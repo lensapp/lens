@@ -37,10 +37,12 @@ import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import { registerKeyboardShortcuts } from "./keyboard-shortcuts";
+import logger from "../common/logger";
+import { unmountComponentAtNode } from "react-dom";
 
 @observer
 export class LensApp extends React.Component {
-  static async init() {
+  static async init(rootElem: HTMLElement) {
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
     LensProtocolRouterRenderer.createInstance().init();
@@ -51,6 +53,12 @@ export class LensApp extends React.Component {
 
     registerKeyboardShortcuts();
     registerIpcListeners();
+
+    window.onbeforeunload = () => {
+      logger.info("[App]: Unload app");
+
+      unmountComponentAtNode(rootElem);
+    };
   }
 
   componentDidMount() {
