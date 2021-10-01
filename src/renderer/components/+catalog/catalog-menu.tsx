@@ -43,7 +43,7 @@ function getCategories() {
 function getCategoryIcon(category: CatalogCategory) {
   if (!category.metadata?.icon) return null;
 
-  return category.metadata.icon.includes("<svg")
+  return category.metadata.icon.includes?.("<svg")
     ? <Icon small svg={category.metadata.icon}/>
     : <Icon small material={category.metadata.icon}/>;
 }
