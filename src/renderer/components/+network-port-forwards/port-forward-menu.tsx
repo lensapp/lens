@@ -20,13 +20,12 @@
  */
 
 import React from "react";
-import { boundMethod, cssNames, openExternal } from "../../utils";
-import { PortForwardItem, removePortForward } from "../../port-forward";
+import { boundMethod, cssNames } from "../../utils";
+import { openPortForward, PortForwardItem, removePortForward } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
-import { PortForwardDialog } from "./port-forward-dialog";
+import { PortForwardDialog } from "../../port-forward";
 
 interface Props extends MenuActionsProps {
   portForward: PortForwardItem;
@@ -39,25 +38,6 @@ export class PortForwardMenu extends React.Component<Props> {
     return removePortForward(this.props.portForward);
   }
 
-  @boundMethod
-  openInBrowser() {
-    const { portForward } = this.props;
-    const browseTo = `http://localhost:${portForward.forwardPort}`;
-
-    openExternal(browseTo)
-      .catch(error => {
-        console.error(`failed to open in browser: ${error}`, {
-          clusterId: portForward.clusterId,
-          port: portForward.port,
-          kind: portForward.kind,
-          namespace: portForward.namespace,
-          name: portForward.name,
-        });
-        Notifications.error(`Failed to open ${browseTo} in browser`);
-      }
-      );
-  }
-
   renderContent() {
     const { portForward, toolbar } = this.props;
 
@@ -65,7 +45,7 @@ export class PortForwardMenu extends React.Component<Props> {
 
     return (
       <>
-        <MenuItem onClick={this.openInBrowser}>
+        <MenuItem onClick={() => openPortForward(this.props.portForward)}>
           <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
           <span className="title">Open</span>
         </MenuItem>

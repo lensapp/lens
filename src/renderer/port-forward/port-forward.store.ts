@@ -22,14 +22,15 @@
 
 import { computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { ItemObject, ItemStore } from "../../common/item.store";
-import { autoBind, createStorage } from "../utils";
-import { getHostedClusterId } from "../utils";
+import { autoBind, createStorage, getHostedClusterId, openExternal } from "../utils";
 import { PortForwardItem } from "./port-forward-item";
 import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
+import { Notifications } from "../components/notifications";
+import logger from "../../common/logger";
 
 export interface ForwardedPort {
-  clusterId: string;
+  clusterId?: string;
   kind: string;
   namespace: string;
   name: string;
@@ -54,6 +55,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     const savedPortForwards = this.storage.get(); // undefined on first load
 
     if (Array.isArray(savedPortForwards)) {
+      logger.info("[PORT_FORWARD] starting saved port-forwards");
       await Promise.all(savedPortForwards.map(pf => {
         const port = new PortForwardItem;
 
@@ -128,41 +130,57 @@ interface PortForwardsResult {
   portForwards: ForwardedPort[];
 }
 
-export async function addPortForward(portForward: PortForwardItem): Promise<number> {
-  let response;
+export async function addPortForward(portForward: ForwardedPort): Promise<number> {
+  let response: PortForwardResult;
 
   try {
-    response = await apiBase.post<PortForwardResult>(`/pods/${portForward.getNs()}/${portForward.getKind()}/${portForward.getName()}/port-forward/${portForward.getPort()}/${portForward.getForwardPort()}`, {});
+    response = await apiBase.post<PortForwardResult>(`/pods/${portForward.namespace}/${portForward.kind}/${portForward.name}/port-forward/${portForward.port}/${portForward.forwardPort}`, {});
     
-    if (response?.port != +portForward.getForwardPort()) {
-      console.log(`specified ${portForward.getForwardPort()} got ${response.port}`);
+    if (response?.port != +portForward.forwardPort) {
+      logger.info(`specified ${portForward.forwardPort} got ${response.port}`);
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
   portForwardStore.reset();
 
   return response?.port;
 }
 
-export async function modifyPortForward(portForward: PortForwardItem, desiredPort: number) {
+export async function getPortForward(portForward: ForwardedPort): Promise<number> {
+  let response: PortForwardResult;
+
+  try {
+    response = await apiBase.get<PortForwardResult>(`/pods/${portForward.namespace}/${portForward.kind}/${portForward.name}/port-forward/${portForward.port}/${portForward.forwardPort}`, {});
+  } catch (error) {
+    logger.error(error);
+  }
+
+  return response?.port;
+}
+
+export async function modifyPortForward(portForward: ForwardedPort, desiredPort: number): Promise<number> {
+  let port = 0;
+  
   try {
     await removePortForward(portForward);
     portForward.forwardPort = desiredPort.toString();
-    await addPortForward(portForward);
+    port = await addPortForward(portForward);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
   portForwardStore.reset();
+
+  return port;
 }
 
 
-export async function removePortForward(portForward: PortForwardItem) {
+export async function removePortForward(portForward: ForwardedPort) {
   try {
-    await apiBase.del(`/pods/${portForward.getNs()}/${portForward.getKind()}/${portForward.getName()}/port-forward/${portForward.getPort()}/${portForward.forwardPort}`, {});
-    await waitUntilFree(+portForward.getForwardPort(), 200, 1000);
+    await apiBase.del(`/pods/${portForward.namespace}/${portForward.kind}/${portForward.name}/port-forward/${portForward.port}/${portForward.forwardPort}`, {});
+    await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
   portForwardStore.reset();
 }
@@ -173,10 +191,28 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
 
     return response.portForwards;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     
     return [];
   }
+}
+
+export function openPortForward(portForward: ForwardedPort) {
+  const browseTo = `http://localhost:${portForward.forwardPort}`;
+
+  openExternal(browseTo)
+    .catch(error => {
+      logger.error(`failed to open in browser: ${error}`, {
+        clusterId: portForward.clusterId,
+        port: portForward.port,
+        kind: portForward.kind,
+        namespace: portForward.namespace,
+        name: portForward.name,
+      });
+      Notifications.error(`Failed to open ${browseTo} in browser`);
+    }
+    );
+
 }
 
 export const portForwardStore = new PortForwardStore();

@@ -22,22 +22,20 @@
 import "./service-port-component.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import type { Service, ServicePort } from "../../../common/k8s-api/endpoints";
-import { apiBase } from "../../api";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, IReactionDisposer, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
-import { Input } from "../input";
 import { Button } from "../button";
+import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, removePortForward } from "../../port-forward";
+import type { ForwardedPort } from "../../port-forward";
+import logger from "../../../common/logger";
+import { Spinner } from "../spinner";
 
 interface Props {
   service: Service;
   port: ServicePort;
-}
-
-interface PortForwardResult {
-  port: number;
 }
 
 @observer
@@ -52,26 +50,54 @@ export class ServicePortComponent extends React.Component<Props> {
     this.init();
   }
 
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      this.watch(),
+    ]);
+  }
+
+  watch() {
+    const disposers: IReactionDisposer[] = [
+      reaction(() => portForwardStore.portForwards, () => this.init()),
+    ];
+
+    return () => disposers.forEach((dispose) => dispose());
+  }
+
   init() {
     this.checkExistingPortForwarding().catch(error => {
-      console.error(error);
+      logger.error(error);
     });
   }
 
   async checkExistingPortForwarding() {
     const { service, port } = this.props;
-    const response = await apiBase.get<PortForwardResult>(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}/${this.forwardPort}`, {});
+    const portForward: ForwardedPort = {
+      kind: "service",
+      name: service.getName(),
+      namespace: service.getNs(),
+      port: port.port.toString(),
+      forwardPort: this.forwardPort.toString()
+    };
+    let activePort = await getPortForward(portForward);
 
-    const activePort = response.port;
-
-    if (activePort) {
-      this.forwardPort = activePort;
-      this.isPortForwarded = true;
+    if (!activePort) {
+      activePort = 0;
     }
+
+    this.forwardPort = activePort;
+    this.isPortForwarded = activePort ? true : false;
   }
 
   async portForward() {
     const { service, port } = this.props;
+    const portForward: ForwardedPort = {
+      kind: "service",
+      name: service.getName(),
+      namespace: service.getNs(),
+      port: port.port.toString(),
+      forwardPort: this.forwardPort.toString()
+    };
 
     this.waiting = true;
 
@@ -80,10 +106,13 @@ export class ServicePortComponent extends React.Component<Props> {
     }
 
     try {
-      const response = await apiBase.post<PortForwardResult>(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}/${this.forwardPort}`, {});
+      this.forwardPort = await addPortForward(portForward);
 
-      this.forwardPort = response.port;
-      this.isPortForwarded = true;
+      if (this.forwardPort) {
+        portForward.forwardPort = this.forwardPort.toString();
+        openPortForward(portForward);
+        this.isPortForwarded = true;
+      }
     } catch(error) {
       Notifications.error(error);
     } finally {
@@ -93,11 +122,18 @@ export class ServicePortComponent extends React.Component<Props> {
 
   async stopPortForward() {
     const { service, port } = this.props;
+    const portForward: ForwardedPort = {
+      kind: "service",
+      name: service.getName(),
+      namespace: service.getNs(),
+      port: port.port.toString(),
+      forwardPort: this.forwardPort.toString()
+    };
 
     this.waiting = true;
 
     try {
-      await apiBase.del(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}/${this.forwardPort}`, {});
+      await removePortForward(portForward);
       this.isPortForwarded = false;
     } catch(error) {
       Notifications.error(error);
@@ -107,31 +143,34 @@ export class ServicePortComponent extends React.Component<Props> {
   }
 
   render() {
-    const { port } = this.props;
+    const { port, service } = this.props;
 
     const portForwardAction = async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
       }else {
-        await this.portForward();
+        const portForward: ForwardedPort = {
+          kind: "service",
+          name: service.getName(),
+          namespace: service.getNs(),
+          port: port.port.toString(),
+          forwardPort: this.forwardPort.toString()
+        };
+            
+        PortForwardDialog.open(portForward, true);
       }
     };
 
     return (
       <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
-        {port.toString()}
+        <span title="Open in a browser" onClick={() => this.portForward() }>
+          {port.toString()}
+          {this.waiting && (
+            <Spinner />
+          )}
+        </span>
         {" "}
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward"} </Button>
-        <text> local port:</text>
-        <Input className={"portInput"}
-          type="number"
-          min="0"
-          max="65535"
-          value= {this.forwardPort != 0? String(this.forwardPort) : ""}
-          disabled={this.isPortForwarded}
-          placeholder={"Random"}
-          onChange={(value) => this.forwardPort = Number(value)}
-        />
+        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward..."} </Button>
       </div>
     );
   }

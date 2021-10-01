@@ -24,21 +24,22 @@ import "./port-forward-dialog.scss";
 import React, { Component } from "react";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Icon } from "../icon";
-import { Input } from "../input";
-import { Notifications } from "../notifications";
-import { cssNames } from "../../utils";
-import { modifyPortForward, PortForwardItem } from "../../port-forward";
-import { isNumber } from "../input/input_validators";
+import { Dialog, DialogProps } from "../components/dialog";
+import { Wizard, WizardStep } from "../components/wizard";
+import { Input } from "../components/input";
+import { Notifications } from "../components/notifications";
+import { cssNames } from "../utils";
+import { addPortForward, modifyPortForward } from "./port-forward.store";
+import type { ForwardedPort } from "./port-forward.store";
+import { openPortForward } from ".";
 
 interface Props extends Partial<DialogProps> {
 }
 
 const dialogState = observable.object({
   isOpen: false,
-  data: null as PortForwardItem,
+  data: null as ForwardedPort,
+  openInBrowser: false
 });
 
 @observer
@@ -52,9 +53,10 @@ export class PortForwardDialog extends Component<Props> {
     makeObservable(this);
   }
 
-  static open(portForward: PortForwardItem) {
+  static open(portForward: ForwardedPort, openInBrowser = false) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
+    dialogState.openInBrowser = openInBrowser;
   }
 
   static close() {
@@ -83,24 +85,40 @@ export class PortForwardDialog extends Component<Props> {
 
     this.currentPort = +portForward.forwardPort;
     this.desiredPort = this.currentPort;
-    this.ready = true;
+    this.ready = this.currentPort ? false : true;
   };
 
   onClose = () => {
     this.ready = false;
   };
 
-  changePort = async () => {
+  changePort = (value: string) => {
+    this.desiredPort = Number(value);
+    this.ready = Boolean(this.desiredPort == 0 || this.currentPort !== this.desiredPort);
+  };
+
+  startPortForward = async () => {
     const { portForward } = this;
     const { currentPort, desiredPort, close } = this;
 
     try {
-      if (currentPort !== desiredPort) {
-        await modifyPortForward(portForward, desiredPort);
+      let port: number;
+
+      if (currentPort) {
+        port = await modifyPortForward(portForward, desiredPort);
+      } else {
+        portForward.forwardPort = String(desiredPort);
+        port = await addPortForward(portForward);
       }
-      close();
+      
+      if (dialogState.openInBrowser) {
+        portForward.forwardPort = String(port);
+        openPortForward(portForward);
+      }
     } catch (err) {
       Notifications.error(err);
+    } finally {
+      close();
     }
   };
 
@@ -110,21 +128,17 @@ export class PortForwardDialog extends Component<Props> {
         <div className="flex gaps align-center">
           <div className="input-container flex align-center">
             <div className="current-port" data-testid="current-port">
-              Current port: {this.currentPort}
+              Local port to forward from:
             </div>
-            <Input
-              required autoFocus
-              iconLeft="import_export"
-              placeholder="Desired port"
-              trim
-              validators={isNumber}
-              onChange={v => this.desiredPort = +v}
+            <Input className={"portInput"}
+              type="number"
+              min="0"
+              max="65535"
+              value={this.desiredPort === 0 ? "" : String(this.desiredPort)}
+              placeholder={"Random"}
+              onChange={this.changePort}
             />
           </div>
-        </div>
-        <div className="warning" data-testid="warning">
-          <Icon material="warning" />
-          Current port-forwarding will be removed and a new one will be started
         </div>
       </>
     );
@@ -132,10 +146,10 @@ export class PortForwardDialog extends Component<Props> {
 
   render() {
     const { className, ...dialogProps } = this.props;
-    const resourceName = this.portForward ? this.portForward.getName() : "";
+    const resourceName = this.portForward ? this.portForward.name : "";
     const header = (
       <h5>
-        Change Port <span>{resourceName}</span>
+        Port Forwarding for <span>{resourceName}</span>
       </h5>
     );
 
@@ -151,8 +165,8 @@ export class PortForwardDialog extends Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep
             contentClass="flex gaps column"
-            next={this.changePort}
-            nextLabel="Change Port"
+            next={this.startPortForward}
+            nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
             disabledNext={!this.ready}
           >
             {this.renderContents()}

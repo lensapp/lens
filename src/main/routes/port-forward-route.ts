@@ -22,7 +22,6 @@
 import type { LensApiRequest } from "../router";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 import { Kubectl } from "../kubectl";
-import { shell } from "electron";
 import * as tcpPortUsed from "tcp-port-used";
 import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
@@ -112,17 +111,6 @@ class PortForward {
   public async stop() {
     this.process.kill();
   }
-
-  public open() {
-    shell.openExternal(`http://localhost:${this.internalPort}`)
-      .catch(error => logger.error(`[PORT-FORWARD]: failed to open external shell: ${error}`, {
-        clusterId: this.clusterId,
-        port: this.port,
-        kind: this.kind,
-        namespace: this.namespace,
-        name: this.name,
-      }));
-  }
 }
 
 export class PortForwardRoute {
@@ -165,7 +153,6 @@ export class PortForwardRoute {
         }
       }
 
-      portForward.open();
       respondJson(response, {port: portForward.internalPort});
     } catch (error) {
       logger.error(`[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`, { namespace, port, resourceType, resourceName });

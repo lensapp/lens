@@ -66,5 +66,12 @@
         margin-right: $margin;
       }
     }
-  }
+
+    .portInput {
+      display: inline-block !important;
+      width: 70px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }  }
+
 }
