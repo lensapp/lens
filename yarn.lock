@@ -5268,10 +5268,10 @@ electron-window-state@^5.0.3:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@^13.4.0:
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-13.4.0.tgz#f9f9e518d8c6bf23bfa8b69580447eea3ca0f880"
-  integrity sha512-KJGWS2qa0xZXIMPMDUNkRVO8/JxRd4+M0ejYYOzu2LIQ5ijecPzNuNR9nvDkml9XyyRBzu975FkhJcwD17ietQ==
+electron@^13.5.1:
+  version "13.5.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.5.1.tgz#76c02c39be228532f886a170b472cbd3d93f0d0f"
+  integrity sha512-ZyxhIhmdaeE3xiIGObf0zqEyCyuIDqZQBv9NKX8w5FNzGm87j4qR0H1+GQg6vz+cA1Nnv1x175Zvimzc0/UwEQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
@@ -10264,7 +10264,6 @@ npm@^6.14.15:
     cmd-shim "^3.0.3"
     columnify "~1.5.4"
     config-chain "^1.1.12"
-    debuglog "*"
     detect-indent "~5.0.0"
     detect-newline "^2.1.0"
     dezalgo "~1.0.3"
@@ -10279,7 +10278,6 @@ npm@^6.14.15:
     has-unicode "~2.0.1"
     hosted-git-info "^2.8.9"
     iferr "^1.0.2"
-    imurmurhash "*"
     infer-owner "^1.0.4"
     inflight "~1.0.6"
     inherits "^2.0.4"
@@ -10298,14 +10296,8 @@ npm@^6.14.15:
     libnpx "^10.2.4"
     lock-verify "^2.1.0"
     lockfile "^1.0.4"
-    lodash._baseindexof "*"
     lodash._baseuniq "~4.6.0"
-    lodash._bindcallback "*"
-    lodash._cacheindexof "*"
-    lodash._createcache "*"
-    lodash._getnative "*"
     lodash.clonedeep "~4.5.0"
-    lodash.restparam "*"
     lodash.union "~4.6.0"
     lodash.uniq "~4.5.0"
     lodash.without "~4.4.0"
