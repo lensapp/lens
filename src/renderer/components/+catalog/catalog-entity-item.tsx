@@ -34,83 +34,83 @@ import { KubeObject } from "../../../common/k8s-api/kube-object";
 const css = makeCss(styles);
  
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
-	 constructor(public entity: T) {}
+  constructor(public entity: T) {}
  
-	 get kind() {
-		 return this.entity.kind;
-	 }
+  get kind() {
+    return this.entity.kind;
+  }
  
-	 get apiVersion() {
-		 return this.entity.apiVersion;
-	 }
+  get apiVersion() {
+    return this.entity.apiVersion;
+  }
  
-	 get name() {
-		 return this.entity.metadata.name;
-	 }
+  get name() {
+    return this.entity.metadata.name;
+  }
  
-	 getName() {
-		 return this.entity.metadata.name;
-	 }
+  getName() {
+    return this.entity.metadata.name;
+  }
  
-	 get id() {
-		 return this.entity.metadata.uid;
-	 }
+  get id() {
+    return this.entity.metadata.uid;
+  }
  
-	 getId() {
-		 return this.id;
-	 }
+  getId() {
+    return this.id;
+  }
  
-	 @computed get phase() {
-		 return this.entity.status.phase;
-	 }
+   @computed get phase() {
+    return this.entity.status.phase;
+  }
  
-	 get enabled() {
-		 return this.entity.status.enabled ?? true;
-	 }
+   get enabled() {
+     return this.entity.status.enabled ?? true;
+   }
  
-	 get labels() {
-		 return KubeObject.stringifyLabels(this.entity.metadata.labels);
-	 }
+   get labels() {
+     return KubeObject.stringifyLabels(this.entity.metadata.labels);
+   }
  
-	 getLabelBadges(onClick?: React.MouseEventHandler<any>) {
-		 return this.labels
-			 .map(label => (
-				 <Badge
-					 className={css.badge}
-					 key={label}
-					 label={label}
-					 title={label}
-					 onClick={(event) => {
-						 navigation.searchParams.set(searchUrlParam.name, label);
-						 onClick?.(event);
-						 event.stopPropagation();
-					 }}
-					 expandable={false}
-				 />
-			 ));
-	 }
+   getLabelBadges(onClick?: React.MouseEventHandler<any>) {
+     return this.labels
+       .map(label => (
+         <Badge
+           className={css.badge}
+           key={label}
+           label={label}
+           title={label}
+           onClick={(event) => {
+             navigation.searchParams.set(searchUrlParam.name, label);
+             onClick?.(event);
+             event.stopPropagation();
+           }}
+           expandable={false}
+         />
+       ));
+   }
  
-	 get source() {
-		 return this.entity.metadata.source || "unknown";
-	 }
+   get source() {
+     return this.entity.metadata.source || "unknown";
+   }
  
-	 get searchFields() {
-		 return [
-			 this.name,
-			 this.id,
-			 this.phase,
-			 `source=${this.source}`,
-			 ...this.labels,
-		 ];
-	 }
+   get searchFields() {
+     return [
+       this.name,
+       this.id,
+       this.phase,
+       `source=${this.source}`,
+       ...this.labels,
+     ];
+   }
  
-	 onRun(ctx: CatalogEntityActionContext) {
-		 this.entity.onRun(ctx);
-	 }
+   onRun(ctx: CatalogEntityActionContext) {
+     this.entity.onRun(ctx);
+   }
  
-	 @action
-	 async onContextMenuOpen(ctx: any) {
-		 return this.entity.onContextMenuOpen(ctx);
-	 }
+   @action
+   async onContextMenuOpen(ctx: any) {
+     return this.entity.onContextMenuOpen(ctx);
+   }
 }
 
