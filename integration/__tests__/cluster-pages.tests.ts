@@ -433,7 +433,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await frame.waitForTimeout(100_000);
     }
 
-    const inputField = await frame.waitForSelector(".CreateResource div.react-monaco-editor-container");
+    const inputField = await frame.waitForSelector(".CreateResource .MonacoEditor");
 
     await inputField.click();
     await inputField.type("apiVersion: v1", { delay: 10 });

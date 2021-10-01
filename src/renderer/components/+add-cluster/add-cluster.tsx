@@ -122,6 +122,7 @@ export class AddCluster extends React.Component {
         </p>
         <div className="flex column">
           <MonacoEditor
+            autoFocus={true}
             value={this.customConfig}
             onChange={(value: string) => {
               this.customConfig = value;

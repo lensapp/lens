@@ -150,8 +150,10 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
+      // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       new MonacoWebpackPlugin({
-        // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+        // publicPath: "/",
+        // filename: "[name].worker.js",
         languages: ["json", "yaml"],
         globalAPI: isDevelopment,
       }),
