@@ -29,7 +29,7 @@ import { Icon } from "../icon";
 import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
-import type { CatalogEntityItem } from "./catalog-entity.store";
+import type { CatalogEntityItem } from "./catalog-entity-item";
 import { isDevelopment } from "../../../common/vars";
 
 interface Props<T extends CatalogEntity> {
@@ -69,7 +69,9 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                 background={item.entity.spec.icon?.background}
                 disabled={!item?.enabled}
                 onClick={() => item.onRun(catalogEntityRunContext)}
-                size={128} />
+                size={128}
+                data-testid="detail-panel-hot-bar-icon"
+              />
               {item?.enabled && (
                 <div className="IconHint">
                   Click to open
