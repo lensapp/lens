@@ -5269,10 +5269,10 @@ electron@*:
     "@types/node" "^12.0.12"
     extract-zip "^1.0.3"
 
-electron@^12.0.17:
-  version "12.0.17"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.17.tgz#9707c9bfd0a29ae63b8b66f1b3acf8894f7b63f4"
-  integrity sha512-jkOMKSEj/X9i++5LD7NKqYK/ORi6H0kHYk6rrvcJNQfbDpYX5lxNNexZ2ikPeKxS2B84+WcSFrw5Ce9y8B+pmA==
+electron@^12.2.1:
+  version "12.2.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-12.2.1.tgz#ef138fde11efd01743934c3e0df717cc53ee362b"
+  integrity sha512-Gp+rO81qoaRDP7PTVtBOvnSgDgGlwUuAEWXxi621uOJMIlYFas9ChXe8pjdL0R0vyUpiHVzp6Vrjx41VZqEpsw==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
