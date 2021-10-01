@@ -314,7 +314,7 @@
     "@types/uuid": "^8.3.1",
     "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.17",
-    "@types/webpack-dev-server": "^3.11.1",
+    "@types/webpack-dev-server": "^3.11.6",
     "@types/webpack-env": "^1.15.2",
     "@types/webpack-node-externals": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
