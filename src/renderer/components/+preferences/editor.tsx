@@ -45,7 +45,7 @@ export const Editor = observer(() => {
           control={
             <Switcher
               checked={editorConfiguration.miniMap.enabled}
-              onChange={(evt, checked: boolean) => editorConfiguration.miniMap.enabled = checked}
+              onChange={(evt, checked) => editorConfiguration.miniMap.enabled = checked}
               name="minimap"
             />
           }

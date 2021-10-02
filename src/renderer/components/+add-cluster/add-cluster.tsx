@@ -124,7 +124,7 @@ export class AddCluster extends React.Component {
           <MonacoEditor
             autoFocus={true}
             value={this.customConfig}
-            onChange={(value: string) => {
+            onChange={value => {
               this.customConfig = value;
               this.errors.length = 0;
               this.refreshContexts();
