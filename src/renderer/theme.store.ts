@@ -26,6 +26,7 @@ import logger from "../main/logger";
 import darkTheme from "./themes/lens-dark.json";
 import lightTheme from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";
+import type { MonacoEditorProps } from "./components/monaco-editor";
 
 export type ThemeId = string;
 
@@ -35,7 +36,7 @@ export interface Theme {
   colors: Record<string, string>;
   description: string;
   author: string;
-  monacoTheme: string;
+  monacoTheme: MonacoEditorProps["theme"];
 }
 
 export interface ThemeItems extends Theme {

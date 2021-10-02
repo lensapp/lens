@@ -60,7 +60,7 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
   options: {},
   language: "yaml",
   autoFocus: false,
-  get theme(): string {
+  get theme(): MonacoEditorProps["theme"] {
     // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
     return ThemeStore.getInstance().activeTheme.monacoTheme;
   }
@@ -147,24 +147,30 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   componentDidMount() {
-    this.createEditor();
-    logger.info(`[MONACO]: editor did mounted`);
-
-    if (this.props.autoFocus) {
-      this.editor.focus();
+    try {
+      this.createEditor();
+      if (this.props.autoFocus) {
+        this.editor.focus();
+      }
+      logger.info(`[MONACO]: editor did mounted`);
+    } catch (error) {
+      logger.error(`[MONACO]: mounting failed`, { error, editor: this });
     }
   }
 
   componentWillUnmount() {
-    logger.info(`[MONACO]: unmounting editor..`);
-    this.unmounting = true;
-    this.disposeOnUnmount();
-    MonacoEditor.models.get(this).forEach(model => model.dispose());
-    MonacoEditor.models.delete(this);
-    this.editor?.dispose();
+    try {
+      logger.info(`[MONACO]: unmounting editor..`);
+      this.unmounting = true;
+      this.destroyEditor();
+      MonacoEditor.models.get(this).forEach(model => model.dispose());
+      MonacoEditor.models.delete(this);
+    } catch (error) {
+      logger.error(`[MONACO]: unmounting error failed: ${String(error)}`, this, error);
+    }
   }
 
-  private createEditor = (): void => {
+  private createEditor() {
     if (!this.containerElem || this.editor || this.unmounting) {
       return;
     }
@@ -209,6 +215,14 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       this.bindResizeObserver(),
     );
   };
+
+  private destroyEditor(): void {
+    if (!this.editor) return;
+
+    this.editor.dispose();
+    this.editor = null;
+    this.disposeOnUnmount();
+  }
 
   @action
   setDimensions(width: number, height: number) {
