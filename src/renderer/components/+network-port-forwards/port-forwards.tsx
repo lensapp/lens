@@ -23,12 +23,8 @@ import "./port-forwards.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router-dom";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { PortForwardItem, portForwardStore } from "../../port-forward";
-import { PortForwardsRouteParams, portForwardsURL } from "../../../common/routes";
-import { navigation } from "../../navigation";
-import { PortForwardDetails } from "./port-forward-details";
 import { PortForwardMenu } from "./port-forward-menu";
 
 enum columnId {
@@ -39,37 +35,14 @@ enum columnId {
   forwardPort = "forwardPort",
 }
 
-interface Props extends RouteComponentProps<PortForwardsRouteParams> {
-}
-
 @observer
-export class PortForwards extends React.Component<Props> {
+export class PortForwards extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
       portForwardStore.watch(),
     ]);
   }
-
-  get selectedPortForward() {
-    const { match: { params: { forwardport } } } = this.props;
-
-    return portForwardStore.items.find(pf => {
-      return pf.getForwardPort() == forwardport;
-    });
-  }
-
-  showDetails = (item: PortForwardItem) => {
-    navigation.push(portForwardsURL({
-      params: {
-        forwardport: item.getForwardPort(),
-      }
-    }));
-  };
-
-  hideDetails = () => {
-    navigation.push(portForwardsURL());
-  };
 
   renderRemoveDialogMessage(selectedItems: PortForwardItem[]) {
     const forwardPorts = selectedItems.map(item => item.getForwardPort()).join(", ");
@@ -123,12 +96,6 @@ export class PortForwards extends React.Component<Props> {
           customizeRemoveDialog={selectedItems => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}
-          detailsItem={this.selectedPortForward}
-          onDetails={this.showDetails}
-        />
-        <PortForwardDetails
-          portForward={this.selectedPortForward}
-          hideDetails={this.hideDetails}
         />
       </>
     );

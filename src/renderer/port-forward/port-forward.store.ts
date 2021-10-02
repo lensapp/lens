@@ -136,11 +136,11 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   try {
     response = await apiBase.post<PortForwardResult>(`/pods/${portForward.namespace}/${portForward.kind}/${portForward.name}/port-forward/${portForward.port}/${portForward.forwardPort}`, {});
     
-    if (response?.port != +portForward.forwardPort) {
-      logger.info(`specified ${portForward.forwardPort} got ${response.port}`);
+    if (response?.port && response.port != +portForward.forwardPort) {
+      logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
     }
   } catch (error) {
-    logger.error(error);
+    logger.warn(error); // don't care, caller must check 
   }
   portForwardStore.reset();
 
@@ -153,7 +153,7 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
   try {
     response = await apiBase.get<PortForwardResult>(`/pods/${portForward.namespace}/${portForward.kind}/${portForward.name}/port-forward/${portForward.port}/${portForward.forwardPort}`, {});
   } catch (error) {
-    logger.error(error);
+    logger.warn(error); // don't care, caller must check 
   }
 
   return response?.port;
@@ -167,7 +167,7 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
     portForward.forwardPort = desiredPort.toString();
     port = await addPortForward(portForward);
   } catch (error) {
-    logger.error(error);
+    logger.warn(error); // don't care, caller must check 
   }
   portForwardStore.reset();
 
@@ -180,7 +180,7 @@ export async function removePortForward(portForward: ForwardedPort) {
     await apiBase.del(`/pods/${portForward.namespace}/${portForward.kind}/${portForward.name}/port-forward/${portForward.port}/${portForward.forwardPort}`, {});
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
-    logger.error(error);
+    logger.warn(error); // don't care, caller must check 
   }
   portForwardStore.reset();
 }
@@ -191,7 +191,7 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
 
     return response.portForwards;
   } catch (error) {
-    logger.error(error);
+    logger.warn(error); // don't care, caller must check 
     
     return [];
   }

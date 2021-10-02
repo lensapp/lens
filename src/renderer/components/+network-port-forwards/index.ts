@@ -20,4 +20,3 @@
  */
 
 export * from "./port-forwards";
-export * from "./port-forward-details";
