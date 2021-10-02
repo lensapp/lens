@@ -24,7 +24,6 @@ import React from "react";
 import { action, computed, makeObservable, observable, reaction, toJS, when } from "mobx";
 import { observer } from "mobx-react";
 import { editor, Uri } from "monaco-editor";
-import logger from "../../../common/logger";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { cssNames, disposer } from "../../utils";
@@ -69,7 +68,6 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
 @observer
 export class MonacoEditor extends React.Component<MonacoEditorProps> {
   static defaultProps = defaultEditorProps as object;
-  static models = new WeakMap<MonacoEditor, editor.ITextModel[]>();
   static viewStates = new WeakMap<editor.ITextModel, editor.ICodeEditorViewState>();
 
   public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
@@ -83,8 +81,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   constructor(props: MonacoEditorProps) {
     super(props);
     makeObservable(this);
-
-    MonacoEditor.models.set(this, []);
   }
 
   get whenEditorReady() {
@@ -103,8 +99,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
-
-        logger.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`, entry);
         this.setDimensions(width, height);
       }
     });
@@ -117,29 +111,21 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
-    logger.info("[MONACO]: model change", { model, oldModel });
+    console.info("[MONACO]: model change", { model, oldModel });
 
-    this.saveViewState(oldModel); // save previously used view-model state
+    this.saveViewState(oldModel); // save current view-model state in the editor
     this.editor.setModel(model);
     this.editor.restoreViewState(this.getViewState(model)); // restore cursor position, selection, etc.
     this.editor.layout();
+    this.editor.focus(); // keep focus in editor, e.g. when clicking between dock-tabs
   };
 
+  @computed get editorId(): string {
+    return this.props.id ?? this.staticId;
+  }
+
   @computed get model(): editor.ITextModel {
-    const { language, value, id = this.staticId } = this.props;
-    const model = this.getModelById(id);
-
-    // model with matched props.id already exists, return
-    if (model) return model;
-
-    // creating new temporary model
-    const uri = this.createUri(id);
-    const newModel = editor.createModel(value, language, uri);
-
-    logger.info(`[MONACO]: creating new model ${uri}`, newModel);
-    MonacoEditor.models.get(this).push(newModel);
-
-    return newModel;
+    return this.getModelById(this.editorId);
   }
 
   @computed get globalEditorOptions() {
@@ -152,21 +138,19 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       if (this.props.autoFocus) {
         this.editor.focus();
       }
-      logger.info(`[MONACO]: editor did mounted`);
+      console.info(`[MONACO]: editor did mounted`);
     } catch (error) {
-      logger.error(`[MONACO]: mounting failed`, { error, editor: this });
+      console.error(`[MONACO]: mounting failed`, { error, editor: this });
     }
   }
 
   componentWillUnmount() {
     try {
-      logger.info(`[MONACO]: unmounting editor..`);
+      console.info(`[MONACO]: unmounting editor..`);
       this.unmounting = true;
       this.destroyEditor();
-      MonacoEditor.models.get(this).forEach(model => model.dispose());
-      MonacoEditor.models.delete(this);
     } catch (error) {
-      logger.error(`[MONACO]: unmounting error failed: ${String(error)}`, this, error);
+      console.error(`[MONACO]: unmounting error failed: ${String(error)}`, this, error);
     }
   }
 
@@ -185,16 +169,16 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.globalEditorOptions,
       ...options,
     });
-    logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
+    console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
 
     const onDidLayoutChangeDisposer = this.editor.onDidLayoutChange(layoutInfo => {
       this.props.onDidLayoutChange?.(layoutInfo);
-      // logger.info("[MONACO]: onDidLayoutChange()", layoutInfo);
+      // console.info("[MONACO]: onDidLayoutChange()", layoutInfo);
     });
 
     const onValueChangeDisposer = this.editor.onDidChangeModelContent(event => {
       const value = this.editor.getValue();
-      // logger.info("[MONACO]: value changed", { value, event });
+      // console.info("[MONACO]: value changed", { value, event });
 
       this.props.onChange?.(value, {
         model: this.model,
@@ -204,7 +188,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     const onContentSizeChangeDisposer = this.editor.onDidContentSizeChange((params) => {
       this.props.onDidContentSizeChange?.(params);
-      // logger.info("[MONACO]: onDidContentSizeChange():", params)
+      // console.info("[MONACO]: onDidContentSizeChange():", params)
     });
 
     this.disposeOnUnmount.push(
@@ -226,6 +210,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   @action
   setDimensions(width: number, height: number) {
+    console.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`);
     this.dimensions.width = width;
     this.dimensions.height = height;
     this.editor?.layout({ width, height });
@@ -246,12 +231,14 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   getModelById(id: string): editor.ITextModel | null {
     const uri = this.createUri(id);
-
-    for (const model of MonacoEditor.models.get(this)) {
-      if (String(model.uri) === String(uri)) return model;
+    const model = editor.getModels().find(model => String(model.uri) === String(uri));
+    if (model) {
+      return model; // model with corresponding props.id exists
     }
 
-    return null;
+    // creating new temporary model if not exists regarding to props.ID
+    const { language, value } = this.props;
+    return editor.createModel(value, language, uri);
   }
 
   setValue(value: string) {
