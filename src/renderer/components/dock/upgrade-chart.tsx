@@ -73,7 +73,7 @@ export class UpgradeChart extends React.Component<Props> {
   }
 
   get value() {
-    return upgradeChartStore.values.getData(this.tabId);
+    return upgradeChartStore.values.get(this.tabId);
   }
 
   async loadVersions() {
@@ -87,7 +87,7 @@ export class UpgradeChart extends React.Component<Props> {
   }
 
   onChange = (value: string) => {
-    upgradeChartStore.values.setData(this.tabId, value);
+    upgradeChartStore.values.set(this.tabId, value);
   };
 
   onError = (error: string) => {

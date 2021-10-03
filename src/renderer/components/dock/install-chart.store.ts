@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { dockStore, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
-import { DockTabStore } from "./dock-tab.store";
+import { DockTabsStore } from "./dock-tabs.store";
 import { getChartDetails, getChartValues, HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import type { IReleaseUpdateDetails } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Notifications } from "../notifications";
@@ -37,23 +37,29 @@ export interface IChartInstallData {
   lastVersion?: boolean;
 }
 
-export class InstallChartStore extends DockTabStore<IChartInstallData> {
-  public versions = new DockTabStore<string[]>();
-  public details = new DockTabStore<IReleaseUpdateDetails>();
+export class InstallChartStore extends DockTabsStore<IChartInstallData> {
+  details = observable.map<TabId, IReleaseUpdateDetails>();
+  versions = observable.map<TabId, string[]>();
 
   constructor() {
     super({
       storageKey: "install_charts"
     });
     makeObservable(this);
-    autorun(() => {
-      const { selectedTab, isOpen } = dockStore;
+  }
 
-      if (selectedTab?.kind === TabKind.INSTALL_CHART && isOpen) {
-        this.loadData(selectedTab.id)
-          .catch(err => Notifications.error(String(err)));
-      }
-    }, { delay: 250 });
+  protected init() {
+    super.init();
+
+    this.dispose.push(
+      dockStore.onTabChange(({ selectedTabId }) => {
+        this.loadData(selectedTabId).catch(err => Notifications.error(String(err)));
+      }, {
+        kind: TabKind.INSTALL_CHART,
+        fireImmediately: true,
+        isVisible: true,
+      }),
+    );
   }
 
   @action
@@ -64,7 +70,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
       promises.push(this.loadValues(tabId));
     }
 
-    if (!this.versions.getData(tabId)) {
+    if (!this.versions.get(tabId)) {
       promises.push(this.loadVersions(tabId));
     }
 
@@ -75,11 +81,11 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
   async loadVersions(tabId: TabId) {
     const { repo, name, version } = this.getData(tabId);
 
-    this.versions.clearData(tabId); // reset
+    this.versions.delete(tabId); // reset
     const charts = await getChartDetails(repo, name, { version });
     const versions = charts.versions.map(chartVersion => chartVersion.version);
 
-    this.versions.setData(tabId, versions);
+    this.versions.set(tabId, versions);
   }
 
   @action

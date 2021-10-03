@@ -20,8 +20,7 @@
  */
 
 import { autoBind, noop } from "../../utils";
-import { DockTabStore } from "./dock-tab.store";
-import { autorun, IReactionDisposer } from "mobx";
+import { DockTabsStore } from "./dock-tabs.store";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { apiManager } from "../../../common/k8s-api/api-manager";
@@ -32,9 +31,7 @@ export interface EditingResource {
   draft?: string; // edited draft in yaml
 }
 
-export class EditResourceStore extends DockTabStore<EditingResource> {
-  private watchers = new Map<TabId, IReactionDisposer>();
-
+export class EditResourceStore extends DockTabsStore<EditingResource> {
   constructor() {
     super({
       storageKey: "edit_resource_store",
@@ -44,34 +41,19 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
 
   protected async init() {
     super.init();
-    await this.storage.whenReady;
 
-    autorun(() => {
-      Array.from(this.data).forEach(([tabId, { resource }]) => {
-        if (this.watchers.get(tabId)) {
-          return;
+    this.dispose.push(
+      dockStore.onTabChange(({ selectedTabId }) => {
+        const { resource } = this.getData(selectedTabId);
+        const store = apiManager.getStore(resource);
+
+        if (!store?.getByPath(resource)) {
+          store?.loadFromPath(resource).catch(noop); // preload resource by uri
         }
-        this.watchers.set(tabId, autorun(() => {
-          const store = apiManager.getStore(resource);
-
-          if (store) {
-            const isActiveTab = dockStore.isOpen && dockStore.selectedTabId === tabId;
-            const obj = store.getByPath(resource);
-
-            // preload resource for editing
-            if (!obj && !store.isLoaded && !store.isLoading && isActiveTab) {
-              store.loadFromPath(resource).catch(noop);
-            }
-            // auto-close tab when resource removed from store
-            else if (!obj && store.isLoaded) {
-              dockStore.closeTab(tabId);
-            }
-          }
-        }, {
-          delay: 100 // make sure all kube-object stores are initialized
-        }));
-      });
-    });
+      }, {
+        fireImmediately: true,
+      })
+    );
   }
 
   protected finalizeDataForSave({ draft, ...data }: EditingResource): EditingResource {
@@ -97,19 +79,11 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
   }
 
   getTabByResource(object: KubeObject): DockTab {
-    const [tabId] = Array.from(this.data).find(([, { resource }]) => {
+    const [tabId] = Object.entries(this.data).find(([, { resource }]) => {
       return object.selfLink === resource;
     }) || [];
 
     return dockStore.getTabById(tabId);
-  }
-
-  reset() {
-    super.reset();
-    Array.from(this.watchers).forEach(([tabId, dispose]) => {
-      this.watchers.delete(tabId);
-      dispose();
-    });
   }
 }
 

@@ -88,6 +88,17 @@ export interface DockStorageState {
   isOpen?: boolean;
 }
 
+export interface DockTabChangeEvent {
+  selectedTabId?: TabId;
+  tab?: DockTab;
+  prevTab?: DockTab;
+}
+
+export interface DockTabChangeEventOptions extends IReactionOptions {
+  kind?: TabKind; // filter: matching by dockStore.selectedTab.kind
+  isVisible?: boolean; // filter: dock and selected tab should be visible
+}
+
 export class DockStore implements DockStorageState {
   constructor() {
     makeObservable(this);
@@ -178,8 +189,18 @@ export class DockStore implements DockStorageState {
     return reaction(() => [this.height, this.fullSize], callback, options);
   }
 
-  onTabChange(callback: (tabId: TabId) => void, options?: IReactionOptions) {
-    return reaction(() => this.selectedTabId, callback, options);
+  onTabChange(callback?: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {
+    const { kind, isVisible, ...reactionOpts } = options;
+
+    return reaction(() => this.selectedTab, ((tab, prevTab) => {
+      if (kind && kind !== tab.kind) return;
+      if (isVisible && !dockStore.isOpen) return;
+
+      callback({
+        tab, prevTab,
+        selectedTabId: this.selectedTabId,
+      });
+    }), reactionOpts);
   }
 
   hasTabs() {

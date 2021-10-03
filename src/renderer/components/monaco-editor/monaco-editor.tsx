@@ -21,12 +21,12 @@
 
 import "./monaco-editor.scss";
 import React from "react";
-import { action, computed, makeObservable, observable, reaction, toJS, when } from "mobx";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import { observer } from "mobx-react";
 import { editor, Uri } from "monaco-editor";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
-import { cssNames, disposer } from "../../utils";
+import { cssNames, disposer, toJS } from "../../utils";
 
 export interface MonacoEditorProps {
   id?: string; // associating editor's ID with created model.uri
@@ -65,6 +65,9 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
   }
 };
 
+// FIXME: load resource templates via webpack's dynamic import for create-resource dock tab
+// FIXME: apply changes of props.options and globalOptions.editor to active editor
+
 @observer
 export class MonacoEditor extends React.Component<MonacoEditorProps> {
   static defaultProps = defaultEditorProps as object;
@@ -99,6 +102,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
+
         this.setDimensions(width, height);
       }
     });
@@ -128,13 +132,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return this.getModelById(this.editorId);
   }
 
-  @computed get globalEditorOptions() {
-    return toJS(UserStore.getInstance().editorConfiguration);
-  }
-
   componentDidMount() {
     try {
       this.createEditor();
+
       if (this.props.autoFocus) {
         this.editor.focus();
       }
@@ -159,6 +160,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       return;
     }
     const { language, theme, readOnly, value: defaultValue, options } = this.props;
+    const globalEditorOptions = toJS(UserStore.getInstance().editorConfiguration);
 
     this.editor = editor.create(this.containerElem, {
       model: this.model,
@@ -166,7 +168,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       language,
       theme,
       readOnly,
-      ...this.globalEditorOptions,
+      ...globalEditorOptions,
       ...options,
     });
     console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
@@ -198,7 +200,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       () => onContentSizeChangeDisposer.dispose(),
       this.bindResizeObserver(),
     );
-  };
+  }
 
   private destroyEditor(): void {
     if (!this.editor) return;
@@ -232,12 +234,14 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   getModelById(id: string): editor.ITextModel | null {
     const uri = this.createUri(id);
     const model = editor.getModels().find(model => String(model.uri) === String(uri));
+
     if (model) {
       return model; // model with corresponding props.id exists
     }
 
     // creating new temporary model if not exists regarding to props.ID
     const { language, value } = this.props;
+
     return editor.createModel(value, language, uri);
   }
 

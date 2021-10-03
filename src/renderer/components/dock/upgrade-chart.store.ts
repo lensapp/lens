@@ -19,27 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun, computed, IReactionDisposer, makeObservable, reaction } from "mobx";
+import { action, makeObservable, observable, when } from "mobx";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
-import { DockTabStore } from "./dock-tab.store";
+import { DockTabsStore } from "./dock-tabs.store";
 import { getReleaseValues, HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
-import { iter } from "../../utils";
 
 export interface IChartUpgradeData {
   releaseName: string;
   releaseNamespace: string;
 }
 
-export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
-  private watchers = new Map<string, IReactionDisposer>();
-
-  values = new DockTabStore<string>();
-
-  @computed
-  private get releaseNameReverseLookup(): Map<string, string> {
-    return new Map(iter.map(this.data, ([id, { releaseName }]) => [releaseName, id]));
-  }
+export class UpgradeChartStore extends DockTabsStore<IChartUpgradeData> {
+  public values = observable.map<TabId, string>();
 
   constructor() {
     super({
@@ -47,82 +39,66 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     });
 
     makeObservable(this);
-
-    autorun(() => {
-      const { selectedTab, isOpen } = dockStore;
-
-      if (selectedTab?.kind === TabKind.UPGRADE_CHART && isOpen) {
-        this.loadData(selectedTab.id);
-      }
-    }, { delay: 250 });
-
-    autorun(() => {
-      const objects = [...this.data.values()];
-
-      objects.forEach(({ releaseName }) => this.createReleaseWatcher(releaseName));
-    });
   }
 
-  private createReleaseWatcher(releaseName: string) {
-    if (this.watchers.get(releaseName)) {
-      return;
-    }
-    const dispose = reaction(() => {
-      const release = releaseStore.getByName(releaseName);
+  get whenReady() {
+    return Promise.all([
+      super.whenReady,
+      when(() => releaseStore.isLoaded),
+    ]);
+  }
 
-      return release?.getRevision(); // watch changes only by revision
-    },
-    release => {
-      const releaseTab = this.getTabByRelease(releaseName);
+  protected init() {
+    super.init();
 
-      if (!releaseStore.isLoaded || !releaseTab) {
-        return;
-      }
-
-      // auto-reload values if was loaded before
-      if (release) {
-        if (dockStore.selectedTab === releaseTab && this.values.getData(releaseTab.id)) {
-          this.loadValues(releaseTab.id);
+    this.dispose.push(
+      dockStore.onTabChange(({ selectedTabId }) => {
+        if (!this.isLoaded(selectedTabId)) {
+          this.loadData(selectedTabId); // preload just once
         }
-      }
-      // clean up watcher, close tab if release not exists / was removed
-      else {
-        dispose();
-        this.watchers.delete(releaseName);
-        dockStore.closeTab(releaseTab.id);
-      }
-    });
-
-    this.watchers.set(releaseName, dispose);
+      }, {
+        kind: TabKind.UPGRADE_CHART,
+        isVisible: true,
+        fireImmediately: true,
+      }),
+    );
   }
 
   isLoading(tabId = dockStore.selectedTabId) {
-    const values = this.values.getData(tabId);
+    const values = this.values.get(tabId);
 
     return !releaseStore.isLoaded || values === undefined;
   }
 
+  isLoaded(tabId: TabId) {
+    return this.values.has(tabId);
+  }
+
   @action
-  async loadData(tabId: TabId) {
-    const values = this.values.getData(tabId);
+  private async loadData(tabId: TabId) {
+    const values = this.values.get(tabId);
 
     await Promise.all([
       !releaseStore.isLoaded && releaseStore.loadFromContextNamespaces(),
-      !values && this.loadValues(tabId)
+      !values && this.reloadValues(tabId)
     ]);
   }
 
   @action
-  async loadValues(tabId: TabId) {
-    this.values.clearData(tabId); // reset
+  private async reloadValues(tabId: TabId) {
+    this.values.delete(tabId);
     const { releaseName, releaseNamespace } = this.getData(tabId);
     const values = await getReleaseValues(releaseName, releaseNamespace, true);
 
-    this.values.setData(tabId, values);
+    this.values.set(tabId, values);
   }
 
   getTabByRelease(releaseName: string): DockTab {
-    return dockStore.getTabById(this.releaseNameReverseLookup.get(releaseName));
+    const entry = Object
+      .entries(this.data)
+      .find(([, data]) => data.releaseName === releaseName);
+
+    return dockStore.getTabById(entry?.[0]);
   }
 }
 

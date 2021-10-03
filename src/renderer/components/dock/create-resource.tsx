@@ -20,13 +20,10 @@
  */
 
 import "./create-resource.scss";
-
 import React from "react";
-import path from "path";
-import fs from "fs-extra";
-import { GroupSelectOption, Select, SelectOption } from "../select";
+import { Select, SelectOption } from "../select";
 import jsYaml from "js-yaml";
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
@@ -46,27 +43,16 @@ interface Props {
 export class CreateResource extends React.Component<Props> {
   @observable currentTemplates: Map<string, SelectOption> = new Map();
   @observable error = "";
-  @observable templates: GroupSelectOption<SelectOption>[] = [];
+  @observable templates = observable.map<string/*filename*/, string>();
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
-    createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
-    createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
-  }
-
-  updateGroupSelectOptions(templates: Record<string, string[]>) {
-    this.templates = Object.entries(templates)
-      .map(([name, grouping]) => this.convertToGroup(name, grouping));
-  }
-
-  convertToGroup(group: string, items: string[]): GroupSelectOption {
-    const options = items.map(v => ({ label: path.parse(v).name, value: v }));
-
-    return { label: group, options };
+  // TODO
+  @computed get selectTemplateOptions(): SelectOption<string>[] {
+    return [];
   }
 
   get tabId() {
@@ -77,7 +63,7 @@ export class CreateResource extends React.Component<Props> {
     return createResourceStore.getData(this.tabId);
   }
 
-  get currentTemplate() {
+  get selectedTemplate() {
     return this.currentTemplates.get(this.tabId) ?? null;
   }
 
@@ -89,12 +75,14 @@ export class CreateResource extends React.Component<Props> {
     this.error = error;
   };
 
+  // FIXME
   onSelectTemplate = (item: SelectOption) => {
-    this.currentTemplates.set(this.tabId, item);
-
-    fs.readFile(item.value, "utf8").then(value => {
-      createResourceStore.setData(this.tabId, value);
-    });
+    console.log(`SELECTED TEMPLATE: ${this.tabId}`, item);
+    // this.currentTemplates.set(this.tabId, item);
+    //
+    // fs.readFile(item.value, "utf8").then(templateFileContent => {
+    //   createResourceStore.setData(this.tabId, templateFileContent);
+    // });
   };
 
   create = async () => {
@@ -137,13 +125,13 @@ export class CreateResource extends React.Component<Props> {
       <div className="flex gaps align-center">
         <Select
           autoConvertOptions={false}
-          className="TemplateSelect"
+          className="SelectResourceTemplate"
           placeholder="Select Template ..."
-          options={this.templates}
+          options={this.selectTemplateOptions}
           menuPlacement="top"
           themeName="outlined"
           onChange={v => this.onSelectTemplate(v)}
-          value={this.currentTemplate}
+          value={this.selectedTemplate}
         />
       </div>
     );

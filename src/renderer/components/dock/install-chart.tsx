@@ -68,11 +68,11 @@ export class InstallChart extends Component<Props> {
   }
 
   get versions() {
-    return installChartStore.versions.getData(this.tabId);
+    return installChartStore.versions.get(this.tabId);
   }
 
   get releaseDetails() {
-    return installChartStore.details.getData(this.tabId);
+    return installChartStore.details.get(this.tabId);
   }
 
   viewRelease = () => {
@@ -120,7 +120,7 @@ export class InstallChart extends Component<Props> {
       repo, namespace, version, values,
     });
 
-    installChartStore.details.setData(this.tabId, details);
+    installChartStore.details.set(this.tabId, details);
 
     return (
       <p>Chart Release <b>{details.release.name}</b> successfully created.</p>
