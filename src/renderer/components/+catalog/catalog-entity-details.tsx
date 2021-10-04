@@ -69,15 +69,7 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                 background={item.entity.spec.icon?.background}
                 disabled={!item?.enabled}
                 onClick={() => {
-                  if (typeof item.entity.onClickDetailIcon === "function") {
-                    item.onClickDetailIcon(catalogEntityRunContext);
-                  }	else {
-                    item.onRun(catalogEntityRunContext);
-                  }
-
-                  if (typeof item.entity.onClickDetailIcon === "function" && item.entity.spec?.triggerOnRunAfterOnClickDetailIcon) {
-                    item.onRun(catalogEntityRunContext);
-                  }
+                  item.onRun(catalogEntityRunContext);
                 }}
                 size={128}
                 data-testid="detail-panel-hot-bar-icon"

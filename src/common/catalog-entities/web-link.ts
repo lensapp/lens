@@ -47,12 +47,6 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     return;
   }
 
-  onClickDetailIcon(context: CatalogEntityActionContext) {
-    catalogCategoryRegistry
-      .getCategoryForEntity<WebLinkCategory>(this)
-      ?.emit("onClickDetailIcon", this, context);
-  }
-
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (this.metadata.source === "local") {
       context.menuItems.push({

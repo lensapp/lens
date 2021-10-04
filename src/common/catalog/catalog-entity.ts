@@ -59,7 +59,6 @@ export interface CatalogCategoryEvents {
   load: () => void;
   catalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
   contextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
-  onClickDetailIcon: (entity: CatalogEntity, context: CatalogEntityActionContext) => void;
 }
 
 export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
@@ -231,21 +230,7 @@ export abstract class CatalogEntity<
     return this.metadata.name;
   }
 
-  /**
-   * Trigger when user click on the icon in details panel
-   * 
-   * @remarks
-   * Priority < this.onClickDetailIcon, if this.onClickDetailIcon presents, onRun won't be called.
-   */
   public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
   public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
-
-  /**
-   * Trigger when user click on the icon in details panel
-   * 
-   * @remarks
-   * Priority > this.onRun, if presents, onRun won't be called.
-   */
-	public abstract onClickDetailIcon?(context: CatalogEntityActionContext): void;
   public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;
 }
