@@ -34,6 +34,10 @@ describe("<CatalogEntityDetails />", () => {
   beforeEach(() => {
     CatalogEntityDetailRegistry.createInstance();
   });
+
+  afterEach(() => {
+    CatalogEntityDetailRegistry.resetInstance();
+  });
  
   it("trigger onRun when click on detail panel icon", () => {
     const onRun = jest.fn();
