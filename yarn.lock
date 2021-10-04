@@ -4719,13 +4719,13 @@ deep-is@^0.1.3, deep-is@~0.1.3:
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
 
-deepdash@^5.3.5:
-  version "5.3.5"
-  resolved "https://registry.yarnpkg.com/deepdash/-/deepdash-5.3.5.tgz#611bec9c1f2829832d21971dcbefe712e408647d"
-  integrity sha512-1ZdPPCI1pCEqeAWGSw+Nbpb/2iIV4w3sGPc22H/PDtcApb8+psTzPIoOVD040iBaT2wqZab29Kjrz6G+cd5mqQ==
+deepdash@^5.3.9:
+  version "5.3.9"
+  resolved "https://registry.yarnpkg.com/deepdash/-/deepdash-5.3.9.tgz#2aa92570d7b1787ed281e2fafe0be24df00ddfe4"
+  integrity sha512-GRzJ0q9PDj2T+J2fX+b+TlUa2NlZ11l6vJ8LHNKVGeZ8CfxCuJaCychTq07iDRTvlfO8435jlvVS1QXBrW9kMg==
   dependencies:
-    lodash "^4.17.20"
-    lodash-es "^4.17.20"
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
 
 deepmerge@^4.2.2:
   version "4.2.2"
@@ -9139,7 +9139,7 @@ lockfile@^1.0.4:
   dependencies:
     signal-exit "^3.0.2"
 
-lodash-es@^4.17.20:
+lodash-es@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
