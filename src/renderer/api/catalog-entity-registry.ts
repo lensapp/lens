@@ -27,13 +27,23 @@ import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
 import { Disposer, iter } from "../utils";
 import { once } from "lodash";
+import type { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity-item"
 
 export type EntityFilter = (entity: CatalogEntity) => any;
+export type CatelogEntityOnRunHook = (entity: CatalogEntity | CatalogEntityItem<CatalogEntity>) => boolean | Promise<boolean>;
+
+type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;
   protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
   protected filters = observable.set<EntityFilter>([], {
+    deep: false,
+  });
+  protected entityOnRunHooks = observable.set<{
+    catalogEntityUid: CatalogEntityUid;
+    onRunHook: CatelogEntityOnRunHook
+  }>([], {
     deep: false,
   });
 
@@ -168,6 +178,41 @@ export class CatalogEntityRegistry {
     this.filters.add(fn);
 
     return once(() => void this.filters.delete(fn));
+  }
+
+  /**
+   * Add a onRun hook to a catalog entity.
+   * @param uid The uid of the catalog entity
+   * @param onRunHook The function that should return a boolean if the onRun of catalog entity should be triggered.
+   * @returns A function to remove that hook
+   */
+  addOnRunHook(catalogEntityUid: CatalogEntityUid, onRunHook: CatelogEntityOnRunHook): Disposer {
+    this.entityOnRunHooks.add({
+      catalogEntityUid,
+      onRunHook,
+    });
+  
+    return once(() => void this.entityOnRunHooks.delete({
+      catalogEntityUid,
+      onRunHook,
+    }));
+  }
+
+  /**
+   * Returns one catalog entity onRun hook by catalog entity uid
+   */
+  getOnRunHook(_catalogEntityUid: CatalogEntityUid): CatelogEntityOnRunHook | undefined {
+    return Array.from(this.entityOnRunHooks).find(({ catalogEntityUid }) => catalogEntityUid === _catalogEntityUid)?.onRunHook;
+  }
+
+  /**
+   * Returns all catalog entities' onRun hooks
+   */
+  getAllOnRunHooks(): Array<{
+    catalogEntityUid: CatalogEntityUid;
+    onRunHook: CatelogEntityOnRunHook;
+  }> {
+    return Array.from(this.entityOnRunHooks);
   }
 }
 

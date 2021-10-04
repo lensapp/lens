@@ -26,6 +26,7 @@ import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatelogEntityOnRunHook} from "../../api/catalog-entity-registry";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
@@ -33,6 +34,7 @@ import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
+import { toJS } from "mobx";
 
 interface Props {
   className?: IClassName;
@@ -52,6 +54,10 @@ export class HotbarMenu extends React.Component<Props> {
     }
 
     return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
+  }
+
+  getEntityOnRunHook(uid: string): CatelogEntityOnRunHook | undefined {
+    return catalogEntityRegistry.getOnRunHook(uid);
   }
 
   onDragEnd(result: DropResult) {
@@ -124,7 +130,23 @@ export class HotbarMenu extends React.Component<Props> {
                             key={index}
                             index={index}
                             entity={entity}
-                            onClick={() => entity.onRun(catalogEntityRunContext)}
+                            onClick={() => {
+                              const onRunHook = this.getEntityOnRunHook(entity.metadata.uid);
+
+                              if (!onRunHook) {
+                                entity.onRun(catalogEntityRunContext);
+
+                                return;
+                              }
+
+                              if (typeof onRunHook === "function") {
+                                // if onRunHook() returns a Promise, we wait for it to resolve
+                                // if not, just take whatever it returns
+                                Promise.resolve(onRunHook(toJS(entity))).then((shouldRun) => {
+                                  if (shouldRun) entity.onRun(catalogEntityRunContext);
+                                });
+                              }
+                            }}
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
                             add={this.addItem}

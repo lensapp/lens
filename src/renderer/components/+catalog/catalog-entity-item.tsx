@@ -22,12 +22,14 @@ import styles from "./catalog.module.css";
 import React from "react";
 import { action, computed } from "mobx";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
+import type { CatelogEntityOnRunHook } from "../../api/catalog-entity-registry";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
 import { searchUrlParam } from "../input";
 import { makeCss } from "../../../common/utils/makeCss";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
+import { toJS } from "mobx";
 
 const css = makeCss(styles);
 
@@ -102,8 +104,20 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     ];
   }
 
-  onRun(ctx: CatalogEntityActionContext) {
-    this.entity.onRun(ctx);
+  onRun(onRunHook: CatelogEntityOnRunHook | undefined, ctx: CatalogEntityActionContext) {
+    if (!onRunHook) {
+      this.entity.onRun(ctx);
+
+      return;
+    }
+
+    if (typeof onRunHook === "function") {
+      // if onRunHook() returns a Promise, we wait for it to resolve
+      // if not, just take whatever it returns
+      Promise.resolve(onRunHook(toJS(this.entity))).then((shouldRun) => {
+        if (shouldRun) this.entity.onRun(ctx);
+      });      
+    }
   }
 
   @action

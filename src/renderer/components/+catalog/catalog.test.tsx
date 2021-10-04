@@ -1,0 +1,160 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Catalog } from "./catalog";
+import { createMemoryHistory } from "history";
+import { mockWindow } from "../../../../__mocks__/windowMock";
+import { kubernetesClusterCategory } from "../../../common/catalog-entities/kubernetes-cluster";
+import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
+import { catalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
+import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
+import { CatalogEntityItem } from "./catalog-entity-item";
+import { CatalogEntityStore } from "./catalog-entity.store";
+
+mockWindow();
+
+const isCatalogEntityItem = (entity: any): entity is CatalogEntityItem<CatalogEntity> => typeof entity.enable === "boolean";
+
+// avoid TypeError: Cannot read property 'getPath' of undefined
+jest.mock("@electron/remote", () => {
+  return {
+    app: {
+      getPath: () => {
+        // avoid TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+        return "";
+      },
+    },
+  };
+});
+
+describe("<Catalog />", () => {
+  const history = createMemoryHistory();
+  const mockLocation = {
+    pathname: "",
+    search: "",
+    state: "",
+    hash: "",
+  };
+  const mockMatch = {
+    params: {
+      // will be used to match activeCategory
+      // need to be the same as property values in kubernetesClusterCategory
+      group: "entity.k8slens.dev",
+      kind: "KubernetesCluster",
+    },
+    isExact: true,
+    path: "",
+    url: "",
+  };
+
+  const catalogEntityUid = "a_catalogEntity_uid";
+  const catalogEntity = {
+    enabled: true,
+    apiVersion: "api",
+    kind: "kind",
+    metadata: {
+      uid: catalogEntityUid,
+      name: "a catalog entity",
+      labels: {
+        test: "label",
+      },
+    },
+    status: {
+      phase: "",
+    },
+    spec: {},
+  };
+  const catalogEntityItemMethods = {
+    getId: () => "",
+    getName: () => "",
+    onContextMenuOpen: () => {},
+    onSettingsOpen: () => {},
+    onRun: () => {},
+  };
+
+  beforeEach(() => {
+    CatalogEntityDetailRegistry.createInstance();
+    // mock the return of getting CatalogCategoryRegistry.filteredItems
+    jest
+      .spyOn(catalogCategoryRegistry, "filteredItems", "get")
+      .mockImplementation(() => {
+        return [kubernetesClusterCategory];
+      });
+
+    // we don't care what this.renderList renders in this test case.
+    jest.spyOn(Catalog.prototype, "renderList").mockImplementation(() => {
+      return <span>empty renderList</span>;
+    });
+  });
+
+  afterEach(() => {
+    CatalogEntityDetailRegistry.resetInstance();
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+  });
+
+  it("can use catalogEntityRegistry.addOnRunHook to add hooks for catalog entities", (done) => {
+    const catalogEntityItem = new CatalogEntityItem({
+      ...catalogEntity,
+      ...catalogEntityItemMethods,
+    });
+
+    // mock as if there is a selected item > the detail panel opens
+    jest
+      .spyOn(CatalogEntityStore.prototype, "selectedItem", "get")
+      .mockImplementation(() => {
+        return catalogEntityItem;
+      });
+
+    let hookGetCalled = false;
+
+    catalogEntityRegistry.addOnRunHook(catalogEntityUid, (entity) => {
+      hookGetCalled = true;
+      expect(hookGetCalled).toBe(true);
+
+      expect(entity.apiVersion).toBe(catalogEntity.apiVersion);
+      expect(entity.kind).toBe(catalogEntity.kind);
+      
+      if (isCatalogEntityItem(entity)) {
+        expect(entity.enabled).toBe(catalogEntity.enabled);
+      }
+
+      if (!isCatalogEntityItem(entity)) {
+        expect(entity.metadata).toBe(catalogEntity.metadata);
+        expect(entity.status).toBe(catalogEntity.status);
+        expect(entity.spec).toBe(catalogEntity.spec);
+      }
+      
+      done();
+
+      return true;
+    });
+
+    render(
+      <Catalog history={history} location={mockLocation} match={mockMatch} />
+    );
+
+    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+  });
+});

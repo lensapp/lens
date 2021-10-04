@@ -22,7 +22,7 @@
 
 import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
 import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
-
+import type { CatelogEntityOnRunHook } from "../../renderer/api/catalog-entity-registry";
 export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
 
 export class CatalogEntityRegistry {
@@ -47,6 +47,33 @@ export class CatalogEntityRegistry {
 
   getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
     return registry.getItemsForCategory(category);
+  }
+
+  /**
+   * Add a onRun hook to a catalog entity.
+   * @param catalogEntityUid The uid of the catalog entity
+   * @param onRunHook The function that should return a boolean if the onRun of catalog entity should be triggered.
+   * @returns A function to remove that hook
+   */
+  addOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"], onRunHook: CatelogEntityOnRunHook) {
+    return registry.addOnRunHook(catalogEntityUid, onRunHook);
+  }
+
+  /**
+   * Returns one catalog entity onRun hook by catalog entity uid
+   */
+  getOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatelogEntityOnRunHook | undefined {
+    return registry.getOnRunHook(catalogEntityUid);
+  }
+
+  /**
+   * Returns all catalog entities' onRun hooks
+   */
+  getAllOnRunHooks(): Array<{
+    catalogEntityUid: CatalogEntity["metadata"]["uid"];
+    onRunHook: CatelogEntityOnRunHook;
+  }> {
+    return registry.getAllOnRunHooks();
   }
 }
 
