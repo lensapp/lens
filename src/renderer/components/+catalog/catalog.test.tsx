@@ -26,15 +26,13 @@ import { Catalog } from "./catalog";
 import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import { kubernetesClusterCategory } from "../../../common/catalog-entities/kubernetes-cluster";
-import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
+import { catalogCategoryRegistry } from "../../../common/catalog";
 import { catalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { CatalogEntityItem } from "./catalog-entity-item";
 import { CatalogEntityStore } from "./catalog-entity.store";
 
 mockWindow();
-
-const isCatalogEntityItem = (entity: any): entity is CatalogEntityItem<CatalogEntity> => typeof entity.enable === "boolean";
 
 // avoid TypeError: Cannot read property 'getPath' of undefined
 jest.mock("@electron/remote", () => {
@@ -115,9 +113,11 @@ describe("<Catalog />", () => {
   });
 
   it("can use catalogEntityRegistry.addOnRunHook to add hooks for catalog entities", (done) => {
+    const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
+      onRun,
     });
 
     // mock as if there is a selected item > the detail panel opens
@@ -129,27 +129,45 @@ describe("<Catalog />", () => {
 
     let hookGetCalled = false;
 
-    catalogEntityRegistry.addOnRunHook(catalogEntityUid, (entity) => {
-      hookGetCalled = true;
-      expect(hookGetCalled).toBe(true);
+    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+      catalogEntityUid,
+      (entity) => {
+        hookGetCalled = true;
+        expect(hookGetCalled).toBe(true);
 
-      expect(entity.apiVersion).toBe(catalogEntity.apiVersion);
-      expect(entity.kind).toBe(catalogEntity.kind);
-      
-      if (isCatalogEntityItem(entity)) {
-        expect(entity.enabled).toBe(catalogEntity.enabled);
+        onRunDisposer?.();
+        expect(entity).toMatchInlineSnapshot(`
+          Object {
+            "apiVersion": "api",
+            "enabled": true,
+            "getId": [Function],
+            "getName": [Function],
+            "kind": "kind",
+            "metadata": Object {
+              "labels": Object {
+                "test": "label",
+              },
+              "name": "a catalog entity",
+              "uid": "a_catalogEntity_uid",
+            },
+            "onContextMenuOpen": [Function],
+            "onRun": [MockFunction],
+            "onSettingsOpen": [Function],
+            "spec": Object {},
+            "status": Object {
+              "phase": "",
+            },
+          }
+        `);
+
+        setTimeout(() => {
+          expect(onRun).toHaveBeenCalled();
+          done();
+        }, 800);
+
+        return true;
       }
-
-      if (!isCatalogEntityItem(entity)) {
-        expect(entity.metadata).toBe(catalogEntity.metadata);
-        expect(entity.status).toBe(catalogEntity.status);
-        expect(entity.spec).toBe(catalogEntity.spec);
-      }
-      
-      done();
-
-      return true;
-    });
+    );
 
     render(
       <Catalog history={history} location={mockLocation} match={mockMatch} />
