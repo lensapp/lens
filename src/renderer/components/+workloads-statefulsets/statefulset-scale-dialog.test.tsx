@@ -117,6 +117,7 @@ const dummyStatefulSet: StatefulSet = {
   toPlainObject: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
+  patch: jest.fn(),
 };
 
 describe("<StatefulSetScaleDialog />", () => {
