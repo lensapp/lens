@@ -27,7 +27,7 @@ import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
 import { Disposer, iter } from "../utils";
 import { once } from "lodash";
-import type { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity-item"
+import type { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity-item";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatelogEntityOnRunHook = (entity: CatalogEntity | CatalogEntityItem<CatalogEntity>) => boolean | Promise<boolean>;
