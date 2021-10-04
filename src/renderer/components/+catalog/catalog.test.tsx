@@ -19,16 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { Catalog } from "./catalog";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
-import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import {
   KubernetesCluster,
-  kubernetesClusterCategory,
 } from "../../../common/catalog-entities/kubernetes-cluster";
 import { CatalogEntityItem } from "./catalog-entity-item";
 import { CatalogEntityStore } from "./catalog-entity.store";
