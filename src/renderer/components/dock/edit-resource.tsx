@@ -97,13 +97,14 @@ export class EditResource extends React.Component<Props> {
     if (this.error) {
       return null;
     }
+
     const store = editResourceStore.getStore(this.tabId);
     const currentVersion = yaml.safeLoad(this.draft);
     const firstVersion = yaml.safeLoad(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
     const patches = createPatch(firstVersion, currentVersion);
-
-    console.log({ currentVersion, firstVersion, patches });
     const updatedResource = await store.patch(this.resource, patches);
+
+    editResourceStore.clearInitialDraft(this.tabId);
 
     return (
       <p>

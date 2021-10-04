@@ -107,6 +107,10 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     return dockStore.getTabById(tabId);
   }
 
+  clearInitialDraft(tabId: TabId): void {
+    delete this.getData(tabId)?.firstDraft;
+  }
+
   reset() {
     super.reset();
     Array.from(this.watchers).forEach(([tabId, dispose]) => {
