@@ -19,19 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, makeObservable, observable, when } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
-import { DockTabsStore } from "./dock-tabs.store";
+import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
+import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
+import { helmChartStore } from "../+apps-helm-charts/helm-chart.store";
 
 export interface IChartUpgradeData {
   releaseName: string;
   releaseNamespace: string;
 }
 
-export class UpgradeChartStore extends DockTabsStore<IChartUpgradeData> {
+export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   public values = observable.map<TabId, string>();
+  public versions = observable.array<IChartVersion>();
 
   constructor() {
     super({
@@ -41,64 +44,65 @@ export class UpgradeChartStore extends DockTabsStore<IChartUpgradeData> {
     makeObservable(this);
   }
 
-  get whenReady() {
-    return Promise.all([
-      super.whenReady,
-      when(() => releaseStore.isLoaded),
-    ]);
-  }
-
   protected init() {
     super.init();
-
-    this.dispose.push(
-      dockStore.onTabChange(({ selectedTabId }) => {
-        if (!this.isLoaded(selectedTabId)) {
-          this.loadData(selectedTabId); // preload just once
-        }
-      }, {
-        kind: TabKind.UPGRADE_CHART,
-        isVisible: true,
-        fireImmediately: true,
-      }),
-    );
+    releaseStore.loadFromContextNamespaces();
   }
 
-  isLoading(tabId = dockStore.selectedTabId) {
-    const values = this.values.get(tabId);
-
-    return !releaseStore.isLoaded || values === undefined;
-  }
-
-  isLoaded(tabId: TabId) {
+  hasValues(tabId: TabId) {
     return this.values.has(tabId);
   }
 
-  @action
-  private async loadData(tabId: TabId) {
-    const values = this.values.get(tabId);
-
+  async loadData(tabId: TabId) {
     await Promise.all([
-      !releaseStore.isLoaded && releaseStore.loadFromContextNamespaces(),
-      !values && this.reloadValues(tabId)
+      this.loadValues(tabId),
+      this.loadVersions(tabId),
     ]);
   }
 
-  @action
-  private async reloadValues(tabId: TabId) {
-    this.values.delete(tabId);
-    const { releaseName, releaseNamespace } = this.getData(tabId);
-    const values = await getReleaseValues(releaseName, releaseNamespace, true);
+  getRelease(tabId: TabId) {
+    const releaseName = this.getData(tabId)?.releaseName;
 
-    this.values.set(tabId, values);
+    if (!releaseName) return null;
+
+    return releaseStore.getByName(releaseName);
   }
 
-  getTabByRelease(releaseName: string): DockTab {
-    const entry = Object
-      .entries(this.data)
-      .find(([, data]) => data.releaseName === releaseName);
+  @action
+  async loadVersions(tabId: TabId) {
+    try {
+      const { releaseName } = this.getData(tabId);
 
-    return dockStore.getTabById(entry?.[0]);
+      this.versions.clear();
+      const versions = await helmChartStore.getVersions(releaseName);
+
+      this.versions.replace(versions);
+    } catch (error) {
+      console.error(`[UPGRADE-CHART]: loading versions has failed: ${error}`);
+    }
+  }
+
+  @action
+  async loadValues(tabId: TabId, { forceReload = false } = {}) {
+    if (this.hasValues(tabId) && !forceReload) {
+      return;
+    }
+
+    try {
+      this.values.delete(tabId);
+      const { releaseName, releaseNamespace } = this.getData(tabId);
+      const values = await getReleaseValues(releaseName, releaseNamespace, true);
+
+      this.values.set(tabId, values);
+    } catch (error) {
+      console.error(`[UPGRADE-CHART]: loading values has failed: ${error}`);
+    }
+  }
+
+  getTabByRelease(releaseName: string): DockTab | null {
+    const entry = Object.entries(this.data).find(([, data]) => data.releaseName === releaseName);
+
+    return entry ? dockStore.getTabById(entry[0]) : null;
   }
 }
 

@@ -25,7 +25,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
 import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
-import { DockTabsStore } from "./dock-tabs.store";
+import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
 export interface LogTabData {
@@ -45,7 +45,7 @@ interface WorkloadLogsTabData {
   workload: WorkloadKubeObject
 }
 
-export class LogTabStore extends DockTabsStore<LogTabData> {
+export class LogTabStore extends DockTabStore<LogTabData> {
   constructor() {
     super({
       storageKey: "pod_logs"

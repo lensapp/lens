@@ -22,8 +22,8 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { action, computed, makeObservable, observable } from "mobx";
-import { observer } from "mobx-react";
+import { action, autorun, makeObservable, observable } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import type { DockTab } from "./dock.store";
 import { cssNames } from "../../utils";
@@ -46,32 +46,32 @@ export class EditResource extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+
+    disposeOnUnmount(this, [
+      autorun(() => editResourceStore.loadResource(this.tabId)),
+    ]);
   }
 
   get tabId() {
     return this.props.tab.id;
   }
 
-  get isReadyForEditing() {
-    return editResourceStore.isReady(this.tabId);
-  }
-
   get resource(): KubeObject | undefined {
     return editResourceStore.getResource(this.tabId);
   }
 
-  @computed get draft(): string {
-    if (!this.isReadyForEditing) {
-      return ""; // wait until tab's data and kube-object resource are loaded
-    }
-
+  get draft(): string {
     const { draft } = editResourceStore.getData(this.tabId);
 
     if (typeof draft === "string") {
-      return draft;
+      return draft; // get previously edited draft
     }
 
-    return jsYaml.safeDump(this.resource.toPlainObject()); // dump resource first time
+    if (this.resource) {
+      return jsYaml.safeDump(this.resource.toPlainObject()); // dump resource first time
+    }
+
+    return "";
   }
 
   @action
@@ -113,11 +113,11 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, error, draft, isReadyForEditing, resource } = this;
-
-    if (!isReadyForEditing) {
+    if (!editResourceStore.dataReady || !this.resource) {
       return <Spinner center/>;
     }
+
+    const { tabId, error, draft, resource } = this;
 
     return (
       <div className={cssNames("EditResource flex column", this.props.className)}>

@@ -22,7 +22,7 @@
 import "./upgrade-chart.scss";
 
 import React from "react";
-import { makeObservable, observable, reaction } from "mobx";
+import { autorun, computed, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import type { DockTab } from "./dock.store";
@@ -32,9 +32,9 @@ import { Spinner } from "../spinner";
 import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { MonacoEditor } from "../monaco-editor";
-import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
-import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
+import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
+import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 
 interface Props {
   className?: string;
@@ -44,19 +44,14 @@ interface Props {
 @observer
 export class UpgradeChart extends React.Component<Props> {
   @observable error: string;
-  @observable versions = observable.array<IChartVersion>();
-  @observable version: IChartVersion;
+  @observable selectedVersion: IChartVersion;
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.loadVersions();
 
     disposeOnUnmount(this, [
-      reaction(() => this.release, () => this.loadVersions())
+      autorun(() => upgradeChartStore.loadData(this.tabId)),
     ]);
   }
 
@@ -64,26 +59,24 @@ export class UpgradeChart extends React.Component<Props> {
     return this.props.tab.id;
   }
 
-  get release(): HelmRelease {
-    const tabData = upgradeChartStore.getData(this.tabId);
+  get release(): HelmRelease | null {
+    return upgradeChartStore.getRelease(this.tabId);
+  }
 
-    if (!tabData) return null;
+  get isReady(){
+    return [
+      upgradeChartStore.dataReady,
+      this.release,
+      this.selectedVersion,
+    ].every(Boolean);
+  }
 
-    return releaseStore.getByName(tabData.releaseName);
+  @computed get versionOptions(): SelectOption<IChartVersion>[] {
+    return upgradeChartStore.versions.map(version => ({ value: version }));
   }
 
   get value() {
     return upgradeChartStore.values.get(this.tabId);
-  }
-
-  async loadVersions() {
-    if (!this.release) return;
-    this.version = null;
-    this.versions.clear();
-    const versions = await helmChartStore.getVersions(this.release.getChart());
-
-    this.versions.replace(versions);
-    this.version = this.versions[0];
   }
 
   onChange = (value: string) => {
@@ -96,7 +89,7 @@ export class UpgradeChart extends React.Component<Props> {
 
   upgrade = async () => {
     if (this.error) return null;
-    const { version, repo } = this.version;
+    const { version, repo } = this.selectedVersion;
     const releaseName = this.release.getName();
     const releaseNs = this.release.getNs();
 
@@ -121,13 +114,14 @@ export class UpgradeChart extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, release, value, error, versions, version } = this;
-    const { className } = this.props;
-
-    if (!release || upgradeChartStore.isLoading() || !version) {
+    if (!this.isReady) {
       return <Spinner center/>;
     }
+
+    const { className } = this.props;
+    const { tabId, release, value, error, versionOptions, selectedVersion } = this;
     const currentVersion = release.getVersion();
+
     const controlsAndInfo = (
       <div className="upgrade flex gaps align-center">
         <span>Release</span> <Badge label={release.getName()}/>
@@ -138,10 +132,10 @@ export class UpgradeChart extends React.Component<Props> {
           className="chart-version"
           menuPlacement="top"
           themeName="outlined"
-          value={version}
-          options={versions}
+          value={selectedVersion}
+          options={versionOptions}
           formatOptionLabel={this.formatVersionLabel}
-          onChange={({ value }: SelectOption) => this.version = value}
+          onChange={({ value }: SelectOption) => this.selectedVersion = value}
         />
       </div>
     );

@@ -19,8 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autoBind, noop } from "../../utils";
-import { DockTabsStore } from "./dock-tabs.store";
+import { makeObservable } from "mobx";
+import { autoBind } from "../../utils";
+import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { apiManager } from "../../../common/k8s-api/api-manager";
@@ -31,39 +32,23 @@ export interface EditingResource {
   draft?: string; // edited draft in yaml
 }
 
-export class EditResourceStore extends DockTabsStore<EditingResource> {
+export class EditResourceStore extends DockTabStore<EditingResource> {
   constructor() {
     super({
       storageKey: "edit_resource_store",
     });
     autoBind(this);
+    makeObservable(this);
   }
 
-  protected async init() {
-    super.init();
+  async loadResource(tabId: TabId) {
+    const resource = this.getResource(tabId);
+    const store = this.getStore(tabId);
+    const data = this.getData(tabId);
 
-    this.dispose.push(
-      dockStore.onTabChange(({ selectedTabId }) => {
-        const { resource } = this.getData(selectedTabId);
-        const store = apiManager.getStore(resource);
-
-        if (!store?.getByPath(resource)) {
-          store?.loadFromPath(resource).catch(noop); // preload resource by uri
-        }
-      }, {
-        fireImmediately: true,
-      })
-    );
-  }
-
-  protected finalizeDataForSave({ draft, ...data }: EditingResource): EditingResource {
-    return data; // skip saving draft to local-storage
-  }
-
-  isReady(tabId: TabId) {
-    const tabDataReady = super.isReady(tabId);
-
-    return Boolean(tabDataReady && this.getResource(tabId)); // ready to edit resource
+    if (!resource && store && data) {
+      await store.loadFromPath(data.resource); // preloading resource for the first time
+    }
   }
 
   getStore(tabId: TabId): KubeObjectStore<KubeObject> | undefined {
@@ -74,8 +59,8 @@ export class EditResourceStore extends DockTabsStore<EditingResource> {
     return this.getStore(tabId)?.getByPath(this.getResourcePath(tabId));
   }
 
-  getResourcePath(tabId: TabId): string | undefined {
-    return this.getData(tabId)?.resource;
+  getResourcePath(tabId: TabId): string {
+    return this.getData(tabId)?.resource ?? "";
   }
 
   getTabByResource(object: KubeObject): DockTab {

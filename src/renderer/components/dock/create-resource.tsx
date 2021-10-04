@@ -51,7 +51,7 @@ export class CreateResource extends React.Component<Props> {
   }
 
   // TODO
-  @computed get selectTemplateOptions(): SelectOption<string>[] {
+  @computed get templateOptions(): SelectOption<string>[] {
     return [];
   }
 
@@ -127,7 +127,7 @@ export class CreateResource extends React.Component<Props> {
           autoConvertOptions={false}
           className="SelectResourceTemplate"
           placeholder="Select Template ..."
-          options={this.selectTemplateOptions}
+          options={this.templateOptions}
           menuPlacement="top"
           themeName="outlined"
           onChange={v => this.onSelectTemplate(v)}

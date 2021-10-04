@@ -28,18 +28,20 @@ export interface DockTabStoreOptions {
   storageKey?: string; // save data to persistent storage under the key
 }
 
-export class DockTabsStore<T extends {}> {
+export class DockTabStore<T extends {}> {
   @observable private _data: Record<TabId, T> = {};
   @observable.ref private storage?: StorageHelper<Record<TabId, T>>; // available only with `options.storageKey`
+  @observable dataReady = false; // dock-tab's data ready to interact, e.g. start editing resource
+
   protected watchers = observable.map<TabId, IReactionDisposer | Disposer>();
   protected dispose = disposer();
 
   @computed get data() {
     if (this.options.storageKey) {
       return this.storage.get();
-    } else {
-      return this._data;
     }
+
+    return this._data;
   }
 
   set data(value: Record<TabId, T>) {
@@ -60,7 +62,7 @@ export class DockTabsStore<T extends {}> {
     };
 
     if (this.options.storageKey) {
-      this.storage = createStorage(this.options.storageKey, {}); // starts preloading json file via Node.fs right away
+      this.storage = createStorage(this.options.storageKey, this._data);
     }
 
     if (this.options.autoInit) {
@@ -69,13 +71,15 @@ export class DockTabsStore<T extends {}> {
   }
 
   get whenReady(): Promise<any> {
-    return Promise.allSettled([
+    return Promise.all([
       dockStore.whenReady,
       this.storage?.whenReady,
     ]);
   }
 
   protected init() {
+    this.dataReady = true;
+
     this.dispose.push(
       autorun(() => {
         const docTabIds = dockStore.tabs.map(tab => tab.id);
@@ -110,16 +114,12 @@ export class DockTabsStore<T extends {}> {
     return reaction(() => this.data[tabId], callback, opts);
   }
 
-  isReady(tabId: TabId): boolean {
-    return Boolean(this.getData(tabId) !== undefined);
-  }
-
-  getData(tabId: TabId) {
-    return this.data[tabId];
+  getData(tabId: TabId): T {
+    return this.data[tabId] ?? {} as T;
   }
 
   setData(tabId: TabId, data: T) {
-    this.data[tabId] = data;
+    this.data[tabId] = { ...data };
   }
 
   clearData(tabId: TabId) {
@@ -131,6 +131,7 @@ export class DockTabsStore<T extends {}> {
   }
 
   destroy() {
+    this.dataReady = false;
     this.dispose();
     this.disposeWatchers();
     this.reset();

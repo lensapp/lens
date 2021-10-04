@@ -23,10 +23,10 @@ import fs from "fs-extra";
 import path from "path";
 import os from "os";
 import { autoBind } from "../../utils";
-import { DockTabsStore } from "./dock-tabs.store";
+import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
-export class CreateResourceStore extends DockTabsStore<string> {
+export class CreateResourceStore extends DockTabStore<string> {
   constructor() {
     super({
       storageKey: "create_resource"
@@ -43,8 +43,8 @@ export class CreateResourceStore extends DockTabsStore<string> {
     return path.resolve(os.homedir(), "~/.k8slens/templates");
   }
 
-  async getBundledTemplate(fileName: string, ext = "yaml") {
-    return import(`../../../../templates/create-resource/${fileName}.${ext}`);
+  async getTemplate(fileName: string, ext = "yaml") {
+    return import(`../../../../templates/create-resource/${fileName}.${ext}?raw`);
   }
 }
 

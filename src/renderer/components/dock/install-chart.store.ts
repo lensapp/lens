@@ -21,10 +21,9 @@
 
 import { action, makeObservable, observable } from "mobx";
 import { dockStore, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
-import { DockTabsStore } from "./dock-tabs.store";
+import { DockTabStore } from "./dock-tab.store";
 import { getChartDetails, getChartValues, HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import type { IReleaseUpdateDetails } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { Notifications } from "../notifications";
 
 export interface IChartInstallData {
   name: string;
@@ -37,7 +36,7 @@ export interface IChartInstallData {
   lastVersion?: boolean;
 }
 
-export class InstallChartStore extends DockTabsStore<IChartInstallData> {
+export class InstallChartStore extends DockTabStore<IChartInstallData> {
   details = observable.map<TabId, IReleaseUpdateDetails>();
   versions = observable.map<TabId, string[]>();
 
@@ -48,22 +47,8 @@ export class InstallChartStore extends DockTabsStore<IChartInstallData> {
     makeObservable(this);
   }
 
-  protected init() {
-    super.init();
-
-    this.dispose.push(
-      dockStore.onTabChange(({ selectedTabId }) => {
-        this.loadData(selectedTabId).catch(err => Notifications.error(String(err)));
-      }, {
-        kind: TabKind.INSTALL_CHART,
-        fireImmediately: true,
-        isVisible: true,
-      }),
-    );
-  }
-
   @action
-  async loadData(tabId: string) {
+  async loadData(tabId: TabId) {
     const promises = [];
 
     if (!this.getData(tabId).values) {

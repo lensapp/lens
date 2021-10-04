@@ -21,7 +21,7 @@
 
 import "./monaco-editor.scss";
 import React from "react";
-import { action, computed, makeObservable, observable, reaction, when } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { editor, Uri } from "monaco-editor";
 import { ThemeStore } from "../../theme.store";
@@ -65,7 +65,6 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
   }
 };
 
-// FIXME: load resource templates via webpack's dynamic import for create-resource dock tab
 // FIXME: apply changes of props.options and globalOptions.editor to active editor
 
 @observer
@@ -84,14 +83,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   constructor(props: MonacoEditorProps) {
     super(props);
     makeObservable(this);
-  }
-
-  get whenEditorReady() {
-    return when(() => Boolean(this.containerElem && this.editor));
-  }
-
-  get whenUnmounting() {
-    return when(() => this.unmounting);
   }
 
   /**
@@ -141,7 +132,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       }
       console.info(`[MONACO]: editor did mounted`);
     } catch (error) {
-      console.error(`[MONACO]: mounting failed`, { error, editor: this });
+      console.error(`[MONACO]: mounting failed`, { error, editor, component: this });
     }
   }
 

@@ -96,7 +96,7 @@ export interface DockTabChangeEvent {
 
 export interface DockTabChangeEventOptions extends IReactionOptions {
   kind?: TabKind; // filter: matching by dockStore.selectedTab.kind
-  isVisible?: boolean; // filter: dock and selected tab should be visible
+  dockIsVisible?: boolean; // filter: dock and selected tab should be visible (default: true)
 }
 
 export class DockStore implements DockStorageState {
@@ -190,11 +190,11 @@ export class DockStore implements DockStorageState {
   }
 
   onTabChange(callback?: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {
-    const { kind, isVisible, ...reactionOpts } = options;
+    const { kind, dockIsVisible = true, ...reactionOpts } = options;
 
     return reaction(() => this.selectedTab, ((tab, prevTab) => {
       if (kind && kind !== tab.kind) return;
-      if (isVisible && !dockStore.isOpen) return;
+      if (dockIsVisible && !dockStore.isOpen) return;
 
       callback({
         tab, prevTab,

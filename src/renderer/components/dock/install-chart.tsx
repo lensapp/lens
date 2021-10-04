@@ -22,8 +22,8 @@
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { makeObservable, observable } from "mobx";
-import { observer } from "mobx-react";
+import { autorun, computed, makeObservable, observable } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { dockStore, DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
@@ -53,18 +53,18 @@ export class InstallChart extends Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-  }
 
-  get values() {
-    return this.chartData.values;
-  }
-
-  get chartData() {
-    return installChartStore.getData(this.tabId);
+    disposeOnUnmount(this, [
+      autorun(() => installChartStore.loadData(this.tabId)),
+    ]);
   }
 
   get tabId() {
     return this.props.tab.id;
+  }
+
+  get chartData(): IChartInstallData | undefined {
+    return installChartStore.getData(this.tabId);
   }
 
   get versions() {
@@ -73,6 +73,10 @@ export class InstallChart extends Component<Props> {
 
   get releaseDetails() {
     return installChartStore.details.get(this.tabId);
+  }
+
+  @computed get isReady() {
+    return [installChartStore.dataReady, this.versions].every(Boolean);
   }
 
   viewRelease = () => {
@@ -127,42 +131,45 @@ export class InstallChart extends Component<Props> {
     );
   };
 
-  render() {
-    const { tabId, chartData, values, versions, install } = this;
+  renderReleaseDetails(): React.ReactNode {
+    return (
+      <div className="InstallChartDone flex column gaps align-center justify-center">
+        <p>
+          <Icon material="check" big sticker/>
+        </p>
+        <p>Installation complete!</p>
+        <div className="flex gaps align-center">
+          <Button
+            autoFocus primary
+            label="View Helm Release"
+            onClick={prevDefault(this.viewRelease)}
+          />
+          <Button
+            plain active
+            label="Show Notes"
+            onClick={() => this.showNotes = true}
+          />
+        </div>
+        <LogsDialog
+          title="Helm Chart Install"
+          isOpen={this.showNotes}
+          close={() => this.showNotes = false}
+          logs={this.releaseDetails.log}
+        />
+      </div>
+    );
+  }
 
-    if (chartData?.values === undefined || !versions) {
+  render() {
+    if (!this.isReady) {
       return <Spinner center/>;
     }
 
     if (this.releaseDetails) {
-      return (
-        <div className="InstallChartDone flex column gaps align-center justify-center">
-          <p>
-            <Icon material="check" big sticker/>
-          </p>
-          <p>Installation complete!</p>
-          <div className="flex gaps align-center">
-            <Button
-              autoFocus primary
-              label="View Helm Release"
-              onClick={prevDefault(this.viewRelease)}
-            />
-            <Button
-              plain active
-              label="Show Notes"
-              onClick={() => this.showNotes = true}
-            />
-          </div>
-          <LogsDialog
-            title="Helm Chart Install"
-            isOpen={this.showNotes}
-            close={() => this.showNotes = false}
-            logs={this.releaseDetails.log}
-          />
-        </div>
-      );
+      return this.renderReleaseDetails();
     }
 
+    const { tabId, chartData, install, versions } = this;
     const { repo, name, version, namespace, releaseName } = chartData;
     const panelControls = (
       <div className="install-controls flex gaps align-center">
@@ -208,7 +215,7 @@ export class InstallChart extends Component<Props> {
         />
         <MonacoEditor
           id={tabId}
-          value={values}
+          value={chartData.values}
           onChange={this.onValuesChange}
           onError={error => this.error = error}
         />
