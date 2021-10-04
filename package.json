@@ -313,7 +313,7 @@
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.1",
     "@types/webdriverio": "^4.13.0",
-    "@types/webpack": "^4.41.17",
+    "@types/webpack": "^4.41.31",
     "@types/webpack-dev-server": "^3.11.6",
     "@types/webpack-env": "^1.16.2",
     "@types/webpack-node-externals": "^1.7.1",
