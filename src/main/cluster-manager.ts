@@ -269,8 +269,7 @@ export function catalogEntityFromCluster(cluster: Cluster) {
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,
       kubeconfigContext: cluster.contextName,
-      icon: {},
-      triggerOnRunAfterOnClickDetailIcon: true,
+      icon: {}
     },
     status: {
       phase: cluster.disconnected ? "disconnected" : "connected",

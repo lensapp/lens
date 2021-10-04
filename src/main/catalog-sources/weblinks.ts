@@ -78,8 +78,7 @@ export function syncWeblinks() {
             labels: {}
           },
           spec: {
-            url: weblinkData.url,
-            triggerOnRunAfterOnClickDetailIcon: true,
+            url: weblinkData.url
           },
           status: {
             phase: "available",

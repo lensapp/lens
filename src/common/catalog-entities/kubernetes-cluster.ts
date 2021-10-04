@@ -52,7 +52,6 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
     background?: string;
   };
   accessibleNamespaces?: string[];
-	triggerOnRunAfterOnClickDetailIcon?: boolean
 }
 
 export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
