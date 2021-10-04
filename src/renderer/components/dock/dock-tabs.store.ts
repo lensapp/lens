@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction } from "mobx";
+import { autorun, computed, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage, Disposer, disposer, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
@@ -29,12 +29,12 @@ export interface DockTabStoreOptions {
 }
 
 export class DockTabsStore<T extends {}> {
-  private storage?: StorageHelper<Record<TabId, T>>; // available only with `options.storageKey`
-  private _data = observable.object<Record<TabId, T>>({});
-  protected watchers = observable.map<TabId, IReactionDisposer | Disposer>([], { deep: false });
+  @observable private _data: Record<TabId, T> = {};
+  @observable.ref private storage?: StorageHelper<Record<TabId, T>>; // available only with `options.storageKey`
+  protected watchers = observable.map<TabId, IReactionDisposer | Disposer>();
   protected dispose = disposer();
 
-  get data() {
+  @computed get data() {
     if (this.options.storageKey) {
       return this.storage.get();
     } else {
@@ -50,7 +50,7 @@ export class DockTabsStore<T extends {}> {
     }
   }
 
-  constructor(protected options: DockTabStoreOptions = {}) {
+  protected constructor(protected options: DockTabStoreOptions = {}) {
     autoBind(this);
     makeObservable(this);
 
@@ -118,17 +118,14 @@ export class DockTabsStore<T extends {}> {
     return this.data[tabId];
   }
 
-  @action
   setData(tabId: TabId, data: T) {
     this.data[tabId] = data;
   }
 
-  @action
   clearData(tabId: TabId) {
     delete this.data[tabId];
   }
 
-  @action
   reset() {
     this.data = {};
   }
