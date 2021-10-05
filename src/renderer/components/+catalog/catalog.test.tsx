@@ -229,6 +229,50 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
+  it("addOnRunHook throw an exception => onRun wont be triggered", (done) => {
+    const onRun = jest.fn();
+    const catalogEntityItem = new CatalogEntityItem({
+      ...catalogEntity,
+      ...catalogEntityItemMethods,
+      onRun,
+    });
+
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+
+    // mock as if there is a selected item > the detail panel opens
+    jest
+      .spyOn(catalogEntityStore, "selectedItem", "get")
+      .mockImplementation(() => {
+        return catalogEntityItem;
+      });
+
+    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+      catalogEntityUid,
+      () => {
+        onRunDisposer?.();
+        setTimeout(() => {
+          expect(onRun).not.toHaveBeenCalled();
+          done();
+        }, 500);
+
+        throw new Error("error!");
+      }
+    );
+
+    render(
+      <Catalog
+        history={history}
+        location={mockLocation}
+        match={mockMatch}
+        catalogEntityStore={catalogEntityStore}
+      />
+    );
+
+    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+  });
+
   it("addOnRunHook return a promise and resolve true => onRun()", (done) => {
     let onRunTriggered = false;
     const onRun = () => {
@@ -308,6 +352,50 @@ describe("<Catalog />", () => {
         }, 500);
 
         return false;
+      }
+    );
+
+    render(
+      <Catalog
+        history={history}
+        location={mockLocation}
+        match={mockMatch}
+        catalogEntityStore={catalogEntityStore}
+      />
+    );
+
+    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+  });
+
+  it("addOnRunHook return a promise and reject => onRun wont be triggered", (done) => {
+    const onRun = jest.fn();
+    const catalogEntityItem = new CatalogEntityItem({
+      ...catalogEntity,
+      ...catalogEntityItemMethods,
+      onRun,
+    });
+
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+
+    // mock as if there is a selected item > the detail panel opens
+    jest
+      .spyOn(catalogEntityStore, "selectedItem", "get")
+      .mockImplementation(() => {
+        return catalogEntityItem;
+      });
+
+    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+      catalogEntityUid,
+      async () => {
+        onRunDisposer?.();
+        setTimeout(() => {
+          expect(onRun).not.toHaveBeenCalled();
+          done();
+        }, 500);
+
+        throw new Error("rejection!");
       }
     );
 

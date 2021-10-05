@@ -33,6 +33,8 @@ import { toJS } from "mobx";
 
 const css = makeCss(styles);
 
+const isPromise = (obj: any): obj is Promise<any> => (obj?.then && typeof obj?.then === "function") ? true: false;
+
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
   constructor(public entity: T) {}
 
@@ -112,11 +114,23 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     }
 
     if (typeof onRunHook === "function") {
-      // if onRunHook() returns a Promise, we wait for it to resolve
-      // if not, just take whatever it returns
-      Promise.resolve(onRunHook(toJS(this.entity))).then((shouldRun) => {
-        if (shouldRun) this.entity.onRun(ctx);
-      });      
+      let shouldRun;
+
+      try {
+        shouldRun = onRunHook(toJS(this.entity));
+      } catch (error) {
+        if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity.metadata.uid} throw an exception, stop before onRun`, error);
+      }
+
+      if (isPromise(shouldRun)) {
+        Promise.resolve(shouldRun).then((shouldRun) => {
+          if (shouldRun) this.entity.onRun(ctx);
+        }).catch((error) => {
+          if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity.metadata.uid} rejects, stop before onRun`, error);
+        }); 
+      }  else if (shouldRun) {
+        this.entity.onRun(ctx);
+      }
     }
   }
 
