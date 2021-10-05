@@ -30,7 +30,7 @@ import { once } from "lodash";
 import type { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity-item";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
-export type CatelogEntityOnRunHook = (entity: CatalogEntity | CatalogEntityItem<CatalogEntity>) => boolean | Promise<boolean>;
+export type CatalogEntityOnRunHook = (entity: CatalogEntity | CatalogEntityItem<CatalogEntity>) => boolean | Promise<boolean>;
 
 type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
 
@@ -42,7 +42,7 @@ export class CatalogEntityRegistry {
   });
   protected entityOnRunHooks = observable.set<{
     catalogEntityUid: CatalogEntityUid;
-    onRunHook: CatelogEntityOnRunHook
+    onRunHook: CatalogEntityOnRunHook
   }>([], {
     deep: false,
   });
@@ -186,7 +186,7 @@ export class CatalogEntityRegistry {
    * @param onRunHook The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnRunHook(catalogEntityUid: CatalogEntityUid, onRunHook: CatelogEntityOnRunHook): Disposer {
+  addOnRunHook(catalogEntityUid: CatalogEntityUid, onRunHook: CatalogEntityOnRunHook): Disposer {
     this.entityOnRunHooks.add({
       catalogEntityUid,
       onRunHook,
@@ -201,7 +201,7 @@ export class CatalogEntityRegistry {
   /**
    * Returns one catalog entity onRun hook by catalog entity uid
    */
-  getOnRunHook(_catalogEntityUid: CatalogEntityUid): CatelogEntityOnRunHook | undefined {
+  getOnRunHook(_catalogEntityUid: CatalogEntityUid): CatalogEntityOnRunHook | undefined {
     return Array.from(this.entityOnRunHooks).find(({ catalogEntityUid }) => catalogEntityUid === _catalogEntityUid)?.onRunHook;
   }
 }

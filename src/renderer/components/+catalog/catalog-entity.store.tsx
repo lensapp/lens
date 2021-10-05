@@ -22,7 +22,7 @@
 import { computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import type { CatelogEntityOnRunHook } from "../../api/catalog-entity-registry";
+import type { CatalogEntityOnRunHook } from "../../api/catalog-entity-registry";
 import { ItemStore } from "../../../common/item.store";
 import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
 import { autoBind } from "../../../common/utils";
@@ -50,7 +50,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
     return this.entities.find(e => e.getId() === this.selectedItemId);
   }
 
-  getCatalogEntityOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatelogEntityOnRunHook | undefined {
+  getCatalogEntityOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatalogEntityOnRunHook | undefined {
     return catalogEntityRegistry.getOnRunHook(catalogEntityUid);
   }
 

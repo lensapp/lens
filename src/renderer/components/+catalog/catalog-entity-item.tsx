@@ -22,7 +22,7 @@ import styles from "./catalog.module.css";
 import React from "react";
 import { action, computed } from "mobx";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
-import type { CatelogEntityOnRunHook } from "../../api/catalog-entity-registry";
+import type { CatalogEntityOnRunHook } from "../../api/catalog-entity-registry";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
@@ -104,7 +104,7 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     ];
   }
 
-  onRun(onRunHook: CatelogEntityOnRunHook | undefined, ctx: CatalogEntityActionContext) {
+  onRun(onRunHook: CatalogEntityOnRunHook | undefined, ctx: CatalogEntityActionContext) {
     if (!onRunHook) {
       this.entity.onRun(ctx);
 
