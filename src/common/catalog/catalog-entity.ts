@@ -230,7 +230,7 @@ export abstract class CatalogEntity<
     return this.metadata.name;
   }
 
-  public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
+  public abstract onRun(context: CatalogEntityActionContext): void | Promise<void>;
   public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
   public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;
 }

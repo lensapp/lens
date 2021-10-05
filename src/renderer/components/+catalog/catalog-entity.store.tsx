@@ -39,18 +39,14 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
 
   @computed get entities() {
     if (!this.activeCategory) {
-      return this.registry.filteredItems.map(entity => new CatalogEntityItem(entity));
+      return this.registry.filteredItems.map(entity => new CatalogEntityItem(entity, this.registry));
     }
 
-    return this.registry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity));
+    return this.registry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity, this.registry));
   }
 
   @computed get selectedItem() {
     return this.entities.find(e => e.getId() === this.selectedItemId);
-  }
-
-  onRun(entity: CatalogEntity): void {
-    this.registry.onRun(entity);
   }
 
   watch() {

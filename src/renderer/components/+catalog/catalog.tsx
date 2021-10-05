@@ -133,12 +133,8 @@ export class Catalog extends React.Component<Props> {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
     } else {
-      this.catalogEntityStore.onRun(item.entity);
+      item.onRun();
     }
-  };
-
-  onClickDetailPanelIcon = (item: CatalogEntityItem<CatalogEntity>) => {
-    this.catalogEntityStore.onRun(item.entity);
   };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -286,7 +282,6 @@ export class Catalog extends React.Component<Props> {
             ? <CatalogEntityDetails
               item={this.catalogEntityStore.selectedItem}
               hideDetails={() => this.catalogEntityStore.selectedItemId = null}
-              onClickDetailPanelIcon={this.onClickDetailPanelIcon}
             />
             : (
               <RenderDelay>

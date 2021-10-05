@@ -113,16 +113,15 @@ describe("<Catalog />", () => {
   });
 
   it("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", (done) => {
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
       onRun,
-    });
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    }, catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -178,16 +177,15 @@ describe("<Catalog />", () => {
   });
 
   it("onBeforeRun return false => onRun wont be triggered", (done) => {
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
       onRun,
-    });
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    }, catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -219,16 +217,15 @@ describe("<Catalog />", () => {
   });
 
   it("addOnBeforeRun throw an exception => onRun wont be triggered", (done) => {
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
       onRun,
-    });
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    }, catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -260,21 +257,15 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and resolve true => onRun()", (done) => {
-    let onRunTriggered = false;
-    const onRun = () => {
-      onRunTriggered = true;
-      expect(onRunTriggered).toBeTruthy();
-      done();
-    };
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    const onRun = jest.fn(() => done());
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
       onRun,
-    });
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    }, catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -301,19 +292,15 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and resolve false => onRun() wont be triggered", (done) => {
-    let onRunTriggered = false;
-    const onRun = () => {
-      onRunTriggered = true;
-    };
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
       onRun,
-    });
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    }, catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -323,10 +310,10 @@ describe("<Catalog />", () => {
     catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
-        expect(onRunTriggered).toBeFalsy();
+        expect(onRun).not.toBeCalled();
 
         setTimeout(() => {
-          expect(onRunTriggered).toBeFalsy();
+          expect(onRun).not.toBeCalled();
           done();
         }, 500);
 
@@ -347,16 +334,15 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and reject => onRun wont be triggered", (done) => {
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
       ...catalogEntityItemMethods,
       onRun,
-    });
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+    }, catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest

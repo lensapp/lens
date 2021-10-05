@@ -34,7 +34,6 @@ import { isDevelopment } from "../../../common/vars";
 interface Props<T extends CatalogEntity> {
   item: CatalogEntityItem<T> | null | undefined;
   hideDetails(): void;
-  onClickDetailPanelIcon: (catalogEntitiyItem: CatalogEntityItem<T>) => void;
 }
 
 @observer
@@ -68,9 +67,7 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                 material={item.entity.spec.icon?.material}
                 background={item.entity.spec.icon?.background}
                 disabled={!item?.enabled}
-                onClick={() => {
-                  this.props.onClickDetailPanelIcon(item);
-                }}
+                onClick={() => item.onRun()}
                 size={128}
                 data-testid="detail-panel-hot-bar-icon"
               />

@@ -21,18 +21,19 @@
 import styles from "./catalog.module.css";
 import React from "react";
 import { action, computed } from "mobx";
-import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../api/catalog-entity";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
 import { searchUrlParam } from "../input";
 import { makeCss } from "../../../common/utils/makeCss";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 const css = makeCss(styles);
 
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
-  constructor(public entity: T) {}
+  constructor(public entity: T, private registry: CatalogEntityRegistry) {}
 
   get kind() {
     return this.entity.kind;
@@ -102,8 +103,8 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     ];
   }
 
-  onRun(ctx: CatalogEntityActionContext) {
-    this.entity.onRun(ctx);
+  onRun() {
+    this.registry.onRun(this.entity);
   }
 
   @action

@@ -229,6 +229,10 @@ export class CatalogEntityRegistry {
     return true;
   }
 
+  /**
+   * Perform the onBeforeRun check and, if successful, then proceed to call `entity`'s onRun method
+   * @param entity The instance to invoke the hooks and then execute the onRun
+   */
   onRun(entity: CatalogEntity): void {
     this.onBeforeRun(entity)
       .then(doOnRun => {
