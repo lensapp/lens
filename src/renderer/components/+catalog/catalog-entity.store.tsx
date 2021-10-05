@@ -19,106 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./catalog.module.css";
-
-import React from "react";
-import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
-import { ItemObject, ItemStore } from "../../../common/item.store";
+import { computed, makeObservable, observable, reaction } from "mobx";
+import { catalogEntityRegistry, CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntity } from "../../api/catalog-entity";
+import { ItemStore } from "../../../common/item.store";
 import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
-import { autoBind } from "../../../common/utils";
-import { Badge } from "../badge";
-import { navigation } from "../../navigation";
-import { searchUrlParam } from "../input";
-import { makeCss } from "../../../common/utils/makeCss";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
-
-const css = makeCss(styles);
-
-export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
-  constructor(public entity: T) {}
-
-  get kind() {
-    return this.entity.kind;
-  }
-
-  get apiVersion() {
-    return this.entity.apiVersion;
-  }
-
-  get name() {
-    return this.entity.metadata.name;
-  }
-
-  getName() {
-    return this.entity.metadata.name;
-  }
-
-  get id() {
-    return this.entity.metadata.uid;
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  @computed get phase() {
-    return this.entity.status.phase;
-  }
-
-  get enabled() {
-    return this.entity.status.enabled ?? true;
-  }
-
-  get labels() {
-    return KubeObject.stringifyLabels(this.entity.metadata.labels);
-  }
-
-  getLabelBadges(onClick?: React.MouseEventHandler<any>) {
-    return this.labels
-      .map(label => (
-        <Badge
-          className={css.badge}
-          key={label}
-          label={label}
-          title={label}
-          onClick={(event) => {
-            navigation.searchParams.set(searchUrlParam.name, label);
-            onClick?.(event);
-            event.stopPropagation();
-          }}
-          expandable={false}
-        />
-      ));
-  }
-
-  get source() {
-    return this.entity.metadata.source || "unknown";
-  }
-
-  get searchFields() {
-    return [
-      this.name,
-      this.id,
-      this.phase,
-      `source=${this.source}`,
-      ...this.labels,
-    ];
-  }
-
-  onRun(ctx: CatalogEntityActionContext) {
-    this.entity.onRun(ctx);
-  }
-
-  @action
-  async onContextMenuOpen(ctx: any) {
-    return this.entity.onContextMenuOpen(ctx);
-  }
-}
+import { autoBind, disposer } from "../../../common/utils";
+import { CatalogEntityItem } from "./catalog-entity-item";
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntity>> {
-  constructor() {
+  constructor(private registry: CatalogEntityRegistry = catalogEntityRegistry) {
     super();
     makeObservable(this);
     autoBind(this);
@@ -129,10 +39,10 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
 
   @computed get entities() {
     if (!this.activeCategory) {
-      return catalogEntityRegistry.filteredItems.map(entity => new CatalogEntityItem(entity));
+      return this.registry.filteredItems.map(entity => new CatalogEntityItem(entity, this.registry));
     }
 
-    return catalogEntityRegistry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity));
+    return this.registry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity, this.registry));
   }
 
   @computed get selectedItem() {
@@ -140,12 +50,10 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
   }
 
   watch() {
-    const disposers: IReactionDisposer[] = [
+    return disposer(
       reaction(() => this.entities, () => this.loadAll()),
-      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
-    ];
-
-    return () => disposers.forEach((dispose) => dispose());
+      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100}),
+    );
   }
 
   loadAll() {

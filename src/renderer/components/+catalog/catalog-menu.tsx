@@ -41,11 +41,15 @@ function getCategories() {
 }
 
 function getCategoryIcon(category: CatalogCategory) {
-  if (!category.metadata?.icon) return null;
+  const { icon } = category.metadata ?? {};
 
-  return category.metadata.icon.includes("<svg")
-    ? <Icon small svg={category.metadata.icon}/>
-    : <Icon small material={category.metadata.icon}/>;
+  if (typeof icon === "string") {
+    return icon.includes("<svg")
+      ? <Icon small svg={icon}/>
+      : <Icon small material={icon}/>;
+  }
+  
+  return null;
 }
 
 function Item(props: TreeItemProps) {

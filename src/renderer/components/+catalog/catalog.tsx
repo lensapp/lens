@@ -25,10 +25,11 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
+import { CatalogEntityStore } from "./catalog-entity.store";
+import type { CatalogEntityItem } from "./catalog-entity-item";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
-import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
@@ -55,7 +56,10 @@ enum sortBy {
 
 const css = makeCss(styles);
 
-interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
+interface Props extends RouteComponentProps<CatalogViewRouteParam> {
+  catalogEntityStore?: CatalogEntityStore;
+}
+
 @observer
 export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
@@ -65,8 +69,11 @@ export class Catalog extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-    this.catalogEntityStore = new CatalogEntityStore();
+    this.catalogEntityStore = props.catalogEntityStore;
   }
+  static defaultProps = {
+    catalogEntityStore: new CatalogEntityStore(),       
+  };
 
   get routeActiveTab(): string {
     const { group, kind } = this.props.match.params ?? {};
@@ -126,7 +133,7 @@ export class Catalog extends React.Component<Props> {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
     } else {
-      item.onRun(catalogEntityRunContext);
+      item.onRun();
     }
   };
 

@@ -358,6 +358,7 @@
     "postcss": "^8.3.6",
     "postcss-loader": "4.3.0",
     "postinstall-postinstall": "^2.1.0",
+    "prettier": "^2.4.1",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",
     "raw-loader": "^4.0.2",
