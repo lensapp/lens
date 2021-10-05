@@ -237,7 +237,7 @@ export class CatalogEntityRegistry {
     this.onBeforeRun(entity)
       .then(doOnRun => {
         if (doOnRun) {
-          return entity.onRun(catalogEntityRunContext);
+          return entity.onRun?.(catalogEntityRunContext);
         } else {
           logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
         }
