@@ -110,6 +110,8 @@ export function getMetricsForDaemonSets(daemonsets: DaemonSet[], namespace: stri
     cpuUsage: opts,
     memoryUsage: opts,
     fsUsage: opts,
+    fsWrites: opts,
+    fsReads: opts,
     networkReceive: opts,
     networkTransmit: opts,
   }, {

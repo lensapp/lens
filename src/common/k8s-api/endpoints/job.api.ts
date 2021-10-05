@@ -133,6 +133,8 @@ export function getMetricsForJobs(jobs: Job[], namespace: string, selector = "")
     cpuUsage: opts,
     memoryUsage: opts,
     fsUsage: opts,
+    fsWrites: opts,
+    fsReads: opts,
     networkReceive: opts,
     networkTransmit: opts,
   }, {

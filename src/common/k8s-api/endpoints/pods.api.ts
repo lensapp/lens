@@ -46,6 +46,8 @@ export function getMetricsForPods(pods: Pod[], namespace: string, selector = "po
     memoryRequests: opts,
     memoryLimits: opts,
     fsUsage: opts,
+    fsWrites: opts,
+    fsReads: opts,
     networkReceive: opts,
     networkTransmit: opts,
   }, {
@@ -57,7 +59,9 @@ export interface IPodMetrics<T = IMetrics> {
   [metric: string]: T;
   cpuUsage: T;
   memoryUsage: T;
-  fsUsage: T;
+  fsUsage: T,
+  fsWrites: T,
+  fsReads: T,
   networkReceive: T;
   networkTransmit: T;
   cpuRequests?: T;
