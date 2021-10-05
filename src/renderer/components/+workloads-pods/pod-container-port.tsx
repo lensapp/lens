@@ -72,8 +72,8 @@ export class PodContainerPort extends React.Component<Props> {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
-      port: port.containerPort.toString(),
-      forwardPort: this.forwardPort.toString()
+      port: port.containerPort,
+      forwardPort: this.forwardPort,
     };
     const activePort = await getPortForward(portForward) ?? 0;
 
@@ -87,8 +87,8 @@ export class PodContainerPort extends React.Component<Props> {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
-      port: port.containerPort.toString(),
-      forwardPort: this.forwardPort.toString()
+      port: port.containerPort,
+      forwardPort: this.forwardPort,
     };
 
     this.waiting = true;
@@ -101,7 +101,7 @@ export class PodContainerPort extends React.Component<Props> {
       this.forwardPort = await addPortForward(portForward);
 
       if (this.forwardPort) {
-        portForward.forwardPort = this.forwardPort.toString();
+        portForward.forwardPort = this.forwardPort;
         openPortForward(portForward);
         this.isPortForwarded = true;
       }
@@ -118,8 +118,8 @@ export class PodContainerPort extends React.Component<Props> {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
-      port: port.containerPort.toString(),
-      forwardPort: this.forwardPort.toString()
+      port: port.containerPort,
+      forwardPort: this.forwardPort,
     };
 
     this.waiting = true;
@@ -147,8 +147,8 @@ export class PodContainerPort extends React.Component<Props> {
           kind: "pod",
           name: pod.getName(),
           namespace: pod.getNs(),
-          port: port.containerPort.toString(),
-          forwardPort: this.forwardPort.toString()
+          port: port.containerPort,
+          forwardPort: this.forwardPort,
         };
 
         PortForwardDialog.open(portForward, { openInBrowser: true });

@@ -28,8 +28,8 @@ export interface ForwardedPort {
   kind: string;
   namespace: string;
   name: string;
-  port: string;
-  forwardPort: string;
+  port: number;
+  forwardPort: number;
 }
   
 export class PortForwardItem implements ItemObject {
@@ -37,8 +37,8 @@ export class PortForwardItem implements ItemObject {
   kind: string;
   namespace: string;
   name: string;
-  port: string;
-  forwardPort: string;
+  port: number;
+  forwardPort: number;
   
   constructor(pf: ForwardedPort) {
     this.clusterId = pf.clusterId;
@@ -64,7 +64,7 @@ export class PortForwardItem implements ItemObject {
   }
    
   getId() {
-    return this.forwardPort;
+    return String(this.forwardPort);
   }
   
   getKind() {

@@ -102,12 +102,12 @@ export class PortForwardDialog extends Component<Props> {
       if (currentPort) {
         port = await modifyPortForward(portForward, desiredPort);
       } else {
-        portForward.forwardPort = String(desiredPort);
+        portForward.forwardPort = desiredPort;
         port = await addPortForward(portForward);
       }
       
       if (dialogState.openInBrowser) {
-        portForward.forwardPort = String(port);
+        portForward.forwardPort = port;
         openPortForward(portForward);
       }
     } catch (err) {

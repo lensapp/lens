@@ -68,8 +68,8 @@ export class ServicePortComponent extends React.Component<Props> {
       kind: "service",
       name: service.getName(),
       namespace: service.getNs(),
-      port: port.port.toString(),
-      forwardPort: this.forwardPort.toString()
+      port: port.port,
+      forwardPort: this.forwardPort,
     };
     const activePort = await getPortForward(portForward) ?? 0;
 
@@ -83,8 +83,8 @@ export class ServicePortComponent extends React.Component<Props> {
       kind: "service",
       name: service.getName(),
       namespace: service.getNs(),
-      port: port.port.toString(),
-      forwardPort: this.forwardPort.toString()
+      port: port.port,
+      forwardPort: this.forwardPort,
     };
 
     this.waiting = true;
@@ -97,7 +97,7 @@ export class ServicePortComponent extends React.Component<Props> {
       this.forwardPort = await addPortForward(portForward);
 
       if (this.forwardPort) {
-        portForward.forwardPort = this.forwardPort.toString();
+        portForward.forwardPort = this.forwardPort;
         openPortForward(portForward);
         this.isPortForwarded = true;
       }
@@ -114,8 +114,8 @@ export class ServicePortComponent extends React.Component<Props> {
       kind: "service",
       name: service.getName(),
       namespace: service.getNs(),
-      port: port.port.toString(),
-      forwardPort: this.forwardPort.toString()
+      port: port.port,
+      forwardPort: this.forwardPort,
     };
 
     this.waiting = true;
@@ -141,8 +141,8 @@ export class ServicePortComponent extends React.Component<Props> {
           kind: "service",
           name: service.getName(),
           namespace: service.getNs(),
-          port: port.port.toString(),
-          forwardPort: this.forwardPort.toString()
+          port: port.port,
+          forwardPort: this.forwardPort,
         };
 
         PortForwardDialog.open(portForward, { openInBrowser: true });

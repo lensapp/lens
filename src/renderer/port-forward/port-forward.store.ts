@@ -127,7 +127,7 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
   
   try {
     await removePortForward(portForward);
-    portForward.forwardPort = desiredPort.toString();
+    portForward.forwardPort = desiredPort;
     port = await addPortForward(portForward);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
