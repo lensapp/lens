@@ -204,16 +204,6 @@ export class CatalogEntityRegistry {
   getOnRunHook(_catalogEntityUid: CatalogEntityUid): CatelogEntityOnRunHook | undefined {
     return Array.from(this.entityOnRunHooks).find(({ catalogEntityUid }) => catalogEntityUid === _catalogEntityUid)?.onRunHook;
   }
-
-  /**
-   * Returns all catalog entities' onRun hooks
-   */
-  getAllOnRunHooks(): Array<{
-    catalogEntityUid: CatalogEntityUid;
-    onRunHook: CatelogEntityOnRunHook;
-  }> {
-    return Array.from(this.entityOnRunHooks);
-  }
 }
 
 export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);

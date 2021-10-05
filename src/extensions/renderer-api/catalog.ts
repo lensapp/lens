@@ -65,16 +65,6 @@ export class CatalogEntityRegistry {
   getOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatelogEntityOnRunHook | undefined {
     return registry.getOnRunHook(catalogEntityUid);
   }
-
-  /**
-   * Returns all catalog entities' onRun hooks
-   */
-  getAllOnRunHooks(): Array<{
-    catalogEntityUid: CatalogEntity["metadata"]["uid"];
-    onRunHook: CatelogEntityOnRunHook;
-  }> {
-    return registry.getAllOnRunHooks();
-  }
 }
 
 export const catalogEntities = new CatalogEntityRegistry();
