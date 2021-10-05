@@ -32,6 +32,8 @@ import logger from "../../common/logger";
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   private storage = createStorage<ForwardedPort[] | undefined>("port_forwards", undefined);
 
+  @observable portForwards: PortForwardItem[];
+
   constructor() {
     super();
     makeObservable(this);
@@ -48,12 +50,8 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     if (Array.isArray(savedPortForwards)) {
       logger.info("[PORT_FORWARD] starting saved port-forwards");
       await Promise.all(savedPortForwards.map(addPortForward));
-
-      this.reset();
     }
   }
-
-  @observable portForwards: PortForwardItem[];
 
   watch() {
     return disposer(
