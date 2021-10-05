@@ -98,6 +98,12 @@ export interface KubeObjectStatus {
 
 export type KubeMetaField = keyof KubeObjectMetadata;
 
+export class KubeCreationError extends Error {
+  constructor(message: string, public data: any) {
+    super(message);
+  }
+}
+
 export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
@@ -209,8 +215,12 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   ]);
 
   constructor(data: KubeJsonApiData) {
-    if (typeof data !== "object") {
+    if (typeof data !== "object") { 
       throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
+    }
+
+    if (!data.metadata || typeof data.metadata !== "object") {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata`, data);
     }
 
     Object.assign(this, data);
@@ -274,7 +284,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   }
 
   getOwnerRefs() {
-    const refs = this.metadata?.ownerReferences || [];
+    const refs = this.metadata.ownerReferences || [];
     const namespace = this.getNs();
 
     return refs.map(ownerRef => ({ ...ownerRef, namespace }));
