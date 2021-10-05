@@ -22,7 +22,7 @@
 
 import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
 import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
-import type { CatalogEntityOnRunHook } from "../../renderer/api/catalog-entity-registry";
+import type { CatalogEntityOnBeforeRun } from "../../renderer/api/catalog-entity-registry";
 export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
 
 export class CatalogEntityRegistry {
@@ -50,20 +50,20 @@ export class CatalogEntityRegistry {
   }
 
   /**
-   * Add a onRun hook to a catalog entity.
+   * Add a onBeforeRun hook to a catalog entity.
    * @param catalogEntityUid The uid of the catalog entity
-   * @param onRunHook The function that should return a boolean if the onRun of catalog entity should be triggered.
+   * @param onBeforeRun The function that should return a boolean if the onBeforeRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"], onRunHook: CatalogEntityOnRunHook) {
-    return registry.addOnRunHook(catalogEntityUid, onRunHook);
+  addOnBeforeRun(catalogEntityUid: CatalogEntity["metadata"]["uid"], onBeforeRun: CatalogEntityOnBeforeRun) {
+    return registry.addOnBeforeRun(catalogEntityUid, onBeforeRun);
   }
 
   /**
-   * Returns one catalog entity onRun hook by catalog entity uid
+   * Returns one catalog entity onBeforeRun by catalog entity uid
    */
-  getOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatalogEntityOnRunHook | undefined {
-    return registry.getOnRunHook(catalogEntityUid);
+  onBeforeRun(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatalogEntityOnBeforeRun | undefined {
+    return registry.getOnBeforeRun(catalogEntityUid);
   }
 }
 

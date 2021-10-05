@@ -112,7 +112,7 @@ describe("<Catalog />", () => {
     jest.restoreAllMocks();
   });
 
-  it("can use catalogEntityRegistry.addOnRunHook to add hooks for catalog entities", (done) => {
+  it("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", (done) => {
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
@@ -133,7 +133,7 @@ describe("<Catalog />", () => {
 
     let hookGetCalled = false;
 
-    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       (entity) => {
         hookGetCalled = true;
@@ -185,7 +185,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnRunHook return false => onRun wont be triggered", (done) => {
+  it("onBeforeRun return false => onRun wont be triggered", (done) => {
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
@@ -204,7 +204,7 @@ describe("<Catalog />", () => {
         return catalogEntityItem;
       });
 
-    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       () => {
         onRunDisposer?.();
@@ -229,7 +229,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnRunHook throw an exception => onRun wont be triggered", (done) => {
+  it("addOnBeforeRun throw an exception => onRun wont be triggered", (done) => {
     const onRun = jest.fn();
     const catalogEntityItem = new CatalogEntityItem({
       ...catalogEntity,
@@ -248,7 +248,7 @@ describe("<Catalog />", () => {
         return catalogEntityItem;
       });
 
-    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       () => {
         onRunDisposer?.();
@@ -297,7 +297,7 @@ describe("<Catalog />", () => {
         return catalogEntityItem;
       });
 
-    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
         onRunDisposer?.();
@@ -340,7 +340,7 @@ describe("<Catalog />", () => {
         return catalogEntityItem;
       });
 
-    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
         onRunDisposer?.();
@@ -386,7 +386,7 @@ describe("<Catalog />", () => {
         return catalogEntityItem;
       });
 
-    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
         onRunDisposer?.();

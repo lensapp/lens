@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import type { CatalogEntityOnRunHook} from "../../api/catalog-entity-registry";
+import type { CatalogEntityOnBeforeRun} from "../../api/catalog-entity-registry";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
@@ -58,8 +58,8 @@ export class HotbarMenu extends React.Component<Props> {
     return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
   }
 
-  getEntityOnRunHook(uid: string): CatalogEntityOnRunHook | undefined {
-    return catalogEntityRegistry.getOnRunHook(uid);
+  getEntityOnBeforeRun(uid: string): CatalogEntityOnBeforeRun | undefined {
+    return catalogEntityRegistry.getOnBeforeRun(uid);
   }
 
   onDragEnd(result: DropResult) {
@@ -133,28 +133,28 @@ export class HotbarMenu extends React.Component<Props> {
                             index={index}
                             entity={entity}
                             onClick={() => {
-                              const onRunHook = this.getEntityOnRunHook(entity.metadata.uid);
+                              const onBeforeRun = this.getEntityOnBeforeRun(entity.metadata.uid);
 
-                              if (!onRunHook) {
+                              if (!onBeforeRun) {
                                 entity.onRun(catalogEntityRunContext);
 
                                 return;
                               }
 
-                              if (typeof onRunHook === "function") {
+                              if (typeof onBeforeRun === "function") {
                                 let shouldRun;
 
                                 try {
-                                  shouldRun = onRunHook(toJS(entity));
+                                  shouldRun = onBeforeRun(toJS(entity));
                                 } catch (error) {
-                                  if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onRunHook of entity.metadata.uid ${entity?.metadata?.uid} throw an exception, stop before onRun`, error);
+                                  if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onBeforeRun of entity.metadata.uid ${entity?.metadata?.uid} throw an exception, stop before onRun`, error);
                                 }
 
                                 if (isPromise(shouldRun)) {
                                   Promise.resolve(shouldRun).then((shouldRun) => {
                                     if (shouldRun) entity.onRun(catalogEntityRunContext);
                                   }).catch((error) => {
-                                    if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onRunHook of entity.metadata.uid ${entity?.metadata?.uid} rejects, stop before onRun`, error);
+                                    if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onBeforeRun of entity.metadata.uid ${entity?.metadata?.uid} rejects, stop before onRun`, error);
                                   }); 
                                 } else if (shouldRun) {
                                   entity.onRun(catalogEntityRunContext);

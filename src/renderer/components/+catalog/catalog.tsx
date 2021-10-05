@@ -133,16 +133,16 @@ export class Catalog extends React.Component<Props> {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
     } else {
-      const onRunHook = this.catalogEntityStore.getCatalogEntityOnRunHook(item.entity.metadata.uid);
+      const onBeforeRun = this.catalogEntityStore.getCatalogEntityOnBeforeRun(item.entity.metadata.uid);
 
-      item.onRun(onRunHook, catalogEntityRunContext);
+      item.onRun(onBeforeRun, catalogEntityRunContext);
     }
   };
 
   onClickDetailPanelIcon = (item: CatalogEntityItem<CatalogEntity>) => {
-    const onRunHook = this.catalogEntityStore.getCatalogEntityOnRunHook(item.entity.metadata.uid);
+    const onBeforeRun = this.catalogEntityStore.getCatalogEntityOnBeforeRun(item.entity.metadata.uid);
 
-    item.onRun(onRunHook, catalogEntityRunContext);
+    item.onRun(onBeforeRun, catalogEntityRunContext);
   };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {

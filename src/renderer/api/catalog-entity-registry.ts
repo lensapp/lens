@@ -29,7 +29,7 @@ import { Disposer, iter } from "../utils";
 import { once } from "lodash";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
-export type CatalogEntityOnRunHook = (entity: CatalogEntity) => boolean | Promise<boolean>;
+export type CatalogEntityOnBeforeRun = (entity: CatalogEntity) => boolean | Promise<boolean>;
 
 type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
 
@@ -39,9 +39,9 @@ export class CatalogEntityRegistry {
   protected filters = observable.set<EntityFilter>([], {
     deep: false,
   });
-  protected entityOnRunHooks = observable.set<{
+  protected entityOnBeforeRun = observable.set<{
     catalogEntityUid: CatalogEntityUid;
-    onRunHook: CatalogEntityOnRunHook
+    onBeforeRun: CatalogEntityOnBeforeRun
   }>([], {
     deep: false,
   });
@@ -182,26 +182,26 @@ export class CatalogEntityRegistry {
   /**
    * Add a onRun hook to a catalog entity.
    * @param uid The uid of the catalog entity
-   * @param onRunHook The function that should return a boolean if the onRun of catalog entity should be triggered.
+   * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnRunHook(catalogEntityUid: CatalogEntityUid, onRunHook: CatalogEntityOnRunHook): Disposer {
-    this.entityOnRunHooks.add({
+  addOnBeforeRun(catalogEntityUid: CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    this.entityOnBeforeRun.add({
       catalogEntityUid,
-      onRunHook,
+      onBeforeRun,
     });
   
-    return once(() => void this.entityOnRunHooks.delete({
+    return once(() => void this.entityOnBeforeRun.delete({
       catalogEntityUid,
-      onRunHook,
+      onBeforeRun,
     }));
   }
 
   /**
-   * Returns one catalog entity onRun hook by catalog entity uid
+   * Returns one catalog entity onBeforeRun by catalog entity uid
    */
-  getOnRunHook(_catalogEntityUid: CatalogEntityUid): CatalogEntityOnRunHook | undefined {
-    return Array.from(this.entityOnRunHooks).find(({ catalogEntityUid }) => catalogEntityUid === _catalogEntityUid)?.onRunHook;
+  getOnBeforeRun(_catalogEntityUid: CatalogEntityUid): CatalogEntityOnBeforeRun | undefined {
+    return Array.from(this.entityOnBeforeRun).find(({ catalogEntityUid }) => catalogEntityUid === _catalogEntityUid)?.onBeforeRun;
   }
 }
 

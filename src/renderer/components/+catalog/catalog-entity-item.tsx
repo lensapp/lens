@@ -22,7 +22,7 @@ import styles from "./catalog.module.css";
 import React from "react";
 import { action, computed } from "mobx";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
-import type { CatalogEntityOnRunHook } from "../../api/catalog-entity-registry";
+import type { CatalogEntityOnBeforeRun } from "../../api/catalog-entity-registry";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
@@ -106,27 +106,27 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     ];
   }
 
-  onRun(onRunHook: CatalogEntityOnRunHook | undefined, ctx: CatalogEntityActionContext) {
-    if (!onRunHook) {
+  onRun(onBeforeRun: CatalogEntityOnBeforeRun | undefined, ctx: CatalogEntityActionContext) {
+    if (!onBeforeRun) {
       this.entity.onRun(ctx);
 
       return;
     }
 
-    if (typeof onRunHook === "function") {
+    if (typeof onBeforeRun === "function") {
       let shouldRun;
 
       try {
-        shouldRun = onRunHook(toJS(this.entity));
+        shouldRun = onBeforeRun(toJS(this.entity));
       } catch (error) {
-        if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity?.metadata?.uid} throw an exception, stop before onRun`, error);
+        if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onBeforeRun of entity.metadata.uid ${this.entity?.metadata?.uid} throw an exception, stop before onRun`, error);
       }
 
       if (isPromise(shouldRun)) {
         Promise.resolve(shouldRun).then((shouldRun) => {
           if (shouldRun) this.entity.onRun(ctx);
         }).catch((error) => {
-          if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity?.metadata?.uid} rejects, stop before onRun`, error);
+          if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onBeforeRun of entity.metadata.uid ${this.entity?.metadata?.uid} rejects, stop before onRun`, error);
         }); 
       }  else if (shouldRun) {
         this.entity.onRun(ctx);
