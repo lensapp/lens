@@ -135,12 +135,32 @@ const allowErrorReporting: PreferenceDescription<boolean> = {
   },
 };
 
+export interface DownloadMirror {
+  url: string;
+  label: string;
+  platforms: Set<NodeJS.Platform>;
+}
+
+const defaultPackageMirror = "default";
+const packageMirrors = new Map<string, DownloadMirror>([
+  [defaultPackageMirror, {
+    url: "https://storage.googleapis.com/kubernetes-release/release",
+    label: "Default (Google)",
+    platforms: new Set(["darwin", "win32", "linux"]),
+  }],
+  ["china", {
+    url: "https://mirror.azure.cn/kubernetes/kubectl",
+    label: "China (Azure)",
+    platforms: new Set(["win32", "linux"]),
+  }],
+]);
+
 const downloadMirror: PreferenceDescription<string> = {
   fromStore(val) {
-    return val ?? "default";
+    return packageMirrors.has(val) ? val : defaultPackageMirror;
   },
   toStore(val) {
-    if (!val || val === "default") {
+    if (!val || val === defaultPackageMirror) {
       return undefined;
     }
 
@@ -288,4 +308,9 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
+};
+
+export const CONSTANTS = {
+  defaultPackageMirror,
+  packageMirrors,
 };
