@@ -185,6 +185,8 @@ export class CatalogEntityRegistry {
    * @returns A function to remove that hook
    */
   addOnBeforeRun(entityOrId: CatalogEntity | CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    logger.debug(`[CATALOG-ENTITY-REGISTRY]: adding onBeforeRun to ${entityOrId}`);
+
     const id = typeof entityOrId === "string"
       ? entityOrId
       : entityOrId.getId();
@@ -202,6 +204,8 @@ export class CatalogEntityRegistry {
    * @returns Whether the entities `onRun` method should be executed
    */
   async onBeforeRun(entity: CatalogEntity): Promise<boolean> {
+    logger.debug(`[CATALOG-ENTITY-REGISTRY]: run onBeforeRun on ${entity.getId()}`);
+    
     const hooks = this.onBeforeRunHooks.get(entity.getId());
 
     if (!hooks) {

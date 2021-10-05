@@ -84,8 +84,8 @@ describe("<Catalog />", () => {
     spec: {},
   };
   const catalogEntityItemMethods = {
-    getId: () => "",
-    getName: () => "",
+    getId: () => catalogEntity.metadata.uid,
+    getName: () => catalogEntity.metadata.name,
     onContextMenuOpen: () => {},
     onSettingsOpen: () => {},
     onRun: () => {},
@@ -127,19 +127,11 @@ describe("<Catalog />", () => {
     // mock as if there is a selected item > the detail panel opens
     jest
       .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => {
-        return catalogEntityItem;
-      });
+      .mockImplementation(() => catalogEntityItem);
 
-    let hookGetCalled = false;
-
-    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
+    catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       (entity) => {
-        hookGetCalled = true;
-        expect(hookGetCalled).toBe(true);
-
-        onRunDisposer?.();
         expect(entity).toMatchInlineSnapshot(`
           Object {
             "apiVersion": "api",
@@ -200,14 +192,11 @@ describe("<Catalog />", () => {
     // mock as if there is a selected item > the detail panel opens
     jest
       .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => {
-        return catalogEntityItem;
-      });
+      .mockImplementation(() => catalogEntityItem);
 
-    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
+    catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       () => {
-        onRunDisposer?.();
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
           done();
@@ -244,14 +233,11 @@ describe("<Catalog />", () => {
     // mock as if there is a selected item > the detail panel opens
     jest
       .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => {
-        return catalogEntityItem;
-      });
+      .mockImplementation(() => catalogEntityItem);
 
-    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
+    catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       () => {
-        onRunDisposer?.();
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
           done();
@@ -293,15 +279,11 @@ describe("<Catalog />", () => {
     // mock as if there is a selected item > the detail panel opens
     jest
       .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => {
-        return catalogEntityItem;
-      });
+      .mockImplementation(() => catalogEntityItem);
 
-    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
+    catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
-        onRunDisposer?.();
-
         return true;
       }
     );
@@ -336,14 +318,11 @@ describe("<Catalog />", () => {
     // mock as if there is a selected item > the detail panel opens
     jest
       .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => {
-        return catalogEntityItem;
-      });
+      .mockImplementation(() => catalogEntityItem);
 
-    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
+    catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
-        onRunDisposer?.();
         expect(onRunTriggered).toBeFalsy();
 
         setTimeout(() => {
@@ -382,14 +361,11 @@ describe("<Catalog />", () => {
     // mock as if there is a selected item > the detail panel opens
     jest
       .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => {
-        return catalogEntityItem;
-      });
+      .mockImplementation(() => catalogEntityItem);
 
-    const onRunDisposer = catalogEntityRegistry.addOnBeforeRun(
+    catalogEntityRegistry.addOnBeforeRun(
       catalogEntityUid,
       async () => {
-        onRunDisposer?.();
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
           done();
