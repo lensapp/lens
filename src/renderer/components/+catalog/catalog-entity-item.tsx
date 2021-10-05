@@ -22,18 +22,14 @@ import styles from "./catalog.module.css";
 import React from "react";
 import { action, computed } from "mobx";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
-import type { CatalogEntityOnBeforeRun } from "../../api/catalog-entity-registry";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
 import { searchUrlParam } from "../input";
 import { makeCss } from "../../../common/utils/makeCss";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-import { toJS } from "mobx";
 
 const css = makeCss(styles);
-
-const isPromise = (obj: any): obj is Promise<any> => (obj?.then && typeof obj?.then === "function") ? true: false;
 
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
   constructor(public entity: T) {}
@@ -106,32 +102,8 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     ];
   }
 
-  onRun(onBeforeRun: CatalogEntityOnBeforeRun | undefined, ctx: CatalogEntityActionContext) {
-    if (!onBeforeRun) {
-      this.entity.onRun(ctx);
-
-      return;
-    }
-
-    if (typeof onBeforeRun === "function") {
-      let shouldRun;
-
-      try {
-        shouldRun = onBeforeRun(toJS(this.entity));
-      } catch (error) {
-        if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onBeforeRun of entity.metadata.uid ${this.entity?.metadata?.uid} throw an exception, stop before onRun`, error);
-      }
-
-      if (isPromise(shouldRun)) {
-        Promise.resolve(shouldRun).then((shouldRun) => {
-          if (shouldRun) this.entity.onRun(ctx);
-        }).catch((error) => {
-          if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onBeforeRun of entity.metadata.uid ${this.entity?.metadata?.uid} rejects, stop before onRun`, error);
-        }); 
-      }  else if (shouldRun) {
-        this.entity.onRun(ctx);
-      }
-    }
+  onRun(ctx: CatalogEntityActionContext) {
+    this.entity.onRun(ctx);
   }
 
   @action

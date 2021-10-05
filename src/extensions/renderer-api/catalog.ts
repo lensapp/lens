@@ -55,15 +55,15 @@ export class CatalogEntityRegistry {
    * @param onBeforeRun The function that should return a boolean if the onBeforeRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnBeforeRun(catalogEntityUid: CatalogEntity["metadata"]["uid"], onBeforeRun: CatalogEntityOnBeforeRun) {
-    return registry.addOnBeforeRun(catalogEntityUid, onBeforeRun);
+  addOnBeforeRun(entity: CatalogEntity, onBeforeRun: CatalogEntityOnBeforeRun) {
+    return registry.addOnBeforeRun(entity, onBeforeRun);
   }
 
   /**
    * Returns one catalog entity onBeforeRun by catalog entity uid
    */
-  onBeforeRun(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatalogEntityOnBeforeRun | undefined {
-    return registry.getOnBeforeRun(catalogEntityUid);
+  onBeforeRun(entity: CatalogEntity): Promise<boolean> {
+    return registry.onBeforeRun(entity);
   }
 }
 

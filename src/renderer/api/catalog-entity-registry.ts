@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, makeObservable, action } from "mobx";
+import { computed, observable, makeObservable, action, ObservableSet } from "mobx";
 import { ipcRendererOn } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
@@ -27,6 +27,8 @@ import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
 import { Disposer, iter } from "../utils";
 import { once } from "lodash";
+import logger from "../../common/logger";
+import { catalogEntityRunContext } from "./catalog-entity";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (entity: CatalogEntity) => boolean | Promise<boolean>;
@@ -39,7 +41,7 @@ export class CatalogEntityRegistry {
   protected filters = observable.set<EntityFilter>([], {
     deep: false,
   });
-  protected entityOnBeforeRun = observable.map<CatalogEntityUid, CatalogEntityOnBeforeRun>({}, {
+  protected onBeforeRunHooks = observable.map<CatalogEntityUid, ObservableSet<CatalogEntityOnBeforeRun>>({}, {
     deep: false,
   });
 
@@ -177,22 +179,62 @@ export class CatalogEntityRegistry {
   }
 
   /**
-   * Add a onRun hook to a catalog entity.
-   * @param uid The uid of the catalog entity
+   * Add a onRun hook to a catalog entity. If `onBeforeRun` was previously added then it will not be added again
+   * @param catalogEntityUid The uid of the catalog entity
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnBeforeRun(catalogEntityUid: CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    this.entityOnBeforeRun.set(catalogEntityUid, onBeforeRun);
+  addOnBeforeRun(entityOrId: CatalogEntity | CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    const id = typeof entityOrId === "string"
+      ? entityOrId
+      : entityOrId.getId();
+    const hooks = this.onBeforeRunHooks.get(id) ??
+      this.onBeforeRunHooks.set(id, observable.set([], { deep: false })).get(id);
+      
+    hooks.add(onBeforeRun);
   
-    return once(() => void this.entityOnBeforeRun.delete(catalogEntityUid));
+    return once(() => void hooks.delete(onBeforeRun));
   }
 
   /**
-   * Returns one catalog entity onBeforeRun by catalog entity uid
+   * Runs all the registered `onBeforeRun` hooks, short circuiting on the first falsy returned/resolved valued
+   * @param entity The entity to run the hooks on
+   * @returns Whether the entities `onRun` method should be executed
    */
-  getOnBeforeRun(catalogEntityUid: CatalogEntityUid): CatalogEntityOnBeforeRun | undefined {
-    return this.entityOnBeforeRun.get(catalogEntityUid);
+  async onBeforeRun(entity: CatalogEntity): Promise<boolean> {
+    const hooks = this.onBeforeRunHooks.get(entity.getId());
+
+    if (!hooks) {
+      return true;
+    }
+
+    for (const onBeforeRun of hooks) {
+      try {
+        if (!await onBeforeRun(entity)) {
+          return false;
+        }
+      } catch (error) {
+        logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
+
+        // If a handler throws treat it as if it has returned `false`
+        // Namely: assume that its internal logic has failed and didn't complete as expected
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  onRun(entity: CatalogEntity): void {
+    this.onBeforeRun(entity)
+      .then(doOnRun => {
+        if (doOnRun) {
+          return entity.onRun(catalogEntityRunContext);
+        } else {
+          logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
+        }
+      })
+      .catch(error => logger.error(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onRun threw an error`, error));
   }
 }
 

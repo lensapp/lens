@@ -29,7 +29,7 @@ import { CatalogEntityStore } from "./catalog-entity.store";
 import type { CatalogEntityItem } from "./catalog-entity-item";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
-import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
@@ -133,16 +133,12 @@ export class Catalog extends React.Component<Props> {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
     } else {
-      const onBeforeRun = this.catalogEntityStore.getCatalogEntityOnBeforeRun(item.entity.metadata.uid);
-
-      item.onRun(onBeforeRun, catalogEntityRunContext);
+      this.catalogEntityStore.onRun(item.entity);
     }
   };
 
   onClickDetailPanelIcon = (item: CatalogEntityItem<CatalogEntity>) => {
-    const onBeforeRun = this.catalogEntityStore.getCatalogEntityOnBeforeRun(item.entity.metadata.uid);
-
-    item.onRun(onBeforeRun, catalogEntityRunContext);
+    this.catalogEntityStore.onRun(item.entity);
   };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {

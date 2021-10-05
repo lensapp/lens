@@ -19,28 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
-import { catalogEntityRegistry as _catalogEntityRegistry, CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { computed, makeObservable, observable, reaction } from "mobx";
+import { catalogEntityRegistry, CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import type { CatalogEntityOnBeforeRun } from "../../api/catalog-entity-registry";
 import { ItemStore } from "../../../common/item.store";
 import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
-import { autoBind } from "../../../common/utils";
+import { autoBind, disposer } from "../../../common/utils";
 import { CatalogEntityItem } from "./catalog-entity-item";
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntity>> {
-  #catalogEntityRegistry: CatalogEntityRegistry;
-
-  constructor(catalogEntityRegistry?: CatalogEntityRegistry) {
+  constructor(private registry: CatalogEntityRegistry = catalogEntityRegistry) {
     super();
     makeObservable(this);
     autoBind(this);
-
-    if (catalogEntityRegistry) {
-      this.#catalogEntityRegistry = catalogEntityRegistry;
-    } else {
-      this.#catalogEntityRegistry = _catalogEntityRegistry;
-    }
   }
 
   @observable activeCategory?: CatalogCategory;
@@ -48,27 +39,25 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
 
   @computed get entities() {
     if (!this.activeCategory) {
-      return this.#catalogEntityRegistry.filteredItems.map(entity => new CatalogEntityItem(entity));
+      return this.registry.filteredItems.map(entity => new CatalogEntityItem(entity));
     }
 
-    return this.#catalogEntityRegistry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity));
+    return this.registry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity));
   }
 
   @computed get selectedItem() {
     return this.entities.find(e => e.getId() === this.selectedItemId);
   }
 
-  getCatalogEntityOnBeforeRun(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatalogEntityOnBeforeRun | undefined {
-    return this.#catalogEntityRegistry.getOnBeforeRun(catalogEntityUid);
+  onRun(entity: CatalogEntity): void {
+    this.registry.onRun(entity);
   }
 
   watch() {
-    const disposers: IReactionDisposer[] = [
+    return disposer(
       reaction(() => this.entities, () => this.loadAll()),
-      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
-    ];
-
-    return () => disposers.forEach((dispose) => dispose());
+      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100}),
+    );
   }
 
   loadAll() {

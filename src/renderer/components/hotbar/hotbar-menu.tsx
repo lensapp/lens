@@ -26,21 +26,17 @@ import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import type { CatalogEntityOnBeforeRun} from "../../api/catalog-entity-registry";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
-import { toJS } from "mobx";
 
 interface Props {
   className?: IClassName;
 }
-
-const isPromise = (obj: any): obj is Promise<any> => (obj?.then && typeof obj?.then === "function") ? true: false;
 
 @observer
 export class HotbarMenu extends React.Component<Props> {
@@ -56,10 +52,6 @@ export class HotbarMenu extends React.Component<Props> {
     }
 
     return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
-  }
-
-  getEntityOnBeforeRun(uid: string): CatalogEntityOnBeforeRun | undefined {
-    return catalogEntityRegistry.getOnBeforeRun(uid);
   }
 
   onDragEnd(result: DropResult) {
@@ -132,35 +124,7 @@ export class HotbarMenu extends React.Component<Props> {
                             key={index}
                             index={index}
                             entity={entity}
-                            onClick={() => {
-                              const onBeforeRun = this.getEntityOnBeforeRun(entity.metadata.uid);
-
-                              if (!onBeforeRun) {
-                                entity.onRun(catalogEntityRunContext);
-
-                                return;
-                              }
-
-                              if (typeof onBeforeRun === "function") {
-                                let shouldRun;
-
-                                try {
-                                  shouldRun = onBeforeRun(toJS(entity));
-                                } catch (error) {
-                                  if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onBeforeRun of entity.metadata.uid ${entity?.metadata?.uid} throw an exception, stop before onRun`, error);
-                                }
-
-                                if (isPromise(shouldRun)) {
-                                  Promise.resolve(shouldRun).then((shouldRun) => {
-                                    if (shouldRun) entity.onRun(catalogEntityRunContext);
-                                  }).catch((error) => {
-                                    if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onBeforeRun of entity.metadata.uid ${entity?.metadata?.uid} rejects, stop before onRun`, error);
-                                  }); 
-                                } else if (shouldRun) {
-                                  entity.onRun(catalogEntityRunContext);
-                                }
-                              }
-                            }}
+                            onClick={() => catalogEntityRegistry.onRun(entity)}
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
                             add={this.addItem}
