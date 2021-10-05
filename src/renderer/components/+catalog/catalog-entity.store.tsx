@@ -20,7 +20,7 @@
  */
 
 import { computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { catalogEntityRegistry as _catalogEntityRegistry, CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import type { CatalogEntityOnRunHook } from "../../api/catalog-entity-registry";
 import { ItemStore } from "../../../common/item.store";
@@ -29,10 +29,18 @@ import { autoBind } from "../../../common/utils";
 import { CatalogEntityItem } from "./catalog-entity-item";
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntity>> {
-  constructor() {
+  #catalogEntityRegistry: CatalogEntityRegistry;
+
+  constructor(catalogEntityRegistry?: CatalogEntityRegistry) {
     super();
     makeObservable(this);
     autoBind(this);
+
+    if (catalogEntityRegistry) {
+      this.#catalogEntityRegistry = catalogEntityRegistry;
+    } else {
+      this.#catalogEntityRegistry = _catalogEntityRegistry;
+    }
   }
 
   @observable activeCategory?: CatalogCategory;
@@ -40,10 +48,10 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
 
   @computed get entities() {
     if (!this.activeCategory) {
-      return catalogEntityRegistry.filteredItems.map(entity => new CatalogEntityItem(entity));
+      return this.#catalogEntityRegistry.filteredItems.map(entity => new CatalogEntityItem(entity));
     }
 
-    return catalogEntityRegistry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity));
+    return this.#catalogEntityRegistry.getItemsForCategory(this.activeCategory, { filtered: true }).map(entity => new CatalogEntityItem(entity));
   }
 
   @computed get selectedItem() {
@@ -51,7 +59,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
   }
 
   getCatalogEntityOnRunHook(catalogEntityUid: CatalogEntity["metadata"]["uid"]): CatalogEntityOnRunHook | undefined {
-    return catalogEntityRegistry.getOnRunHook(catalogEntityUid);
+    return this.#catalogEntityRegistry.getOnRunHook(catalogEntityUid);
   }
 
   watch() {

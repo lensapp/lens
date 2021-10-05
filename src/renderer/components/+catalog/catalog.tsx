@@ -56,7 +56,10 @@ enum sortBy {
 
 const css = makeCss(styles);
 
-interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
+interface Props extends RouteComponentProps<CatalogViewRouteParam> {
+  catalogEntityStore: CatalogEntityStore;
+}
+
 @observer
 export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
@@ -66,8 +69,11 @@ export class Catalog extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-    this.catalogEntityStore = new CatalogEntityStore();
+    this.catalogEntityStore = props.catalogEntityStore;
   }
+  static defaultProps = {
+    catalogEntityStore: new CatalogEntityStore(),       
+  };
 
   get routeActiveTab(): string {
     const { group, kind } = this.props.match.params ?? {};
