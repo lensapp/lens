@@ -57,7 +57,7 @@ enum sortBy {
 const css = makeCss(styles);
 
 interface Props extends RouteComponentProps<CatalogViewRouteParam> {
-  catalogEntityStore: CatalogEntityStore;
+  catalogEntityStore?: CatalogEntityStore;
 }
 
 @observer
