@@ -20,7 +20,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../../renderer/utils";
+import { autoBind, cpuUnitsToNumber, iter, unitsToBytes } from "../../../renderer/utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
@@ -151,16 +151,19 @@ export class Node extends KubeObject {
     autoBind(this);
   }
 
-  getNodeConditionText() {
-    const { conditions } = this.status;
+  getNodeConditionText(): string {
+    const { conditions = [] } = this.status;
 
-    if (!conditions) return "";
-
-    return conditions.reduce((types, current) => {
-      if (current.status !== "True") return "";
-
-      return types += ` ${current.type}`;
-    }, "");
+    return iter.join(
+      iter.map(
+        iter.filter(
+          conditions.values(), 
+          ({ status }) => status === "True",
+        ),
+        ({ type }) => type,
+      ),
+      " ",
+    );
   }
 
   getTaints() {
