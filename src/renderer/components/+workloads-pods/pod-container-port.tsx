@@ -111,13 +111,13 @@ export class PodContainerPort extends React.Component<Props> {
 
     try {
       this.forwardPort = await addPortForward(portForward);
-      
+
       if (this.forwardPort) {
         portForward.forwardPort = this.forwardPort.toString();
         openPortForward(portForward);
         this.isPortForwarded = true;
       }
-    } catch(error) {
+    } catch (error) {
       Notifications.error(error);
     } finally {
       this.waiting = false;
@@ -139,7 +139,7 @@ export class PodContainerPort extends React.Component<Props> {
     try {
       await removePortForward(portForward);
       this.isPortForwarded = false;
-    } catch(error) {
+    } catch (error) {
       Notifications.error(error);
     } finally {
       this.waiting = false;
@@ -162,21 +162,20 @@ export class PodContainerPort extends React.Component<Props> {
           port: port.containerPort.toString(),
           forwardPort: this.forwardPort.toString()
         };
-        
-        PortForwardDialog.open(portForward, true);
+
+        PortForwardDialog.open(portForward, { openInBrowser: true });
       }
     };
 
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
-        <span title="Open in a browser" onClick={() => this.portForward() }>
+        <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
-          {this.waiting && (
-            <Spinner />
-          )}
         </span>
-        {" "}
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward..."} </Button>
+        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
+        {this.waiting && (
+          <Spinner />
+        )}
       </div>
     );
   }

@@ -20,23 +20,14 @@
  */
 
 
-import { computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
-import { ItemObject, ItemStore } from "../../common/item.store";
-import { autoBind, createStorage, getHostedClusterId, openExternal } from "../utils";
-import { PortForwardItem } from "./port-forward-item";
+import { makeObservable, observable, reaction } from "mobx";
+import { ItemStore } from "../../common/item.store";
+import { autoBind, createStorage, disposer, getHostedClusterId, openExternal } from "../utils";
+import { ForwardedPort, PortForwardItem } from "./port-forward-item";
 import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
 import { Notifications } from "../components/notifications";
 import logger from "../../common/logger";
-
-export interface ForwardedPort {
-  clusterId?: string;
-  kind: string;
-  namespace: string;
-  name: string;
-  port: string;
-  forwardPort: string;
-}
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   private storage = createStorage<ForwardedPort[] | undefined>("port_forwards", undefined);
@@ -56,36 +47,18 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
     if (Array.isArray(savedPortForwards)) {
       logger.info("[PORT_FORWARD] starting saved port-forwards");
-      await Promise.all(savedPortForwards.map(pf => {
-        const port = new PortForwardItem;
+      await Promise.all(savedPortForwards.map(addPortForward));
 
-        port.clusterId = pf.clusterId;
-        port.kind = pf.kind;
-        port.namespace = pf.namespace;
-        port.name = pf.name;
-        port.port = pf.port;
-        port.forwardPort = pf.forwardPort;
-
-        return addPortForward(port);
-      }));
-
-      this.portForwards = [];
+      this.reset();
     }
   }
 
-  @observable selectedItemId?: string;
   @observable portForwards: PortForwardItem[];
 
-  @computed get selectedItem() {
-    return this.portForwards.find((e: ItemObject) => e.getId() === this.selectedItemId);
-  }
-
   watch() {
-    const disposers: IReactionDisposer[] = [
+    return disposer(
       reaction(() => this.portForwards, () => this.loadAll()),
-    ];
-
-    return () => disposers.forEach((dispose) => dispose());
+    );
   }
 
   loadAll() {
@@ -93,21 +66,11 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
       let portForwards = await getPortForwards();
 
       // filter out any not for this cluster
-      portForwards = portForwards?.filter(pf => pf.clusterId == getHostedClusterId());
+      portForwards = portForwards.filter(pf => pf.clusterId == getHostedClusterId());
       this.storage.set(portForwards);
 
       this.reset();
-      portForwards?.forEach(pf => {
-        const port = new PortForwardItem;
-
-        port.clusterId = pf.clusterId;
-        port.kind = pf.kind;
-        port.namespace = pf.namespace;
-        port.name = pf.name;
-        port.port = pf.port;
-        port.forwardPort = pf.forwardPort;
-        this.portForwards.push(port);
-      });
+      portForwards.map(pf => this.portForwards.push(new PortForwardItem(pf)));
 
       return this.portForwards;
     });

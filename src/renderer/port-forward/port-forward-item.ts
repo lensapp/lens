@@ -23,6 +23,15 @@
 import type { ItemObject } from "../../common/item.store";
 import { autoBind } from "../../common/utils";
 
+export interface ForwardedPort {
+  clusterId?: string;
+  kind: string;
+  namespace: string;
+  name: string;
+  port: string;
+  forwardPort: string;
+}
+  
 export class PortForwardItem implements ItemObject {
   clusterId: string;
   kind: string;
@@ -31,7 +40,14 @@ export class PortForwardItem implements ItemObject {
   port: string;
   forwardPort: string;
   
-  constructor() {
+  constructor(pf: ForwardedPort) {
+    this.clusterId = pf.clusterId;
+    this.kind = pf.kind;
+    this.namespace = pf.namespace;
+    this.name = pf.name;
+    this.port = pf.port;
+    this.forwardPort = pf.forwardPort;
+
     autoBind(this);
   }
   

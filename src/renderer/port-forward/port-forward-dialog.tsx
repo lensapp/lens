@@ -22,7 +22,7 @@
 import "./port-forward-dialog.scss";
 
 import React, { Component } from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../components/dialog";
 import { Wizard, WizardStep } from "../components/wizard";
@@ -30,10 +30,14 @@ import { Input } from "../components/input";
 import { Notifications } from "../components/notifications";
 import { cssNames } from "../utils";
 import { addPortForward, modifyPortForward } from "./port-forward.store";
-import type { ForwardedPort } from "./port-forward.store";
+import type { ForwardedPort } from "./port-forward-item";
 import { openPortForward } from ".";
 
 interface Props extends Partial<DialogProps> {
+}
+
+interface PortForwardDialogOpenOptions {
+  openInBrowser: boolean
 }
 
 const dialogState = observable.object({
@@ -53,10 +57,10 @@ export class PortForwardDialog extends Component<Props> {
     makeObservable(this);
   }
 
-  static open(portForward: ForwardedPort, openInBrowser = false) {
+  static open(portForward: ForwardedPort, options : PortForwardDialogOpenOptions = { openInBrowser:  false }) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
-    dialogState.openInBrowser = openInBrowser;
+    dialogState.openInBrowser = options.openInBrowser;
   }
 
   static close() {
@@ -70,15 +74,6 @@ export class PortForwardDialog extends Component<Props> {
   close = () => {
     PortForwardDialog.close();
   };
-
-  @computed get scaleMax() {
-    const { currentPort } = this;
-    const defaultMax = 50;
-
-    return currentPort <= defaultMax
-      ? defaultMax * 2
-      : currentPort * 2;
-  }
 
   onOpen = async () => {
     const { portForward } = this;

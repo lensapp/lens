@@ -24,8 +24,8 @@ import "./service-port-component.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Service, ServicePort } from "../../../common/k8s-api/endpoints";
-import { observable, makeObservable, IReactionDisposer, reaction } from "mobx";
-import { cssNames } from "../../utils";
+import { observable, makeObservable, reaction } from "mobx";
+import { cssNames, disposer } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, removePortForward } from "../../port-forward";
@@ -57,11 +57,9 @@ export class ServicePortComponent extends React.Component<Props> {
   }
 
   watch() {
-    const disposers: IReactionDisposer[] = [
+    return disposer(
       reaction(() => portForwardStore.portForwards, () => this.init()),
-    ];
-
-    return () => disposers.forEach((dispose) => dispose());
+    );
   }
 
   init() {
@@ -113,7 +111,7 @@ export class ServicePortComponent extends React.Component<Props> {
         openPortForward(portForward);
         this.isPortForwarded = true;
       }
-    } catch(error) {
+    } catch (error) {
       Notifications.error(error);
     } finally {
       this.waiting = false;
@@ -135,7 +133,7 @@ export class ServicePortComponent extends React.Component<Props> {
     try {
       await removePortForward(portForward);
       this.isPortForwarded = false;
-    } catch(error) {
+    } catch (error) {
       Notifications.error(error);
     } finally {
       this.waiting = false;
@@ -148,7 +146,7 @@ export class ServicePortComponent extends React.Component<Props> {
     const portForwardAction = async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
-      }else {
+      } else {
         const portForward: ForwardedPort = {
           kind: "service",
           name: service.getName(),
@@ -156,21 +154,20 @@ export class ServicePortComponent extends React.Component<Props> {
           port: port.port.toString(),
           forwardPort: this.forwardPort.toString()
         };
-            
-        PortForwardDialog.open(portForward, true);
+
+        PortForwardDialog.open(portForward, { openInBrowser: true });
       }
     };
 
     return (
       <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
-        <span title="Open in a browser" onClick={() => this.portForward() }>
+        <span title="Open in a browser" onClick={() => this.portForward()}>
           {port.toString()}
-          {this.waiting && (
-            <Spinner />
-          )}
         </span>
-        {" "}
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward..."} </Button>
+        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
+        {this.waiting && (
+          <Spinner />
+        )}
       </div>
     );
   }

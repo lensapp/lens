@@ -76,7 +76,7 @@ class PortForward {
       "port-forward",
       "-n", this.namespace,
       `${this.kind}/${this.name}`,
-      `${this.forwardPort??""}:${this.port}`
+      `${this.forwardPort ?? ""}:${this.port}`
     ];
 
     this.process = spawn(kubectlBin, args, {
@@ -126,11 +126,11 @@ export class PortForwardRoute {
 
       let thePort: string; // undefined
       const portNum = Number(forwardPort);
-      
+
       if (portNum > 0 && portNum < 65536) {
         thePort = forwardPort;
       }
-      
+
       if (!portForward) {
         logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
         portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
@@ -153,7 +153,7 @@ export class PortForwardRoute {
         }
       }
 
-      respondJson(response, {port: portForward.internalPort});
+      respondJson(response, { port: portForward.internalPort });
     } catch (error) {
       logger.error(`[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`, { namespace, port, resourceType, resourceName });
 
@@ -164,7 +164,7 @@ export class PortForwardRoute {
   }
 
   static async routeCurrentPortForward(request: LensApiRequest) {
-    const { params, response, cluster} = request;
+    const { params, response, cluster } = request;
     const { namespace, port, forwardPort, resourceType, resourceName } = params;
 
     const portForward = PortForward.getPortforward({
@@ -172,32 +172,28 @@ export class PortForwardRoute {
       namespace, port, forwardPort
     });
 
-    respondJson(response, {port: portForward?.internalPort?? null});
+    respondJson(response, { port: portForward?.internalPort ?? null });
   }
 
   static async routeAllPortForwards(request: LensApiRequest) {
     const { response } = request;
 
-    const portForwards: PortForwardArgs[] = [];
-
-    PortForward.portForwards.forEach(f => {
-      const pf: PortForwardArgs = {
+    const portForwards: PortForwardArgs[] = PortForward.portForwards.map(f => (
+      {
         clusterId: f.clusterId,
         kind: f.kind,
         namespace: f.namespace,
         name: f.name,
         port: f.port,
         forwardPort: f.forwardPort,
-      };
+      })
+    );
 
-      portForwards.push(pf);
-    });
-
-    respondJson(response, {portForwards});
+    respondJson(response, { portForwards });
   }
 
   static async routeCurrentPortForwardStop(request: LensApiRequest) {
-    const { params, response, cluster} = request;
+    const { params, response, cluster } = request;
     const { namespace, port, forwardPort, resourceType, resourceName } = params;
 
     const portForward = PortForward.getPortforward({
@@ -207,9 +203,13 @@ export class PortForwardRoute {
 
     try {
       await portForward.stop();
-      respondJson(response, {status: true});
+      respondJson(response, { status: true });
     } catch (error) {
-      logger.error(error);
+      logger.error("[PORT-FORWARD-ROUTE]: error stopping a port-forward", { namespace, port, forwardPort, resourceType, resourceName });
+
+      return respondJson(response, {
+        message: `error stopping a forward port ${port}`
+      }, 400);
     }
   }
 }
