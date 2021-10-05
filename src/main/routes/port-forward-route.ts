@@ -70,7 +70,7 @@ class PortForward {
   }
 
   public async start() {
-    const kubectlBin = await Kubectl.bundled().getPath();
+    const kubectlBin = await Kubectl.bundled().getPath(true);
     const args = [
       "--kubeconfig", this.kubeConfig,
       "port-forward",
