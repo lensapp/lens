@@ -787,6 +787,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#addonbeforerun" class="md-nav__link">
+    addOnBeforeRun
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#getbyid" class="md-nav__link">
     getById
   </a>
@@ -840,6 +847,7 @@
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#addonbeforerun">addOnBeforeRun</a></li>
 <li><a href="./#getbyid">getById</a></li>
 <li><a href="./#getitemsforapikind">getItemsForApiKind</a></li>
 <li><a href="./#getitemsforcategory">getItemsForCategory</a></li>
@@ -859,9 +867,38 @@
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>Map</code>&lt;string, <a href="../common.catalog.catalogentity/">CatalogEntity</a>&lt;<a href="../../interfaces/common.catalog.catalogentitymetadata/">CatalogEntityMetadata</a>, <a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a>, <a href="../../modules/common.catalog/#catalogentityspec">CatalogEntitySpec</a>>></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="addonbeforerun">addOnBeforeRun<a class="headerlink" href="#addonbeforerun" title="Permanent link">#</a></h3>
+<p>▸ <strong>addOnBeforeRun</strong>(<code>entity</code>, <code>onBeforeRun</code>): <code>Disposer</code></p>
+<p>Add a onBeforeRun hook to a catalog entity. If <code>onBeforeRun</code> was previously added then it will not be added again</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>entity</code></td>
+<td align="left"><a href="../common.catalog.catalogentity/">CatalogEntity</a>&lt;<a href="../../interfaces/common.catalog.catalogentitymetadata/">CatalogEntityMetadata</a>, <a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a>, <a href="../../modules/common.catalog/#catalogentityspec">CatalogEntitySpec</a>></td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left"><code>onBeforeRun</code></td>
+<td align="left"><code>CatalogEntityOnBeforeRun</code></td>
+<td align="left">The function that should return a boolean if the onRun of catalog entity should be triggered.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>Disposer</code></p>
+<p>A function to remove that hook</p>
+<hr />
 <h3 id="getbyid">getById<a class="headerlink" href="#getbyid" title="Permanent link">#</a></h3>
 <p>▸ <strong>getById</strong>(<code>id</code>): <a href="../common.catalog.catalogentity/">CatalogEntity</a>&lt;<a href="../../interfaces/common.catalog.catalogentitymetadata/">CatalogEntityMetadata</a>, <a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a>, <a href="../../modules/common.catalog/#catalogentityspec">CatalogEntitySpec</a>></p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -876,51 +913,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogentity/">CatalogEntity</a>&lt;<a href="../../interfaces/common.catalog.catalogentitymetadata/">CatalogEntityMetadata</a>, <a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a>, <a href="../../modules/common.catalog/#catalogentityspec">CatalogEntitySpec</a>></p>
 <hr />
 <h3 id="getitemsforapikind">getItemsForApiKind<a class="headerlink" href="#getitemsforapikind" title="Permanent link">#</a></h3>
 <p>▸ <strong>getItemsForApiKind</strong>&lt;T>(<code>apiVersion</code>, <code>kind</code>): <code>T</code>[]</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code>: <a href="../common.catalog.catalogentity/">CatalogEntity</a>&lt;<a href="../../interfaces/common.catalog.catalogentitymetadata/">CatalogEntityMetadata</a>, <a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a>, <a href="../../modules/common.catalog/#catalogentityspec">CatalogEntitySpec</a>, T></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>apiVersion</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>kind</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>T</code>[]</p>
-<hr />
-<h3 id="getitemsforcategory">getItemsForCategory<a class="headerlink" href="#getitemsforcategory" title="Permanent link">#</a></h3>
-<p>▸ <strong>getItemsForCategory</strong>&lt;T>(<code>category</code>): <code>T</code>[]</p>
-<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -945,12 +943,51 @@
 </thead>
 <tbody>
 <tr>
+<td align="left"><code>apiVersion</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>kind</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>T</code>[]</p>
+<hr />
+<h3 id="getitemsforcategory">getItemsForCategory<a class="headerlink" href="#getitemsforcategory" title="Permanent link">#</a></h3>
+<p>▸ <strong>getItemsForCategory</strong>&lt;T>(<code>category</code>): <code>T</code>[]</p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>T</code>: <a href="../common.catalog.catalogentity/">CatalogEntity</a>&lt;<a href="../../interfaces/common.catalog.catalogentitymetadata/">CatalogEntityMetadata</a>, <a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a>, <a href="../../modules/common.catalog/#catalogentityspec">CatalogEntitySpec</a>, T></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td align="left"><code>category</code></td>
 <td align="left"><a href="../common.catalog.catalogcategory/">CatalogCategory</a></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>T</code>[]</p>
                 
               
