@@ -31,11 +31,13 @@ export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
 }
 
 export function getMetricsForPvc(pvc: PersistentVolumeClaim): Promise<IPvcMetrics> {
+  const opts = { category: "pvc", pvc: pvc.getName(), namespace: pvc.getNs() };
+
   return metricsApi.getMetrics({
-    diskUsage: { category: "pvc", pvc: pvc.getName() },
-    diskCapacity: { category: "pvc", pvc: pvc.getName() }
+    diskUsage: opts,
+    diskCapacity: opts
   }, {
-    namespace: pvc.getNs()
+    namespace: opts.namespace
   });
 }
 
