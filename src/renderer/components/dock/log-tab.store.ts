@@ -20,11 +20,12 @@
  */
 
 import uniqueId from "lodash/uniqueId";
-import { reaction } from "mobx";
+import { action, reaction } from "mobx";
 import { podsStore } from "../+workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
 import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
+import logger from "../../../common/logger";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
@@ -51,9 +52,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
       storageKey: "pod_logs"
     });
 
-    reaction(() => podsStore.items.length, () => {
-      this.updateTabsData();
-    });
+    reaction(() => podsStore.items.length, () => this.updateTabsData());
   }
 
   createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): void {
@@ -108,36 +107,42 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     });
   }
 
-  private async updateTabsData() {
-    const promises: Promise<void>[] = [];
-
+  @action
+  private updateTabsData() {
     for (const [tabId, tabData] of this.data) {
-      const pod = new Pod(tabData.selectedPod);
-      const pods = podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
-      const isSelectedPodInList = pods.find(item => item.getId() == pod.getId());
-      const selectedPod = isSelectedPodInList ? pod : pods[0];
-      const selectedContainer = isSelectedPodInList ? tabData.selectedContainer : pod.getAllContainers()[0];
+      try {
+        if (!tabData.selectedPod) {
+          tabData.selectedPod = tabData.pods[0];
+        }
 
-      if (pods.length) {
-        this.setData(tabId, {
-          ...tabData,
-          selectedPod,
-          selectedContainer,
-          pods
-        });
-
-        this.renameTab(tabId);
-      } else {
-        promises.push(this.closeTab(tabId));
+        const pod = new Pod(tabData.selectedPod);
+        const pods = podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
+        const isSelectedPodInList = pods.find(item => item.getId() == pod.getId());
+        const selectedPod = isSelectedPodInList ? pod : pods[0];
+        const selectedContainer = isSelectedPodInList ? tabData.selectedContainer : pod.getAllContainers()[0];
+  
+        if (pods.length > 0) {
+          this.setData(tabId, {
+            ...tabData,
+            selectedPod,
+            selectedContainer,
+            pods
+          });
+  
+          this.renameTab(tabId);
+        } else {
+          this.closeTab(tabId);
+        }
+      } catch (error) {
+        logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error, tabData);
+        this.data.delete(tabId);
       }
     }
-
-    await Promise.all(promises);
   }
 
-  private async closeTab(tabId: string) {
+  private closeTab(tabId: string) {
     this.clearData(tabId);
-    await dockStore.closeTab(tabId);
+    dockStore.closeTab(tabId);
   }
 }
 
