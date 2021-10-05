@@ -20,7 +20,7 @@
  */
 
 import isEqual from "lodash/isEqual";
-import { action, observable, reaction, when, makeObservable } from "mobx";
+import { action, makeObservable, observable, reaction, when } from "mobx";
 import { autoBind } from "../../utils";
 import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { ItemStore } from "../../../common/item.store";
@@ -106,7 +106,10 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    return this.loadAll(namespaceStore.context.contextNamespaces);
+    const { contextNamespaces } = namespaceStore.context ?? {};
+
+    if (!contextNamespaces) return;
+    await this.loadAll(contextNamespaces);
   }
 
   async loadItems(namespaces: string[]) {

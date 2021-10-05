@@ -26,6 +26,7 @@ import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./doc
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import jsYaml from "js-yaml";
 
 export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default
@@ -42,12 +43,17 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
   }
 
   async loadResource(tabId: TabId) {
-    const resource = this.getResource(tabId);
     const store = this.getStore(tabId);
     const data = this.getData(tabId);
+    let resource = this.getResource(tabId);
 
-    if (!resource && store && data) {
-      await store.loadFromPath(data.resource); // preloading resource for the first time
+    if (!store || !data) return;
+
+    try {
+      resource ??= await store.loadFromPath(data.resource);
+      this.getData(tabId).draft = jsYaml.safeDump(resource.toPlainObject());
+    } catch (error) {
+      console.error(`[DOCK]: dump of resource "${data.resource}" failed: ${error}`);
     }
   }
 

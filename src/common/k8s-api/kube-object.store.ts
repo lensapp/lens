@@ -245,15 +245,18 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async load(params: { name: string; namespace?: string }): Promise<T> {
-    const { name, namespace } = params;
+  async load(params: { name: string; namespace?: string, save?: boolean }): Promise<T> {
+    const { name, namespace, save = true } = params;
     let item = this.getByName(name, namespace);
 
     if (!item) {
       item = await this.loadItem(params);
-      const newItems = this.sortItems([...this.items, item]);
 
-      this.items.replace(newItems);
+      if (save) {
+        const newItems = this.sortItems([...this.items, item]);
+
+        this.items.replace(newItems);
+      }
     }
 
     return item;
@@ -263,7 +266,10 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   async loadFromPath(resourcePath: string) {
     const { namespace, name } = parseKubeApi(resourcePath);
 
-    return this.load({ name, namespace });
+    return this.load({
+      name, namespace,
+      save: false, // don't save loaded resource to store
+    });
   }
 
   protected async createItem(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {

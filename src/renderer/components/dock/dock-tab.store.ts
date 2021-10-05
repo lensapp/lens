@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, computed, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autoBind, createStorage, Disposer, disposer, StorageHelper } from "../../utils";
+import { comparer, makeObservable, observable, reaction } from "mobx";
+import { autoBind, createStorage, disposer, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {
@@ -29,14 +29,13 @@ export interface DockTabStoreOptions {
 }
 
 export class DockTabStore<T extends {}> {
-  @observable private _data: Record<TabId, T> = {};
   @observable.ref private storage?: StorageHelper<Record<TabId, T>>; // available only with `options.storageKey`
+  @observable private _data: Record<TabId, T> = {};
   @observable dataReady = false; // dock-tab's data ready to interact, e.g. start editing resource
 
-  protected watchers = observable.map<TabId, IReactionDisposer | Disposer>();
   protected dispose = disposer();
 
-  @computed get data() {
+  get data() {
     if (this.options.storageKey) {
       return this.storage.get();
     }
@@ -63,6 +62,7 @@ export class DockTabStore<T extends {}> {
 
     if (this.options.storageKey) {
       this.storage = createStorage(this.options.storageKey, this._data);
+      this.dispose.push(() => this.storage.dispose());
     }
 
     if (this.options.autoInit) {
@@ -78,48 +78,33 @@ export class DockTabStore<T extends {}> {
   }
 
   protected init() {
-    this.dataReady = true;
-
     this.dispose.push(
-      autorun(() => {
-        const docTabIds = dockStore.tabs.map(tab => tab.id);
-        const savedDataTabIds = Object.keys(this.data);
+      reaction(() => ({
+        dockTabs: dockStore.tabs.map(tab => tab.id) as TabId[],
+        dataTabs: Object.keys(this.data) as TabId[],
+      }), ({ dataTabs, dockTabs }) => {
 
-        savedDataTabIds.forEach(tabId => {
-          const isTabClosed = !docTabIds.includes(tabId);
+        // clear data for closed or non-existing dock tabs
+        if (dockTabs.length < dataTabs.length) {
+          const closedDockTabs = dataTabs.filter(id => !dockTabs.includes(id));
 
-          if (isTabClosed) {
-            this.clearData(tabId); // clear related tab's data
-            this.watchers.get(tabId)?.(); // dispose tab related data watcher
-            dockStore.closeTab(tabId); // make sure dock tab is closed
-          }
-        });
-      }),
-
-      // clean up data watchers (if any)
-      () => this.disposeWatchers(),
+          closedDockTabs.forEach(tabId => this.clearData(tabId));
+        }
+      }, {
+        fireImmediately: true,
+        equals: comparer.structural,
+      })
     );
-  }
 
-  protected disposeWatchers() {
-    this.watchers.forEach(dispose => dispose());
-    this.watchers.clear();
-  }
-
-  onDataChange(callback: (entries: [TabId, T][]) => void, opts?: IReactionOptions): IReactionDisposer {
-    return reaction(() => Object.entries(this.data), callback, opts);
-  }
-
-  onTabDataChange(tabId: TabId, callback: (data: T, prevData?: T) => void, opts?: IReactionOptions): IReactionDisposer {
-    return reaction(() => this.data[tabId], callback, opts);
+    this.dataReady = true;
   }
 
   getData(tabId: TabId): T {
-    return this.data[tabId] ?? {} as T;
+    return this.data[tabId];
   }
 
   setData(tabId: TabId, data: T) {
-    this.data[tabId] = { ...data };
+    this.data[tabId] = data;
   }
 
   clearData(tabId: TabId) {
@@ -128,12 +113,11 @@ export class DockTabStore<T extends {}> {
 
   reset() {
     this.data = {};
+    this.dataReady = false;
   }
 
   destroy() {
-    this.dataReady = false;
-    this.dispose();
-    this.disposeWatchers();
     this.reset();
+    this.dispose();
   }
 }

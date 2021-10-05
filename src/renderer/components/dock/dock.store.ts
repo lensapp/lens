@@ -20,8 +20,8 @@
  */
 
 import * as uuid from "uuid";
-import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autoBind, createStorage } from "../../utils";
+import { action, comparer, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
+import { autoBind, createStorage, Disposer } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -187,6 +187,27 @@ export class DockStore implements DockStorageState {
 
   onResize(callback: () => void, options?: IReactionOptions) {
     return reaction(() => [this.height, this.fullSize], callback, options);
+  }
+
+  onTabClose(tabId: TabId, callback: () => void, options: IReactionOptions = {}): Disposer {
+    let disposed = false;
+
+    const stopWatcher = reaction(() => this.getTabById(tabId), tab => {
+      if (!tab) {
+        disposed = true;
+        stopWatcher();
+        callback();
+      }
+    }, {
+      fireImmediately: true,
+      equals: comparer.shallow,
+      ...options,
+    });
+
+    return () => {
+      if (disposed) return;
+      stopWatcher();
+    };
   }
 
   onTabChange(callback?: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {

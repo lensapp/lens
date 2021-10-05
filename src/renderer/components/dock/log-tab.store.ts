@@ -20,7 +20,7 @@
  */
 
 import uniqueId from "lodash/uniqueId";
-import { reaction } from "mobx";
+import { reaction, when } from "mobx";
 import { podsStore } from "../+workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
@@ -50,6 +50,13 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     super({
       storageKey: "pod_logs"
     });
+  }
+
+  get whenReady(): Promise<any> {
+    return Promise.all([
+      super.whenReady,
+      when(() => podsStore.isLoaded),
+    ]);
   }
 
   protected init() {

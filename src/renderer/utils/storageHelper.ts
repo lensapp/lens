@@ -21,10 +21,11 @@
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, comparer, makeObservable, observable, toJS, when, } from "mobx";
+import { action, comparer, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
+import { disposer } from "../../common/utils";
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
@@ -36,6 +37,7 @@ export interface StorageAdapter<T> {
 
 export interface StorageHelperOptions<T> {
   autoInit?: boolean; // start preloading data immediately, default: true
+  autoSave?: boolean; // bind auto-saving changes to storage-adapter, default: true
   storage: StorageAdapter<T>;
   defaultValue: T;
 }
@@ -43,6 +45,7 @@ export interface StorageHelperOptions<T> {
 export class StorageHelper<T> {
   static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
+  public dispose = disposer();
 
   private data = observable.box<T>(undefined, {
     deep: true,
@@ -63,17 +66,21 @@ export class StorageHelper<T> {
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     makeObservable(this);
 
-    const { storage, autoInit = true } = options;
+    const { storage, autoInit = true, autoSave = true } = options;
 
     this.storage = storage;
-
-    this.data.observe_(({ newValue, oldValue }) => {
-      this.onChange(newValue as T, oldValue as T);
-    });
 
     if (autoInit) {
       this.init();
     }
+
+    if (autoSave) {
+      this.dispose.push(this.bindAutoSave());
+    }
+  }
+
+  protected bindAutoSave(options: IReactionOptions = {}): IReactionDisposer {
+    return reaction(() => this.toJSON(), this.onChange, options);
   }
 
   private onData = (data: T): void => {
@@ -114,7 +121,7 @@ export class StorageHelper<T> {
     return isEqual(value, this.defaultValue);
   }
 
-  protected onChange(value: T, oldValue?: T) {
+  protected onChange = (value: T, oldValue?: T) => {
     if (!this.initialized) return;
 
     try {
@@ -128,7 +135,7 @@ export class StorageHelper<T> {
     } catch (error) {
       logger.error(`${StorageHelper.logPrefix} updating storage: ${error}`, this, { value, oldValue });
     }
-  }
+  };
 
   get(): T {
     return this.data.get() ?? this.defaultValue;

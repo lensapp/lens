@@ -61,17 +61,7 @@ export class EditResource extends React.Component<Props> {
   }
 
   get draft(): string {
-    const { draft } = editResourceStore.getData(this.tabId);
-
-    if (typeof draft === "string") {
-      return draft; // get previously edited draft
-    }
-
-    if (this.resource) {
-      return jsYaml.safeDump(this.resource.toPlainObject()); // dump resource first time
-    }
-
-    return "";
+    return editResourceStore.getData(this.tabId)?.draft ?? "";
   }
 
   @action
@@ -80,10 +70,7 @@ export class EditResource extends React.Component<Props> {
       draft = draft ? jsYaml.safeDump(draft) : undefined;
     }
 
-    editResourceStore.setData(this.tabId, {
-      ...editResourceStore.getData(this.tabId),
-      draft,
-    });
+    editResourceStore.getData(this.tabId).draft = draft;
   }
 
   onChange = (draft: string) => {
