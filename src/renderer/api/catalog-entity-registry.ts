@@ -39,10 +39,7 @@ export class CatalogEntityRegistry {
   protected filters = observable.set<EntityFilter>([], {
     deep: false,
   });
-  protected entityOnBeforeRun = observable.set<{
-    catalogEntityUid: CatalogEntityUid;
-    onBeforeRun: CatalogEntityOnBeforeRun
-  }>([], {
+  protected entityOnBeforeRun = observable.map<CatalogEntityUid, CatalogEntityOnBeforeRun>({}, {
     deep: false,
   });
 
@@ -186,22 +183,16 @@ export class CatalogEntityRegistry {
    * @returns A function to remove that hook
    */
   addOnBeforeRun(catalogEntityUid: CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    this.entityOnBeforeRun.add({
-      catalogEntityUid,
-      onBeforeRun,
-    });
+    this.entityOnBeforeRun.set(catalogEntityUid, onBeforeRun);
   
-    return once(() => void this.entityOnBeforeRun.delete({
-      catalogEntityUid,
-      onBeforeRun,
-    }));
+    return once(() => void this.entityOnBeforeRun.delete(catalogEntityUid));
   }
 
   /**
    * Returns one catalog entity onBeforeRun by catalog entity uid
    */
-  getOnBeforeRun(_catalogEntityUid: CatalogEntityUid): CatalogEntityOnBeforeRun | undefined {
-    return Array.from(this.entityOnBeforeRun).find(({ catalogEntityUid }) => catalogEntityUid === _catalogEntityUid)?.onBeforeRun;
+  getOnBeforeRun(catalogEntityUid: CatalogEntityUid): CatalogEntityOnBeforeRun | undefined {
+    return this.entityOnBeforeRun.get(catalogEntityUid);
   }
 }
 
