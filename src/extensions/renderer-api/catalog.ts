@@ -51,7 +51,7 @@ export class CatalogEntityRegistry {
   }
 
   /**
-   * Add a onRun hook to a catalog entity. If `onBeforeRun` was previously added then it will not be added again
+   * Add a onBeforeRun hook to a catalog entity. If `onBeforeRun` was previously added then it will not be added again
    * @param catalogEntityUid The uid of the catalog entity
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
