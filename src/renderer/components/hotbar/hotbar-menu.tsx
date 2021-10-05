@@ -40,6 +40,8 @@ interface Props {
   className?: IClassName;
 }
 
+const isPromise = (obj: any): obj is Promise<any> => (obj?.then && typeof obj?.then === "function") ? true: false;
+
 @observer
 export class HotbarMenu extends React.Component<Props> {
   get hotbar() {
@@ -140,11 +142,23 @@ export class HotbarMenu extends React.Component<Props> {
                               }
 
                               if (typeof onRunHook === "function") {
-                                // if onRunHook() returns a Promise, we wait for it to resolve
-                                // if not, just take whatever it returns
-                                Promise.resolve(onRunHook(toJS(entity))).then((shouldRun) => {
-                                  if (shouldRun) entity.onRun(catalogEntityRunContext);
-                                });
+                                let shouldRun;
+
+                                try {
+                                  shouldRun = onRunHook(toJS(entity));
+                                } catch (error) {
+                                  if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onRunHook of entity.metadata.uid ${entity?.metadata?.uid} throw an exception, stop before onRun`, error);
+                                }
+
+                                if (isPromise(shouldRun)) {
+                                  Promise.resolve(shouldRun).then((shouldRun) => {
+                                    if (shouldRun) entity.onRun(catalogEntityRunContext);
+                                  }).catch((error) => {
+                                    if (process?.env?.NODE_ENV !== "test") console.warn(`[HOT-BAR] onRunHook of entity.metadata.uid ${entity?.metadata?.uid} rejects, stop before onRun`, error);
+                                  }); 
+                                } else if (shouldRun) {
+                                  entity.onRun(catalogEntityRunContext);
+                                }
                               }
                             }}
                             className={cssNames({ isDragging: snapshot.isDragging })}

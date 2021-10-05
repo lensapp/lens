@@ -119,14 +119,14 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
       try {
         shouldRun = onRunHook(toJS(this.entity));
       } catch (error) {
-        if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity.metadata.uid} throw an exception, stop before onRun`, error);
+        if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity?.metadata?.uid} throw an exception, stop before onRun`, error);
       }
 
       if (isPromise(shouldRun)) {
         Promise.resolve(shouldRun).then((shouldRun) => {
           if (shouldRun) this.entity.onRun(ctx);
         }).catch((error) => {
-          if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity.metadata.uid} rejects, stop before onRun`, error);
+          if (process?.env?.NODE_ENV !== "test") console.warn(`[CATALOG-ENTITY-ITEM] onRunHook of entity.metadata.uid ${this.entity?.metadata?.uid} rejects, stop before onRun`, error);
         }); 
       }  else if (shouldRun) {
         this.entity.onRun(ctx);
