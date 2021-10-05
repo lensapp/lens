@@ -125,7 +125,7 @@ export class PortForwardDialog extends Component<Props> {
             <div className="current-port" data-testid="current-port">
               Local port to forward from:
             </div>
-            <Input className={"portInput"}
+            <Input className="portInput"
               type="number"
               min="0"
               max="65535"
@@ -141,7 +141,7 @@ export class PortForwardDialog extends Component<Props> {
 
   render() {
     const { className, ...dialogProps } = this.props;
-    const resourceName = this.portForward ? this.portForward.name : "";
+    const resourceName = this.portForward?.name ?? "";
     const header = (
       <h5>
         Port Forwarding for <span>{resourceName}</span>

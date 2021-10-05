@@ -74,7 +74,7 @@ export class Network extends React.Component {
     }
 
     tabs.push({
-      title: "Forwarded Ports",
+      title: "Port Forwarding",
       component: PortForwards,
       url: routes.portForwardsURL(),
       routePath: routes.portForwardsRoute.path.toString(),

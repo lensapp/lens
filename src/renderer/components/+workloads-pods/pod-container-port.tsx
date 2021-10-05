@@ -24,7 +24,7 @@ import "./pod-container-port.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { observable, makeObservable, reaction, IReactionDisposer } from "mobx";
+import { observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
@@ -56,16 +56,8 @@ export class PodContainerPort extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      this.watch(),
-    ]);
-  }
-
-  watch() {
-    const disposers: IReactionDisposer[] = [
       reaction(() => portForwardStore.portForwards, () => this.init()),
-    ];
-
-    return () => disposers.forEach((dispose) => dispose());
+    ]);
   }
 
   init() {
@@ -83,11 +75,7 @@ export class PodContainerPort extends React.Component<Props> {
       port: port.containerPort.toString(),
       forwardPort: this.forwardPort.toString()
     };
-    let activePort = await getPortForward(portForward);
-
-    if (!activePort) {
-      activePort = 0;
-    }
+    const activePort = await getPortForward(portForward) ?? 0;
 
     this.forwardPort = activePort;
     this.isPortForwarded = activePort ? true : false;

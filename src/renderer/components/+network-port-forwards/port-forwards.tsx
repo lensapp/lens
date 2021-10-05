@@ -72,7 +72,7 @@ export class PortForwards extends React.Component {
           searchFilters={[
             item => item.getSearchFields(),
           ]}
-          renderHeaderTitle="Forwarded Ports"
+          renderHeaderTitle="Port Forwarding"
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },

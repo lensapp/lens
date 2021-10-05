@@ -97,7 +97,7 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`, {});
+    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
     
     if (response?.port && response.port != +portForward.forwardPort) {
       logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
@@ -114,7 +114,7 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`, {});
+    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
   }
@@ -140,7 +140,7 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
 
 export async function removePortForward(portForward: ForwardedPort) {
   try {
-    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`, {});
+    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
@@ -150,7 +150,7 @@ export async function removePortForward(portForward: ForwardedPort) {
 
 export async function getPortForwards(): Promise<ForwardedPort[]> {
   try {
-    const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards`, {});
+    const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards`);
 
     return response.portForwards;
   } catch (error) {

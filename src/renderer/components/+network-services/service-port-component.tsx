@@ -25,7 +25,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Service, ServicePort } from "../../../common/k8s-api/endpoints";
 import { observable, makeObservable, reaction } from "mobx";
-import { cssNames, disposer } from "../../utils";
+import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, removePortForward } from "../../port-forward";
@@ -52,14 +52,8 @@ export class ServicePortComponent extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      this.watch(),
-    ]);
-  }
-
-  watch() {
-    return disposer(
       reaction(() => portForwardStore.portForwards, () => this.init()),
-    );
+    ]);
   }
 
   init() {
@@ -77,11 +71,7 @@ export class ServicePortComponent extends React.Component<Props> {
       port: port.port.toString(),
       forwardPort: this.forwardPort.toString()
     };
-    let activePort = await getPortForward(portForward);
-
-    if (!activePort) {
-      activePort = 0;
-    }
+    const activePort = await getPortForward(portForward) ?? 0;
 
     this.forwardPort = activePort;
     this.isPortForwarded = activePort ? true : false;
