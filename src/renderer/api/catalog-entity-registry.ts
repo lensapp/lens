@@ -27,10 +27,9 @@ import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
 import { Disposer, iter } from "../utils";
 import { once } from "lodash";
-import type { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity-item";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
-export type CatalogEntityOnRunHook = (entity: CatalogEntity | CatalogEntityItem<CatalogEntity>) => boolean | Promise<boolean>;
+export type CatalogEntityOnRunHook = (entity: CatalogEntity) => boolean | Promise<boolean>;
 
 type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
 
