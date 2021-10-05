@@ -167,9 +167,53 @@ describe("<Catalog />", () => {
         setTimeout(() => {
           expect(onRun).toHaveBeenCalled();
           done();
-        }, 800);
+        }, 500);
 
         return true;
+      }
+    );
+
+    render(
+      <Catalog
+        history={history}
+        location={mockLocation}
+        match={mockMatch}
+        catalogEntityStore={catalogEntityStore}
+      />
+    );
+
+    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+  });
+
+  it("addOnRunHook return false => onRun wont be triggered", (done) => {
+    const onRun = jest.fn();
+    const catalogEntityItem = new CatalogEntityItem({
+      ...catalogEntity,
+      ...catalogEntityItemMethods,
+      onRun,
+    });
+
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+
+    // mock as if there is a selected item > the detail panel opens
+    jest
+      .spyOn(catalogEntityStore, "selectedItem", "get")
+      .mockImplementation(() => {
+        return catalogEntityItem;
+      });
+
+    const onRunDisposer = catalogEntityRegistry.addOnRunHook(
+      catalogEntityUid,
+      () => {
+        onRunDisposer?.();
+        setTimeout(() => {
+          expect(onRun).not.toHaveBeenCalled();
+          done();
+        }, 500);
+
+        return false;
       }
     );
 
