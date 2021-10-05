@@ -115,8 +115,10 @@ class PortForward {
 
 export class PortForwardRoute {
   static async routePortForward(request: LensApiRequest) {
-    const { params, response, cluster } = request;
-    const { namespace, port, forwardPort, resourceType, resourceName } = params;
+    const { params, query, response, cluster } = request;
+    const { namespace, resourceType, resourceName } = params;
+    const port = query.get("port");
+    const forwardPort = query.get("forwardPort");
 
     try {
       let portForward = PortForward.getPortforward({
@@ -164,8 +166,10 @@ export class PortForwardRoute {
   }
 
   static async routeCurrentPortForward(request: LensApiRequest) {
-    const { params, response, cluster } = request;
-    const { namespace, port, forwardPort, resourceType, resourceName } = params;
+    const { params, query, response, cluster } = request;
+    const { namespace, resourceType, resourceName } = params;
+    const port = query.get("port");
+    const forwardPort = query.get("forwardPort");
 
     const portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
@@ -193,8 +197,10 @@ export class PortForwardRoute {
   }
 
   static async routeCurrentPortForwardStop(request: LensApiRequest) {
-    const { params, response, cluster } = request;
-    const { namespace, port, forwardPort, resourceType, resourceName } = params;
+    const { params, query, response, cluster } = request;
+    const { namespace, resourceType, resourceName } = params;
+    const port = query.get("port");
+    const forwardPort = query.get("forwardPort");
 
     const portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
