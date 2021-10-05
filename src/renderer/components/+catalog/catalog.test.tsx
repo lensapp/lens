@@ -26,8 +26,8 @@ import { Catalog } from "./catalog";
 import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import { kubernetesClusterCategory } from "../../../common/catalog-entities/kubernetes-cluster";
-import { catalogCategoryRegistry } from "../../../common/catalog";
-import { catalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
+import { catalogCategoryRegistry, CatalogCategoryRegistry } from "../../../common/catalog";
+import { CatalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { CatalogEntityItem } from "./catalog-entity-item";
 import { CatalogEntityStore } from "./catalog-entity.store";
@@ -120,9 +120,13 @@ describe("<Catalog />", () => {
       onRun,
     });
 
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
+
     // mock as if there is a selected item > the detail panel opens
     jest
-      .spyOn(CatalogEntityStore.prototype, "selectedItem", "get")
+      .spyOn(catalogEntityStore, "selectedItem", "get")
       .mockImplementation(() => {
         return catalogEntityItem;
       });
@@ -170,7 +174,12 @@ describe("<Catalog />", () => {
     );
 
     render(
-      <Catalog history={history} location={mockLocation} match={mockMatch} />
+      <Catalog
+        history={history}
+        location={mockLocation}
+        match={mockMatch}
+        catalogEntityStore={catalogEntityStore}
+      />
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
