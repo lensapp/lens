@@ -371,7 +371,7 @@
     "react-window": "^1.8.5",
     "sass": "^1.41.1",
     "sass-loader": "^8.0.2",
-    "sharp": "^0.29.0",
+    "sharp": "^0.29.1",
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.2.4",
     "ts-jest": "26.5.6",
