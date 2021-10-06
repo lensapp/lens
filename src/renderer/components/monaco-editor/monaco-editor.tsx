@@ -36,7 +36,7 @@ export interface MonacoEditorProps {
   readOnly?: boolean;
   theme?: "vs" /* default, light theme */ | "vs-dark" | "hc-black" | string;
   language?: "yaml" | "json"; // configure bundled list of languages in via MonacoWebpackPlugin({languages: []})
-  options?: editor.IStandaloneEditorConstructionOptions; // customize editor's initialization options
+  options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
   onChange?: onChangeCallback;
   onError?: onErrorCallback;
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
@@ -55,10 +55,7 @@ export interface onErrorCallback {
 }
 
 export const defaultEditorProps: Partial<MonacoEditorProps> = {
-  value: "",
-  options: {},
   language: "yaml",
-  autoFocus: false,
   get theme(): MonacoEditorProps["theme"] {
     // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
     return ThemeStore.getInstance().activeTheme.monacoTheme;
@@ -71,7 +68,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   static viewStates = new WeakMap<editor.ITextModel, editor.ICodeEditorViewState>();
 
   public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
-  public disposeOnUnmount = disposer();
+  public dispose = disposer();
 
   @observable.ref containerElem: HTMLElement;
   @observable.ref editor: editor.IStandaloneCodeEditor;
@@ -81,6 +78,13 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   constructor(props: MonacoEditorProps) {
     super(props);
     makeObservable(this);
+  }
+
+  @computed get options(): editor.IStandaloneEditorConstructionOptions {
+    return toJS({
+      ...UserStore.getInstance().editorConfiguration,
+      ...(this.props.options ?? {}),
+    });
   }
 
   /**
@@ -135,21 +139,15 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   componentWillUnmount() {
-    try {
-      console.info(`[MONACO]: unmounting editor..`);
-      this.unmounting = true;
-      this.destroyEditor();
-    } catch (error) {
-      console.error(`[MONACO]: unmounting error failed: ${String(error)}`, this, error);
-    }
+    this.unmounting = true;
+    this.destroy();
   }
 
   private createEditor() {
     if (!this.containerElem || this.editor || this.unmounting) {
       return;
     }
-    const { language, theme, readOnly, value: defaultValue, options } = this.props;
-    const globalEditorOptions = toJS(UserStore.getInstance().editorConfiguration);
+    const { language, theme, readOnly, value: defaultValue } = this.props;
 
     this.editor = editor.create(this.containerElem, {
       model: this.model,
@@ -157,8 +155,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       language,
       theme,
       readOnly,
-      ...globalEditorOptions,
-      ...options,
+      ...this.options,
     });
     console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
 
@@ -182,11 +179,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       // console.info("[MONACO]: onDidContentSizeChange():", params)
     });
 
-    this.disposeOnUnmount.push(
+    this.dispose.push(
       reaction(() => this.model, this.onModelChange),
       reaction(() => this.props.theme, editor.setTheme),
       reaction(() => this.props.value, value => this.setValue(value)),
-      reaction(() => toJS(this.props.options), opts => this.editor.updateOptions(opts)),
+      reaction(() => this.options, opts => this.editor.updateOptions(opts)),
 
       () => onDidLayoutChangeDisposer.dispose(),
       () => onValueChangeDisposer.dispose(),
@@ -195,12 +192,12 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     );
   }
 
-  private destroyEditor(): void {
+  destroy(): void {
     if (!this.editor) return;
 
+    this.dispose();
     this.editor.dispose();
     this.editor = null;
-    this.disposeOnUnmount();
   }
 
   @action

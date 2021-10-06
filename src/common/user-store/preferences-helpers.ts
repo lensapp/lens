@@ -24,27 +24,26 @@ import path from "path";
 import os from "os";
 import { ThemeStore } from "../../renderer/theme.store";
 import { ObservableToggleSet } from "../utils";
-import type * as monaco from "monaco-editor";
+import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
 }
 
-export interface KubeconfigSyncValue { }
-
-export interface EditorConfiguration {
-  miniMap: monaco.editor.IEditorMinimapOptions;
-  lineNumbers: monaco.editor.LineNumbersType;
-  tabSize: number;
+export interface KubeconfigSyncValue {
 }
 
+export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptions,
+  "minimap" | "tabSize" | "lineNumbers">;
+
 export const defaultEditorConfig: EditorConfiguration = {
+  tabSize: 2,
   lineNumbers: "on",
-  miniMap: {
-    enabled: true
+  minimap: {
+    enabled: true,
+    side: "right",
   },
-  tabSize: 2
 };
 
 interface PreferenceDescription<T, R = T> {

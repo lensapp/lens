@@ -20,12 +20,13 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
+import type { editor } from "monaco-editor";
 import { UserStore } from "../../../common/user-store";
-import { FormSwitch, Switcher } from "../switch";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { isNumber } from "../input/input_validators";
+import { Switcher } from "../switch";
 import { Select } from "../select";
+import { SubTitle } from "../layout/sub-title";
+import { SubHeader } from "../layout/sub-header";
+import { Input, InputValidators } from "../input";
 
 enum EditorLineNumbersStyles {
   on = "On",
@@ -40,18 +41,29 @@ export const Editor = observer(() => {
   return (
     <section id="editor">
       <h2 data-testid="editor-configuration-header">Editor configuration</h2>
+
+      <SubTitle title="Minimap"/>
       <section>
-        <FormSwitch
-          control={
+        <div className="flex gaps justify-space-between">
+          <div className="flex gaps align-center">
+            <SubHeader compact>Show minimap</SubHeader>
             <Switcher
-              checked={editorConfiguration.miniMap.enabled}
-              onChange={(evt, checked) => editorConfiguration.miniMap.enabled = checked}
-              name="minimap"
+              checked={editorConfiguration.minimap.enabled}
+              onChange={(evt, checked) => editorConfiguration.minimap.enabled = checked}
             />
-          }
-          label="Show minimap"
-        />
+          </div>
+          <div className="flex gaps align-center">
+            <SubHeader compact>Position</SubHeader>
+            <Select
+              themeName="lens"
+              options={["left", "right"] as editor.IEditorMinimapOptions["side"][]}
+              value={editorConfiguration.minimap.side}
+              onChange={({ value }) => editorConfiguration.minimap.side = value}
+            />
+          </div>
+        </div>
       </section>
+
       <section>
         <SubTitle title="Line numbers"/>
         <Select
@@ -61,14 +73,14 @@ export const Editor = observer(() => {
           themeName="lens"
         />
       </section>
+
       <section>
         <SubTitle title="Tab size"/>
         <Input
           theme="round-black"
-          min={1}
-          max={10}
           type="number"
-          validators={[isNumber]}
+          min={1}
+          validators={InputValidators.isNumber}
           value={editorConfiguration.tabSize.toString()}
           onChange={value => editorConfiguration.tabSize = Number(value)}
         />
