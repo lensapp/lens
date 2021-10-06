@@ -9672,6 +9672,11 @@ monaco-editor@^0.26.1:
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.26.1.tgz#62bb5f658bc95379f8abb64b147632bd1c019d73"
   integrity sha512-mm45nUrBDk0DgZKgbD7+bhDOtcAFNGPJJRAdS6Su1kTGl6XEgC7U3xOmDUW/0RrLf+jlvCGaqLvD4p2VjwuwwQ==
 
+monaco-editor@^0.27.0:
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.27.0.tgz#4b69108bb1dc1f60174c5dcdf51bc5306ab5ba26"
+  integrity sha512-UhwP78Wb8w0ZSYoKXQNTV/0CHObp6NS3nCt51QfKE6sKyBo5PBsvuDOHoI2ooBakc6uIwByRLHVeT7+yXQe2fQ==
+
 moo-color@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/moo-color/-/moo-color-1.0.2.tgz#837c40758d2d58763825d1359a84e330531eca64"
@@ -11629,12 +11634,12 @@ react-material-ui-carousel@^2.3.1:
     auto-bind "^2.1.1"
     react-swipeable "^6.1.0"
 
-react-monaco-editor@^0.44.0:
-  version "0.44.0"
-  resolved "https://registry.yarnpkg.com/react-monaco-editor/-/react-monaco-editor-0.44.0.tgz#9f966fd00b6c30e8be8873a3fbc86f14a0da2ba4"
-  integrity sha512-GPheXTIpBXpwv857H7/jA8HX5yae4TJ7vFwDJ5iTvy05LxIQTsD3oofXznXGi66lVA93ST/G7wRptEf4CJ9dOg==
+react-monaco-editor@^0.45.0:
+  version "0.45.0"
+  resolved "https://registry.yarnpkg.com/react-monaco-editor/-/react-monaco-editor-0.45.0.tgz#fa7eeaddc61c44865508d63c40930b4d67d49e98"
+  integrity sha512-QgAFXdXm5e9QRCnjFBt5fHqmUWL2qIMHZuZSLR6rU9E3Bbo2pQO7FSqgVmB5trc5U+hs7KdIWVoWIOzQvZMu3w==
   dependencies:
-    monaco-editor "^0.26.1"
+    monaco-editor "^0.27.0"
     prop-types "^15.7.2"
 
 react-redux@^7.2.0:
