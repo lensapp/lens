@@ -20,7 +20,7 @@
  */
 
 import uniqueId from "lodash/uniqueId";
-import { action, reaction } from "mobx";
+import { reaction } from "mobx";
 import { podsStore } from "../+workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
@@ -55,12 +55,12 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     reaction(() => podsStore.items.length, () => this.updateTabsData());
   }
 
-  createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): void {
+  createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): string {
     const podOwner = selectedPod.getOwnerRefs()[0];
     const pods = podsStore.getPodsByOwnerId(podOwner?.uid);
     const title = `Pod ${selectedPod.getName()}`;
 
-    this.createLogsTab(title, {
+    return this.createLogsTab(title, {
       pods: pods.length ? pods : [selectedPod],
       selectedPod,
       selectedContainer
@@ -94,9 +94,9 @@ export class LogTabStore extends DockTabStore<LogTabData> {
       ...tabParams,
       kind: TabKind.POD_LOGS,
     }, false);
-  }
+  } 
 
-  private createLogsTab(title: string, data: LogTabData) {
+  private createLogsTab(title: string, data: LogTabData): string {
     const id = uniqueId("log-tab-");
 
     this.createDockTab({ id, title });
@@ -105,9 +105,10 @@ export class LogTabStore extends DockTabStore<LogTabData> {
       showTimestamps: false,
       previous: false
     });
+
+    return id;
   }
 
-  @action
   private updateTabsData() {
     for (const [tabId, tabData] of this.data) {
       try {
@@ -134,7 +135,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
           this.closeTab(tabId);
         }
       } catch (error) {
-        logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error, tabData);
+        logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error,);
         this.data.delete(tabId);
       }
     }

@@ -21,7 +21,7 @@
 
 import * as uuid from "uuid";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autoBind, createStorage } from "../../utils";
+import { autoBind, createStorage, toJS } from "../../utils";
 import throttle from "lodash/throttle";
 import {monacoModelsManager} from "./monaco-model-manager";
 
@@ -311,6 +311,8 @@ export class DockStore implements DockStorageState {
         this.close();
       }
     }
+
+    console.log(tabId, toJS(this.tabs));
   }
 
   closeTabs(tabs: DockTab[]) {
