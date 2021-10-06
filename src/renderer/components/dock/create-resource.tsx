@@ -21,7 +21,7 @@
 
 import "./create-resource.scss";
 import React from "react";
-import { Select, SelectOption } from "../select";
+import { GroupSelectOption, Select, SelectOption } from "../select";
 import jsYaml from "js-yaml";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -39,32 +39,29 @@ interface Props {
   tab: DockTab;
 }
 
+type SelectOptionTemplate = SelectOption<SelectOptionTemplateValue>;
+
+interface SelectOptionTemplateValue {
+  sourceFolder: string;
+  fileName: string;
+  content?: string; // available after loading (template selection)
+}
+
 @observer
 export class CreateResource extends React.Component<Props> {
-  @observable currentTemplates: Map<string, SelectOption> = new Map();
-  @observable error = "";
-  @observable templates = observable.map<string/*filename*/, string>();
-
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  // TODO
-  @computed get templateOptions(): SelectOption<string>[] {
-    return [];
-  }
+  @observable error = "";
 
   get tabId() {
     return this.props.tab.id;
   }
 
-  get data() {
+  get draft() {
     return createResourceStore.getData(this.tabId);
-  }
-
-  get selectedTemplate() {
-    return this.currentTemplates.get(this.tabId) ?? null;
   }
 
   onChange = (value: string) => {
@@ -75,24 +72,14 @@ export class CreateResource extends React.Component<Props> {
     this.error = error;
   };
 
-  // FIXME
-  onSelectTemplate = (item: SelectOption) => {
-    console.log(`SELECTED TEMPLATE: ${this.tabId}`, item);
-    // this.currentTemplates.set(this.tabId, item);
-    //
-    // fs.readFile(item.value, "utf8").then(templateFileContent => {
-    //   createResourceStore.setData(this.tabId, templateFileContent);
-    // });
-  };
-
   create = async () => {
-    if (this.error || !this.data.trim()) {
+    if (this.error || !this.draft) {
       // do not save when field is empty or there is an error
       return null;
     }
 
     // skip empty documents if "---" pasted at the beginning or end
-    const resources = jsYaml.safeLoadAll(this.data).filter(Boolean);
+    const resources = jsYaml.safeLoadAll(this.draft).filter(Boolean);
     const createdResources: string[] = [];
     const errors: string[] = [];
 
@@ -125,20 +112,41 @@ export class CreateResource extends React.Component<Props> {
       <div className="flex gaps align-center">
         <Select
           autoConvertOptions={false}
+          controlShouldRenderValue={false} // always keep initial placeholder
           className="SelectResourceTemplate"
           placeholder="Select Template ..."
-          options={this.templateOptions}
           menuPlacement="top"
           themeName="outlined"
+          options={this.templateOptions}
           onChange={v => this.onSelectTemplate(v)}
-          value={this.selectedTemplate}
         />
       </div>
     );
   }
 
+  @computed get templateOptions(): GroupSelectOption<SelectOptionTemplate>[] {
+    return Object.entries(createResourceStore.templateGroups).map(([sourceFolder, group]) => {
+      return {
+        label: group.label,
+        options: Object.entries(group.templates).map(([fileName]) => {
+          return {
+            label: fileName,
+            value: { fileName, sourceFolder },
+          };
+        }),
+      };
+    });
+  }
+
+  onSelectTemplate = async ({ value }: SelectOptionTemplate) => {
+    const { fileName, sourceFolder, content } = value;
+    const templateContent = content ?? await createResourceStore.loadTemplate({ fileName, sourceFolder });
+
+    createResourceStore.setData(this.tabId, templateContent); // update draft
+  };
+
   render() {
-    const { tabId, data, error, create } = this;
+    const { tabId, draft, error, create } = this;
     const { className } = this.props;
 
     return (
@@ -153,7 +161,7 @@ export class CreateResource extends React.Component<Props> {
         />
         <MonacoEditor
           id={tabId}
-          value={data}
+          value={draft}
           onChange={this.onChange}
           onError={this.onError}
         />

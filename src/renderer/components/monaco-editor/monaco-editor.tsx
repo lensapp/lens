@@ -65,8 +65,6 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
   }
 };
 
-// FIXME: apply changes of props.options and globalOptions.editor to active editor
-
 @observer
 export class MonacoEditor extends React.Component<MonacoEditorProps> {
   static defaultProps = defaultEditorProps as object;
@@ -186,6 +184,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     this.disposeOnUnmount.push(
       reaction(() => this.model, this.onModelChange),
+      reaction(() => this.props.theme, editor.setTheme),
+      reaction(() => this.props.value, value => this.setValue(value)),
+      reaction(() => toJS(this.props.options), opts => this.editor.updateOptions(opts)),
+
       () => onDidLayoutChangeDisposer.dispose(),
       () => onValueChangeDisposer.dispose(),
       () => onContentSizeChangeDisposer.dispose(),
@@ -237,6 +239,8 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   setValue(value: string) {
+    if (value == this.getValue()) return;
+
     this.editor.setValue(value);
   }
 
