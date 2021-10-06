@@ -260,6 +260,32 @@ const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConf
   },
 };
 
+const defaultUpdateChannel = "latest";
+const updateChannels = new Map([
+  [defaultUpdateChannel, {
+    label: "Stable"
+  }],
+  ["beta", {
+    label: "Beta"
+  }],
+  ["alpha", {
+    label: "Alpha"
+  }],
+]);
+
+const updateChannel: PreferenceDescription<string> = {
+  fromStore(val) {
+    return updateChannels.has(val) ? val : defaultUpdateChannel;
+  },
+  toStore(val) {
+    if (!updateChannels.has(val) || val === defaultUpdateChannel) {
+      return undefined;
+    }
+
+    return val;
+  }
+};
+
 type PreferencesModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<infer T, any> ? T : never;
 type UserStoreModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<any, infer T> ? T : never;
 
@@ -288,4 +314,10 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
+  updateChannel,
+};
+
+export const CONSTANTS = {
+  defaultUpdateChannel,
+  updateChannels,
 };
