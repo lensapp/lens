@@ -57,8 +57,7 @@ class PortForward {
   public namespace: string;
   public name: string;
   public port: number;
-  public internalPort?: number;
-  public forwardPort?: number;
+  public forwardPort: number;
 
   constructor(public kubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
@@ -91,14 +90,15 @@ class PortForward {
       }
     });
 
-    this.internalPort = await getPortFrom(this.process.stdout, {
+    const internalPort = await getPortFrom(this.process.stdout, {
       lineRegex: internalPortRegex,
     });
 
     try {
-      await tcpPortUsed.waitUntilUsed(this.internalPort, 500, 15000);
+      await tcpPortUsed.waitUntilUsed(internalPort, 500, 15000);
 
-      this.forwardPort = this.internalPort;
+      // make sure this.forwardPort is set to the actual port used (if it was 0 then an available port is found by 'kubectl port-forward')
+      this.forwardPort = internalPort;
 
       return true;
     } catch (error) {
@@ -154,7 +154,7 @@ export class PortForwardRoute {
         }
       }
 
-      respondJson(response, { port: portForward.internalPort });
+      respondJson(response, { port: portForward.forwardPort });
     } catch (error) {
       logger.error(`[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`, { namespace, port, resourceType, resourceName });
 
@@ -175,7 +175,7 @@ export class PortForwardRoute {
       namespace, port, forwardPort
     });
 
-    respondJson(response, { port: portForward?.internalPort ?? null });
+    respondJson(response, { port: portForward?.forwardPort ?? null });
   }
 
   static async routeAllPortForwards(request: LensApiRequest) {

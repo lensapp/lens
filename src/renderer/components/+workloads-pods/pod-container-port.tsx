@@ -92,10 +92,7 @@ export class PodContainerPort extends React.Component<Props> {
     };
 
     this.waiting = true;
-
-    if (!this.forwardPort) {
-      this.forwardPort = 0;
-    }
+    this.isPortForwarded = false;
 
     try {
       this.forwardPort = await addPortForward(portForward);
