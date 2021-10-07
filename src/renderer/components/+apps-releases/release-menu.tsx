@@ -79,6 +79,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
         {...menuProps}
         className={cssNames("HelmReleaseMenu", className)}
         removeAction={this.remove}
+        removeConfirmationMessage={() => <p>Remove Helm Release <b>{release.name}</b>?</p>}
       >
         {this.renderContent()}
       </MenuActions>
