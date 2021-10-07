@@ -296,7 +296,7 @@
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.1.1",
     "@types/react-dom": "^17.0.9",
-    "@types/react-router-dom": "^5.1.6",
+    "@types/react-router-dom": "^5.3.1",
     "@types/react-select": "3.1.2",
     "@types/react-table": "^7.7.6",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
