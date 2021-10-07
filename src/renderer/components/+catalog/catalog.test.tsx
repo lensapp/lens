@@ -129,8 +129,8 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      (entity) => {
-        expect(entity).toMatchInlineSnapshot(`
+      (event) => {
+        expect(event.target).toMatchInlineSnapshot(`
           Object {
             "apiVersion": "api",
             "enabled": true,
@@ -175,7 +175,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("onBeforeRun return false => onRun wont be triggered", (done) => {
+  it("onBeforeRun prevents event => onRun wont be triggered", (done) => {
     const catalogCategoryRegistry = new CatalogCategoryRegistry();
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
@@ -192,13 +192,12 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      () => {
+      (e) => {
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
           done();
         }, 500);
-
-        return false;
+        e.preventDefault();
       }
     );
 
@@ -253,7 +252,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnRunHook return a promise and resolve true => onRun()", (done) => {
+  it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
     const catalogCategoryRegistry = new CatalogCategoryRegistry();
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
@@ -271,7 +270,7 @@ describe("<Catalog />", () => {
 
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
-        return true;
+        // no op
       }
     );
 
@@ -287,7 +286,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnRunHook return a promise and resolve false => onRun() wont be triggered", (done) => {
+  it("addOnRunHook return a promise and prevents event wont be triggered", (done) => {
     const catalogCategoryRegistry = new CatalogCategoryRegistry();
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
@@ -304,7 +303,7 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      async () => {
+      async (e) => {
         expect(onRun).not.toBeCalled();
 
         setTimeout(() => {
@@ -312,7 +311,7 @@ describe("<Catalog />", () => {
           done();
         }, 500);
 
-        return false;
+        e.preventDefault();
       }
     );
 

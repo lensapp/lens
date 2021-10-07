@@ -53,9 +53,9 @@ export class CatalogEntityRegistry {
   /**
    * Add a onBeforeRun hook to a catalog entities. If `onBeforeRun` was previously
    * added then it will not be added again.
-   * @param onBeforeRun The function will receive the catalog entity as a parameter.
-   * Hook function should return a boolean that determines if the running sequence
-   * should continue to onRun.
+   * @param onBeforeRun The function will receive the catalog run event as a parameter.
+   * event target will be the catalog entity. onBeforeRun hook can call event.preventDefault()
+   * to stop run sequence
    * @returns A function to remove that hook
    */
   addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {

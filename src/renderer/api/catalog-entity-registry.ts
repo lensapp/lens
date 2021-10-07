@@ -29,9 +29,10 @@ import { Disposer, iter } from "../utils";
 import { once } from "lodash";
 import logger from "../../common/logger";
 import { catalogEntityRunContext } from "./catalog-entity";
+import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
-export type CatalogEntityOnBeforeRun = (entity: CatalogEntity) => boolean | Promise<boolean>;
+export type CatalogEntityOnBeforeRun = ((event: CatalogRunEvent) => void) | ((event: CatalogRunEvent) => Promise<void>);
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;
@@ -190,7 +191,7 @@ export class CatalogEntityRegistry {
   }
 
   /**
-   * Runs all the registered `onBeforeRun` hooks, short circuiting on the first falsy returned/resolved valued
+   * Runs all the registered `onBeforeRun` hooks, short circuiting on the first event that's preventDefaulted
    * @param entity The entity to run the hooks on
    * @returns Whether the entities `onRun` method should be executed
    */
@@ -199,9 +200,13 @@ export class CatalogEntityRegistry {
 
     for (const onBeforeRun of this.onBeforeRunHooks) {
       try {
-        if (!await onBeforeRun(entity)) {
-          return false;
-        }
+        const runEvent = new CatalogRunEvent({ target: entity });
+
+        await onBeforeRun(runEvent);
+
+        const shouldContinue = !runEvent.preventDefaulted;
+
+        return shouldContinue;
       } catch (error) {
         logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
 
