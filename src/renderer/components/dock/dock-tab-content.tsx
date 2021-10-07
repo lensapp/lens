@@ -19,12 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./dock";
+import React from "react";
+import type { DockTab } from "./dock.store";
+import { cssNames } from "../../utils";
 
-// registered dock-tab view components
-export * from "./terminal-window";
-export * from "./create-resource";
-export * from "./edit-resource";
-export * from "./install-chart";
-export * from "./upgrade-chart";
-export * from "./logs";
+export interface DockTabContentProps {
+  className?: string;
+  tab: DockTab;
+  bindElemRef?(container: HTMLElement): void;
+}
+
+export class DockTabContent extends React.Component<DockTabContentProps> {
+  render() {
+    const { children: tabContent, bindElemRef, className } = this.props;
+
+    return (
+      <div className={cssNames("DockTabContent flex column", className)} ref={bindElemRef}>
+        {tabContent}
+      </div>
+    );
+  }
+}

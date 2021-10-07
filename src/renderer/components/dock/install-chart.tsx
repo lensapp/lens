@@ -24,7 +24,7 @@ import "./install-chart.scss";
 import React, { Component } from "react";
 import { autorun, computed, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { dockStore, DockTab } from "./dock.store";
+import { dockStore, TabKind } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -37,12 +37,13 @@ import { releaseStore } from "../+apps-releases/release.store";
 import { LogsDialog } from "../dialog/logs-dialog";
 import { Select, SelectOption } from "../select";
 import { Input } from "../input";
-import { MonacoEditor } from "../monaco-editor";
 import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { dockViewsManager } from "./dock.views-manager";
+import { MonacoEditor } from "../monaco-editor";
 
-interface Props {
-  tab: DockTab;
+interface Props extends DockTabContentProps {
 }
 
 @observer
@@ -106,6 +107,10 @@ export class InstallChart extends Component<Props> {
 
   onValuesChange = (values: string) => {
     this.save({ values });
+  };
+
+  onValuesError = (error: string) => {
+    this.error = error;
   };
 
   onNamespaceChange = (opt: SelectOption) => {
@@ -203,7 +208,7 @@ export class InstallChart extends Component<Props> {
     );
 
     return (
-      <div className="InstallChart flex column">
+      <DockTabContent className="InstallChart" {...this.props}>
         <InfoPanel
           tabId={tabId}
           controls={panelControls}
@@ -217,9 +222,13 @@ export class InstallChart extends Component<Props> {
           id={tabId}
           value={chartData.values}
           onChange={this.onValuesChange}
-          onError={error => this.error = error}
+          onError={this.onValuesError}
         />
-      </div>
+      </DockTabContent>
     );
   }
 }
+
+dockViewsManager.register(TabKind.INSTALL_CHART, {
+  tabContent: InstallChart,
+});

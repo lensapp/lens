@@ -23,22 +23,16 @@ import "./dock.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-
 import { cssNames, prevDefault } from "../../utils";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
-import { CreateResource } from "./create-resource";
 import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
-import { dockStore, DockTab, TabKind } from "./dock.store";
-import { EditResource } from "./edit-resource";
-import { InstallChart } from "./install-chart";
-import { Logs } from "./logs";
-import { TerminalWindow } from "./terminal-window";
+import { dockStore, DockTab } from "./dock.store";
 import { createTerminalTab } from "./terminal.store";
-import { UpgradeChart } from "./upgrade-chart";
+import { dockViewsManager } from "./dock.views-manager";
 
 interface Props {
   className?: string;
@@ -69,38 +63,10 @@ export class Dock extends React.Component<Props> {
     selectTab(tab.id);
   };
 
-  renderTab(tab: DockTab) {
-    switch (tab.kind) {
-      case TabKind.CREATE_RESOURCE:
-        return <CreateResource tab={tab} />;
-      case TabKind.EDIT_RESOURCE:
-        return <EditResource tab={tab} />;
-      case TabKind.INSTALL_CHART:
-        return <InstallChart tab={tab} />;
-      case TabKind.UPGRADE_CHART:
-        return <UpgradeChart tab={tab} />;
-      case TabKind.POD_LOGS:
-        return <Logs tab={tab} />;
-      case TabKind.TERMINAL:
-        return <TerminalWindow tab={tab} />;
-    }
-  }
-
-  renderTabContent() {
-    const { isOpen, height, selectedTab } = dockStore;
-
-    if (!isOpen || !selectedTab) return null;
-
-    return (
-      <div className="tab-content" style={{ flexBasis: height }}>
-        {this.renderTab(selectedTab)}
-      </div>
-    );
-  }
-
   render() {
     const { className } = this.props;
-    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize, height } = dockStore;
+    const TabContent = dockViewsManager.get(selectedTab?.kind)?.tabContent ?? React.Fragment;
 
     return (
       <div
@@ -130,11 +96,11 @@ export class Dock extends React.Component<Props> {
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
-                  <Icon small svg="terminal" size={15} />
+                  <Icon small svg="terminal" size={15}/>
                   Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
-                  <Icon small material="create" />
+                  <Icon small material="create"/>
                   Create resource
                 </MenuItem>
               </MenuActions>
@@ -155,7 +121,9 @@ export class Dock extends React.Component<Props> {
             )}
           </div>
         </div>
-        {this.renderTabContent()}
+        <div className="tab-content" style={{ flexBasis: height }}>
+          <TabContent tab={selectedTab}/>
+        </div>
       </div>
     );
   }

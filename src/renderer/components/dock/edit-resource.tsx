@@ -25,18 +25,18 @@ import React from "react";
 import { action, autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import jsYaml from "js-yaml";
-import type { DockTab } from "./dock.store";
-import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
-import { MonacoEditor } from "../monaco-editor";
 import { Spinner } from "../spinner";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { DockTabContentProps } from "./dock-tab-content";
+import { DockTabContent } from "./dock-tab-content";
+import { TabKind } from "./dock.store";
+import { dockViewsManager } from "./dock.views-manager";
+import { MonacoEditor } from "../monaco-editor";
 
-interface Props {
-  className?: string;
-  tab: DockTab;
+interface Props extends DockTabContentProps {
 }
 
 @observer
@@ -104,10 +104,10 @@ export class EditResource extends React.Component<Props> {
       return <Spinner center/>;
     }
 
-    const { tabId, error, draft, resource } = this;
+    const { tabId, error, draft, resource, onChange, onError } = this;
 
     return (
-      <div className={cssNames("EditResource flex column", this.props.className)}>
+      <DockTabContent className="EditResource" {...this.props}>
         <InfoPanel
           tabId={tabId}
           error={error}
@@ -125,10 +125,14 @@ export class EditResource extends React.Component<Props> {
         <MonacoEditor
           id={tabId}
           value={draft}
-          onChange={this.onChange}
-          onError={this.onError}
+          onChange={onChange}
+          onError={onError}
         />
-      </div>
+      </DockTabContent>
     );
   }
 }
+
+dockViewsManager.register(TabKind.EDIT_RESOURCE, {
+  tabContent: EditResource,
+});

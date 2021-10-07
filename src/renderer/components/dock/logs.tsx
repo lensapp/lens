@@ -20,12 +20,11 @@
  */
 
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
 import { boundMethod } from "../../utils";
-import type { DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";
@@ -33,10 +32,11 @@ import { logStore } from "./log.store";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
 import { LogTabData, logTabStore } from "./log-tab.store";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { TabKind } from "./dock.store";
+import { dockViewsManager } from "./dock.views-manager";
 
-interface Props {
-  className?: string
-  tab: DockTab
+interface Props extends DockTabContentProps {
 }
 
 @observer
@@ -143,7 +143,7 @@ export class Logs extends React.Component<Props> {
     }
 
     return (
-      <div className="PodLogs flex column">
+      <DockTabContent className="PodLogs" {...this.props}>
         {this.renderResourceSelector(data)}
         <LogList
           logs={logs}
@@ -158,7 +158,11 @@ export class Logs extends React.Component<Props> {
           save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
-      </div>
+      </DockTabContent>
     );
   }
 }
+
+dockViewsManager.register(TabKind.POD_LOGS, {
+  tabContent: Logs,
+});

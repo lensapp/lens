@@ -24,21 +24,20 @@ import "./upgrade-chart.scss";
 import React from "react";
 import { autorun, computed, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
-import type { DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { Spinner } from "../spinner";
 import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
-import { MonacoEditor } from "../monaco-editor";
 import { Select, SelectOption } from "../select";
 import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { TabKind } from "./dock.store";
+import { dockViewsManager } from "./dock.views-manager";
+import { MonacoEditor } from "../monaco-editor";
 
-interface Props {
-  className?: string;
-  tab: DockTab;
+interface Props extends DockTabContentProps {
 }
 
 @observer
@@ -63,7 +62,7 @@ export class UpgradeChart extends React.Component<Props> {
     return upgradeChartStore.getRelease(this.tabId);
   }
 
-  get isReady(){
+  get isReady() {
     return [
       upgradeChartStore.dataReady,
       this.release,
@@ -118,8 +117,7 @@ export class UpgradeChart extends React.Component<Props> {
       return <Spinner center/>;
     }
 
-    const { className } = this.props;
-    const { tabId, release, value, error, versionOptions, selectedVersion } = this;
+    const { tabId, release, value, error, versionOptions, selectedVersion, onChange, onError } = this;
     const currentVersion = release.getVersion();
 
     const controlsAndInfo = (
@@ -141,7 +139,7 @@ export class UpgradeChart extends React.Component<Props> {
     );
 
     return (
-      <div className={cssNames("UpgradeChart flex column", className)}>
+      <DockTabContent className="UpgradeChart" {...this.props}>
         <InfoPanel
           tabId={tabId}
           error={error}
@@ -153,10 +151,14 @@ export class UpgradeChart extends React.Component<Props> {
         <MonacoEditor
           id={tabId}
           value={value}
-          onChange={this.onChange}
-          onError={this.onError}
+          onChange={onChange}
+          onError={onError}
         />
-      </div>
+      </DockTabContent>
     );
   }
 }
+
+dockViewsManager.register(TabKind.UPGRADE_CHART, {
+  tabContent: UpgradeChart,
+});

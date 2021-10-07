@@ -19,12 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./dock";
+import type React from "react";
+import { observable } from "mobx";
+import type { TabKind } from "./dock.store";
+import type { DockTabContentProps } from "./dock-tab-content";
 
-// registered dock-tab view components
-export * from "./terminal-window";
-export * from "./create-resource";
-export * from "./edit-resource";
-export * from "./install-chart";
-export * from "./upgrade-chart";
-export * from "./logs";
+export interface DockViews {
+  tabContent?: React.ComponentType<DockTabContentProps>;
+}
+
+const dockViews = observable.map<TabKind, DockViews>([], {
+  deep: false, // mobx: don't try to modify react components
+});
+
+export const dockViewsManager = {
+  get(tabKind: TabKind): DockViews {
+    return dockViews.get(tabKind) ?? {};
+  },
+
+  register(tabKind: TabKind, views: DockViews) {
+    const currentViews = this.get(tabKind);
+
+    dockViews.set(tabKind, { ...currentViews, ...views });
+  }
+};

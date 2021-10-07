@@ -25,14 +25,14 @@ import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import type { DockTab } from "./dock.store";
 import type { Terminal } from "./terminal";
 import { terminalStore } from "./terminal.store";
 import { ThemeStore } from "../../theme.store";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { TabKind } from "./dock.store";
+import { dockViewsManager } from "./dock.views-manager";
 
-interface Props {
-  className?: string;
-  tab: DockTab;
+interface Props extends DockTabContentProps {
 }
 
 @observer
@@ -55,13 +55,16 @@ export class TerminalWindow extends React.Component<Props> {
   }
 
   render() {
-    const { className } = this.props;
-
     return (
-      <div
-        className={cssNames("TerminalWindow", className, ThemeStore.getInstance().activeTheme.type)}
-        ref={e => this.elem = e}
+      <DockTabContent
+        {...this.props}
+        className={cssNames("TerminalWindow", ThemeStore.getInstance().activeTheme.type)}
+        bindElemRef={elem => this.elem = elem}
       />
     );
   }
 }
+
+dockViewsManager.register(TabKind.TERMINAL, {
+  tabContent: TerminalWindow,
+});

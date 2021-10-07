@@ -25,18 +25,17 @@ import { GroupSelectOption, Select, SelectOption } from "../select";
 import jsYaml from "js-yaml";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
-import type { DockTab } from "./dock.store";
-import { MonacoEditor } from "../monaco-editor";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { Notifications } from "../notifications";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { TabKind } from "./dock.store";
+import { dockViewsManager } from "./dock.views-manager";
+import { MonacoEditor } from "../monaco-editor";
 
-interface Props {
-  className?: string;
-  tab: DockTab;
+interface Props extends DockTabContentProps {
 }
 
 type SelectOptionTemplate = SelectOption<SelectOptionTemplateValue>;
@@ -146,11 +145,10 @@ export class CreateResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, draft, error, create } = this;
-    const { className } = this.props;
+    const { tabId, draft, error, create, onChange, onError } = this;
 
     return (
-      <div className={cssNames("CreateResource flex column", className)}>
+      <DockTabContent className="CreateResource" {...this.props}>
         <InfoPanel
           tabId={tabId}
           error={error}
@@ -162,10 +160,14 @@ export class CreateResource extends React.Component<Props> {
         <MonacoEditor
           id={tabId}
           value={draft}
-          onChange={this.onChange}
-          onError={this.onError}
+          onChange={onChange}
+          onError={onError}
         />
-      </div>
+      </DockTabContent>
     );
   }
 }
+
+dockViewsManager.register(TabKind.CREATE_RESOURCE, {
+  tabContent: CreateResource,
+});
