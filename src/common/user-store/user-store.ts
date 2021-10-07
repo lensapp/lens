@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import semver from "semver";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { BaseStore } from "../base-store";
@@ -48,7 +48,11 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     });
 
     makeObservable(this);
-    fileNameMigration();
+
+    if (ipcMain) {
+      fileNameMigration();
+    }
+
     this.load();
   }
 
