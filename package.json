@@ -318,7 +318,7 @@
     "@types/webpack-dev-server": "^3.11.6",
     "@types/webpack-env": "^1.16.2",
     "@types/webpack-node-externals": "^1.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.29.1",
     "ansi_up": "^5.0.1",
     "chart.js": "^2.9.4",
