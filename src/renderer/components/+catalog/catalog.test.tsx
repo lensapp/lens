@@ -158,8 +158,6 @@ describe("<Catalog />", () => {
           expect(onRun).toHaveBeenCalled();
           done();
         }, 500);
-
-        return true;
       }
     );
 
@@ -213,7 +211,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnBeforeRun throw an exception => onRun wont be triggered", (done) => {
+  it("addOnBeforeRun throw an exception => onRun will be triggered", (done) => {
     const catalogCategoryRegistry = new CatalogCategoryRegistry();
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
@@ -232,7 +230,7 @@ describe("<Catalog />", () => {
     catalogEntityRegistry.addOnBeforeRun(
       () => {
         setTimeout(() => {
-          expect(onRun).not.toHaveBeenCalled();
+          expect(onRun).toHaveBeenCalled();
           done();
         }, 500);
 
@@ -327,7 +325,7 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnRunHook return a promise and reject => onRun wont be triggered", (done) => {
+  it("addOnRunHook return a promise and reject => onRun will be triggered", (done) => {
     const catalogCategoryRegistry = new CatalogCategoryRegistry();
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
@@ -346,7 +344,7 @@ describe("<Catalog />", () => {
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
         setTimeout(() => {
-          expect(onRun).not.toHaveBeenCalled();
+          expect(onRun).toHaveBeenCalled();
           done();
         }, 500);
 

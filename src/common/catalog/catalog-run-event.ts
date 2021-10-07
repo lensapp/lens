@@ -22,23 +22,23 @@
 import type { CatalogEntity } from "../catalog";
 
 export class CatalogRunEvent {
-  private _defaultPrevented: boolean;
-  private _target: CatalogEntity;
+  #defaultPrevented: boolean;
+  #target: CatalogEntity;
 
   get defaultPrevented() {
-    return this._defaultPrevented;
+    return this.#defaultPrevented;
   }
 
   get target() {
-    return this._target;
+    return this.#target;
   }
 
   constructor({ target }: { target: CatalogEntity }) {
-    this._defaultPrevented = false;
-    this._target = target;
+    this.#defaultPrevented = false;
+    this.#target = target;
   }
 
   preventDefault() {
-    this._defaultPrevented = true;
+    this.#defaultPrevented = true;
   }
 }

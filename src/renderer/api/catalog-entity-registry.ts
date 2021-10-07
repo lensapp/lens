@@ -206,11 +206,13 @@ export class CatalogEntityRegistry {
       } catch (error) {
         logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
       }
+
+      if (runEvent.defaultPrevented) {
+        return false;
+      }
     }
 
-    const shouldContinue = !runEvent.defaultPrevented;
-
-    return shouldContinue;
+    return true;
   }
 
   /**
