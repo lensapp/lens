@@ -21,7 +21,7 @@
 
 import * as uuid from "uuid";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autoBind, createStorage, toJS } from "../../utils";
+import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 import {monacoModelsManager} from "./monaco-model-manager";
 
@@ -160,7 +160,7 @@ export class DockStore implements DockStorageState {
     window.addEventListener("resize", throttle(this.adjustHeight, 250));
     // create monaco models
     this.whenReady.then(() => {this.tabs.forEach(tab => {
-      if (this.usesMonacoEditor(tab)) {     
+      if (this.usesMonacoEditor(tab)) {
         monacoModelsManager.addModel(tab.id);
       }
     });});
@@ -274,7 +274,7 @@ export class DockStore implements DockStorageState {
       title
     };
 
-    // add monaco model 
+    // add monaco model
     if (this.usesMonacoEditor(tab)) {
       monacoModelsManager.addModel(id);
     }
@@ -294,7 +294,7 @@ export class DockStore implements DockStorageState {
       return;
     }
 
-    // remove monaco model 
+    // remove monaco model
     if (this.usesMonacoEditor(tab)) {
       monacoModelsManager.removeModel(tabId);
     }
@@ -311,8 +311,6 @@ export class DockStore implements DockStorageState {
         this.close();
       }
     }
-
-    console.log(tabId, toJS(this.tabs));
   }
 
   closeTabs(tabs: DockTab[]) {

@@ -145,7 +145,7 @@ describe("log tab store", () => {
     });
 
     podsStore.items.clear();
-    
+
     expect(logTabStore.getData(dockStore.selectedTabId)).toBeUndefined();
     expect(logTabStore.getData(id)).toBeUndefined();
     expect(dockStore.getTabById(id)).toBeUndefined();
