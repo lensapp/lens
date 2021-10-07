@@ -33,7 +33,7 @@ import { catalogEntityRunContext } from "./catalog-entity";
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (entity: CatalogEntity) => boolean | Promise<boolean>;
 
-type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
+export type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;
@@ -180,7 +180,7 @@ export class CatalogEntityRegistry {
 
   /**
    * Add a onBeforeRun hook to a catalog entity. If `onBeforeRun` was previously added then it will not be added again
-   * @param catalogEntityUid The uid of the catalog entity
+   * @param entityOrId Catalog entity or the uid of the catalog entity
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */

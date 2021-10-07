@@ -21,6 +21,7 @@
 
 
 import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
+import type { CatalogEntityUid } from "../../renderer/api/catalog-entity-registry";
 import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
 import type { CatalogEntityOnBeforeRun } from "../../renderer/api/catalog-entity-registry";
 import type { Disposer } from "../../common/utils";
@@ -52,12 +53,12 @@ export class CatalogEntityRegistry {
 
   /**
    * Add a onBeforeRun hook to a catalog entity. If `onBeforeRun` was previously added then it will not be added again
-   * @param catalogEntityUid The uid of the catalog entity
+   * @param entityOrId Catalog entity or the uid of the catalog entity
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnBeforeRun(entity: CatalogEntity, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    return registry.addOnBeforeRun(entity, onBeforeRun);
+  addOnBeforeRun(entityOrId: CatalogEntity | CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    return registry.addOnBeforeRun(entityOrId, onBeforeRun);
   }
 }
 
