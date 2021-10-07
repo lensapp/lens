@@ -247,7 +247,7 @@ export function buildMenu(windowManager: WindowManager) {
       },
       {
         label: "Documentation",
-        id: "docs",
+        id: "documentation",
         click: async () => {
           shell.openExternal(docsUrl);
         },
