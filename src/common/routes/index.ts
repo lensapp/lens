@@ -40,6 +40,7 @@ export * from "./network-policies";
 export * from "./network";
 export * from "./nodes";
 export * from "./pod-disruption-budgets";
+export * from "./port-forwards";
 export * from "./preferences";
 export * from "./releases";
 export * from "./resource-quotas";

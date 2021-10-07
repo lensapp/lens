@@ -20,21 +20,13 @@
  */
 
 import type { RouteProps } from "react-router";
-import type { URLParams } from "../utils/buildUrl";
-import { endpointRoute } from "./endpoints";
-import { ingressRoute } from "./ingresses";
-import { networkPoliciesRoute } from "./network-policies";
-import { servicesRoute, servicesURL } from "./services";
-import { portForwardsRoute } from "./port-forwards";
+import { buildURL } from "../utils/buildUrl";
 
-export const networkRoute: RouteProps = {
-  path: [
-    servicesRoute,
-    endpointRoute,
-    ingressRoute,
-    networkPoliciesRoute,
-    portForwardsRoute,
-  ].map(route => route.path.toString())
+export const portForwardsRoute: RouteProps = {
+  path: "/port-forwards"
 };
 
-export const networkURL = (params?: URLParams) => servicesURL(params);
+export interface PortForwardsRouteParams {
+}
+
+export const portForwardsURL = buildURL<PortForwardsRouteParams>(portForwardsRoute.path);

@@ -19,22 +19,59 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { RouteProps } from "react-router";
-import type { URLParams } from "../utils/buildUrl";
-import { endpointRoute } from "./endpoints";
-import { ingressRoute } from "./ingresses";
-import { networkPoliciesRoute } from "./network-policies";
-import { servicesRoute, servicesURL } from "./services";
-import { portForwardsRoute } from "./port-forwards";
+.PortForwardDialog {
+  .Wizard {
+    .header {
+      span {
+        color: #a0a0a0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
 
-export const networkRoute: RouteProps = {
-  path: [
-    servicesRoute,
-    endpointRoute,
-    ingressRoute,
-    networkPoliciesRoute,
-    portForwardsRoute,
-  ].map(route => route.path.toString())
-};
+    .WizardStep {
+      .step-content {
+        min-height: 90px;
+        overflow: hidden;
+      }
+    }
 
-export const networkURL = (params?: URLParams) => servicesURL(params);
+    .current-scale {
+      font-weight: bold
+    }
+
+    .desired-scale {
+      flex: 1.1 0;
+    }
+
+    .slider-container {
+      flex: 1 0;
+    }
+
+    .plus-minus-container {
+      margin-left: $margin * 2;
+      .Icon {
+        --color-active: black;
+      }
+    }
+
+    .warning {
+      color: $colorSoftError;
+      font-size: small;
+      display: flex;
+      align-items: center;
+
+      .Icon {
+        margin: 0;
+        margin-right: $margin;
+      }
+    }
+
+    .portInput {
+      display: inline-block !important;
+      width: 70px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }  }
+
+}

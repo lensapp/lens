@@ -33,11 +33,13 @@
     cursor: pointer;
     color: $primary;
     text-decoration: underline;
+    padding-right: 1em;
   }
 
-  .Spinner {
-    --spinner-size: #{$unit * 2};
-    margin-left: $margin;
-    position: absolute;
+  .portInput {
+    display: inline-block !important;
+    width: 70px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }

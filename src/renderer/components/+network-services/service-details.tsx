@@ -32,6 +32,7 @@ import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import { portForwardStore } from "../../port-forward";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
@@ -46,6 +47,7 @@ export class ServiceDetails extends React.Component<Props> {
         preload: true,
         namespaces: [service.getNs()],
       }),
+      portForwardStore.watch(),
     ]);
   }
 
