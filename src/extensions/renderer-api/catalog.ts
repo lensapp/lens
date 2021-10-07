@@ -56,8 +56,8 @@ export class CatalogEntityRegistry {
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnBeforeRun(entity: CatalogEntity, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    return registry.addOnBeforeRun(entity, onBeforeRun);
+  addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    return registry.addOnBeforeRun(onBeforeRun);
   }
 }
 

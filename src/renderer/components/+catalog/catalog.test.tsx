@@ -129,7 +129,6 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      catalogEntityUid,
       (entity) => {
         expect(entity).toMatchInlineSnapshot(`
           Object {
@@ -193,7 +192,6 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      catalogEntityUid,
       () => {
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
@@ -233,7 +231,6 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      catalogEntityUid,
       () => {
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
@@ -273,7 +270,6 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      catalogEntityUid,
       async () => {
         return true;
       }
@@ -308,7 +304,6 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      catalogEntityUid,
       async () => {
         expect(onRun).not.toBeCalled();
 
@@ -350,7 +345,6 @@ describe("<Catalog />", () => {
       .mockImplementation(() => catalogEntityItem);
 
     catalogEntityRegistry.addOnBeforeRun(
-      catalogEntityUid,
       async () => {
         setTimeout(() => {
           expect(onRun).not.toHaveBeenCalled();
