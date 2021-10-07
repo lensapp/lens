@@ -27,7 +27,7 @@ import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
+import { formatNodeTaint, getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../../common/utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
