@@ -26,7 +26,7 @@ import { FSWatcher, watch } from "chokidar";
 import fs from "fs";
 import path from "path";
 import type stream from "stream";
-import { Disposer, ExtendedObservableMap, iter, Singleton, storedKubeConfigFolder } from "../../common/utils";
+import { bytesToUnits, Disposer, ExtendedObservableMap, iter, noop, Singleton, storedKubeConfigFolder } from "../../common/utils";
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
@@ -228,8 +228,17 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
   });
 }
 
-function diffChangedConfig(filePath: string, source: RootSource): Disposer {
+const maxAllowedFileReadSize = 16 * 1024 * 1024; // 16 MiB
+
+function diffChangedConfig(filePath: string, source: RootSource, stats: fs.Stats): Disposer {
   logger.debug(`${logPrefix} file changed`, { filePath });
+
+  if (stats.size >= maxAllowedFileReadSize) {
+    logger.warn(`${logPrefix} skipping ${filePath}: size=${bytesToUnits(stats.size)} is larger than maxSize=${bytesToUnits(maxAllowedFileReadSize)}`);
+    source.clear();
+
+    return noop;
+  }
 
   // TODO: replace with an AbortController with fs.readFile when we upgrade to Node 16 (after it comes out)
   const fileReader = fs.createReadStream(filePath, {
@@ -294,7 +303,7 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
       });
 
       watcher
-        .on("change", (childFilePath) => {
+        .on("change", (childFilePath, stats) => {
           const cleanup = cleanupFns.get(childFilePath);
 
           if (!cleanup) {
@@ -303,9 +312,9 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
           }
 
           cleanup();
-          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map), stats));
         })
-        .on("add", (childFilePath) => {
+        .on("add", (childFilePath, stats) => {
           if (isFolderSync) {
             const fileName = path.basename(childFilePath);
 
@@ -316,7 +325,7 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
             }
           }
 
-          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map), stats));
         })
         .on("unlink", (childFilePath) => {
           cleanupFns.get(childFilePath)?.();
