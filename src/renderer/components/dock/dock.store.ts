@@ -313,7 +313,7 @@ export class DockStore implements DockStorageState {
   }
 
   @action
-  async closeTab(tabId: TabId) {
+  closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
 
     if (!tab || tab.pinned) {
@@ -326,12 +326,6 @@ export class DockStore implements DockStorageState {
       if (this.tabs.length) {
         const newTab = this.tabs.slice(-1)[0]; // last
 
-        if (newTab?.kind === TabKind.TERMINAL) {
-          // close the dock when selected sibling inactive terminal tab
-          const { TerminalStore } = await import("./terminal.store");
-
-          if (!TerminalStore.getInstance(false)?.isConnected(newTab.id)) this.close();
-        }
         this.selectTab(newTab.id);
       } else {
         this.selectedTabId = null;
