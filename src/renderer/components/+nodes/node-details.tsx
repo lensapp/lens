@@ -132,11 +132,7 @@ export class NodeDetails extends React.Component<Props> {
         />
         {taints.length > 0 && (
           <DrawerItem name="Taints" labelsOnly>
-            {
-              taints.map(({ key, effect, value }) => (
-                <Badge key={key} label={`${key}=${value}:${effect}`} />
-              ))
-            }
+            {taints.map(taint => <Badge key={taint.key} label={formatNodeTaint(taint)} />)}
           </DrawerItem>
         )}
         {conditions &&
