@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, makeObservable, action, ObservableSet } from "mobx";
+import { computed, observable, makeObservable, action } from "mobx";
 import { ipcRendererOn } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
@@ -29,11 +29,10 @@ import { Disposer, iter } from "../utils";
 import { once } from "lodash";
 import logger from "../../common/logger";
 import { catalogEntityRunContext } from "./catalog-entity";
+import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
-export type CatalogEntityOnBeforeRun = (entity: CatalogEntity) => boolean | Promise<boolean>;
-
-type CatalogEntityUid = CatalogEntity["metadata"]["uid"];
+export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;
@@ -41,7 +40,7 @@ export class CatalogEntityRegistry {
   protected filters = observable.set<EntityFilter>([], {
     deep: false,
   });
-  protected onBeforeRunHooks = observable.map<CatalogEntityUid, ObservableSet<CatalogEntityOnBeforeRun>>({}, {
+  protected onBeforeRunHooks = observable.set<CatalogEntityOnBeforeRun>([], {
     deep: false,
   });
 
@@ -179,49 +178,36 @@ export class CatalogEntityRegistry {
   }
 
   /**
-   * Add a onBeforeRun hook to a catalog entity. If `onBeforeRun` was previously added then it will not be added again
-   * @param catalogEntityUid The uid of the catalog entity
+   * Add a onBeforeRun hook. If `onBeforeRun` was previously added then it will not be added again
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnBeforeRun(entityOrId: CatalogEntity | CatalogEntityUid, onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    logger.debug(`[CATALOG-ENTITY-REGISTRY]: adding onBeforeRun to ${entityOrId}`);
+  addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    logger.debug(`[CATALOG-ENTITY-REGISTRY]: adding onBeforeRun hook`);
 
-    const id = typeof entityOrId === "string"
-      ? entityOrId
-      : entityOrId.getId();
-    const hooks = this.onBeforeRunHooks.get(id) ??
-      this.onBeforeRunHooks.set(id, observable.set([], { deep: false })).get(id);
-      
-    hooks.add(onBeforeRun);
-  
-    return once(() => void hooks.delete(onBeforeRun));
+    this.onBeforeRunHooks.add(onBeforeRun);
+
+    return once(() => void this.onBeforeRunHooks.delete(onBeforeRun));
   }
 
   /**
-   * Runs all the registered `onBeforeRun` hooks, short circuiting on the first falsy returned/resolved valued
+   * Runs all the registered `onBeforeRun` hooks, short circuiting on the first event that's preventDefaulted
    * @param entity The entity to run the hooks on
    * @returns Whether the entities `onRun` method should be executed
    */
   async onBeforeRun(entity: CatalogEntity): Promise<boolean> {
     logger.debug(`[CATALOG-ENTITY-REGISTRY]: run onBeforeRun on ${entity.getId()}`);
-    
-    const hooks = this.onBeforeRunHooks.get(entity.getId());
 
-    if (!hooks) {
-      return true;
-    }
+    const runEvent = new CatalogRunEvent({ target: entity });
 
-    for (const onBeforeRun of hooks) {
-      try {
-        if (!await onBeforeRun(entity)) {
-          return false;
-        }
+    for (const onBeforeRun of this.onBeforeRunHooks) {
+      try { 
+        await onBeforeRun(runEvent);
       } catch (error) {
         logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
+      }
 
-        // If a handler throws treat it as if it has returned `false`
-        // Namely: assume that its internal logic has failed and didn't complete as expected
+      if (runEvent.defaultPrevented) {
         return false;
       }
     }
