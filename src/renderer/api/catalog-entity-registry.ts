@@ -32,7 +32,7 @@ import { catalogEntityRunContext } from "./catalog-entity";
 import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
-export type CatalogEntityOnBeforeRun = ((event: CatalogRunEvent) => void) | ((event: CatalogRunEvent) => Promise<void>);
+export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;
@@ -198,25 +198,19 @@ export class CatalogEntityRegistry {
   async onBeforeRun(entity: CatalogEntity): Promise<boolean> {
     logger.debug(`[CATALOG-ENTITY-REGISTRY]: run onBeforeRun on ${entity.getId()}`);
 
+    const runEvent = new CatalogRunEvent({ target: entity });
+
     for (const onBeforeRun of this.onBeforeRunHooks) {
-      try {
-        const runEvent = new CatalogRunEvent({ target: entity });
-
+      try { 
         await onBeforeRun(runEvent);
-
-        const shouldContinue = !runEvent.preventDefaulted;
-
-        return shouldContinue;
       } catch (error) {
         logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
-
-        // If a handler throws treat it as if it has returned `false`
-        // Namely: assume that its internal logic has failed and didn't complete as expected
-        return false;
       }
     }
 
-    return true;
+    const shouldContinue = !runEvent.defaultPrevented;
+
+    return shouldContinue;
   }
 
   /**
