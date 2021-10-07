@@ -121,7 +121,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
         namespaceStore.toggleSingle(namespace);
       }
     } else {
-      namespaceStore.toggleAll(true); // "All namespaces" clicked
+      namespaceStore.selectAll();
     }
   };
 
