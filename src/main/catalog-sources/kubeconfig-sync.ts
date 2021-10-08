@@ -54,6 +54,14 @@ const ignoreGlobs = [
   matcher: globToRegExp(rawGlob),
 }));
 
+/**
+ * This should be much larger than any kubeconfig text file
+ *
+ * Even if you have a cert-file, key-file, and client-cert files that is only
+ * 12kb of extra data (at 4096 bytes each) which allows for around 150 entries.
+ */
+const maxAllowedFileReadSize = 2 * 1024 * 1024; // 2 MiB
+
 export class KubeconfigSyncManager extends Singleton {
   protected sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
   protected syncing = false;
@@ -228,8 +236,6 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
   });
 }
 
-const maxAllowedFileReadSize = 16 * 1024 * 1024; // 16 MiB
-
 function diffChangedConfig(filePath: string, source: RootSource, stats: fs.Stats): Disposer {
   logger.debug(`${logPrefix} file changed`, { filePath });
 
@@ -245,7 +251,8 @@ function diffChangedConfig(filePath: string, source: RootSource, stats: fs.Stats
     mode: fs.constants.O_RDONLY,
   });
   const readStream: stream.Readable = fileReader;
-  const bufs: Buffer[] = [];
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let fileString = "";
   let closed = false;
 
   const cleanup = () => {
@@ -262,7 +269,15 @@ function diffChangedConfig(filePath: string, source: RootSource, stats: fs.Stats
   };
 
   readStream
-    .on("data", chunk => bufs.push(chunk))
+    .on("data", (chunk: Buffer) => {
+      try {
+        fileString += decoder.decode(chunk, { stream: true });
+      } catch (error) {
+        logger.warn(`${logPrefix} skipping ${filePath}: ${error}`);
+        source.clear();
+        cleanup();
+      }
+    })
     .on("close", () => cleanup())
     .on("error", error => {
       cleanup();
@@ -270,7 +285,7 @@ function diffChangedConfig(filePath: string, source: RootSource, stats: fs.Stats
     })
     .on("end", () => {
       if (!closed) {
-        computeDiff(Buffer.concat(bufs).toString("utf-8"), source, filePath);
+        computeDiff(fileString, source, filePath);
       }
     });
 
