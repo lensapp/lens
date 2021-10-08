@@ -27,8 +27,7 @@ import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import logger from "../../common/logger";
 
-export interface JsonApiData {
-}
+export type JsonApiData = Record<string, any>;
 
 export interface JsonApiError {
   code?: number;

@@ -19,10 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObject } from "../kube-object";
+import { KubeCreationError, KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { crdResourcesURL } from "../../routes";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 type AdditionalPrinterColumnsCommon = {
   name: string;
@@ -42,7 +43,10 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
 export interface CustomResourceDefinition {
   spec: {
     group: string;
-    version?: string; // deprecated in v1 api
+    /**
+     * This is deprecated for apiextensions.k8s.io/v1 but used previously
+     */
+    version?: string;
     names: {
       plural: string;
       singular: string;
@@ -88,6 +92,14 @@ export class CustomResourceDefinition extends KubeObject {
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
+  constructor(data: KubeJsonApiData) {
+    super(data);
+
+    if (!data.spec || typeof data.spec !== "object") {
+      throw new KubeCreationError("Cannot create a CustomResourceDefinition from an object without spec", data);
+    }
+  }
+
   getResourceUrl() {
     return crdResourcesURL({
       params: {
@@ -126,8 +138,22 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getVersion() {
-    // v1 has removed the spec.version property, if it is present it must match the first version
-    return this.spec.versions?.[0]?.name ?? this.spec.version;
+    // Prefer the modern `versions` over the legacy `version`
+    for (const version of this.spec.versions || []) {
+      /**
+       * If the version is not served then 404 errors will occur
+       * We should also prefer the storage version
+       */
+      if (version.served && version.storage) {
+        return version.name;
+      }
+    }
+
+    if (this.spec.version) {
+      return this.spec.version;
+    }
+
+    throw new Error(`Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
   }
 
   isNamespaced() {
