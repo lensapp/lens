@@ -87,12 +87,16 @@ export interface CustomResourceDefinition {
   };
 }
 
+export interface CRDApiData extends KubeJsonApiData {
+  spec: object; // TODO: make better
+}
+
 export class CustomResourceDefinition extends KubeObject {
   static kind = "CustomResourceDefinition";
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
-  constructor(data: KubeJsonApiData) {
+  constructor(data: CRDApiData) {
     super(data);
 
     if (!data.spec || typeof data.spec !== "object") {
