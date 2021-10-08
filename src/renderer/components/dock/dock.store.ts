@@ -20,8 +20,8 @@
  */
 
 import * as uuid from "uuid";
-import { action, comparer, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autoBind, createStorage, Disposer } from "../../utils";
+import { action, comparer, computed, IReactionOptions, makeObservable, observable, reaction, runInAction } from "mobx";
+import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -89,14 +89,18 @@ export interface DockStorageState {
 }
 
 export interface DockTabChangeEvent {
-  selectedTabId?: TabId;
+  tabId?: TabId;
   tab?: DockTab;
   prevTab?: DockTab;
 }
 
 export interface DockTabChangeEventOptions extends IReactionOptions {
-  kind?: TabKind; // filter: matching by dockStore.selectedTab.kind
+  tabKind?: TabKind; // filter: by dockStore.selectedTab.kind == tabKind
   dockIsVisible?: boolean; // filter: dock and selected tab should be visible (default: true)
+}
+
+export interface DockTabCloseEvent {
+  tabId: TabId; // closed tab id
 }
 
 export class DockStore implements DockStorageState {
@@ -189,37 +193,35 @@ export class DockStore implements DockStorageState {
     return reaction(() => [this.height, this.fullSize], callback, options);
   }
 
-  onTabClose(tabId: TabId, callback: () => void, options: IReactionOptions = {}): Disposer {
-    let disposed = false;
+  onTabClose(callback: (evt: DockTabCloseEvent) => void, options: IReactionOptions = {}) {
+    return reaction(() => dockStore.tabs.map(tab => tab.id), (tabs: TabId[], prevTabs?: TabId[]) => {
+      if (!Array.isArray(prevTabs)) {
+        return; // tabs not yet modified
+      }
 
-    const stopWatcher = reaction(() => this.getTabById(tabId), tab => {
-      if (!tab) {
-        disposed = true;
-        stopWatcher();
-        callback();
+      const closedTabs: TabId[] = prevTabs.filter(id => !tabs.includes(id));
+
+      if (closedTabs.length > 0) {
+        runInAction(() => {
+          closedTabs.forEach(tabId => callback({ tabId }));
+        });
       }
     }, {
-      fireImmediately: true,
-      equals: comparer.shallow,
+      equals: comparer.structural,
       ...options,
     });
-
-    return () => {
-      if (disposed) return;
-      stopWatcher();
-    };
   }
 
   onTabChange(callback?: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {
-    const { kind, dockIsVisible = true, ...reactionOpts } = options;
+    const { tabKind, dockIsVisible = true, ...reactionOpts } = options;
 
     return reaction(() => this.selectedTab, ((tab, prevTab) => {
-      if (kind && kind !== tab.kind) return;
-      if (dockIsVisible && !dockStore.isOpen) return;
+      if (tabKind && tabKind !== tab.kind) return;
+      if (dockIsVisible && !this.isOpen) return;
 
       callback({
         tab, prevTab,
-        selectedTabId: this.selectedTabId,
+        tabId: this.selectedTabId,
       });
     }), reactionOpts);
   }

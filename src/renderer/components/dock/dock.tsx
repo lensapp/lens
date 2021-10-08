@@ -20,7 +20,6 @@
  */
 
 import "./dock.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, prevDefault } from "../../utils";
@@ -62,15 +61,15 @@ export class Dock extends React.Component<Props> {
     open();
     selectTab(tab.id);
   };
-
+  
   render() {
     const { className } = this.props;
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize, height } = dockStore;
-    const TabContent = dockViewsManager.get(selectedTab?.kind)?.tabContent ?? React.Fragment;
+    const DockTabContent = dockViewsManager.get(selectedTab?.kind)?.tabContent;
 
     return (
       <div
-        className={cssNames("Dock", className, { isOpen, fullSize })}
+        className={cssNames("Dock", className, { isOpen, isClosed: !isOpen, fullSize })}
         onKeyDown={this.onKeydown}
         tabIndex={-1}
       >
@@ -121,8 +120,8 @@ export class Dock extends React.Component<Props> {
             )}
           </div>
         </div>
-        <div className="tab-content" style={{ flexBasis: height }}>
-          <TabContent tab={selectedTab}/>
+        <div className="tab-content" style={{ flexBasis: isOpen ? height : 0 }}>
+          {DockTabContent && <DockTabContent tab={selectedTab}/>}
         </div>
       </div>
     );

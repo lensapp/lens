@@ -38,7 +38,7 @@
     }
   }
 
-  &:not(.isOpen) {
+  &.isClosed {
     height: auto !important;
 
     .Tab {
@@ -71,7 +71,7 @@
     background: $terminalBackground;
     flex: 1;
     overflow: hidden;
-    transition: flex 60ms ease-in-out;
+    transition: flex-basis 25ms ease-in;
 
     > *:not(.Spinner) {
       position: absolute;

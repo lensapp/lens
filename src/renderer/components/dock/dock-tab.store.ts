@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { comparer, makeObservable, observable, reaction } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { autoBind, createStorage, disposer, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
@@ -52,8 +52,8 @@ export class DockTabStore<T extends {}> {
   }
 
   protected constructor(protected options: DockTabStoreOptions = {}) {
+    makeObservable(this); // must be called *before* autoBind() when used with mobx's method decorators
     autoBind(this);
-    makeObservable(this);
 
     this.options = {
       autoInit: true,
@@ -78,44 +78,34 @@ export class DockTabStore<T extends {}> {
   }
 
   protected init() {
-    this.dispose.push(
-      reaction(() => ({
-        dockTabs: dockStore.tabs.map(tab => tab.id) as TabId[],
-        dataTabs: Object.keys(this.data) as TabId[],
-      }), ({ dataTabs, dockTabs }) => {
-
-        // clear data for closed or non-existing dock tabs
-        if (dockTabs.length < dataTabs.length) {
-          const closedDockTabs = dataTabs.filter(id => !dockTabs.includes(id));
-
-          closedDockTabs.forEach(tabId => this.clearData(tabId));
-        }
-      }, {
-        fireImmediately: true,
-        equals: comparer.structural,
-      })
-    );
-
     this.dataReady = true;
+
+    this.dispose.push(
+      dockStore.onTabClose(({ tabId }) => this.clearData(tabId)),
+    );
   }
 
   getData(tabId: TabId): T {
     return this.data[tabId];
   }
 
+  @action
   setData(tabId: TabId, data: T) {
     this.data[tabId] = data;
   }
 
+  @action
   clearData(tabId: TabId) {
     delete this.data[tabId];
   }
 
+  @action
   reset() {
     this.data = {};
     this.dataReady = false;
   }
 
+  @action
   destroy() {
     this.reset();
     this.dispose();

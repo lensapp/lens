@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, observable, when } from "mobx";
-import { autoBind, noop, Singleton } from "../../utils";
+import { action, makeObservable, observable, when } from "mobx";
+import { autoBind, disposer, noop, Singleton } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
@@ -40,29 +40,30 @@ export function createTerminalTab(tabParams: DockTabCreateSpecific = {}) {
 }
 
 export class TerminalStore extends Singleton {
-  protected terminals = new Map<TabId, Terminal>();
+  protected terminals = observable.map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();
+  public dispose = disposer();
 
   constructor() {
     super();
+    makeObservable(this);
     autoBind(this);
+    this.init();
+  }
 
-    // connect active tab
-    autorun(() => {
-      const { selectedTab, isOpen } = dockStore;
+  protected init() {
+    // connect active dock tab
+    this.dispose.push(
+      dockStore.onTabChange(({ tabId }) => this.connect(tabId), {
+        tabKind: TabKind.TERMINAL,
+        fireImmediately: true,
+      }),
+    );
 
-      if (selectedTab?.kind === TabKind.TERMINAL && isOpen) {
-        this.connect(selectedTab.id);
-      }
-    });
-    // disconnect closed tabs
-    autorun(() => {
-      const currentTabs = dockStore.tabs.map(tab => tab.id);
-
-      for (const [tabId] of this.connections) {
-        if (!currentTabs.includes(tabId)) this.disconnect(tabId);
-      }
-    });
+    // disconnect terminals for closed dock tabs (if any)
+    this.dispose.push(
+      dockStore.onTabClose(({ tabId }) => this.disconnect(tabId)),
+    );
   }
 
   connect(tabId: TabId) {
@@ -80,6 +81,7 @@ export class TerminalStore extends Singleton {
     this.terminals.set(tabId, terminal);
   }
 
+  @action
   disconnect(tabId: TabId) {
     if (!this.isConnected(tabId)) {
       return;
@@ -165,7 +167,7 @@ export const terminalStore = new Proxy({}, {
     const res = (ts as any)?.[p];
 
     if (typeof res === "function") {
-      return function(...args: any[]) {
+      return function (...args: any[]) {
         return res.apply(ts, args);
       };
     }
