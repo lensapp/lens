@@ -28,6 +28,7 @@ import { StorageHelper } from "./storageHelper";
 import { ClusterStore } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { getHostedClusterId, getPath } from "../../common/utils";
+import { isTestEnv } from "../../common/vars";
 
 const storage = observable({
   initialized: false,
@@ -50,7 +51,7 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
   const fileName = `${clusterId ?? "app"}.json`;
   const filePath = path.resolve(folder, fileName);
 
-  if (!storage.initialized) {
+  if (!storage.initialized && !isTestEnv) {
     init(); // called once per cluster-view
   }
 

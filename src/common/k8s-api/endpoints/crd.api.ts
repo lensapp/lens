@@ -40,11 +40,19 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
   JSONPath: string;
 };
 
+export interface CRDVersion {
+  name: string;
+  served: boolean;
+  storage: boolean;
+  schema?: object; // required in v1 but not present in v1beta
+  additionalPrinterColumns?: AdditionalPrinterColumnsV1[];
+}
+
 export interface CustomResourceDefinition {
   spec: {
     group: string;
     /**
-     * This is deprecated for apiextensions.k8s.io/v1 but used previously
+     * @deprecated for apiextensions.k8s.io/v1 but used previously
      */
     version?: string;
     names: {
@@ -54,19 +62,19 @@ export interface CustomResourceDefinition {
       listKind: string;
     };
     scope: "Namespaced" | "Cluster" | string;
-    validation?: any;
-    versions?: {
-      name: string;
-      served: boolean;
-      storage: boolean;
-      schema?: unknown; // required in v1 but not present in v1beta
-      additionalPrinterColumns?: AdditionalPrinterColumnsV1[]
-    }[];
+    /**
+     * @deprecated for apiextensions.k8s.io/v1 but used previously
+     */
+    validation?: object;
+    versions?: CRDVersion[];
     conversion: {
       strategy?: string;
       webhook?: any;
     };
-    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[]; // removed in v1
+    /**
+     * @deprecated for apiextensions.k8s.io/v1 but used previously
+     */
+    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
   };
   status: {
     conditions: {
@@ -141,23 +149,36 @@ export class CustomResourceDefinition extends KubeObject {
     return this.spec.scope;
   }
 
-  getVersion() {
+  getPreferedVersion(): CRDVersion {
     // Prefer the modern `versions` over the legacy `version`
-    for (const version of this.spec.versions || []) {
-      /**
-       * If the version is not served then 404 errors will occur
-       * We should also prefer the storage version
-       */
-      if (version.served && version.storage) {
-        return version.name;
+    if (this.spec.versions) {
+      for (const version of this.spec.versions) {
+        /**
+         * If the version is not served then 404 errors will occur
+         * We should also prefer the storage version
+         */
+        if (version.served && version.storage) {
+          return version;
+        }
       }
-    }
+    } else if (this.spec.version) {
+      const { additionalPrinterColumns: apc } = this.spec;
+      const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc}) => ({ ...apc, jsonPath: JSONPath }));
 
-    if (this.spec.version) {
-      return this.spec.version;
+      return {
+        name: this.spec.version,
+        served: true,
+        storage: true,
+        schema: this.spec.validation,
+        additionalPrinterColumns,
+      };
     }
 
     throw new Error(`Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
+  }
+
+  getVersion() {
+    return this.getPreferedVersion().name;
   }
 
   isNamespaced() {
@@ -177,17 +198,14 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getPrinterColumns(ignorePriority = true): AdditionalPrinterColumnsV1[] {
-    const columns = this.spec.versions?.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
-      ?? this.spec.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
-      ?? [];
+    const columns = this.getPreferedVersion().additionalPrinterColumns ?? [];
 
     return columns
-      .filter(column => column.name != "Age")
-      .filter(column => ignorePriority ? true : !column.priority);
+      .filter(column => column.name != "Age" && (ignorePriority || !column.priority));
   }
 
   getValidation() {
-    return JSON.stringify(this.spec.validation ?? this.spec.versions?.[0]?.schema, null, 2);
+    return JSON.stringify(this.getPreferedVersion().schema, null, 2);
   }
 
   getConditions() {
