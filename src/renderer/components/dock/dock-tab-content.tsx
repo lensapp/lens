@@ -19,23 +19,67 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import "./dock-tab-content.scss";
 import React from "react";
-import type { DockTab } from "./dock.store";
+import { observer } from "mobx-react";
+import { computed, makeObservable } from "mobx";
+import type { DockTab, TabId } from "./dock.store";
 import { cssNames } from "../../utils";
+import { DockTabComponents, dockViewsManager } from "./dock.views-manager";
+import { MonacoEditor } from "../monaco-editor";
 
-export interface DockTabContentProps {
+export interface DockTabContentProps extends React.HTMLAttributes<any> {
   className?: string;
   tab: DockTab;
-  bindElemRef?(container: HTMLElement): void;
+  bindContainerRef?(elem: HTMLElement): void;
 }
 
+@observer
 export class DockTabContent extends React.Component<DockTabContentProps> {
-  render() {
-    const { children: tabContent, bindElemRef, className } = this.props;
+  constructor(props: DockTabContentProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @computed get tabId(): TabId {
+    return this.props.tab.id;
+  }
+
+  @computed get tabComponents(): DockTabComponents {
+    return dockViewsManager.get(this.props.tab.kind);
+  }
+
+  /**
+   * Always keep editor in DOM while (while <Dock/> is open/rendered).
+   * This allows to restore editor's model-view state (cursor pos, selection, etc.)
+   * while switching between different tab.kind-s (e.g. "terminal" tab doesn't have editor)
+   */
+  renderEditor() {
+    const { tabId } = this;
+    const { editor } = this.tabComponents;
 
     return (
-      <div className={cssNames("DockTabContent flex column", className)} ref={bindElemRef}>
-        {tabContent}
+      <MonacoEditor
+        id={tabId}
+        className={cssNames({ hidden: !editor })}
+        value={editor?.getValue(tabId)}
+        onChange={value => editor?.setValue(tabId, value)}
+        onError={error => editor?.onError?.(tabId, error)}
+      />
+    );
+  }
+
+  render() {
+    const { children: bottomContent, bindContainerRef, className, tab } = this.props;
+
+    if (!tab) return null;
+    const { Content } = this.tabComponents;
+
+    return (
+      <div className={cssNames("DockTabContent flex column", className)} ref={bindContainerRef}>
+        {Content && <Content {...this.props}/>}
+        {this.renderEditor()}
+        {bottomContent}
       </div>
     );
   }

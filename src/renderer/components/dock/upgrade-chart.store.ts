@@ -37,16 +37,20 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   public versions = observable.array<IChartVersion>();
 
   constructor() {
-    super({
-      storageKey: "chart_releases"
-    });
-
+    super({ storageKey: "chart_releases" });
     makeObservable(this);
   }
 
-  protected init() {
+  protected async init() {
     super.init();
-    releaseStore.loadFromContextNamespaces();
+    await releaseStore.loadFromContextNamespaces();
+
+    this.dispose.push(
+      dockStore.onTabChange(({ tabId }) => this.loadData(tabId), {
+        tabKind: TabKind.UPGRADE_CHART,
+        fireImmediately: true,
+      }),
+    );
   }
 
   hasValues(tabId: TabId) {

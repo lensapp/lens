@@ -77,6 +77,7 @@ export class DockTabStore<T extends {}> {
     ]);
   }
 
+  @action
   protected init() {
     this.dataReady = true;
 

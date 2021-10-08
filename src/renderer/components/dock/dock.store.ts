@@ -216,6 +216,7 @@ export class DockStore implements DockStorageState {
     const { tabKind, dockIsVisible = true, ...reactionOpts } = options;
 
     return reaction(() => this.selectedTab, ((tab, prevTab) => {
+      if (!tab) return; // skip
       if (tabKind && tabKind !== tab.kind) return;
       if (dockIsVisible && !this.isOpen) return;
 

@@ -22,8 +22,8 @@
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { autorun, computed, makeObservable, observable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { computed, makeObservable, observable } from "mobx";
+import { observer } from "mobx-react";
 import { dockStore, TabKind } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
@@ -39,25 +39,19 @@ import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import type { DockTabContentProps } from "./dock-tab-content";
 import { dockViewsManager } from "./dock.views-manager";
-import { MonacoEditor } from "../monaco-editor";
 
 interface Props extends DockTabContentProps {
 }
 
 @observer
 export class InstallChart extends Component<Props> {
-  @observable error = "";
   @observable showNotes = false;
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-
-    disposeOnUnmount(this, [
-      autorun(() => installChartStore.loadData(this.tabId)),
-    ]);
   }
 
   get tabId() {
@@ -103,14 +97,6 @@ export class InstallChart extends Component<Props> {
 
     this.save({ version, values: "" });
     installChartStore.loadValues(this.tabId);
-  };
-
-  onValuesChange = (values: string) => {
-    this.save({ values });
-  };
-
-  onValuesError = (error: string) => {
-    this.error = error;
   };
 
   onNamespaceChange = (opt: SelectOption) => {
@@ -176,6 +162,7 @@ export class InstallChart extends Component<Props> {
 
     const { tabId, chartData, install, versions } = this;
     const { repo, name, version, namespace, releaseName } = chartData;
+
     const panelControls = (
       <div className="install-controls flex gaps align-center">
         <span>Chart</span>
@@ -208,27 +195,28 @@ export class InstallChart extends Component<Props> {
     );
 
     return (
-      <DockTabContent className="InstallChart" {...this.props}>
+      <div className="InstallChart">
         <InfoPanel
           tabId={tabId}
           controls={panelControls}
-          error={this.error}
           submit={install}
           submitLabel="Install"
           submittingMessage="Installing..."
           showSubmitClose={false}
         />
-        <MonacoEditor
-          id={tabId}
-          value={chartData.values}
-          onChange={this.onValuesChange}
-          onError={this.onValuesError}
-        />
-      </DockTabContent>
+      </div>
     );
   }
 }
 
 dockViewsManager.register(TabKind.INSTALL_CHART, {
-  tabContent: InstallChart,
+  Content: InstallChart,
+  editor: {
+    getValue(tabId) {
+      return installChartStore.getData(tabId).values;
+    },
+    setValue(tabId, value) {
+      installChartStore.getData(tabId).values = value;
+    },
+  }
 });

@@ -23,17 +23,16 @@ import "./create-resource.scss";
 import React from "react";
 import { GroupSelectOption, Select, SelectOption } from "../select";
 import jsYaml from "js-yaml";
-import { computed, makeObservable, observable } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { createResourceStore } from "./create-resource.store";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { Notifications } from "../notifications";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
 import { TabKind } from "./dock.store";
+import type { DockTabContentProps } from "./dock-tab-content";
 import { dockViewsManager } from "./dock.views-manager";
-import { MonacoEditor } from "../monaco-editor";
 
 interface Props extends DockTabContentProps {
 }
@@ -53,8 +52,6 @@ export class CreateResource extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @observable error = "";
-
   get tabId() {
     return this.props.tab.id;
   }
@@ -63,17 +60,10 @@ export class CreateResource extends React.Component<Props> {
     return createResourceStore.getData(this.tabId);
   }
 
-  onChange = (value: string) => {
-    createResourceStore.setData(this.tabId, value);
-  };
+  create = async (): Promise<any> => {
+    const isEmpty = !this.draft?.trim();
 
-  onError = (error: string) => {
-    this.error = error;
-  };
-
-  create = async () => {
-    if (this.error || !this.draft) {
-      // do not save when field is empty or there is an error
+    if (!isEmpty) {
       return null;
     }
 
@@ -145,29 +135,28 @@ export class CreateResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, draft, error, create, onChange, onError } = this;
-
     return (
-      <DockTabContent className="CreateResource" {...this.props}>
+      <div className="CreateResource">
         <InfoPanel
-          tabId={tabId}
-          error={error}
+          tabId={this.tabId}
           controls={this.renderControls()}
-          submit={create}
+          submit={this.create}
           submitLabel="Create"
           showNotifications={false}
         />
-        <MonacoEditor
-          id={tabId}
-          value={draft}
-          onChange={onChange}
-          onError={onError}
-        />
-      </DockTabContent>
+      </div>
     );
   }
 }
 
 dockViewsManager.register(TabKind.CREATE_RESOURCE, {
-  tabContent: CreateResource,
+  Content: CreateResource,
+  editor: {
+    getValue(tabId) {
+      return createResourceStore.getData(tabId);
+    },
+    setValue(tabId, value) {
+      createResourceStore.setData(tabId, value);
+    },
+  }
 });

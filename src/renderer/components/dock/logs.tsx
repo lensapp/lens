@@ -32,9 +32,9 @@ import { logStore } from "./log.store";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
 import { LogTabData, logTabStore } from "./log-tab.store";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
+import type { DockTabContentProps } from "./dock-tab-content";
 
 interface Props extends DockTabContentProps {
 }
@@ -143,7 +143,7 @@ export class Logs extends React.Component<Props> {
     }
 
     return (
-      <DockTabContent className="PodLogs" {...this.props}>
+      <div className="PodLogs flex column">
         {this.renderResourceSelector(data)}
         <LogList
           logs={logs}
@@ -158,11 +158,11 @@ export class Logs extends React.Component<Props> {
           save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
-      </DockTabContent>
+      </div>
     );
   }
 }
 
 dockViewsManager.register(TabKind.POD_LOGS, {
-  tabContent: Logs,
+  Content: Logs,
 });

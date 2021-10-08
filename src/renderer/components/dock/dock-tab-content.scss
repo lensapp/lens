@@ -19,32 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type React from "react";
-import { observable } from "mobx";
-import type { TabId, TabKind } from "./dock.store";
-import type { DockTabContentProps } from "./dock-tab-content";
-
-export interface DockTabComponents {
-  Content?: React.ComponentType<DockTabContentProps>;
-  editor?: {
-    getValue(tabId: TabId): string | undefined;
-    setValue(tabId: TabId, value: string): void;
-    onError?(tabId: TabId, error: string | Error): void;
-  }
+.DockTabContent {
+  position: relative;
+  flex: 1;
+  height: 100%;
 }
-
-const dockViews = observable.map<TabKind, DockTabComponents>([], {
-  deep: false, // mobx: don't try to modify react components
-});
-
-export const dockViewsManager = {
-  get(tabKind: TabKind): DockTabComponents {
-    return dockViews.get(tabKind) ?? {};
-  },
-
-  register(tabKind: TabKind, views: DockTabComponents) {
-    const currentViews = this.get(tabKind);
-
-    dockViews.set(tabKind, { ...currentViews, ...views });
-  }
-};

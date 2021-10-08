@@ -22,8 +22,7 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { action, autorun, makeObservable, observable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
@@ -31,27 +30,14 @@ import { Badge } from "../badge";
 import { Spinner } from "../spinner";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { DockTabContentProps } from "./dock-tab-content";
-import { DockTabContent } from "./dock-tab-content";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
-import { MonacoEditor } from "../monaco-editor";
 
 interface Props extends DockTabContentProps {
 }
 
 @observer
 export class EditResource extends React.Component<Props> {
-  @observable error = "";
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-
-    disposeOnUnmount(this, [
-      autorun(() => editResourceStore.loadResource(this.tabId)),
-    ]);
-  }
-
   get tabId() {
     return this.props.tab.id;
   }
@@ -61,10 +47,9 @@ export class EditResource extends React.Component<Props> {
   }
 
   get draft(): string {
-    return editResourceStore.getData(this.tabId)?.draft ?? "";
+    return editResourceStore.getData(this.tabId)?.draft;
   }
 
-  @action
   saveDraft(draft: string | object) {
     if (typeof draft === "object") {
       draft = draft ? jsYaml.safeDump(draft) : undefined;
@@ -73,18 +58,7 @@ export class EditResource extends React.Component<Props> {
     editResourceStore.getData(this.tabId).draft = draft;
   }
 
-  onChange = (draft: string) => {
-    this.saveDraft(draft);
-  };
-
-  onError = (error: string) => {
-    this.error = error;
-  };
-
   save = async () => {
-    if (this.error) {
-      return null;
-    }
     const store = editResourceStore.getStore(this.tabId);
     const updatedResource: KubeObject = await store.update(this.resource, jsYaml.safeLoad(this.draft));
 
@@ -100,17 +74,16 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    if (!editResourceStore.dataReady || !this.resource) {
+    const { tabId, resource } = this;
+
+    if (!editResourceStore.dataReady || !resource) {
       return <Spinner center/>;
     }
 
-    const { tabId, error, draft, resource, onChange, onError } = this;
-
     return (
-      <DockTabContent className="EditResource" {...this.props}>
+      <div className="EditResource">
         <InfoPanel
           tabId={tabId}
-          error={error}
           submit={this.save}
           submitLabel="Save"
           submittingMessage="Applying.."
@@ -122,17 +95,19 @@ export class EditResource extends React.Component<Props> {
             </div>
           )}
         />
-        <MonacoEditor
-          id={tabId}
-          value={draft}
-          onChange={onChange}
-          onError={onError}
-        />
-      </DockTabContent>
+      </div>
     );
   }
 }
 
 dockViewsManager.register(TabKind.EDIT_RESOURCE, {
-  tabContent: EditResource,
+  Content: EditResource,
+  editor: {
+    getValue(tabId) {
+      return editResourceStore.getData(tabId).draft;
+    },
+    setValue(tabId, value) {
+      editResourceStore.getData(tabId).draft = value;
+    },
+  }
 });

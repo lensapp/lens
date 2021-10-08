@@ -22,15 +22,14 @@
 import "./terminal-window.scss";
 
 import React from "react";
-import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import type { Terminal } from "./terminal";
-import { terminalStore } from "./terminal.store";
+import { TerminalStore } from "./terminal.store";
 import { ThemeStore } from "../../theme.store";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
-import { TabKind } from "./dock.store";
+import { dockStore, TabId, TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
+import type { DockTabContentProps } from "./dock-tab-content";
 
 interface Props extends DockTabContentProps {
 }
@@ -42,29 +41,29 @@ export class TerminalWindow extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.tab.id, tabId => this.activate(tabId), {
-        fireImmediately: true
-      })
+      dockStore.onTabChange(({ tabId }) => this.activate(tabId), {
+        tabKind: TabKind.TERMINAL,
+        fireImmediately: true,
+      }),
     ]);
   }
 
-  activate(tabId = this.props.tab.id) {
+  activate(tabId: TabId = dockStore.selectedTabId) {
     if (this.terminal) this.terminal.detach(); // detach previous
-    this.terminal = terminalStore.getTerminal(tabId);
+    this.terminal = TerminalStore.getInstance().getTerminal(tabId);
     this.terminal.attachTo(this.elem);
   }
 
   render() {
     return (
-      <DockTabContent
-        {...this.props}
+      <div
         className={cssNames("TerminalWindow", ThemeStore.getInstance().activeTheme.type)}
-        bindElemRef={elem => this.elem = elem}
+        ref={elem => this.elem = elem}
       />
     );
   }
 }
 
 dockViewsManager.register(TabKind.TERMINAL, {
-  tabContent: TerminalWindow,
+  Content: TerminalWindow,
 });

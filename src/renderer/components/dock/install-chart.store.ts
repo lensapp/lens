@@ -41,10 +41,19 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
   versions = observable.map<TabId, string[]>();
 
   constructor() {
-    super({
-      storageKey: "install_charts"
-    });
+    super({ storageKey: "install_charts" });
     makeObservable(this);
+  }
+
+  protected init() {
+    super.init();
+
+    this.dispose.push(
+      dockStore.onTabChange(({ tabId }) => this.loadData(tabId), {
+        tabKind: TabKind.INSTALL_CHART,
+        fireImmediately: true,
+      }),
+    );
   }
 
   @action

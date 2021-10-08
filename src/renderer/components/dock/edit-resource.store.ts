@@ -35,14 +35,23 @@ export interface EditingResource {
 
 export class EditResourceStore extends DockTabStore<EditingResource> {
   constructor() {
-    super({
-      storageKey: "edit_resource_store",
-    });
-    autoBind(this);
+    super({ storageKey: "edit_resource_store" });
     makeObservable(this);
+    autoBind(this);
   }
 
-  async loadResource(tabId: TabId) {
+  protected init() {
+    super.init();
+
+    this.dispose.push(
+      dockStore.onTabChange(({ tabId }) => editResourceStore.editResource(tabId), {
+        tabKind: TabKind.EDIT_RESOURCE,
+        fireImmediately: true,
+      })
+    );
+  }
+
+  async editResource(tabId: TabId) {
     const store = this.getStore(tabId);
     const data = this.getData(tabId);
     let resource = this.getResource(tabId);
@@ -51,9 +60,9 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
 
     try {
       resource ??= await store.loadFromPath(data.resource);
-      this.getData(tabId).draft = jsYaml.safeDump(resource.toPlainObject());
+      data.draft ||= jsYaml.safeDump(resource.toPlainObject());
     } catch (error) {
-      console.error(`[DOCK]: dump of resource "${data.resource}" failed: ${error}`);
+      console.error(`[DOCK]: dumping '${data.resource}' has failed: ${error}`, { store, data });
     }
   }
 
