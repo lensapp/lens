@@ -18,6 +18,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import yaml, { YAMLException } from "js-yaml";
 
-export * from "./monaco-editor";
-export * from "./monaco-validators";
+export interface MonacoValidator {
+  (value: string): Promise<void | string>;
+}
+
+export const yamlValidator: MonacoValidator = async (value: string) => {
+  try {
+    await yaml.safeLoad(value);
+  } catch (error) {
+    throw String(error as YAMLException);
+  }
+};
+
+export const jsonValidator: MonacoValidator = async (value: string) => {
+  try {
+    await yaml.safeLoad(value, { json: true });
+  } catch (error) {
+    throw String(error);
+  }
+};
+
+export const monacoValidators = {
+  yaml: yamlValidator,
+  json: jsonValidator,
+};
+
+export type MonacoValidatorKey = keyof typeof monacoValidators; // "json", "yaml"

@@ -26,7 +26,7 @@ import { computed, makeObservable } from "mobx";
 import type { DockTab, TabId } from "./dock.store";
 import { cssNames } from "../../utils";
 import { DockTabComponents, dockViewsManager } from "./dock.views-manager";
-import { MonacoEditor } from "../monaco-editor";
+import { MonacoEditor, onMonacoContentChangeCallback } from "../monaco-editor";
 
 export interface DockTabContentProps extends React.HTMLAttributes<any> {
   className?: string;
@@ -55,20 +55,29 @@ export class DockTabContent extends React.Component<DockTabContentProps> {
    * while switching between different tab.kind-s (e.g. "terminal" tab doesn't have editor)
    */
   renderEditor() {
-    const { tabId } = this;
-    const { editor } = this.tabComponents;
+    const { tabId, tabComponents } = this;
+    const isHidden = !tabComponents.editor;
 
     return (
       <MonacoEditor
         id={tabId}
-        className={cssNames({ hidden: !editor })}
-        value={editor?.getValue(tabId)}
-        onChange={value => editor?.setValue(tabId, value)}
-        onError={error => editor?.onError?.(tabId, error)}
+        className={cssNames({ hidden: isHidden })}
+        value={tabComponents.editor?.getValue(tabId)}
+        onChange={this.onEditorChange}
+        onError={this.onEditorError}
       />
     );
   }
 
+  onEditorChange: onMonacoContentChangeCallback = (value) => {
+    this.tabComponents.editor?.setValue(this.tabId, value);
+  };
+
+  onEditorError = (error: string) => {
+    this.tabComponents.editor?.onError?.(this.tabId, error);
+  };
+
+  // TODO: provide error to dock's info-panel
   render() {
     const { children: bottomContent, bindContainerRef, className, tab } = this.props;
 

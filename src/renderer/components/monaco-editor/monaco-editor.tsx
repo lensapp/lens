@@ -27,6 +27,8 @@ import { editor, Uri } from "monaco-editor";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { cssNames, disposer, toJS } from "../../utils";
+import { MonacoValidatorKey, monacoValidators } from "./monaco-validators";
+import debounce from "lodash/debounce";
 
 export interface MonacoEditorProps {
   id?: string; // associating editor's ID with created model.uri
@@ -37,25 +39,30 @@ export interface MonacoEditorProps {
   theme?: "vs" /* default, light theme */ | "vs-dark" | "hc-black" | string;
   language?: "yaml" | "json"; // configure bundled list of languages in via MonacoWebpackPlugin({languages: []})
   options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
-  onChange?: onChangeCallback;
-  onError?: onErrorCallback;
+  onChange?: onMonacoContentChangeCallback;
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
+  validators?: MonacoValidatorKey[], // validate changes with validators and catch error in `props.onError`
+  validateOnChange?: boolean; // run validators each time when editor's content/model changes (default: true)
+  onError?: onMonacoErrorCallback; // caught errors with `props.validators`
 }
 
-export interface onChangeCallback {
+// `props.onChange` called via editor's api value changes / user input, but when `props.value` changes
+export interface onMonacoContentChangeCallback {
   (value: string, data: {
     model: editor.ITextModel, // current model
     event: editor.IModelContentChangedEvent;
   }): void;
 }
 
-export interface onErrorCallback {
+export interface onMonacoErrorCallback {
   (error: string): void; // TODO: provide validation or some another occurred error
 }
 
 export const defaultEditorProps: Partial<MonacoEditorProps> = {
   language: "yaml",
+  validators: [],
+  validateOnChange: true,
   get theme(): MonacoEditorProps["theme"] {
     // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
     return ThemeStore.getInstance().activeTheme.monacoTheme;
@@ -74,6 +81,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   @observable.ref editor: editor.IStandaloneCodeEditor;
   @observable dimensions: { width?: number, height?: number } = {};
   @observable unmounting = false;
+  validationErrors = observable.array<string>(); // last validation errors (if any)
 
   constructor(props: MonacoEditorProps) {
     super(props);
@@ -168,6 +176,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       const value = this.editor.getValue();
       // console.info("[MONACO]: value changed", { value, event });
 
+      this.validateOnChange(value);
       this.props.onChange?.(value, {
         model: this.model,
         event,
@@ -239,10 +248,44 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     if (value == this.getValue()) return;
 
     this.editor.setValue(value);
+    this.validateOnChange(value);
   }
 
   getValue(opts?: { preserveBOM: boolean; lineEnding: string; }) {
     return this.editor.getValue(opts);
+  }
+
+  // avoid excessive validations during typing
+  validateLazy = debounce((value: string) => this.validate(value), 250);
+
+  protected validateOnChange(value: string) {
+    if (!this.props.validateOnChange) return;
+
+    this.validateLazy(value);
+  }
+
+  @action
+  async validate(value: string = this.getValue()): Promise<void> {
+    const { validators } = this.props;
+
+    if (!validators) return;
+
+    this.validationErrors.clear(); // reset previous if any
+
+    for (const validatorKey of validators) {
+      try {
+        await monacoValidators[validatorKey](value); // validate editor's content
+      } catch (error) {
+        this.validationErrors.push(String(error));
+      }
+    }
+
+    // emit error via props.onError()-callback if provided
+    if (this.props.onError && this.validationErrors.length) {
+      this.validationErrors.forEach(error => {
+        this.props.onError(error);
+      });
+    }
   }
 
   bindRef = (elem: HTMLElement) => this.containerElem = elem;
