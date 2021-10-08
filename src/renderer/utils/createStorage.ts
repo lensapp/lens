@@ -51,7 +51,7 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
   const fileName = `${clusterId ?? "app"}.json`;
   const filePath = path.resolve(folder, fileName);
 
-  if (!storage.initialized && !isTestEnv) {
+  if (!storage.initialized) {
     init(); // called once per cluster-view
   }
 
@@ -63,7 +63,9 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
       .then(data => storage.data = data)
       .catch(() => null) // ignore empty / non-existing / invalid json files
       .finally(() => {
-        logger.info(`${logPrefix} loading finished for ${filePath}`);
+        if (!isTestEnv) {
+          logger.info(`${logPrefix} loading finished for ${filePath}`);
+        }
         storage.loaded = true;
       });
 
