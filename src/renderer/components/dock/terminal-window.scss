@@ -22,11 +22,8 @@
 @import "~xterm";
 
 .TerminalWindow {
-  margin: $padding;
-  margin-left: $padding * 2;
-  margin-top: $padding * 2;
-
-  > .xterm {
-    overflow: hidden;
-  }
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  margin: 10px;
 }
