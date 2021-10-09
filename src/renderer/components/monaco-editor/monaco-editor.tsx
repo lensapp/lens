@@ -244,15 +244,15 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return editor.createModel(value, language, uri);
   }
 
-  setValue(value: string) {
+  setValue(value = "") {
     if (value == this.getValue()) return;
 
     this.editor.setValue(value);
     this.validateOnChange(value);
   }
 
-  getValue(opts?: { preserveBOM: boolean; lineEnding: string; }) {
-    return this.editor.getValue(opts);
+  getValue(opts?: { preserveBOM: boolean; lineEnding: string; }): string {
+    return this.editor?.getValue(opts) ?? "";
   }
 
   // avoid excessive validations during typing
