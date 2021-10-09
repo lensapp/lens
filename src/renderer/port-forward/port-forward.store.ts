@@ -28,6 +28,7 @@ import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
 import { Notifications } from "../components/notifications";
 import logger from "../../common/logger";
+import { podsApi, serviceApi } from "../../common/k8s-api/endpoints";
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   private storage = createStorage<ForwardedPort[] | undefined>("port_forwards", undefined);
@@ -56,7 +57,14 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
   watch() {
     return disposer(
       reaction(() => this.portForwards, () => this.loadAll()),
+      this.reaper(),
     );
+  }
+
+  reaper() {
+    const interval = setInterval(async () => await Promise.all(this.portForwards.map(reapPortForward)), 30 * 1000); // every 30 seconds
+
+    return () => clearInterval(interval);
   }
 
   loadAll() {
@@ -146,7 +154,7 @@ export async function removePortForward(portForward: ForwardedPort) {
   portForwardStore.reset();
 }
 
-export async function getPortForwards(): Promise<ForwardedPort[]> {
+async function getPortForwards(): Promise<ForwardedPort[]> {
   try {
     const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards`);
 
@@ -155,6 +163,20 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
     logger.warn(error); // don't care, caller must check 
     
     return [];
+  }
+}
+
+async function reapPortForward(portForward: ForwardedPort): Promise<void> {
+  const api = {
+    "service": serviceApi,
+    "pod": podsApi
+  }[portForward.kind];
+
+  try {
+    await api.get({name: portForward.name, namespace: portForward.namespace});
+  } catch(error) {
+    logger.debug(`port-forward resource ${portForward.name} not found, removing`, portForward);
+    removePortForward(portForward);
   }
 }
 

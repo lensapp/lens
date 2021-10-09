@@ -29,9 +29,8 @@ import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
 import { Notifications } from "../components/notifications";
 import { cssNames } from "../utils";
-import { addPortForward, modifyPortForward } from "./port-forward.store";
+import { addPortForward, modifyPortForward, openPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
-import { openPortForward } from ".";
 
 interface Props extends Partial<DialogProps> {
 }
