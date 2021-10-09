@@ -21,7 +21,7 @@
 import yaml, { YAMLException } from "js-yaml";
 
 export interface MonacoValidator {
-  (value: string): Promise<void | string>;
+  (value: string): Promise<void>;
 }
 
 export const yamlValidator: MonacoValidator = async (value: string) => {
@@ -45,4 +45,4 @@ export const monacoValidators = {
   json: jsonValidator,
 };
 
-export type MonacoValidatorKey = keyof typeof monacoValidators; // "json", "yaml"
+export type MonacoValidatorKey = keyof typeof monacoValidators;

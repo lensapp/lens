@@ -27,7 +27,7 @@ import { editor, Uri } from "monaco-editor";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { cssNames, disposer, toJS } from "../../utils";
-import { MonacoValidatorKey, monacoValidators } from "./monaco-validators";
+import { MonacoValidator, monacoValidators } from "./monaco-validators";
 import debounce from "lodash/debounce";
 
 export interface MonacoEditorProps {
@@ -40,11 +40,9 @@ export interface MonacoEditorProps {
   language?: "yaml" | "json"; // configure bundled list of languages in via MonacoWebpackPlugin({languages: []})
   options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
   onChange?: onMonacoContentChangeCallback;
+  onError?: onMonacoErrorCallback; // provide syntax validation errors, etc.
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
-  validators?: MonacoValidatorKey[], // validate changes with validators and catch error in `props.onError`
-  validateOnChange?: boolean; // run validators each time when editor's content/model changes (default: true)
-  onError?: onMonacoErrorCallback; // caught errors with `props.validators`
 }
 
 // `props.onChange` called via editor's api value changes / user input, but when `props.value` changes
@@ -61,8 +59,6 @@ export interface onMonacoErrorCallback {
 
 export const defaultEditorProps: Partial<MonacoEditorProps> = {
   language: "yaml",
-  validators: [],
-  validateOnChange: true,
   get theme(): MonacoEditorProps["theme"] {
     // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
     return ThemeStore.getInstance().activeTheme.monacoTheme;
@@ -81,7 +77,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   @observable.ref editor: editor.IStandaloneCodeEditor;
   @observable dimensions: { width?: number, height?: number } = {};
   @observable unmounting = false;
-  validationErrors = observable.array<string>(); // last validation errors (if any)
+  validationErrors = observable.array<string>();
 
   constructor(props: MonacoEditorProps) {
     super(props);
@@ -176,7 +172,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       const value = this.editor.getValue();
       // console.info("[MONACO]: value changed", { value, event });
 
-      this.validateOnChange(value);
+      this.validateLazy(value);
       this.props.onChange?.(value, {
         model: this.model,
         event,
@@ -244,11 +240,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return editor.createModel(value, language, uri);
   }
 
-  setValue(value = "") {
+  setValue(value = ""): void {
     if (value == this.getValue()) return;
 
     this.editor.setValue(value);
-    this.validateOnChange(value);
+    this.validateLazy(value);
   }
 
   getValue(opts?: { preserveBOM: boolean; lineEnding: string; }): string {
@@ -258,33 +254,26 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   // avoid excessive validations during typing
   validateLazy = debounce((value: string) => this.validate(value), 250);
 
-  protected validateOnChange(value: string) {
-    if (!this.props.validateOnChange) return;
-
-    this.validateLazy(value);
-  }
-
   @action
   async validate(value: string = this.getValue()): Promise<void> {
-    const { validators } = this.props;
+    const { language } = this.props;
+    const validators: MonacoValidator[] = [];
+    const syntaxValidator: MonacoValidator = monacoValidators[language];
 
-    if (!validators) return;
-
-    this.validationErrors.clear(); // reset previous if any
-
-    for (const validatorKey of validators) {
-      try {
-        await monacoValidators[validatorKey](value); // validate editor's content
-      } catch (error) {
-        this.validationErrors.push(String(error));
-      }
+    if (syntaxValidator) {
+      validators.push(syntaxValidator);
     }
 
-    // emit error via props.onError()-callback if provided
-    if (this.props.onError && this.validationErrors.length) {
-      this.validationErrors.forEach(error => {
-        this.props.onError(error);
-      });
+    this.validationErrors.clear();
+
+    for (const validate of validators) {
+      try {
+        await validate(value);
+      } catch (error) {
+        error = String(error);
+        this.validationErrors.push(error);
+        this.props.onError?.(error); // emit error outside via callback
+      }
     }
   }
 
