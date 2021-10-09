@@ -24,21 +24,21 @@ export interface MonacoValidator {
   (value: string): Promise<void>;
 }
 
-export const yamlValidator: MonacoValidator = async (value: string) => {
+export async function yamlValidator(value: string) {
   try {
-    await yaml.safeLoad(value);
+    await yaml.load(value);
   } catch (error) {
     throw String(error as YAMLException);
   }
-};
+}
 
-export const jsonValidator: MonacoValidator = async (value: string) => {
+export async function jsonValidator(value: string) {
   try {
-    await yaml.safeLoad(value, { json: true });
+    JSON.parse(value);
   } catch (error) {
     throw String(error);
   }
-};
+}
 
 export const monacoValidators = {
   yaml: yamlValidator,

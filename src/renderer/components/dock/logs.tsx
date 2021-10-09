@@ -125,7 +125,7 @@ export class Logs extends React.Component<Props> {
 
     return (
       <InfoPanel
-        tabId={this.props.tab.id}
+        tabId={this.tabId}
         controls={controls}
         showSubmitClose={false}
         showButtons={false}

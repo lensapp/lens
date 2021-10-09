@@ -19,24 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./upgrade-chart.scss";
-
 import React from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { InfoPanel } from "./info-panel";
+import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
 import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import type { DockTabContentProps } from "./dock-tab-content";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
-import { Spinner } from "../spinner";
 
-interface Props extends DockTabContentProps {
+interface Props extends InfoPanelProps {
 }
 
 @observer
@@ -49,7 +45,7 @@ export class UpgradeChart extends React.Component<Props> {
   @observable selectedVersion: IChartVersion;
 
   get tabId() {
-    return this.props.tab.id;
+    return this.props.tabId;
   }
 
   get release(): HelmRelease | null {
@@ -90,46 +86,39 @@ export class UpgradeChart extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, release, versions, selectedVersion } = this;
-
-    if (!release) {
-      return <Spinner center/>;
-    }
-
+    const { release, versions, selectedVersion } = this;
     const currentVersion = release.getVersion();
 
     return (
-      <div className="UpgradeChart">
-        <InfoPanel
-          tabId={tabId}
-          submit={this.upgrade}
-          submitLabel="Upgrade"
-          submittingMessage="Updating.."
-          controls={
-            <div className="upgrade flex gaps align-center">
-              <span>Release</span> <Badge label={release.getName()}/>
-              <span>Namespace</span> <Badge label={release.getNs()}/>
-              <span>Version</span> <Badge label={currentVersion}/>
-              <span>Upgrade version</span>
-              <Select
-                className="chart-version"
-                menuPlacement="top"
-                themeName="outlined"
-                value={selectedVersion ?? versions[0]}
-                options={versions}
-                formatOptionLabel={this.formatVersionLabel}
-                onChange={({ value }: SelectOption<IChartVersion>) => this.selectedVersion = value}
-              />
-            </div>
-          }
-        />
-      </div>
+      <InfoPanel
+        {...this.props}
+        submit={this.upgrade}
+        submitLabel="Upgrade"
+        submittingMessage="Updating.."
+        controls={
+          <div className="upgrade flex gaps align-center">
+            <span>Release</span> <Badge label={release.getName()}/>
+            <span>Namespace</span> <Badge label={release.getNs()}/>
+            <span>Version</span> <Badge label={currentVersion}/>
+            <span>Upgrade version</span>
+            <Select
+              className="chart-version"
+              menuPlacement="top"
+              themeName="outlined"
+              value={selectedVersion ?? versions[0]}
+              options={versions}
+              formatOptionLabel={this.formatVersionLabel}
+              onChange={({ value }: SelectOption<IChartVersion>) => this.selectedVersion = value}
+            />
+          </div>
+        }
+      />
     );
   }
 }
 
 dockViewsManager.register(TabKind.UPGRADE_CHART, {
-  Content: UpgradeChart,
+  InfoPanel: UpgradeChart,
   editor: {
     getValue(tabId): string {
       return upgradeChartStore.values.get(tabId);

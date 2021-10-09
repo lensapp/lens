@@ -25,7 +25,7 @@ import React, { Component } from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { dockStore, TabKind } from "./dock.store";
-import { InfoPanel } from "./info-panel";
+import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { prevDefault } from "../../utils";
@@ -39,14 +39,13 @@ import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
-import type { DockTabContentProps } from "./dock-tab-content";
 import { dockViewsManager } from "./dock.views-manager";
 
-interface Props extends DockTabContentProps {
+interface Props extends InfoPanelProps {
 }
 
 @observer
-export class InstallChart extends Component<Props> {
+export class InstallChartInfoPanel extends Component<Props> {
   @observable showNotes = false;
 
   constructor(props: Props) {
@@ -55,7 +54,7 @@ export class InstallChart extends Component<Props> {
   }
 
   get tabId() {
-    return this.props.tab.id;
+    return this.props.tabId;
   }
 
   get chartData(): IChartInstallData | undefined {
@@ -160,7 +159,7 @@ export class InstallChart extends Component<Props> {
       return this.renderReleaseDetails();
     }
 
-    const { tabId, chartData, install, versions } = this;
+    const { chartData, install, versions } = this;
     const { repo, name, version, namespace, releaseName } = chartData;
 
     const panelControls = (
@@ -195,22 +194,21 @@ export class InstallChart extends Component<Props> {
     );
 
     return (
-      <div className="InstallChart">
-        <InfoPanel
-          tabId={tabId}
-          controls={panelControls}
-          submit={install}
-          submitLabel="Install"
-          submittingMessage="Installing..."
-          showSubmitClose={false}
-        />
-      </div>
+      <InfoPanel
+        {...this.props}
+        className="InstallChartInfoPanel"
+        controls={panelControls}
+        submit={install}
+        submitLabel="Install"
+        submittingMessage="Installing..."
+        showSubmitClose={false}
+      />
     );
   }
 }
 
 dockViewsManager.register(TabKind.INSTALL_CHART, {
-  Content: InstallChart,
+  InfoPanel: InstallChartInfoPanel,
   editor: {
     getValue(tabId) {
       return installChartStore.getData(tabId).values;

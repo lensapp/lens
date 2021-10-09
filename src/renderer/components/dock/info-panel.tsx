@@ -20,9 +20,8 @@
  */
 
 import "./info-panel.scss";
-
 import React, { Component, ReactNode } from "react";
-import { computed, observable, reaction, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
@@ -31,14 +30,11 @@ import { Spinner } from "../spinner";
 import { dockStore, TabId } from "./dock.store";
 import { Notifications } from "../notifications";
 
-interface Props extends OptionalProps {
+export interface InfoPanelProps {
   tabId: TabId;
   submit?: () => Promise<ReactNode | string>;
-}
-
-interface OptionalProps {
   className?: string;
-  error?: string;
+  error?: React.ReactNode;
   controls?: ReactNode;
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
@@ -50,22 +46,23 @@ interface OptionalProps {
   showStatusPanel?: boolean;
 }
 
-@observer
-export class InfoPanel extends Component<Props> {
-  static defaultProps: OptionalProps = {
-    submitLabel: "Submit",
-    submittingMessage: "Submitting..",
-    showButtons: true,
-    showSubmitClose: true,
-    showInlineInfo: true,
-    showNotifications: true,
-    showStatusPanel: true,
-  };
+const defaultProps: Partial<InfoPanelProps> = {
+  submitLabel: "Submit",
+  submittingMessage: "Submitting..",
+  showButtons: true,
+  showSubmitClose: true,
+  showInlineInfo: true,
+  showNotifications: true,
+  showStatusPanel: true,
+};
 
-  @observable error = "";
+@observer
+export class InfoPanel extends Component<InfoPanelProps> {
+  static defaultProps = defaultProps as object;
+
   @observable waiting = false;
 
-  constructor(props: Props) {
+  constructor(props: InfoPanelProps) {
     super(props);
     makeObservable(this);
   }
@@ -76,10 +73,6 @@ export class InfoPanel extends Component<Props> {
         this.waiting = false;
       })
     ]);
-  }
-
-  @computed get errorInfo() {
-    return this.props.error;
   }
 
   submit = async () => {
@@ -107,14 +100,16 @@ export class InfoPanel extends Component<Props> {
     dockStore.closeTab(this.props.tabId);
   };
 
-  renderErrorIcon() {
-    if (!this.props.showInlineInfo || !this.errorInfo) {
+  renderErrorIcon(): React.ReactNode {
+    const { error } = this.props;
+
+    if (!error || !this.props.showInlineInfo) {
       return null;
     }
 
     return (
       <div className="error">
-        <Icon material="error_outline" tooltip={this.errorInfo}/>
+        <Icon material="error_outline" tooltip={error}/>
       </div>
     );
   }

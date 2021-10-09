@@ -19,22 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./create-resource.scss";
 import React from "react";
 import { GroupSelectOption, Select, SelectOption } from "../select";
 import jsYaml from "js-yaml";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { createResourceStore } from "./create-resource.store";
-import { InfoPanel } from "./info-panel";
+import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { Notifications } from "../notifications";
 import { TabKind } from "./dock.store";
-import type { DockTabContentProps } from "./dock-tab-content";
 import { dockViewsManager } from "./dock.views-manager";
 
-interface Props extends DockTabContentProps {
+interface Props extends InfoPanelProps {
 }
 
 type SelectOptionTemplate = SelectOption<SelectOptionTemplateValue>;
@@ -46,14 +44,14 @@ interface SelectOptionTemplateValue {
 }
 
 @observer
-export class CreateResource extends React.Component<Props> {
+export class CreateResourceInfoPanel extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
   get tabId() {
-    return this.props.tab.id;
+    return this.props.tabId;
   }
 
   get draft() {
@@ -136,21 +134,19 @@ export class CreateResource extends React.Component<Props> {
 
   render() {
     return (
-      <div className="CreateResource">
-        <InfoPanel
-          tabId={this.tabId}
-          controls={this.renderControls()}
-          submit={this.create}
-          submitLabel="Create"
-          showNotifications={false}
-        />
-      </div>
+      <InfoPanel
+        {...this.props}
+        controls={this.renderControls()}
+        submit={this.create}
+        submitLabel="Create"
+        showNotifications={false}
+      />
     );
   }
 }
 
 dockViewsManager.register(TabKind.CREATE_RESOURCE, {
-  Content: CreateResource,
+  InfoPanel: CreateResourceInfoPanel,
   editor: {
     getValue(tabId) {
       return createResourceStore.getData(tabId);

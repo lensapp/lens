@@ -21,12 +21,12 @@
 
 import "./dock-tab-content.scss";
 import React from "react";
-import { observer } from "mobx-react";
-import { computed, makeObservable } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import type { DockTab, TabId } from "./dock.store";
 import { cssNames } from "../../utils";
 import { DockTabComponents, dockViewsManager } from "./dock.views-manager";
-import { MonacoEditor, onMonacoContentChangeCallback } from "../monaco-editor";
+import { MonacoEditor } from "../monaco-editor";
 
 export interface DockTabContentProps extends React.HTMLAttributes<any> {
   className?: string;
@@ -39,6 +39,10 @@ export class DockTabContent extends React.Component<DockTabContentProps> {
   constructor(props: DockTabContentProps) {
     super(props);
     makeObservable(this);
+
+    disposeOnUnmount(this, [
+      reaction(() => this.tabId, () => this.error = ""), // reset
+    ]);
   }
 
   @computed get tabId(): TabId {
@@ -49,46 +53,45 @@ export class DockTabContent extends React.Component<DockTabContentProps> {
     return dockViewsManager.get(this.props.tab.kind);
   }
 
+  @observable error = "";
+
   /**
    * Always keep editor in DOM while (while <Dock/> is open/rendered).
    * This allows to restore editor's model-view state (cursor pos, selection, etc.)
    * while switching between different tab.kind-s (e.g. "terminal" tab doesn't have editor)
    */
   renderEditor() {
-    const { tabId, tabComponents } = this;
-    const isHidden = !tabComponents.editor;
+    const { tabId, tabComponents: { editor } } = this;
+    const isHidden = !editor;
 
     return (
       <MonacoEditor
         id={tabId}
         className={cssNames({ hidden: isHidden })}
-        value={tabComponents.editor?.getValue(tabId)}
-        onChange={this.onEditorChange}
-        onError={this.onEditorError}
+        value={editor?.getValue(tabId) ?? ""}
+        onChange={value => {
+          this.error = "";
+          editor?.setValue(tabId, value);
+        }}
+        onError={error => {
+          this.error = isHidden ? "" : error;
+        }}
       />
     );
   }
 
-  onEditorChange: onMonacoContentChangeCallback = (value) => {
-    this.tabComponents.editor?.setValue(this.tabId, value);
-  };
-
-  onEditorError = (error: string) => {
-    this.tabComponents.editor?.onError?.(this.tabId, error);
-  };
-
-  // TODO: provide error to dock's info-panel
   render() {
-    const { children: bottomContent, bindContainerRef, className, tab } = this.props;
+    const { bindContainerRef, className, tab } = this.props;
 
     if (!tab) return null;
-    const { Content } = this.tabComponents;
+    const { InfoPanel, Content } = this.tabComponents;
 
     return (
       <div className={cssNames("DockTabContent flex column", className)} ref={bindContainerRef}>
+        {InfoPanel && <InfoPanel tabId={this.tabId} error={this.error}/>}
         {Content && <Content {...this.props}/>}
         {this.renderEditor()}
-        {bottomContent}
+        {this.props.children}
       </div>
     );
   }

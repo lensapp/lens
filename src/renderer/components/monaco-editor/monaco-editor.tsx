@@ -39,22 +39,10 @@ export interface MonacoEditorProps {
   theme?: "vs" /* default, light theme */ | "vs-dark" | "hc-black" | string;
   language?: "yaml" | "json"; // configure bundled list of languages in via MonacoWebpackPlugin({languages: []})
   options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
-  onChange?: onMonacoContentChangeCallback;
-  onError?: onMonacoErrorCallback; // provide syntax validation errors, etc.
+  onChange?(value: string, evt: editor.IModelContentChangedEvent): void; // catch latest value updates
+  onError?(error?: string): void; // provide syntax validation errors, etc.
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
-}
-
-// `props.onChange` called via editor's api value changes / user input, but when `props.value` changes
-export interface onMonacoContentChangeCallback {
-  (value: string, data: {
-    model: editor.ITextModel, // current model
-    event: editor.IModelContentChangedEvent;
-  }): void;
-}
-
-export interface onMonacoErrorCallback {
-  (error: string): void; // TODO: provide validation or some another occurred error
 }
 
 export const defaultEditorProps: Partial<MonacoEditorProps> = {
@@ -119,6 +107,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.editor.restoreViewState(this.getViewState(model)); // restore cursor position, selection, etc.
     this.editor.layout();
     this.editor.focus(); // keep focus in editor, e.g. when clicking between dock-tabs
+    this.validateLazy();
   };
 
   @computed get editorId(): string {
@@ -132,13 +121,9 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   componentDidMount() {
     try {
       this.createEditor();
-
-      if (this.props.autoFocus) {
-        this.editor.focus();
-      }
       console.info(`[MONACO]: editor did mounted`);
     } catch (error) {
-      console.error(`[MONACO]: mounting failed`, { error, editor, component: this });
+      console.error(`[MONACO]: mounting failed: ${error}`, this);
     }
   }
 
@@ -162,6 +147,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.options,
     });
     console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
+    this.validateLazy(); // validate initial value
+
+    if (this.props.autoFocus) {
+      this.editor.focus();
+    }
 
     const onDidLayoutChangeDisposer = this.editor.onDidLayoutChange(layoutInfo => {
       this.props.onDidLayoutChange?.(layoutInfo);
@@ -172,11 +162,8 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       const value = this.editor.getValue();
       // console.info("[MONACO]: value changed", { value, event });
 
+      this.props.onChange?.(value, event);
       this.validateLazy(value);
-      this.props.onChange?.(value, {
-        model: this.model,
-        event,
-      });
     });
 
     const onContentSizeChangeDisposer = this.editor.onDidContentSizeChange((params) => {
@@ -244,18 +231,15 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     if (value == this.getValue()) return;
 
     this.editor.setValue(value);
-    this.validateLazy(value);
+    this.validate(value);
   }
 
   getValue(opts?: { preserveBOM: boolean; lineEnding: string; }): string {
     return this.editor?.getValue(opts) ?? "";
   }
 
-  // avoid excessive validations during typing
-  validateLazy = debounce((value: string) => this.validate(value), 250);
-
   @action
-  async validate(value: string = this.getValue()): Promise<void> {
+  validate = async (value = this.getValue()): Promise<void> => {
     const { language } = this.props;
     const validators: MonacoValidator[] = [];
     const syntaxValidator: MonacoValidator = monacoValidators[language];
@@ -264,7 +248,8 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       validators.push(syntaxValidator);
     }
 
-    this.validationErrors.clear();
+    // console.info('[MONACO]: validating', { value, validators });
+    this.validationErrors.clear(); // reset first
 
     for (const validate of validators) {
       try {
@@ -275,7 +260,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
         this.props.onError?.(error); // emit error outside via callback
       }
     }
-  }
+  };
+
+  // avoid excessive validations during typing
+  validateLazy = debounce(this.validate, 250);
 
   bindRef = (elem: HTMLElement) => this.containerElem = elem;
 

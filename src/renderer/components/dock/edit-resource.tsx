@@ -19,27 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./edit-resource.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { editResourceStore } from "./edit-resource.store";
-import { InfoPanel } from "./info-panel";
+import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { Badge } from "../badge";
-import { Spinner } from "../spinner";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { DockTabContentProps } from "./dock-tab-content";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
 
-interface Props extends DockTabContentProps {
+interface Props extends InfoPanelProps {
 }
 
 @observer
-export class EditResource extends React.Component<Props> {
+export class EditResourceInfoPanel extends React.Component<Props> {
   get tabId() {
-    return this.props.tab.id;
+    return this.props.tabId;
   }
 
   get resource(): KubeObject | undefined {
@@ -74,34 +70,30 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, resource } = this;
+    const { resource } = this;
 
-    if (!editResourceStore.dataReady || !resource) {
-      return <Spinner center/>;
-    }
+    if (!resource) return null;
 
     return (
-      <div className="EditResource">
-        <InfoPanel
-          tabId={tabId}
-          submit={this.save}
-          submitLabel="Save"
-          submittingMessage="Applying.."
-          controls={(
-            <div className="resource-info flex gaps align-center">
-              <span>Kind:</span> <Badge label={resource.kind}/>
-              <span>Name:</span><Badge label={resource.getName()}/>
-              <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
-            </div>
-          )}
-        />
-      </div>
+      <InfoPanel
+        {...this.props}
+        submit={this.save}
+        submitLabel="Save"
+        submittingMessage="Applying.."
+        controls={(
+          <div className="resource-info flex gaps align-center">
+            <span>Kind:</span> <Badge label={resource.kind}/>
+            <span>Name:</span><Badge label={resource.getName()}/>
+            <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
+          </div>
+        )}
+      />
     );
   }
 }
 
 dockViewsManager.register(TabKind.EDIT_RESOURCE, {
-  Content: EditResource,
+  InfoPanel: EditResourceInfoPanel,
   editor: {
     getValue(tabId) {
       return editResourceStore.getData(tabId).draft;
