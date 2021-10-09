@@ -21,9 +21,16 @@
 
 import fetchMock from "jest-fetch-mock";
 import configurePackages from "./common/configure-packages";
+import { configure } from "mobx";
 
 // setup default configuration for external npm-packages
 configurePackages();
+
+configure({
+  // Needed because we want to use jest.spyOn()
+  // ref https://github.com/mobxjs/mobx/issues/2784
+  safeDescriptors: false,
+});
 
 // rewire global.fetch to call 'fetchMock'
 fetchMock.enableMocks();

@@ -27,7 +27,7 @@ import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
@@ -124,7 +124,7 @@ export class HotbarMenu extends React.Component<Props> {
                             key={index}
                             index={index}
                             entity={entity}
-                            onClick={() => entity.onRun(catalogEntityRunContext)}
+                            onClick={() => catalogEntityRegistry.onRun(entity)}
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
                             add={this.addItem}

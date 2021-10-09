@@ -19,32 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { LensApiRequest } from "../router";
-import { respondJson, respondText } from "../utils/http-responses";
-import { ResourceApplier } from "../resource-applier";
+import type { CatalogEntity } from "../catalog";
 
-export class ResourceApplierApiRoute {
-  static async applyResource(request: LensApiRequest) {
-    const { response, cluster, payload } = request;
+export class CatalogRunEvent {
+  #defaultPrevented: boolean;
+  #target: CatalogEntity;
 
-    try {
-      const resource = await new ResourceApplier(cluster).apply(payload);
-
-      respondJson(response, resource, 200);
-    } catch (error) {
-      respondText(response, error, 422);
-    }
+  get defaultPrevented() {
+    return this.#defaultPrevented;
   }
 
-  static async patchResource(request: LensApiRequest) {
-    const { response, cluster, payload } = request;
+  get target() {
+    return this.#target;
+  }
 
-    try {
-      const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.patch, payload.ns);
+  constructor({ target }: { target: CatalogEntity }) {
+    this.#defaultPrevented = false;
+    this.#target = target;
+  }
 
-      respondJson(response, resource, 200);
-    } catch (error) {
-      respondText(response, error, 422);
-    }
+  preventDefault() {
+    this.#defaultPrevented = true;
   }
 }

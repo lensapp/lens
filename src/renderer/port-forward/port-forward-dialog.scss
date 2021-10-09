@@ -19,32 +19,59 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { LensApiRequest } from "../router";
-import { respondJson, respondText } from "../utils/http-responses";
-import { ResourceApplier } from "../resource-applier";
-
-export class ResourceApplierApiRoute {
-  static async applyResource(request: LensApiRequest) {
-    const { response, cluster, payload } = request;
-
-    try {
-      const resource = await new ResourceApplier(cluster).apply(payload);
-
-      respondJson(response, resource, 200);
-    } catch (error) {
-      respondText(response, error, 422);
+.PortForwardDialog {
+  .Wizard {
+    .header {
+      span {
+        color: #a0a0a0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
-  }
 
-  static async patchResource(request: LensApiRequest) {
-    const { response, cluster, payload } = request;
-
-    try {
-      const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.patch, payload.ns);
-
-      respondJson(response, resource, 200);
-    } catch (error) {
-      respondText(response, error, 422);
+    .WizardStep {
+      .step-content {
+        min-height: 90px;
+        overflow: hidden;
+      }
     }
-  }
+
+    .current-scale {
+      font-weight: bold
+    }
+
+    .desired-scale {
+      flex: 1.1 0;
+    }
+
+    .slider-container {
+      flex: 1 0;
+    }
+
+    .plus-minus-container {
+      margin-left: $margin * 2;
+      .Icon {
+        --color-active: black;
+      }
+    }
+
+    .warning {
+      color: $colorSoftError;
+      font-size: small;
+      display: flex;
+      align-items: center;
+
+      .Icon {
+        margin: 0;
+        margin-right: $margin;
+      }
+    }
+
+    .portInput {
+      display: inline-block !important;
+      width: 70px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }  }
+
 }

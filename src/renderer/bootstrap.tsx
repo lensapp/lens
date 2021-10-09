@@ -28,7 +28,7 @@ import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
-import { render, unmountComponentAtNode } from "react-dom";
+import { render } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { ClusterStore } from "../common/cluster-store";
@@ -64,7 +64,7 @@ async function attachChromeDebugger() {
 }
 
 type AppComponent = React.ComponentType & {
-  init?(): Promise<void>;
+  init?(rootElem: HTMLElement): Promise<void>;
 };
 
 export async function bootstrap(App: AppComponent) {
@@ -117,16 +117,8 @@ export async function bootstrap(App: AppComponent) {
 
   // init app's dependencies if any
   if (App.init) {
-    await App.init();
+    await App.init(rootElem);
   }
-  window.addEventListener("message", (ev: MessageEvent) => {
-    if (ev.data === "teardown") {
-      UserStore.getInstance(false)?.unregisterIpcListener();
-      ClusterStore.getInstance(false)?.unregisterIpcListener();
-      unmountComponentAtNode(rootElem);
-      window.location.href = "about:blank";
-    }
-  });
   render(<>
     {isMac && <div id="draggable-top" />}
     {DefaultProps(App)}

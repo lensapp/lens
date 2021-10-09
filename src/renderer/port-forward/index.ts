@@ -19,32 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { LensApiRequest } from "../router";
-import { respondJson, respondText } from "../utils/http-responses";
-import { ResourceApplier } from "../resource-applier";
-
-export class ResourceApplierApiRoute {
-  static async applyResource(request: LensApiRequest) {
-    const { response, cluster, payload } = request;
-
-    try {
-      const resource = await new ResourceApplier(cluster).apply(payload);
-
-      respondJson(response, resource, 200);
-    } catch (error) {
-      respondText(response, error, 422);
-    }
-  }
-
-  static async patchResource(request: LensApiRequest) {
-    const { response, cluster, payload } = request;
-
-    try {
-      const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.patch, payload.ns);
-
-      respondJson(response, resource, 200);
-    } catch (error) {
-      respondText(response, error, 422);
-    }
-  }
-}
+export * from "./port-forward.store";
+export * from "./port-forward-item";
+export * from "./port-forward-dialog";
