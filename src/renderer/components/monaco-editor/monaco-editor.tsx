@@ -238,6 +238,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return this.editor?.getValue(opts) ?? "";
   }
 
+  focus(){
+    this.editor?.focus();
+  }
+
   @action
   validate = async (value = this.getValue()): Promise<void> => {
     const { language } = this.props;
