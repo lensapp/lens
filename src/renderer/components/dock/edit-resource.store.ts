@@ -52,17 +52,19 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
   }
 
   async editResource(tabId: TabId) {
+    await this.whenReady;
     const store = this.getStore(tabId);
     const data = this.getData(tabId);
-    let resource = this.getResource(tabId);
 
-    if (!store || !data) return;
+    if (data.resource && !data.draft) {
+      try {
+        let resource = this.getResource(tabId);
 
-    try {
-      resource ??= await store.loadFromPath(data.resource);
-      data.draft ||= jsYaml.safeDump(resource.toPlainObject());
-    } catch (error) {
-      console.error(`[DOCK]: dumping '${data.resource}' has failed: ${error}`, { store, data });
+        resource ??= await store.loadFromPath(data.resource);
+        data.draft ||= jsYaml.safeDump(resource.toPlainObject()); // dump resource if empty
+      } catch (error) {
+        console.error(`[DOCK]: dumping '${data.resource}' has failed: ${error}`, { store, data });
+      }
     }
   }
 

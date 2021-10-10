@@ -58,6 +58,8 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   async loadData(tabId: TabId) {
+    await this.whenReady;
+
     await Promise.all([
       this.loadValues(tabId),
       this.loadVersions(tabId),
@@ -73,7 +75,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   @action
-  async loadVersions(tabId: TabId) {
+  private async loadVersions(tabId: TabId) {
     try {
       const { releaseName } = this.getData(tabId);
 
@@ -87,7 +89,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   @action
-  async loadValues(tabId: TabId, { forceReload = false } = {}) {
+  private async loadValues(tabId: TabId, { forceReload = false } = {}) {
     if (this.hasValues(tabId) && !forceReload) {
       return;
     }

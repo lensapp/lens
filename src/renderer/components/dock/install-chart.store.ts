@@ -58,6 +58,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
   @action
   async loadData(tabId: TabId) {
+    await this.whenReady;
     const promises = [];
 
     if (!this.getData(tabId).values) {
@@ -73,6 +74,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
   @action
   async loadVersions(tabId: TabId) {
+    await this.whenReady;
     const { repo, name, version } = this.getData(tabId);
 
     this.versions.delete(tabId); // reset
@@ -84,6 +86,8 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
   @action
   async loadValues(tabId: TabId, attempt = 0): Promise<void> {
+    await this.whenReady;
+
     const data = this.getData(tabId);
     const { repo, name, version } = data;
     const values = await getChartValues(repo, name, version);

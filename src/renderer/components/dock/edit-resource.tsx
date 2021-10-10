@@ -96,7 +96,7 @@ dockViewsManager.register(TabKind.EDIT_RESOURCE, {
   InfoPanel: EditResourceInfoPanel,
   editor: {
     getValue(tabId) {
-      return editResourceStore.getData(tabId).draft;
+      return editResourceStore.getData(tabId)?.draft ?? "";
     },
     setValue(tabId, value) {
       editResourceStore.getData(tabId).draft = value;
