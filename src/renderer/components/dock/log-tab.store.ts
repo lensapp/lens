@@ -59,7 +59,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     ]);
   }
 
-  protected init() {
+  async init() {
     super.init();
 
     this.dispose.push(

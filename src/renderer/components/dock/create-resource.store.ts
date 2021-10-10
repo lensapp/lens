@@ -57,7 +57,7 @@ export class CreateResourceStore extends DockTabStore<string> {
     return path.resolve(os.homedir(), "~/.k8slens/templates");
   }
 
-  protected async init() {
+  async init() {
     super.init();
 
     // scan all available templates immediately

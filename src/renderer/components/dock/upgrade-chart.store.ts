@@ -41,7 +41,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     makeObservable(this);
   }
 
-  protected async init() {
+  async init() {
     super.init();
     await releaseStore.loadFromContextNamespaces();
 

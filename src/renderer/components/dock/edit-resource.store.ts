@@ -40,7 +40,7 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     autoBind(this);
   }
 
-  protected init() {
+  async init() {
     super.init();
 
     this.dispose.push(

@@ -24,18 +24,21 @@ import { autoBind, createStorage, disposer, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {
-  autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
+  autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events (default: true)
   storageKey?: string; // save data to persistent storage under the key
 }
 
-export class DockTabStore<T extends {}> {
-  @observable.ref private storage?: StorageHelper<Record<TabId, T>>; // available only with `options.storageKey`
-  @observable private _data: Record<TabId, T> = {};
+export type DockTabStoreShape<T> = Record<TabId, T>;
+
+export class DockTabStore<T> {
+  @observable.ref private storage?: StorageHelper<DockTabStoreShape<T>>; // available only with `options.storageKey`
+  @observable private _data: DockTabStoreShape<T> = {};
   @observable dataReady = false; // dock-tab's data ready to interact, e.g. start editing resource
+  @observable initialized = false;
 
   protected dispose = disposer();
 
-  get data() {
+  get data(): DockTabStoreShape<T> {
     if (this.options.storageKey) {
       return this.storage.get();
     }
@@ -43,7 +46,7 @@ export class DockTabStore<T extends {}> {
     return this._data;
   }
 
-  set data(value: Record<TabId, T>) {
+  set data(value: DockTabStoreShape<T>) {
     if (this.options.storageKey) {
       this.storage.set(value);
     } else {
@@ -51,7 +54,7 @@ export class DockTabStore<T extends {}> {
     }
   }
 
-  protected constructor(protected options: DockTabStoreOptions = {}) {
+  constructor(protected options: DockTabStoreOptions = {}) {
     makeObservable(this); // must be called *before* autoBind() when used with mobx's method decorators
     autoBind(this);
 
@@ -74,12 +77,13 @@ export class DockTabStore<T extends {}> {
     return Promise.all([
       dockStore.whenReady,
       this.storage?.whenReady,
-    ]);
+    ]).then(() => this.dataReady = true);
   }
 
   @action
-  protected init() {
-    this.dataReady = true;
+  async init(): Promise<any> {
+    if (this.initialized) return;
+    this.initialized = true;
 
     this.dispose.push(
       dockStore.onTabClose(({ tabId }) => this.clearData(tabId)),
@@ -102,8 +106,9 @@ export class DockTabStore<T extends {}> {
 
   @action
   reset() {
-    this.data = {};
+    this.data = {}; // clears json-file storage when initialized with `opts.storageKey`
     this.dataReady = false;
+    this.initialized = false;
   }
 
   @action

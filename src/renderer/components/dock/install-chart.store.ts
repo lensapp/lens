@@ -45,7 +45,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     makeObservable(this);
   }
 
-  protected init() {
+  async init() {
     super.init();
 
     this.dispose.push(
