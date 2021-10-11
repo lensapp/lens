@@ -44,10 +44,6 @@
 
   &:hover .pinIcon {
     opacity: 1;
-
-    &:global(.disabled) {
-      opacity: 0.3;
-    }
   }
 }
 

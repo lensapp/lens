@@ -330,8 +330,8 @@ describe("HotbarStore", () => {
 
       hotbarStore.addToHotbar(testCluster);
 
-      expect(hotbarStore.entityPinnedToHotbar(testCluster)).toBeTruthy();
-      expect(hotbarStore.entityPinnedToHotbar(awsCluster)).toBeFalsy();
+      expect(hotbarStore.isAddedToActive(testCluster)).toBeTruthy();
+      expect(hotbarStore.isAddedToActive(awsCluster)).toBeFalsy();
     });
   });
 

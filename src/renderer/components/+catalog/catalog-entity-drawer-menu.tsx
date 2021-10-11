@@ -74,6 +74,10 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     HotbarStore.getInstance().addToHotbar(entity);
   }
 
+  removeFromHotbar(item: CatalogEntity): void {
+    HotbarStore.getInstance().removeFromHotbar(item.getId());
+  }
+
   getMenuItems(entity: T): React.ReactChild[] {
     if (!entity) {
       return [];
@@ -98,11 +102,19 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       );
     }
 
-    items.push(
-      <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
-        <Icon material="push_pin" small tooltip="Add to Hotbar" />
-      </MenuItem>
-    );
+    if (!HotbarStore.getInstance().isAddedToActive(entity)) {
+      items.push(
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
+          <Icon material="push_pin" small tooltip="Add to Hotbar" />
+        </MenuItem>
+      );
+    } else {
+      items.push(
+        <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity)}>
+          <Icon material="push_pin" small tooltip="Remove from Hotbar" />
+        </MenuItem>
+      );
+    }
 
     return items;
   }

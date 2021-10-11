@@ -37,7 +37,7 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import { createAppStorage, cssNames } from "../../utils";
+import { createAppStorage, cssNames, prevDefault } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
@@ -130,6 +130,10 @@ export class Catalog extends React.Component<Props> {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
+  removeFromHotbar(item: CatalogEntityItem<CatalogEntity>): void {
+    HotbarStore.getInstance().removeFromHotbar(item.getId());
+  }
+
   onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
@@ -177,6 +181,8 @@ export class Catalog extends React.Component<Props> {
   }
 
   renderItemMenu = (item: CatalogEntityItem<CatalogEntity>) => {
+    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(item.entity);
+
     const onOpen = () => {
       this.contextMenu.menuItems = [];
 
@@ -195,29 +201,32 @@ export class Catalog extends React.Component<Props> {
             </MenuItem>
           ))
         }
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
-          Pin to Hotbar
-        </MenuItem>
+        {!isItemInHotbar ? (
+          <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
+            Add to Hotbar
+          </MenuItem>
+        ) : (
+          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item)}>
+            Remove from Hotbar
+          </MenuItem>
+        )}
       </MenuActions>
     );
   };
 
   renderName(item: CatalogEntityItem<CatalogEntity>) {
-    const disabledIcon = HotbarStore.getInstance().entityPinnedToHotbar(item.entity);
+    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(item.entity);
 
     return (
       <div className={styles.entityName}>
         {item.name}
         <Icon
           small
-          disabled={disabledIcon}
           className={styles.pinIcon}
           material="push_pin"
-          tooltip={disabledIcon ? "" : "Pin to Hotbar"}
-          onClick={(event) => {
-            event.stopPropagation();
-            this.addToHotbar(item);
-          }}/>
+          tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
+          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
+        />
       </div>
     );
   }

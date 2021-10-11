@@ -171,7 +171,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }};
 
 
-    if (this.entityPinnedToHotbar(item)) {
+    if (this.isAddedToActive(item)) {
       return;
     }
 
@@ -279,7 +279,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
    * Checks if entity already pinned to hotbar
    * @returns boolean
    */
-  entityPinnedToHotbar(entity: CatalogEntity) {
+  isAddedToActive(entity: CatalogEntity) {
     return !!this.getActive().items.find(item => item?.entity.uid === entity.metadata.uid);
   }
 }
