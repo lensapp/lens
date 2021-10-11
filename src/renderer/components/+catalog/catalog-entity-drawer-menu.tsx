@@ -102,7 +102,9 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       );
     }
 
-    if (!HotbarStore.getInstance().isAddedToActive(entity)) {
+    const isAddedEntity = () => HotbarStore.getInstance().isAddedToActive(entity);
+
+    if (!isAddedEntity) {
       items.push(
         <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
           <Icon material="push_pin" small tooltip="Add to Hotbar" />
