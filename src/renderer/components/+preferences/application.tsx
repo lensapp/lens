@@ -72,6 +72,20 @@ export const Application = observer(() => {
         />
       </section>
 
+      <section id="terminalSelection">
+        <SubTitle title="Terminal copy & paste" />
+        <FormSwitch
+          label="Copy on select and paste on right-click"
+          control={
+            <Switcher
+              checked={UserStore.getInstance().terminalCopyOnSelect}
+              onChange={v => UserStore.getInstance().terminalCopyOnSelect = v.target.checked}
+              name="terminalCopyOnSelect"
+            />
+          }
+        />
+      </section>
+
       <hr/>
 
       <section id="other">

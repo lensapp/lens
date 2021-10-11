@@ -19,18 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, BrowserWindow, dialog, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import type { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
+import { appName, isMac, isWindows, docsUrl, supportUrl, productName } from "../common/vars";
 import { MenuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
-import { broadcastMessage, ipcMainOn } from "../common/ipc";
+import { broadcastMessage } from "../common/ipc";
 import * as packageJson from "../../package.json";
 import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../common/routes";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
+
+interface MenuItemsOpts extends MenuItemConstructorOptions {
+  submenu?: MenuItemConstructorOptions[];
+}
 
 export function initMenu(windowManager: WindowManager) {
   return autorun(() => buildMenu(windowManager), {
@@ -68,11 +72,13 @@ export function buildMenu(windowManager: WindowManager) {
     await windowManager.navigate(url);
   }
 
-  const macAppMenu: MenuItemConstructorOptions = {
+  const macAppMenu: MenuItemsOpts = {
     label: app.getName(),
+    id: "root",
     submenu: [
       {
         label: `About ${productName}`,
+        id: "about",
         click(menuItem: MenuItem, browserWindow: BrowserWindow) {
           showAbout(browserWindow);
         }
@@ -81,6 +87,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Preferences",
         accelerator: "CmdOrCtrl+,",
+        id: "preferences",
         click() {
           navigate(preferencesURL());
         },
@@ -88,6 +95,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Extensions",
         accelerator: "CmdOrCtrl+Shift+E",
+        id: "extensions",
         click() {
           navigate(extensionsURL());
         }
@@ -102,18 +110,21 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Quit",
         accelerator: "Cmd+Q",
+        id: "quit",
         click() {
           exitApp();
         }
       }
     ],
   };
-  const fileMenu: MenuItemConstructorOptions = {
+  const fileMenu: MenuItemsOpts = {
     label: "File",
+    id: "file",
     submenu: [
       {
         label: "Add Cluster",
         accelerator: "CmdOrCtrl+Shift+A",
+        id: "add-cluster",
         click() {
           navigate(addClusterURL());
         }
@@ -122,6 +133,7 @@ export function buildMenu(windowManager: WindowManager) {
         { type: "separator" },
         {
           label: "Preferences",
+          id: "preferences",
           accelerator: "Ctrl+,",
           click() {
             navigate(preferencesURL());
@@ -145,6 +157,7 @@ export function buildMenu(windowManager: WindowManager) {
         {
           label: "Exit",
           accelerator: "Alt+F4",
+          id: "quit",
           click() {
             exitApp();
           }
@@ -152,8 +165,9 @@ export function buildMenu(windowManager: WindowManager) {
       ])
     ],
   };
-  const editMenu: MenuItemConstructorOptions = {
+  const editMenu: MenuItemsOpts = {
     label: "Edit",
+    id: "edit",
     submenu: [
       { role: "undo" },
       { role: "redo" },
@@ -166,12 +180,14 @@ export function buildMenu(windowManager: WindowManager) {
       { role: "selectAll" },
     ]
   };
-  const viewMenu: MenuItemConstructorOptions = {
+  const viewMenu: MenuItemsOpts = {
     label: "View",
+    id: "view",
     submenu: [
       {
         label: "Catalog",
         accelerator: "Shift+CmdOrCtrl+C",
+        id: "catalog",
         click() {
           navigate(catalogURL());
         }
@@ -179,6 +195,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Command Palette...",
         accelerator: "Shift+CmdOrCtrl+P",
+        id: "command-palette",
         click() {
           broadcastMessage("command-palette:open");
         }
@@ -187,6 +204,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Back",
         accelerator: "CmdOrCtrl+[",
+        id: "go-back",
         click() {
           webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => wc.goBack());
         }
@@ -194,6 +212,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Forward",
         accelerator: "CmdOrCtrl+]",
+        id: "go-forward",
         click() {
           webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => wc.goForward());
         }
@@ -201,6 +220,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Reload",
         accelerator: "CmdOrCtrl+R",
+        id: "reload",
         click() {
           windowManager.reload();
         }
@@ -214,23 +234,27 @@ export function buildMenu(windowManager: WindowManager) {
       { role: "togglefullscreen" }
     ]
   };
-  const helpMenu: MenuItemConstructorOptions = {
+  const helpMenu: MenuItemsOpts = {
     role: "help",
+    id: "help",
     submenu: [
       {
         label: "Welcome",
+        id: "welcome",
         click() {
           navigate(welcomeURL());
         },
       },
       {
         label: "Documentation",
+        id: "documentation",
         click: async () => {
           shell.openExternal(docsUrl);
         },
       },
       {
         label: "Support",
+        id: "support",
         click: async () => {
           shell.openExternal(supportUrl);
         },
@@ -238,6 +262,7 @@ export function buildMenu(windowManager: WindowManager) {
       ...ignoreOnMac([
         {
           label: `About ${productName}`,
+          id: "about",
           click(menuItem: MenuItem, browserWindow: BrowserWindow) {
             showAbout(browserWindow);
           }
@@ -246,69 +271,28 @@ export function buildMenu(windowManager: WindowManager) {
     ]
   };
   // Prepare menu items order
-  const appMenu: Record<MenuTopId, MenuItemConstructorOptions> = {
-    mac: macAppMenu,
-    file: fileMenu,
-    edit: editMenu,
-    view: viewMenu,
-    help: helpMenu,
-  };
+  const appMenu = new Map([
+    ["mac", macAppMenu],
+    ["file", fileMenu],
+    ["edit", editMenu],
+    ["view", viewMenu],
+    ["help", helpMenu],
+  ]);
 
   // Modify menu from extensions-api
-  MenuRegistry.getInstance().getItems().forEach(({ parentId, ...menuItem }) => {
-    try {
-      const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
+  for (const { parentId, ...menuItem } of MenuRegistry.getInstance().getItems()) {
+    if (!appMenu.has(parentId)) {
+      logger.error(`[MENU]: cannot register menu item for parentId=${parentId}, parent item doesn't exist`, { menuItem });
 
-      topMenu.push(menuItem);
-    } catch (err) {
-      logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem });
+      continue;
     }
-  });
+
+    appMenu.get(parentId).submenu.push(menuItem);
+  }
 
   if (!isMac) {
-    delete appMenu.mac;
+    appMenu.delete("mac");
   }
 
-  const menu = Menu.buildFromTemplate(Object.values(appMenu));
-
-  Menu.setApplicationMenu(menu);
-
-  if (isTestEnv) {
-    // this is a workaround for the test environment (spectron) not being able to directly access
-    // the application menus (https://github.com/electron-userland/spectron/issues/21)
-    ipcMainOn("test-menu-item-click", (event: IpcMainEvent, ...names: string[]) => {
-      let menu: Menu = Menu.getApplicationMenu();
-      const parentLabels: string[] = [];
-      let menuItem: MenuItem;
-
-      for (const name of names) {
-        parentLabels.push(name);
-        menuItem = menu?.items?.find(item => item.label === name);
-
-        if (!menuItem) {
-          break;
-        }
-        menu = menuItem.submenu;
-      }
-
-      const menuPath: string = parentLabels.join(" -> ");
-
-      if (!menuItem) {
-        logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
-
-        return;
-      }
-
-      const { enabled, visible, click } = menuItem;
-
-      if (enabled === false || visible === false || typeof click !== "function") {
-        logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} not clickable`);
-
-        return;
-      }
-
-      logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} click!`);
-      menuItem.click();
-    });
-  }
+  Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenu.values()]));
 }

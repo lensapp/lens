@@ -25,16 +25,24 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
-import type { Page } from "playwright";
+import type { ElectronApplication, Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("preferences page tests", () => {
   let window: Page, cleanup: () => Promise<void>;
 
   beforeEach(async () => {
-    ({ window, cleanup } = await utils.start());
+    let app: ElectronApplication;
+    
+    ({ window, cleanup, app } = await utils.start());
     await utils.clickWelcomeButton(window);
-    await window.keyboard.press("Meta+,");
+
+    await app.evaluate(async ({ app }) => {
+      await app.applicationMenu
+        .getMenuItemById(process.platform === "darwin" ? "root" : "file")
+        .submenu.getMenuItemById("preferences")
+        .click();
+    });
   }, 10*60*1000);
 
   afterEach(async () => {

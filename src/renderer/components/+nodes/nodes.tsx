@@ -236,8 +236,8 @@ export class Nodes extends React.Component<Props> {
               this.renderDiskUsage(node),
               <>
                 <span id={tooltipId}>{node.getTaints().length}</span>
-                <Tooltip targetId={tooltipId} style={{ whiteSpace: "pre-line" }}>
-                  {node.getTaints().map(({ key, effect }) => `${key}: ${effect}`).join("\n")}
+                <Tooltip targetId={tooltipId} tooltipOnParentHover={true} style={{ whiteSpace: "pre-line" }}>
+                  {node.getTaints().map(({ key, value, effect }) => `${key}=${value}:${effect}`).join("\n")}
                 </Tooltip>
               </>,
               node.getRoleLabels(),

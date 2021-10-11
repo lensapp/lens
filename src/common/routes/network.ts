@@ -25,6 +25,7 @@ import { endpointRoute } from "./endpoints";
 import { ingressRoute } from "./ingresses";
 import { networkPoliciesRoute } from "./network-policies";
 import { servicesRoute, servicesURL } from "./services";
+import { portForwardsRoute } from "./port-forwards";
 
 export const networkRoute: RouteProps = {
   path: [
@@ -32,6 +33,7 @@ export const networkRoute: RouteProps = {
     endpointRoute,
     ingressRoute,
     networkPoliciesRoute,
+    portForwardsRoute,
   ].map(route => route.path.toString())
 };
 

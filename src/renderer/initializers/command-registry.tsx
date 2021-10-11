@@ -30,6 +30,7 @@ import { HotbarRemoveCommand } from "../components/hotbar/hotbar-remove-command"
 import { HotbarSwitchCommand } from "../components/hotbar/hotbar-switch-command";
 import { navigate } from "../navigation";
 import { HotbarRenameCommand } from "../components/hotbar/hotbar-rename-command";
+import { ActivateEntityCommand } from "../components/activate-entity-command";
 
 export function initCommandRegistry() {
   CommandRegistry.getInstance()
@@ -195,6 +196,12 @@ export function initCommandRegistry() {
         title: "Hotbar: Rename Hotbar ...",
         scope: "global",
         action: () => CommandOverlay.open(<HotbarRenameCommand />)
+      },
+      {
+        id: "catalog.searchEntities",
+        title: "Catalog: Activate Entity ...",
+        scope: "global",
+        action: () => CommandOverlay.open(<ActivateEntityCommand />)
       },
     ]);
 }

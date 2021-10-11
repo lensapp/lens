@@ -25,9 +25,9 @@ import { BaseRegistry } from "./base-registry";
 import type { LensExtension } from "../lens-extension";
 import type { CatalogEntity } from "../../common/catalog";
 
-export type CommandContext = {
+export interface CommandContext {
   entity?: CatalogEntity;
-};
+}
 
 export interface CommandRegistration {
   id: string;

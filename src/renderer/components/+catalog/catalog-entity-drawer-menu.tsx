@@ -30,7 +30,7 @@ import { MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { Icon } from "../icon";
-import type { CatalogEntityItem } from "./catalog-entity.store";
+import type { CatalogEntityItem } from "./catalog-entity-item";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
   item: CatalogEntityItem<T> | null | undefined;

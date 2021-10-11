@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./entity-settings.scss";
+import styles from "./entity-settings.module.css";
 
 import React from "react";
 import { observable, makeObservable } from "mobx";
@@ -98,7 +98,9 @@ export class EntitySettings extends React.Component<Props> {
             source={this.entity.metadata.source}
             src={this.entity.spec.icon?.src}
           />
-          <h2>{this.entity.metadata.name}</h2>
+          <div className={styles.entityName}>
+            {this.entity.metadata.name}
+          </div>
         </div>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
           { groups.map((group, groupIndex) => (
@@ -138,7 +140,6 @@ export class EntitySettings extends React.Component<Props> {
 
     return (
       <SettingLayout
-        className="CatalogEntitySettings"
         navigation={this.renderNavigation()}
         contentGaps={false}
       >

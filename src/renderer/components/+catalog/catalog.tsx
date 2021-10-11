@@ -25,7 +25,8 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
+import { CatalogEntityStore } from "./catalog-entity.store";
+import type { CatalogEntityItem } from "./catalog-entity-item";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
@@ -39,13 +40,13 @@ import { MainLayout } from "../layout/main-layout";
 import { createAppStorage, cssNames } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
-import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
+import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
 
-export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
+export const previousActiveTab = createAppStorage("catalog-previous-active-tab", browseCatalogTab);
 
 enum sortBy {
   name = "name",
@@ -56,7 +57,10 @@ enum sortBy {
 
 const css = makeCss(styles);
 
-interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
+interface Props extends RouteComponentProps<CatalogViewRouteParam> {
+  catalogEntityStore?: CatalogEntityStore;
+}
+
 @observer
 export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
@@ -66,8 +70,11 @@ export class Catalog extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-    this.catalogEntityStore = new CatalogEntityStore();
+    this.catalogEntityStore = props.catalogEntityStore;
   }
+  static defaultProps = {
+    catalogEntityStore: new CatalogEntityStore(),       
+  };
 
   get routeActiveTab(): string {
     const { group, kind } = this.props.match.params ?? {};
@@ -76,7 +83,7 @@ export class Catalog extends React.Component<Props> {
       return `${group}/${kind}`;
     }
 
-    return "";
+    return browseCatalogTab;
   }
 
   async componentDidMount() {
@@ -90,7 +97,7 @@ export class Catalog extends React.Component<Props> {
         previousActiveTab.set(this.routeActiveTab);
 
         try {
-          await when(() => (routeTab === "" || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
+          await when(() => (routeTab === browseCatalogTab || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
           const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
 
           runInAction(() => {
@@ -118,12 +125,17 @@ export class Catalog extends React.Component<Props> {
       }
     }));
   }
+
   addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
   onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
-    this.catalogEntityStore.selectedItemId = item.getId();
+    if (this.catalogEntityStore.selectedItemId) {
+      this.catalogEntityStore.selectedItemId = null;
+    } else {
+      item.onRun();
+    }
   };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -154,7 +166,7 @@ export class Catalog extends React.Component<Props> {
     if (activeCategory) {
       navigate(catalogURL({ params: {group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
     } else {
-      navigate(catalogURL());
+      navigate(catalogURL({ params: { group: browseCatalogTab }}));
     }
   };
 
@@ -173,6 +185,9 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <MenuActions onOpen={onOpen}>
+        <MenuItem key="open-details" onClick={() => this.catalogEntityStore.selectedItemId = item.getId()}>
+          View Details
+        </MenuItem>
         {
           this.contextMenu.menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>

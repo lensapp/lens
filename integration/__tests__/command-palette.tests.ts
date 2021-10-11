@@ -19,14 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Page } from "playwright";
+import type { ElectronApplication, Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("Lens command palette", () => {
-  let window: Page, cleanup: () => Promise<void>;
+  let window: Page, cleanup: () => Promise<void>, app: ElectronApplication;
 
   beforeEach(async () => {
-    ({ window, cleanup } = await utils.start());
+    ({ window, cleanup, app } = await utils.start());
     await utils.clickWelcomeButton(window);
   }, 10*60*1000);
 
@@ -35,8 +35,13 @@ describe("Lens command palette", () => {
   }, 10*60*1000);
 
   describe("menu", () => {
-    it("opens command dialog from keyboard shortcut", async () => {
-      await window.keyboard.press("Meta+Shift+p");
+    it("opens command dialog from menu", async () => {
+      await app.evaluate(async ({ app }) => {
+        await app.applicationMenu
+          .getMenuItemById("view")
+          .submenu.getMenuItemById("command-palette")
+          .click();
+      });
       await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
     }, 10*60*1000);
   });
