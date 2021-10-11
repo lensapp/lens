@@ -25,7 +25,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
-import { Catalog } from "../+catalog";
+import { Catalog, previousActiveTab } from "../+catalog";
 import { Preferences } from "../+preferences";
 import { AddCluster } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
@@ -40,6 +40,7 @@ import { reaction } from "mobx";
 import { navigation } from "../../navigation";
 import { setEntityOnRouteMatch } from "../../../main/catalog-sources/helpers/general-active-sync";
 import { TopBar } from "../layout/topbar";
+import { catalogURL, getPreviousTabUrl } from "../../../common/routes";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -56,6 +57,7 @@ export class ClusterManager extends React.Component {
         <main>
           <div id="lens-views"/>
           <Switch>
+            <Redirect exact from={catalogURL()} to={getPreviousTabUrl(previousActiveTab.get())}/>
             <Route component={Welcome} {...routes.welcomeRoute} />
             <Route component={Catalog} {...routes.catalogRoute} />
             <Route component={Preferences} {...routes.preferencesRoute} />

@@ -29,6 +29,8 @@ import { ThemeStore } from "../../theme.store";
 import { boundMethod } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase } from "lodash";
+import { UserStore } from "../../../common/user-store";
+import { clipboard } from "electron";
 
 export class Terminal {
   static spawningPool: HTMLElement;
@@ -115,11 +117,13 @@ export class Terminal {
     this.xterm.open(Terminal.spawningPool);
     this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
+    this.xterm.onSelectionChange(this.onSelectionChange);
 
     // bind events
     const onDataHandler = this.xterm.onData(this.onData);
 
     this.viewport.addEventListener("scroll", this.onScroll);
+    this.elem.addEventListener("contextmenu", this.onContextMenu);
     this.api.onReady.addListener(this.onClear, { once: true }); // clear status logs (connecting..)
     this.api.onData.addListener(this.onApiData);
     window.addEventListener("resize", this.onResize);
@@ -133,6 +137,7 @@ export class Terminal {
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),
+      () => this.elem.removeEventListener("contextmenu", this.onContextMenu),
     );
   }
 
@@ -196,6 +201,24 @@ export class Terminal {
 
   onClickLink = (evt: MouseEvent, link: string) => {
     window.open(link, "_blank");
+  };
+
+  onContextMenu = () => {
+    const { terminalCopyOnSelect } = UserStore.getInstance();
+    const textFromClipboard = clipboard.readText();
+
+    if (terminalCopyOnSelect) {
+      this.xterm.paste(textFromClipboard);
+    }
+  };
+
+  onSelectionChange = () => {
+    const { terminalCopyOnSelect } = UserStore.getInstance();
+    const selection = this.xterm.getSelection().trim();
+
+    if (terminalCopyOnSelect && selection !== "") {
+      clipboard.writeText(selection);
+    }
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {

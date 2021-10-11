@@ -44,15 +44,11 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
   }
 
   get isEditable() {
-    const { editable } = this.props;
-
-    return editable !== undefined ? editable : !!(this.store && this.store.update);
+    return this.props.editable ?? Boolean(this.store?.patch);
   }
 
   get isRemovable() {
-    const { removable } = this.props;
-
-    return removable !== undefined ? removable : !!(this.store && this.store.remove);
+    return this.props.removable ?? Boolean(this.store?.remove);
   }
 
   @boundMethod

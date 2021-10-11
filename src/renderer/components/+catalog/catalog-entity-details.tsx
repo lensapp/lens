@@ -23,13 +23,12 @@ import "./catalog-entity-details.scss";
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
-import { catalogEntityRunContext } from "../../api/catalog-entity";
 import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
 import { Icon } from "../icon";
 import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
-import type { CatalogEntityItem } from "./catalog-entity.store";
+import type { CatalogEntityItem } from "./catalog-entity-item";
 import { isDevelopment } from "../../../common/vars";
 
 interface Props<T extends CatalogEntity> {
@@ -68,8 +67,10 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                 material={item.entity.spec.icon?.material}
                 background={item.entity.spec.icon?.background}
                 disabled={!item?.enabled}
-                onClick={() => item.onRun(catalogEntityRunContext)}
-                size={128} />
+                onClick={() => item.onRun()}
+                size={128}
+                data-testid="detail-panel-hot-bar-icon"
+              />
               {item?.enabled && (
                 <div className="IconHint">
                   Click to open

@@ -31,6 +31,7 @@ import { Singleton } from "../common/utils";
 import type { Cluster } from "./cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { appEventBus } from "../common/event-bus";
+import { getBoolean } from "./utils/parse-query";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 
@@ -38,6 +39,15 @@ export interface LensProxyFunctions {
   getClusterForRequest: GetClusterForRequest,
   shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+}
+
+const watchParam = "watch";
+const followParam = "follow";
+
+export function isLongRunningRequest(reqUrl: string) {
+  const url = new URL(reqUrl, "http://localhost");
+
+  return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
 }
 
 export class LensProxy extends Singleton {
@@ -174,9 +184,8 @@ export class LensProxy extends Singleton {
     if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
-      const isWatchRequest = req.url.includes("watch=");
 
-      return contextHandler.getApiTarget(isWatchRequest);
+      return contextHandler.getApiTarget(isLongRunningRequest(req.url));
     }
   }
 

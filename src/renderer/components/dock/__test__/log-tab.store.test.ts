@@ -25,9 +25,11 @@ import { Pod } from "../../../../common/k8s-api/endpoints";
 import { ThemeStore } from "../../../theme.store";
 import { dockStore } from "../dock.store";
 import { logTabStore } from "../log-tab.store";
-import { TerminalStore } from "../terminal.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 import fse from "fs-extra";
+import { mockWindow } from "../../../../../__mocks__/windowMock";
+
+mockWindow();
 
 jest.mock("react-monaco-editor", () => null);
 
@@ -45,7 +47,6 @@ describe("log tab store", () => {
   beforeEach(() => {
     UserStore.createInstance();
     ThemeStore.createInstance();
-    TerminalStore.createInstance();
   });
 
   afterEach(() => {
@@ -53,7 +54,6 @@ describe("log tab store", () => {
     dockStore.reset();
     UserStore.resetInstance();
     ThemeStore.resetInstance();
-    TerminalStore.resetInstance();
     fse.remove("tmp");
   });
 
@@ -135,11 +135,11 @@ describe("log tab store", () => {
   });
 
   // FIXME: this is failed when it's not .only == depends on something above
-  it.only("closes tab if no pods left in store", () => {
+  it.only("closes tab if no pods left in store", async () => {
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    const id = logTabStore.createPodTab({
       selectedPod,
       selectedContainer
     });
@@ -147,6 +147,7 @@ describe("log tab store", () => {
     podsStore.items.clear();
 
     expect(logTabStore.getData(dockStore.selectedTabId)).toBeUndefined();
-    expect(dockStore.getTabById(dockStore.selectedTabId)).toBeUndefined();
+    expect(logTabStore.getData(id)).toBeUndefined();
+    expect(dockStore.getTabById(id)).toBeUndefined();
   });
 });

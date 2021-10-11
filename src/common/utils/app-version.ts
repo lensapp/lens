@@ -33,8 +33,9 @@ export function getBundledKubectlVersion(): string {
 export async function getAppVersionFromProxyServer(proxyPort: number): Promise<string> {
   const response = await requestPromise({
     method: "GET",
-    uri: `http://localhost:${proxyPort}/version`,
-    resolveWithFullResponse: true
+    uri: `http://127.0.0.1:${proxyPort}/version`,
+    resolveWithFullResponse: true,
+    proxy: undefined,
   });
 
   return JSON.parse(response.body).version;

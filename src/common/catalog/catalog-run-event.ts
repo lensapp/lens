@@ -19,26 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.EntitySettings {
-  $spacing: $padding * 3;
+import type { CatalogEntity } from "../catalog";
 
+export class CatalogRunEvent {
+  #defaultPrevented: boolean;
+  #target: CatalogEntity;
 
-  // TODO: move sub-component styles to separate files
-  .admin-note {
-    font-size: small;
-    opacity: 0.5;
-    margin-left: $margin;
+  get defaultPrevented() {
+    return this.#defaultPrevented;
   }
 
-  .button-area {
-    margin-top: $margin * 2;
+  get target() {
+    return this.#target;
   }
 
-  .file-loader {
-    margin-top: $margin * 2;
+  constructor({ target }: { target: CatalogEntity }) {
+    this.#defaultPrevented = false;
+    this.#target = target;
   }
 
-  .Input, .Select {
-    margin-top: $padding;
+  preventDefault() {
+    this.#defaultPrevented = true;
   }
 }

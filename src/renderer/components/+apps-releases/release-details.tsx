@@ -59,7 +59,7 @@ export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails;
   @observable values = "";
   @observable valuesLoading = false;
-  @observable showOnlyUserSuppliedValues = false;
+  @observable showOnlyUserSuppliedValues = true;
   @observable saving = false;
   @observable releaseSecret: Secret;
 
@@ -165,7 +165,7 @@ export class ReleaseDetails extends Component<Props> {
             onChange={text => this.values = text}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             className={cssNames("MonacoEditor", {loading: valuesLoading})}
-            options={{readOnly: valuesLoading || this.showOnlyUserSuppliedValues, ...UserStore.getInstance().getEditorOptions()}}
+            options={{readOnly: valuesLoading, ...UserStore.getInstance().getEditorOptions()}}
           >
             {valuesLoading && <Spinner center />}
           </MonacoEditor>

@@ -160,7 +160,7 @@ export class DockStore implements DockStorageState {
     window.addEventListener("resize", throttle(this.adjustHeight, 250));
     // create monaco models
     this.whenReady.then(() => {this.tabs.forEach(tab => {
-      if (this.usesMonacoEditor(tab)) {     
+      if (this.usesMonacoEditor(tab)) {
         monacoModelsManager.addModel(tab.id);
       }
     });});
@@ -274,7 +274,7 @@ export class DockStore implements DockStorageState {
       title
     };
 
-    // add monaco model 
+    // add monaco model
     if (this.usesMonacoEditor(tab)) {
       monacoModelsManager.addModel(id);
     }
@@ -287,14 +287,14 @@ export class DockStore implements DockStorageState {
   }
 
   @action
-  async closeTab(tabId: TabId) {
+  closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
 
     if (!tab || tab.pinned) {
       return;
     }
 
-    // remove monaco model 
+    // remove monaco model
     if (this.usesMonacoEditor(tab)) {
       monacoModelsManager.removeModel(tabId);
     }
@@ -305,12 +305,6 @@ export class DockStore implements DockStorageState {
       if (this.tabs.length) {
         const newTab = this.tabs.slice(-1)[0]; // last
 
-        if (newTab?.kind === TabKind.TERMINAL) {
-          // close the dock when selected sibling inactive terminal tab
-          const { TerminalStore } = await import("./terminal.store");
-
-          if (!TerminalStore.getInstance(false)?.isConnected(newTab.id)) this.close();
-        }
         this.selectTab(newTab.id);
       } else {
         this.selectedTabId = null;

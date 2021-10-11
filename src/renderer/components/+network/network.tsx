@@ -28,6 +28,7 @@ import { Services } from "../+network-services";
 import { Endpoints } from "../+network-endpoints";
 import { Ingresses } from "../+network-ingresses";
 import { NetworkPolicies } from "../+network-policies";
+import { PortForwards } from "../+network-port-forwards";
 import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import * as routes from "../../../common/routes";
 
@@ -71,6 +72,13 @@ export class Network extends React.Component {
         routePath: routes.networkPoliciesRoute.path.toString(),
       });
     }
+
+    tabs.push({
+      title: "Port Forwarding",
+      component: PortForwards,
+      url: routes.portForwardsURL(),
+      routePath: routes.portForwardsRoute.path.toString(),
+    });
 
     return tabs;
   }
