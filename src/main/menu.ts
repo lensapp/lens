@@ -147,13 +147,18 @@ export function buildMenu(windowManager: WindowManager) {
           }
         }
       ]),
+
       { type: "separator" },
-      {
-        role: "close",
-        label: "Close Window"
-      },
+
+      ...(isMac ? [
+        {
+          role: "close",
+          label: "Close Window",
+          accelerator: "Shift+Cmd+W"
+        }
+      ] as MenuItemConstructorOptions[] : []),
+
       ...ignoreOnMac([
-        { type: "separator" },
         {
           label: "Exit",
           accelerator: "Alt+F4",

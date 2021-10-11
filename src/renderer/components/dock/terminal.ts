@@ -222,7 +222,7 @@ export class Terminal {
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
-    const { code, ctrlKey, type, metaKey } = evt;
+    const { code, ctrlKey, metaKey } = evt;
 
     // Handle custom hotkey bindings
     if (ctrlKey) {
@@ -246,11 +246,6 @@ export class Terminal {
           this.onClear();
           break;
       }
-    }
-
-    // Pass the event above in DOM for <Dock/> to handle common actions
-    if (!evt.defaultPrevented) {
-      this.elem.dispatchEvent(new KeyboardEvent(type, evt));
     }
 
     return true;

@@ -29,6 +29,7 @@ import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { observable, makeObservable } from "mobx";
+import { isMac } from "../../../common/vars";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
@@ -94,7 +95,7 @@ export class DockTab extends React.Component<DockTabProps> {
         {!pinned && (
           <Icon
             small material="close"
-            tooltip="Close (Ctrl+Shift+W)"
+            tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
             onClick={prevDefault(this.close)}
           />
         )}
