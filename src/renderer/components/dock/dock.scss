@@ -27,6 +27,16 @@
   display: flex;
   flex-direction: column;
 
+  &:not(:focus-within) .DockTab.active {
+    &::after {
+      color: var(--halfGray);
+    }
+
+    &:hover::after {
+      color: var(--line-color-active);
+    }
+  }
+
   &.isOpen {
     &.fullSize {
       position: fixed;
