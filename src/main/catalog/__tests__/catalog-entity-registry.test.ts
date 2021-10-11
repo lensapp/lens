@@ -92,6 +92,38 @@ describe("CatalogEntityRegistry", () => {
       expect(registry.items.length).toEqual(1);
     });
 
+    it ("can mutate entity", () => {
+      const source = observable.array([]);
+
+      registry.addObservableSource("test", source);
+      source.push(entity);
+      
+      const index = source.findIndex((i) => i.metadata.uid === entity.metadata.uid);
+
+      const updateEntity = new WebLink({
+        metadata: {
+          uid: "test",
+          name: "test-link",
+          source: "test",
+          labels: {}
+        },
+        spec: {
+          url: "https://k8slens.dev"
+        },
+        status: {
+          phase: "unavailable"
+        }
+      });
+
+      source.splice(index, 1, updateEntity);
+      expect(registry.items.length).toEqual(1);
+
+      const found = registry.items.find((i) => i.metadata.uid === updateEntity.metadata.uid);
+
+      expect(found).toBeDefined();
+      expect(found.status.phase).toBe("unavailable");
+    });
+
     it ("added source change triggers reaction", (done) => {
       const source = observable.array([]);
 
