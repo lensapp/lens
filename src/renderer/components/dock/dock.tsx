@@ -79,6 +79,7 @@ export class Dock extends React.Component<Props> {
 
     open();
     selectTab(tab.id);
+    this.element?.current.focus();
   };
 
   renderTab(tab: DockTab) {
