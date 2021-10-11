@@ -143,7 +143,7 @@ export class Logs extends React.Component<Props> {
     }
 
     return (
-      <div className="PodLogs flex column">
+      <div className="PodLogs flex column box grow">
         {this.renderResourceSelector(data)}
         <LogList
           logs={logs}
