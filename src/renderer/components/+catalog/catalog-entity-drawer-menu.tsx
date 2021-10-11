@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { cssNames } from "../../utils";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
@@ -70,14 +70,6 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     }
   }
 
-  addToHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().addToHotbar(entity);
-  }
-
-  removeFromHotbar(item: CatalogEntity): void {
-    HotbarStore.getInstance().removeFromHotbar(item.getId());
-  }
-
   getMenuItems(entity: T): React.ReactChild[] {
     if (!entity) {
       return [];
@@ -102,21 +94,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       );
     }
 
-    const isAddedEntity = () => HotbarStore.getInstance().isAddedToActive(entity);
-
-    if (!isAddedEntity) {
-      items.push(
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
-          <Icon material="push_pin" small tooltip="Add to Hotbar" />
-        </MenuItem>
-      );
-    } else {
-      items.push(
-        <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity)}>
-          <Icon material="push_pin" small tooltip="Remove from Hotbar" />
-        </MenuItem>
-      );
-    }
+    items.push(<HotbarToggleItem key="hotbar-toggle" entity={entity}/>);
 
     return items;
   }
@@ -138,4 +116,20 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       </MenuActions>
     );
   }
+}
+
+function HotbarToggleItem(props: { entity: CatalogEntity }) {
+  const store = HotbarStore.getInstance(false);
+  const add = () => store?.addToHotbar(props.entity);
+  const remove = () => store?.removeFromHotbar(props.entity.getId());
+  const [itemInHotbar, setItemInHotbar] = useState(store?.isAddedToActive(props.entity));
+
+  return (
+    <MenuItem onClick={() => {
+      itemInHotbar ? remove() : add();
+      setItemInHotbar(!itemInHotbar);
+    }}>
+      <Icon material="push_pin" small tooltip={itemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}/>
+    </MenuItem>
+  );
 }
