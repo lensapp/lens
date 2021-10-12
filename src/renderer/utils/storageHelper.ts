@@ -152,7 +152,7 @@ export class StorageHelper<T> {
     const nextValue = produce<T>(this.toJSON(), (draft: Draft<T>) => {
 
       if (typeof value == "function") {
-        const newValue = value(draft) as Draft<T>;
+        const newValue = value(draft);
 
         // merge returned plain objects from `value-as-callback` usage
         // otherwise `draft` can be just modified inside a callback without returning any value (void)
