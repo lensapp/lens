@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import semver from "semver";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { BaseStore } from "../base-store";
@@ -48,7 +48,11 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     });
 
     makeObservable(this);
-    fileNameMigration();
+
+    if (ipcMain) {
+      fileNameMigration();
+    }
+
     this.load();
   }
 
@@ -70,6 +74,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable shell?: string;
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
+  @observable terminalCopyOnSelect: boolean;
 
   /**
    * Download kubectl binaries matching cluster version
@@ -212,6 +217,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.hiddenTableColumns.replace(DESCRIPTORS.hiddenTableColumns.fromStore(preferences?.hiddenTableColumns));
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
+    this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
   }
 
   toJSON(): UserStoreModel {
@@ -233,6 +239,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         hiddenTableColumns: DESCRIPTORS.hiddenTableColumns.toStore(this.hiddenTableColumns),
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
+        terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
       },
     };
 

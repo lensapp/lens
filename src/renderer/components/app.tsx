@@ -73,6 +73,8 @@ import { getHostedClusterId } from "../utils";
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import { watchHistoryState } from "../remote-helpers/history-updater";
+import { unmountComponentAtNode } from "react-dom";
+import { PortForwardDialog } from "../port-forward";
 
 @observer
 export class App extends React.Component {
@@ -83,7 +85,7 @@ export class App extends React.Component {
     makeObservable(this);
   }
 
-  static async init() {
+  static async init(rootElem: HTMLElement) {
     catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
 
@@ -112,6 +114,20 @@ export class App extends React.Component {
     window.addEventListener("online", () => {
       window.location.reload();
     });
+
+    window.addEventListener("message", (ev: MessageEvent) => {
+      if (ev.data === "teardown") {
+        unmountComponentAtNode(rootElem);
+        window.location.href = "about:blank";
+      }
+    });
+
+    window.onbeforeunload = () => {
+      logger.info(`[APP]: Unload dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
+
+      unmountComponentAtNode(rootElem);
+    };
+
     whatInput.ask(); // Start to monitor user input device
 
     // Setup hosted cluster context
@@ -216,6 +232,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
+          <PortForwardDialog/>
           <CommandContainer clusterId={App.clusterId}/>
         </ErrorBoundary>
       </Router>

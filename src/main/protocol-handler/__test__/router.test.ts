@@ -126,7 +126,7 @@ describe("protocol router tests", () => {
     }
 
     await delay(50);
-    expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app/", "matched");
+    expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
     expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
   });
 

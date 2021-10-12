@@ -30,7 +30,19 @@ export class ResourceApplierApiRoute {
     try {
       const resource = await new ResourceApplier(cluster).apply(payload);
 
-      respondJson(response, [resource], 200);
+      respondJson(response, resource, 200);
+    } catch (error) {
+      respondText(response, error, 422);
+    }
+  }
+
+  static async patchResource(request: LensApiRequest) {
+    const { response, cluster, payload } = request;
+
+    try {
+      const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.patch, payload.ns);
+
+      respondJson(response, resource, 200);
     } catch (error) {
       respondText(response, error, 422);
     }

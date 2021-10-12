@@ -46,6 +46,10 @@ export abstract class BaseStore<T> extends Singleton {
   protected constructor(protected params: BaseStoreParams<T>) {
     super();
     makeObservable(this);
+
+    if (ipcRenderer) {
+      params.migrations = undefined; // don't run migrations on renderer
+    }
   }
 
   /**

@@ -23,7 +23,7 @@ import type { LensApiRequest } from "../router";
 import { helmService } from "../helm/helm-service";
 import logger from "../logger";
 import { respondJson, respondText } from "../utils/http-responses";
-import { getBoolean } from "./utils/parse-query";
+import { getBoolean } from "../utils/parse-query";
 
 export class HelmApiRoute {
   static async listCharts(request: LensApiRequest) {

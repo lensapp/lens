@@ -22,19 +22,27 @@
 import jsYaml from "js-yaml";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { apiBase } from "../index";
+import type { Patch } from "rfc6902";
 
-export const resourceApplierApi = {
-  annotations: [
-    "kubectl.kubernetes.io/last-applied-configuration"
-  ],
+export const annotations = [
+  "kubectl.kubernetes.io/last-applied-configuration"
+];
 
-  async update(resource: object | string): Promise<KubeJsonApiData | null> {
-    if (typeof resource === "string") {
-      resource = jsYaml.safeLoad(resource);
-    }
-
-    const [data = null] = await apiBase.post<KubeJsonApiData[]>("/stack", { data: resource });
-
-    return data;
+export async function update(resource: object | string): Promise<KubeJsonApiData> {
+  if (typeof resource === "string") {
+    resource = jsYaml.safeLoad(resource);
   }
-};
+
+  return apiBase.post<KubeJsonApiData>("/stack", { data: resource });
+}
+
+export async function patch(name: string, kind: string, ns: string, patch: Patch): Promise<KubeJsonApiData> {
+  return apiBase.patch<KubeJsonApiData>("/stack", {
+    data: {
+      name,
+      kind,
+      ns,
+      patch,
+    },
+  });
+}

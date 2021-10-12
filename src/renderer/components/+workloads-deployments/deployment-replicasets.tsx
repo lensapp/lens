@@ -75,6 +75,7 @@ export class DeploymentReplicaSets extends React.Component<Props> {
           sortable={this.sortingCallbacks}
           sortByDefault={{ sortBy: sortBy.pods, orderBy: "desc" }}
           sortSyncWithUrl={false}
+          tableId="deployment_replica_sets_view"
           className="box grow"
         >
           <TableHead>

@@ -77,7 +77,7 @@ export class LensRendererExtension extends LensExtension {
   }
 
   /**
-   * Add a filtering function for the catalog catogries. This will be removed if the extension is disabled.
+   * Add a filtering function for the catalog categories. This will be removed if the extension is disabled.
    * @param fn The function which should return a truthy value for those categories which should be kept.
    * @returns A function to clean up the filter
    */

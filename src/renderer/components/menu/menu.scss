@@ -35,14 +35,6 @@
   &.portal {
     left: -1000px;
     top: -1000px;
-
-    &.top {
-      margin-top: -$margin;
-    }
-
-    &.bottom {
-      margin-top: $margin;
-    }
   }
 
   &:not(.portal) {

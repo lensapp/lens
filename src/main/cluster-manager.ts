@@ -131,11 +131,11 @@ export class ClusterManager extends Singleton {
       entity.spec.metrics.prometheus = prometheus;
     }
 
+    // Only set the icon if the preference is set. If the preference is not set
+    // then let the source determine if a cluster has an icon.
     if (cluster.preferences.icon) {
       entity.spec.icon ??= {};
       entity.spec.icon.src = cluster.preferences.icon;
-    } else {
-      entity.spec.icon = null;
     }
 
     catalogEntityRegistry.items.splice(index, 1, entity);
@@ -158,6 +158,10 @@ export class ClusterManager extends Singleton {
 
         if (!cluster.disconnected) {
           return "connecting";
+        }
+
+        if (entity?.status?.phase) {
+          return entity.status.phase;
         }
 
         return "disconnected";
