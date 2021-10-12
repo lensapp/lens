@@ -28,6 +28,7 @@ import { StorageHelper } from "./storageHelper";
 import { ClusterStore } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { getHostedClusterId, getPath } from "../../common/utils";
+import { isTestEnv } from "../../common/vars";
 
 const storage = observable({
   initialized: false,
@@ -62,7 +63,9 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
       .then(data => storage.data = data)
       .catch(() => null) // ignore empty / non-existing / invalid json files
       .finally(() => {
-        logger.info(`${logPrefix} loading finished for ${filePath}`);
+        if (!isTestEnv) {
+          logger.info(`${logPrefix} loading finished for ${filePath}`);
+        }
         storage.loaded = true;
       });
 
