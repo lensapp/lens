@@ -160,6 +160,10 @@ export class ClusterManager extends Singleton {
           return "connecting";
         }
 
+        if (entity?.status?.phase) {
+          return entity.status.phase;
+        }
+
         return "disconnected";
       })();
 
