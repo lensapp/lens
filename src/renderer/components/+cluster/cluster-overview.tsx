@@ -31,7 +31,7 @@ import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
-import { clusterOverviewStore } from "./cluster-overview.store";
+import { clusterApiStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
@@ -45,7 +45,7 @@ export class ClusterOverview extends React.Component {
     const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
 
     if (cluster.available) {
-      clusterOverviewStore.loadMetrics();
+      clusterApiStore.loadMetrics();
     }
   }
 
@@ -54,7 +54,7 @@ export class ClusterOverview extends React.Component {
 
     disposeOnUnmount(this, [
       reaction(
-        () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
+        () => clusterApiStore.metricNodeRole, // Toggle Master/Worker node switcher
         () => this.metricPoller.restart(true)
       ),
     ]);

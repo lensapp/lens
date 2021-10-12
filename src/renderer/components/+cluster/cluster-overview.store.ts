@@ -19,39 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, observable, reaction, when, makeObservable } from "mobx";
+import { action, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { Cluster, clusterApi, getMetricsByNodeNames, IClusterMetrics } from "../../../common/k8s-api/endpoints";
-import { autoBind, createStorage } from "../../utils";
+import { autoBind } from "../../utils";
 import { IMetricsReqParams, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { nodesStore } from "../+nodes/nodes.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
-export enum MetricType {
-  MEMORY = "memory",
-  CPU = "cpu"
-}
-
-export enum MetricNodeRole {
-  MASTER = "master",
-  WORKER = "worker"
-}
-
-export interface ClusterOverviewStorageState {
-  metricType: MetricType;
-  metricNodeRole: MetricNodeRole,
-}
-
-export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {
+export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
   api = clusterApi;
 
-  @observable metrics: Partial<IClusterMetrics> = {};
-  @observable metricsLoaded = false;
-
-  private storage = createStorage<ClusterOverviewStorageState>("cluster_overview", {
-    metricType: MetricType.CPU, // setup defaults
-    metricNodeRole: MetricNodeRole.WORKER,
-  });
 
   get metricType(): MetricType {
     return this.storage.get().metricType;
@@ -129,5 +107,5 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
   }
 }
 
-export const clusterOverviewStore = new ClusterOverviewStore();
-apiManager.registerStore(clusterOverviewStore);
+export const clusterApiStore = new ClusterOverviewStore();
+apiManager.registerStore(clusterApiStore);

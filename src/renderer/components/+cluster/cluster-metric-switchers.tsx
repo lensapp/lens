@@ -26,10 +26,10 @@ import { observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { cssNames } from "../../utils";
 import { Radio, RadioGroup } from "../radio";
-import { clusterOverviewStore, MetricNodeRole, MetricType } from "./cluster-overview.store";
+import { clusterApiStore, MetricNodeRole, MetricType } from "./cluster-overview.store";
 
 export const ClusterMetricSwitchers = observer(() => {
-  const { metricType, metricNodeRole, getMetricsValues, metrics } = clusterOverviewStore;
+  const { metricType, metricNodeRole, getMetricsValues, metrics } = clusterApiStore;
   const { masterNodes, workerNodes } = nodesStore;
   const metricsValues = getMetricsValues(metrics);
   const disableRoles = !masterNodes.length || !workerNodes.length;
@@ -42,7 +42,7 @@ export const ClusterMetricSwitchers = observer(() => {
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableRoles })}
           value={metricNodeRole}
-          onChange={(metric: MetricNodeRole) => clusterOverviewStore.metricNodeRole = metric}
+          onChange={(metric: MetricNodeRole) => clusterApiStore.metricNodeRole = metric}
         >
           <Radio label="Master" value={MetricNodeRole.MASTER}/>
           <Radio label="Worker" value={MetricNodeRole.WORKER}/>
@@ -53,7 +53,7 @@ export const ClusterMetricSwitchers = observer(() => {
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableMetrics })}
           value={metricType}
-          onChange={(value: MetricType) => clusterOverviewStore.metricType = value}
+          onChange={(value: MetricType) => clusterApiStore.metricType = value}
         >
           <Radio label="CPU" value={MetricType.CPU}/>
           <Radio label="Memory" value={MetricType.MEMORY}/>

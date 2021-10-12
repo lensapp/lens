@@ -24,18 +24,38 @@ import "./cluster-metrics.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import { clusterOverviewStore, MetricType } from "./cluster-overview.store";
+import { clusterApiStore } from "./cluster-overview.store";
 import { BarChart } from "../chart";
-import { bytesToUnits } from "../../utils";
+import { bytesToUnits, createStorage } from "../../utils";
 import { Spinner } from "../spinner";
 import { ZebraStripes } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 
+export enum MetricType {
+  MEMORY = "memory",
+  CPU = "cpu"
+}
+
+export enum MetricNodeRole {
+  MASTER = "master",
+  WORKER = "worker"
+}
+
+export interface ClusterMetricsStorageState {
+  metricType: MetricType;
+  metricNodeRole: MetricNodeRole,
+}
+
+const storage = createStorage<ClusterMetricsStorageState>("cluster_overview", {
+  metricType: MetricType.CPU, // setup defaults
+  metricNodeRole: MetricNodeRole.WORKER,
+});
+
 export const ClusterMetrics = observer(() => {
-  const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics } = clusterOverviewStore;
-  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
+  const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics } = clusterApiStore;
+  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterApiStore.metrics);
   const metricValues = getMetricsValues(metrics);
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
   const data = metricValues.map(value => ({
@@ -60,11 +80,7 @@ export const ClusterMetrics = observer(() => {
     },
     tooltips: {
       callbacks: {
-        label: ({ index }, data) => {
-          const value = data.datasets[0].data[index] as ChartPoint;
-
-          return value.y.toString();
-        }
+        label: ({ index }, data) => (data.datasets[0].data[index] as ChartPoint).y.toString(),
       }
     }
   };
@@ -79,11 +95,9 @@ export const ClusterMetrics = observer(() => {
     },
     tooltips: {
       callbacks: {
-        label: ({ index }, data) => {
-          const value = data.datasets[0].data[index] as ChartPoint;
-
-          return bytesToUnits(parseInt(value.y as string), 3);
-        }
+        label: ({ index }, data) => (
+          bytesToUnits(parseInt((data.datasets[0].data[index] as ChartPoint).y as string), 3)
+        )
       }
     }
   };

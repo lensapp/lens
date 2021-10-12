@@ -23,7 +23,7 @@ import "./cluster-pie-charts.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { clusterOverviewStore, MetricNodeRole } from "./cluster-overview.store";
+import { clusterApiStore, MetricNodeRole } from "./cluster-overview.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -48,7 +48,7 @@ export const ClusterPieCharts = observer(() => {
   };
 
   const renderCharts = () => {
-    const data = getMetricLastPoints(clusterOverviewStore.metrics);
+    const data = getMetricLastPoints(clusterApiStore.metrics);
     const { memoryUsage, memoryRequests, memoryAllocatableCapacity, memoryCapacity, memoryLimits } = data;
     const { cpuUsage, cpuRequests, cpuAllocatableCapacity, cpuCapacity, cpuLimits } = data;
     const { podUsage, podAllocatableCapacity, podCapacity } = data;
@@ -215,7 +215,7 @@ export const ClusterPieCharts = observer(() => {
 
   const renderContent = () => {
     const { masterNodes, workerNodes } = nodesStore;
-    const { metricNodeRole, metricsLoaded } = clusterOverviewStore;
+    const { metricNodeRole, metricsLoaded } = clusterApiStore;
     const nodes = metricNodeRole === MetricNodeRole.MASTER ? masterNodes : workerNodes;
 
     if (!nodes.length) {
@@ -234,7 +234,7 @@ export const ClusterPieCharts = observer(() => {
         </div>
       );
     }
-    const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
+    const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterApiStore.metrics);
 
     if (!memoryCapacity || !cpuCapacity || !podCapacity) {
       return <ClusterNoMetrics className="empty"/>;
