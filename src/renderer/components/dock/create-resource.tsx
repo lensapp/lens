@@ -59,11 +59,7 @@ export class CreateResourceInfoPanel extends React.Component<Props> {
   }
 
   create = async (): Promise<any> => {
-    const isEmpty = !this.draft?.trim();
-
-    if (!isEmpty) {
-      return null;
-    }
+    if (!this.draft) return; // skip: empty draft
 
     // skip empty documents if "---" pasted at the beginning or end
     const resources = jsYaml.safeLoadAll(this.draft).filter(Boolean);
