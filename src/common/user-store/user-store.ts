@@ -30,7 +30,7 @@ import { appEventBus } from "../event-bus";
 import path from "path";
 import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration } from "./preferences-helpers";
+import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration, CONSTANTS } from "./preferences-helpers";
 import logger from "../../main/logger";
 import type { monaco } from "react-monaco-editor";
 import { getPath } from "../utils/getPath";
@@ -75,6 +75,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
   @observable terminalCopyOnSelect: boolean;
+  @observable updateChannel?: string;
 
   /**
    * Download kubectl binaries matching cluster version
@@ -104,6 +105,10 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   @computed get resolvedShell(): string | undefined {
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
+  }
+
+  @computed get isAllowedToDowngrade(): boolean {
+    return this.updateChannel !== CONSTANTS.defaultUpdateChannel;
   }
 
   startMainReactions() {
@@ -218,6 +223,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
     this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
+    this.updateChannel = DESCRIPTORS.updateChannel.fromStore(preferences?.updateChannel);
   }
 
   toJSON(): UserStoreModel {
@@ -240,6 +246,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
         terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
+        updateChannel: DESCRIPTORS.updateChannel.toStore(this.updateChannel),
       },
     };
 

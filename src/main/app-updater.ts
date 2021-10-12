@@ -27,6 +27,7 @@ import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMess
 import { once } from "lodash";
 import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
+import { UserStore } from "../common/user-store";
 
 const updateChannel = autoUpdater.channel;
 let installVersion: null | string = null;
@@ -58,9 +59,13 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
     return;
   }
 
+  const us = UserStore.getInstance();
+
   autoUpdater.logger = logger;
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
+  autoUpdater.channel = us.updateChannel;
+  autoUpdater.allowDowngrade = us.isAllowedToDowngrade;
 
   autoUpdater
     .on("update-available", (info: UpdateInfo) => {
