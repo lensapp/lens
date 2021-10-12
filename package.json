@@ -179,7 +179,7 @@
     }
   },
   "dependencies": {
-    "@electron/remote": "^1.2.1",
+    "@electron/remote": "^1.2.2",
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.15.1",
