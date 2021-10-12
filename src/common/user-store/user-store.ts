@@ -39,6 +39,7 @@ export interface UserStoreModel {
 }
 
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
+  readonly displayName = "UserStore";
   constructor() {
     super({
       configName: "lens-user-store",

@@ -43,7 +43,10 @@ import { ClusterFrameHandler } from "./components/cluster-manager/lens-views";
 injectSystemCAs();
 
 @observer
-export class LensApp extends React.Component {
+export class RootFrame extends React.Component {
+  static readonly logPrefix = "[ROOT-FRAME]:";
+  static displayName = "RootFrame";
+
   static async init(rootElem: HTMLElement) {
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
@@ -55,11 +58,10 @@ export class LensApp extends React.Component {
 
     registerIpcListeners();
 
-    window.onbeforeunload = () => {
-      logger.info("[App]: Unload app");
-
+    window.addEventListener("beforeunload", () => {
+      logger.info(`${RootFrame.logPrefix} Unload app`);
       unmountComponentAtNode(rootElem);
-    };
+    });
   }
 
   constructor(props: {}) {

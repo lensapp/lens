@@ -43,6 +43,8 @@ export abstract class BaseStore<T> extends Singleton {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
+  readonly displayName: string = this.constructor.name;
+
   protected constructor(protected params: BaseStoreParams<T>) {
     super();
     makeObservable(this);
@@ -56,6 +58,10 @@ export abstract class BaseStore<T> extends Singleton {
    * This must be called after the last child's constructor is finished (or just before it finishes)
    */
   load() {
+    if (!isTestEnv) {
+      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
+    }
+
     this.storeConfig = new Config({
       ...this.params,
       projectName: "lens",
@@ -66,13 +72,13 @@ export abstract class BaseStore<T> extends Singleton {
     const res: any = this.fromStore(this.storeConfig.store);
 
     if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-      console.error(`${this.constructor.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+      console.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
     this.enableSync();
 
     if (!isTestEnv) {
-      logger.info(`[${kebabCase(this.constructor.name).toUpperCase()}]: LOADED from ${this.path}`);
+      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
     }
   }
 

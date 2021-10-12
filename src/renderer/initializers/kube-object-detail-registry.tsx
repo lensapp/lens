@@ -54,7 +54,7 @@ import { ReplicaSetDetails } from "../components/+workloads-replicasets";
 import { StatefulSetDetails } from "../components/+workloads-statefulsets";
 import type { KubeObjectDetailsProps } from "../components/kube-object-details";
 
-export function intiKubeObjectDetailRegistry() {
+export function initKubeObjectDetailRegistry() {
   KubeObjectDetailRegistry.getInstance()
     .add([
       {

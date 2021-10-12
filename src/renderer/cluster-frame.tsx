@@ -22,61 +22,63 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { history } from "../navigation";
-import { NotFound } from "./+404";
-import { UserManagement } from "./+user-management/user-management";
-import { ConfirmDialog } from "./confirm-dialog";
-import { ClusterOverview } from "./+cluster/cluster-overview";
-import { Events } from "./+events/events";
-import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
-import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
-import { CustomResources } from "./+custom-resources/custom-resources";
-import { isAllowedResource } from "../../common/utils/allowed-resource";
-import logger from "../../main/logger";
+import { history } from "./navigation";
+import { NotFound } from "./components/+404";
+import { UserManagement } from "./components/+user-management/user-management";
+import { ConfirmDialog } from "./components/confirm-dialog";
+import { ClusterOverview } from "./components/+cluster/cluster-overview";
+import { Events } from "./components/+events/events";
+import { DeploymentScaleDialog } from "./components/+workloads-deployments/deployment-scale-dialog";
+import { CronJobTriggerDialog } from "./components/+workloads-cronjobs/cronjob-trigger-dialog";
+import { CustomResources } from "./components/+custom-resources/custom-resources";
+import { isAllowedResource } from "../common/utils/allowed-resource";
+import logger from "../main/logger";
 import { webFrame } from "electron";
-import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
-import { ExtensionLoader } from "../../extensions/extension-loader";
-import { appEventBus } from "../../common/event-bus";
-import { requestMain } from "../../common/ipc";
+import { ClusterPageRegistry, getExtensionPageUrl } from "../extensions/registries/page-registry";
+import { ExtensionLoader } from "../extensions/extension-loader";
+import { appEventBus } from "../common/event-bus";
+import { requestMain } from "../common/ipc";
 import whatInput from "what-input";
-import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
-import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../extensions/registries";
-import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { kubeWatchApi } from "../../common/k8s-api/kube-watch-api";
-import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
-import { CommandContainer } from "./command-palette/command-container";
-import { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
-import { clusterContext } from "./context";
-import * as routes from "../../common/routes";
-import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
-import { ErrorBoundary } from "./error-boundary";
-import { MainLayout } from "./layout/main-layout";
-import { Notifications } from "./notifications";
-import { KubeObjectDetails } from "./kube-object-details";
-import { KubeConfigDialog } from "./kubeconfig-dialog";
-import { Terminal } from "./dock/terminal";
-import { namespaceStore } from "./+namespaces/namespace.store";
-import { Sidebar } from "./layout/sidebar";
-import { Dock } from "./dock";
-import { Apps } from "./+apps";
-import { Namespaces } from "./+namespaces";
-import { Network } from "./+network";
-import { Nodes } from "./+nodes";
-import { Workloads } from "./+workloads";
-import { Config } from "./+config";
-import { Storage } from "./+storage";
-import { catalogEntityRegistry } from "../api/catalog-entity-registry";
-import { getHostedClusterId } from "../utils";
-import { ClusterStore } from "../../common/cluster-store";
-import type { ClusterId } from "../../common/cluster-types";
-import { watchHistoryState } from "../remote-helpers/history-updater";
+import { clusterSetFrameIdHandler } from "../common/cluster-ipc";
+import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../extensions/registries";
+import { StatefulSetScaleDialog } from "./components/+workloads-statefulsets/statefulset-scale-dialog";
+import { kubeWatchApi } from "../common/k8s-api/kube-watch-api";
+import { ReplicaSetScaleDialog } from "./components/+workloads-replicasets/replicaset-scale-dialog";
+import { CommandContainer } from "./components/command-palette/command-container";
+import { KubeObjectStore } from "../common/k8s-api/kube-object.store";
+import { clusterContext } from "./components/context";
+import * as routes from "../common/routes";
+import { TabLayout, TabLayoutRoute } from "./components/layout/tab-layout";
+import { ErrorBoundary } from "./components/error-boundary";
+import { MainLayout } from "./components/layout/main-layout";
+import { Notifications } from "./components/notifications";
+import { KubeObjectDetails } from "./components/kube-object-details";
+import { KubeConfigDialog } from "./components/kubeconfig-dialog";
+import { Terminal } from "./components/dock/terminal";
+import { namespaceStore } from "./components/+namespaces/namespace.store";
+import { Sidebar } from "./components/layout/sidebar";
+import { Dock } from "./components/dock";
+import { Apps } from "./components/+apps";
+import { Namespaces } from "./components/+namespaces";
+import { Network } from "./components/+network";
+import { Nodes } from "./components/+nodes";
+import { Workloads } from "./components/+workloads";
+import { Config } from "./components/+config";
+import { Storage } from "./components/+storage";
+import { catalogEntityRegistry } from "./api/catalog-entity-registry";
+import { getHostedClusterId } from "./utils";
+import { ClusterStore } from "../common/cluster-store";
+import type { ClusterId } from "../common/cluster-types";
+import { watchHistoryState } from "./remote-helpers/history-updater";
 import { unmountComponentAtNode } from "react-dom";
-import { PortForwardDialog } from "../port-forward";
-import { DeleteClusterDialog } from "./delete-cluster-dialog";
+import { PortForwardDialog } from "./port-forward";
+import { DeleteClusterDialog } from "./components/delete-cluster-dialog";
 
 @observer
-export class App extends React.Component {
+export class ClusterFrame extends React.Component {
   static clusterId: ClusterId;
+  static readonly logPrefix = "[CLUSTER-FRAME]:";
+  static displayName = "ClusterFrame";
 
   constructor(props: {}) {
     super(props);
@@ -87,17 +89,14 @@ export class App extends React.Component {
     catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
 
-    App.clusterId = getHostedClusterId();
+    ClusterFrame.clusterId = getHostedClusterId();
 
-    logger.info(`[APP]: Init dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
+    logger.info(`${ClusterFrame.logPrefix} Init dashboard, clusterId=${ClusterFrame.clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
-    await requestMain(clusterSetFrameIdHandler, App.clusterId);
+    await requestMain(clusterSetFrameIdHandler, ClusterFrame.clusterId);
+    await ClusterStore.getInstance().getById(ClusterFrame.clusterId).whenReady; // cluster.activate() is done at this point
 
-    const cluster = ClusterStore.getInstance().getById(App.clusterId);
-
-    await cluster.whenReady; // cluster.activate() is done at this point
-
-    catalogEntityRegistry.activeEntity = App.clusterId;
+    catalogEntityRegistry.activeEntity = ClusterFrame.clusterId;
 
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
@@ -105,7 +104,7 @@ export class App extends React.Component {
         name: "cluster",
         action: "open",
         params: {
-          clusterId: App.clusterId,
+          clusterId: ClusterFrame.clusterId,
         },
       });
     });
@@ -114,7 +113,7 @@ export class App extends React.Component {
     });
 
     window.onbeforeunload = () => {
-      logger.info(`[APP]: Unload dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
+      logger.info(`${ClusterFrame.logPrefix} Unload dashboard, clusterId=${ClusterFrame.clusterId}, frameId=${frameId}`);
 
       unmountComponentAtNode(rootElem);
     };
@@ -225,7 +224,7 @@ export class App extends React.Component {
           <CronJobTriggerDialog/>
           <PortForwardDialog/>
           <DeleteClusterDialog/>
-          <CommandContainer clusterId={App.clusterId}/>
+          <CommandContainer clusterId={ClusterFrame.clusterId}/>
         </ErrorBoundary>
       </Router>
     );

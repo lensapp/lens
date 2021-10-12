@@ -35,6 +35,7 @@ export interface HotbarStoreModel {
 }
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
+  readonly displayName = "HotbarStore";
   @observable hotbars: Hotbar[] = [];
   @observable private _activeHotbarId: string;
 
