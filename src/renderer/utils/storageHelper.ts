@@ -21,8 +21,8 @@
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 import { action, comparer, makeObservable, observable, toJS, when, } from "mobx";
-import { Draft, produce } from "immer";
-import { isEqual, isPlainObject, merge } from "lodash";
+import produce, { Draft } from "immer";
+import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
 export interface StorageAdapter<T> {
@@ -149,25 +149,18 @@ export class StorageHelper<T> {
 
   @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce(this.toJS(), (draft: Draft<T>) => {
-      const newValue = typeof value === "function" ? value(draft) : value;
+    const nextValue = produce(this.toJSON(), (state: Draft<T>) => {
+      const newValue = (isFunction(value) ? value(state) : value) as unknown;
 
-      // Partial updates for plain objects
-      if (isPlainObject(newValue)) {
-        merge(draft, newValue);
-
-        return; // draft is modified, no need to return anything
-      }
-
-      // Replacing with a new value
-      // See also: https://immerjs.github.io/immer/return
-      return newValue as unknown;
+      return isPlainObject(newValue)
+        ? Object.assign(state, newValue) // partial updates for returned plain objects
+        : newValue;
     });
 
-    this.set(nextValue);
+    this.set(nextValue as T);
   }
 
-  toJS(): T {
+  toJSON(): T {
     return toJS(this.get());
   }
 }
