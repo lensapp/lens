@@ -113,15 +113,11 @@ docs:
 
 .PHONY: clean-extensions
 clean-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/dist)
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/node_modules)
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm $(dir)/*.tgz || true)
+	rm -rf $(EXTENSIONS_DIR)/*/{dist,node_modules,*.tgz}
 
 .PHONY: clean-npm
 clean-npm:
-	rm -rf src/extensions/npm/extensions/dist
-	rm -rf src/extensions/npm/extensions/__mocks__
-	rm -rf src/extensions/npm/extensions/node_modules
+	rm -rf src/extensions/npm/extensions/{dist,__mocks__,node_modules}
 
 .PHONY: clean
 clean: clean-npm clean-extensions

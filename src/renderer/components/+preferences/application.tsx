@@ -29,11 +29,16 @@ import { Input } from "../input";
 import { isWindows } from "../../../common/vars";
 import { FormSwitch, Switcher } from "../switch";
 import moment from "moment-timezone";
+import { CONSTANTS } from "../../../common/user-store/preferences-helpers";
 
 const timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
   label: zone,
   value: zone,
 }));
+const updateChannelOptions: SelectOption<string>[] = Array.from(
+  CONSTANTS.updateChannels.entries(),
+  ([value, { label }]) => ({ value, label }),
+);
 
 export const Application = observer(() => {
   const defaultShell = process.env.SHELL
@@ -99,6 +104,18 @@ export const Application = observer(() => {
             />
           }
           label="Automatically start Lens on login"
+        />
+      </section>
+
+      <hr />
+
+      <section id="update-channel">
+        <SubTitle title="Update Channel"/>
+        <Select
+          options={updateChannelOptions}
+          value={UserStore.getInstance().updateChannel}
+          onChange={({ value }: SelectOption) => UserStore.getInstance().updateChannel = value}
+          themeName="lens"
         />
       </section>
 

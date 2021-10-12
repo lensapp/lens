@@ -41,7 +41,7 @@ export class HelmApiRoute {
 
       respondJson(response, chart);
     } catch (error) {
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error getting chart", 422);
     }
   }
 
@@ -53,7 +53,7 @@ export class HelmApiRoute {
 
       respondJson(response, values);
     } catch (error) {
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error getting chart values", 422);
     }
   }
 
@@ -66,7 +66,7 @@ export class HelmApiRoute {
       respondJson(response, result, 201);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error installing chart", 422);
     }
   }
 
@@ -79,7 +79,7 @@ export class HelmApiRoute {
       respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error updating chart", 422);
     }
   }
 
@@ -92,7 +92,7 @@ export class HelmApiRoute {
       respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error rolling back chart", 422);
     }
   }
 
@@ -105,7 +105,7 @@ export class HelmApiRoute {
       respondJson(response, result);
     } catch(error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error listing release", 422);
     }
   }
 
@@ -118,7 +118,7 @@ export class HelmApiRoute {
       respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error getting release", 422);
     }
   }
 
@@ -132,7 +132,7 @@ export class HelmApiRoute {
       respondText(response, result);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error getting release values", 422);
     }
   }
 
@@ -145,7 +145,7 @@ export class HelmApiRoute {
       respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error getting release history", 422);
     }
   }
 
@@ -158,7 +158,7 @@ export class HelmApiRoute {
       respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      respondText(response, error, 422);
+      respondText(response, error?.toString() || "Error deleting release", 422);
     }
   }
 }

@@ -55,12 +55,13 @@ interface Props {
 
 @observer
 export class ReleaseDetails extends Component<Props> {
-  @observable details: IReleaseDetails;
+  @observable details: IReleaseDetails | null = null;
   @observable values = "";
   @observable valuesLoading = false;
   @observable showOnlyUserSuppliedValues = false;
   @observable saving = false;
   @observable releaseSecret: Secret;
+  @observable error?: string = undefined;
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -95,9 +96,13 @@ export class ReleaseDetails extends Component<Props> {
 
   async loadDetails() {
     const { release } = this.props;
-
-    this.details = null;
-    this.details = await getRelease(release.getName(), release.getNs());
+    
+    try {
+      this.details = null;
+      this.details = await getRelease(release.getName(), release.getNs());
+    } catch (error) {
+      this.error = `Failed to get release details: ${error}`;
+    }
   }
 
   async loadValues() {
@@ -234,11 +239,18 @@ export class ReleaseDetails extends Component<Props> {
 
   renderContent() {
     const { release } = this.props;
-    const { details } = this;
 
     if (!release) return null;
 
-    if (!details) {
+    if (this.error) {
+      return (
+        <div className="loading-error">
+          {this.error}
+        </div>
+      );
+    }
+
+    if (!this.details) {
       return <Spinner center/>;
     }
 
