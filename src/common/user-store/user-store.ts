@@ -20,7 +20,7 @@
  */
 
 import { app, ipcMain } from "electron";
-import semver from "semver";
+import semver, { SemVer } from "semver";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
@@ -30,7 +30,7 @@ import { appEventBus } from "../event-bus";
 import path from "path";
 import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration, CONSTANTS } from "./preferences-helpers";
+import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration } from "./preferences-helpers";
 import logger from "../../main/logger";
 import type { monaco } from "react-monaco-editor";
 import { getPath } from "../utils/getPath";
@@ -107,9 +107,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
   }
 
-  @computed get isAllowedToDowngrade(): boolean {
-    return this.updateChannel !== CONSTANTS.defaultUpdateChannel;
-  }
+  readonly isAllowedToDowngrade = new SemVer(getAppVersion()).prerelease[0] !== "latest";
 
   startMainReactions() {
     // track telemetry availability
