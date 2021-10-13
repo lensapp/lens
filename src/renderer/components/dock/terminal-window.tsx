@@ -51,7 +51,7 @@ export class TerminalWindow extends React.Component<Props> {
     ]);
   }
 
-  activate(tabId: TabId = dockStore.selectedTabId) {
+  activate(tabId: TabId) {
     if (this.terminal) this.terminal.detach(); // detach previous
     this.terminal = TerminalStore.getInstance().getTerminal(tabId);
     this.terminal.attachTo(this.elem);

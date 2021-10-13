@@ -42,8 +42,6 @@ export class UpgradeChart extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @observable selectedVersion: IChartVersion;
-
   get tabId() {
     return this.props.tabId;
   }
@@ -52,22 +50,45 @@ export class UpgradeChart extends React.Component<Props> {
     return upgradeChartStore.getRelease(this.tabId);
   }
 
-  @computed get versions(): SelectOption<IChartVersion>[] {
-    return upgradeChartStore.versions.map(version => ({ value: version }));
+  @observable selectedVersion: IChartVersion | undefined;
+
+  @computed get releaseVersion(): IChartVersion {
+    return this.getChartVersionByRelease(this.release);
   }
 
-  get value() {
+  @computed get chartVersionOptions(): SelectOption<IChartVersion>[] {
+    return upgradeChartStore.versions.map(version => ({
+      value: version,
+      disabled: this.selectedVersion == this.releaseVersion,
+    }));
+  }
+
+  @computed get chartValues(): string {
     return upgradeChartStore.values.get(this.tabId);
   }
 
+  getChartVersionByRelease(release: HelmRelease): IChartVersion | undefined {
+    return upgradeChartStore.versions.find(({ version, repo }) => (
+      release?.getChart() == repo &&
+      release?.getVersion() === version
+    ));
+  }
+
   upgrade = async () => {
-    const { version, repo } = this.selectedVersion;
-    const releaseName = this.release.getName();
-    const releaseNs = this.release.getNs();
+    const { releaseVersion, selectedVersion, release, chartValues } = this;
+    const newVersionNotSelected = !selectedVersion || selectedVersion == releaseVersion;
+
+    if (!release || newVersionNotSelected) {
+      throw new Error(`You have not selected new version for "${releaseVersion}"`); // skip: nothing to upgrade
+    }
+
+    const { version, repo } = selectedVersion;
+    const releaseName = release.getName();
+    const releaseNs = release.getNs();
 
     await releaseStore.update(releaseName, releaseNs, {
-      chart: this.release.getChart(),
-      values: this.value,
+      chart: release.getChart(),
+      values: chartValues,
       repo, version,
     });
 
@@ -86,8 +107,7 @@ export class UpgradeChart extends React.Component<Props> {
   };
 
   render() {
-    const { release, versions, selectedVersion } = this;
-    const currentVersion = release.getVersion();
+    const { release, chartVersionOptions } = this;
 
     return (
       <InfoPanel
@@ -97,16 +117,16 @@ export class UpgradeChart extends React.Component<Props> {
         submittingMessage="Updating.."
         controls={
           <div className="upgrade flex gaps align-center">
-            <span>Release</span> <Badge label={release.getName()}/>
-            <span>Namespace</span> <Badge label={release.getNs()}/>
-            <span>Version</span> <Badge label={currentVersion}/>
+            <span>Release</span> <Badge label={release?.getName()}/>
+            <span>Namespace</span> <Badge label={release?.getNs()}/>
+            <span>Version</span> <Badge label={release?.getVersion()}/>
             <span>Upgrade version</span>
             <Select
               className="chart-version"
               menuPlacement="top"
               themeName="outlined"
-              value={selectedVersion ?? versions[0]}
-              options={versions}
+              value={this.selectedVersion ?? this.releaseVersion}
+              options={chartVersionOptions}
               formatOptionLabel={this.formatVersionLabel}
               onChange={({ value }: SelectOption<IChartVersion>) => this.selectedVersion = value}
             />

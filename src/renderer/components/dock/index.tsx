@@ -21,7 +21,7 @@
 
 export * from "./dock";
 
-// registered dock-tab view components
+// Registered React components to handle contents per {DockTab.kind}
 export * from "./terminal-window";
 export * from "./create-resource";
 export * from "./edit-resource";

@@ -363,11 +363,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
     await kubeApiServerRow.click();
     await frame.waitForSelector(".Drawer", { state: "visible" });
-
-    const podLogsIcon = await frame.waitForSelector(".Drawer .drawer-title .Icon >> text=subject");
-
-    await podLogsIcon.click();
-
+    await frame.waitForSelector(".Drawer .drawer-title .Icon >> text=subject").then(button => button.click());
     await frame.waitForSelector(".Dock.isOpen");
 
     // Check if controls are available

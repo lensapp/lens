@@ -43,7 +43,6 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   async init() {
     super.init();
-    await releaseStore.loadFromContextNamespaces();
 
     this.dispose.push(
       dockStore.onTabChange(({ tabId }) => this.loadData(tabId), {
@@ -53,20 +52,17 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     );
   }
 
-  hasValues(tabId: TabId) {
-    return this.values.has(tabId);
-  }
-
   async loadData(tabId: TabId) {
     await this.whenReady;
 
-    await Promise.all([
+    return Promise.all([
+      !releaseStore.isLoaded && releaseStore.loadFromContextNamespaces(),
       this.loadValues(tabId),
       this.loadVersions(tabId),
     ]);
   }
 
-  getRelease(tabId: TabId) {
+  getRelease(tabId: TabId): HelmRelease | null {
     const releaseName = this.getData(tabId)?.releaseName;
 
     if (!releaseName) return null;
@@ -75,34 +71,44 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   @action
-  private async loadVersions(tabId: TabId) {
+  private async loadVersions(tabId: TabId): Promise<IChartVersion[]> {
     try {
       const { releaseName } = this.getData(tabId);
 
-      this.versions.clear();
+      console.info(`[UPGRADE-CHART]: loading versions for release "${releaseName}"`);
       const versions = await helmChartStore.getVersions(releaseName);
 
       this.versions.replace(versions);
+
+      return versions;
     } catch (error) {
       console.error(`[UPGRADE-CHART]: loading versions has failed: ${error}`);
     }
+
+    return [];
   }
 
   @action
-  private async loadValues(tabId: TabId, { forceReload = false } = {}) {
-    if (this.hasValues(tabId) && !forceReload) {
-      return;
+  private async loadValues(tabId: TabId): Promise<string> {
+    if (this.values.has(tabId)) {
+      return this.values.get(tabId); // use cached values
     }
 
     try {
-      this.values.delete(tabId);
       const { releaseName, releaseNamespace } = this.getData(tabId);
+
+      console.info(`[UPGRADE-CHART]: loading values for release "${releaseName}"`);
+
       const values = await getReleaseValues(releaseName, releaseNamespace, true);
 
       this.values.set(tabId, values);
+
+      return values;
     } catch (error) {
       console.error(`[UPGRADE-CHART]: loading values has failed: ${error}`);
     }
+
+    return "";
   }
 
   getTabByRelease(releaseName: string): DockTab | null {

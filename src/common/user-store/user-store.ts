@@ -29,7 +29,7 @@ import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../event-bus";
 import path from "path";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { defaultEditorConfig, DESCRIPTORS, EditorConfiguration, KubeconfigSyncValue, UserPreferencesModel, CONSTANTS } from "./preferences-helpers";
+import { CONSTANTS, DESCRIPTORS, EditorConfiguration, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
 import { getPath } from "../utils/getPath";
 
@@ -90,7 +90,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   /**
    * Monaco editor configs
    */
-  @observable editorConfiguration: EditorConfiguration = defaultEditorConfig;
+  @observable editorConfiguration: EditorConfiguration = CONSTANTS.defaultEditorConfig;
 
   /**
    * The set of file/folder paths to be synced
