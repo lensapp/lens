@@ -148,7 +148,7 @@ export class StorageHelper<T> {
   }
 
   @action
-  merge(value: Partial<T> | ((draft: Draft<T>) => Draft<T> | void)) {
+  merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
     const nextValue = produce<T>(this.toJSON(), (draft: Draft<T>) => {
 
       if (typeof value == "function") {
