@@ -33,17 +33,17 @@ describe("nextUpdateChannel", () => {
     expect(nextUpdateChannel("latest", "alpha")).toEqual("beta");
   });
 
-  it("returns rc if current channel is beta", () => {
-    expect(nextUpdateChannel("alpha", "beta")).toEqual("rc");
-    expect(nextUpdateChannel("beta", "beta")).toEqual("rc");
-    expect(nextUpdateChannel("rc", "beta")).toEqual("rc");
-    expect(nextUpdateChannel("latest", "beta")).toEqual("rc");
+  it("returns latest if current channel is beta", () => {
+    expect(nextUpdateChannel("alpha", "beta")).toEqual("latest");
+    expect(nextUpdateChannel("beta", "beta")).toEqual("latest");
+    expect(nextUpdateChannel("rc", "beta")).toEqual("latest");
+    expect(nextUpdateChannel("latest", "beta")).toEqual("latest");
   });
 
-  it("returns latest if current channel is rc", () => {
-    expect(nextUpdateChannel("alpha", "rc")).toEqual("latest");
-    expect(nextUpdateChannel("beta", "rc")).toEqual("latest");
-    expect(nextUpdateChannel("rc", "rc")).toEqual("latest");
+  it("returns default if current channel is unknown", () => {
+    expect(nextUpdateChannel("alpha", "rc")).toEqual("alpha");
+    expect(nextUpdateChannel("beta", "rc")).toEqual("beta");
+    expect(nextUpdateChannel("rc", "rc")).toEqual("rc");
     expect(nextUpdateChannel("latest", "rc")).toEqual("latest");
   });
 });
