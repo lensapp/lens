@@ -265,7 +265,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.2.1",
-    "@types/byline": "^4.2.32",
+    "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.34",
     "@types/color": "^3.0.2",
     "@types/crypto-js": "^3.1.47",
