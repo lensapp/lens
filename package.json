@@ -335,7 +335,7 @@
     "esbuild-loader": "^2.15.1",
     "eslint": "^7.32.0",
     "eslint-plugin-header": "^3.1.1",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.0.1",
     "file-loader": "^6.2.0",
