@@ -21,13 +21,13 @@
 
 import "./radio.scss";
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames, IClassName } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 
 // todo: refactor with contexts
 
 export interface RadioGroupProps {
-  className?: any;
+  className?: IClassName;
   value?: any;
   asButtons?: boolean;
   disabled?: boolean;
@@ -51,7 +51,7 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
             disabled: disabled !== undefined ? disabled : radio.props.disabled,
             checked: radio.props.value === value,
             onChange
-          } as any);
+          });
         })}
       </div>
     );

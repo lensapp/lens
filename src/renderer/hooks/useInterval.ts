@@ -21,6 +21,11 @@
 
 import { useRef, useEffect } from "react";
 
+/**
+ * Call `callback` every `delay` ms. Does not fire immediately.
+ * @param callback The function to call
+ * @param delay The number of ms between each call
+ */
 export function useInterval(callback: () => void, delay: number) {
   const savedCallback = useRef<() => void>();
 

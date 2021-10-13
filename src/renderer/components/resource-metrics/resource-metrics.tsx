@@ -25,18 +25,17 @@ import React, { createContext, useEffect, useState } from "react";
 import { Radio, RadioGroup } from "../radio";
 import { useInterval } from "../../hooks";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { cssNames } from "../../utils";
+import { cssNames, IClassName } from "../../utils";
 import { Spinner } from "../spinner";
 
-interface Props extends React.HTMLProps<any> {
-  tabs: React.ReactNode[];
+interface Props<T> {
+  tabs: string[] | string[][];
   object?: KubeObject;
   loader?: () => void;
   interval?: number;
-  className?: string;
-  params?: {
-    [key: string]: any;
-  };
+  className?: IClassName;
+  params?: T;
+  children?: React.ReactNode;
 }
 
 export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
@@ -47,13 +46,13 @@ export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
 
 export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<Props<any>> = {
   interval: 60  // 1 min
 };
 
 ResourceMetrics.defaultProps = defaultProps;
 
-export function ResourceMetrics({ object, loader, interval, tabs, children, className, params }: Props) {
+export function ResourceMetrics<T>({ object, loader, interval, tabs, children, className, params }: Props<T>) {
   const [tabId, setTabId] = useState<number>(0);
 
   useEffect(() => {
@@ -64,36 +63,28 @@ export function ResourceMetrics({ object, loader, interval, tabs, children, clas
     if (loader) loader();
   }, interval * 1000);
 
-  const renderContents = () => {
-    return (
-      <>
-        <div className="switchers">
-          <RadioGroup
-            asButtons
-            className="flex box grow gaps"
-            value={tabs[tabId]}
-            onChange={value => setTabId(tabs.findIndex(tab => tab == value))}
-          >
-            {tabs.map((tab, index) => (
-              <Radio key={index} className="box grow" label={tab} value={tab}/>
-            ))}
-          </RadioGroup>
-        </div>
-        <ResourceMetricsContext.Provider value={{ object, tabId, params }}>
-          <div className="graph">
-            {children}
-          </div>
-        </ResourceMetricsContext.Provider>
-        <div className="loader">
-          <Spinner/>
-        </div>
-      </>
-    );
-  };
-
   return (
     <div className={cssNames("ResourceMetrics flex column", className)}>
-      {renderContents()}
+      <div className="switchers">
+        <RadioGroup
+          asButtons
+          className="flex box grow gaps"
+          value={tabs[tabId]}
+          onChange={value => setTabId(tabs.findIndex(tab => tab == value))}
+        >
+          {tabs.map((tab, index) => (
+            <Radio key={index} className="box grow" label={tab} value={tab} />
+          ))}
+        </RadioGroup>
+      </div>
+      <ResourceMetricsContext.Provider value={{ object, tabId, params }}>
+        <div className="graph">
+          {children}
+        </div>
+      </ResourceMetricsContext.Provider>
+      <div className="loader">
+        <Spinner />
+      </div>
     </div>
   );
 }
