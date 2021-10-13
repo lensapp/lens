@@ -33,7 +33,7 @@ describe("preferences page tests", () => {
 
   beforeEach(async () => {
     let app: ElectronApplication;
-    
+
     ({ window, cleanup, app } = await utils.start());
     await utils.clickWelcomeButton(window);
 
@@ -74,7 +74,7 @@ describe("preferences page tests", () => {
   utils.itIf(process.platform !== "win32")("ensures helm repos", async () => {
     await window.click("[data-testid=kubernetes-tab]");
     await window.waitForSelector("[data-testid=repository-name]", {
-      timeout: 100_000,
+      timeout: 140_000,
     });
     await window.click("#HelmRepoSelect");
     await window.waitForSelector("div.Select__option");

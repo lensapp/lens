@@ -30,7 +30,7 @@ import { Badge } from "../badge";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../../common/k8s-api/endpoints";
+import { formatNodeTaint, getMetricsByNodeNames, IClusterMetrics, Node } from "../../../common/k8s-api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -132,11 +132,7 @@ export class NodeDetails extends React.Component<Props> {
         />
         {taints.length > 0 && (
           <DrawerItem name="Taints" labelsOnly>
-            {
-              taints.map(({ key, effect, value }) => (
-                <Badge key={key} label={`${key}=${value}:${effect}`} />
-              ))
-            }
+            {taints.map(taint => <Badge key={taint.key} label={formatNodeTaint(taint)} />)}
           </DrawerItem>
         )}
         {conditions &&
