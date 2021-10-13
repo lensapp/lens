@@ -59,13 +59,7 @@ export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
   kubeVersion?: string;
 }
 
-export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
-
-export interface KubernetesClusterStatus extends CatalogEntityStatus {
-  phase: KubernetesClusterStatusPhase;
-}
-
-export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
+export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, CatalogEntityStatus, KubernetesClusterSpec> {
   public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public static readonly kind = "KubernetesCluster";
 

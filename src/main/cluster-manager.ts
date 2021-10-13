@@ -27,13 +27,22 @@ import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { getClusterIdFromHost, Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
-import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 import { ClusterStore } from "../common/cluster-store";
 import type { ClusterId } from "../common/cluster-types";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
+
+enum LensClusterStatus {
+  DELETING = "deleting",
+  CONNECTING = "connecting",
+  CONNECTED = "connected",
+  DISCONNECTED = "disconnected"
+}
+
+const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensClusterStatus));
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
@@ -90,6 +99,8 @@ export class ClusterManager extends Singleton {
 
   @action
   protected updateCatalog(clusters: Cluster[]) {
+    logger.debug("[CLUSTER-MANAGER]: updating catalog from cluster store");
+
     for (const cluster of clusters) {
       this.updateEntityFromCluster(cluster);
     }
@@ -144,27 +155,28 @@ export class ClusterManager extends Singleton {
   @action
   protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
     if (this.deleting.has(entity.getId())) {
-      entity.status.phase = "deleting";
+      entity.status.phase = LensClusterStatus.DELETING;
       entity.status.enabled = false;
     } else {
-      entity.status.phase = ((): KubernetesClusterStatusPhase => {
+      entity.status.phase = (() => {
         if (!cluster) {
-          return "disconnected";
+          return LensClusterStatus.DISCONNECTED;
         }
 
         if (cluster.accessible) {
-          return "connected";
+          return LensClusterStatus.CONNECTED;
         }
 
         if (!cluster.disconnected) {
-          return "connecting";
+          return LensClusterStatus.CONNECTING;
         }
 
-        if (entity?.status?.phase) {
+        // Extensions are not allowed to use the Lens specific status phases
+        if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
           return entity.status.phase;
         }
 
-        return "disconnected";
+        return LensClusterStatus.DISCONNECTED;
       })();
 
       entity.status.enabled = true;
