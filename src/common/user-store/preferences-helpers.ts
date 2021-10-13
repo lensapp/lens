@@ -272,7 +272,7 @@ const updateChannels = new Map([
     label: "Alpha"
   }],
 ]);
-const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0].toString();
+const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
 
 const updateChannel: PreferenceDescription<string> = {
   fromStore(val) {
