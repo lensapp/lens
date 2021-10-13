@@ -42,6 +42,8 @@ import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
+import { observable } from "mobx";
+import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
 
 interface Props {
   className?: string;
@@ -50,6 +52,10 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
+  @observable private contextMenu: CatalogEntityContextMenuContext = {
+    menuItems: [],
+    navigate: (url: string) => navigate(url),
+  };
 
   async componentDidMount() {
     crdStore.reloadAll();
@@ -194,6 +200,8 @@ export class Sidebar extends React.Component<Props> {
           src={spec.icon?.src}
           className="mr-5"
           onClick={() => navigate("/")}
+          menuItems={this.contextMenu.menuItems}
+          onMenuOpen={() => this.clusterEntity.onContextMenuOpen(this.contextMenu)}
         />
         <div className={styles.clusterName}>
           {metadata.name}
