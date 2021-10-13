@@ -26,7 +26,7 @@ import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { createStorage, getHostedClusterId, interval } from "../../utils";
+import { boundMethod, createStorage, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
@@ -35,8 +35,9 @@ import { kubeClusterStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { ClusterStore } from "../../../common/cluster-store";
-import type { IClusterMetrics } from "../../../common/k8s-api/endpoints";
+import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../../common/k8s-api/endpoints";
+import type { IMetricsReqParams } from "../../../common/k8s-api/endpoints/metrics.api";
+import { ResourceMetrics } from "../resource-metrics";
 
 export enum MetricType {
   MEMORY = "memory",
@@ -51,76 +52,59 @@ export enum MetricNodeRole {
 const storage = createStorage("cluster_overview", {
   metricType: MetricType.CPU, // setup defaults
   metricNodeRole: MetricNodeRole.WORKER,
+  showVirtualNodes: false,
 });
 
 @observer
 export class ClusterOverview extends React.Component {
   @observable metrics?: IClusterMetrics = undefined;
-  private metricPoller = interval(60, () => this.loadMetrics());
 
-  loadMetrics() {
-    const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
-
-    if (cluster.available) {
-      kubeClusterStore.loadMetrics();
-    }
-  }
-  async loadMetrics() {
-    const { object: pod } = this.props;
-
-    this.metrics = await getMetricsForPods([pod], pod.getNs());
-    this.containerMetrics = await getMetricsForPods([pod], pod.getNs(), "container, namespace");
+  get metricNodeRole() {
+    return storage.get().metricNodeRole;
   }
 
-  componentDidMount() {
-    this.metricPoller.start(true);
-
-    disposeOnUnmount(this, [
-      reaction(
-        () => kubeClusterStore.metricNodeRole, // Toggle Master/Worker node switcher
-        () => this.metricPoller.restart(true)
-      ),
-    ]);
+  get showVirtualNodes() {
+    return storage.get().showVirtualNodes;
   }
 
-  componentWillUnmount() {
-    this.metricPoller.stop();
-  }
+  getNodesForMetrics(): Node[] {
+    const { masterNodes, workerNodes } = nodesStore;
+    const nodes = this.metricNodeRole === MetricNodeRole.MASTER
+      ? masterNodes
+      : workerNodes;
 
-  renderMetrics(isMetricsHidden: boolean) {
-    if (isMetricsHidden) {
-      return null;
+    if (this.showVirtualNodes) {
+      return nodes;
     }
 
-    return (
-      <>
-        <ClusterMetrics/>
-        <ClusterPieCharts/>
-      </>
-    );
+    return nodes.filter(node => node.metadata.labels?.kind !== "virtual-kubelet");
   }
 
-  renderClusterOverview(isLoaded: boolean, isMetricsHidden: boolean) {
-    if (!isLoaded) {
-      return <Spinner center/>;
-    }
+  @boundMethod
+  async loadMetrics(params?: IMetricsReqParams): Promise<void> {
+    const nodesNames = this.getNodesForMetrics().map(node => node.getName());
 
-    return (
-      <>
-        {this.renderMetrics(isMetricsHidden)}
-        <ClusterIssues className={isMetricsHidden ? "OnlyClusterIssues" : ""}/>
-      </>
-    );
+    this.metrics = await getMetricsByNodeNames(nodesNames, params);
   }
 
   render() {
-    const isLoaded = nodesStore.isLoaded && podsStore.isLoaded;
+    const { metrics } = this;
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Cluster);
 
     return (
       <TabLayout>
         <div className="ClusterOverview">
-          {this.renderClusterOverview(isLoaded, isMetricHidden)}
+          {!isMetricHidden && (
+            <ResourceMetrics
+              loader={this.loadMetrics}
+              tabs={[MetricType.CPU, MetricType.MEMORY]}
+              params={{ metrics }}
+            >
+              <ClusterMetrics />
+              <ClusterPieCharts />
+            </ResourceMetrics>
+          )}
+          <ClusterIssues className={isMetricHidden ? "OnlyClusterIssues" : ""} />
         </div>
       </TabLayout>
     );
