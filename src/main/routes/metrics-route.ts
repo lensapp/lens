@@ -44,11 +44,13 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   async function loadMetric(query: string): Promise<any> {
     async function loadMetricHelper(): Promise<any> {
       for (const [attempt, lastAttempt] of ATTEMPTS.entries()) { // retry
+        const reqParams = { query, ...queryParams };
+
         try {
-          return await getMetrics(cluster, prometheusPath, { query, ...queryParams });
+          return await getMetrics(cluster, prometheusPath, reqParams);
         } catch (error) {
           if (lastAttempt || (error?.statusCode >= 400 && error?.statusCode < 500)) {
-            logger.error("[Metrics]: metrics not available", { error });
+            logger.error("[Metrics]: metrics not available", { ...error.error, reqParams });
             throw new Error("Metrics not available");
           }
 

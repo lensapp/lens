@@ -27,7 +27,7 @@ import { IMetricsReqParams, normalizeMetrics } from "../../../common/k8s-api/end
 import { nodesStore } from "../+nodes/nodes.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
-export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
+export class KubeClusterStore extends KubeObjectStore<Cluster> {
   api = clusterApi;
 
 
@@ -80,6 +80,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
     this.metrics = await getMetricsByNodeNames(nodes.map(node => node.getName()), params);
+    console.log(toJS(this.metrics));
     this.metricsLoaded = true;
   }
 
@@ -107,5 +108,5 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
   }
 }
 
-export const clusterApiStore = new ClusterOverviewStore();
-apiManager.registerStore(clusterApiStore);
+export const kubeClusterStore = new KubeClusterStore();
+apiManager.registerStore(kubeClusterStore);

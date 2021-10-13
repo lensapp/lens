@@ -77,13 +77,16 @@ export class PodDetails extends React.Component<Props> {
   render() {
     const { object: pod } = this.props;
 
-    if (!pod) return null;
-    const { status, spec } = pod;
-    const { conditions, podIP } = status;
+    if (!pod) {
+      return null;
+    }
+
+    const { status: { conditions, podIP }, spec: { nodeName } } = pod;
+    const { metrics } = this;
     const podIPs = pod.getIPs();
-    const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
+    const initContainers = pod.getInitContainers();
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Pod);
 
     return (
@@ -91,7 +94,9 @@ export class PodDetails extends React.Component<Props> {
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={pod} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={pod}
+            params={{ metrics }}
           >
             <PodCharts/>
           </ResourceMetrics>
@@ -111,11 +116,7 @@ export class PodDetails extends React.Component<Props> {
           {podIP}
         </DrawerItem>
         <DrawerItem name="Pod IPs" hidden={!podIPs.length} labelsOnly>
-          {
-            podIPs.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
+          {podIPs.map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
         <DrawerItem name="Priority Class">
           {pod.getPriorityClassName()}
@@ -123,65 +124,65 @@ export class PodDetails extends React.Component<Props> {
         <DrawerItem name="QoS Class">
           {pod.getQosClass()}
         </DrawerItem>
-        {conditions &&
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
-          {
-            conditions.map(condition => {
-              const { type, status, lastTransitionTime } = condition;
-
-              return (
-                <Badge
-                  key={type}
-                  label={type}
-                  disabled={status === "False"}
-                  tooltip={`Last transition time: ${lastTransitionTime}`}
-                />
-              );
-            })
-          }
-        </DrawerItem>
+        {
+          conditions && (
+            <DrawerItem name="Conditions" className="conditions" labelsOnly>
+              {
+                conditions
+                  .map(({ type, status, lastTransitionTime }) => (
+                    <Badge
+                      key={type}
+                      label={type}
+                      disabled={status === "False"}
+                      tooltip={`Last transition time: ${lastTransitionTime}`}
+                    />
+                  ))
+              }
+            </DrawerItem>
+          )
         }
-        {nodeSelector.length > 0 &&
-        <DrawerItem name="Node Selector">
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
-        </DrawerItem>
+        {
+          nodeSelector.length > 0 && (
+            <DrawerItem name="Node Selector">
+              {nodeSelector.map(label => <Badge key={label} label={label} />)}
+            </DrawerItem>
+          )
         }
         <PodDetailsTolerations workload={pod}/>
         <PodDetailsAffinities workload={pod}/>
-
-        {pod.getSecrets().length > 0 && (
-          <DrawerItem name="Secrets">
-            <PodDetailsSecrets pod={pod}/>
-          </DrawerItem>
-        )}
-
-        {pod.getInitContainers() && pod.getInitContainers().length > 0 &&
-        <DrawerTitle title="Init Containers"/>
+        {
+          pod.getSecrets().length > 0 && (
+            <DrawerItem name="Secrets">
+              <PodDetailsSecrets pod={pod} />
+            </DrawerItem>
+          )
         }
         {
-          pod.getInitContainers() && pod.getInitContainers().map(container => {
-            return <PodDetailsContainer key={container.name} pod={pod} container={container}/>;
-          })
+          initContainers.length && (
+            <>
+              <DrawerTitle title="Init Containers" />
+              {
+                initContainers.map(container => (
+                  <PodDetailsContainer
+                    key={container.name}
+                    pod={pod}
+                    container={container}
+                  />
+                ))
+              }
+            </>
+          )
         }
         <DrawerTitle title="Containers"/>
         {
-          pod.getContainers().map(container => {
-            const { name } = container;
-            const metrics = getItemMetrics(toJS(this.containerMetrics), name);
-
-            return (
-              <PodDetailsContainer
-                key={name}
-                pod={pod}
-                container={container}
-                metrics={metrics || null}
-              />
-            );
-          })
+          pod.getContainers().map(container => (
+            <PodDetailsContainer
+              key={container.name}
+              pod={pod}
+              container={container}
+              metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
+            />
+          ))
         }
 
         {volumes.length > 0 && (

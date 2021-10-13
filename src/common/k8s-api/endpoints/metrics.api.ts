@@ -24,6 +24,7 @@
 import moment from "moment";
 import { apiBase } from "../index";
 import type { IMetricsQuery } from "../../../main/routes/metrics-route";
+import { iter, toJS } from "../../utils";
 
 export interface IMetrics {
   status: string;
@@ -36,7 +37,7 @@ export interface IMetrics {
 export interface IMetricsResult {
   metric: {
     [name: string]: string;
-    instance: string;
+    instance?: string;
     node?: string;
     pod?: string;
     kubernetes?: string;
@@ -104,7 +105,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
         result: [{
           metric: {},
           values: []
-        } as IMetricsResult],
+        }],
       },
       status: "",
     };
@@ -112,18 +113,23 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
 
   const { result } = metrics.data;
 
+  console.log(toJS(result));
+
   if (result.length) {
     if (frames > 0) {
       // fill the gaps
-      result.forEach(res => {
-        if (!res.values || !res.values.length) return;
+      for (const res of result) {
+        if (!res.values || !res.values.length) {
+          continue;
+        }
 
-        let now = moment().startOf("minute").subtract(1, "minute").unix();
-        let timestamp = res.values[0][0];
+        const now = moment().startOf("minute").subtract(1, "minute").unix();
 
-        while (timestamp <= now) {
-          timestamp = moment.unix(timestamp).add(1, "minute").unix();
-
+        for (
+          let timestamp = res.values[0][0]; 
+          timestamp <= now; 
+          timestamp = moment.unix(timestamp).add(1, "minute").unix()
+        ) {
           if (!res.values.find((value) => value[0] === timestamp)) {
             res.values.push([timestamp, "0"]);
           }
@@ -135,58 +141,67 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
           if (!res.values.find((value) => value[0] === timestamp)) {
             res.values.unshift([timestamp, "0"]);
           }
-          now = timestamp;
         }
-      });
+      }
     }
-  }
-  else {
+  } else {
     // always return at least empty values array
     result.push({
       metric: {},
       values: []
-    } as IMetricsResult);
+    });
   }
 
   return metrics;
 }
 
 export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
-  return Object.values(metrics).every(metric => !metric?.data?.result?.length);
+  return !Object.values(metrics).some(metric => metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | void {
-  if (!metrics) return;
-  const itemMetrics = { ...metrics };
-
-  for (const metric in metrics) {
-    if (!metrics[metric]?.data?.result) {
-      continue;
-    }
-    const results = metrics[metric].data.result;
-    const result = results.find(res => Object.values(res.metric)[0] == itemName);
-
-    itemMetrics[metric].data.result = result ? [result] : [];
+export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> {
+  if (!metrics) {
+    return {};
   }
 
-  return itemMetrics;
+  return Object.fromEntries(
+    iter.filterMap(
+      Object.entries(metrics),
+      ([key, value]) => {
+        if (value?.data?.result) {
+          const result = value.data.result.find(res => res.metric.container === itemName);
+
+          value.data.result = [result].filter(Boolean);
+
+          return [key, value];
+        }
+
+        return undefined;
+      }
+    )
+  );
 }
 
-export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
-  const result: Partial<{ [metric: string]: number }> = {};
+export function getMetricLastPoints(metrics: Record<string, IMetrics>): Record<string, number> {
+  return Object.fromEntries(
+    iter.filterMap(
+      Object.entries(metrics),
+      ([key, value]) => {
+        if (value.data.result.length > 0) {
+          const [{ values }] = value.data.result;
 
-  Object.keys(metrics).forEach(metricName => {
-    try {
-      const metric = metrics[metricName];
+          if (values.length > 0) {
+            const [[, value]] = values.slice(-1);
+            const parsed = +value;
 
-      if (metric.data.result.length) {
-        result[metricName] = +metric.data.result[0].values.slice(-1)[0][1];
-      }
-    } catch (e) {
-    }
+            if (!isNaN(parsed)) {
+              return [key, parsed];
+            }
+          }
+        }
 
-    return result;
-  }, {});
-
-  return result;
+        return undefined;
+      },
+    ),
+  );
 }

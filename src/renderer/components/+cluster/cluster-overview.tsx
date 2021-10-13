@@ -22,31 +22,54 @@
 import "./cluster-overview.scss";
 
 import React from "react";
-import { reaction } from "mobx";
+import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { getHostedClusterId, interval } from "../../utils";
+import { createStorage, getHostedClusterId, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
-import { clusterApiStore } from "./cluster-overview.store";
+import { kubeClusterStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { IClusterMetrics } from "../../../common/k8s-api/endpoints";
+
+export enum MetricType {
+  MEMORY = "memory",
+  CPU = "cpu"
+}
+
+export enum MetricNodeRole {
+  MASTER = "master",
+  WORKER = "worker"
+}
+
+const storage = createStorage("cluster_overview", {
+  metricType: MetricType.CPU, // setup defaults
+  metricNodeRole: MetricNodeRole.WORKER,
+});
 
 @observer
 export class ClusterOverview extends React.Component {
+  @observable metrics?: IClusterMetrics = undefined;
   private metricPoller = interval(60, () => this.loadMetrics());
 
   loadMetrics() {
     const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
 
     if (cluster.available) {
-      clusterApiStore.loadMetrics();
+      kubeClusterStore.loadMetrics();
     }
+  }
+  async loadMetrics() {
+    const { object: pod } = this.props;
+
+    this.metrics = await getMetricsForPods([pod], pod.getNs());
+    this.containerMetrics = await getMetricsForPods([pod], pod.getNs(), "container, namespace");
   }
 
   componentDidMount() {
@@ -54,7 +77,7 @@ export class ClusterOverview extends React.Component {
 
     disposeOnUnmount(this, [
       reaction(
-        () => clusterApiStore.metricNodeRole, // Toggle Master/Worker node switcher
+        () => kubeClusterStore.metricNodeRole, // Toggle Master/Worker node switcher
         () => this.metricPoller.restart(true)
       ),
     ]);
