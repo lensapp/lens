@@ -394,7 +394,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   @action disconnect() {
-    logger.info(`[CLUSTER]: disconnect`, this.getMeta());
     this.unbindEvents();
     this.contextHandler?.stopServer();
     this.disconnected = true;
@@ -405,6 +404,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.allowedNamespaces = [];
     this.resourceAccessStatuses.clear();
     this.pushState();
+    logger.info(`[CLUSTER]: disconnect`, this.getMeta());
   }
 
   /**
