@@ -1,0 +1,2176 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Lens Extension Development and API.">
+      
+      
+      
+        <meta name="author" content="Mirantis, Inc.">
+      
+      
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.SelectProps/">
+      
+      
+        
+      
+      <link rel="icon" href="../../../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.1.8+insiders-2.9.2">
+    
+    
+      
+        <title>Interface: SelectProps - Lens Extension Development</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.92048cb8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.73e53a79.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    
+      
+
+  
+
+
+  
+
+  
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-159377374-2","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __scope(t,e="../../../.."){return new URL(e,location).pathname+"."+t}function __get(t,e=localStorage,n){return JSON.parse(e.getItem(__scope(t,n)))}function __set(t,e,n=localStorage,o){try{n.setItem(__scope(t,o),JSON.stringify(e))}catch(t){}}</script>
+    
+      <script>var palette=__get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#interface-selectpropst" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Lens Extension Development" class="md-header__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Lens Extension Development
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Interface: SelectProps<T\>
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m10-3a5 5 0 0 1 5 5 5 5 0 0 1-5 5H7a5 5 0 0 1-5-5 5 5 0 0 1 5-5h10M7 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3h10a3 3 0 0 0 3-3 3 3 0 0 0-3-3H7z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    Lens Extension Development
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/your-first-extension/" class="md-nav__link">
+        Your First Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/anatomy/" class="md-nav__link">
+        Extension Anatomy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/wrapping-up/" class="md-nav__link">
+        Wrapping Up
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Extension Capabilities
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Capabilities
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/common-capabilities/" class="md-nav__link">
+        Common Capabilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/styling/" class="md-nav__link">
+        Styling
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Extension Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/generator/" class="md-nav__link">
+        Generator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/main-extension/" class="md-nav__link">
+        Main Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/renderer-extension/" class="md-nav__link">
+        Renderer Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/catalog/" class="md-nav__link">
+        Catalog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/resource-stack/" class="md-nav__link">
+        Resource Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/stores/" class="md-nav__link">
+        Stores
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/working-with-mobx/" class="md-nav__link">
+        Working with MobX
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/protocol-handlers/" class="md-nav__link">
+        Protocol Handlers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/ipc/" class="md-nav__link">
+        IPC
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Testing and Publishing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Testing and Publishing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/testing/" class="md-nav__link">
+        Testing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/publishing/" class="md-nav__link">
+        Publishing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of contents
+  </a>
+  
+    <nav class="md-nav" aria-label="Table of contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#allowcreatewhileloading" class="md-nav__link">
+    allowCreateWhileLoading
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-label" class="md-nav__link">
+    aria-label
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-labelledby" class="md-nav__link">
+    aria-labelledby
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoconvertoptions" class="md-nav__link">
+    autoConvertOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autofocus" class="md-nav__link">
+    autoFocus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backspaceremovesvalue" class="md-nav__link">
+    backspaceRemovesValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blurinputonselect" class="md-nav__link">
+    blurInputOnSelect
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturemenuscroll" class="md-nav__link">
+    captureMenuScroll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classname" class="md-nav__link">
+    className
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classnameprefix" class="md-nav__link">
+    classNamePrefix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#closemenuonscroll" class="md-nav__link">
+    closeMenuOnScroll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#closemenuonselect" class="md-nav__link">
+    closeMenuOnSelect
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    components
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controlshouldrendervalue" class="md-nav__link">
+    controlShouldRenderValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createoptionposition" class="md-nav__link">
+    createOptionPosition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultinputvalue" class="md-nav__link">
+    defaultInputValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultmenuisopen" class="md-nav__link">
+    defaultMenuIsOpen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultvalue" class="md-nav__link">
+    defaultValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delimiter" class="md-nav__link">
+    delimiter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#escapeclearsvalue" class="md-nav__link">
+    escapeClearsValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filteroption" class="md-nav__link">
+    filterOption
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formatgrouplabel" class="md-nav__link">
+    formatGroupLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getoptionlabel" class="md-nav__link">
+    getOptionLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getoptionvalue" class="md-nav__link">
+    getOptionValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hideselectedoptions" class="md-nav__link">
+    hideSelectedOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#id" class="md-nav__link">
+    id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inputid" class="md-nav__link">
+    inputId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inputvalue" class="md-nav__link">
+    inputValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instanceid" class="md-nav__link">
+    instanceId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isclearable" class="md-nav__link">
+    isClearable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iscreatable" class="md-nav__link">
+    isCreatable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isdisabled" class="md-nav__link">
+    isDisabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isloading" class="md-nav__link">
+    isLoading
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismulti" class="md-nav__link">
+    isMulti
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isrtl" class="md-nav__link">
+    isRtl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issearchable" class="md-nav__link">
+    isSearchable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maxmenuheight" class="md-nav__link">
+    maxMenuHeight
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menuclass" class="md-nav__link">
+    menuClass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menuisopen" class="md-nav__link">
+    menuIsOpen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menuplacement" class="md-nav__link">
+    menuPlacement
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menuportaltarget" class="md-nav__link">
+    menuPortalTarget
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menuposition" class="md-nav__link">
+    menuPosition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menushouldblockscroll" class="md-nav__link">
+    menuShouldBlockScroll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menushouldscrollintoview" class="md-nav__link">
+    menuShouldScrollIntoView
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmenuheight" class="md-nav__link">
+    minMenuHeight
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onblur" class="md-nav__link">
+    onBlur
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onfocus" class="md-nav__link">
+    onFocus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeydown" class="md-nav__link">
+    onKeyDown
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openmenuonclick" class="md-nav__link">
+    openMenuOnClick
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openmenuonfocus" class="md-nav__link">
+    openMenuOnFocus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagesize" class="md-nav__link">
+    pageSize
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#placeholder" class="md-nav__link">
+    placeholder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styles" class="md-nav__link">
+    styles
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabindex" class="md-nav__link">
+    tabIndex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabselectsvalue" class="md-nav__link">
+    tabSelectsValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme" class="md-nav__link">
+    theme
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#themename" class="md-nav__link">
+    themeName
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value" class="md-nav__link">
+    value
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formatcreatelabel" class="md-nav__link">
+    formatCreateLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formatoptionlabel" class="md-nav__link">
+    formatOptionLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getnewoptiondata" class="md-nav__link">
+    getNewOptionData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoptiondisabled" class="md-nav__link">
+    isOptionDisabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoptionselected" class="md-nav__link">
+    isOptionSelected
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isvalidnewoption" class="md-nav__link">
+    isValidNewOption
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadingmessage" class="md-nav__link">
+    loadingMessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nooptionsmessage" class="md-nav__link">
+    noOptionsMessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onchange" class="md-nav__link">
+    onChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncreateoption" class="md-nav__link">
+    onCreateOption
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oninputchange" class="md-nav__link">
+    onInputChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmenuclose" class="md-nav__link">
+    onMenuClose
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmenuopen" class="md-nav__link">
+    onMenuOpen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmenuscrolltobottom" class="md-nav__link">
+    onMenuScrollToBottom
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmenuscrolltotop" class="md-nav__link">
+    onMenuScrollToTop
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screenreaderstatus" class="md-nav__link">
+    screenReaderStatus
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                
+                <h1 id="interface-selectpropst">Interface: SelectProps&lt;T><a class="headerlink" href="#interface-selectpropst" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.SelectProps</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>any</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li>
+<p><code>ReactSelectProps</code>&lt;<code>T</code>, <code>boolean</code>></p>
+</li>
+<li>
+<p><code>CreatableProps</code>&lt;<code>T</code>, <code>boolean</code>></p>
+</li>
+</ul>
+<p>↳ <strong><code>SelectProps</code></strong></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#allowcreatewhileloading">allowCreateWhileLoading</a></li>
+<li><a href="./#aria-label">aria-label</a></li>
+<li><a href="./#aria-labelledby">aria-labelledby</a></li>
+<li><a href="./#autoconvertoptions">autoConvertOptions</a></li>
+<li><a href="./#autofocus">autoFocus</a></li>
+<li><a href="./#backspaceremovesvalue">backspaceRemovesValue</a></li>
+<li><a href="./#blurinputonselect">blurInputOnSelect</a></li>
+<li><a href="./#capturemenuscroll">captureMenuScroll</a></li>
+<li><a href="./#classname">className</a></li>
+<li><a href="./#classnameprefix">classNamePrefix</a></li>
+<li><a href="./#closemenuonscroll">closeMenuOnScroll</a></li>
+<li><a href="./#closemenuonselect">closeMenuOnSelect</a></li>
+<li><a href="./#components">components</a></li>
+<li><a href="./#controlshouldrendervalue">controlShouldRenderValue</a></li>
+<li><a href="./#createoptionposition">createOptionPosition</a></li>
+<li><a href="./#defaultinputvalue">defaultInputValue</a></li>
+<li><a href="./#defaultmenuisopen">defaultMenuIsOpen</a></li>
+<li><a href="./#defaultvalue">defaultValue</a></li>
+<li><a href="./#delimiter">delimiter</a></li>
+<li><a href="./#escapeclearsvalue">escapeClearsValue</a></li>
+<li><a href="./#filteroption">filterOption</a></li>
+<li><a href="./#formatgrouplabel">formatGroupLabel</a></li>
+<li><a href="./#getoptionlabel">getOptionLabel</a></li>
+<li><a href="./#getoptionvalue">getOptionValue</a></li>
+<li><a href="./#hideselectedoptions">hideSelectedOptions</a></li>
+<li><a href="./#id">id</a></li>
+<li><a href="./#inputid">inputId</a></li>
+<li><a href="./#inputvalue">inputValue</a></li>
+<li><a href="./#instanceid">instanceId</a></li>
+<li><a href="./#isclearable">isClearable</a></li>
+<li><a href="./#iscreatable">isCreatable</a></li>
+<li><a href="./#isdisabled">isDisabled</a></li>
+<li><a href="./#isloading">isLoading</a></li>
+<li><a href="./#ismulti">isMulti</a></li>
+<li><a href="./#isrtl">isRtl</a></li>
+<li><a href="./#issearchable">isSearchable</a></li>
+<li><a href="./#maxmenuheight">maxMenuHeight</a></li>
+<li><a href="./#menuclass">menuClass</a></li>
+<li><a href="./#menuisopen">menuIsOpen</a></li>
+<li><a href="./#menuplacement">menuPlacement</a></li>
+<li><a href="./#menuportaltarget">menuPortalTarget</a></li>
+<li><a href="./#menuposition">menuPosition</a></li>
+<li><a href="./#menushouldblockscroll">menuShouldBlockScroll</a></li>
+<li><a href="./#menushouldscrollintoview">menuShouldScrollIntoView</a></li>
+<li><a href="./#minmenuheight">minMenuHeight</a></li>
+<li><a href="./#name">name</a></li>
+<li><a href="./#onblur">onBlur</a></li>
+<li><a href="./#onfocus">onFocus</a></li>
+<li><a href="./#onkeydown">onKeyDown</a></li>
+<li><a href="./#openmenuonclick">openMenuOnClick</a></li>
+<li><a href="./#openmenuonfocus">openMenuOnFocus</a></li>
+<li><a href="./#options">options</a></li>
+<li><a href="./#pagesize">pageSize</a></li>
+<li><a href="./#placeholder">placeholder</a></li>
+<li><a href="./#styles">styles</a></li>
+<li><a href="./#tabindex">tabIndex</a></li>
+<li><a href="./#tabselectsvalue">tabSelectsValue</a></li>
+<li><a href="./#theme">theme</a></li>
+<li><a href="./#themename">themeName</a></li>
+<li><a href="./#value">value</a></li>
+</ul>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#formatcreatelabel">formatCreateLabel</a></li>
+<li><a href="./#formatoptionlabel">formatOptionLabel</a></li>
+<li><a href="./#getnewoptiondata">getNewOptionData</a></li>
+<li><a href="./#isoptiondisabled">isOptionDisabled</a></li>
+<li><a href="./#isoptionselected">isOptionSelected</a></li>
+<li><a href="./#isvalidnewoption">isValidNewOption</a></li>
+<li><a href="./#loadingmessage">loadingMessage</a></li>
+<li><a href="./#nooptionsmessage">noOptionsMessage</a></li>
+<li><a href="./#onchange">onChange</a></li>
+<li><a href="./#oncreateoption">onCreateOption</a></li>
+<li><a href="./#oninputchange">onInputChange</a></li>
+<li><a href="./#onmenuclose">onMenuClose</a></li>
+<li><a href="./#onmenuopen">onMenuOpen</a></li>
+<li><a href="./#onmenuscrolltobottom">onMenuScrollToBottom</a></li>
+<li><a href="./#onmenuscrolltotop">onMenuScrollToTop</a></li>
+<li><a href="./#screenreaderstatus">screenReaderStatus</a></li>
+</ul>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="allowcreatewhileloading">allowCreateWhileLoading<a class="headerlink" href="#allowcreatewhileloading" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>allowCreateWhileLoading</strong>: <code>boolean</code></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>CreatableProps.allowCreateWhileLoading</p>
+<hr />
+<h3 id="aria-label">aria-label<a class="headerlink" href="#aria-label" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-label</strong>: <code>string</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.aria-label</p>
+<hr />
+<h3 id="aria-labelledby">aria-labelledby<a class="headerlink" href="#aria-labelledby" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-labelledby</strong>: <code>string</code></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.aria-labelledby</p>
+<hr />
+<h3 id="autoconvertoptions">autoConvertOptions<a class="headerlink" href="#autoconvertoptions" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>autoConvertOptions</strong>: <code>boolean</code></p>
+<hr />
+<h3 id="autofocus">autoFocus<a class="headerlink" href="#autofocus" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>autoFocus</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.autoFocus</p>
+<hr />
+<h3 id="backspaceremovesvalue">backspaceRemovesValue<a class="headerlink" href="#backspaceremovesvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>backspaceRemovesValue</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.backspaceRemovesValue</p>
+<hr />
+<h3 id="blurinputonselect">blurInputOnSelect<a class="headerlink" href="#blurinputonselect" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>blurInputOnSelect</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.blurInputOnSelect</p>
+<hr />
+<h3 id="capturemenuscroll">captureMenuScroll<a class="headerlink" href="#capturemenuscroll" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>captureMenuScroll</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.captureMenuScroll</p>
+<hr />
+<h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.className</p>
+<hr />
+<h3 id="classnameprefix">classNamePrefix<a class="headerlink" href="#classnameprefix" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>classNamePrefix</strong>: <code>string</code></p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.classNamePrefix</p>
+<hr />
+<h3 id="closemenuonscroll">closeMenuOnScroll<a class="headerlink" href="#closemenuonscroll" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>closeMenuOnScroll</strong>: <code>boolean</code> | <code>EventListener</code></p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.closeMenuOnScroll</p>
+<hr />
+<h3 id="closemenuonselect">closeMenuOnSelect<a class="headerlink" href="#closemenuonselect" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>closeMenuOnSelect</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.closeMenuOnSelect</p>
+<hr />
+<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>components</strong>: <code>Partial</code>&lt;<code>SelectComponents</code>&lt;<code>T</code>, <code>boolean</code>>></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.components</p>
+<hr />
+<h3 id="controlshouldrendervalue">controlShouldRenderValue<a class="headerlink" href="#controlshouldrendervalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>controlShouldRenderValue</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.controlShouldRenderValue</p>
+<hr />
+<h3 id="createoptionposition">createOptionPosition<a class="headerlink" href="#createoptionposition" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>createOptionPosition</strong>: <code>"first"</code> | <code>"last"</code></p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p>CreatableProps.createOptionPosition</p>
+<hr />
+<h3 id="defaultinputvalue">defaultInputValue<a class="headerlink" href="#defaultinputvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>defaultInputValue</strong>: <code>string</code></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.defaultInputValue</p>
+<hr />
+<h3 id="defaultmenuisopen">defaultMenuIsOpen<a class="headerlink" href="#defaultmenuisopen" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>defaultMenuIsOpen</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.defaultMenuIsOpen</p>
+<hr />
+<h3 id="defaultvalue">defaultValue<a class="headerlink" href="#defaultvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>defaultValue</strong>: <code>T</code> | <code>OptionsType</code>&lt;<code>T</code>></p>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.defaultValue</p>
+<hr />
+<h3 id="delimiter">delimiter<a class="headerlink" href="#delimiter" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>delimiter</strong>: <code>string</code></p>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.delimiter</p>
+<hr />
+<h3 id="escapeclearsvalue">escapeClearsValue<a class="headerlink" href="#escapeclearsvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>escapeClearsValue</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.escapeClearsValue</p>
+<hr />
+<h3 id="filteroption">filterOption<a class="headerlink" href="#filteroption" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>filterOption</strong>: (<code>option</code>: <code>Option</code>, <code>rawInput</code>: <code>string</code>) =&gt; <code>boolean</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>option</code>, <code>rawInput</code>): <code>boolean</code></p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>option</code></td>
+<td align="left"><code>Option</code></td>
+</tr>
+<tr>
+<td align="left"><code>rawInput</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.filterOption</p>
+<hr />
+<h3 id="formatgrouplabel">formatGroupLabel<a class="headerlink" href="#formatgrouplabel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>formatGroupLabel</strong>: <code>formatGroupLabel</code>&lt;<code>T</code>></p>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.formatGroupLabel</p>
+<hr />
+<h3 id="getoptionlabel">getOptionLabel<a class="headerlink" href="#getoptionlabel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>getOptionLabel</strong>: <code>getOptionLabel</code>&lt;<code>T</code>></p>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.getOptionLabel</p>
+<hr />
+<h3 id="getoptionvalue">getOptionValue<a class="headerlink" href="#getoptionvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>getOptionValue</strong>: <code>getOptionValue</code>&lt;<code>T</code>></p>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.getOptionValue</p>
+<hr />
+<h3 id="hideselectedoptions">hideSelectedOptions<a class="headerlink" href="#hideselectedoptions" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>hideSelectedOptions</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.hideSelectedOptions</p>
+<hr />
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>id</strong>: <code>string</code></p>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.id</p>
+<hr />
+<h3 id="inputid">inputId<a class="headerlink" href="#inputid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>inputId</strong>: <code>string</code></p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.inputId</p>
+<hr />
+<h3 id="inputvalue">inputValue<a class="headerlink" href="#inputvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>inputValue</strong>: <code>string</code></p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.inputValue</p>
+<hr />
+<h3 id="instanceid">instanceId<a class="headerlink" href="#instanceid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>instanceId</strong>: <code>string</code> | <code>number</code></p>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.instanceId</p>
+<hr />
+<h3 id="isclearable">isClearable<a class="headerlink" href="#isclearable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isClearable</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isClearable</p>
+<hr />
+<h3 id="iscreatable">isCreatable<a class="headerlink" href="#iscreatable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isCreatable</strong>: <code>boolean</code></p>
+<hr />
+<h3 id="isdisabled">isDisabled<a class="headerlink" href="#isdisabled" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isDisabled</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isDisabled</p>
+<hr />
+<h3 id="isloading">isLoading<a class="headerlink" href="#isloading" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isLoading</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isLoading</p>
+<hr />
+<h3 id="ismulti">isMulti<a class="headerlink" href="#ismulti" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isMulti</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isMulti</p>
+<hr />
+<h3 id="isrtl">isRtl<a class="headerlink" href="#isrtl" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isRtl</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isRtl</p>
+<hr />
+<h3 id="issearchable">isSearchable<a class="headerlink" href="#issearchable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isSearchable</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_33">Inherited from<a class="headerlink" href="#inherited-from_33" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isSearchable</p>
+<hr />
+<h3 id="maxmenuheight">maxMenuHeight<a class="headerlink" href="#maxmenuheight" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>maxMenuHeight</strong>: <code>number</code></p>
+<h4 id="inherited-from_34">Inherited from<a class="headerlink" href="#inherited-from_34" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.maxMenuHeight</p>
+<hr />
+<h3 id="menuclass">menuClass<a class="headerlink" href="#menuclass" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuClass</strong>: <code>string</code></p>
+<hr />
+<h3 id="menuisopen">menuIsOpen<a class="headerlink" href="#menuisopen" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuIsOpen</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_35">Inherited from<a class="headerlink" href="#inherited-from_35" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.menuIsOpen</p>
+<hr />
+<h3 id="menuplacement">menuPlacement<a class="headerlink" href="#menuplacement" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuPlacement</strong>: <code>MenuPlacement</code></p>
+<h4 id="inherited-from_36">Inherited from<a class="headerlink" href="#inherited-from_36" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.menuPlacement</p>
+<hr />
+<h3 id="menuportaltarget">menuPortalTarget<a class="headerlink" href="#menuportaltarget" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuPortalTarget</strong>: <code>HTMLElement</code></p>
+<h4 id="inherited-from_37">Inherited from<a class="headerlink" href="#inherited-from_37" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.menuPortalTarget</p>
+<hr />
+<h3 id="menuposition">menuPosition<a class="headerlink" href="#menuposition" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuPosition</strong>: <code>MenuPosition</code></p>
+<h4 id="inherited-from_38">Inherited from<a class="headerlink" href="#inherited-from_38" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.menuPosition</p>
+<hr />
+<h3 id="menushouldblockscroll">menuShouldBlockScroll<a class="headerlink" href="#menushouldblockscroll" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuShouldBlockScroll</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_39">Inherited from<a class="headerlink" href="#inherited-from_39" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.menuShouldBlockScroll</p>
+<hr />
+<h3 id="menushouldscrollintoview">menuShouldScrollIntoView<a class="headerlink" href="#menushouldscrollintoview" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuShouldScrollIntoView</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_40">Inherited from<a class="headerlink" href="#inherited-from_40" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.menuShouldScrollIntoView</p>
+<hr />
+<h3 id="minmenuheight">minMenuHeight<a class="headerlink" href="#minmenuheight" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>minMenuHeight</strong>: <code>number</code></p>
+<h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.minMenuHeight</p>
+<hr />
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>name</strong>: <code>string</code></p>
+<h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.name</p>
+<hr />
+<h3 id="onblur">onBlur<a class="headerlink" href="#onblur" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onBlur</strong>: <code>FocusEventHandler</code></p>
+<h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onBlur</p>
+<hr />
+<h3 id="onfocus">onFocus<a class="headerlink" href="#onfocus" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onFocus</strong>: <code>FocusEventHandler</code></p>
+<h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onFocus</p>
+<hr />
+<h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyDown</strong>: <code>KeyboardEventHandler</code></p>
+<h4 id="inherited-from_45">Inherited from<a class="headerlink" href="#inherited-from_45" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onKeyDown</p>
+<hr />
+<h3 id="openmenuonclick">openMenuOnClick<a class="headerlink" href="#openmenuonclick" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>openMenuOnClick</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_46">Inherited from<a class="headerlink" href="#inherited-from_46" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.openMenuOnClick</p>
+<hr />
+<h3 id="openmenuonfocus">openMenuOnFocus<a class="headerlink" href="#openmenuonfocus" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>openMenuOnFocus</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_47">Inherited from<a class="headerlink" href="#inherited-from_47" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.openMenuOnFocus</p>
+<hr />
+<h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>options</strong>: <code>OptionsType</code>&lt;<code>T</code>> | <code>GroupedOptionsType</code>&lt;<code>T</code>></p>
+<h4 id="inherited-from_48">Inherited from<a class="headerlink" href="#inherited-from_48" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.options</p>
+<hr />
+<h3 id="pagesize">pageSize<a class="headerlink" href="#pagesize" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>pageSize</strong>: <code>number</code></p>
+<h4 id="inherited-from_49">Inherited from<a class="headerlink" href="#inherited-from_49" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.pageSize</p>
+<hr />
+<h3 id="placeholder">placeholder<a class="headerlink" href="#placeholder" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>placeholder</strong>: <code>ReactNode</code></p>
+<h4 id="inherited-from_50">Inherited from<a class="headerlink" href="#inherited-from_50" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.placeholder</p>
+<hr />
+<h3 id="styles">styles<a class="headerlink" href="#styles" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>styles</strong>: <code>Partial</code>&lt;<code>Styles</code>&lt;<code>T</code>, <code>boolean</code>>></p>
+<h4 id="inherited-from_51">Inherited from<a class="headerlink" href="#inherited-from_51" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.styles</p>
+<hr />
+<h3 id="tabindex">tabIndex<a class="headerlink" href="#tabindex" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>tabIndex</strong>: <code>string</code></p>
+<h4 id="inherited-from_52">Inherited from<a class="headerlink" href="#inherited-from_52" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.tabIndex</p>
+<hr />
+<h3 id="tabselectsvalue">tabSelectsValue<a class="headerlink" href="#tabselectsvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>tabSelectsValue</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_53">Inherited from<a class="headerlink" href="#inherited-from_53" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.tabSelectsValue</p>
+<hr />
+<h3 id="theme">theme<a class="headerlink" href="#theme" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>theme</strong>: <code>ThemeConfig</code></p>
+<h4 id="inherited-from_54">Inherited from<a class="headerlink" href="#inherited-from_54" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.theme</p>
+<hr />
+<h3 id="themename">themeName<a class="headerlink" href="#themename" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>themeName</strong>: <code>"lens"</code> | <code>"light"</code> | <code>"outlined"</code> | <code>"dark"</code></p>
+<hr />
+<h3 id="value">value<a class="headerlink" href="#value" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>value</strong>: <code>T</code></p>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.value</p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="formatcreatelabel">formatCreateLabel<a class="headerlink" href="#formatcreatelabel" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>formatCreateLabel</strong>(<code>inputValue</code>): <code>ReactNode</code></p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>inputValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>ReactNode</code></p>
+<h4 id="inherited-from_55">Inherited from<a class="headerlink" href="#inherited-from_55" title="Permanent link">#</a></h4>
+<p>CreatableProps.formatCreateLabel</p>
+<hr />
+<h3 id="formatoptionlabel">formatOptionLabel<a class="headerlink" href="#formatoptionlabel" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>formatOptionLabel</strong>(<code>option</code>, <code>labelMeta</code>): <code>ReactNode</code></p>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>option</code></td>
+<td align="left"><code>OptionType</code></td>
+</tr>
+<tr>
+<td align="left"><code>labelMeta</code></td>
+<td align="left"><code>FormatOptionLabelMeta</code>&lt;<code>OptionType</code>, <code>IsMulti</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>ReactNode</code></p>
+<h4 id="inherited-from_56">Inherited from<a class="headerlink" href="#inherited-from_56" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.formatOptionLabel</p>
+<hr />
+<h3 id="getnewoptiondata">getNewOptionData<a class="headerlink" href="#getnewoptiondata" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>getNewOptionData</strong>(<code>inputValue</code>, <code>optionLabel</code>): <code>OptionType</code></p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>inputValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>optionLabel</code></td>
+<td align="left"><code>ReactNode</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>OptionType</code></p>
+<h4 id="inherited-from_57">Inherited from<a class="headerlink" href="#inherited-from_57" title="Permanent link">#</a></h4>
+<p>CreatableProps.getNewOptionData</p>
+<hr />
+<h3 id="isoptiondisabled">isOptionDisabled<a class="headerlink" href="#isoptiondisabled" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>isOptionDisabled</strong>(<code>option</code>, <code>options</code>): <code>boolean</code></p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>option</code></td>
+<td align="left"><code>OptionType</code></td>
+</tr>
+<tr>
+<td align="left"><code>options</code></td>
+<td align="left"><code>OptionsType</code>&lt;<code>OptionType</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_58">Inherited from<a class="headerlink" href="#inherited-from_58" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isOptionDisabled</p>
+<hr />
+<h3 id="isoptionselected">isOptionSelected<a class="headerlink" href="#isoptionselected" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>isOptionSelected</strong>(<code>option</code>, <code>options</code>): <code>boolean</code></p>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>option</code></td>
+<td align="left"><code>OptionType</code></td>
+</tr>
+<tr>
+<td align="left"><code>options</code></td>
+<td align="left"><code>OptionsType</code>&lt;<code>OptionType</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_59">Inherited from<a class="headerlink" href="#inherited-from_59" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.isOptionSelected</p>
+<hr />
+<h3 id="isvalidnewoption">isValidNewOption<a class="headerlink" href="#isvalidnewoption" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>isValidNewOption</strong>(<code>inputValue</code>, <code>value</code>, <code>options</code>): <code>boolean</code></p>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>inputValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>value</code></td>
+<td align="left"><code>IsMulti</code> extends <code>true</code> ? <code>OptionsType</code>&lt;<code>OptionType</code>> : <code>OptionType</code></td>
+</tr>
+<tr>
+<td align="left"><code>options</code></td>
+<td align="left"><code>OptionsType</code>&lt;<code>OptionType</code>> | <code>GroupedOptionsType</code>&lt;<code>OptionType</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_60">Inherited from<a class="headerlink" href="#inherited-from_60" title="Permanent link">#</a></h4>
+<p>CreatableProps.isValidNewOption</p>
+<hr />
+<h3 id="loadingmessage">loadingMessage<a class="headerlink" href="#loadingmessage" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>loadingMessage</strong>(<code>obj</code>): <code>string</code></p>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>obj</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+<tr>
+<td align="left"><code>obj.inputValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_61">Inherited from<a class="headerlink" href="#inherited-from_61" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.loadingMessage</p>
+<hr />
+<h3 id="nooptionsmessage">noOptionsMessage<a class="headerlink" href="#nooptionsmessage" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>noOptionsMessage</strong>(<code>obj</code>): <code>string</code></p>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>obj</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+<tr>
+<td align="left"><code>obj.inputValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_62">Inherited from<a class="headerlink" href="#inherited-from_62" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.noOptionsMessage</p>
+<hr />
+<h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onChange</strong>(<code>option</code>, <code>meta?</code>): <code>void</code></p>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>option</code></td>
+<td align="left"><code>T</code></td>
+</tr>
+<tr>
+<td align="left"><code>meta?</code></td>
+<td align="left"><code>ActionMeta</code>&lt;<code>any</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onChange</p>
+<hr />
+<h3 id="oncreateoption">onCreateOption<a class="headerlink" href="#oncreateoption" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onCreateOption</strong>(<code>inputValue</code>): <code>void</code></p>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>inputValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_63">Inherited from<a class="headerlink" href="#inherited-from_63" title="Permanent link">#</a></h4>
+<p>CreatableProps.onCreateOption</p>
+<hr />
+<h3 id="oninputchange">onInputChange<a class="headerlink" href="#oninputchange" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onInputChange</strong>(<code>newValue</code>, <code>actionMeta</code>): <code>void</code></p>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>newValue</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>actionMeta</code></td>
+<td align="left"><code>InputActionMeta</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_64">Inherited from<a class="headerlink" href="#inherited-from_64" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onInputChange</p>
+<hr />
+<h3 id="onmenuclose">onMenuClose<a class="headerlink" href="#onmenuclose" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onMenuClose</strong>(): <code>void</code></p>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_65">Inherited from<a class="headerlink" href="#inherited-from_65" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onMenuClose</p>
+<hr />
+<h3 id="onmenuopen">onMenuOpen<a class="headerlink" href="#onmenuopen" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onMenuOpen</strong>(): <code>void</code></p>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_66">Inherited from<a class="headerlink" href="#inherited-from_66" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onMenuOpen</p>
+<hr />
+<h3 id="onmenuscrolltobottom">onMenuScrollToBottom<a class="headerlink" href="#onmenuscrolltobottom" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onMenuScrollToBottom</strong>(<code>event</code>): <code>void</code></p>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>event</code></td>
+<td align="left"><code>SyntheticEvent</code>&lt;<code>HTMLElement</code>, <code>Event</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_67">Inherited from<a class="headerlink" href="#inherited-from_67" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onMenuScrollToBottom</p>
+<hr />
+<h3 id="onmenuscrolltotop">onMenuScrollToTop<a class="headerlink" href="#onmenuscrolltotop" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onMenuScrollToTop</strong>(<code>event</code>): <code>void</code></p>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>event</code></td>
+<td align="left"><code>SyntheticEvent</code>&lt;<code>HTMLElement</code>, <code>Event</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_68">Inherited from<a class="headerlink" href="#inherited-from_68" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.onMenuScrollToTop</p>
+<hr />
+<h3 id="screenreaderstatus">screenReaderStatus<a class="headerlink" href="#screenreaderstatus" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>screenReaderStatus</strong>(<code>obj</code>): <code>string</code></p>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>obj</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+<tr>
+<td align="left"><code>obj.count</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_69">Inherited from<a class="headerlink" href="#inherited-from_69" title="Permanent link">#</a></h4>
+<p>ReactSelectProps.screenReaderStatus</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
+          </div>
+        
+        
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/lensapp/lens" target="_blank" rel="noopener" title="Lens on GitHub" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://twitter.com/k8slens" target="_blank" rel="noopener" title="Lens on Twitter" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+      <a href="http://k8slens.slack.com/" target="_blank" rel="noopener" title="Lens on Slack" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://k8slens.dev/" target="_blank" rel="noopener" title="Lens Website" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.df8cae7d.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.82217815.min.js"></script>
+      
+    
+  </body>
+</html>
