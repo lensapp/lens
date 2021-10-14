@@ -50,8 +50,13 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
   static defaultProps = defaultProps as object;
 
   async componentDidMount() {
+    const { hash } = window.location;
+
+    if (hash) {
+      document.querySelector(hash)?.scrollIntoView();
+    }
+
     window.addEventListener("keydown", this.onEscapeKey);
-    document.querySelector(window.location.hash)?.scrollIntoView();
   }
 
   componentWillUnmount() {
