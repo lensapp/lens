@@ -201,7 +201,10 @@ export class Sidebar extends React.Component<Props> {
           className="mr-5"
           onClick={() => navigate("/")}
           menuItems={this.contextMenu.menuItems}
-          onMenuOpen={() => this.clusterEntity.onContextMenuOpen(this.contextMenu)}
+          onMenuOpen={() => {
+            this.contextMenu.menuItems = [];
+            this.clusterEntity.onContextMenuOpen(this.contextMenu);
+          }}
         />
         <div className={styles.clusterName}>
           {metadata.name}
