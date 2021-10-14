@@ -20,7 +20,7 @@
  */
 
 import { KubeConfig } from "@kubernetes/client-node";
-import { validateKubeConfig, loadConfigFromString, getNodeWarningConditions } from "../kube-helpers";
+import { validateKubeConfig, loadConfigFromString } from "../kube-helpers";
 
 const kubeconfig = `
 apiVersion: v1
@@ -118,38 +118,6 @@ describe("kube helpers", () => {
           expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
             expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'")
           );
-        });
-      });
-
-      describe("with invalid exec command", () => {
-        it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalidExec"))).toEqual(
-            expect.stringContaining("User Exec command \"foo\" not found on host. Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig")
-          );
-        });
-      });
-    });
-
-    describe("with validateCluster as false", () => {
-      describe("with invalid cluster object", () => {
-        it("does not return an error", () => {
-          expect(validateKubeConfig(kc, "invalidCluster", { validateCluster: false })).toBeUndefined();
-        });
-      });
-    });
-
-    describe("with validateUser as false", () => {
-      describe("with invalid user object", () => {
-        it("does not return an error", () => {
-          expect(validateKubeConfig(kc, "invalidUser", { validateUser: false })).toBeUndefined();
-        });
-      });
-    });
-
-    describe("with validateExec as false", () => {
-      describe("with invalid exec object", () => {
-        it("does not return an error", () => {
-          expect(validateKubeConfig(kc, "invalidExec", { validateExec: false })).toBeUndefined();
         });
       });
     });
@@ -278,45 +246,6 @@ describe("kube helpers", () => {
         expect(config.contexts[0].name).toBe("minikube");
         expect(config.contexts[1].name).toBe("cluster-3");
       });
-    });
-  });
-
-  describe("getNodeWarningConditions", () => {
-    it("should return an empty array if no status or no conditions", () => {
-      expect(getNodeWarningConditions({}).length).toBe(0);
-    });
-
-    it("should return an empty array if all conditions are good", () => {
-      expect(getNodeWarningConditions({
-        status: {
-          conditions: [
-            {
-              type: "Ready",
-              status: "foobar"
-            }
-          ]
-        }
-      }).length).toBe(0);
-    });
-
-    it("should all not ready conditions", () => {
-      const conds = getNodeWarningConditions({
-        status: {
-          conditions: [
-            {
-              type: "Ready",
-              status: "foobar"
-            },
-            {
-              type: "NotReady",
-              status: "true"
-            },
-          ]
-        }
-      });
-
-      expect(conds.length).toBe(1);
-      expect(conds[0].type).toBe("NotReady");
     });
   });
 });
