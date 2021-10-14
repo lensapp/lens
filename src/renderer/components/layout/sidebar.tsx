@@ -44,6 +44,7 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { observable } from "mobx";
 import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
+import { HotbarStore } from "../../../common/hotbar-store";
 
 interface Props {
   className?: string;
@@ -202,7 +203,16 @@ export class Sidebar extends React.Component<Props> {
           onClick={() => navigate("/")}
           menuItems={this.contextMenu.menuItems}
           onMenuOpen={() => {
-            this.contextMenu.menuItems = [];
+            const hotbarStore = HotbarStore.getInstance();
+            const isAddedToActive = HotbarStore.getInstance().isAddedToActive(this.clusterEntity);
+            const title = isAddedToActive
+              ? `Remove from hotbar ${hotbarStore.getActive().name}`
+              : `Add to hotbar ${hotbarStore.getActive().name}`;
+            const onClick = isAddedToActive
+              ? () => hotbarStore.removeFromHotbar(metadata.uid)
+              : () => hotbarStore.addToHotbar(this.clusterEntity);
+
+            this.contextMenu.menuItems = [{ title, onClick }];
             this.clusterEntity.onContextMenuOpen(this.contextMenu);
           }}
         />
