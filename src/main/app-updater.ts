@@ -29,7 +29,6 @@ import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
 
-const updateChannel = autoUpdater.channel;
 let installVersion: null | string = null;
 
 export function isAutoUpdateEnabled() {
@@ -59,13 +58,13 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
     return;
   }
 
-  const us = UserStore.getInstance();
+  const userStore = UserStore.getInstance();
 
   autoUpdater.logger = logger;
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
-  autoUpdater.channel = us.updateChannel;
-  autoUpdater.allowDowngrade = us.isAllowedToDowngrade;
+  autoUpdater.channel = userStore.updateChannel;
+  autoUpdater.allowDowngrade = userStore.isAllowedToDowngrade;
 
   autoUpdater
     .on("update-available", (info: UpdateInfo) => {
@@ -109,7 +108,7 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
       }
     })
     .on("update-not-available", () => {
-      const nextChannel = nextUpdateChannel(updateChannel, autoUpdater.channel);
+      const nextChannel = nextUpdateChannel(userStore.updateChannel, autoUpdater.channel);
 
       logger.info(`${AutoUpdateLogPrefix}: update not available from ${autoUpdater.channel}, will check ${nextChannel} channel next`);
 

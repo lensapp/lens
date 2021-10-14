@@ -27,7 +27,7 @@ import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
+import { formatNodeTaint, getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../../common/utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
@@ -227,6 +227,7 @@ export class Nodes extends React.Component<Props> {
           ]}
           renderTableContents={node => {
             const tooltipId = `node-taints-${node.getId()}`;
+            const taints = node.getTaints();
 
             return [
               <Badge flat key="name" label={node.getName()} tooltip={node.getName()} />,
@@ -235,9 +236,9 @@ export class Nodes extends React.Component<Props> {
               this.renderMemoryUsage(node),
               this.renderDiskUsage(node),
               <>
-                <span id={tooltipId}>{node.getTaints().length}</span>
+                <span id={tooltipId}>{taints.length}</span>
                 <Tooltip targetId={tooltipId} tooltipOnParentHover={true} style={{ whiteSpace: "pre-line" }}>
-                  {node.getTaints().map(({ key, value, effect }) => `${key}=${value}:${effect}`).join("\n")}
+                  {taints.map(formatNodeTaint).join("\n")}
                 </Tooltip>
               </>,
               node.getRoleLabels(),

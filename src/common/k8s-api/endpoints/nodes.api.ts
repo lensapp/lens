@@ -56,6 +56,21 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
+export interface NodeTaint {
+  key: string;
+  value?: string;
+  effect: string;
+  timeAdded: string;
+}
+
+export function formatNodeTaint(taint: NodeTaint): string {
+  if (taint.value) {
+    return `${taint.key}=${taint.value}:${taint.effect}`;
+  }
+
+  return `${taint.key}:${taint.effect}`;
+}
+
 export interface Node {
   spec: {
     podCIDR?: string;
@@ -65,12 +80,7 @@ export interface Node {
      * @deprecated see https://issues.k8s.io/61966
      */
     externalID?: string;
-    taints?: {
-      key: string;
-      value: string;
-      effect: string;
-      timeAdded: string;
-    }[];
+    taints?: NodeTaint[];
     unschedulable?: boolean;
   };
   status: {

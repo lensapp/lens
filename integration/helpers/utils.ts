@@ -93,7 +93,7 @@ export async function start() {
 }
 
 export async function clickWelcomeButton(window: Page) {
-  await window.click("#hotbarIcon-catalog-entity .Icon");
+  await window.click("[data-testid=welcome-menu-container] li a");
 }
 
 function minikubeEntityId() {

@@ -19,19 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * Compute the next update channel from the current updating channel
- * @param defaultChannel The default (initial) channel to check
- * @param channel The current channel that did not have a new version associated with it
- * @returns The channel name of the next release version
- */
-export function nextUpdateChannel(defaultChannel: string, channel: string): string {
-  switch (channel) {
-    case "alpha":
-      return "beta";
-    case "beta":
-      return "latest"; // there is no RC currently
-    default:
-      return defaultChannel;
-  }
-}
+import { formatNodeTaint } from "../../../common/k8s-api/endpoints";
+
+describe("formatNodeTaint tests", () => {
+  it("should use value if defined", () => {
+    expect(formatNodeTaint({
+      effect: "Foo",
+      key: "hello",
+      timeAdded: "pre",
+      value: "a"
+    })).toBe("hello=a:Foo");
+  });
+
+  it("should not use value if not defined", () => {
+    expect(formatNodeTaint({
+      effect: "Foo",
+      key: "hello",
+      timeAdded: "pre",
+    })).toBe("hello:Foo");
+  });
+});
