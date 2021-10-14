@@ -35,6 +35,7 @@ import plimit from "p-limit";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
 import { storedKubeConfigFolder, toJS } from "../common/utils";
+import type { Response } from "request";
 
 /**
  * Cluster
@@ -642,8 +643,6 @@ export class Cluster implements ClusterModel, ClusterState {
     };
   }
 
-  protected getAllowedNamespacesErrorCount = 0;
-
   protected async getAllowedNamespaces() {
     if (this.accessibleNamespaces.length) {
       return this.accessibleNamespaces;
@@ -655,24 +654,16 @@ export class Cluster implements ClusterModel, ClusterState {
       const { body: { items } } = await api.listNamespace();
       const namespaces = items.map(ns => ns.metadata.name);
 
-      this.getAllowedNamespacesErrorCount = 0; // reset on success
-
       return namespaces;
     } catch (error) {
       const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
       const namespaceList = [ctx.namespace].filter(Boolean);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        this.getAllowedNamespacesErrorCount += 1;
+        const { response } = error as HttpError & { response: Response };
 
-        if (this.getAllowedNamespacesErrorCount > 3) {
-          // reset on send
-          this.getAllowedNamespacesErrorCount = 0;
-
-          // then broadcast, make sure it is 3 successive attempts
-          logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error });
-          broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
-        }
+        logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error: response.body });
+        broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
       }
 
       return namespaceList;
