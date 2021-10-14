@@ -19,6 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./monaco-editor";
-export * from "./monaco-validators";
-export * from "./monaco-themes";
+// Monaco editor themes customization
+import { editor } from "monaco-editor";
+import cloudsMidnight from "./monaco-theme.clouds-midnight.json";
+
+export interface MonacoCustomTheme extends editor.IStandaloneThemeData {
+  name?: string;
+}
+
+// Registered names could be then used in "themes/*.json" in "{monacoTheme: [name]}"
+export const customThemes = {
+  [cloudsMidnight.name]: cloudsMidnight as MonacoCustomTheme,
+};
+
+export function registerCustomThemes(): void {
+  Object.entries(customThemes).forEach(([name, theme]) => {
+    editor.defineTheme(name, theme);
+  });
+}
+
+export async function loadCustomTheme(name: string): Promise<MonacoCustomTheme> {
+  return import(`./monaco-theme.${name}.json`);
+}

@@ -24,11 +24,14 @@ import React from "react";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { editor, Uri } from "monaco-editor";
-import { ThemeStore } from "../../theme.store";
-import { UserStore } from "../../../common/user-store";
-import { cssNames, disposer, toJS } from "../../utils";
+import { registerCustomThemes } from "./monaco-themes";
 import { MonacoValidator, monacoValidators } from "./monaco-validators";
+import { cssNames, disposer, toJS } from "../../utils";
+import { UserStore } from "../../../common/user-store";
+import { ThemeStore } from "../../theme.store";
 import debounce from "lodash/debounce";
+
+registerCustomThemes(); // setup
 
 export interface MonacoEditorProps {
   id?: string; // associating editor's ID with created model.uri
@@ -238,7 +241,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return this.editor?.getValue(opts) ?? "";
   }
 
-  focus(){
+  focus() {
     this.editor?.focus();
   }
 

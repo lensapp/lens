@@ -3,7 +3,7 @@
   "type": "dark",
   "description": "Original Lens dark theme",
   "author": "Mirantis",
-  "monacoTheme": "vs-dark",
+  "monacoTheme": "clouds-midnight",
   "colors": {
     "blue": "#3d90ce",
     "magenta": "#c93dce",
