@@ -1733,10 +1733,10 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@14.17.14", "@types/node@^14.6.2":
-  version "14.17.14"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.14.tgz#6fda9785b41570eb628bac27be4b602769a3f938"
-  integrity sha512-rsAj2u8Xkqfc332iXV12SqIsjVi07H479bOP4q94NAcjzmAvapumEhuVIt53koEf7JFrpjgNKjBga5Pnn/GL8A==
+"@types/node@*", "@types/node@14.17.26", "@types/node@^14.6.2":
+  version "14.17.26"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.26.tgz#47a53c7e7804490155a4646d60c8e194816d073c"
+  integrity sha512-eSTNkK/nfmnC7IKpOJZixDgG0W2/eHz1qyFN7o/rwwwIHsVRp+G9nbh4BrQ77kbQ2zPu286AQRxkuRLPcR3gXw==
 
 "@types/node@^10.12.0":
   version "10.17.24"
