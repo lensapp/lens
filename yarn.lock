@@ -1211,7 +1211,21 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@testing-library/dom@>=7", "@testing-library/dom@^7.28.1":
+"@testing-library/dom@>=7", "@testing-library/dom@^8.9.0":
+  version "8.9.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.9.0.tgz#608ee6f235688a27f8ee180c0d81ff77a5363d59"
+  integrity sha512-fhmAYtGpFqzKdPq5aLNn/T396qfhYkttHT/5RytdDNSCzg9K/0F/WXF5iDsNBK1M3ZIQbPy7Y0qm4Kup5bqT/w==
+  dependencies:
+    "@babel/code-frame" "^7.10.4"
+    "@babel/runtime" "^7.12.5"
+    "@types/aria-query" "^4.2.0"
+    aria-query "^4.2.2"
+    chalk "^4.1.0"
+    dom-accessibility-api "^0.5.6"
+    lz-string "^1.4.4"
+    pretty-format "^27.0.2"
+
+"@testing-library/dom@^7.28.1":
   version "7.30.3"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.30.3.tgz#779ea9bbb92d63302461800a388a5a890ac22519"
   integrity sha512-7JhIg2MW6WPwyikH2iL3o7z+FTVgSOd2jqCwTAHqK7Qal2gRRYiUQyURAxtbK9VXm/UTyG9bRihv8C5Tznr2zw==
@@ -1224,20 +1238,6 @@
     dom-accessibility-api "^0.5.4"
     lz-string "^1.4.4"
     pretty-format "^26.6.2"
-
-"@testing-library/dom@^8.2.0":
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.2.0.tgz#ac46a1b9d7c81f0d341ae38fb5424b64c27d151e"
-  integrity sha512-U8cTWENQPHO3QHvxBdfltJ+wC78ytMdg69ASvIdkGdQ/XRg4M9H2vvM3mHddxl+w/fM6NNqzGMwpQoh82v9VIA==
-  dependencies:
-    "@babel/code-frame" "^7.10.4"
-    "@babel/runtime" "^7.12.5"
-    "@types/aria-query" "^4.2.0"
-    aria-query "^4.2.2"
-    chalk "^4.1.0"
-    dom-accessibility-api "^0.5.6"
-    lz-string "^1.4.4"
-    pretty-format "^27.0.2"
 
 "@testing-library/jest-dom@^5.14.1":
   version "5.14.1"
