@@ -33,6 +33,8 @@ export type {
   WebLinkSpec,
   WebLinkStatus,
   WebLinkStatusPhase,
+  KubernetesClusterStatusPhase,
+  KubernetesClusterStatus,
 } from "../../common/catalog-entities";
 
 export * from "../../common/catalog/catalog-entity";

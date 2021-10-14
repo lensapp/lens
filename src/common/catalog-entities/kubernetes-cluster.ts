@@ -66,7 +66,15 @@ export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
   kubeVersion?: string;
 }
 
-export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, CatalogEntityStatus, KubernetesClusterSpec> {
+/**
+ * @deprecated This is no longer used as it is incorrect. Other sources can add more values
+ */
+export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
+
+export interface KubernetesClusterStatus extends CatalogEntityStatus {
+}
+
+export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
   public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public static readonly kind = "KubernetesCluster";
 
