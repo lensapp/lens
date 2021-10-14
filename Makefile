@@ -122,6 +122,8 @@ clean-npm:
 .PHONY: clean
 clean: clean-npm clean-extensions
 	rm -rf binaries/client
-	rm -rf dist/*
-	rm -rf static/build/*
-	rm -rf node_modules/
+	rm -rf dist
+	rm -rf static/build
+	rm -rf node_modules
+	rm -rf site
+	rm -rf docs/extensions/api
