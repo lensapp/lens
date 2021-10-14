@@ -31,6 +31,7 @@ import { cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -78,7 +79,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
       return null;
     }
 
-    const className = cssNames("led", { online: this.props.entity.status.phase == "connected"}); // TODO: make it more generic
+    const className = cssNames("led", { online: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED}); // TODO: make it more generic
 
     return <div className={className} />;
   }

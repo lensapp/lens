@@ -54,6 +54,13 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
   accessibleNamespaces?: string[];
 }
 
+export enum LensKubernetesClusterStatus {
+  DELETING = "deleting",
+  CONNECTING = "connecting",
+  CONNECTED = "connected",
+  DISCONNECTED = "disconnected"
+}
+
 export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
   distro?: string;
   kubeVersion?: string;
@@ -104,15 +111,15 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     }
 
     switch (this.status.phase) {
-      case "connected":
-      case "connecting":
+      case LensKubernetesClusterStatus.CONNECTED:
+      case LensKubernetesClusterStatus.CONNECTING:
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
           onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid)
         });
         break;
-      case "disconnected":
+      case LensKubernetesClusterStatus.DISCONNECTED:
         context.menuItems.push({
           title: "Connect",
           icon: "link",

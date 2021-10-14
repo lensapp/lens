@@ -27,7 +27,7 @@ import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { getClusterIdFromHost, Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
-import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, KubernetesClusterPrometheusMetrics, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 import { ClusterStore } from "../common/cluster-store";
@@ -35,14 +35,7 @@ import type { ClusterId } from "../common/cluster-types";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
-enum LensClusterStatus {
-  DELETING = "deleting",
-  CONNECTING = "connecting",
-  CONNECTED = "connected",
-  DISCONNECTED = "disconnected"
-}
-
-const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensClusterStatus));
+const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
@@ -155,20 +148,20 @@ export class ClusterManager extends Singleton {
   @action
   protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
     if (this.deleting.has(entity.getId())) {
-      entity.status.phase = LensClusterStatus.DELETING;
+      entity.status.phase = LensKubernetesClusterStatus.DELETING;
       entity.status.enabled = false;
     } else {
       entity.status.phase = (() => {
         if (!cluster) {
-          return LensClusterStatus.DISCONNECTED;
+          return LensKubernetesClusterStatus.DISCONNECTED;
         }
 
         if (cluster.accessible) {
-          return LensClusterStatus.CONNECTED;
+          return LensKubernetesClusterStatus.CONNECTED;
         }
 
         if (!cluster.disconnected) {
-          return LensClusterStatus.CONNECTING;
+          return LensKubernetesClusterStatus.CONNECTING;
         }
 
         // Extensions are not allowed to use the Lens specific status phases
@@ -176,7 +169,7 @@ export class ClusterManager extends Singleton {
           return entity.status.phase;
         }
 
-        return LensClusterStatus.DISCONNECTED;
+        return LensKubernetesClusterStatus.DISCONNECTED;
       })();
 
       entity.status.enabled = true;
@@ -288,7 +281,9 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       icon: {}
     },
     status: {
-      phase: cluster.disconnected ? "disconnected" : "connected",
+      phase: cluster.disconnected
+        ? LensKubernetesClusterStatus.DISCONNECTED
+        : LensKubernetesClusterStatus.CONNECTED,
       reason: "",
       message: "",
       active: !cluster.disconnected
