@@ -19,9 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { KubernetesCluster, kubernetesClusterCategory } from "./kubernetes-cluster";
-export { GeneralEntity } from "./general";
-export { WebLink } from "./web-link";
-
-export type { KubernetesClusterPrometheusMetrics, KubernetesClusterSpec, KubernetesClusterMetadata } from "./kubernetes-cluster";
-export type { WebLinkSpec, WebLinkStatus, WebLinkStatusPhase } from "./web-link";
+export * from "./general";
+export * from "./kubernetes-cluster";
+export * from "./web-link";
