@@ -250,7 +250,7 @@
     "winston": "^3.3.3",
     "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
-    "ws": "^7.4.6"
+    "ws": "^7.5.5"
   },
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
