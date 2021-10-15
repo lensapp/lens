@@ -20,27 +20,24 @@
  */
 
 import { computed, makeObservable, observable, reaction } from "mobx";
-import { autoBind, iter, Singleton } from "./utils";
+import { autoBind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
-import darkTheme from "./themes/lens-dark.json";
-import lightTheme from "./themes/lens-light.json";
+import lensDarkTheme from "./themes/lens-dark.json";
+import lensLightTheme from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";
 import type { MonacoEditorProps } from "./components/monaco-editor";
 
 export type ThemeId = string;
 
 export interface Theme {
-  type: "dark" | "light" | string;
+  id?: ThemeId;
   name: string;
+  type: "dark" | "light";
   colors: Record<string, string>;
   description: string;
   author: string;
   monacoTheme: MonacoEditorProps["theme"];
-}
-
-export interface ThemeItems extends Theme {
-  id: string;
 }
 
 export class ThemeStore extends Singleton {
@@ -49,12 +46,19 @@ export class ThemeStore extends Singleton {
 
   // bundled themes from `themes/${themeId}.json`
   private allThemes = observable.map<string, Theme>({
-    "lens-dark": darkTheme,
-    "lens-light": lightTheme,
+    "lens-dark": lensDarkTheme as Theme,
+    "lens-light": lensLightTheme as Theme,
   });
 
-  @computed get themes(): ThemeItems[] {
-    return Array.from(iter.map(this.allThemes, ([id, theme]) => ({ id, ...theme })));
+  @computed get themes() {
+    return Array.from(this.allThemes.entries()).map(([themeId, themeOriginal]) => {
+      const theme: Required<Theme> = {
+        id: themeId, // take id from map's key
+        ...themeOriginal,
+      };
+
+      return theme;
+    });
   }
 
   @computed get activeThemeId(): string {
@@ -62,7 +66,7 @@ export class ThemeStore extends Singleton {
   }
 
   @computed get activeTheme(): Theme {
-    return this.allThemes.get(this.activeThemeId) ?? this.allThemes.get("lens-dark");
+    return this.allThemes.get(this.activeThemeId) ?? this.allThemes.get(ThemeStore.defaultTheme);
   }
 
   @computed get themeOptions(): SelectOption<string>[] {
