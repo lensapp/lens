@@ -26,8 +26,9 @@ import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PodDisruptionBudget } from "../../../common/k8s-api/endpoints";
+import { PodDisruptionBudget } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
@@ -38,7 +39,16 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
   render() {
     const { object: pdb } = this.props;
 
-    if (!pdb) return null;
+    if (!pdb) {
+      return null;
+    }
+
+    if (!(pdb instanceof PodDisruptionBudget)) {
+      logger.error("[PodDisruptionBudgetDetails]: passed object that is not an instanceof PodDisruptionBudget", pdb);
+
+      return null;
+    }
+
     const selectors = pdb.getSelectors();
 
     return (

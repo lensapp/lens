@@ -21,7 +21,7 @@
 import styles from "./catalog.module.css";
 import React from "react";
 import { action, computed } from "mobx";
-import type { CatalogEntity } from "../../api/catalog-entity";
+import { CatalogEntity } from "../../api/catalog-entity";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
@@ -33,7 +33,11 @@ import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 const css = makeCss(styles);
 
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
-  constructor(public entity: T, private registry: CatalogEntityRegistry) {}
+  constructor(public entity: T, private registry: CatalogEntityRegistry) {
+    if (!(entity instanceof CatalogEntity)) {
+      throw Object.assign(new TypeError("CatalogEntityItem cannot wrap a non-CatalogEntity type"), { typeof: typeof entity, prototype: Object.getPrototypeOf(entity) });
+    }
+  }
 
   get kind() {
     return this.entity.kind;

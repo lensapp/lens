@@ -31,6 +31,7 @@ import { PersistentVolume, pvcApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 }
@@ -43,6 +44,13 @@ export class PersistentVolumeDetails extends React.Component<Props> {
     if (!volume) {
       return null;
     }
+
+    if (!(volume instanceof PersistentVolume)) {
+      logger.error("[PersistentVolumeDetails]: passed object that is not an instanceof PersistentVolume", volume);
+
+      return null;
+    }
+
     const { accessModes, capacity, persistentVolumeReclaimPolicy, storageClassName, claimRef, flexVolume, mountOptions, nfs } = volume.spec;
 
     return (
