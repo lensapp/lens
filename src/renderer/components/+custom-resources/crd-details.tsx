@@ -24,7 +24,7 @@ import "./crd-details.scss";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
 import { cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 import { Badge } from "../badge";
@@ -35,6 +35,7 @@ import { Input } from "../input";
 import { KubeObjectMeta } from "../kube-object-meta";
 import MonacoEditor from "react-monaco-editor";
 import { UserStore } from "../../../common/user-store";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -44,7 +45,16 @@ export class CRDDetails extends React.Component<Props> {
   render() {
     const { object: crd } = this.props;
 
-    if (!crd) return null;
+    if (!crd) {
+      return null;
+    }
+
+    if (!(crd instanceof CustomResourceDefinition)) {
+      logger.error("[CRDDetails]: passed object that is not an instanceof CustomResourceDefinition", crd);
+
+      return null;
+    }
+
     const { plural, singular, kind, listKind } = crd.getNames();
     const printerColumns = crd.getPrinterColumns();
     const validation = crd.getValidation();

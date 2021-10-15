@@ -28,6 +28,7 @@ import { LimitPart, LimitRange, LimitRangeItem, Resource } from "../../../common
 import { KubeObjectMeta } from "../kube-object-meta";
 import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<LimitRange> {
 }
@@ -57,15 +58,13 @@ function renderResourceLimits(limit: LimitRangeItem, resource: Resource) {
 
 function renderLimitDetails(limits: LimitRangeItem[], resources: Resource[]) {
 
-  return resources.map(resource =>
+  return resources.map(resource => (
     <DrawerItem key={resource} name={resource}>
       {
-        limits.map(limit =>
-          renderResourceLimits(limit, resource)
-        )
+        limits.map(limit => renderResourceLimits(limit, resource))
       }
     </DrawerItem>
-  );
+  ));
 }
 
 @observer
@@ -73,7 +72,16 @@ export class LimitRangeDetails extends React.Component<Props> {
   render() {
     const { object: limitRange } = this.props;
 
-    if (!limitRange) return null;
+    if (!limitRange) {
+      return null;
+    }
+
+    if (!(limitRange instanceof LimitRange)) {
+      logger.error("[LimitRangeDetails]: passed object that is not an instanceof LimitRange", limitRange);
+
+      return null;
+    }
+
     const containerLimits = limitRange.getContainerLimits();
     const podLimits = limitRange.getPodLimits();
     const pvcLimits = limitRange.getPVCLimits();

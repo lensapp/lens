@@ -25,9 +25,10 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { Endpoint } from "../../../common/k8s-api/endpoints";
+import { Endpoint } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<Endpoint> {
 }
@@ -37,7 +38,15 @@ export class EndpointDetails extends React.Component<Props> {
   render() {
     const { object: endpoint } = this.props;
 
-    if (!endpoint) return null;
+    if (!endpoint) {
+      return null;
+    }
+
+    if (!(endpoint instanceof Endpoint)) {
+      logger.error("[EndpointDetails]: passed object that is not an instanceof Endpoint", endpoint);
+
+      return null;
+    }
 
     return (
       <div className="EndpointDetails">

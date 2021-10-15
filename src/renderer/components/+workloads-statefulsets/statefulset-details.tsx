@@ -40,6 +40,7 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -72,7 +73,16 @@ export class StatefulSetDetails extends React.Component<Props> {
   render() {
     const { object: statefulSet } = this.props;
 
-    if (!statefulSet) return null;
+    if (!statefulSet) {
+      return null;
+    }
+
+    if (!(statefulSet instanceof StatefulSet)) {
+      logger.error("[StatefulSetDetails]: passed object that is not an instanceof StatefulSet", statefulSet);
+
+      return null;
+    }
+
     const images = statefulSet.getImages();
     const selectors = statefulSet.getSelectors();
     const nodeSelector = statefulSet.getNodeSelectors();

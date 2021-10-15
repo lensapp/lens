@@ -20,13 +20,14 @@
  */
 
 import React from "react";
-import type { KubeMetaField, KubeObject } from "../../../common/k8s-api/kube-object";
+import { KubeMetaField, KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
+import logger from "../../../common/logger";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -46,6 +47,17 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
 
   render() {
     const { object } = this.props;
+
+    if (!object) {
+      return null;
+    }
+
+    if (!(object instanceof KubeObject)) {
+      logger.error("[KubeObjectMeta]: passed object that is not an instanceof KubeObject", object);
+
+      return null;
+    }
+
     const {
       getNs, getLabels, getResourceVersion, selfLink, getAnnotations,
       getFinalizers, getId, getAge, getName, metadata: { creationTimestamp },
