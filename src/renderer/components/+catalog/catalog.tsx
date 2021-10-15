@@ -45,6 +45,7 @@ import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
+import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", browseCatalogTab);
 
@@ -181,8 +182,6 @@ export class Catalog extends React.Component<Props> {
   }
 
   renderItemMenu = (item: CatalogEntityItem<CatalogEntity>) => {
-    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(item.entity);
-
     const onOpen = () => {
       this.contextMenu.menuItems = [];
 
@@ -201,15 +200,12 @@ export class Catalog extends React.Component<Props> {
             </MenuItem>
           ))
         }
-        {!isItemInHotbar ? (
-          <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
-            Add to Hotbar
-          </MenuItem>
-        ) : (
-          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item)}>
-            Remove from Hotbar
-          </MenuItem>
-        )}
+        <HotbarToggleMenuItem
+          key="hotbar-toggle"
+          entity={item.entity}
+          addContent="Add to Hotbar"
+          removeContent="Remove from Hotbar"
+        />
       </MenuActions>
     );
   };
@@ -223,7 +219,8 @@ export class Catalog extends React.Component<Props> {
         <Icon
           small
           className={styles.pinIcon}
-          material="push_pin"
+          material={!isItemInHotbar && "push_pin"}
+          svg={isItemInHotbar && "unpin"}
           tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
           onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
         />

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, { useState } from "react";
+import React from "react";
 import { cssNames } from "../../utils";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
@@ -28,9 +28,9 @@ import { makeObservable, observable } from "mobx";
 import { navigate } from "../../navigation";
 import { MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { Icon } from "../icon";
 import type { CatalogEntityItem } from "./catalog-entity-item";
+import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
   item: CatalogEntityItem<T> | null | undefined;
@@ -94,7 +94,14 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       );
     }
 
-    items.push(<HotbarToggleItem key="hotbar-toggle" entity={entity}/>);
+    items.push(
+      <HotbarToggleMenuItem
+        key="hotbar-toggle"
+        entity={entity}
+        addContent={<Icon material="push_pin" small tooltip={"Add to Hotbar"}/>}
+        removeContent={<Icon svg="unpin" small tooltip={"Remove from Hotbar"}/>}
+      />
+    );
 
     return items;
   }
@@ -116,20 +123,4 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       </MenuActions>
     );
   }
-}
-
-function HotbarToggleItem(props: { entity: CatalogEntity }) {
-  const store = HotbarStore.getInstance(false);
-  const add = () => store?.addToHotbar(props.entity);
-  const remove = () => store?.removeFromHotbar(props.entity.getId());
-  const [itemInHotbar, setItemInHotbar] = useState(store?.isAddedToActive(props.entity));
-
-  return (
-    <MenuItem onClick={() => {
-      itemInHotbar ? remove() : add();
-      setItemInHotbar(!itemInHotbar);
-    }}>
-      <Icon material="push_pin" small tooltip={itemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}/>
-    </MenuItem>
-  );
 }
