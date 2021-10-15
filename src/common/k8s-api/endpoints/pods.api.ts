@@ -21,7 +21,7 @@
 
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
-import { IMetrics, metricsApi } from "./metrics.api";
+import { IMetrics, getMetrics } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
@@ -38,7 +38,7 @@ export function getMetricsForPods(pods: Pod[], namespace: string, selector = "po
   const podSelector = pods.map(pod => pod.getName()).join("|");
   const opts = { category: "pods", pods: podSelector, namespace, selector };
 
-  return metricsApi.getMetrics({
+  return getMetrics({
     cpuUsage: opts,
     cpuRequests: opts,
     cpuLimits: opts,
@@ -53,17 +53,17 @@ export function getMetricsForPods(pods: Pod[], namespace: string, selector = "po
   });
 }
 
-export interface IPodMetrics<T = IMetrics> {
-  [metric: string]: T;
-  cpuUsage: T;
-  memoryUsage: T;
-  fsUsage: T;
-  networkReceive: T;
-  networkTransmit: T;
-  cpuRequests?: T;
-  cpuLimits?: T;
-  memoryRequests?: T;
-  memoryLimits?: T;
+export interface IPodMetrics {
+  [metric: string]: IMetrics;
+  cpuUsage: IMetrics;
+  memoryUsage: IMetrics;
+  fsUsage: IMetrics;
+  networkReceive: IMetrics;
+  networkTransmit: IMetrics;
+  cpuRequests?: IMetrics;
+  cpuLimits?: IMetrics;
+  memoryRequests?: IMetrics;
+  memoryLimits?: IMetrics;
 }
 
 // Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core

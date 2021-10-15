@@ -22,7 +22,7 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
 import type { IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
-import { BarChart, ChartDataSets, memoryOptions } from "../chart";
+import { BarChart, ChartDataSets, defaultBarChartOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
@@ -45,15 +45,15 @@ export const VolumeClaimDiskChart = observer(() => {
   const datasets: ChartDataSets[] = [
     {
       id: `${id}-diskUsage`,
-      label: `Usage`,
-      tooltip: `Volume disk usage`,
+      label: "Usage",
+      tooltip: "Volume disk usage",
       borderColor: "#ffc63d",
       data: usage.map(([x, y]) => ({ x, y }))
     },
     {
       id: `${id}-diskCapacity`,
-      label: `Capacity`,
-      tooltip: `Volume disk capacity`,
+      label: "Capacity",
+      tooltip: "Volume disk capacity",
       borderColor: chartCapacityColor,
       data: capacity.map(([x, y]) => ({ x, y }))
     }
@@ -64,7 +64,7 @@ export const VolumeClaimDiskChart = observer(() => {
       className="VolumeClaimDiskChart flex box grow column"
       name={`pvc-${object.getName()}-disk`}
       timeLabelStep={10}
-      options={memoryOptions}
+      options={defaultBarChartOptions}
       data={{ datasets }}
     />
   );

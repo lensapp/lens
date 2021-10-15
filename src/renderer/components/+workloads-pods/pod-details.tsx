@@ -82,7 +82,6 @@ export class PodDetails extends React.Component<Props> {
     }
 
     const { status: { conditions, podIP }, spec: { nodeName } } = pod;
-    const { metrics } = this;
     const podIPs = pod.getIPs();
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
@@ -96,7 +95,7 @@ export class PodDetails extends React.Component<Props> {
             loader={this.loadMetrics}
             tabs={podMetricTabs}
             object={pod}
-            params={{ metrics }}
+            metrics={this.metrics}
           >
             <PodCharts/>
           </ResourceMetrics>

@@ -22,16 +22,13 @@
 import "./cluster-overview.scss";
 
 import React from "react";
-import { observable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { boundMethod, createStorage, interval } from "../../utils";
+import { boundMethod, createStorage } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
-import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
-import { kubeClusterStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
@@ -88,7 +85,6 @@ export class ClusterOverview extends React.Component {
   }
 
   render() {
-    const { metrics } = this;
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Cluster);
 
     return (
@@ -98,7 +94,7 @@ export class ClusterOverview extends React.Component {
             <ResourceMetrics
               loader={this.loadMetrics}
               tabs={[MetricType.CPU, MetricType.MEMORY]}
-              params={{ metrics }}
+              metrics={this.metrics}
             >
               <ClusterMetrics />
               <ClusterPieCharts />

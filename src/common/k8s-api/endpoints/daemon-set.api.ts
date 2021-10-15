@@ -23,10 +23,10 @@ import get from "lodash/get";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { metricsApi } from "./metrics.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import { getMetrics } from "./metrics.api";
 
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";
@@ -106,7 +106,7 @@ export function getMetricsForDaemonSets(daemonsets: DaemonSet[], namespace: stri
   const podSelector = daemonsets.map(daemonset => `${daemonset.getName()}-[[:alnum:]]{5}`).join("|");
   const opts = { category: "pods", pods: podSelector, namespace, selector };
 
-  return metricsApi.getMetrics({
+  return getMetrics({
     cpuUsage: opts,
     memoryUsage: opts,
     fsUsage: opts,

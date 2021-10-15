@@ -69,7 +69,6 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
       return null;
     }
     const { storageClassName, accessModes } = volumeClaim.spec;
-    const { metrics } = this;
     const pods = volumeClaim.getPods(podsStore.items);
     const metricTabs = [
       "Disk"
@@ -81,12 +80,12 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={metricTabs} object={volumeClaim} params={{ metrics }}
+            tabs={metricTabs} object={volumeClaim} metrics={this.metrics}
           >
-            <VolumeClaimDiskChart/>
+            <VolumeClaimDiskChart />
           </ResourceMetrics>
         )}
-        <KubeObjectMeta object={volumeClaim}/>
+        <KubeObjectMeta object={volumeClaim} />
         <DrawerItem name="Access Modes">
           {accessModes.join(", ")}
         </DrawerItem>
@@ -107,10 +106,10 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
           {volumeClaim.getStatus()}
         </DrawerItem>
 
-        <DrawerTitle title="Selector"/>
+        <DrawerTitle title="Selector" />
 
         <DrawerItem name="Match Labels" labelsOnly>
-          {volumeClaim.getMatchLabels().map(label => <Badge key={label} label={label}/>)}
+          {volumeClaim.getMatchLabels().map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
 
         <DrawerItem name="Match Expressions">

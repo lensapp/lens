@@ -40,6 +40,7 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { NodeDetailsResources } from "./node-details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { boundMethod } from "../../utils";
+import { nodeDetailsMetricTabs } from "../metrics-helpers";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -78,13 +79,6 @@ export class NodeDetails extends React.Component<Props> {
     const conditions = node.getActiveConditions();
     const taints = node.getTaints();
     const childPods = podsStore.getPodsByNode(node.getName());
-    const { metrics } = this;
-    const metricTabs = [
-      "CPU",
-      "Memory",
-      "Disk",
-      "Pods",
-    ];
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Node);
 
     return (
@@ -92,7 +86,9 @@ export class NodeDetails extends React.Component<Props> {
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={metricTabs} object={node} params={{ metrics }}
+            tabs={nodeDetailsMetricTabs}
+            object={node}
+            metrics={this.metrics}
           >
             <NodeCharts/>
           </ResourceMetrics>

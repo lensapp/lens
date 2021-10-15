@@ -22,22 +22,15 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
 import type { IPodMetrics } from "../../../common/k8s-api/endpoints";
-import { BarChart, cpuOptions, memoryOptions } from "../chart";
-import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
+import { BarChart, ChartDataSets } from "../chart";
+import { FlattenedMetrics, flattenMatricResults, isMetricsEmpty } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import { ResourceMetricsContext } from "../resource-metrics";
 import { ThemeStore } from "../../theme.store";
-import { mapValues } from "lodash";
+import { ContainerMetricsTab, getBarChartOptions } from "../metrics-helpers";
 
-type IContext = IResourceMetricsValue<any, { metrics: IPodMetrics }>;
-
-export const ContainerCharts = observer(() => {
-  const { params: { metrics }, tabId } = useContext<IContext>(ResourceMetricsContext);
+function getDatasets(tab: string, metrics: FlattenedMetrics<IPodMetrics>): ChartDataSets[] | null {
   const { chartCapacityColor } = ThemeStore.getInstance().activeTheme.colors;
-
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
-
   const {
     cpuUsage,
     cpuRequests,
@@ -46,76 +39,90 @@ export const ContainerCharts = observer(() => {
     memoryRequests,
     memoryLimits,
     fsUsage
-  } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
+  } = metrics;
 
-  const datasets = [
-    // CPU
-    [
-      {
-        id: "cpuUsage",
-        label: `Usage`,
-        tooltip: `CPU cores usage`,
-        borderColor: "#3D90CE",
-        data: cpuUsage.map(([x, y]) => ({ x, y }))
-      },
-      {
-        id: "cpuRequests",
-        label: `Requests`,
-        tooltip: `CPU requests`,
-        borderColor: "#30b24d",
-        data: cpuRequests.map(([x, y]) => ({ x, y }))
-      },
-      {
-        id: "cpuLimits",
-        label: `Limits`,
-        tooltip: `CPU limits`,
-        borderColor: chartCapacityColor,
-        data: cpuLimits.map(([x, y]) => ({ x, y }))
-      }
-    ],
-    // Memory
-    [
-      {
-        id: "memoryUsage",
-        label: `Usage`,
-        tooltip: `Memory usage`,
-        borderColor: "#c93dce",
-        data: memoryUsage.map(([x, y]) => ({ x, y }))
-      },
-      {
-        id: "memoryRequests",
-        label: `Requests`,
-        tooltip: `Memory requests`,
-        borderColor: "#30b24d",
-        data: memoryRequests.map(([x, y]) => ({ x, y }))
-      },
-      {
-        id: "memoryLimits",
-        label: `Limits`,
-        tooltip: `Memory limits`,
-        borderColor: chartCapacityColor,
-        data: memoryLimits.map(([x, y]) => ({ x, y }))
-      }
-    ],
-    // Filesystem
-    [
-      {
-        id: "fsUsage",
-        label: `Usage`,
-        tooltip: `Bytes consumed on this filesystem`,
-        borderColor: "#ffc63d",
-        data: fsUsage.map(([x, y]) => ({ x, y }))
-      }
-    ]
-  ];
+  switch (tab) {
+    case ContainerMetricsTab.CPU:
+      return [
+        {
+          id: "cpuUsage",
+          label: "Usage",
+          tooltip: "CPU cores usage",
+          borderColor: "#3D90CE",
+          data: cpuUsage.map(([x, y]) => ({ x, y }))
+        },
+        {
+          id: "cpuRequests",
+          label: "Requests",
+          tooltip: "CPU requests",
+          borderColor: "#30b24d",
+          data: cpuRequests.map(([x, y]) => ({ x, y }))
+        },
+        {
+          id: "cpuLimits",
+          label: "Limits",
+          tooltip: "CPU limits",
+          borderColor: chartCapacityColor,
+          data: cpuLimits.map(([x, y]) => ({ x, y }))
+        }
+      ];
+    case ContainerMetricsTab.MEMORY:
+      return [
+        {
+          id: "memoryUsage",
+          label: "Usage",
+          tooltip: "Memory usage",
+          borderColor: "#c93dce",
+          data: memoryUsage.map(([x, y]) => ({ x, y }))
+        },
+        {
+          id: "memoryRequests",
+          label: "Requests",
+          tooltip: "Memory requests",
+          borderColor: "#30b24d",
+          data: memoryRequests.map(([x, y]) => ({ x, y }))
+        },
+        {
+          id: "memoryLimits",
+          label: "Limits",
+          tooltip: "Memory limits",
+          borderColor: chartCapacityColor,
+          data: memoryLimits.map(([x, y]) => ({ x, y }))
+        }
+      ];
+    case ContainerMetricsTab.FILESYSTEM:
+      return [
+        {
+          id: "fsUsage",
+          label: "Usage",
+          tooltip: "Bytes consumed on this filesystem",
+          borderColor: "#ffc63d",
+          data: fsUsage.map(([x, y]) => ({ x, y }))
+        }
+      ];
+    default:
+      return null;
+  }
+}
 
-  const options = tabId == 0 ? cpuOptions : memoryOptions;
+export const ContainerCharts = observer(() => {
+  const { metrics, tab } = useContext(ResourceMetricsContext);
+
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics />;
+  }
+
+  const datasets = getDatasets(tab, flattenMatricResults(metrics as IPodMetrics));
+
+  if (!datasets) {
+    return <NoMetrics />;
+  }
 
   return (
     <BarChart
-      name={`metrics-${tabId}`}
-      options={options}
-      data={{ datasets: datasets[tabId] }}
+      name={`metrics-${tab}`}
+      options={getBarChartOptions(tab)}
+      data={{ datasets }}
     />
   );
 });

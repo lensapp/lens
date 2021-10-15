@@ -72,7 +72,6 @@ export class ReplicaSetDetails extends React.Component<Props> {
     const { object: replicaSet } = this.props;
 
     if (!replicaSet) return null;
-    const { metrics } = this;
     const { status } = replicaSet;
     const { availableReplicas, replicas } = status;
     const selectors = replicaSet.getSelectors();
@@ -86,7 +85,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={replicaSet} params={{ metrics }}
+            tabs={podMetricTabs} object={replicaSet} metrics={this.metrics}
           >
             <PodCharts/>
           </ResourceMetrics>
@@ -121,7 +120,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
         <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
-        <ResourceMetricsText metrics={metrics}/>
+        <ResourceMetricsText metrics={this.metrics}/>
         <PodDetailsList pods={childPods} owner={replicaSet}/>
       </div>
     );

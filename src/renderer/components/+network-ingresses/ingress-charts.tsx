@@ -23,7 +23,7 @@ import React, { useContext } from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
 import type { IIngressMetrics, Ingress } from "../../../common/k8s-api/endpoints";
-import { BarChart, memoryOptions } from "../chart";
+import { BarChart, defaultBarChartOptions } from "../chart";
 import { normalizeMetrics, isMetricsEmpty } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { ResourceMetricsContext, IResourceMetricsValue } from "../resource-metrics";
@@ -52,15 +52,15 @@ export const IngressCharts = observer(() => {
     [
       {
         id: `${id}-bytesSentSuccess`,
-        label: `Bytes sent, status 2xx`,
-        tooltip: `Bytes sent by Ingress controller with successful status`,
+        label: "Bytes sent, status 2xx",
+        tooltip: "Bytes sent by Ingress controller with successful status",
         borderColor: "#46cd9e",
         data: bytesSentSuccess.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-bytesSentFailure`,
-        label: `Bytes sent, status 5xx`,
-        tooltip: `Bytes sent by Ingress controller with error status`,
+        label: "Bytes sent, status 5xx",
+        tooltip: "Bytes sent by Ingress controller with error status",
         borderColor: "#cd465a",
         data: bytesSentFailure.map(([x, y]) => ({ x, y }))
       },
@@ -69,15 +69,15 @@ export const IngressCharts = observer(() => {
     [
       {
         id: `${id}-requestDurationSeconds`,
-        label: `Request`,
-        tooltip: `Request duration in seconds`,
+        label: "Request",
+        tooltip: "Request duration in seconds",
         borderColor: "#48b18d",
         data: requestDurationSeconds.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-responseDurationSeconds`,
-        label: `Response`,
-        tooltip: `Response duration in seconds`,
+        label: "Response",
+        tooltip: "Response duration in seconds",
         borderColor: "#73ba3c",
         data: responseDurationSeconds.map(([x, y]) => ({ x, y }))
       },
@@ -97,7 +97,7 @@ export const IngressCharts = observer(() => {
         label: ({ datasetIndex, index }, { datasets }) => {
           const { label, data } = datasets[datasetIndex];
           const value = data[index] as ChartPoint;
-          const chartTooltipSec = `sec`;
+          const chartTooltipSec = "sec";
 
           return `${label}: ${parseFloat(value.y as string).toFixed(3)} ${chartTooltipSec}`;
         }
@@ -105,7 +105,7 @@ export const IngressCharts = observer(() => {
     }
   };
 
-  const options = [memoryOptions, durationOptions];
+  const options = [defaultBarChartOptions, durationOptions];
 
   return (
     <BarChart

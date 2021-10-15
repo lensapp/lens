@@ -24,7 +24,9 @@
 import moment from "moment";
 import { apiBase } from "../index";
 import type { IMetricsQuery } from "../../../main/routes/metrics-route";
-import { iter, toJS } from "../../utils";
+import { iter } from "../../utils";
+import { mapValues } from "lodash";
+import type { Falsey } from "../../utils/iter";
 
 export interface IMetrics {
   status: string;
@@ -70,32 +72,38 @@ export interface IResourceMetrics<T extends IMetrics> {
   networkTransmit: T;
 }
 
-export const metricsApi = {
-  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
-    const { range = 3600, step = 60, namespace } = reqParams;
-    let { start, end } = reqParams;
+export async function getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
+  const { range = 3600, step = 60, namespace } = reqParams;
+  let { start, end } = reqParams;
 
-    if (!start && !end) {
-      const timeNow = Date.now() / 1000;
-      const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
+  if (!start && !end) {
+    const timeNow = Date.now() / 1000;
+    const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
 
-      start = now - range;
-      end = now;
-    }
-
-    return apiBase.post("/metrics", {
-      data: query,
-      query: {
-        start, end, step,
-        "kubernetes_namespace": namespace,
-      }
-    });
-  },
-
-  async getMetricProviders(): Promise<MetricProviderInfo[]> {
-    return apiBase.get("/metrics/providers");
+    start = now - range;
+    end = now;
   }
+
+  return apiBase.post("/metrics", {
+    data: query,
+    query: {
+      start, end, step,
+      "kubernetes_namespace": namespace,
+    }
+  });
+}
+
+export async function getMetricProviders(): Promise<MetricProviderInfo[]> {
+  return apiBase.get("/metrics/providers");
+}
+
+export type FlattenedMetrics<M extends Record<string, IMetrics>> = {
+  [key in keyof M]: [number, string][];
 };
+
+export function flattenMatricResults<M extends Record<string, IMetrics>>(metrics: M): FlattenedMetrics<M> {
+  return mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
+}
 
 export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
   if (!metrics?.data?.result) {
@@ -113,8 +121,6 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
 
   const { result } = metrics.data;
 
-  console.log(toJS(result));
-
   if (result.length) {
     if (frames > 0) {
       // fill the gaps
@@ -126,8 +132,8 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
         const now = moment().startOf("minute").subtract(1, "minute").unix();
 
         for (
-          let timestamp = res.values[0][0]; 
-          timestamp <= now; 
+          let timestamp = res.values[0][0];
+          timestamp <= now;
           timestamp = moment.unix(timestamp).add(1, "minute").unix()
         ) {
           if (!res.values.find((value) => value[0] === timestamp)) {
@@ -155,8 +161,8 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
   return metrics;
 }
 
-export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
-  return !Object.values(metrics).some(metric => metric?.data?.result?.length);
+export function isMetricsEmpty(metrics: Record<string, IMetrics> | Falsey) {
+  return !metrics || !Object.values(metrics).some(metric => metric?.data?.result?.length);
 }
 
 export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> {
@@ -171,7 +177,7 @@ export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: stri
         if (value?.data?.result) {
           const result = value.data.result.find(res => res.metric.container === itemName);
 
-          value.data.result = [result].filter(Boolean);
+          value.data.result = result ? [result] : [];
 
           return [key, value];
         }

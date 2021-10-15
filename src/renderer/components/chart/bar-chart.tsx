@@ -26,7 +26,7 @@ import Color from "color";
 import { observer } from "mobx-react";
 import type { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
-import { bytesToUnits, cssNames } from "../../utils";
+import { bytesToUnits, cssNames, numbers } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
 import { ThemeStore } from "../../theme.store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
@@ -144,12 +144,10 @@ export class BarChart extends React.Component<Props> {
 
             return String(xLabel);
           },
-          labelColor: ({ datasetIndex }) => {
-            return {
-              borderColor: "darkgray",
-              backgroundColor: chartData.datasets[datasetIndex].borderColor as string
-            };
-          }
+          labelColor: ({ datasetIndex }) => ({
+            borderColor: "darkgray",
+            backgroundColor: chartData.datasets[datasetIndex].borderColor as string
+          })
         }
       },
       animation: {
@@ -183,7 +181,7 @@ export class BarChart extends React.Component<Props> {
 }
 
 // Default options for all charts containing memory units (network, disk, memory, etc)
-export const memoryOptions: ChartOptions = {
+const memoryUnits: ChartOptions = {
   scales: {
     yAxes: [{
       ticks: {
@@ -217,18 +215,18 @@ export const memoryOptions: ChartOptions = {
 };
 
 // Default options for all charts with cpu units or other decimal numbers
-export const cpuOptions: ChartOptions = {
+const decimalUnits: ChartOptions = {
   scales: {
     yAxes: [{
       ticks: {
         callback: (value: number | string): string => {
-          const float = parseFloat(`${value}`);
+          const parsed = typeof value === "string"
+            ? parseFloat(value)
+            : value;
+          const magnitude = numbers.clamp(Math.floor(Math.log10(parsed)), { min: 0, max: 2 });
+          const precision = 3 - magnitude;
 
-          if (float == 0) return "0";
-          if (float < 10) return float.toFixed(3);
-          if (float < 100) return float.toFixed(2);
-
-          return float.toFixed(1);
+          return parsed.toFixed(precision);
         }
       }
     }]
@@ -244,3 +242,8 @@ export const cpuOptions: ChartOptions = {
     }
   }
 };
+
+export const barChartOptions = Object.freeze({
+  decimalUnits,
+  memoryUnits,
+});

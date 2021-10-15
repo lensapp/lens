@@ -27,33 +27,34 @@ import { useInterval } from "../../hooks";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { cssNames, IClassName } from "../../utils";
 import { Spinner } from "../spinner";
+import type { IMetrics } from "../../../common/k8s-api/endpoints";
 
-interface Props<T> {
-  tabs: string[] | string[][];
+interface Props {
+  tabs: string[];
   object?: KubeObject;
   loader?: () => void;
   interval?: number;
   className?: IClassName;
-  params?: T;
+  metrics?: Record<string, IMetrics>;
   children?: React.ReactNode;
 }
 
-export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
-  object: T;
-  tabId: number;
-  params?: P;
+export type IResourceMetricsValue<K extends KubeObject = KubeObject, Metrics extends Record<string, IMetrics> = Record<string, IMetrics>> = {
+  object?: K;
+  tab: string;
+  metrics?: Metrics;
 };
 
 export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
 
-const defaultProps: Partial<Props<any>> = {
+const defaultProps: Partial<Props> = {
   interval: 60  // 1 min
 };
 
 ResourceMetrics.defaultProps = defaultProps;
 
-export function ResourceMetrics<T>({ object, loader, interval, tabs, children, className, params }: Props<T>) {
-  const [tabId, setTabId] = useState<number>(0);
+export function ResourceMetrics({ object, loader, interval, tabs, children, className, metrics }: Props) {
+  const [tab, setTab] = useState<string>(tabs[0]);
 
   useEffect(() => {
     if (loader) loader();
@@ -69,15 +70,15 @@ export function ResourceMetrics<T>({ object, loader, interval, tabs, children, c
         <RadioGroup
           asButtons
           className="flex box grow gaps"
-          value={tabs[tabId]}
-          onChange={value => setTabId(tabs.findIndex(tab => tab == value))}
+          value={tab}
+          onChange={value => setTab(value)}
         >
           {tabs.map((tab, index) => (
             <Radio key={index} className="box grow" label={tab} value={tab} />
           ))}
         </RadioGroup>
       </div>
-      <ResourceMetricsContext.Provider value={{ object, tabId, params }}>
+      <ResourceMetricsContext.Provider value={{ object, tab, metrics }}>
         <div className="graph">
           {children}
         </div>

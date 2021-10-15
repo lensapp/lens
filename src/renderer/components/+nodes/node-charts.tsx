@@ -21,7 +21,7 @@
 
 import React, { useContext } from "react";
 import type { IClusterMetrics, Node } from "../../../common/k8s-api/endpoints";
-import { BarChart, cpuOptions, memoryOptions } from "../chart";
+import { BarChart, cpuOptions, defaultBarChartOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
@@ -66,29 +66,29 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-cpuUsage`,
-        label: `Usage`,
-        tooltip: `CPU cores usage`,
+        label: "Usage",
+        tooltip: "CPU cores usage",
         borderColor: "#3D90CE",
         data: cpuUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-cpuRequests`,
-        label: `Requests`,
-        tooltip: `CPU requests`,
+        label: "Requests",
+        tooltip: "CPU requests",
         borderColor: "#30b24d",
         data: cpuRequests.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-cpuAllocatableCapacity`,
-        label: `Allocatable Capacity`,
-        tooltip: `CPU allocatable capacity`,
+        label: "Allocatable Capacity",
+        tooltip: "CPU allocatable capacity",
         borderColor: "#032b4d",
         data: cpuAllocatableCapacity.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-cpuCapacity`,
-        label: `Capacity`,
-        tooltip: `CPU capacity`,
+        label: "Capacity",
+        tooltip: "CPU capacity",
         borderColor: chartCapacityColor,
         data: cpuCapacity.map(([x, y]) => ({ x, y }))
       }
@@ -97,36 +97,36 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-memoryUsage`,
-        label: `Usage`,
-        tooltip: `Memory usage`,
+        label: "Usage",
+        tooltip: "Memory usage",
         borderColor: "#c93dce",
         data: memoryUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-workloadMemoryUsage`,
-        label: `Workload Memory Usage`,
-        tooltip: `Workload memory usage`,
+        label: "Workload Memory Usage",
+        tooltip: "Workload memory usage",
         borderColor: "#9cd3ce",
         data: workloadMemoryUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: "memoryRequests",
-        label: `Requests`,
-        tooltip: `Memory requests`,
+        label: "Requests",
+        tooltip: "Memory requests",
         borderColor: "#30b24d",
         data: memoryRequests.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-memoryAllocatableCapacity`,
-        label: `Allocatable Capacity`,
-        tooltip: `Memory allocatable capacity`,
+        label: "Allocatable Capacity",
+        tooltip: "Memory allocatable capacity",
         borderColor: "#032b4d",
         data: memoryAllocatableCapacity.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-memoryCapacity`,
-        label: `Capacity`,
-        tooltip: `Memory capacity`,
+        label: "Capacity",
+        tooltip: "Memory capacity",
         borderColor: chartCapacityColor,
         data: memoryCapacity.map(([x, y]) => ({ x, y }))
       }
@@ -135,15 +135,15 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-fsUsage`,
-        label: `Usage`,
-        tooltip: `Node filesystem usage in bytes`,
+        label: "Usage",
+        tooltip: "Node filesystem usage in bytes",
         borderColor: "#ffc63d",
         data: fsUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-fsSize`,
-        label: `Size`,
-        tooltip: `Node filesystem size in bytes`,
+        label: "Size",
+        tooltip: "Node filesystem size in bytes",
         borderColor: chartCapacityColor,
         data: fsSize.map(([x, y]) => ({ x, y }))
       }
@@ -152,15 +152,15 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-podUsage`,
-        label: `Usage`,
-        tooltip: `Number of running Pods`,
+        label: "Usage",
+        tooltip: "Number of running Pods",
         borderColor: "#30b24d",
         data: podUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-podCapacity`,
-        label: `Capacity`,
-        tooltip: `Node Pods capacity`,
+        label: "Capacity",
+        tooltip: "Node Pods capacity",
         borderColor: chartCapacityColor,
         data: podCapacity.map(([x, y]) => ({ x, y }))
       }
@@ -187,7 +187,7 @@ export const NodeCharts = observer(() => {
     }
   };
 
-  const options = [cpuOptions, memoryOptions, memoryOptions, podOptions];
+  const options = [cpuOptions, defaultBarChartOptions, defaultBarChartOptions, podOptions];
 
   return (
     <BarChart

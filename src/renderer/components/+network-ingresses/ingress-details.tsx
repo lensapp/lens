@@ -35,6 +35,7 @@ import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import { ingressMetricTabs } from "../metrics-helpers";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -63,42 +64,41 @@ export class IngressDetails extends React.Component<Props> {
   renderPaths(ingress: Ingress) {
     const { spec: { rules } } = ingress;
 
-    if (!rules || !rules.length) return null;
+    if (!rules) {
+      return null;
+    }
 
-    return rules.map((rule, index) => {
-      return (
-        <div className="rules" key={index}>
-          {rule.host && (
-            <div className="host-title">
-              <>Host: {rule.host}</>
-            </div>
-          )}
-          {rule.http && (
-            <Table className="paths">
-              <TableHead>
-                <TableCell className="path">Path</TableCell>
-                <TableCell className="backends">Backends</TableCell>
-              </TableHead>
-              {
-                rule.http.paths.map((path, index) => {
-                  const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-                  const backend = `${serviceName}:${servicePort}`;
+    return rules.map((rule, index) => (
+      <div className="rules" key={index}>
+        {rule.host && (
+          <div className="host-title">
+            Host: {rule.host}
+          </div>
+        )}
+        {rule.http && (
+          <Table className="paths">
+            <TableHead>
+              <TableCell className="path">Path</TableCell>
+              <TableCell className="backends">Backends</TableCell>
+            </TableHead>
+            {
+              rule.http.paths.map((path, index) => {
+                const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
 
-                  return (
-                    <TableRow key={index}>
-                      <TableCell className="path">{path.path || ""}</TableCell>
-                      <TableCell className="backends">
-                        <p key={backend}>{backend}</p>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              }
-            </Table>
-          )}
-        </div>
-      );
-    });
+                return (
+                  <TableRow key={index}>
+                    <TableCell className="path">{path.path || ""}</TableCell>
+                    <TableCell className="backends">
+                      <p>{serviceName}:{servicePort}</p>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            }
+          </Table>
+        )}
+      </div>
+    ));
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
@@ -134,11 +134,6 @@ export class IngressDetails extends React.Component<Props> {
 
     const { spec, status } = ingress;
     const ingressPoints = status?.loadBalancer?.ingress;
-    const { metrics } = this;
-    const metricTabs = [
-      "Network",
-      "Duration",
-    ];
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Ingress);
     const { serviceName, servicePort } = ingress.getServiceNamePort();
 
@@ -147,7 +142,9 @@ export class IngressDetails extends React.Component<Props> {
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={metricTabs} object={ingress} params={{ metrics }}
+            tabs={ingressMetricTabs}
+            object={ingress}
+            metrics={this.metrics}
           >
             <IngressCharts/>
           </ResourceMetrics>

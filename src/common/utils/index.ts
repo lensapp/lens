@@ -59,6 +59,7 @@ export * from "./types";
 export * from "./convertMemory";
 export * from "./convertCpu";
 
+import * as numbers from "./numbers";
 import * as iter from "./iter";
 
-export { iter };
+export { iter, numbers };

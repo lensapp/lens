@@ -69,7 +69,6 @@ module.exports = {
         ],
         "quotes": ["error", "double", {
           "avoidEscape": true,
-          "allowTemplateLiterals": true,
         }],
         "linebreak-style": ["error", "unix"],
         "eol-last": ["error", "always"],
@@ -128,7 +127,6 @@ module.exports = {
         }],
         "quotes": ["error", "double", {
           "avoidEscape": true,
-          "allowTemplateLiterals": true,
         }],
         "react/prop-types": "off",
         "semi": "off",
@@ -196,7 +194,6 @@ module.exports = {
         }],
         "quotes": ["error", "double", {
           "avoidEscape": true,
-          "allowTemplateLiterals": true,
         }],
         "react/prop-types": "off",
         "semi": "off",

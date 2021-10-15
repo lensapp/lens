@@ -33,13 +33,14 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { DaemonSet, getMetricsForDaemonSets, IPodMetrics } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
-import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
+import { PodCharts } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import { podMetricTabs } from "../metrics-helpers";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -85,7 +86,9 @@ export class DaemonSetDetails extends React.Component<Props> {
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={daemonSet} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={daemonSet}
+            metrics={this.metrics}
           >
             <PodCharts/>
           </ResourceMetrics>
