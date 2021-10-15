@@ -73,7 +73,7 @@ function isTopPageTest(test: CommonPageTest): test is TopPageTest {
 const commonPageTests: CommonPageTest[] = [{
   page: {
     name: "Cluster",
-    href: "cluster",
+    href: "/cluster/overview",
     expectedSelector: "div.ClusterOverview div.label",
     expectedText: "CPU"
   }
@@ -81,7 +81,7 @@ const commonPageTests: CommonPageTest[] = [{
 {
   page: {
     name: "Nodes",
-    href: "nodes",
+    href: "/cluster/nodes",
     expectedSelector: "h5.title",
     expectedText: "Nodes"
   }
@@ -90,49 +90,49 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "workloads",
   pages: [{
     name: "Overview",
-    href: "workloads",
+    href: "/cluster/workloads",
     expectedSelector: "h5.box",
     expectedText: "Overview"
   },
   {
     name: "Pods",
-    href: "pods",
+    href: "/cluster/pods",
     expectedSelector: "h5.title",
     expectedText: "Pods"
   },
   {
     name: "Deployments",
-    href: "deployments",
+    href: "/cluster/deployments",
     expectedSelector: "h5.title",
     expectedText: "Deployments"
   },
   {
     name: "DaemonSets",
-    href: "daemonsets",
+    href: "/cluster/daemonsets",
     expectedSelector: "h5.title",
     expectedText: "Daemon Sets"
   },
   {
     name: "StatefulSets",
-    href: "statefulsets",
+    href: "/cluster/statefulsets",
     expectedSelector: "h5.title",
     expectedText: "Stateful Sets"
   },
   {
     name: "ReplicaSets",
-    href: "replicasets",
+    href: "/cluster/replicasets",
     expectedSelector: "h5.title",
     expectedText: "Replica Sets"
   },
   {
     name: "Jobs",
-    href: "jobs",
+    href: "/cluster/jobs",
     expectedSelector: "h5.title",
     expectedText: "Jobs"
   },
   {
     name: "CronJobs",
-    href: "cronjobs",
+    href: "/cluster/cronjobs",
     expectedSelector: "h5.title",
     expectedText: "Cron Jobs"
   }]
@@ -141,37 +141,37 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "config",
   pages: [{
     name: "ConfigMaps",
-    href: "configmaps",
+    href: "/cluster/configmaps",
     expectedSelector: "h5.title",
     expectedText: "Config Maps"
   },
   {
     name: "Secrets",
-    href: "secrets",
+    href: "/cluster/secrets",
     expectedSelector: "h5.title",
     expectedText: "Secrets"
   },
   {
     name: "Resource Quotas",
-    href: "resourcequotas",
+    href: "/cluster/resourcequotas",
     expectedSelector: "h5.title",
     expectedText: "Resource Quotas"
   },
   {
     name: "Limit Ranges",
-    href: "limitranges",
+    href: "/cluster/limitranges",
     expectedSelector: "h5.title",
     expectedText: "Limit Ranges"
   },
   {
     name: "HPA",
-    href: "hpa",
+    href: "/cluster/hpa",
     expectedSelector: "h5.title",
     expectedText: "Horizontal Pod Autoscalers"
   },
   {
     name: "Pod Disruption Budgets",
-    href: "poddisruptionbudgets",
+    href: "/cluster/poddisruptionbudgets",
     expectedSelector: "h5.title",
     expectedText: "Pod Disruption Budgets"
   }]
@@ -180,25 +180,25 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "networks",
   pages: [{
     name: "Services",
-    href: "services",
+    href: "/cluster/services",
     expectedSelector: "h5.title",
     expectedText: "Services"
   },
   {
     name: "Endpoints",
-    href: "endpoints",
+    href: "/cluster/endpoints",
     expectedSelector: "h5.title",
     expectedText: "Endpoints"
   },
   {
     name: "Ingresses",
-    href: "ingresses",
+    href: "/cluster/ingresses",
     expectedSelector: "h5.title",
     expectedText: "Ingresses"
   },
   {
     name: "Network Policies",
-    href: "network-policies",
+    href: "/cluster/network-policies",
     expectedSelector: "h5.title",
     expectedText: "Network Policies"
   }]
@@ -207,19 +207,19 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "storage",
   pages: [{
     name: "Persistent Volume Claims",
-    href: "persistent-volume-claims",
+    href: "/cluster/persistent-volume-claims",
     expectedSelector: "h5.title",
     expectedText: "Persistent Volume Claims"
   },
   {
     name: "Persistent Volumes",
-    href: "persistent-volumes",
+    href: "/cluster/persistent-volumes",
     expectedSelector: "h5.title",
     expectedText: "Persistent Volumes"
   },
   {
     name: "Storage Classes",
-    href: "storage-classes",
+    href: "/cluster/storage-classes",
     expectedSelector: "h5.title",
     expectedText: "Storage Classes"
   }]
@@ -227,7 +227,7 @@ const commonPageTests: CommonPageTest[] = [{
 {
   page: {
     name: "Namespaces",
-    href: "namespaces",
+    href: "/cluster/namespaces",
     expectedSelector: "h5.title",
     expectedText: "Namespaces"
   }
@@ -235,7 +235,7 @@ const commonPageTests: CommonPageTest[] = [{
 {
   page: {
     name: "Events",
-    href: "events",
+    href: "/cluster/events",
     expectedSelector: "h5.title",
     expectedText: "Events"
   }
@@ -244,12 +244,12 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "apps",
   pages: [{
     name: "Charts",
-    href: "apps/charts",
+    href: "/cluster/apps/charts",
     expectedSelector: "div.HelmCharts input",
   },
   {
     name: "Releases",
-    href: "apps/releases",
+    href: "/cluster/apps/releases",
     expectedSelector: "h5.title",
     expectedText: "Releases"
   }]
@@ -258,37 +258,37 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "users",
   pages: [{
     name: "Service Accounts",
-    href: "service-accounts",
+    href: "/cluster/service-accounts",
     expectedSelector: "h5.title",
     expectedText: "Service Accounts"
   },
   {
     name: "Roles",
-    href: "roles",
+    href: "/cluster/roles",
     expectedSelector: "h5.title",
     expectedText: "Roles"
   },
   {
     name: "Cluster Roles",
-    href: "cluster-roles",
+    href: "/cluster/cluster-roles",
     expectedSelector: "h5.title",
     expectedText: "Cluster Roles"
   },
   {
     name: "Role Bindings",
-    href: "role-bindings",
+    href: "/cluster/role-bindings",
     expectedSelector: "h5.title",
     expectedText: "Role Bindings"
   },
   {
     name: "Cluster Role Bindings",
-    href: "cluster-role-bindings",
+    href: "/cluster/cluster-role-bindings",
     expectedSelector: "h5.title",
     expectedText: "Cluster Role Bindings"
   },
   {
     name: "Pod Security Policies",
-    href: "pod-security-policies",
+    href: "/cluster/pod-security-policies",
     expectedSelector: "h5.title",
     expectedText: "Pod Security Policies"
   }]
@@ -297,7 +297,7 @@ const commonPageTests: CommonPageTest[] = [{
   drawerId: "custom-resources",
   pages: [{
     name: "Definitions",
-    href: "crd/definitions",
+    href: "/clustercrd/definitions",
     expectedSelector: "h5.title",
     expectedText: "Custom Resources"
   }]
@@ -321,7 +321,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     for (const test of commonPageTests) {
       if (isTopPageTest(test)) {
         const { href, expectedText, expectedSelector } = test.page;
-        const menuButton = await frame.waitForSelector(`a[href^="/${href}"]`);
+        const menuButton = await frame.waitForSelector(`a[href^="${href}"]`);
 
         await menuButton.click();
         await frame.waitForSelector(`${expectedSelector} >> text='${expectedText}'`);
@@ -349,8 +349,8 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   }, 10*60*1000);
 
   it("show logs and highlight the log search entries", async () => {
-    await frame.click(`a[href="/workloads"]`);
-    await frame.click(`a[href="/pods"]`);
+    await frame.click(`a[href="/cluster/workloads"]`);
+    await frame.click(`a[href="/cluster/pods"]`);
 
     const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
 
@@ -387,13 +387,13 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   }, 10*60*1000);
 
   it("should show the default namespaces", async () => {
-    await frame.click('a[href="/namespaces"]');
+    await frame.click('a[href="/cluster/namespaces"]');
     await frame.waitForSelector("div.TableCell >> text='default'");
     await frame.waitForSelector("div.TableCell >> text='kube-system'");
   }, 10*60*1000);
 
   it(`should create the ${TEST_NAMESPACE} and a pod in the namespace`, async () => {
-    await frame.click('a[href="/namespaces"]');
+    await frame.click('a[href="/cluster/namespaces"]');
     await frame.click("button.add-button");
     await frame.waitForSelector("div.AddNamespaceDialog >> text='Create Namespace'");
 
@@ -404,11 +404,11 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
     await frame.waitForSelector(`div.TableCell >> text=${TEST_NAMESPACE}`);
 
-    if ((await frame.innerText(`a[href^="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
-      await frame.click(`a[href^="/workloads"]`);
+    if ((await frame.innerText(`a[href^="/cluster/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
+      await frame.click(`a[href^="/cluster/workloads"]`);
     }
 
-    await frame.click(`a[href^="/pods"]`);
+    await frame.click(`a[href^="/cluster/pods"]`);
 
     const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
 
