@@ -54,15 +54,24 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
   accessibleNamespaces?: string[];
 }
 
+export enum LensKubernetesClusterStatus {
+  DELETING = "deleting",
+  CONNECTING = "connecting",
+  CONNECTED = "connected",
+  DISCONNECTED = "disconnected"
+}
+
 export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
   distro?: string;
   kubeVersion?: string;
 }
 
+/**
+ * @deprecated This is no longer used as it is incorrect. Other sources can add more values
+ */
 export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
-  phase: KubernetesClusterStatusPhase;
 }
 
 export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
@@ -110,15 +119,15 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     }
 
     switch (this.status.phase) {
-      case "connected":
-      case "connecting":
+      case LensKubernetesClusterStatus.CONNECTED:
+      case LensKubernetesClusterStatus.CONNECTING:
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
           onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid)
         });
         break;
-      case "disconnected":
+      case LensKubernetesClusterStatus.DISCONNECTED:
         context.menuItems.push({
           title: "Connect",
           icon: "link",

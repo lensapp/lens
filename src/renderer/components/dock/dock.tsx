@@ -46,19 +46,31 @@ interface Props {
 
 @observer
 export class Dock extends React.Component<Props> {
-  onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
-    const { close, closeTab, selectedTab } = dockStore;
+  private element = React.createRef<HTMLDivElement>();
 
-    if (!selectedTab) return;
-    const { code, ctrlKey, shiftKey } = evt.nativeEvent;
+  componentDidMount() {
+    document.addEventListener("keydown", this.onKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.onKeyDown);
+  }
+
+  onKeyDown = (evt: KeyboardEvent) => {
+    const { close, selectedTab, closeTab } = dockStore;
+    const { code, ctrlKey, metaKey, shiftKey } = evt;
+    // Determine if user working inside <Dock/> or using any other areas in app
+    const dockIsFocused = this.element?.current.contains(document.activeElement);
+
+    if (!selectedTab || !dockIsFocused) return;
 
     if (shiftKey && code === "Escape") {
       close();
     }
 
-    if (ctrlKey && code === "KeyW") {
-      if (selectedTab.pinned) close();
-      else closeTab(selectedTab.id);
+    if ((ctrlKey && code === "KeyW") || (metaKey && code === "KeyW")) {
+      closeTab(selectedTab.id);
+      this.element?.current.focus();  // Avoid loosing focus when closing tab
     }
   };
 
@@ -67,6 +79,7 @@ export class Dock extends React.Component<Props> {
 
     open();
     selectTab(tab.id);
+    this.element?.current.focus();
   };
 
   renderTab(tab: DockTab) {
@@ -105,7 +118,7 @@ export class Dock extends React.Component<Props> {
     return (
       <div
         className={cssNames("Dock", className, { isOpen, fullSize })}
-        onKeyDown={this.onKeydown}
+        ref={this.element}
         tabIndex={-1}
       >
         <ResizingAnchor

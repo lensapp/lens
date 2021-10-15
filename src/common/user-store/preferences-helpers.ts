@@ -23,9 +23,10 @@ import moment from "moment-timezone";
 import path from "path";
 import os from "os";
 import { ThemeStore } from "../../renderer/theme.store";
-import { ObservableToggleSet } from "../utils";
+import { getAppVersion, ObservableToggleSet } from "../utils";
 import type {monaco} from "react-monaco-editor";
 import merge from "lodash/merge";
+import { SemVer } from "semver";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -260,6 +261,32 @@ const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConf
   },
 };
 
+const updateChannels = new Map([
+  ["latest", {
+    label: "Stable"
+  }],
+  ["beta", {
+    label: "Beta"
+  }],
+  ["alpha", {
+    label: "Alpha"
+  }],
+]);
+const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
+
+const updateChannel: PreferenceDescription<string> = {
+  fromStore(val) {
+    return updateChannels.has(val) ? val : defaultUpdateChannel;
+  },
+  toStore(val) {
+    if (!updateChannels.has(val) || val === defaultUpdateChannel) {
+      return undefined;
+    }
+
+    return val;
+  }
+};
+
 type PreferencesModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<infer T, any> ? T : never;
 type UserStoreModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<any, infer T> ? T : never;
 
@@ -288,4 +315,9 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
+  updateChannel,
+};
+
+export const CONSTANTS = {
+  updateChannels,
 };

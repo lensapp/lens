@@ -19,16 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export class ExecValidationNotFoundError extends Error {
-  constructor(execPath: string, isAbsolute: boolean) {
-    super(`User Exec command "${execPath}" not found on host.`);
-    let message = `User Exec command "${execPath}" not found on host.`;
+import { formatNodeTaint } from "../../../common/k8s-api/endpoints";
 
-    if (!isAbsolute) {
-      message += ` Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig`;
-    }
-    this.message = message; 
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
+describe("formatNodeTaint tests", () => {
+  it("should use value if defined", () => {
+    expect(formatNodeTaint({
+      effect: "Foo",
+      key: "hello",
+      timeAdded: "pre",
+      value: "a"
+    })).toBe("hello=a:Foo");
+  });
+
+  it("should not use value if not defined", () => {
+    expect(formatNodeTaint({
+      effect: "Foo",
+      key: "hello",
+      timeAdded: "pre",
+    })).toBe("hello:Foo");
+  });
+});

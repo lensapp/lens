@@ -20,91 +20,107 @@
  */
 
 import { CustomResourceDefinition } from "../endpoints";
-import type { KubeObjectMetadata } from "../kube-object";
 
 describe("Crds", () => {
   describe("getVersion", () => {
-    it("should get the first version name from the list of versions", () => {
+    it("should throw if none of the versions are served", () => {
       const crd = new CustomResourceDefinition({
-        apiVersion: "foo",
+        apiVersion: "apiextensions.k8s.io/v1",
         kind: "CustomResourceDefinition",
-        metadata: {} as KubeObjectMetadata,
+        metadata: {
+          name: "foo",
+          resourceVersion: "12345",
+          uid: "12345",
+        },
+        spec: {
+          versions: [
+            {
+              name: "123",
+              served: false,
+              storage: false,
+            },
+            {
+              name: "1234",
+              served: false,
+              storage: false,
+            },
+          ],
+        },
       });
 
-      crd.spec = {
-        versions: [
-          {
-            name: "123",
-            served: false,
-            storage: false,
-          }
-        ]
-      } as any;
+      expect(() => crd.getVersion()).toThrowError("Failed to find a version for CustomResourceDefinition foo");
+    });
+
+    it("should should get the version that is both served and stored", () => {
+      const crd = new CustomResourceDefinition({
+        apiVersion: "apiextensions.k8s.io/v1",
+        kind: "CustomResourceDefinition",
+        metadata: {
+          name: "foo",
+          resourceVersion: "12345",
+          uid: "12345",
+        },
+        spec: {
+          versions: [
+            {
+              name: "123",
+              served: true,
+              storage: true,
+            },
+            {
+              name: "1234",
+              served: false,
+              storage: false,
+            },
+          ],
+        },
+      });
 
       expect(crd.getVersion()).toBe("123");
     });
 
-    it("should get the first version name from the list of versions (length 2)", () => {
+    it("should should get the version that is both served and stored even with version field", () => {
       const crd = new CustomResourceDefinition({
-        apiVersion: "foo",
+        apiVersion: "apiextensions.k8s.io/v1",
         kind: "CustomResourceDefinition",
-        metadata: {} as KubeObjectMetadata,
+        metadata: {
+          name: "foo",
+          resourceVersion: "12345",
+          uid: "12345",
+        },
+        spec: {
+          version: "abc",
+          versions: [
+            {
+              name: "123",
+              served: true,
+              storage: true,
+            },
+            {
+              name: "1234",
+              served: false,
+              storage: false,
+            },
+          ],
+        },
       });
-
-      crd.spec = {
-        versions: [
-          {
-            name: "123",
-            served: false,
-            storage: false,
-          },
-          {
-            name: "1234",
-            served: false,
-            storage: false,
-          }
-        ]
-      } as any;
 
       expect(crd.getVersion()).toBe("123");
     });
 
-    it("should get the first version name from the list of versions (length 2) even with version field", () => {
+    it("should get the version name from the version field", () => {
       const crd = new CustomResourceDefinition({
-        apiVersion: "foo",
+        apiVersion: "apiextensions.k8s.io/v1beta1",
         kind: "CustomResourceDefinition",
-        metadata: {} as KubeObjectMetadata,
+        metadata: {
+          name: "foo",
+          resourceVersion: "12345",
+          uid: "12345",
+        },
+        spec: {
+          version: "abc",
+        }
       });
-
-      crd.spec = {
-        version: "abc",
-        versions: [
-          {
-            name: "123",
-            served: false,
-            storage: false,
-          },
-          {
-            name: "1234",
-            served: false,
-            storage: false,
-          }
-        ]
-      } as any;
-
-      expect(crd.getVersion()).toBe("123");
-    });
-
-    it("should get the first version name from the version field", () => {
-      const crd = new CustomResourceDefinition({
-        apiVersion: "foo",
-        kind: "CustomResourceDefinition",
-        metadata: {} as KubeObjectMetadata,
-      });
-
-      crd.spec = {
-        version: "abc"
-      } as any;
 
       expect(crd.getVersion()).toBe("abc");
     });

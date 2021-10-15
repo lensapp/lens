@@ -193,7 +193,7 @@ export class Sidebar extends React.Component<Props> {
           source={metadata.source}
           src={spec.icon?.src}
           className="mr-5"
-          onClick={() => navigate(routes.clusterURL())}
+          onClick={() => navigate("/")}
         />
         <div className={styles.clusterName}>
           {metadata.name}
