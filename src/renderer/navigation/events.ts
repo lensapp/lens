@@ -63,6 +63,7 @@ function bindClusterManagerRouteEvents() {
   ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_APP, (event, url: string) => {
     logger.info(`[IPC]: navigate to ${url}`, { currentLocation: location.href });
     navigate(url);
+    window.focus(); // make sure that the main frame is focused
   });
 }
 

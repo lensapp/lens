@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const hpaRoute: RouteProps = {
-  path: "/hpa"
+  path: "/cluster/hpa"
 };
 
 export interface HpaRouteParams {

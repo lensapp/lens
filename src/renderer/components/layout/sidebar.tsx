@@ -42,9 +42,11 @@ import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { broadcastMessage } from "../../../common/ipc";
+import { IpcRendererNavigationEvents } from "../../navigation/events";
 
 interface Props {
   className?: string;
@@ -55,8 +57,21 @@ export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
   @observable private contextMenu: CatalogEntityContextMenuContext = {
     menuItems: [],
-    navigate: (url: string) => navigate(url),
+    navigate: (pathname: string) => {
+      if (pathname.startsWith("/cluster/")) {
+        // assume in-frame navigation
+        // FIXME: this is not entirely correct because of extension navigation rules
+        navigate(pathname);
+      } else {
+        broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, pathname);
+      }
+    },
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     crdStore.reloadAll();

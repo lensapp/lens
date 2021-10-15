@@ -24,22 +24,22 @@ import { buildURL, URLParams } from "../utils/buildUrl";
 
 // Routes
 export const serviceAccountsRoute: RouteProps = {
-  path: "/service-accounts"
+  path: "/cluster/service-accounts"
 };
 export const podSecurityPoliciesRoute: RouteProps = {
-  path: "/pod-security-policies"
+  path: "/cluster/pod-security-policies"
 };
 export const rolesRoute: RouteProps = {
-  path: "/roles"
+  path: "/cluster/roles"
 };
 export const clusterRolesRoute: RouteProps = {
-  path: "/cluster-roles"
+  path: "/cluster/cluster-roles"
 };
 export const roleBindingsRoute: RouteProps = {
-  path: "/role-bindings"
+  path: "/cluster/role-bindings"
 };
 export const clusterRoleBindingsRoute: RouteProps = {
-  path: "/cluster-role-bindings"
+  path: "/cluster/cluster-role-bindings"
 };
 
 export const usersManagementRoute: RouteProps = {

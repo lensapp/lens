@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const crdRoute: RouteProps = {
-  path: "/crd"
+  path: "/cluster/crd"
 };
 
 export const crdDefinitionsRoute: RouteProps = {

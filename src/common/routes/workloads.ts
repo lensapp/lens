@@ -25,28 +25,28 @@ import type { KubeResource } from "../rbac";
 
 // Routes
 export const overviewRoute: RouteProps = {
-  path: "/workloads"
+  path: "/cluster/workloads"
 };
 export const podsRoute: RouteProps = {
-  path: "/pods"
+  path: "/cluster/pods"
 };
 export const deploymentsRoute: RouteProps = {
-  path: "/deployments"
+  path: "/cluster/deployments"
 };
 export const daemonSetsRoute: RouteProps = {
-  path: "/daemonsets"
+  path: "/cluster/daemonsets"
 };
 export const statefulSetsRoute: RouteProps = {
-  path: "/statefulsets"
+  path: "/cluster/statefulsets"
 };
 export const replicaSetsRoute: RouteProps = {
-  path: "/replicasets"
+  path: "/cluster/replicasets"
 };
 export const jobsRoute: RouteProps = {
-  path: "/jobs"
+  path: "/cluster/jobs"
 };
 export const cronJobsRoute: RouteProps = {
-  path: "/cronjobs"
+  path: "/cluster/cronjobs"
 };
 
 export const workloadsRoute: RouteProps = {

@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const storageClassesRoute: RouteProps = {
-  path: "/storage-classes"
+  path: "/cluster/storage-classes"
 };
 
 export interface StorageClassesRouteParams {

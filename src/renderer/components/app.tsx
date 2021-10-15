@@ -75,6 +75,7 @@ import type { ClusterId } from "../../common/cluster-types";
 import { watchHistoryState } from "../remote-helpers/history-updater";
 import { unmountComponentAtNode } from "react-dom";
 import { PortForwardDialog } from "../port-forward";
+import { DeleteClusterDialog } from "./delete-cluster-dialog";
 
 @observer
 export class App extends React.Component {
@@ -220,6 +221,7 @@ export class App extends React.Component {
               <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
+              <Redirect exact from="/cluster" to={this.startUrl}/>
               <Redirect exact from="/" to={this.startUrl}/>
               <Route component={NotFound}/>
             </Switch>
@@ -233,6 +235,7 @@ export class App extends React.Component {
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
           <PortForwardDialog/>
+          <DeleteClusterDialog/>
           <CommandContainer clusterId={App.clusterId}/>
         </ErrorBoundary>
       </Router>
