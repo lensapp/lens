@@ -34,6 +34,7 @@ import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
+import logger from "../../../common/logger";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -45,6 +46,17 @@ export class EntitySettings extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+
+    const { hash } = navigation.location;
+
+    if (hash) {
+      const menuId = hash.slice(1);
+      const item = this.menuItems.find((item) => item.id === menuId);
+
+      if (item) {
+        this.activeTab = item.id;
+      }
+    }
   }
 
   get entityId() {
@@ -61,18 +73,10 @@ export class EntitySettings extends React.Component<Props> {
     return EntitySettingRegistry.getInstance().getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
   }
 
-  async componentDidMount() {
-    const { hash } = navigation.location;
+  get activeSetting() {
+    this.activeTab ||= this.menuItems[0]?.id;
 
-    if (hash) {
-      const item = this.menuItems.find((item) => item.title === hash.slice(1));
-
-      if (item) {
-        this.activeTab = item.id;
-      }
-    }
-
-    this.ensureActiveTab();
+    return this.menuItems.find((setting) => setting.id === this.activeTab);
   }
 
   onTabChange = (tabId: string) => {
@@ -122,33 +126,31 @@ export class EntitySettings extends React.Component<Props> {
     );
   }
 
-  ensureActiveTab() {
-    if (!this.activeTab) {
-      this.activeTab = this.menuItems[0]?.id;
-    }
-  }
-
   render() {
     if (!this.entity) {
-      console.error("entity not found", this.entityId);
+      logger.error("[ENTITY-SETTINGS]: entity not found", this.entityId);
 
       return null;
     }
 
-    this.ensureActiveTab();
-    const activeSetting = this.menuItems.find((setting) => setting.id === this.activeTab);
+    const { activeSetting } = this;
+
 
     return (
       <SettingLayout
         navigation={this.renderNavigation()}
         contentGaps={false}
       >
-        <section>
-          <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
-          <section>
-            <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
-          </section>
-        </section>
+        {
+          activeSetting && (
+            <section>
+              <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
+              <section>
+                <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
+              </section>
+            </section>
+          )
+        }
       </SettingLayout>
     );
   }
