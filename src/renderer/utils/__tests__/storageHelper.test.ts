@@ -19,149 +19,109 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { reaction } from "mobx";
-import { StorageAdapter, StorageHelper } from "../storageHelper";
+import { observable, reaction } from "mobx";
+import { StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
 
-describe("renderer/utils/StorageHelper", () => {
-  describe("window.localStorage might be used as StorageAdapter", () => {
-    type StorageModel = string;
+type StorageModel = {
+  [prop: string]: any /*json-serializable*/;
+  message?: string;
+  description?: any;
+};
 
+describe("renderer/utils/StorageHelper", () => {
+  describe("Using custom StorageAdapter", () => {
     const storageKey = "ui-settings";
+    const remoteStorageMock = observable.map<string, StorageModel>();
     let storageHelper: StorageHelper<StorageModel>;
+    let storageHelperAsync: StorageHelper<StorageModel>;
 
     beforeEach(() => {
-      localStorage.clear();
+      remoteStorageMock.set(storageKey, {
+        message: "saved-before", // pretending as previously saved data
+      });
 
       storageHelper = new StorageHelper<StorageModel>(storageKey, {
         autoInit: false,
-        storage: localStorage,
-        defaultValue: "test",
-      });
-    });
-
-    it("initialized with default value", async () => {
-      localStorage.setItem(storageKey, "saved"); // pretending it was saved previously
-
-      expect(storageHelper.key).toBe(storageKey);
-      expect(storageHelper.defaultValue).toBe("test");
-      expect(storageHelper.get()).toBe("test");
-
-      storageHelper.init();
-
-      expect(storageHelper.key).toBe(storageKey);
-      expect(storageHelper.defaultValue).toBe("test");
-      expect(storageHelper.get()).toBe("saved");
-    });
-
-    it("updates storage", async () => {
-      storageHelper.init();
-
-      storageHelper.set("test2");
-      expect(localStorage.getItem(storageKey)).toBe("test2");
-
-      localStorage.setItem(storageKey, "test3");
-      storageHelper.init({ force: true }); // reload from underlying storage and merge
-      expect(storageHelper.get()).toBe("test3");
-    });
-  });
-
-  describe("Using custom StorageAdapter", () => {
-    type SettingsStorageModel = {
-      [key: string]: any;
-      message: string;
-    };
-
-    const storageKey = "mySettings";
-    const storageMock: Record<string, any> = {};
-    let storageHelper: StorageHelper<SettingsStorageModel>;
-    let storageHelperAsync: StorageHelper<SettingsStorageModel>;
-    let storageAdapter: StorageAdapter<SettingsStorageModel>;
-
-    const storageHelperDefaultValue: SettingsStorageModel = {
-      message: "hello-world",
-      anyOtherStorableData: 123,
-    };
-
-    beforeEach(() => {
-      storageMock[storageKey] = {
-        message: "saved-before",
-      } as SettingsStorageModel;
-
-      storageAdapter = {
-        onChange: jest.fn(),
-        getItem: jest.fn((key: string) => {
-          return storageMock[key];
-        }),
-        setItem: jest.fn((key: string, value: any) => {
-          storageMock[key] = value;
-        }),
-        removeItem: jest.fn((key: string) => {
-          delete storageMock[key];
-        }),
-      };
-
-      storageHelper = new StorageHelper(storageKey, {
-        autoInit: false,
-        defaultValue: storageHelperDefaultValue,
-        storage: storageAdapter,
+        defaultValue: {
+          message: "blabla",
+          description: "default"
+        },
+        storage: {
+          getItem(key: string): StorageModel {
+            return Object.assign(
+              storageHelper.defaultValue,
+              remoteStorageMock.get(key),
+            );
+          },
+          setItem(key: string, value: StorageModel) {
+            remoteStorageMock.set(key, value);
+          },
+          removeItem(key: string) {
+            remoteStorageMock.delete(key);
+          }
+        },
       });
 
       storageHelperAsync = new StorageHelper(storageKey, {
         autoInit: false,
-        defaultValue: storageHelperDefaultValue,
+        defaultValue: storageHelper.defaultValue,
         storage: {
-          ...storageAdapter,
-          async getItem(key: string): Promise<SettingsStorageModel> {
+          ...storageHelper.storage,
+          async getItem(key: string): Promise<StorageModel> {
             await delay(500); // fake loading timeout
 
-            return storageAdapter.getItem(key);
+            return storageHelper.storage.getItem(key);
           }
         },
       });
     });
 
-    it("loads data from storage with fallback to default-value", () => {
-      expect(storageHelper.get()).toEqual(storageHelperDefaultValue);
+    it("initialized with default value", async () => {
       storageHelper.init();
-
-      expect(storageHelper.get().message).toBe("saved-before");
-      expect(storageAdapter.getItem).toHaveBeenCalledWith(storageHelper.key);
+      expect(storageHelper.key).toBe(storageKey);
+      expect(storageHelper.get()).toEqual(storageHelper.defaultValue);
     });
 
     it("async loading from storage supported too", async () => {
       expect(storageHelperAsync.initialized).toBeFalsy();
       storageHelperAsync.init();
       await delay(300);
-      expect(storageHelperAsync.get()).toEqual(storageHelperDefaultValue);
+      expect(storageHelperAsync.get()).toEqual(storageHelper.defaultValue);
       await delay(200);
       expect(storageHelperAsync.get().message).toBe("saved-before");
     });
 
     it("set() fully replaces data in storage", () => {
       storageHelper.init();
-      storageHelper.set({ message: "test2" });
-      expect(storageHelper.get().message).toBe("test2");
-      expect(storageMock[storageKey]).toEqual({ message: "test2" });
-      expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, { message: "test2" });
+      storageHelper.set({ message: "msg" });
+      storageHelper.get().description = "desc";
+      expect(storageHelper.get().message).toBe("msg");
+      expect(storageHelper.get().description).toBe("desc");
+      expect(remoteStorageMock.get(storageKey)).toEqual({
+        message: "msg",
+        description: "desc",
+      } as StorageModel);
     });
 
     it("merge() does partial data tree updates", () => {
       storageHelper.init();
       storageHelper.merge({ message: "updated" });
 
-      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated" });
-      expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, { ...storageHelperDefaultValue, message: "updated" });
+      expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated" });
+      expect(remoteStorageMock.get(storageKey)).toEqual({ ...storageHelper.defaultValue, message: "updated" });
 
+      // `draft` modified inside, returning `void` is expected
       storageHelper.merge(draft => {
         draft.message = "updated2";
       });
-      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated2" });
+      expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated2" });
 
+      // returning object modifies `draft` as well
       storageHelper.merge(draft => ({
         message: draft.message.replace("2", "3")
       }));
-      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated3" });
+      expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated3" });
     });
   });
 

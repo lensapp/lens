@@ -20,10 +20,9 @@
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-
 import { action, comparer, makeObservable, observable, toJS, when, } from "mobx";
-import produce, { Draft } from "immer";
-import { isEqual, isFunction, isPlainObject } from "lodash";
+import produce, { Draft, isDraft } from "immer";
+import { isEqual } from "lodash";
 import logger from "../../main/logger";
 
 export interface StorageAdapter<T> {
@@ -150,15 +149,22 @@ export class StorageHelper<T> {
 
   @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce(this.toJSON(), (state: Draft<T>) => {
-      const newValue = isFunction(value) ? value(state) : value;
+    const nextValue = produce<T>(this.toJSON(), (draft: Draft<T>) => {
 
-      return isPlainObject(newValue)
-        ? Object.assign(state, newValue) // partial updates for returned plain objects
-        : newValue;
+      if (typeof value == "function") {
+        const newValue = value(draft);
+
+        // merge returned plain objects from `value-as-callback` usage
+        // otherwise `draft` can be just modified inside a callback without returning any value (void)
+        if (newValue && !isDraft(newValue)) {
+          Object.assign(draft, newValue);
+        }
+      } else {
+        Object.assign(draft, value);
+      }
     });
 
-    this.set(nextValue as T);
+    this.set(nextValue);
   }
 
   toJSON(): T {
