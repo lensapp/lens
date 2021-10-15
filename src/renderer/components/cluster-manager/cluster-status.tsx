@@ -90,7 +90,7 @@ export class ClusterStatus extends React.Component<Props> {
       params: {
         entityId: this.props.clusterId,
       },
-      fragment: "Proxy",
+      fragment: "proxy",
     }));
   };
 
