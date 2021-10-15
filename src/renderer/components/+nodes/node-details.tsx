@@ -40,6 +40,7 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { NodeDetailsResources } from "./node-details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { boundMethod } from "../../utils";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -72,7 +73,16 @@ export class NodeDetails extends React.Component<Props> {
   render() {
     const { object: node } = this.props;
 
-    if (!node) return null;
+    if (!node) {
+      return null;
+    }
+
+    if (!(node instanceof Node)) {
+      logger.error("[NodeDetails]: passed object that is not an instanceof Node", node);
+
+      return null;
+    }
+
     const { status } = node;
     const { nodeInfo, addresses } = status;
     const conditions = node.getActiveConditions();

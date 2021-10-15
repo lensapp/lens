@@ -25,22 +25,26 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PodSecurityPolicy } from "../../../common/k8s-api/endpoints";
+import { PodSecurityPolicy } from "../../../common/k8s-api/endpoints";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object-meta";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }
 
+interface RuleGroup {
+  rule: string;
+  ranges?: {
+    max: number;
+    min: number;
+  }[];
+}
+
 @observer
 export class PodSecurityPolicyDetails extends React.Component<Props> {
-  renderRuleGroup(
-    title: React.ReactNode,
-    group: {
-      rule: string;
-      ranges?: { max: number; min: number }[];
-    }) {
+  renderRuleGroup( title: React.ReactNode, group: RuleGroup) {
     if (!group) return null;
     const { rule, ranges } = group;
 
@@ -67,6 +71,13 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
     if (!psp) {
       return null;
     }
+
+    if (!(psp instanceof PodSecurityPolicy)) {
+      logger.error("[PodSecurityPolicyDetails]: passed object that is not an instanceof PodSecurityPolicy", psp);
+
+      return null;
+    }
+
     const {
       allowedHostPaths, allowedCapabilities, allowedCSIDrivers, allowedFlexVolumes, allowedProcMountTypes,
       allowedUnsafeSysctls, allowPrivilegeEscalation, defaultAddCapabilities, forbiddenSysctls, fsGroup,
@@ -172,14 +183,14 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
                 <TableCell>Path Prefix</TableCell>
                 <TableCell>Read-only</TableCell>
               </TableHead>
-              {allowedHostPaths.map(({ pathPrefix, readOnly }, index) => {
-                return (
+              {
+                allowedHostPaths.map(({ pathPrefix, readOnly }, index) => (
                   <TableRow key={index}>
                     <TableCell>{pathPrefix}</TableCell>
                     <TableCell>{readOnly ? "Yes" : "No"}</TableCell>
                   </TableRow>
-                );
-              })}
+                ))
+              }
             </Table>
           </>
         )}
@@ -193,7 +204,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
           <>
             <DrawerTitle title="Runtime Class"/>
             <DrawerItem name="Allowed Runtime Class Names">
-              {(runtimeClass.allowedRuntimeClassNames || []).join(", ") || "-"}
+              {runtimeClass.allowedRuntimeClassNames?.join(", ") || "-"}
             </DrawerItem>
             <DrawerItem name="Default Runtime Class Name">
               {runtimeClass.defaultRuntimeClassName || "-"}

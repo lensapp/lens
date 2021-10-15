@@ -33,8 +33,9 @@ import { base64 } from "../../utils";
 import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { Secret } from "../../../common/k8s-api/endpoints";
+import { Secret } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<Secret> {
 }
@@ -84,7 +85,15 @@ export class SecretDetails extends React.Component<Props> {
   render() {
     const { object: secret } = this.props;
 
-    if (!secret) return null;
+    if (!secret) {
+      return null;
+    }
+
+    if (!(secret instanceof Secret)) {
+      logger.error("[SecretDetails]: passed object that is not an instanceof Secret", secret);
+
+      return null;
+    }
 
     return (
       <div className="SecretDetails">

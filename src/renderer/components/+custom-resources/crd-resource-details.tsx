@@ -30,9 +30,10 @@ import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { Input } from "../input";
-import type { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
 import { parseJsonPath } from "../../utils/jsonPath";
-import type { KubeObject, KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
+import { KubeObject, KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<KubeObject> {
   crd: CustomResourceDefinition;
@@ -98,6 +99,18 @@ export class CrdResourceDetails extends React.Component<Props> {
     const { props: { object, crd } } = this;
 
     if (!object || !crd) {
+      return null;
+    }
+
+    if (!(object instanceof KubeObject)) {
+      logger.error("[CrdResourceDetails]: passed object that is not an instanceof KubeObject", object);
+
+      return null;
+    }
+
+    if (!(crd instanceof CustomResourceDefinition)) {
+      logger.error("[CrdResourceDetails]: passed crd that is not an instanceof CustomResourceDefinition", crd);
+
       return null;
     }
 
