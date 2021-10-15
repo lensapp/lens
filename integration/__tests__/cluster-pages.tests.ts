@@ -310,7 +310,7 @@ const commonPageTests: CommonPageTest[] = [{
   pages: [
     {
       name: "Definitions",
-      href: "/clustercrd/definitions",
+      href: "/cluster/crd/definitions",
       expectedSelector: "h5.title",
       expectedText: "Custom Resources"
     },
