@@ -843,13 +843,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#back" class="md-nav__link">
-    back
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#componentdidcatch" class="md-nav__link">
     componentDidCatch
   </a>
@@ -987,7 +980,6 @@
 <li><a href="./#unsafe_componentwillmount">UNSAFE_componentWillMount</a></li>
 <li><a href="./#unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></li>
 <li><a href="./#unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></li>
-<li><a href="./#back">back</a></li>
 <li><a href="./#componentdidcatch">componentDidCatch</a></li>
 <li><a href="./#componentdidmount">componentDidMount</a></li>
 <li><a href="./#componentdidupdate">componentDidUpdate</a></li>
@@ -1192,31 +1184,11 @@ prevents this from being invoked.</p>
 <h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillUpdate</p>
 <hr />
-<h3 id="back">back<a class="headerlink" href="#back" title="Permanent link">#</a></h3>
-<p>▸ <strong>back</strong>(<code>evt?</code>): <code>void</code></p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>evt?</code></td>
-<td align="left"><code>MouseEvent</code>&lt;<code>Element</code>, <code>MouseEvent</code>> | <code>KeyboardEvent</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
 <h3 id="componentdidcatch">componentDidCatch<a class="headerlink" href="#componentdidcatch" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>componentDidCatch</strong>(<code>error</code>, <code>errorInfo</code>): <code>void</code></p>
 <p>Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.</p>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1235,14 +1207,14 @@ the entire component tree to unmount.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidCatch</p>
 <hr />
 <h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentDidMount</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidMount</p>
@@ -1251,7 +1223,7 @@ the entire component tree to unmount.</p>
 <p>▸ <code>Optional</code> <strong>componentDidUpdate</strong>(<code>prevProps</code>, <code>prevState</code>, <code>snapshot?</code>): <code>void</code></p>
 <p>Called immediately after updating occurs. Not called for the initial render.</p>
 <p>The snapshot is only present if getSnapshotBeforeUpdate is present and returns non-null.</p>
-<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1274,7 +1246,7 @@ the entire component tree to unmount.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidUpdate</p>
@@ -1288,7 +1260,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead; will stop working in React 17</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillMount</p>
@@ -1304,7 +1276,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use static getDerivedStateFromProps instead; will stop working in React 17</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1323,14 +1295,14 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillReceiveProps</p>
 <hr />
 <h3 id="componentwillunmount">componentWillUnmount<a class="headerlink" href="#componentwillunmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentWillUnmount</strong>(): <code>void</code></p>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillUnmount</p>
@@ -1344,7 +1316,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use getSnapshotBeforeUpdate instead; will stop working in React 17</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1367,14 +1339,14 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillUpdate</p>
 <hr />
 <h3 id="forceupdate">forceUpdate<a class="headerlink" href="#forceupdate" title="Permanent link">#</a></h3>
 <p>▸ <strong>forceUpdate</strong>(<code>callback?</code>): <code>void</code></p>
-<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1389,7 +1361,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>React.Component.forceUpdate</p>
@@ -1401,7 +1373,7 @@ returns an object to be given to componentDidUpdate. Useful for saving
 things such as scroll position before <code>render</code> causes changes to it.</p>
 <p>Note: the presence of getSnapshotBeforeUpdate prevents any of the deprecated
 lifecycle events from running.</p>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1420,14 +1392,14 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>any</code></p>
 <h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>React.Component.getSnapshotBeforeUpdate</p>
 <hr />
 <h3 id="onescapekey">onEscapeKey<a class="headerlink" href="#onescapekey" title="Permanent link">#</a></h3>
 <p>▸ <strong>onEscapeKey</strong>(<code>evt</code>): <code>void</code></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1442,12 +1414,12 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <code>Element</code></p>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p>React.Component.render</p>
@@ -1469,7 +1441,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1488,7 +1460,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p>React.Component.setState</p>
@@ -1501,7 +1473,7 @@ lifecycle events from running.</p>
 props or states have changed.</p>
 <p>If false is returned, <code>Component#render</code>, <code>componentWillUpdate</code>
 and <code>componentDidUpdate</code> will not be called.</p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1524,7 +1496,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>
