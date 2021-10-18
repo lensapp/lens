@@ -319,5 +319,4 @@ export const DESCRIPTORS = {
 
 export const CONSTANTS = {
   updateChannels,
-  defaultEditorConfig,
 };

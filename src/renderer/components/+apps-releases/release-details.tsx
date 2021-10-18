@@ -58,7 +58,7 @@ export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails | null = null;
   @observable values = "";
   @observable valuesLoading = false;
-  @observable showOnlyUserSuppliedValues = false;
+  @observable showOnlyUserSuppliedValues = true;
   @observable saving = false;
   @observable releaseSecret: Secret;
   @observable error?: string = undefined;

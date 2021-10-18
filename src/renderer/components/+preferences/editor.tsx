@@ -20,9 +20,8 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import type { editor } from "monaco-editor";
 import { UserStore } from "../../../common/user-store";
-import { Switcher } from "../switch";
+import { FormSwitch, Switcher } from "../switch";
 import { Select } from "../select";
 import { SubTitle } from "../layout/sub-title";
 import { SubHeader } from "../layout/sub-header";
@@ -46,17 +45,21 @@ export const Editor = observer(() => {
       <section>
         <div className="flex gaps justify-space-between">
           <div className="flex gaps align-center">
-            <SubHeader compact>Show minimap</SubHeader>
-            <Switcher
-              checked={editorConfiguration.minimap.enabled}
-              onChange={(evt, checked) => editorConfiguration.minimap.enabled = checked}
+            <FormSwitch
+              label={<SubHeader compact>Show minimap</SubHeader>}
+              control={
+                <Switcher
+                  checked={editorConfiguration.minimap.enabled}
+                  onChange={(evt, checked) => editorConfiguration.minimap.enabled = checked}
+                />
+              }
             />
           </div>
           <div className="flex gaps align-center">
             <SubHeader compact>Position</SubHeader>
             <Select
               themeName="lens"
-              options={["left", "right"] as editor.IEditorMinimapOptions["side"][]}
+              options={["left", "right"]}
               value={editorConfiguration.minimap.side}
               onChange={({ value }) => editorConfiguration.minimap.side = value}
             />
