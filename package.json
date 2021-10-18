@@ -268,7 +268,7 @@
     "@types/chart.js": "^2.9.34",
     "@types/color": "^3.0.2",
     "@types/crypto-js": "^3.1.47",
-    "@types/dompurify": "^2.0.2",
+    "@types/dompurify": "^2.3.1",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/fs-extra": "^9.0.1",
     "@types/glob-to-regexp": "^0.4.1",
