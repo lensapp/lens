@@ -35,8 +35,11 @@ export type WebLinkSpec = {
 };
 
 export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
-  public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "WebLink";
+  public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
+  public static readonly kind = "WebLink";
+
+  public readonly apiVersion = WebLink.apiVersion;
+  public readonly kind = WebLink.kind;
 
   async onRun() {
     window.open(this.spec.url, "_blank");
