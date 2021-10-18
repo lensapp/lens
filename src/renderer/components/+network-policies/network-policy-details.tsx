@@ -24,12 +24,13 @@ import "./network-policy-details.scss";
 import get from "lodash/get";
 import React, { Fragment } from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
+import { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 }
@@ -117,6 +118,13 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     if (!policy) {
       return null;
     }
+
+    if (!(policy instanceof NetworkPolicy)) {
+      logger.error("[NetworkPolicyDetails]: passed object that is not an instanceof NetworkPolicy", policy);
+
+      return null;
+    }
+
     const { ingress, egress } = policy.spec;
     const selector = policy.getMatchLabels();
 

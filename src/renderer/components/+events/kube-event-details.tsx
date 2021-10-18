@@ -23,11 +23,12 @@ import "./kube-event-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
 import { LocaleDate } from "../locale-date";
 import { eventStore } from "./event.store";
+import logger from "../../../common/logger";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -41,6 +42,17 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
 
   render() {
     const { object } = this.props;
+
+    if (!object) {
+      return null;
+    }
+
+    if (!(object instanceof KubeObject)) {
+      logger.error("[KubeEventDetails]: passed object that is not an instanceof KubeObject", object);
+
+      return null;
+    }
+
     const events = eventStore.getEventsByObject(object);
 
     if (!events.length) {

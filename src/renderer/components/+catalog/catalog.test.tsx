@@ -26,7 +26,7 @@ import { Catalog } from "./catalog";
 import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import { kubernetesClusterCategory } from "../../../common/catalog-entities/kubernetes-cluster";
-import { catalogCategoryRegistry, CatalogCategoryRegistry } from "../../../common/catalog";
+import { catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
 import { CatalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { CatalogEntityItem } from "./catalog-entity-item";
@@ -52,6 +52,18 @@ jest.mock("./hotbar-toggle-menu-item", () => {
   };
 });
 
+class MockCatalogEntity extends CatalogEntity {
+  public apiVersion = "api";
+  public kind = "kind";
+
+  constructor(data: CatalogEntityData, public onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
+    super(data);
+  }
+
+  public onContextMenuOpen(): void | Promise<void> {}
+  public onSettingsOpen(): void | Promise<void> {}
+}
+
 describe("<Catalog />", () => {
   const history = createMemoryHistory();
   const mockLocation = {
@@ -72,30 +84,21 @@ describe("<Catalog />", () => {
     url: "",
   };
 
-  const catalogEntityUid = "a_catalogEntity_uid";
-  const catalogEntity = {
-    enabled: true,
-    apiVersion: "api",
-    kind: "kind",
-    metadata: {
-      uid: catalogEntityUid,
-      name: "a catalog entity",
-      labels: {
-        test: "label",
+  function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
+    return new MockCatalogEntity({
+      metadata: {
+        uid: "a_catalogEntity_uid",
+        name: "a catalog entity",
+        labels: {
+          test: "label",
+        },
       },
-    },
-    status: {
-      phase: "",
-    },
-    spec: {},
-  };
-  const catalogEntityItemMethods = {
-    getId: () => catalogEntity.metadata.uid,
-    getName: () => catalogEntity.metadata.name,
-    onContextMenuOpen: () => {},
-    onSettingsOpen: () => {},
-    onRun: () => {},
-  };
+      status: {
+        phase: "",
+      },
+      spec: {},
+    }, onRun);
+  }
 
   beforeEach(() => {
     CatalogEntityDetailRegistry.createInstance();
@@ -123,11 +126,7 @@ describe("<Catalog />", () => {
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
-    const catalogEntityItem = new CatalogEntityItem({
-      ...catalogEntity,
-      ...catalogEntityItemMethods,
-      onRun,
-    }, catalogEntityRegistry);
+    const catalogEntityItem = new CatalogEntityItem(createMockCatalogEntity(onRun), catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -136,29 +135,8 @@ describe("<Catalog />", () => {
 
     catalogEntityRegistry.addOnBeforeRun(
       (event) => {
-        expect(event.target).toMatchInlineSnapshot(`
-          Object {
-            "apiVersion": "api",
-            "enabled": true,
-            "getId": [Function],
-            "getName": [Function],
-            "kind": "kind",
-            "metadata": Object {
-              "labels": Object {
-                "test": "label",
-              },
-              "name": "a catalog entity",
-              "uid": "a_catalogEntity_uid",
-            },
-            "onContextMenuOpen": [Function],
-            "onRun": [MockFunction],
-            "onSettingsOpen": [Function],
-            "spec": Object {},
-            "status": Object {
-              "phase": "",
-            },
-          }
-        `);
+        expect(event.target.getId()).toBe("a_catalogEntity_uid");
+        expect(event.target.getName()).toBe("a catalog entity");
 
         setTimeout(() => {
           expect(onRun).toHaveBeenCalled();
@@ -184,11 +162,7 @@ describe("<Catalog />", () => {
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
-    const catalogEntityItem = new CatalogEntityItem({
-      ...catalogEntity,
-      ...catalogEntityItemMethods,
-      onRun,
-    }, catalogEntityRegistry);
+    const catalogEntityItem = new CatalogEntityItem(createMockCatalogEntity(onRun), catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -222,11 +196,7 @@ describe("<Catalog />", () => {
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
-    const catalogEntityItem = new CatalogEntityItem({
-      ...catalogEntity,
-      ...catalogEntityItemMethods,
-      onRun,
-    }, catalogEntityRegistry);
+    const catalogEntityItem = new CatalogEntityItem(createMockCatalogEntity(onRun), catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -261,11 +231,7 @@ describe("<Catalog />", () => {
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn(() => done());
-    const catalogEntityItem = new CatalogEntityItem({
-      ...catalogEntity,
-      ...catalogEntityItemMethods,
-      onRun,
-    }, catalogEntityRegistry);
+    const catalogEntityItem = new CatalogEntityItem(createMockCatalogEntity(onRun), catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -295,11 +261,7 @@ describe("<Catalog />", () => {
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
-    const catalogEntityItem = new CatalogEntityItem({
-      ...catalogEntity,
-      ...catalogEntityItemMethods,
-      onRun,
-    }, catalogEntityRegistry);
+    const catalogEntityItem = new CatalogEntityItem(createMockCatalogEntity(onRun), catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest
@@ -336,11 +298,7 @@ describe("<Catalog />", () => {
     const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
     const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
-    const catalogEntityItem = new CatalogEntityItem({
-      ...catalogEntity,
-      ...catalogEntityItemMethods,
-      onRun,
-    }, catalogEntityRegistry);
+    const catalogEntityItem = new CatalogEntityItem(createMockCatalogEntity(onRun), catalogEntityRegistry);
 
     // mock as if there is a selected item > the detail panel opens
     jest

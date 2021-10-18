@@ -26,7 +26,7 @@ import { FSWatcher, watch } from "chokidar";
 import fs from "fs";
 import path from "path";
 import type stream from "stream";
-import { Disposer, ExtendedObservableMap, iter, Singleton, storedKubeConfigFolder } from "../../common/utils";
+import { bytesToUnits, Disposer, ExtendedObservableMap, iter, noop, Singleton, storedKubeConfigFolder } from "../../common/utils";
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
@@ -53,6 +53,15 @@ const ignoreGlobs = [
   rawGlob,
   matcher: globToRegExp(rawGlob),
 }));
+
+/**
+ * This should be much larger than any kubeconfig text file
+ *
+ * Even if you have a cert-file, key-file, and client-cert files that is only
+ * 12kb of extra data (at 4096 bytes each) which allows for around 150 entries.
+ */
+const folderSyncMaxAllowedFileReadSize = 2 * 1024 * 1024; // 2 MiB
+const fileSyncMaxAllowedFileReadSize = 16 * folderSyncMaxAllowedFileReadSize; // 32 MiB
 
 export class KubeconfigSyncManager extends Singleton {
   protected sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
@@ -228,15 +237,30 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
   });
 }
 
-function diffChangedConfig(filePath: string, source: RootSource): Disposer {
+interface DiffChangedConfigArgs {
+  filePath: string;
+  source: RootSource;
+  stats: fs.Stats;
+  maxAllowedFileReadSize: number;
+}
+
+function diffChangedConfig({ filePath, source, stats, maxAllowedFileReadSize }: DiffChangedConfigArgs): Disposer {
   logger.debug(`${logPrefix} file changed`, { filePath });
+
+  if (stats.size >= maxAllowedFileReadSize) {
+    logger.warn(`${logPrefix} skipping ${filePath}: size=${bytesToUnits(stats.size)} is larger than maxSize=${bytesToUnits(maxAllowedFileReadSize)}`);
+    source.clear();
+
+    return noop;
+  }
 
   // TODO: replace with an AbortController with fs.readFile when we upgrade to Node 16 (after it comes out)
   const fileReader = fs.createReadStream(filePath, {
     mode: fs.constants.O_RDONLY,
   });
   const readStream: stream.Readable = fileReader;
-  const bufs: Buffer[] = [];
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let fileString = "";
   let closed = false;
 
   const cleanup = () => {
@@ -253,7 +277,15 @@ function diffChangedConfig(filePath: string, source: RootSource): Disposer {
   };
 
   readStream
-    .on("data", chunk => bufs.push(chunk))
+    .on("data", (chunk: Buffer) => {
+      try {
+        fileString += decoder.decode(chunk, { stream: true });
+      } catch (error) {
+        logger.warn(`${logPrefix} skipping ${filePath}: ${error}`);
+        source.clear();
+        cleanup();
+      }
+    })
     .on("close", () => cleanup())
     .on("error", error => {
       cleanup();
@@ -261,7 +293,7 @@ function diffChangedConfig(filePath: string, source: RootSource): Disposer {
     })
     .on("end", () => {
       if (!closed) {
-        computeDiff(Buffer.concat(bufs).toString("utf-8"), source, filePath);
+        computeDiff(fileString, source, filePath);
       }
     });
 
@@ -279,6 +311,9 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
       const stat = await fs.promises.stat(filePath);
       const isFolderSync = stat.isDirectory();
       const cleanupFns = new Map<string, Disposer>();
+      const maxAllowedFileReadSize = isFolderSync
+        ? folderSyncMaxAllowedFileReadSize
+        : fileSyncMaxAllowedFileReadSize;
 
       watcher = watch(filePath, {
         followSymlinks: true,
@@ -294,7 +329,7 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
       });
 
       watcher
-        .on("change", (childFilePath) => {
+        .on("change", (childFilePath, stats) => {
           const cleanup = cleanupFns.get(childFilePath);
 
           if (!cleanup) {
@@ -303,9 +338,14 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
           }
 
           cleanup();
-          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+          cleanupFns.set(childFilePath, diffChangedConfig({
+            filePath: childFilePath,
+            source: rootSource.getOrInsert(childFilePath, observable.map),
+            stats,
+            maxAllowedFileReadSize,
+          }));
         })
-        .on("add", (childFilePath) => {
+        .on("add", (childFilePath, stats) => {
           if (isFolderSync) {
             const fileName = path.basename(childFilePath);
 
@@ -316,7 +356,12 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
             }
           }
 
-          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+          cleanupFns.set(childFilePath, diffChangedConfig({
+            filePath: childFilePath,
+            source: rootSource.getOrInsert(childFilePath, observable.map),
+            stats,
+            maxAllowedFileReadSize,
+          }));
         })
         .on("unlink", (childFilePath) => {
           cleanupFns.get(childFilePath)?.();
