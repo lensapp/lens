@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./pod-details-affinities.scss";
 import React from "react";
 import jsYaml from "js-yaml";
 import { DrawerItem, DrawerParamToggler } from "../drawer";
@@ -41,7 +40,7 @@ export class PodDetailsAffinities extends React.Component<Props> {
     return (
       <DrawerItem name="Affinities" className="PodDetailsAffinities">
         <DrawerParamToggler label={affinitiesNum}>
-          <div className="ace-container">
+          <div style={{ height: 200 }}>
             <MonacoEditor readOnly value={jsYaml.dump(affinities)}/>
           </div>
         </DrawerParamToggler>
