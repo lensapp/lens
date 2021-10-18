@@ -28,7 +28,7 @@ export interface ClusterViewRouteParams {
 
 export const clusterViewRoute: RouteProps = {
   exact: true,
-  path: "/:clusterId",
+  path: "/cluster/:clusterId",
 };
 
 export const clusterViewURL = buildURL<ClusterViewRouteParams>(clusterViewRoute.path);
