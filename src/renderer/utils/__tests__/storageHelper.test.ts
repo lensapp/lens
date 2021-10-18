@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { jest } from "@jest/globals";
 import { observable, reaction } from "mobx";
 import { StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";

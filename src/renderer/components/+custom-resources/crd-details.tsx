@@ -32,7 +32,6 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { MonacoEditor } from "../monaco-editor";
-import { UserStore } from "../../../common/user-store";
 import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
@@ -125,37 +124,37 @@ export class CRDDetails extends React.Component<Props> {
           </TableRow>
         </Table>
         {printerColumns.length > 0 &&
-        <>
-          <DrawerTitle title="Additional Printer Columns"/>
-          <Table selectable className="printer-columns box grow">
-            <TableHead>
-              <TableCell className="name">Name</TableCell>
-              <TableCell className="type">Type</TableCell>
-              <TableCell className="json-path">JSON Path</TableCell>
-            </TableHead>
-            {
-              printerColumns.map((column, index) => {
-                const { name, type, jsonPath } = column;
+          <>
+            <DrawerTitle title="Additional Printer Columns"/>
+            <Table selectable className="printer-columns box grow">
+              <TableHead>
+                <TableCell className="name">Name</TableCell>
+                <TableCell className="type">Type</TableCell>
+                <TableCell className="json-path">JSON Path</TableCell>
+              </TableHead>
+              {
+                printerColumns.map((column, index) => {
+                  const { name, type, jsonPath } = column;
 
-                return (
-                  <TableRow key={index}>
-                    <TableCell className="name">{name}</TableCell>
-                    <TableCell className="type">{type}</TableCell>
-                    <TableCell className="json-path">
-                      <Badge label={jsonPath}/>
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            }
-          </Table>
-        </>
+                  return (
+                    <TableRow key={index}>
+                      <TableCell className="name">{name}</TableCell>
+                      <TableCell className="type">{type}</TableCell>
+                      <TableCell className="json-path">
+                        <Badge label={jsonPath}/>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              }
+            </Table>
+          </>
         }
         {validation &&
-        <>
-          <DrawerTitle title="Validation"/>
-          <MonacoEditor readOnly value={validation}/>
-        </>
+          <>
+            <DrawerTitle title="Validation"/>
+            <MonacoEditor readOnly value={validation}/>
+          </>
         }
       </div>
     );

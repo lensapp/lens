@@ -96,7 +96,7 @@ export class ReleaseDetails extends Component<Props> {
 
   async loadDetails() {
     const { release } = this.props;
-    
+
     try {
       this.details = null;
       this.details = await getRelease(release.getName(), release.getNs());
@@ -165,7 +165,7 @@ export class ReleaseDetails extends Component<Props> {
           />
           <MonacoEditor
             className={cssNames({ loading: valuesLoading })}
-            readOnly={valuesLoading || this.showOnlyUserSuppliedValues}
+            readOnly={valuesLoading}
             value={values}
             onChange={text => this.values = text}
           >
