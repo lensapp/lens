@@ -44,7 +44,7 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     super.init();
 
     this.dispose.push(
-      dockStore.onTabChange(({ tabId }) => editResourceStore.editResource(tabId), {
+      dockStore.onTabChange(({ tabId }) => this.editResource(tabId), {
         tabKind: TabKind.EDIT_RESOURCE,
         fireImmediately: true,
       })

@@ -22,13 +22,16 @@
 import fs from "fs-extra";
 import path from "path";
 import os from "os";
+import { action, makeObservable, observable } from "mobx";
+import logger from "../../../common/logger";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
-import { action, makeObservable, observable } from "mobx";
 
 export interface TemplatesGroup {
   label: string;
-  templates: Record<string/*filename*/, string /*contents*/>;
+  templates: {
+    [filename: string]: string;
+  };
 }
 
 export class CreateResourceStore extends DockTabStore<string> {
@@ -40,7 +43,7 @@ export class CreateResourceStore extends DockTabStore<string> {
   readonly templateGroups: Record<string, TemplatesGroup> = observable({
     [this.appTemplatesFolder]: {
       label: "Lens Templates",
-      templates: {} as Record<string/*filename*/, string /*contents*/>,
+      templates: {},
     },
     [this.userTemplatesFolder]: {
       label: "Custom templates",
@@ -54,7 +57,7 @@ export class CreateResourceStore extends DockTabStore<string> {
   }
 
   get userTemplatesFolder(): string {
-    return path.resolve(os.homedir(), "~/.k8slens/templates");
+    return path.resolve(os.homedir(), ".k8slens/templates");
   }
 
   async init() {
@@ -79,7 +82,7 @@ export class CreateResourceStore extends DockTabStore<string> {
         fileNames.map(fileName => [fileName, "" /* empty: content not loaded yet */])
       );
     } catch (error) {
-      console.error(`[CREATE-RESOURCE]: scanning template folders error: ${error}`);
+      logger.error(`[CREATE-RESOURCE]: scanning template folders error: ${error}`);
     }
   }
 
@@ -109,15 +112,10 @@ export class CreateResourceStore extends DockTabStore<string> {
 
       return textContent;
     } catch (error) {
-      console.error(`[CREATE-RESOURCE]: reading "${sourceFolder}/${fileName}" has failed: ${error}`);
+      logger.error(`[CREATE-RESOURCE]: reading "${sourceFolder}/${fileName}" has failed: ${error}`);
     }
 
     return "";
-  }
-
-  // bundled app templates via webpack.renderer.ts, "?raw"-query loads content as text
-  async getBundledTemplate(fileName: string, ext = "yaml"): Promise<string> {
-    return import(`${this.appTemplatesFolder}/${fileName}.${ext}?raw`);
   }
 }
 

@@ -44,5 +44,3 @@ export const monacoValidators = {
   yaml: yamlValidator,
   json: jsonValidator,
 };
-
-export type MonacoValidatorKey = keyof typeof monacoValidators;
