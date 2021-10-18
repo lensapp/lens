@@ -33,6 +33,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
+import logger from "../../../common/logger";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
@@ -80,17 +81,13 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
           <TableCell className="metrics">Current / Target</TableCell>
         </TableHead>
         {
-          hpa.getMetrics().map((metric, index) => {
-            const name = renderName(metric);
-            const values = hpa.getMetricValues(metric);
-
-            return (
+          hpa.getMetrics()
+            .map((metric, index) => (
               <TableRow key={index}>
-                <TableCell className="name">{name}</TableCell>
-                <TableCell className="metrics">{values}</TableCell>
+                <TableCell className="name">{renderName(metric)}</TableCell>
+                <TableCell className="metrics">{hpa.getMetricValues(metric)}</TableCell>
               </TableRow>
-            );
-          })
+            ))
         }
       </Table>
     );
@@ -99,7 +96,16 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
   render() {
     const { object: hpa } = this.props;
 
-    if (!hpa) return null;
+    if (!hpa) {
+      return null;
+    }
+
+    if (!(hpa instanceof HorizontalPodAutoscaler)) {
+      logger.error("[HpaDetails]: passed object that is not an instanceof HorizontalPodAutoscaler", hpa);
+
+      return null;
+    }
+
     const { scaleTargetRef } = hpa.spec;
 
     return (

@@ -23,7 +23,7 @@ import "./setting-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
 import { Icon } from "../icon";
 
@@ -36,17 +36,10 @@ export interface SettingLayoutProps extends React.DOMAttributes<any> {
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
-function scrollToAnchor() {
-  const { hash } = window.location;
-
-  if (hash) {
-    document.querySelector(`${hash}`).scrollIntoView();
-  }
-}
-
 const defaultProps: Partial<SettingLayoutProps> = {
   provideBackButtonNavigation: true,
   contentGaps: true,
+  back: () => navigation.goBack(),
 };
 
 /**
@@ -56,19 +49,14 @@ const defaultProps: Partial<SettingLayoutProps> = {
 export class SettingLayout extends React.Component<SettingLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  @boundMethod
-  back(evt?: React.MouseEvent | KeyboardEvent) {
-    if (this.props.back) {
-      this.props.back(evt);
-    } else {
-      navigation.goBack();
-    }
-  }
-
   async componentDidMount() {
-    window.addEventListener("keydown", this.onEscapeKey);
+    const { hash } = window.location;
 
-    scrollToAnchor();
+    if (hash) {
+      document.querySelector(hash)?.scrollIntoView();
+    }
+
+    window.addEventListener("keydown", this.onEscapeKey);
   }
 
   componentWillUnmount() {
@@ -82,7 +70,7 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
 
     if (evt.code === "Escape") {
       evt.stopPropagation();
-      this.back(evt);
+      this.props.back(evt);
     }
   };
 
@@ -107,17 +95,18 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
             {children}
           </div>
           <div className="toolsRegion">
-            { this.props.provideBackButtonNavigation && (
-              <div className="fixedTools">
-                <div className="closeBtn" role="button" aria-label="Close" onClick={this.back}>
-                  <Icon material="close"/>
+            {
+              this.props.provideBackButtonNavigation && (
+                <div className="fixedTools">
+                  <div className="closeBtn" role="button" aria-label="Close" onClick={back}>
+                    <Icon material="close" />
+                  </div>
+                  <div className="esc" aria-hidden="true">
+                    ESC
+                  </div>
                 </div>
-
-                <div className="esc" aria-hidden="true">
-                  ESC
-                </div>
-              </div>
-            )}
+              )
+            }
           </div>
         </div>
       </div>

@@ -40,6 +40,7 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -72,7 +73,16 @@ export class DaemonSetDetails extends React.Component<Props> {
   render() {
     const { object: daemonSet } = this.props;
 
-    if (!daemonSet) return null;
+    if (!daemonSet) {
+      return null;
+    }
+
+    if (!(daemonSet instanceof DaemonSet)) {
+      logger.error("[DaemonSetDetails]: passed object that is not an instanceof DaemonSet", daemonSet);
+
+      return null;
+    }
+
     const { spec } = daemonSet;
     const selectors = daemonSet.getSelectors();
     const images = daemonSet.getImages();

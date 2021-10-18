@@ -44,6 +44,7 @@ import { ResourceMetrics } from "../resource-metrics";
 import { boundMethod } from "autobind-decorator";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
@@ -71,7 +72,16 @@ export class JobDetails extends React.Component<Props> {
   render() {
     const { object: job } = this.props;
 
-    if (!job) return null;
+    if (!job) {
+      return null;
+    }
+
+    if (!(job instanceof Job)) {
+      logger.error("[JobDetails]: passed object that is not an instanceof Job", job);
+
+      return null;
+    }
+
     const selectors = job.getSelectors();
     const nodeSelector = job.getNodeSelectors();
     const images = job.getImages();

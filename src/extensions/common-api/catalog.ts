@@ -19,5 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "../../common/catalog-entities";
+export {
+  KubernetesCluster,
+  kubernetesClusterCategory,
+  GeneralEntity,
+  WebLink,
+} from "../../common/catalog-entities";
+
+export type {
+  KubernetesClusterPrometheusMetrics,
+  KubernetesClusterSpec,
+  KubernetesClusterMetadata,
+  WebLinkSpec,
+  WebLinkStatus,
+  WebLinkStatusPhase,
+  KubernetesClusterStatusPhase,
+  KubernetesClusterStatus,
+} from "../../common/catalog-entities";
+
 export * from "../../common/catalog/catalog-entity";
