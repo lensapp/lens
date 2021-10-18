@@ -221,7 +221,6 @@ export class App extends React.Component {
               <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/cluster" to={this.startUrl}/>
               <Redirect exact from="/" to={this.startUrl}/>
               <Route component={NotFound}/>
             </Switch>

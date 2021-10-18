@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const volumesRoute: RouteProps = {
-  path: "/cluster/persistent-volumes"
+  path: "/persistent-volumes"
 };
 
 export interface VolumesRouteParams {

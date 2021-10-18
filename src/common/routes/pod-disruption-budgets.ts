@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const pdbRoute: RouteProps = {
-  path: "/cluster/poddisruptionbudgets"
+  path: "/poddisruptionbudgets"
 };
 
 export interface PodDisruptionBudgetsRouteParams {

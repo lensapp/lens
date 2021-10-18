@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const appsRoute: RouteProps = {
-  path: "/cluster/apps",
+  path: "/apps",
 };
 
 export const appsURL = buildURL(appsRoute.path);
