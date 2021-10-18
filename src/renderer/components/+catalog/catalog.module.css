@@ -19,10 +19,36 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+.list :global(.TableRow) {
+  .entityName {
+    position: relative;
+    width: min-content;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 24px;
+
+    .pinIcon {
+      position: absolute;
+      right: 0;
+      opacity: 0;
+      transition: none;
+
+      &:hover {
+        /* Drop styles defined for <Icon/> */
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &:hover .pinIcon {
+    opacity: 1;
+  }
+}
+
 .iconCell {
-  max-width: 40px;
-  display: flex;
-  align-items: center;
+  @apply flex items-center max-w-[40px];
 }
 
 .iconCell > div * {

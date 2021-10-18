@@ -37,13 +37,15 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import { createAppStorage, cssNames } from "../../utils";
+import { createAppStorage, cssNames, prevDefault } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
+import { Icon } from "../icon";
+import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", browseCatalogTab);
 
@@ -129,6 +131,10 @@ export class Catalog extends React.Component<Props> {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
+  removeFromHotbar(item: CatalogEntityItem<CatalogEntity>): void {
+    HotbarStore.getInstance().removeFromHotbar(item.getId());
+  }
+
   onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
@@ -194,12 +200,33 @@ export class Catalog extends React.Component<Props> {
             </MenuItem>
           ))
         }
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
-          Pin to Hotbar
-        </MenuItem>
+        <HotbarToggleMenuItem
+          key="hotbar-toggle"
+          entity={item.entity}
+          addContent="Add to Hotbar"
+          removeContent="Remove from Hotbar"
+        />
       </MenuActions>
     );
   };
+
+  renderName(item: CatalogEntityItem<CatalogEntity>) {
+    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(item.entity);
+
+    return (
+      <div className={styles.entityName}>
+        {item.name}
+        <Icon
+          small
+          className={styles.pinIcon}
+          material={!isItemInHotbar && "push_pin"}
+          svg={isItemInHotbar && "unpin"}
+          tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
+          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
+        />
+      </div>
+    );
+  }
 
   renderIcon(item: CatalogEntityItem<CatalogEntity>) {
     return (
@@ -231,7 +258,7 @@ export class Catalog extends React.Component<Props> {
         renderHeaderTitle={activeCategory?.metadata.name || "Browse All"}
         isSelectable={false}
         isConfigurable={true}
-        className="CatalogItemList"
+        className={styles.list}
         store={this.catalogEntityStore}
         sortingCallbacks={{
           [sortBy.name]: item => item.name,
@@ -255,7 +282,7 @@ export class Catalog extends React.Component<Props> {
         })}
         renderTableContents={item => [
           this.renderIcon(item),
-          item.name,
+          this.renderName(item),
           !activeCategory && item.kind,
           item.source,
           item.getLabelBadges(),

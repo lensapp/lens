@@ -46,6 +46,12 @@ jest.mock("@electron/remote", () => {
   };
 });
 
+jest.mock("./hotbar-toggle-menu-item", () => {
+  return {
+    HotbarToggleMenuItem: () => <div>menu item</div>
+  };
+});
+
 class MockCatalogEntity extends CatalogEntity {
   public apiVersion = "api";
   public kind = "kind";
