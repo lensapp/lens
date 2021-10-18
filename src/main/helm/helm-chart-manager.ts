@@ -95,37 +95,11 @@ export class HelmChartManager {
     const cacheFileStats = await fs.promises.stat(this.repo.cacheFilePath);
     const data = yaml.load(cacheFile) as string | number | HelmCacheFile;
 
-    if (typeof data !== "object" || !data) {
-      return;
+    if (!data || typeof data !== "object" || typeof data.entries !== "object") {
+      throw Object.assign(new TypeError("Helm Cache file does not parse correctly"), { file: this.repo.cacheFilePath, data });
     }
 
-    const { entries } = data;
-
-    /**
-     * Do some initial preprocessing on the data, so as to avoid needing to do it later
-     * 1. Set the repo name
-     * 2. Normalize the created date
-     * 3. Filter out deprecated items
-     */
-
-    const normalized = Object.fromEntries(
-      iter.filter(
-        iter.map(
-          Object.entries(entries),
-          ([name, charts]) => [
-            name,
-            sortCharts(
-              charts.map(chart => ({
-                ...chart,
-                created: Date.parse(chart.created).toString(),
-                repo: this.repo.name,
-              })),
-            ),
-          ] as const
-        ),
-        ([, charts]) => !charts.every(chart => chart.deprecated),
-      )
-    );
+    const normalized = normalizeHelmCharts(this.repo.name, data.entries);
 
     HelmChartManager.#cache.set(this.repo.name, {
       data: v8.serialize(normalized),
@@ -147,4 +121,31 @@ export class HelmChartManager {
 
     return v8.deserialize(HelmChartManager.#cache.get(this.repo.name).data);
   }
+}
+
+/**
+ * Do some initial preprocessing on the data, so as to avoid needing to do it later
+ * 1. Set the repo name
+ * 2. Normalize the created date
+ * 3. Filter out charts that only have deprecated entries
+ */
+function normalizeHelmCharts(repoName: string, entries: RepoHelmChartList): RepoHelmChartList {
+  return Object.fromEntries(
+    iter.filter(
+      iter.map(
+        Object.entries(entries),
+        ([name, charts]) => [
+          name,
+          sortCharts(
+            charts.map(chart => ({
+              ...chart,
+              created: Date.parse(chart.created).toString(),
+              repo: repoName,
+            })),
+          ),
+        ] as const
+      ),
+      ([, charts]) => !charts.every(chart => chart.deprecated),
+    )
+  );
 }
