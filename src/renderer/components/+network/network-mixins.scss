@@ -31,3 +31,15 @@ $service-status-color-list: (
     }
   }
 }
+
+$port-forward-status-color-list: (
+  active: $colorOk,
+);
+
+@mixin port-forward-status-colors {
+  @each $status, $color in $port-forward-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}
