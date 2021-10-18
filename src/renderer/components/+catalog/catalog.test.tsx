@@ -46,6 +46,12 @@ jest.mock("@electron/remote", () => {
   };
 });
 
+jest.mock("./hotbar-toggle-menu-item", () => {
+  return {
+    HotbarToggleMenuItem: () => <div>menu item</div>
+  };
+});
+
 describe("<Catalog />", () => {
   const history = createMemoryHistory();
   const mockLocation = {
