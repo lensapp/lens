@@ -71,6 +71,15 @@ export function formatNodeTaint(taint: NodeTaint): string {
   return `${taint.key}:${taint.effect}`;
 }
 
+export interface NodeCondition {
+  type: string;
+  status: string;
+  lastHeartbeatTime?: string;
+  lastTransitionTime?: string;
+  reason?: string;
+  message?: string;
+}
+
 export interface Node {
   spec: {
     podCIDR?: string;
@@ -100,14 +109,7 @@ export interface Node {
       memory: string;
       pods: string;
     };
-    conditions?: {
-      type: string;
-      status: string;
-      lastHeartbeatTime?: string;
-      lastTransitionTime?: string;
-      reason?: string;
-      message?: string;
-    }[];
+    conditions?: NodeCondition[];
     addresses?: {
       type: string;
       address: string;
@@ -141,6 +143,19 @@ export interface Node {
   };
 }
 
+/**
+ * Iterate over `conditions` yielding the `type` field if the `status` field is
+ * the string `"True"`
+ * @param conditions An iterator of some conditions
+ */
+function* getTrueConditionTypes(conditions: IterableIterator<NodeCondition> | Iterable<NodeCondition>): IterableIterator<string> {
+  for (const { status, type } of conditions) {
+    if (status === "True") {
+      yield type;
+    }
+  }
+}
+
 export class Node extends KubeObject {
   static kind = "Node";
   static namespaced = false;
@@ -151,17 +166,13 @@ export class Node extends KubeObject {
     autoBind(this);
   }
 
+  /**
+   * Returns the concatination of all current condition types which have a status
+   * of `"True"`
+   */
   getNodeConditionText(): string {
-    const { conditions = [] } = this.status;
-
     return iter.join(
-      iter.map(
-        iter.filter(
-          conditions.values(), 
-          ({ status }) => status === "True",
-        ),
-        ({ type }) => type,
-      ),
+      getTrueConditionTypes(this.status?.conditions ?? []),
       " ",
     );
   }
