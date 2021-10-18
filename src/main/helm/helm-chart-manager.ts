@@ -29,6 +29,11 @@ import { helmCli } from "./helm-cli";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
 import { sortCharts } from "../../common/utils";
 
+export interface HelmCacheFile {
+  apiVersion: string;
+  entries: RepoHelmChartList;
+}
+
 export class HelmChartManager {
   static #cache = new Map<string, Buffer>();
 
@@ -82,7 +87,11 @@ export class HelmChartManager {
   protected async cachedYaml(): Promise<RepoHelmChartList> {
     if (!HelmChartManager.#cache.has(this.repo.name)) {
       const cacheFile = await fs.promises.readFile(this.repo.cacheFilePath, "utf-8");
-      const { entries } = yaml.safeLoad(cacheFile) as { entries: RepoHelmChartList };
+      const data = yaml.load(cacheFile) as string | number | HelmCacheFile;
+
+      if (typeof data !== "object" || !data) {
+        return {};
+      }
 
       /**
        * Do some initial preprocessing on the data, so as to avoid needing to do it later
@@ -92,7 +101,7 @@ export class HelmChartManager {
        */
 
       const normalized = Object.fromEntries(
-        Object.entries(entries)
+        Object.entries(data.entries)
           .map(([name, charts]) => [
             name,
             sortCharts(

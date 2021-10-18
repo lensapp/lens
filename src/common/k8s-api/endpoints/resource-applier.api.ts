@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import jsYaml from "js-yaml";
+import yaml from "js-yaml";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { apiBase } from "../index";
 import type { Patch } from "rfc6902";
@@ -30,7 +30,13 @@ export const annotations = [
 
 export async function update(resource: object | string): Promise<KubeJsonApiData> {
   if (typeof resource === "string") {
-    resource = jsYaml.safeLoad(resource);
+    const parsed = yaml.load(resource);
+
+    if (typeof parsed !== "object") {
+      throw new Error("Cannot update resource to string or number");
+    }
+
+    resource = parsed;
   }
 
   return apiBase.post<KubeJsonApiData>("/stack", { data: resource });

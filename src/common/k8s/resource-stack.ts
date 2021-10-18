@@ -133,7 +133,7 @@ export class ResourceStack {
 
       if (!resourceData.trim()) continue;
 
-      const resourceArray = yaml.safeLoadAll(resourceData.toString());
+      const resourceArray = yaml.loadAll(resourceData.toString());
 
       resourceArray.forEach((resource) => {
         if (resource?.metadata) {
@@ -143,7 +143,7 @@ export class ResourceStack {
           resource.metadata.labels["app.kubernetes.io/created-by"] = "resource-stack";
         }
 
-        resources.push(yaml.safeDump(resource));
+        resources.push(yaml.dump(resource));
       });
     }
 
