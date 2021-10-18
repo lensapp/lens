@@ -39,10 +39,6 @@ dev: binaries/client build-extensions static/build/LensDev.html
 lint:
 	yarn lint
 
-.PHONY: release-version
-release-version:
-	npm version $(CMD_ARGS) --git-tag-version false
-
 .PHONY: tag-release
 tag-release:
 	scripts/tag-release.sh $(CMD_ARGS)
