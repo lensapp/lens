@@ -27,17 +27,17 @@ import { observer } from "mobx-react";
 import { bundledKubectlPath } from "../../../main/kubectl";
 import { SelectOption, Select } from "../select";
 import { FormSwitch, Switcher } from "../switch";
+import { packageMirrors } from "../../../common/user-store/preferences-helpers";
 
 export const KubectlBinaries = observer(() => {
   const userStore = UserStore.getInstance();
   const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
-
-  const downloadMirrorOptions: SelectOption<string>[] = [
-    { value: "default", label: "Default (Google)" },
-    { value: "china", label: "China (Azure)" },
-  ];
+  const downloadMirrorOptions: SelectOption<string>[] = Array.from(
+    packageMirrors.entries(),
+    ([value, { label, platforms }]) => ({ value, label, platforms })
+  );
 
   const save = () => {
     userStore.downloadBinariesPath = downloadPath;
@@ -68,6 +68,7 @@ export const KubectlBinaries = observer(() => {
           value={userStore.downloadMirror}
           onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
           disabled={!userStore.downloadKubectlBinaries}
+          isOptionDisabled={({ platforms }) => !platforms.has(process.platform)}
           themeName="lens"
         />
       </section>
