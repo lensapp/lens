@@ -22,14 +22,13 @@
 import "./secret-details.scss";
 
 import React from "react";
-import isEmpty from "lodash/isEmpty";
 import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
-import { base64 } from "../../utils";
+import { base64, ObservableToggleSet } from "../../utils";
 import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
@@ -44,7 +43,7 @@ interface Props extends KubeObjectDetailsProps<Secret> {
 export class SecretDetails extends React.Component<Props> {
   @observable isSaving = false;
   @observable data: { [name: string]: string } = {};
-  @observable revealSecret: { [name: string]: boolean } = {};
+  revealSecret = new ObservableToggleSet<string>();
 
   constructor(props: Props) {
     super(props);
@@ -58,7 +57,7 @@ export class SecretDetails extends React.Component<Props> {
 
         if (secret) {
           this.data = secret.data;
-          this.revealSecret = {};
+          this.revealSecret.clear();
         }
       })
     ]);
@@ -82,6 +81,69 @@ export class SecretDetails extends React.Component<Props> {
     this.data[name] = encoded ? value : base64.encode(value);
   };
 
+  renderSecret = ([name, value]: [string, string]) => {
+    let decodedVal: string | undefined;
+
+    try {
+      decodedVal = base64.decode(value);
+    } catch {
+      /**
+       * The value failed to be decoded, so don't show the visibility
+       * toggle until the value is saved
+       */
+      this.revealSecret.delete(name);
+    }
+
+    const revealSecret = this.revealSecret.has(name);
+
+    if (revealSecret && typeof decodedVal === "string") {
+      value = decodedVal;
+    }
+
+    return (
+      <div key={name} className="data" data-testid={`${name}-secret-entry`}>
+        <div className="name">{name}</div>
+        <div className="flex gaps align-center">
+          <Input
+            multiLine
+            theme="round-black"
+            className="box grow"
+            value={value || ""}
+            onChange={value => this.editData(name, value, !revealSecret)}
+          />
+          {typeof decodedVal === "string" && (
+            <Icon
+              material={revealSecret ? "visibility" : "visibility_off"}
+              tooltip={revealSecret ? "Hide" : "Show"}
+              onClick={() => this.revealSecret.toggle(name)}
+            />
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  renderData() {
+    const secrets = Object.entries(this.data);
+
+    if (secrets.length === 0) {
+      return null;
+    }
+
+    return (
+      <>
+        <DrawerTitle title="Data" />
+        {secrets.map(this.renderSecret)}
+        <Button
+          primary
+          label="Save" waiting={this.isSaving}
+          className="save-btn"
+          onClick={this.saveSecret}
+        />
+      </>
+    );
+  }
+
   render() {
     const { object: secret } = this.props;
 
@@ -101,52 +163,7 @@ export class SecretDetails extends React.Component<Props> {
         <DrawerItem name="Type">
           {secret.type}
         </DrawerItem>
-        {!isEmpty(this.data) && (
-          <>
-            <DrawerTitle title="Data"/>
-            {
-              Object.entries(this.data).map(([name, value]) => {
-                const revealSecret = this.revealSecret[name];
-                let decodedVal = "";
-
-                try {
-                  decodedVal = base64.decode(value);
-                } catch {
-                  decodedVal = "";
-                }
-                value = revealSecret ? decodedVal : value;
-
-                return (
-                  <div key={name} className="data">
-                    <div className="name">{name}</div>
-                    <div className="flex gaps align-center">
-                      <Input
-                        multiLine
-                        theme="round-black"
-                        className="box grow"
-                        value={value || ""}
-                        onChange={value => this.editData(name, value, !revealSecret)}
-                      />
-                      {decodedVal && (
-                        <Icon
-                          material={`visibility${revealSecret ? "" : "_off"}`}
-                          tooltip={revealSecret ? "Hide" : "Show"}
-                          onClick={() => this.revealSecret[name] = !revealSecret}
-                        />)
-                      }
-                    </div>
-                  </div>
-                );
-              })
-            }
-            <Button
-              primary
-              label="Save" waiting={this.isSaving}
-              className="save-btn"
-              onClick={this.saveSecret}
-            />
-          </>
-        )}
+        {this.renderData()}
       </div>
     );
   }
