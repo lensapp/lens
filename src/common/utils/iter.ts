@@ -25,7 +25,7 @@ export type Falsey = false | 0 | "" | null | undefined;
  * Create a new type safe empty Iterable
  * @returns An `Iterable` that yields 0 items
  */
-export function* newEmpty<T>(): Iterable<T> {
+export function* newEmpty<T>(): IterableIterator<T> {
   return;
 }
 
@@ -35,7 +35,7 @@ export function* newEmpty<T>(): Iterable<T> {
  * @param src An initial iterator
  * @param n The maximum number of elements to take from src. Yields up to the floor of `n` and 0 items if n < 0
  */
-export function* take<T>(src: Iterable<T>, n: number): Iterable<T> {
+export function* take<T>(src: Iterable<T>, n: number): IterableIterator<T> {
   outer: for (let i = 0; i < n; i += 1) {
     for (const item of src) {
       yield item;
@@ -53,7 +53,7 @@ export function* take<T>(src: Iterable<T>, n: number): Iterable<T> {
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): Iterable<U> {
+export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): IterableIterator<U> {
   for (const from of src) {
     yield fn(from);
   }
@@ -64,7 +64,7 @@ export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): Iterable<U> {
  * @param src A type that can be iterated over
  * @param fn The function that returns either an iterable over items that should be filtered out or a `Falsey` value indicating that it should be ignored
  */
-export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsey> | Falsey): Iterable<U> {
+export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsey> | Falsey): IterableIterator<U> {
   for (const from of src) {
     if (!from) {
       continue;
@@ -89,7 +89,7 @@ export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable
  * @param src A type that can be iterated over
  * @param fn A function that returns an iterator
  */
-export function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): Iterable<U> {
+export function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): IterableIterator<U> {
   for (const from of src) {
     yield* fn(from);
   }
@@ -101,7 +101,7 @@ export function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): 
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): Iterable<T> {
+export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): IterableIterator<T> {
   for (const from of src) {
     if (fn(from)) {
       yield from;
@@ -115,7 +115,7 @@ export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): Iterable<T> 
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsey): Iterable<U> {
+export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsey): IterableIterator<U> {
   for (const from of src) {
     const res = fn(from);
 
@@ -131,7 +131,7 @@ export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsey):
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | null | undefined): Iterable<U> {
+export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | null | undefined): IterableIterator<U> {
   for (const from of src) {
     const res = fn(from);
 
@@ -164,7 +164,7 @@ export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
  * @param reducer A function for producing the next item from an accumilation and the current item
  * @param initial The initial value for the iteration
  */
-export function reduce<T, R>(src: Iterable<T>, reducer: (acc: Iterable<R>, cur: T) => Iterable<R>, initial: Iterable<R>): Iterable<R>;
+export function reduce<T, R extends Iterable<any>>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R;
 
 export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R {
   let acc = initial;
@@ -174,4 +174,14 @@ export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => 
   }
 
   return acc;
+}
+
+/**
+ * A convenience function for reducing over an iterator of strings and concatenating them together
+ * @param src The value to iterate over
+ * @param connector The string value to intersperse between the yielded values
+ * @returns The concatenated entries of `src` interspersed with copies of `connector`
+ */
+export function join(src: Iterable<string>, connector = ","): string {
+  return reduce(src, (acc, cur) => `${acc}${connector}${cur}`, "");
 }
