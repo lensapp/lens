@@ -32,7 +32,7 @@ import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
 import { getPath } from "../common/utils/getPath";
-import { CONSTANTS } from "../common/user-store/preferences-helpers";
+import { defaultPackageMirror, packageMirrors } from "../common/user-store/preferences-helpers";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -388,7 +388,7 @@ export class Kubectl {
   protected getDownloadMirror() {
     // MacOS packages are only available from default
 
-    return CONSTANTS.packageMirrors.get(UserStore.getInstance().downloadMirror)
-      ?? CONSTANTS.packageMirrors.get(CONSTANTS.defaultPackageMirror);
+    return packageMirrors.get(UserStore.getInstance().downloadMirror)
+      ?? packageMirrors.get(defaultPackageMirror);
   }
 }

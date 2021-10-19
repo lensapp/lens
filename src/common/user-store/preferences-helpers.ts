@@ -141,8 +141,8 @@ export interface DownloadMirror {
   platforms: Set<NodeJS.Platform>;
 }
 
-const defaultPackageMirror = "default";
-const packageMirrors = new Map<string, DownloadMirror>([
+export const defaultPackageMirror = "default";
+export const packageMirrors = new Map<string, DownloadMirror>([
   [defaultPackageMirror, {
     url: "https://storage.googleapis.com/kubernetes-release/release",
     label: "Default (Google)",
@@ -308,9 +308,4 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
-};
-
-export const CONSTANTS = {
-  defaultPackageMirror,
-  packageMirrors,
 };
