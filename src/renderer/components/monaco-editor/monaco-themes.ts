@@ -23,13 +23,16 @@
 import { editor } from "monaco-editor";
 import cloudsMidnight from "./monaco-theme.clouds-midnight.json";
 
-export interface MonacoCustomTheme extends editor.IStandaloneThemeData {
+export type MonacoTheme = "vs" | "vs-dark" | "hc-black" | MonacoCustomTheme;
+export type MonacoCustomTheme = "clouds-midnight";
+
+export interface MonacoThemeData extends editor.IStandaloneThemeData {
   name?: string;
 }
 
 // Registered names could be then used in "themes/*.json" in "{monacoTheme: [name]}"
-export const customThemes = {
-  [cloudsMidnight.name]: cloudsMidnight as MonacoCustomTheme,
+export const customThemes: Partial<Record<MonacoTheme, MonacoThemeData>> = {
+  "clouds-midnight": cloudsMidnight as MonacoThemeData,
 };
 
 export function registerCustomThemes(): void {
@@ -38,6 +41,6 @@ export function registerCustomThemes(): void {
   });
 }
 
-export async function loadCustomTheme(name: string): Promise<MonacoCustomTheme> {
+export async function loadCustomTheme(name: string): Promise<MonacoThemeData> {
   return import(`./monaco-theme.${name}.json`);
 }

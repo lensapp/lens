@@ -87,12 +87,12 @@
   }
 
   .values {
-    .MonacoEditor {
+    [data-test-component="monaco-editor"] {
       min-height: 300px;
-    }
 
-    .MonacoEditor + .Button {
-      align-self: flex-start;
+      + .Button {
+        align-self: flex-start;
+      }
     }
   }
 }

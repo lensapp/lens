@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./dock-tab-content.scss";
+import styles from "./dock-tab-content.module.css";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
@@ -114,7 +114,11 @@ export class DockTabContent extends React.Component<DockTabContentProps> {
     const { InfoPanel, Content } = this.tabComponents;
 
     return (
-      <div className={cssNames("DockTabContent flex column", className)} ref={bindContainerRef}>
+      <div
+        data-test-component="dock-tab-content"
+        className={cssNames(styles.DockTabContent, className)}
+        ref={bindContainerRef}
+      >
         {InfoPanel && <InfoPanel tabId={this.tabId} error={this.error}/>}
         {Content && <Content {...this.props}/>}
         {this.renderEditor()}

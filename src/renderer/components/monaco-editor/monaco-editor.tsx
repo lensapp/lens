@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./monaco-editor.scss";
+import styles from "./monaco-editor.module.css";
 import React from "react";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { editor, Uri } from "monaco-editor";
-import { registerCustomThemes } from "./monaco-themes";
+import { MonacoTheme, registerCustomThemes } from "./monaco-themes";
 import { MonacoValidator, monacoValidators } from "./monaco-validators";
 import { cssNames, disposer, toJS } from "../../utils";
 import { UserStore } from "../../../common/user-store";
@@ -39,7 +39,7 @@ export interface MonacoEditorProps {
   className?: string;
   autoFocus?: boolean;
   readOnly?: boolean;
-  theme?: "vs" /* default, light theme */ | "vs-dark" | "hc-black" | string;
+  theme?: MonacoTheme;
   language?: "yaml" | "json"; // configure bundled list of languages in via MonacoWebpackPlugin({languages: []})
   options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
   onChange?(value: string, evt: editor.IModelContentChangedEvent): void; // catch latest value updates
@@ -50,7 +50,7 @@ export interface MonacoEditorProps {
 
 export const defaultEditorProps: Partial<MonacoEditorProps> = {
   language: "yaml",
-  get theme(): MonacoEditorProps["theme"] {
+  get theme(): MonacoTheme {
     // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
     return ThemeStore.getInstance().activeTheme.monacoTheme;
   }
@@ -279,7 +279,8 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     return (
       <div
-        className={cssNames("MonacoEditor", className)}
+        data-test-component="monaco-editor"
+        className={cssNames(styles.MonacoEditor, className)}
         ref={this.bindRef}
       />
     );

@@ -45,7 +45,7 @@
     }
   }
 
-  .MonacoEditor {
+  [data-test-component="monaco-editor"] {
     height: 400px;
   }
 }

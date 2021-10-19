@@ -432,7 +432,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     }
 
     const testPodName = "nginx-create-pod-test";
-    const monacoEditor = await frame.waitForSelector(".DockTabContent .MonacoEditor");
+    const monacoEditor = await frame.waitForSelector(`.Dock.isOpen [data-test-component="monaco-editor"]`);
 
     await monacoEditor.click();
     await monacoEditor.type("apiVersion: v1", { delay: 10 });
