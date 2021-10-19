@@ -23,7 +23,7 @@ import "./info-panel.scss";
 import React, { Component, ReactNode } from "react";
 import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames, isReactNode } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
@@ -85,7 +85,9 @@ export class InfoPanel extends Component<InfoPanelProps> {
 
       if (showNotifications) Notifications.ok(result);
     } catch (error) {
-      if (showNotifications) Notifications.error(error.toString());
+      const errorMessage = isReactNode(error) ? error : String(error);
+
+      if (showNotifications) Notifications.error(errorMessage);
     } finally {
       this.waiting = false;
     }
@@ -126,12 +128,12 @@ export class InfoPanel extends Component<InfoPanelProps> {
         </div>
         {showStatusPanel && (
           <div className="flex gaps align-center">
-            {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
+            {waiting ? <><Spinner/> {submittingMessage}</> : this.renderErrorIcon()}
           </div>
         )}
         {showButtons && (
           <>
-            <Button plain label="Cancel" onClick={close} />
+            <Button plain label="Cancel" onClick={close}/>
             <Button
               active
               outlined={showSubmitClose}

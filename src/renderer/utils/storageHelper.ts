@@ -22,7 +22,7 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 import { action, comparer, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction, toJS, when, } from "mobx";
 import produce, { Draft, isDraft } from "immer";
-import { isEqual } from "lodash";
+import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 import { disposer } from "../../common/utils";
 
@@ -166,7 +166,7 @@ export class StorageHelper<T> {
         if (newValue && !isDraft(newValue)) {
           Object.assign(draft, newValue);
         }
-      } else {
+      } else if (isPlainObject(value)) {
         Object.assign(draft, value);
       }
     });

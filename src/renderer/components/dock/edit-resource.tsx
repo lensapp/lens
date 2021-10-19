@@ -21,13 +21,14 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import jsYaml from "js-yaml";
+import yaml from "js-yaml";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { Badge } from "../badge";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
+import { createPatch } from "rfc6902";
 
 interface Props extends InfoPanelProps {
 }
@@ -42,50 +43,43 @@ export class EditResourceInfoPanel extends React.Component<Props> {
     return editResourceStore.getResource(this.tabId);
   }
 
-  @computed get draft(): string {
-    if (!this.isReadyForEditing) {
-      return ""; // wait until tab's data and kube-object resource are loaded
-    }
-
-    const { draft } = editResourceStore.getData(this.tabId);
-
-    if (typeof draft === "string") {
-      return draft;
-    }
-
-    return yaml.dump(this.resource.toPlainObject()); // dump resource first time
+  get draft(): string {
+    return editResourceStore.getData(this.tabId)?.draft;
   }
 
-  @action
-  saveDraft(draft: string | object) {
+  private saveDraft(draft: string | KubeObject) {
     if (typeof draft === "object") {
-      draft = draft ? yaml.dump(draft) : undefined;
+      draft = draft ? yaml.dump(draft.toPlainObject()) : undefined;
     }
 
-    editResourceStore.setData(this.tabId, {
-      firstDraft: draft, // this must be before the next line
-      ...editResourceStore.getData(this.tabId),
-      draft,
-    });
+    editResourceStore.getData(this.tabId).draft = draft;
   }
-
-  onChange = (draft: string, error?: string) => {
-    this.error = error;
-    this.saveDraft(draft);
-  };
 
   save = async () => {
-    if (this.error) {
-      return null;
+    const store = editResourceStore.getStore(this.tabId);
+    const { resource: resourcePath, draft } = editResourceStore.getData(this.tabId);
+    const resource = store.getByPath(resourcePath) ?? await store.loadFromPath(resourcePath);
+    const currentVersion = resource.toPlainObject();
+    const editedVersion = yaml.load(draft) as KubeObject;
+    const patches = createPatch(currentVersion, editedVersion);
+    const editingVersion = editedVersion.metadata.resourceVersion;
+
+    if (editingVersion != resource.getResourceVersion()) {
+      throw (
+        <div className="resource-outdated flex column gaps">
+          <p>
+            {resource.kind} version <b>{resource.getName()}</b> is updated on the server while editing.
+          </p>
+          <p>
+            Please backup your changes and <a onClick={() => this.saveDraft(resource)}>refresh resource</a> to the editor.
+          </p>
+        </div>
+      );
     }
 
-    const store = editResourceStore.getStore(this.tabId);
-    const currentVersion = yaml.load(this.draft);
-    const firstVersion = yaml.load(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
-    const patches = createPatch(firstVersion, currentVersion);
     const updatedResource = await store.patch(this.resource, patches);
 
-    editResourceStore.clearInitialDraft(this.tabId);
+    this.saveDraft(updatedResource); // dump latest resource version for editing
 
     return (
       <p>

@@ -35,7 +35,7 @@ registerCustomThemes(); // setup
 
 export interface MonacoEditorProps {
   id?: string; // associating editor's ID with created model.uri
-  value?: string; // initial text value for editor
+  value?: string;
   className?: string;
   autoFocus?: boolean;
   readOnly?: boolean;

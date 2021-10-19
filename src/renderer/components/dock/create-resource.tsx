@@ -30,6 +30,7 @@ import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-
 import { Notifications } from "../notifications";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
+import logger from "../../../common/logger";
 
 interface Props extends InfoPanelProps {
 }
@@ -58,13 +59,13 @@ export class CreateResourceInfoPanel extends React.Component<Props> {
   }
 
   create = async (): Promise<undefined> => {
-    if (this.error || !this.data.trim()) {
+    if (!this.draft) {
       // do not save when field is empty or there is an error
       return null;
     }
 
     // skip empty documents
-    const resources = yaml.loadAll(this.data).filter(Boolean);
+    const resources = yaml.loadAll(this.draft).filter(Boolean);
     const createdResources: string[] = [];
 
     if (resources.length === 0) {
