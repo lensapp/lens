@@ -42,9 +42,6 @@ import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../extensions/registries";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { eventStore } from "./+events/event.store";
-import { nodesStore } from "./+nodes/nodes.store";
-import { podsStore } from "./+workloads-pods/pods.store";
 import { kubeWatchApi } from "../../common/k8s-api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
@@ -137,7 +134,7 @@ export class App extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
+      kubeWatchApi.subscribeStores([namespaceStore], {
         preload: true,
       }),
 
