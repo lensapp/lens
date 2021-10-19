@@ -28,14 +28,15 @@
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url("../fonts/MaterialIcons-Regular.ttf") format("truetype");
+  src: local("Material Icons"),
+    url("fonts/MaterialIconsExtended.woff2") format("woff2");
 }
 
 // Patched RobotoMono font with icons
 // RobotoMono Windows Compatible for using in terminal
 // https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/RobotoMono
 @font-face {
-  font-family: 'RobotoMono';
-  src: local('RobotoMono'),
-  url('fonts/roboto-mono-nerd.ttf') format('truetype');
+  font-family: "RobotoMono";
+  src: local("RobotoMono"),
+  url("fonts/roboto-mono-nerd.ttf") format("truetype");
 }
