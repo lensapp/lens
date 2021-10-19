@@ -212,7 +212,7 @@
     "jsonpath": "^1.1.1",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.6",
-    "marked": "^2.0.3",
+    "marked": "^2.1.3",
     "md5-file": "^5.0.0",
     "mobx": "^6.3.0",
     "mobx-observable-history": "^2.0.1",
