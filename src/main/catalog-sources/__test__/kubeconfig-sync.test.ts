@@ -28,12 +28,18 @@ import mockFs from "mock-fs";
 import fs from "fs";
 import { ClusterStore } from "../../../common/cluster-store";
 import { ClusterManager } from "../../cluster-manager";
+import { AppPaths } from "../../../common/app-paths";
 
 jest.mock("electron", () => ({
   app: {
     getPath: () => "/foo",
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 describe("kubeconfig-sync.source tests", () => {
   beforeEach(() => {

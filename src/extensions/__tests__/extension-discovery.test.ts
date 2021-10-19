@@ -26,6 +26,7 @@ import path from "path";
 import { ExtensionDiscovery } from "../extension-discovery";
 import os from "os";
 import { Console } from "console";
+import { AppPaths } from "../../common/app-paths";
 
 jest.setTimeout(60_000);
 
@@ -44,10 +45,15 @@ jest.mock("electron", () => ({
     getPath: () => "tmp",
     setLoginItemSettings: jest.fn(),
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
+
+AppPaths.init();
 
 describe("ExtensionDiscovery", () => {
   beforeEach(() => {

@@ -26,7 +26,6 @@ import { comparer, observable, reaction, toJS, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
 import logger from "../../main/logger";
-import { getHostedClusterId, getPath } from "../../common/utils";
 import { isTestEnv } from "../../common/vars";
 
 const storage = observable({
@@ -37,36 +36,29 @@ const storage = observable({
 
 /**
  * Creates a helper for saving data under the "key" intended for window.localStorage
- * @param key
- * @param defaultValue
+ * @param key The descriptor of the data
+ * @param defaultValue The default value of the data, must be JSON serializable
  */
 export function createStorage<T>(key: string, defaultValue: T) {
-  return createAppStorage(key, defaultValue, getHostedClusterId());
-}
-
-export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: string | undefined) {
   const { logPrefix } = StorageHelper;
-  const folder = path.resolve(getPath("userData"), "lens-local-storage");
-  const fileName = `${clusterId ?? "app"}.json`;
-  const filePath = path.resolve(folder, fileName);
 
   if (!storage.initialized) {
+    storage.initialized = true;
     init(); // called once per cluster-view
   }
 
-  function init() {
-    storage.initialized = true;
+  async function init() {
+    const filePath = await StorageHelper.getLocalStoragePath();
 
-    // read previously saved state (if any)
-    fse.readJson(filePath)
-      .then(data => storage.data = data)
-      .catch(() => null) // ignore empty / non-existing / invalid json files
-      .finally(() => {
-        if (!isTestEnv) {
-          logger.info(`${logPrefix} loading finished for ${filePath}`);
-        }
-        storage.loaded = true;
-      });
+    try {
+      storage.data = await fse.readJson(filePath);
+    } catch {} finally {
+      if (!isTestEnv) {
+        logger.info(`${logPrefix} loading finished for ${filePath}`);
+      }
+
+      storage.loaded = true;
+    }
 
     // bind auto-saving data changes to %storage-file.json
     reaction(() => toJS(storage.data), saveFile, {
@@ -78,7 +70,7 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
       logger.info(`${logPrefix} saving ${filePath}`);
 
       try {
-        await fse.ensureDir(folder, { mode: 0o755 });
+        await fse.ensureDir(path.dirname(filePath), { mode: 0o755 });
         await fse.writeJson(filePath, state, { spaces: 2 });
       } catch (error) {
         logger.error(`${logPrefix} saving failed: ${error}`, {

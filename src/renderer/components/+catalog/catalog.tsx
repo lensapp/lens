@@ -37,7 +37,7 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import { createAppStorage, cssNames, prevDefault } from "../../utils";
+import { createStorage, cssNames, prevDefault } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
@@ -47,7 +47,7 @@ import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 
-export const previousActiveTab = createAppStorage("catalog-previous-active-tab", browseCatalogTab);
+export const previousActiveTab = createStorage("catalog-previous-active-tab", browseCatalogTab);
 
 enum sortBy {
   name = "name",
@@ -74,7 +74,7 @@ export class Catalog extends React.Component<Props> {
     this.catalogEntityStore = props.catalogEntityStore;
   }
   static defaultProps = {
-    catalogEntityStore: new CatalogEntityStore(),       
+    catalogEntityStore: new CatalogEntityStore(),
   };
 
   get routeActiveTab(): string {

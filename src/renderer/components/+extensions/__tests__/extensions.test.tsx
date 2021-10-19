@@ -31,6 +31,7 @@ import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
+import { AppPaths } from "../../../../common/app-paths";
 
 mockWindow();
 
@@ -38,13 +39,20 @@ jest.setTimeout(30000);
 jest.mock("fs-extra");
 jest.mock("../../notifications");
 
-jest.mock("../../../../common/utils", () => ({
-  ...jest.requireActual<any>("../../../../common/utils"),
-  downloadFile: jest.fn(() => ({
-    promise: Promise.resolve()
+jest.mock("../../../../common/utils/downloadFile", () => ({
+  downloadFile: jest.fn(({ url }) => ({
+    promise: Promise.resolve(),
+    url,
+    cancel: () => {},
   })),
-  extractTar: jest.fn(() => Promise.resolve())
+  downloadJson: jest.fn(({ url }) => ({
+    promise: Promise.resolve({}),
+    url,
+    cancel: () => { },
+  })),
 }));
+
+jest.mock("../../../../common/utils/tar");
 
 jest.mock("electron", () => ({
   app: {
@@ -52,8 +60,13 @@ jest.mock("electron", () => ({
     getPath: () => "tmp",
     getLocale: () => "en",
     setLoginItemSettings: (): void => void 0,
-  }
+  },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 describe("Extensions", () => {
   beforeEach(async () => {

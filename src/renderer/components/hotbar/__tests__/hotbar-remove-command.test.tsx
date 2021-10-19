@@ -27,13 +27,19 @@ import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import { Notifications } from "../../notifications";
 import mockFs from "mock-fs";
+import { AppPaths } from "../../../../common/app-paths";
 
 jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
     setLoginItemSettings: jest.fn(),
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 const mockHotbars: {[id: string]: any} = {
   "1": {

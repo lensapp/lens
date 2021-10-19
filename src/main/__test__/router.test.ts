@@ -19,7 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { AppPaths } from "../../common/app-paths";
 import { Router } from "../router";
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+  },
+}));
+
+AppPaths.init();
 
 describe("Router", () => {
   it("blocks path traversal attacks", async () => {

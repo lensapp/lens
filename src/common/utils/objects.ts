@@ -19,19 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, ipcMain } from "electron";
-
-const remote = ipcMain ? null : require("@electron/remote");
-
 /**
- * calls getPath either on app or on the remote's app
- *
- * @deprecated Use a different method for accessing the getPath function
+ * A better typed version of `Object.fromEntries` where the keys are known to
+ * be a specific subset
  */
-export function getPath(name: Parameters<typeof app["getPath"]>[0]): string {
-  if (app) {
-    return app.getPath(name);
-  }
-
-  return remote.app.getPath(name);
+export function fromEntries<T, Key extends string>(entries: Iterable<readonly [Key, T]>): { [k in Key]: T } {
+  return Object.fromEntries(entries) as { [k in Key]: T };
 }

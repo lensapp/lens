@@ -27,12 +27,18 @@ import selectEvent from "react-select-event";
 
 import { Cluster } from "../../../../main/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
+import { AppPaths } from "../../../../common/app-paths";
 
 jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 const kubeconfig = `
 apiVersion: v1

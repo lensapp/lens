@@ -24,6 +24,9 @@ import { action, comparer, makeObservable, observable, toJS, when, } from "mobx"
 import produce, { Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
+import { getHostedClusterId } from "../../common/utils";
+import path from "path";
+import { AppPaths } from "../../common/app-paths";
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
@@ -40,6 +43,10 @@ export interface StorageHelperOptions<T> {
 }
 
 export class StorageHelper<T> {
+  static async getLocalStoragePath() {
+    return path.resolve(await AppPaths.getAsync("userData"), "lens-local-storage", `${getHostedClusterId() || "app"}.json`);
+  }
+
   static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
 

@@ -65,6 +65,7 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import * as path from "path";
 import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
+import { AppPaths } from "../common/app-paths";
 
 const onCloseCleanup = disposer();
 const onQuitCleanup = disposer();
@@ -88,6 +89,8 @@ if (process.env.CICD) {
 } else {
   app.setPath("userData", workingDir);
 }
+
+AppPaths.init();
 
 if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();

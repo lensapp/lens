@@ -28,6 +28,7 @@ import { logTabStore } from "../log-tab.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 import fse from "fs-extra";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
+import { AppPaths } from "../../../../common/app-paths";
 
 mockWindow();
 
@@ -37,7 +38,12 @@ jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 podsStore.items.push(new Pod(dockerPod));
 podsStore.items.push(new Pod(deploymentPod1));

@@ -28,6 +28,7 @@ import { stdout, stderr } from "process";
 import { ThemeStore } from "../../../renderer/theme.store";
 import { TerminalStore } from "../../renderer-api/components";
 import { UserStore } from "../../../common/user-store";
+import { AppPaths } from "../../../common/app-paths";
 
 jest.mock("react-monaco-editor", () => null);
 
@@ -35,7 +36,12 @@ jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 console = new Console(stdout, stderr);
 

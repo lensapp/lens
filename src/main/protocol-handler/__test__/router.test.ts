@@ -29,6 +29,7 @@ import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { ExtensionsStore } from "../../../extensions/extensions-store";
 import { LensProtocolRouterMain } from "../router";
 import mockFs from "mock-fs";
+import { AppPaths } from "../../../common/app-paths";
 
 jest.mock("../../../common/ipc");
 
@@ -37,7 +38,12 @@ jest.mock("electron", () => ({
     getPath: () => "tmp",
     setLoginItemSettings: jest.fn(),
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 function throwIfDefined(val: any): void {
   if (val != null) {

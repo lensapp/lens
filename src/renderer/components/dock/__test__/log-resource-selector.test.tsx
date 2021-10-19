@@ -31,6 +31,7 @@ import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
+import { AppPaths } from "../../../../common/app-paths";
 
 jest.mock("react-monaco-editor", () => null);
 
@@ -38,7 +39,12 @@ jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
   },
+  ipcMain: {
+    on: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 const getComponent = (tabData: LogTabData) => {
   return (

@@ -27,7 +27,7 @@ import path from "path";
 import { BaseStore } from "../common/base-store";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { toJS } from "../common/utils";
-import { getPath } from "../common/utils/getPath";
+import { app } from "electron";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
@@ -55,7 +55,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
     if (!this.registeredExtensions.has(extensionName)) {
       const salt = randomBytes(32).toString("hex");
       const hashedName = SHA256(`${extensionName}/${salt}`).toString();
-      const dirPath = path.resolve(getPath("userData"), "extension_data", hashedName);
+      const dirPath = path.resolve(app.getPath("userData"), "extension_data", hashedName);
 
       this.registeredExtensions.set(extensionName, dirPath);
     }
