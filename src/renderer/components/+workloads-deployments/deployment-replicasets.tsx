@@ -71,11 +71,11 @@ export class DeploymentReplicaSets extends React.Component<Props> {
         <DrawerTitle title="Deploy Revisions"/>
         <Table
           selectable
+          tableId="deployment_replica_sets_view"
           scrollable={false}
           sortable={this.sortingCallbacks}
           sortByDefault={{ sortBy: sortBy.pods, orderBy: "desc" }}
           sortSyncWithUrl={false}
-          tableId="deployment_replica_sets_view"
           className="box grow"
         >
           <TableHead>

@@ -31,7 +31,7 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { nodesApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, stopPropagation } from "../../utils";
+import { cssNames, getConvertedParts, stopPropagation } from "../../utils";
 import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
@@ -98,7 +98,7 @@ export class Pods extends React.Component<Props> {
         tableId = "workloads_pods"
         isConfigurable
         sortingCallbacks={{
-          [columnId.name]: pod => pod.getName(),
+          [columnId.name]: pod => getConvertedParts(pod.getName()),
           [columnId.namespace]: pod => pod.getNs(),
           [columnId.containers]: pod => pod.getContainers().length,
           [columnId.restarts]: pod => pod.getRestartsCount(),

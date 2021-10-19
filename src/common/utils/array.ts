@@ -19,21 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common usage utils & helpers
+export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
 
-export * from "../../common/utils";
-export * from "../../common/event-emitter";
+/**
+ *
+ * @param sources The source arrays
+ * @yields A tuple of the next element from each of the sources
+ * @returns The tuple of all the sources as soon as at least one of the sources is exausted
+ */
+export function* zipStrict<T, N extends number>(...sources: Tuple<T[], N>): Iterator<Tuple<T, N>, Tuple<T[], N>> {
+  const maxSafeLength = sources.reduce((prev, cur) => Math.min(prev, cur.length), Number.POSITIVE_INFINITY);
 
-export * from "./copyToClipboard";
-export * from "./createStorage";
-export * from "./cssNames";
-export * from "./cssVar";
-export * from "./display-booleans";
-export * from "./interval";
-export * from "./isMiddleClick";
-export * from "./isReactNode";
-export * from "./metricUnitsToNumber";
-export * from "./name-parts";
-export * from "./prevDefault";
-export * from "./saveFile";
-export * from "./storageHelper";
+  if (!isFinite(maxSafeLength)) {
+    // There are no sources, thus just return
+    return [] as Tuple<T[], N>;
+  }
+
+  for (let i = 0; i < maxSafeLength; i += 1) {
+    yield sources.map(source => source[i]) as Tuple<T, N>;
+  }
+
+  return sources.map(source => source.slice(maxSafeLength)) as Tuple<T[], N>;
+}

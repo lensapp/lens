@@ -19,21 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common usage utils & helpers
+import { getConvertedParts } from "../name-parts";
 
-export * from "../../common/utils";
-export * from "../../common/event-emitter";
-
-export * from "./copyToClipboard";
-export * from "./createStorage";
-export * from "./cssNames";
-export * from "./cssVar";
-export * from "./display-booleans";
-export * from "./interval";
-export * from "./isMiddleClick";
-export * from "./isReactNode";
-export * from "./metricUnitsToNumber";
-export * from "./name-parts";
-export * from "./prevDefault";
-export * from "./saveFile";
-export * from "./storageHelper";
+describe("getConvertedParts", () => {
+  it.each([
+    ["hello", ["hello"]],
+    ["hello.goodbye", ["hello", "goodbye"]],
+    ["hello.1", ["hello", 1]],
+    ["3-hello.1", [3, "hello", 1]],
+    ["3_hello.1", [3, "hello", 1]],
+    ["3_hello.1/foobar", [3, "hello", 1, "foobar"]],
+    ["3_hello.1/foobar\\new", [3, "hello", 1, "foobar", "new"]],
+  ])("Splits '%s' as into %j", (input, output) => {
+    expect(getConvertedParts(input)).toEqual(output);
+  });
+});
