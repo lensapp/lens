@@ -38,6 +38,7 @@ import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import logger from "../common/logger";
 import { unmountComponentAtNode } from "react-dom";
+import { ClusterFrameHandler } from "./components/cluster-manager/lens-views";
 
 injectSystemCAs();
 
@@ -59,6 +60,12 @@ export class LensApp extends React.Component {
 
       unmountComponentAtNode(rootElem);
     };
+  }
+
+  constructor(props: {}) {
+    super(props);
+
+    ClusterFrameHandler.createInstance();
   }
 
   componentDidMount() {

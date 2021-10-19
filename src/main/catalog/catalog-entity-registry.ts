@@ -20,7 +20,7 @@
  */
 
 import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
-import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity, CatalogEntityKindData } from "../../common/catalog";
+import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity, CatalogEntityConstructor, CatalogEntityKindData } from "../../common/catalog";
 import { iter } from "../../common/utils";
 
 export class CatalogEntityRegistry {
@@ -59,7 +59,7 @@ export class CatalogEntityRegistry {
     return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as T[];
   }
 
-  getItemsByEntityClass<T extends CatalogEntity>({ apiVersion, kind }: CatalogEntityKindData): T[] {
+  getItemsByEntityClass<T extends CatalogEntity>({ apiVersion, kind }: CatalogEntityKindData & CatalogEntityConstructor<T>): T[] {
     return this.getItemsForApiKind(apiVersion, kind);
   }
 }
