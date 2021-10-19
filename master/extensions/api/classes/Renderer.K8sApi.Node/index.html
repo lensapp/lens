@@ -1353,7 +1353,7 @@
 </tr>
 <tr>
 <td align="left"><code>conditions?</code></td>
-<td align="left">{ <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</td>
+<td align="left"><code>NodeCondition</code>[]</td>
 </tr>
 <tr>
 <td align="left"><code>daemonEndpoints?</code></td>
@@ -1469,9 +1469,9 @@
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#delete">delete</a></p>
 <hr />
 <h3 id="getactiveconditions">getActiveConditions<a class="headerlink" href="#getactiveconditions" title="Permanent link">#</a></h3>
-<p>▸ <strong>getActiveConditions</strong>(): { <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
+<p>▸ <strong>getActiveConditions</strong>(): <code>NodeCondition</code>[]</p>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p>{ <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
+<p><code>NodeCondition</code>[]</p>
 <hr />
 <h3 id="getage">getAge<a class="headerlink" href="#getage" title="Permanent link">#</a></h3>
 <p>▸ <strong>getAge</strong>(<code>humanize?</code>, <code>compact?</code>, <code>fromNow?</code>): <code>string</code> | <code>number</code></p>
@@ -1532,9 +1532,9 @@
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getannotations">getAnnotations</a></p>
 <hr />
 <h3 id="getconditions">getConditions<a class="headerlink" href="#getconditions" title="Permanent link">#</a></h3>
-<p>▸ <strong>getConditions</strong>(): { <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
+<p>▸ <strong>getConditions</strong>(): <code>NodeCondition</code>[]</p>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p>{ <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
+<p><code>NodeCondition</code>[]</p>
 <hr />
 <h3 id="getcpucapacity">getCpuCapacity<a class="headerlink" href="#getcpucapacity" title="Permanent link">#</a></h3>
 <p>▸ <strong>getCpuCapacity</strong>(): <code>number</code></p>
@@ -1581,6 +1581,8 @@
 <hr />
 <h3 id="getnodeconditiontext">getNodeConditionText<a class="headerlink" href="#getnodeconditiontext" title="Permanent link">#</a></h3>
 <p>▸ <strong>getNodeConditionText</strong>(): <code>string</code></p>
+<p>Returns the concatination of all current condition types which have a status
+of <code>"True"</code></p>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <hr />
@@ -1635,9 +1637,9 @@
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#gettimedifffromnow">getTimeDiffFromNow</a></p>
 <hr />
 <h3 id="getwarningconditions">getWarningConditions<a class="headerlink" href="#getwarningconditions" title="Permanent link">#</a></h3>
-<p>▸ <strong>getWarningConditions</strong>(): { <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
+<p>▸ <strong>getWarningConditions</strong>(): <code>NodeCondition</code>[]</p>
 <h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
-<p>{ <code>lastHeartbeatTime?</code>: <code>string</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
+<p><code>NodeCondition</code>[]</p>
 <hr />
 <h3 id="isunschedulable">isUnschedulable<a class="headerlink" href="#isunschedulable" title="Permanent link">#</a></h3>
 <p>▸ <strong>isUnschedulable</strong>(): <code>boolean</code></p>
