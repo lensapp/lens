@@ -42,7 +42,7 @@ export interface ISecretRef {
 }
 
 export interface SecretData extends KubeJsonApiData {
-  type?: SecretType;
+  type: SecretType;
   data?: Record<string, string>;
 }
 
@@ -51,7 +51,7 @@ export class Secret extends KubeObject {
   static namespaced = true;
   static apiBase = "/api/v1/secrets";
 
-  declare type?: SecretType;
+  declare type: SecretType;
   declare data: Record<string, string>;
 
   constructor(data: SecretData) {
