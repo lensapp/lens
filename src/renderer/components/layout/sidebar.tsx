@@ -211,8 +211,8 @@ export class Sidebar extends React.Component<Props> {
             const hotbarStore = HotbarStore.getInstance();
             const isAddedToActive = HotbarStore.getInstance().isAddedToActive(this.clusterEntity);
             const title = isAddedToActive
-              ? "Remove from hotbar"
-              : "Add to hotbar";
+              ? "Remove from Hotbar"
+              : "Add to Hotbar";
             const onClick = isAddedToActive
               ? () => hotbarStore.removeFromHotbar(metadata.uid)
               : () => hotbarStore.addToHotbar(this.clusterEntity);
