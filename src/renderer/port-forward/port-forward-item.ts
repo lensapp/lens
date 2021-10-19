@@ -78,6 +78,10 @@ export class PortForwardItem implements ItemObject {
   getForwardPort() {
     return this.forwardPort;
   }
+
+  getStatus() {
+    return "Active"; // to-do allow port-forward-items to be stopped (without removing them)
+  }
   
   getSearchFields() {
     return [
