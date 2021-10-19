@@ -86,7 +86,7 @@ export function NodeMenu(props: NodeMenuProps) {
   return (
     <>
       <MenuItem onClick={shell}>
-        <Icon svg="ssh" interactive={toolbar} tooltip={toolbar && "Node shell"}/>
+        <Icon svg="terminal" interactive={toolbar} tooltip={toolbar && "Node shell"}/>
         <span className="title">Shell</span>
       </MenuItem>
       {
