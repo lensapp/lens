@@ -315,7 +315,7 @@
     "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.31",
     "@types/webpack-dev-server": "^3.11.6",
-    "@types/webpack-env": "^1.16.2",
+    "@types/webpack-env": "^1.16.3",
     "@types/webpack-node-externals": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.29.1",
