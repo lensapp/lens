@@ -30,7 +30,6 @@ import { navigate } from "../../navigation";
 import { cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
 
 interface Props extends DOMAttributes<HTMLElement> {
@@ -88,10 +87,6 @@ export class HotbarEntityIcon extends React.Component<Props> {
     return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
   }
 
-  isPersisted(entity: CatalogEntity) {
-    return HotbarStore.getInstance().getActive().items.find((item) => item?.entity?.uid === entity.metadata.uid) !== undefined;
-  }
-
   render() {
     if (!this.contextMenu) {
       return null;
@@ -107,21 +102,13 @@ export class HotbarEntityIcon extends React.Component<Props> {
       disabled: !entity
     });
 
-    const isPersisted = this.isPersisted(entity);
     const onOpen = async () => {
       const menuItems: CatalogEntityContextMenu[] = [];
 
-      if (!isPersisted) {
-        menuItems.unshift({
-          title: "Pin to Hotbar",
-          onClick: () => add(entity, index)
-        });
-      } else {
-        menuItems.unshift({
-          title: "Unpin from Hotbar",
-          onClick: () => remove(entity.metadata.uid)
-        });
-      }
+      menuItems.unshift({
+        title: "Remove from Hotbar",
+        onClick: () => remove(entity.metadata.uid)
+      });
 
       this.contextMenu.menuItems = menuItems;
 

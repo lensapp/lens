@@ -42,29 +42,54 @@ export class EditResourceInfoPanel extends React.Component<Props> {
     return editResourceStore.getResource(this.tabId);
   }
 
-  get draft(): string {
-    return editResourceStore.getData(this.tabId)?.draft;
-  }
-
-  saveDraft(draft: string | object) {
-    if (typeof draft === "object") {
-      draft = draft ? jsYaml.safeDump(draft) : undefined;
+  @computed get draft(): string {
+    if (!this.isReadyForEditing) {
+      return ""; // wait until tab's data and kube-object resource are loaded
     }
 
-    editResourceStore.getData(this.tabId).draft = draft;
+    const { draft } = editResourceStore.getData(this.tabId);
+
+    if (typeof draft === "string") {
+      return draft;
+    }
+
+    return yaml.dump(this.resource.toPlainObject()); // dump resource first time
   }
 
-  save = async () => {
-    const store = editResourceStore.getStore(this.tabId);
-    const updatedResource: KubeObject = await store.update(this.resource, jsYaml.safeLoad(this.draft));
+  @action
+  saveDraft(draft: string | object) {
+    if (typeof draft === "object") {
+      draft = draft ? yaml.dump(draft) : undefined;
+    }
 
-    this.saveDraft(updatedResource.toPlainObject()); // update with new resourceVersion to avoid further errors on save
-    const resourceType = updatedResource.kind;
-    const resourceName = updatedResource.getName();
+    editResourceStore.setData(this.tabId, {
+      firstDraft: draft, // this must be before the next line
+      ...editResourceStore.getData(this.tabId),
+      draft,
+    });
+  }
+
+  onChange = (draft: string, error?: string) => {
+    this.error = error;
+    this.saveDraft(draft);
+  };
+
+  save = async () => {
+    if (this.error) {
+      return null;
+    }
+
+    const store = editResourceStore.getStore(this.tabId);
+    const currentVersion = yaml.load(this.draft);
+    const firstVersion = yaml.load(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
+    const patches = createPatch(firstVersion, currentVersion);
+    const updatedResource = await store.patch(this.resource, patches);
+
+    editResourceStore.clearInitialDraft(this.tabId);
 
     return (
       <p>
-        {resourceType} <b>{resourceName}</b> updated.
+        {updatedResource.kind} <b>{updatedResource.getName()}</b> updated.
       </p>
     );
   };

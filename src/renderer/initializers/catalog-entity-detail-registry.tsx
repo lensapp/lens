@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { KubernetesCluster } from "../../common/catalog-entities";
+import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
 import { CatalogEntityDetailRegistry, CatalogEntityDetailsProps } from "../../extensions/registries";
 import { DrawerItem, DrawerTitle } from "../components/drawer";
 
@@ -45,6 +45,20 @@ export function initCatalogEntityDetailRegistry() {
             </>
           ),
         },
-      }
+      },
+      {
+        apiVersions: [WebLink.apiVersion],
+        kind: WebLink.kind,
+        components: {
+          Details: ({ entity }: CatalogEntityDetailsProps<WebLink>) => (
+            <>
+              <DrawerTitle title="More Information" />
+              <DrawerItem name="URL">
+                {entity.spec.url}
+              </DrawerItem>
+            </>
+          ),
+        },
+      },
     ]);
 }

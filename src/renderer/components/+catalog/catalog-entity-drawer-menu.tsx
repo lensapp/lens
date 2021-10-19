@@ -28,9 +28,9 @@ import { makeObservable, observable } from "mobx";
 import { navigate } from "../../navigation";
 import { MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { Icon } from "../icon";
 import type { CatalogEntityItem } from "./catalog-entity-item";
+import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
   item: CatalogEntityItem<T> | null | undefined;
@@ -70,10 +70,6 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     }
   }
 
-  addToHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().addToHotbar(entity);
-  }
-
   getMenuItems(entity: T): React.ReactChild[] {
     if (!entity) {
       return [];
@@ -99,9 +95,12 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     }
 
     items.push(
-      <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
-        <Icon material="playlist_add" small tooltip="Add to Hotbar" />
-      </MenuItem>
+      <HotbarToggleMenuItem
+        key="hotbar-toggle"
+        entity={entity}
+        addContent={<Icon material="push_pin" small tooltip={"Add to Hotbar"}/>}
+        removeContent={<Icon svg="unpin" small tooltip={"Remove from Hotbar"}/>}
+      />
     );
 
     return items;
@@ -109,7 +108,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
 
   render() {
     const { className, item: entity, ...menuProps } = this.props;
-    
+
     if (!this.contextMenu || !entity.enabled) {
       return null;
     }

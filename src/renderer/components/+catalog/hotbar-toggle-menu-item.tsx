@@ -18,33 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React, { ReactNode, useState } from "react";
 
-import React from "react";
-import yaml from "js-yaml";
-import { DrawerItem, DrawerParamToggler } from "../drawer";
-import type { DaemonSet, Deployment, Job, Pod, ReplicaSet, StatefulSet } from "../../../common/k8s-api/endpoints";
-import { MonacoEditor } from "../monaco-editor";
+import { HotbarStore } from "../../../common/hotbar-store";
+import { MenuItem } from "../menu";
 
-interface Props {
-  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
-}
+import type { CatalogEntity } from "../../api/catalog-entity";
 
-export class PodDetailsAffinities extends React.Component<Props> {
-  render() {
-    const { workload } = this.props;
-    const affinitiesNum = workload.getAffinityNumber();
-    const affinities = workload.getAffinity();
+export function HotbarToggleMenuItem(props: { entity: CatalogEntity, addContent: ReactNode, removeContent: ReactNode }) {
+  const store = HotbarStore.getInstance(false);
+  const add = () => store.addToHotbar(props.entity);
+  const remove = () => store.removeFromHotbar(props.entity.getId());
+  const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
 
-    if (!affinitiesNum) return null;
-
-    return (
-      <DrawerItem name="Affinities" className="PodDetailsAffinities">
-        <DrawerParamToggler label={affinitiesNum}>
-          <div style={{ height: 200 }}>
-            <MonacoEditor readOnly value={yaml.dump(affinities)}/>
-          </div>
-        </DrawerParamToggler>
-      </DrawerItem>
-    );
-  }
+  return (
+    <MenuItem onClick={() => {
+      itemInHotbar ? remove() : add();
+      setItemInHotbar(!itemInHotbar);
+    }}>
+      {itemInHotbar ? props.removeContent : props.addContent }
+    </MenuItem>
+  );
 }

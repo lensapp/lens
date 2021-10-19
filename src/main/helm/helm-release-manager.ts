@@ -53,7 +53,7 @@ export async function installChart(chart: string, values: any, name: string | un
   const helm = await helmCli.binaryPath();
   const fileName = tempy.file({ name: "values.yaml" });
 
-  await fse.writeFile(fileName, yaml.safeDump(values));
+  await fse.writeFile(fileName, yaml.dump(values));
 
   try {
     let generateName = "";
@@ -83,7 +83,7 @@ export async function upgradeRelease(name: string, chart: string, values: any, n
   const helm = await helmCli.binaryPath();
   const fileName = tempy.file({ name: "values.yaml" });
 
-  await fse.writeFile(fileName, yaml.safeDump(values));
+  await fse.writeFile(fileName, yaml.dump(values));
 
   try {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();

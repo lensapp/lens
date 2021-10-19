@@ -171,7 +171,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }};
 
 
-    if (hotbar.items.find(i => i?.entity.uid === uid)) {
+    if (this.isAddedToActive(item)) {
       return;
     }
 
@@ -273,6 +273,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+  }
+
+  /**
+   * Checks if entity already pinned to hotbar
+   * @returns boolean
+   */
+  isAddedToActive(entity: CatalogEntity) {
+    return !!this.getActive().items.find(item => item?.entity.uid === entity.metadata.uid);
   }
 }
 

@@ -138,7 +138,7 @@ export class HotbarMenu extends React.Component<Props> {
                             tooltip={`${item.entity.name} (${item.entity.source})`}
                             menuItems={[
                               {
-                                title: "Unpin from Hotbar",
+                                title: "Remove from Hotbar",
                                 onClick: () => this.removeItem(item.entity.uid)
                               }
                             ]}
