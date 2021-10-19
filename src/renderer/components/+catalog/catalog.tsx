@@ -74,7 +74,7 @@ export class Catalog extends React.Component<Props> {
     this.catalogEntityStore = props.catalogEntityStore;
   }
   static defaultProps = {
-    catalogEntityStore: new CatalogEntityStore(),       
+    catalogEntityStore: new CatalogEntityStore(),
   };
 
   get routeActiveTab(): string {
@@ -219,8 +219,7 @@ export class Catalog extends React.Component<Props> {
         <Icon
           small
           className={styles.pinIcon}
-          material={!isItemInHotbar && "push_pin"}
-          svg={isItemInHotbar && "unpin"}
+          material={isItemInHotbar ? "keep_off" : "push_pin"}
           tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
           onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
         />
