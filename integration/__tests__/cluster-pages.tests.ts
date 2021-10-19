@@ -36,7 +36,7 @@ function getSidebarSelectors(itemId: string) {
 
   return {
     expandSubMenu: `${root} .nav-item`,
-    subMenuLink: (href: string) => `[data-testid=cluster-sidebar] .sub-menu a[href^="/${href}"]`,
+    subMenuLink: (href: string) => `[data-testid=cluster-sidebar] .sub-menu a[href^="${href}"]`,
   };
 }
 
@@ -73,7 +73,7 @@ function isTopPageTest(test: CommonPageTest): test is TopPageTest {
 const commonPageTests: CommonPageTest[] = [{
   page: {
     name: "Cluster",
-    href: "cluster",
+    href: "/overview",
     expectedSelector: "div.ClusterOverview div.label",
     expectedText: "CPU"
   }
@@ -81,153 +81,161 @@ const commonPageTests: CommonPageTest[] = [{
 {
   page: {
     name: "Nodes",
-    href: "nodes",
+    href: "/nodes",
     expectedSelector: "h5.title",
     expectedText: "Nodes"
   }
 },
 {
   drawerId: "workloads",
-  pages: [{
-    name: "Overview",
-    href: "workloads",
-    expectedSelector: "h5.box",
-    expectedText: "Overview"
-  },
-  {
-    name: "Pods",
-    href: "pods",
-    expectedSelector: "h5.title",
-    expectedText: "Pods"
-  },
-  {
-    name: "Deployments",
-    href: "deployments",
-    expectedSelector: "h5.title",
-    expectedText: "Deployments"
-  },
-  {
-    name: "DaemonSets",
-    href: "daemonsets",
-    expectedSelector: "h5.title",
-    expectedText: "Daemon Sets"
-  },
-  {
-    name: "StatefulSets",
-    href: "statefulsets",
-    expectedSelector: "h5.title",
-    expectedText: "Stateful Sets"
-  },
-  {
-    name: "ReplicaSets",
-    href: "replicasets",
-    expectedSelector: "h5.title",
-    expectedText: "Replica Sets"
-  },
-  {
-    name: "Jobs",
-    href: "jobs",
-    expectedSelector: "h5.title",
-    expectedText: "Jobs"
-  },
-  {
-    name: "CronJobs",
-    href: "cronjobs",
-    expectedSelector: "h5.title",
-    expectedText: "Cron Jobs"
-  }]
+  pages: [
+    {
+      name: "Overview",
+      href: "/workloads",
+      expectedSelector: "h5.box",
+      expectedText: "Overview"
+    },
+    {
+      name: "Pods",
+      href: "/pods",
+      expectedSelector: "h5.title",
+      expectedText: "Pods"
+    },
+    {
+      name: "Deployments",
+      href: "/deployments",
+      expectedSelector: "h5.title",
+      expectedText: "Deployments"
+    },
+    {
+      name: "DaemonSets",
+      href: "/daemonsets",
+      expectedSelector: "h5.title",
+      expectedText: "Daemon Sets"
+    },
+    {
+      name: "StatefulSets",
+      href: "/statefulsets",
+      expectedSelector: "h5.title",
+      expectedText: "Stateful Sets"
+    },
+    {
+      name: "ReplicaSets",
+      href: "/replicasets",
+      expectedSelector: "h5.title",
+      expectedText: "Replica Sets"
+    },
+    {
+      name: "Jobs",
+      href: "/jobs",
+      expectedSelector: "h5.title",
+      expectedText: "Jobs"
+    },
+    {
+      name: "CronJobs",
+      href: "/cronjobs",
+      expectedSelector: "h5.title",
+      expectedText: "Cron Jobs"
+    },
+  ]
 },
 {
   drawerId: "config",
-  pages: [{
-    name: "ConfigMaps",
-    href: "configmaps",
-    expectedSelector: "h5.title",
-    expectedText: "Config Maps"
-  },
-  {
-    name: "Secrets",
-    href: "secrets",
-    expectedSelector: "h5.title",
-    expectedText: "Secrets"
-  },
-  {
-    name: "Resource Quotas",
-    href: "resourcequotas",
-    expectedSelector: "h5.title",
-    expectedText: "Resource Quotas"
-  },
-  {
-    name: "Limit Ranges",
-    href: "limitranges",
-    expectedSelector: "h5.title",
-    expectedText: "Limit Ranges"
-  },
-  {
-    name: "HPA",
-    href: "hpa",
-    expectedSelector: "h5.title",
-    expectedText: "Horizontal Pod Autoscalers"
-  },
-  {
-    name: "Pod Disruption Budgets",
-    href: "poddisruptionbudgets",
-    expectedSelector: "h5.title",
-    expectedText: "Pod Disruption Budgets"
-  }]
+  pages: [
+    {
+      name: "ConfigMaps",
+      href: "/configmaps",
+      expectedSelector: "h5.title",
+      expectedText: "Config Maps"
+    },
+    {
+      name: "Secrets",
+      href: "/secrets",
+      expectedSelector: "h5.title",
+      expectedText: "Secrets"
+    },
+    {
+      name: "Resource Quotas",
+      href: "/resourcequotas",
+      expectedSelector: "h5.title",
+      expectedText: "Resource Quotas"
+    },
+    {
+      name: "Limit Ranges",
+      href: "/limitranges",
+      expectedSelector: "h5.title",
+      expectedText: "Limit Ranges"
+    },
+    {
+      name: "HPA",
+      href: "/hpa",
+      expectedSelector: "h5.title",
+      expectedText: "Horizontal Pod Autoscalers"
+    },
+    {
+      name: "Pod Disruption Budgets",
+      href: "/poddisruptionbudgets",
+      expectedSelector: "h5.title",
+      expectedText: "Pod Disruption Budgets"
+    },
+  ]
 },
 {
   drawerId: "networks",
-  pages: [{
-    name: "Services",
-    href: "services",
-    expectedSelector: "h5.title",
-    expectedText: "Services"
-  },
-  {
-    name: "Endpoints",
-    href: "endpoints",
-    expectedSelector: "h5.title",
-    expectedText: "Endpoints"
-  },
-  {
-    name: "Ingresses",
-    href: "ingresses",
-    expectedSelector: "h5.title",
-    expectedText: "Ingresses"
-  },
-  {
-    name: "Network Policies",
-    href: "network-policies",
-    expectedSelector: "h5.title",
-    expectedText: "Network Policies"
-  }]
+  pages: [
+    {
+      name: "Services",
+      href: "/services",
+      expectedSelector: "h5.title",
+      expectedText: "Services"
+    },
+    {
+      name: "Endpoints",
+      href: "/endpoints",
+      expectedSelector: "h5.title",
+      expectedText: "Endpoints"
+    },
+    {
+      name: "Ingresses",
+      href: "/ingresses",
+      expectedSelector: "h5.title",
+      expectedText: "Ingresses"
+    },
+    {
+      name: "Network Policies",
+      href: "/network-policies",
+      expectedSelector: "h5.title",
+      expectedText: "Network Policies"
+    },
+  ]
 },
 {
   drawerId: "storage",
-  pages: [{
-    name: "Persistent Volume Claims",
-    href: "persistent-volume-claims",
-    expectedSelector: "h5.title",
-    expectedText: "Persistent Volume Claims"
-  },
-  {
-    name: "Persistent Volumes",
-    href: "persistent-volumes",
-    expectedSelector: "h5.title",
-    expectedText: "Persistent Volumes"
-  },
-  {
-    name: "Storage Classes",
-    href: "storage-classes",
-    expectedSelector: "h5.title",
-    expectedText: "Storage Classes"
-  }]
+  pages: [
+    {
+      name: "Persistent Volume Claims",
+      href: "/persistent-volume-claims",
+      expectedSelector: "h5.title",
+      expectedText: "Persistent Volume Claims"
+    },
+    {
+      name: "Persistent Volumes",
+      href: "/persistent-volumes",
+      expectedSelector: "h5.title",
+      expectedText: "Persistent Volumes"
+    },
+    {
+      name: "Storage Classes",
+      href: "/storage-classes",
+      expectedSelector: "h5.title",
+      expectedText: "Storage Classes"
+    },
+  ]
 },
 {
   page: {
     name: "Namespaces",
-    href: "namespaces",
+    href: "/namespaces",
     expectedSelector: "h5.title",
     expectedText: "Namespaces"
   }
@@ -235,72 +243,78 @@ const commonPageTests: CommonPageTest[] = [{
 {
   page: {
     name: "Events",
-    href: "events",
+    href: "/events",
     expectedSelector: "h5.title",
     expectedText: "Events"
   }
 },
 {
   drawerId: "apps",
-  pages: [{
-    name: "Charts",
-    href: "apps/charts",
-    expectedSelector: "div.HelmCharts input",
-  },
-  {
-    name: "Releases",
-    href: "apps/releases",
-    expectedSelector: "h5.title",
-    expectedText: "Releases"
-  }]
+  pages: [
+    {
+      name: "Charts",
+      href: "/apps/charts",
+      expectedSelector: "div.HelmCharts input",
+    },
+    {
+      name: "Releases",
+      href: "/apps/releases",
+      expectedSelector: "h5.title",
+      expectedText: "Releases"
+    },
+  ]
 },
 {
   drawerId: "users",
-  pages: [{
-    name: "Service Accounts",
-    href: "service-accounts",
-    expectedSelector: "h5.title",
-    expectedText: "Service Accounts"
-  },
-  {
-    name: "Roles",
-    href: "roles",
-    expectedSelector: "h5.title",
-    expectedText: "Roles"
-  },
-  {
-    name: "Cluster Roles",
-    href: "cluster-roles",
-    expectedSelector: "h5.title",
-    expectedText: "Cluster Roles"
-  },
-  {
-    name: "Role Bindings",
-    href: "role-bindings",
-    expectedSelector: "h5.title",
-    expectedText: "Role Bindings"
-  },
-  {
-    name: "Cluster Role Bindings",
-    href: "cluster-role-bindings",
-    expectedSelector: "h5.title",
-    expectedText: "Cluster Role Bindings"
-  },
-  {
-    name: "Pod Security Policies",
-    href: "pod-security-policies",
-    expectedSelector: "h5.title",
-    expectedText: "Pod Security Policies"
-  }]
+  pages: [
+    {
+      name: "Service Accounts",
+      href: "/service-accounts",
+      expectedSelector: "h5.title",
+      expectedText: "Service Accounts"
+    },
+    {
+      name: "Roles",
+      href: "/roles",
+      expectedSelector: "h5.title",
+      expectedText: "Roles"
+    },
+    {
+      name: "Cluster Roles",
+      href: "/cluster-roles",
+      expectedSelector: "h5.title",
+      expectedText: "Cluster Roles"
+    },
+    {
+      name: "Role Bindings",
+      href: "/role-bindings",
+      expectedSelector: "h5.title",
+      expectedText: "Role Bindings"
+    },
+    {
+      name: "Cluster Role Bindings",
+      href: "/cluster-role-bindings",
+      expectedSelector: "h5.title",
+      expectedText: "Cluster Role Bindings"
+    },
+    {
+      name: "Pod Security Policies",
+      href: "/pod-security-policies",
+      expectedSelector: "h5.title",
+      expectedText: "Pod Security Policies"
+    },
+  ]
 },
 {
   drawerId: "custom-resources",
-  pages: [{
-    name: "Definitions",
-    href: "crd/definitions",
-    expectedSelector: "h5.title",
-    expectedText: "Custom Resources"
-  }]
+  pages: [
+    {
+      name: "Definitions",
+      href: "/crd/definitions",
+      expectedSelector: "h5.title",
+      expectedText: "Custom Resources"
+    },
+  ]
 }];
 
 utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
@@ -321,7 +335,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     for (const test of commonPageTests) {
       if (isTopPageTest(test)) {
         const { href, expectedText, expectedSelector } = test.page;
-        const menuButton = await frame.waitForSelector(`a[href^="/${href}"]`);
+        const menuButton = await frame.waitForSelector(`a[href^="${href}"]`);
 
         await menuButton.click();
         await frame.waitForSelector(`${expectedSelector} >> text='${expectedText}'`);
