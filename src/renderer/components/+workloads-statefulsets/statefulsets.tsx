@@ -27,7 +27,6 @@ import type { RouteComponentProps } from "react-router";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
-import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
@@ -62,7 +61,7 @@ export class StatefulSets extends React.Component<Props> {
         isConfigurable
         tableId="workload_statefulsets"
         className="StatefulSets" store={statefulSetStore}
-        dependentStores={[podsStore, nodesStore, eventStore]}
+        dependentStores={[podsStore, eventStore]} // status icon component uses event store, details component uses podStore
         sortingCallbacks={{
           [columnId.name]: statefulSet => statefulSet.getName(),
           [columnId.namespace]: statefulSet => statefulSet.getNs(),
