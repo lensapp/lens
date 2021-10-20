@@ -30,6 +30,7 @@
   background: $contentColor;
   box-shadow: 0 0 $unit * 2 $boxShadow;
   z-index: $zIndex-drawer;
+  height: 100%;
 
   &.left {
     left: 0;
@@ -51,7 +52,6 @@
   &.right {
     top: 0;
     width: var(--size);
-    height: 100%;
   }
 
   &.top,
