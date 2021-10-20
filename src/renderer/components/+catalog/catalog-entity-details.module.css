@@ -19,25 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
- .CatalogEntityDetails {
-   .EntityMetadata {
-     margin-right: $margin;
-   }
-   .EntityIcon.box.top.left {
-     margin-right: $margin * 2;
+.entityDetails {
+  /* Move Details panel under TopBar line */
+  height: calc(100% - var(--main-layout-header));
+  margin-top: var(--main-layout-header);
+}
 
-    .IconHint {
-      text-align: center;
-      font-size: var(--font-size-small);
-      text-transform: uppercase;
-      margin-top: $margin;
-      cursor: default;
-      user-select: none;
-      opacity: 0.5;
-    }
+.metadata {
+  margin-right: var(--margin);
+}
 
-    div * {
-      font-size: 1.5em;
+.entityIcon {
+  margin-right: calc(var(--margin) * 3);
+
+  .avatar {
+    :global(.MuiAvatar-root) {
+      font-size: 3ch;
     }
-   }
- }
+  }
+
+  .hint {
+    text-align: center;
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    margin-top: var(--margin);
+    cursor: default;
+    user-select: none;
+    opacity: 0.5;
+  }
+}
