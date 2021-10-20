@@ -1870,10 +1870,10 @@
     "@types/react-dom" "*"
     "@types/react-transition-group" "*"
 
-"@types/react-table@^7.7.6":
-  version "7.7.6"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.6.tgz#4899ccc46b4a1de08cc1daf120842e37e112e51e"
-  integrity sha512-ZMFHh1sG5AGDmhVRpz9mgGByGmBFAqnZ7QnyqGa5iAlKtcSC3vb/gul47lM0kJ1uvlawc+qN5k+++pe+GBdJ+g==
+"@types/react-table@^7.7.7":
+  version "7.7.7"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.7.tgz#503be1ce2e06857c11b281629f539358d32671f9"
+  integrity sha512-3l2TP4detx9n5Jt44XhdH7Ku6PYwz6kB83P8W+YcBMUkIHtiw2gsCCcq9c4wyCIcdSwcTlWZ9WqH4PF7Yfbprg==
   dependencies:
     "@types/react" "*"
 
