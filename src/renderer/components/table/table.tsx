@@ -57,9 +57,26 @@ export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
   onSort?: (params: TableSortParams) => void; // callback on sort change, default: global sync with url
   noItems?: React.ReactNode; // Show no items state table list is empty
   selectedItemId?: string;  // Allows to scroll list to selected item
-  virtual?: boolean; // Use virtual list component to render only visible rows
-  rowPadding?: string;
-  rowLineHeight?: string;
+
+  /**
+   * Use virtual list component to render only visible rows. By default uses a
+   * auto sizer to fill available height
+   */
+  virtual?: boolean;
+  /**
+   * Only used when virtual is true. Sets the virtual list to be a fixed height.
+   * Needed when used in contexts that already have a parent component that
+   * is `overflow-y: scroll`,
+   */
+  virtualHeight?: number;
+  /**
+   * Row padding in pixels
+   */
+  rowPadding?: number;
+  /**
+   * Row line height in pixels
+   */
+  rowLineHeight?: number;
   customRowHeights?: (item: Item, lineHeight: number, paddings: number) => number;
   getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
   renderRow?: (item: Item) => React.ReactElement<TableRowProps>;
@@ -78,9 +95,10 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
   static defaultProps: TableProps<any> = {
     scrollable: true,
     autoSize: true,
-    rowPadding: "8px",
-    rowLineHeight: "17px",
+    rowPadding: 8,
+    rowLineHeight: 17,
     sortSyncWithUrl: true,
+    customRowHeights: (item, lineHeight, paddings) => lineHeight + paddings,
   };
 
   constructor(props: TableProps<Item>) {
@@ -185,7 +203,10 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
   }
 
   renderRows() {
-    const { noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items, getTableRow, selectedItemId, className } = this.props;
+    const {
+      noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items,
+      getTableRow, selectedItemId, className, virtualHeight
+    } = this.props;
     const content = this.getContent();
     let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);
     let sortedItems = rows.length ? rows.map(row => row.props.sortItem) : [...items];
@@ -194,9 +215,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
       sortedItems = this.getSorted(sortedItems);
 
       if (rows.length) {
-        rows = sortedItems.map(item => rows.find(row => {
-          return item == row.props.sortItem;
-        }));
+        rows = sortedItems.map(item => rows.find(row => item == row.props.sortItem));
       }
     }
 
@@ -205,15 +224,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
     }
 
     if (virtual) {
-      const lineHeight = parseFloat(rowLineHeight);
-      const padding = parseFloat(rowPadding);
-      let rowHeights: number[] = Array(items.length).fill(lineHeight + padding * 2);
-
-      if (customRowHeights) {
-        rowHeights = sortedItems.map(item => {
-          return customRowHeights(item, lineHeight, padding * 2);
-        });
-      }
+      const rowHeights = sortedItems.map(item => customRowHeights(item, rowLineHeight, rowPadding * 2));
 
       return (
         <VirtualList
@@ -222,6 +233,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
           getRow={getTableRow}
           selectedItemId={selectedItemId}
           className={className}
+          fixedHeight={virtualHeight}
         />
       );
     }
