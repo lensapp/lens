@@ -263,7 +263,7 @@
     "@testing-library/dom": "^8.9.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.2.1",
+    "@testing-library/user-event": "^13.5.0",
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.34",
     "@types/color": "^3.0.2",
