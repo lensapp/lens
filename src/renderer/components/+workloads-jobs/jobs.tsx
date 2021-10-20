@@ -24,7 +24,6 @@ import "./jobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
@@ -51,7 +50,7 @@ export class Jobs extends React.Component<Props> {
         isConfigurable
         tableId="workload_jobs"
         className="Jobs" store={jobStore}
-        dependentStores={[podsStore, eventStore]}
+        dependentStores={[eventStore]} // status icon component uses event store
         sortingCallbacks={{
           [columnId.name]: job => job.getName(),
           [columnId.namespace]: job => job.getNs(),

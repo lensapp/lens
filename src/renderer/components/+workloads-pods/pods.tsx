@@ -26,7 +26,6 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { podsStore } from "./pods.store";
 import type { RouteComponentProps } from "react-router";
-import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { nodesApi, Pod } from "../../../common/k8s-api/endpoints";
@@ -94,7 +93,7 @@ export class Pods extends React.Component<Props> {
     return (
       <KubeObjectListLayout
         className="Pods" store={podsStore}
-        dependentStores={[volumeClaimStore, eventStore]}
+        dependentStores={[eventStore]} // status icon component uses event store
         tableId = "workloads_pods"
         isConfigurable
         sortingCallbacks={{

@@ -31,9 +31,6 @@ import { Icon } from "../icon";
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 import { ConfirmDialog } from "../confirm-dialog";
 import { deploymentStore } from "./deployments.store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { cssNames } from "../../utils";
@@ -79,7 +76,7 @@ export class Deployments extends React.Component<Props> {
         isConfigurable
         tableId="workload_deployments"
         className="Deployments" store={deploymentStore}
-        dependentStores={[replicaSetStore, podsStore, nodesStore, eventStore]}
+        dependentStores={[eventStore]} // status icon component uses event store
         sortingCallbacks={{
           [columnId.name]: deployment => deployment.getName(),
           [columnId.namespace]: deployment => deployment.getNs(),

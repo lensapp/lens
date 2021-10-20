@@ -33,6 +33,7 @@ import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import type { ReplicaSetsRouteParams } from "../../../common/routes";
+import { eventStore } from "../+events/event.store";
 
 enum columnId {
   name = "name",
@@ -54,6 +55,7 @@ export class ReplicaSets extends React.Component<Props> {
         isConfigurable
         tableId="workload_replicasets"
         className="ReplicaSets" store={replicaSetStore}
+        dependentStores={[eventStore]} // status icon component uses event store
         sortingCallbacks={{
           [columnId.name]: replicaSet => replicaSet.getName(),
           [columnId.namespace]: replicaSet => replicaSet.getNs(),
