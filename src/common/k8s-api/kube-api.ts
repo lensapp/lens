@@ -56,6 +56,9 @@ export interface IKubeApiOptions<T extends KubeObject> {
   isNamespaced?: boolean;
   kind?: string;
   checkPreferredVersion?: boolean;
+
+  // If true, the KubeApi won't be registered to apiManager
+  apiManagerDisabled?: boolean;
 }
 
 export interface IKubeApiQueryParams {
@@ -94,6 +97,9 @@ export interface ILocalKubeApiConfig {
   metadata: {
     uid: string;
   }
+
+  // If true, the KubeApi won't be registered to apiManager
+  apiManagerDisabled?: boolean;
 }
 
 /**
@@ -106,12 +112,15 @@ export interface IRemoteKubeApiConfig {
     server: string;
     caData?: string;
     skipTLSVerify?: boolean;
-  }
+  };
   user: {
     token?: string;
     clientCertificateData?: string;
     clientKeyData?: string;
-  }
+  };
+
+  // If true, the KubeApi won't be registered to apiManager
+  apiManagerDisabled?: boolean;
 }
 
 export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
@@ -128,7 +137,8 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
 
   return new KubeApi({
     objectConstructor: kubeClass,
-    request
+    request,
+    apiManagerDisabled: cluster.apiManagerDisabled
   });
 }
 
@@ -166,12 +176,13 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
   const request = new KubeJsonApi({
     serverAddress: config.cluster.server,
     apiBase: "",
-    debug: isDevelopment,
+    debug: isDevelopment
   }, reqInit);
 
   return new KubeApi({
     objectConstructor: kubeClass,
-    request
+    request,
+    apiManagerDisabled: config.apiManagerDisabled
   });
 }
 
@@ -213,6 +224,11 @@ export class KubeApi<T extends KubeObject> {
   protected watchDisposer: () => void;
   private watchId = 1;
 
+  /**
+   * By default registers the api to apiManager. This can be disabled with options.
+   * If registered, the api should be unregistered from the apiManager afterwards.
+   * @param options 
+   */
   constructor(protected options: IKubeApiOptions<T>) {
     const {
       objectConstructor,
@@ -237,7 +253,10 @@ export class KubeApi<T extends KubeObject> {
     this.objectConstructor = objectConstructor;
 
     this.parseResponse = this.parseResponse.bind(this);
-    apiManager.registerApi(apiBase, this);
+
+    if (!options.apiManagerDisabled) {
+      apiManager.registerApi(apiBase, this);
+    }
   }
 
   get apiVersionWithGroup() {
