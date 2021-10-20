@@ -386,21 +386,6 @@
     dir-compare "^2.4.0"
     fs-extra "^9.0.1"
 
-"@emeraldpay/hashicon-react@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@emeraldpay/hashicon-react/-/hashicon-react-0.4.0.tgz#a05a1c9af23721a81450978fad816908fa3246b7"
-  integrity sha512-n+84V9R4g84B62NneYg5mz9Vf1xEBURZoyC4G1K9Rs9C7949D3SxgLhuXYyFKkNO5F5qzms5Qr3LGE5QNEdqJg==
-  dependencies:
-    "@emeraldpay/hashicon" "^0.4.0"
-    react "^16.8.0"
-
-"@emeraldpay/hashicon@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@emeraldpay/hashicon/-/hashicon-0.4.0.tgz#0dcd4db6d589b4eb30495b9995ff66fc9e57f833"
-  integrity sha512-2EB6Z8gS/DK36+SslIuoHE8wdU6pBqljMTjIYxLC8hBN8n2yhhE+xdmifPjqfqOvF/7Wb5HmoNaPX6RGuBrasg==
-  dependencies:
-    js-sha3 "^0.8.0"
-
 "@emotion/cache@^10.0.27", "@emotion/cache@^10.0.9":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
@@ -8561,11 +8546,6 @@ jpeg-js@^0.4.2:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.3.tgz#6158e09f1983ad773813704be80680550eff977b"
   integrity sha512-ru1HWKek8octvUHFHvE5ZzQ1yAsJmIvRdGWvSoKV52XKyuyYA437QWDttXT8eZXDSbuMpHlLzPDZUPd6idIz+Q==
 
-js-sha3@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
-  integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
-
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -11816,15 +11796,6 @@ react-window@^1.8.5:
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
-
-react@^16.8.0:
-  version "16.13.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
-  integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
 
 react@^17.0.2:
   version "17.0.2"
