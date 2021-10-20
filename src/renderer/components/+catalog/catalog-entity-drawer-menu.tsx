@@ -98,8 +98,8 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       <HotbarToggleMenuItem
         key="hotbar-toggle"
         entity={entity}
-        addContent={<Icon material="push_pin" small tooltip={"Add to Hotbar"}/>}
-        removeContent={<Icon svg="unpin" small tooltip={"Remove from Hotbar"}/>}
+        addContent={<Icon material="push_pin" small tooltip="Add to Hotbar"/>}
+        removeContent={<Icon svg="push_off" small tooltip="Remove from Hotbar"/>}
       />
     );
 
