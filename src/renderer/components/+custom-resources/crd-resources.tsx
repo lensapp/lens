@@ -89,11 +89,11 @@ export class CrdResources extends React.Component<Props> {
         searchFilters={[
           item => item.getSearchFields(),
         ]}
-        renderHeaderTitle={crd.getResourceTitle()}
+        renderHeaderTitle={crd.getResourceKind()}
         customizeHeader={({ searchProps, ...headerPlaceholders }) => ({
           searchProps: {
             ...searchProps,
-            placeholder: `Search ${crd.getResourceTitle()}...`,
+            placeholder: `${crd.getResourceKind()} search ...`,
           },
           ...headerPlaceholders
         })}
