@@ -26,7 +26,6 @@ import { autoBind, noop, rejectPromiseBy } from "../utils";
 import { KubeObject, KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-api";
 import { ItemStore } from "../item.store";
-import { apiManager } from "./api-manager";
 import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { KubeJsonApiData } from "./kube-json-api";
@@ -401,12 +400,11 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
-      const api = apiManager.getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
         case "ADDED":
         case "MODIFIED":
-          const newItem = new api.objectConstructor(object) as T;
+          const newItem = new this.api.objectConstructor(object);
 
           if (!item) {
             items.push(newItem);
