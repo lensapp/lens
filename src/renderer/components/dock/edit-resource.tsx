@@ -20,8 +20,9 @@
  */
 
 import React from "react";
-import { observer } from "mobx-react";
 import yaml from "js-yaml";
+import { makeObservable, observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { Badge } from "../badge";
@@ -35,31 +36,44 @@ interface Props extends InfoPanelProps {
 
 @observer
 export class EditResourceInfoPanel extends React.Component<Props> {
+  @observable.ref resource?: KubeObject;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+
+    disposeOnUnmount(this, [
+      reaction(() => this.tabId, async (tabId) => {
+        this.resource = null;
+        this.resource = await editResourceStore.getResource(tabId);
+
+        const { draft } = editResourceStore.getData(tabId);
+
+        if (!draft) {
+          this.saveDraft(this.resource.toPlainObject(), tabId);
+        }
+      }, {
+        fireImmediately: true,
+      }),
+    ]);
+  }
+
   get tabId() {
     return this.props.tabId;
   }
 
-  get resource(): KubeObject | undefined {
-    return editResourceStore.getResource(this.tabId);
-  }
-
-  get draft(): string {
-    return editResourceStore.getData(this.tabId)?.draft;
-  }
-
-  private saveDraft(draft: string | KubeObject) {
+  private saveDraft(draft: string | object, tabId = this.tabId) {
     if (typeof draft === "object") {
-      draft = draft ? yaml.dump(draft.toPlainObject()) : undefined;
+      draft = yaml.dump(draft);
     }
 
-    editResourceStore.getData(this.tabId).draft = draft;
+    editResourceStore.getData(tabId).draft = draft;
   }
 
   save = async () => {
-    const store = editResourceStore.getStore(this.tabId);
-    const { resource: resourcePath, draft } = editResourceStore.getData(this.tabId);
-    const resource = store.getByPath(resourcePath) ?? await store.loadFromPath(resourcePath);
-    const currentVersion = resource.toPlainObject();
+    const resource = await editResourceStore.getResource(this.tabId); // get latest resource version
+    const { draft } = editResourceStore.getData(this.tabId);
+    const currentVersion = resource.toPlainObject() as KubeObject;
     const editedVersion = yaml.load(draft) as KubeObject;
     const patches = createPatch(currentVersion, editedVersion);
     const editingVersion = editedVersion.metadata.resourceVersion;
@@ -71,19 +85,20 @@ export class EditResourceInfoPanel extends React.Component<Props> {
             {resource.kind} version <b>{resource.getName()}</b> is updated on the server while editing.
           </p>
           <p>
-            Please backup your changes and <a onClick={() => this.saveDraft(resource)}>refresh resource</a> to the editor.
+            Please backup your changes and{" "}
+            <a onClick={() => this.saveDraft(resource.toPlainObject())}>refresh resource</a> to the editor.
           </p>
         </div>
       );
     }
 
-    const updatedResource = await store.patch(this.resource, patches);
+    const updatedResource = await this.resource.patch(patches);
 
-    this.saveDraft(updatedResource); // dump latest resource version for editing
+    this.saveDraft(updatedResource); // dump latest version for editing
 
     return (
       <p>
-        {updatedResource.kind} <b>{updatedResource.getName()}</b> updated.
+        {updatedResource.kind} <b>{updatedResource.metadata.name}</b> updated.
       </p>
     );
   };

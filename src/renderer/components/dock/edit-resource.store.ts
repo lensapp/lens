@@ -20,16 +20,14 @@
  */
 
 import { makeObservable } from "mobx";
-import { autoBind } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import yaml from "js-yaml";
+import { parseKubeApi } from "../../../common/k8s-api/kube-api-parse";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
 export interface EditingResource {
-  resource: string; // resource path, e.g. /api/v1/namespaces/default
+  resource: string; // resource path, e.g. "/api/v1/namespaces/default"
   draft?: string; // edited draft in yaml
 }
 
@@ -37,43 +35,13 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
   constructor() {
     super({ storageKey: "edit_resource_store" });
     makeObservable(this);
-    autoBind(this);
   }
 
-  async init() {
-    super.init();
+  async getResource(tabId: TabId): Promise<KubeObject> {
+    const resourcePath = this.getResourcePath(tabId);
+    const { name, namespace } = parseKubeApi(resourcePath);
 
-    this.dispose.push(
-      dockStore.onTabChange(({ tabId }) => this.editResource(tabId), {
-        tabKind: TabKind.EDIT_RESOURCE,
-        fireImmediately: true,
-      })
-    );
-  }
-
-  async editResource(tabId: TabId) {
-    await this.whenReady;
-    const store = this.getStore(tabId);
-    const data = this.getData(tabId);
-
-    if (data.resource && !data.draft) {
-      try {
-        let resource = this.getResource(tabId);
-
-        resource ??= await store.loadFromPath(data.resource);
-        data.draft ||= yaml.dump(resource.toPlainObject()); // dump resource if empty
-      } catch (error) {
-        console.error(`[DOCK]: dumping '${data.resource}' has failed: ${error}`, { store, data });
-      }
-    }
-  }
-
-  getStore(tabId: TabId): KubeObjectStore<KubeObject> | undefined {
-    return apiManager.getStore(this.getResourcePath(tabId));
-  }
-
-  getResource(tabId: TabId): KubeObject | undefined {
-    return this.getStore(tabId)?.getByPath(this.getResourcePath(tabId));
+    return apiManager.getApi(resourcePath)?.get({ name, namespace });
   }
 
   getResourcePath(tabId: TabId): string {
