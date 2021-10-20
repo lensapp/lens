@@ -19,15 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { RouteProps } from "react-router";
-import { buildURL } from "../utils/buildUrl";
+.PortForwardDetails {
+  .SubTitle {
+    text-transform: none
+  }
 
-export const portForwardsRoute: RouteProps = {
-  path: "/port-forwards/:forwardport?"
-};
-
-export interface PortForwardsRouteParams {
-  forwardport?: string;
+  .status {
+    @include port-forward-status-colors;
+  }
 }
-
-export const portForwardsURL = buildURL<PortForwardsRouteParams>(portForwardsRoute.path);
