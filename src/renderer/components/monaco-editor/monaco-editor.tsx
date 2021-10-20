@@ -143,6 +143,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     this.editor = editor.create(this.containerElem, {
       model: this.model,
+      detectIndentation: false, // allow `option.tabSize` to use custom number of spaces for [Tab]
       value: defaultValue,
       language,
       theme,
@@ -178,7 +179,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       reaction(() => this.model, this.onModelChange),
       reaction(() => this.props.theme, editor.setTheme),
       reaction(() => this.props.value, value => this.setValue(value)),
-      reaction(() => this.options, opts => this.editor.updateOptions(opts)),
+      reaction(() => this.options, opts => {
+
+        console.log('OPTS', opts)
+        this.editor.updateOptions(opts);
+      }),
 
       () => onDidLayoutChangeDisposer.dispose(),
       () => onValueChangeDisposer.dispose(),
