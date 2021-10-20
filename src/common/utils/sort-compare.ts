@@ -111,5 +111,5 @@ export function sortCharts(charts: RawHelmChart[]) {
 
   return chartsWithVersion
     .sort(sortCompareChartVersions)
-    .map(chart => (delete chart.__version, chart));
+    .map(chart => (delete chart.__version, chart as RawHelmChart));
 }
