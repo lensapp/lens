@@ -20,8 +20,10 @@
  */
 
 import fs from "fs-extra";
+import glob from "glob";
 import path from "path";
 import os from "os";
+import { promisify } from "util";
 import { action, makeObservable, observable } from "mobx";
 import logger from "../../../common/logger";
 import { DockTabStore } from "./dock-tab.store";
@@ -30,7 +32,7 @@ import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 export interface TemplatesGroup {
   label: string;
   templates: {
-    [filename: string]: string;
+    [filepath: string]: string; // filepath is relative to templates folder
   };
 }
 
@@ -76,10 +78,10 @@ export class CreateResourceStore extends DockTabStore<string> {
       if (!templatesGroup) return; // exit: unknown templates source folder
 
       await fs.ensureDir(sourceFolder);
-      const fileNames = await fs.readdir(sourceFolder);
+      const files = await promisify(glob)("**/*.@(yaml|yml|json)", { cwd: sourceFolder });
 
       templatesGroup.templates = Object.fromEntries(
-        fileNames.map(fileName => [fileName, "" /* empty: content not loaded yet */])
+        files.map(filePath => [filePath, "" /* empty: content not loaded yet */])
       );
     } catch (error) {
       logger.error(`[CREATE-RESOURCE]: scanning template folders error: ${error}`);
@@ -87,8 +89,8 @@ export class CreateResourceStore extends DockTabStore<string> {
   }
 
   @action
-  async loadTemplate(init: { fileName: string, sourceFolder: string }): Promise<string> {
-    const { fileName, sourceFolder } = init;
+  async loadTemplate(init: { filePath: string, sourceFolder: string }): Promise<string> {
+    const { filePath, sourceFolder } = init;
 
     const templatesGroup = this.templateGroups[sourceFolder];
 
@@ -96,23 +98,23 @@ export class CreateResourceStore extends DockTabStore<string> {
       return ""; // unknown group, exit
     }
 
-    const template = templatesGroup.templates[fileName];
+    const template = templatesGroup.templates[filePath];
 
     if (template) return template; // return cache, preloaded already
 
     try {
-      const templatePath = path.resolve(sourceFolder, fileName);
+      const templatePath = path.resolve(sourceFolder, filePath);
       const pathExists = await fs.pathExists(templatePath);
 
       if (!pathExists) return ""; // template file not exists, skip
 
       const textContent = await fs.readFile(templatePath, { encoding: "utf-8" });
 
-      templatesGroup.templates[fileName] = textContent; // save cache
+      templatesGroup.templates[filePath] = textContent; // save cache
 
       return textContent;
     } catch (error) {
-      logger.error(`[CREATE-RESOURCE]: reading "${sourceFolder}/${fileName}" has failed: ${error}`);
+      logger.error(`[CREATE-RESOURCE]: reading "${sourceFolder}/${filePath}" has failed: ${error}`);
     }
 
     return "";
