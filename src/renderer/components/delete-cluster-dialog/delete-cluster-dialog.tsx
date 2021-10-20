@@ -116,6 +116,7 @@ export class DeleteClusterDialog extends React.Component {
       await requestMain(clusterDeleteHandler, cluster.id);
     } catch(error) {
       Notifications.error(`Cannot remove cluster, failed to process config file. ${error}`);
+    } finally {
       await requestMain(clusterClearDeletingHandler, cluster.id);
     }
 
