@@ -32,7 +32,7 @@ import throttle from "lodash/throttle";
 
 export interface DockTabContentProps extends React.HTMLAttributes<any> {
   className?: string;
-  tab: DockTab;
+  tab?: DockTab;
   bindContainerRef?(elem: HTMLElement): void;
 }
 
@@ -55,18 +55,18 @@ export class DockTabContent extends React.Component<DockTabContentProps> {
     ]);
   }
 
-  @computed get tabId(): TabId {
-    return this.props.tab.id;
+  @computed get tabId(): TabId | undefined {
+    return this.props.tab?.id;
   }
 
-  @computed get tabComponents(): DockTabComponents {
-    return dockViewsManager.get(this.props.tab.kind);
+  @computed get tabComponents(): DockTabComponents | undefined {
+    return dockViewsManager.get(this.props.tab?.kind);
   }
 
   @observable error = "";
 
   @computed get editorIsVisible() {
-    return Boolean(this.tabComponents.editor);
+    return Boolean(this.tabComponents?.editor);
   }
 
   focusEditor() {

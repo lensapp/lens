@@ -40,7 +40,7 @@ const dockViews = observable.map<TabKind, DockTabComponents>([], {
 
 export const dockViewsManager = {
   get(tabKind: TabKind): DockTabComponents {
-    return dockViews.get(tabKind) ?? {};
+    return dockViews.get(tabKind);
   },
 
   register(tabKind: TabKind, views: DockTabComponents) {

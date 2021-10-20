@@ -47,7 +47,9 @@ export class TerminalWindow extends React.Component<Props> {
       }),
 
       // refresh terminal available space (cols/rows) when <Dock/> resized
-      dockStore.onResize(() => this.terminal?.fitLazy()),
+      dockStore.onResize(() => this.terminal?.fitLazy(), {
+        fireImmediately: true,
+      }),
     ]);
   }
 

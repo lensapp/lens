@@ -179,11 +179,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       reaction(() => this.model, this.onModelChange),
       reaction(() => this.props.theme, editor.setTheme),
       reaction(() => this.props.value, value => this.setValue(value)),
-      reaction(() => this.options, opts => {
-
-        console.log('OPTS', opts)
-        this.editor.updateOptions(opts);
-      }),
+      reaction(() => this.options, opts => this.editor.updateOptions(opts)),
 
       () => onDidLayoutChangeDisposer.dispose(),
       () => onValueChangeDisposer.dispose(),
