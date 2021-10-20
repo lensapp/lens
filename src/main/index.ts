@@ -207,7 +207,7 @@ app.on("ready", async () => {
       `Failed connection test: ${error}`,
       "Check to make sure that no other versions of Lens are running",
       `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
-      "If you have HTTP_PROXY or http_proxy set in your environment, make sure that that localhost and the ipv4 loopback addr 127.0.0.1 are added to the NO_PROXY environment variable.",
+      "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
     ];
 
     dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
