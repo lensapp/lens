@@ -28,6 +28,7 @@ import { Drawer, DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { podsApi, serviceApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
+import { PortForwardMenu } from "./port-forward-menu";
 
 interface Props {
   portForward: PortForwardItem;
@@ -36,19 +37,36 @@ interface Props {
 
 export class PortForwardDetails extends React.Component<Props> {
 
-  renderContent() {
+  renderResourceName() {
     const { portForward } = this.props;
+    const name = portForward.getName();
     const api = {
       "service": serviceApi,
       "pod": podsApi
     }[portForward.kind];
 
+    if (!api) {
+      return (
+        <span>{name}</span>
+      );
+    }
+
+    return (
+      <Link to={getDetailsUrl(api.getUrl({ name, namespace: portForward.getNs() }))}>
+        {name}
+      </Link>
+    );
+  }
+
+  renderContent() {
+    const { portForward } = this.props;
+
+    if (!portForward) return null;
+
     return (
       <div>
         <DrawerItem name="Resource Name">
-          <Link to={getDetailsUrl(api.getUrl({ name: portForward.getName(), namespace: portForward.getNs() }))}>
-            {portForward.getName()}
-          </Link>
+          {this.renderResourceName()}
         </DrawerItem>
         <DrawerItem name="Namespace">
           {portForward.getNs()}
@@ -71,15 +89,16 @@ export class PortForwardDetails extends React.Component<Props> {
 
   render() {
     const { hideDetails, portForward } = this.props;
-    const title = "Port Forward";
+    const toolbar = <PortForwardMenu portForward={portForward} toolbar hideDetails={hideDetails}/>;
 
     return (
       <Drawer
         className="PortForwardDetails"
         usePortal={true}
         open={!!portForward}
-        title={title}
+        title="Port Forward"
         onClose={hideDetails}
+        toolbar={toolbar}
       >
         {this.renderContent()}
       </Drawer>

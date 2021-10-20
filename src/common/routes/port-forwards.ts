@@ -27,7 +27,7 @@ export const portForwardsRoute: RouteProps = {
 };
 
 export interface PortForwardsRouteParams {
-  forwardport: string;
+  forwardport?: string;
 }
 
 export const portForwardsURL = buildURL<PortForwardsRouteParams>(portForwardsRoute.path);
