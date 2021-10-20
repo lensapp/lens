@@ -96,6 +96,7 @@ export class CreateResourceInfoPanel extends React.Component<Props> {
     return (
       <div className="flex gaps align-center">
         <Select
+          onMenuOpen={() => createResourceStore.refreshTemplates()} // scan user templates
           autoConvertOptions={false}
           controlShouldRenderValue={false} // always keep initial placeholder
           className="SelectResourceTemplate"
@@ -113,10 +114,11 @@ export class CreateResourceInfoPanel extends React.Component<Props> {
     return Object.entries(createResourceStore.templateGroups).map(([sourceFolder, group]) => {
       return {
         label: group.label,
-        options: Object.entries(group.templates).map(([filePath]) => {
+        options: Object.entries(group.templates).map(([filePath, content]) => {
           return {
             label: filePath,
             value: { filePath, sourceFolder },
+            content,
           };
         }),
       };

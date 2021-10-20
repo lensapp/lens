@@ -119,6 +119,10 @@ export class CreateResourceStore extends DockTabStore<string> {
 
     return "";
   }
+
+  async refreshTemplates() {
+    await this.scanTemplates(this.userTemplatesFolder);
+  }
 }
 
 export const createResourceStore = new CreateResourceStore();
