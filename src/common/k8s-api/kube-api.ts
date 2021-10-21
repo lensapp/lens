@@ -195,6 +195,9 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
   watchId?: string;
   retry?: boolean;
+
+  // Request options that are applied for the initial watch request and also subsequent retry requests
+  getRequestOptions?: () => RequestInit;
 };
 
 export class KubeApi<T extends KubeObject> {
@@ -486,7 +489,12 @@ export class KubeApi<T extends KubeObject> {
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop, retry } = opts;
+    const {
+      abortController: { abort, signal } = new AbortController(),
+      namespace,
+      callback = noop,
+      retry,
+      getRequestOptions } = opts;
     const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
 
     signal.addEventListener("abort", () => {
@@ -495,7 +503,11 @@ export class KubeApi<T extends KubeObject> {
     });
 
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, null, { signal, timeout: 600_000 });
+    const responsePromise = this.request.getResponse(
+      watchUrl,
+      null,
+      merge({ signal, timeout: 600_000 }, getRequestOptions?.())
+    );
 
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
