@@ -507,7 +507,7 @@ export class KubeApi<T extends KubeObject> {
     });
 
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, null,{ signal, timeout: 600_000 });
+    const responsePromise = this.request.getResponse(watchUrl, null, { signal, timeout: 600_000 });
 
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
