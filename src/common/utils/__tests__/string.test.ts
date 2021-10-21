@@ -19,11 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * A inference typed version of `Array(length).fill(value)`
- * @param length The number of entries
- * @param value The value of each of the indices
- */
-export function filled<T>(length: number, value: T): T[] {
-  return Array(length).fill(value);
-}
+import { string } from "../../utils";
+
+describe("string tests", () => {
+  describe("repeated()", () => {
+    const table = [];
+    let acc = "";
+
+    for (let i = 0; i <= 20; i += 1) {
+      table.push([acc, i] as const);
+      acc += "l";
+    }
+
+    it.each(table)("should return %p string if times = %i", (output, times) => {
+      expect(string.repeated("l", times)).toBe(output);
+    });
+  });
+});

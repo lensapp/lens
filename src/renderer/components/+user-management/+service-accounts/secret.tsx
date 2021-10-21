@@ -25,7 +25,7 @@ import moment from "moment";
 import React from "react";
 
 import type { Secret } from "../../../../common/k8s-api/endpoints/secret.api";
-import { prevDefault } from "../../../utils";
+import { prevDefault, string } from "../../../utils";
 import { Icon } from "../../icon";
 
 interface Props {
@@ -49,7 +49,7 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
       <>
         {!showToken && (
           <>
-            <span className="asterisks">{Array(16).fill("•").join("")}</span>
+            <span className="asterisks">{string.repeated("•", 16)}</span>
             <Icon
               small material="lock_open"
               tooltip="Show value"

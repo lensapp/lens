@@ -61,5 +61,12 @@ export * from "./convertCpu";
 
 import * as iter from "./iter";
 import * as array from "./array";
+import * as tuple from "./tuple";
+import * as string from "./string";
 
-export { iter, array };
+export {
+  iter,
+  array,
+  string,
+  tuple,
+};

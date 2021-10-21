@@ -20,10 +20,26 @@
  */
 
 /**
- * A inference typed version of `Array(length).fill(value)`
- * @param length The number of entries
- * @param value The value of each of the indices
+ * Create a new string that is `times` repetitions of `part`
+ * @param part The string segment to repeat
+ * @param times A non-negative count of repetitions.
  */
-export function filled<T>(length: number, value: T): T[] {
-  return Array(length).fill(value);
+export function repeated(part: string, times: number): string {
+  function _repeated(part: string, times: number): string {
+    switch (times) {
+      case 0:
+        return "";
+      case 1:
+        return part;
+      case 2:
+        return part + part;
+      default:
+        const major = Math.pow(2, Math.floor(Math.log2(times)));
+        const majorString = _repeated(part, major / 2);
+
+        return majorString + majorString + _repeated(part, times - major);
+    }
+  }
+
+  return _repeated(part, Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(times))));
 }
