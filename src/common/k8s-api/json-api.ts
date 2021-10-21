@@ -75,7 +75,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   public onData = new EventEmitter<[D, Response]>();
   public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
   
-  private getRequestOptions?: () => Promise<RequestInit>;
+  private getRequestOptions?: JsonApiConfig["getRequestOptions"];
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "get" });

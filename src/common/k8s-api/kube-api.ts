@@ -135,13 +135,6 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
 
 export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const reqInit: RequestInit = {};
-  const token = config.user.token;
-
-  if (token && !isFunction(token)) {
-    reqInit.headers = {
-      "Authorization": `Bearer ${token}`
-    };
-  }
 
   const agentOptions: AgentOptions = {};
 
@@ -165,14 +158,15 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     reqInit.agent = new Agent(agentOptions);
   }
 
+  const token = config.user.token;
   const request = new KubeJsonApi({
     serverAddress: config.cluster.server,
     apiBase: "",
     debug: isDevelopment,
-    ...(isFunction(token) ? {
+    ...(token ? {
       getRequestOptions: async () => ({
         headers: {
-          "Authorization": `Bearer ${await token()}`
+          "Authorization": `Bearer ${isFunction(token) ? await token() : token}`
         }
       })
     } : {})
