@@ -1985,6 +1985,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#virtualheight" class="md-nav__link">
+    virtualHeight
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2245,6 +2252,7 @@
 <li><a href="./#storagekey">storageKey</a></li>
 <li><a href="./#tableid">tableId</a></li>
 <li><a href="./#virtual">virtual</a></li>
+<li><a href="./#virtualheight">virtualHeight</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -3092,10 +3100,12 @@
 <p>React.DOMAttributes.onWheelCapture</p>
 <hr />
 <h3 id="rowlineheight">rowLineHeight<a class="headerlink" href="#rowlineheight" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>rowLineHeight</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>rowLineHeight</strong>: <code>number</code></p>
+<p>Row line height in pixels</p>
 <hr />
 <h3 id="rowpadding">rowPadding<a class="headerlink" href="#rowpadding" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>rowPadding</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>rowPadding</strong>: <code>number</code></p>
+<p>Row padding in pixels</p>
 <hr />
 <h3 id="scrollable">scrollable<a class="headerlink" href="#scrollable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>scrollable</strong>: <code>boolean</code></p>
@@ -3125,6 +3135,14 @@
 <hr />
 <h3 id="virtual">virtual<a class="headerlink" href="#virtual" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>virtual</strong>: <code>boolean</code></p>
+<p>Use virtual list component to render only visible rows. By default uses a
+auto sizer to fill available height</p>
+<hr />
+<h3 id="virtualheight">virtualHeight<a class="headerlink" href="#virtualheight" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>virtualHeight</strong>: <code>number</code></p>
+<p>Only used when virtual is true. Sets the virtual list to be a fixed height.
+Needed when used in contexts that already have a parent component that
+is <code>overflow-y: scroll</code>,</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="customrowheights">customRowHeights<a class="headerlink" href="#customrowheights" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>customRowHeights</strong>(<code>item</code>, <code>lineHeight</code>, <code>paddings</code>): <code>number</code></p>
