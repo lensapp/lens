@@ -105,7 +105,9 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
+    const protocol = portForward.protocol ?? "http";
+
+    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}&protocol=${protocol}`);
     
     if (response?.port && response.port != +portForward.forwardPort) {
       logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
@@ -118,11 +120,18 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   return response?.port;
 }
 
+function getProtocolQuery(protocol: string) {
+  if (protocol) {
+    return `&protocol=${protocol}`;
+  }
+  return "";
+}
+
 export async function getPortForward(portForward: ForwardedPort): Promise<number> {
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
+    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
   }
@@ -134,8 +143,11 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
   let port = 0;
   
   try {
+    const protocol = portForward.protocol;
+    delete portForward.protocol;
     await removePortForward(portForward);
     portForward.forwardPort = desiredPort;
+    portForward.protocol = protocol;
     port = await addPortForward(portForward);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
@@ -148,7 +160,7 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
 
 export async function removePortForward(portForward: ForwardedPort) {
   try {
-    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
+    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
@@ -169,7 +181,7 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
 }
 
 export function openPortForward(portForward: ForwardedPort) {
-  const browseTo = `http://localhost:${portForward.forwardPort}`;
+  const browseTo = `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
 
   openExternal(browseTo)
     .catch(error => {
