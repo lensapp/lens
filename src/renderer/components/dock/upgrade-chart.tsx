@@ -22,92 +22,62 @@
 import React from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
+import type { TabId } from "./dock.store";
+import { TabKind } from "./dock.store";
 import { InfoPanel, InfoPanelProps } from "./info-panel";
-import { upgradeChartStore } from "./upgrade-chart.store";
-import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
-import { Select, SelectOption } from "../select";
 import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { TabKind } from "./dock.store";
+import { Select, SelectOption } from "../select";
+import { upgradeChartStore } from "./upgrade-chart.store";
 import { dockViewsManager } from "./dock.views-manager";
 
 interface Props extends InfoPanelProps {
 }
 
 @observer
-export class UpgradeChart extends React.Component<Props> {
+export class UpgradeChartInfoPanel extends React.Component<Props> {
+  @observable selectedVersion: IChartVersion;
+
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  get tabId() {
+  get tabId(): TabId {
     return this.props.tabId;
   }
 
-  get release(): HelmRelease | null {
+  get release(): HelmRelease {
     return upgradeChartStore.getRelease(this.tabId);
   }
 
-  @observable selectedVersion: IChartVersion | undefined;
+  @computed get chartVersions(): SelectOption<IChartVersion>[] {
+    const chartName = this.release.getChart();
+    const versions = upgradeChartStore.versions.get(this.tabId) ?? [];
 
-  @computed get releaseVersion(): IChartVersion {
-    return this.getChartVersionByRelease(this.release);
-  }
-
-  @computed get chartVersionOptions(): SelectOption<IChartVersion>[] {
-    return upgradeChartStore.versions.map(version => ({
-      value: version,
-      disabled: this.selectedVersion == this.releaseVersion,
+    return versions.map(value => ({
+      label: `${value.repo}/${chartName}-${value.version}`,
+      value,
     }));
   }
 
-  @computed get chartValues(): string {
-    return upgradeChartStore.values.get(this.tabId);
-  }
-
-  getChartVersionByRelease(release: HelmRelease): IChartVersion | undefined {
-    return upgradeChartStore.versions.find(({ version, repo }) => (
-      release?.getChart() == repo &&
-      release?.getVersion() === version
-    ));
-  }
-
   upgrade = async () => {
-    const { releaseVersion, selectedVersion, release, chartValues } = this;
-    const newVersionNotSelected = !selectedVersion || selectedVersion == releaseVersion;
-
-    if (!release || newVersionNotSelected) {
-      throw new Error(`You have not selected new version for "${releaseVersion}"`); // skip: nothing to upgrade
-    }
-
-    const { version, repo } = selectedVersion;
-    const releaseName = release.getName();
-    const releaseNs = release.getNs();
-
-    await releaseStore.update(releaseName, releaseNs, {
-      chart: release.getChart(),
-      values: chartValues,
-      repo, version,
-    });
+    await upgradeChartStore.upgrade(this.tabId, this.selectedVersion);
 
     return (
       <p>
-        Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b>
+        Release <b>{this.release.getName()}</b> successfully upgraded to version <b>{this.selectedVersion.version}</b>
       </p>
     );
   };
 
-  formatVersionLabel = ({ value }: SelectOption<IChartVersion>) => {
-    const chartName = this.release.getChart();
-    const { repo, version } = value;
-
-    return `${repo}/${chartName}-${version}`;
-  };
-
   render() {
-    const { release, chartVersionOptions } = this;
+    if (!upgradeChartStore.isReady(this.tabId)) {
+      return null;
+    }
+
+    const { release, selectedVersion, chartVersions } = this;
 
     return (
       <InfoPanel
@@ -117,17 +87,16 @@ export class UpgradeChart extends React.Component<Props> {
         submittingMessage="Updating.."
         controls={
           <div className="upgrade flex gaps align-center">
-            <span>Release</span> <Badge label={release?.getName()}/>
-            <span>Namespace</span> <Badge label={release?.getNs()}/>
-            <span>Version</span> <Badge label={release?.getVersion()}/>
+            <span>Release</span> <Badge label={release.getName()}/>
+            <span>Namespace</span> <Badge label={release.getNs()}/>
+            <span>Version</span> <Badge label={release.getVersion()}/>
             <span>Upgrade version</span>
             <Select
               className="chart-version"
               menuPlacement="top"
               themeName="outlined"
-              value={this.selectedVersion ?? this.releaseVersion}
-              options={chartVersionOptions}
-              formatOptionLabel={this.formatVersionLabel}
+              value={selectedVersion}
+              options={chartVersions}
               onChange={({ value }: SelectOption<IChartVersion>) => this.selectedVersion = value}
             />
           </div>
@@ -138,7 +107,7 @@ export class UpgradeChart extends React.Component<Props> {
 }
 
 dockViewsManager.register(TabKind.UPGRADE_CHART, {
-  InfoPanel: UpgradeChart,
+  InfoPanel: UpgradeChartInfoPanel,
   editor: {
     getValue(tabId): string {
       return upgradeChartStore.values.get(tabId);
