@@ -137,7 +137,7 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
   const reqInit: RequestInit = {};
   const token = config.user.token;
 
-  if (!isFunction(token)) {
+  if (token && !isFunction(token)) {
     reqInit.headers = {
       "Authorization": `Bearer ${token}`
     };
