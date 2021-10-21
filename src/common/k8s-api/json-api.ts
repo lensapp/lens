@@ -52,6 +52,7 @@ export interface JsonApiConfig {
   apiBase: string;
   serverAddress: string;
   debug?: boolean;
+  getRequestOptions?: () => RequestInit;
 }
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
@@ -68,10 +69,13 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
+    this.getRequestOptions = config.getRequestOptions;
   }
 
   public onData = new EventEmitter<[D, Response]>();
   public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
+  
+  private getRequestOptions?: () => RequestInit;
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
@@ -79,7 +83,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit: RequestInit = merge({}, this.reqInit, init);
+    const reqInit: RequestInit = merge({}, this.reqInit, this.getRequestOptions?.(), init);
     const { query } = params || {} as P;
 
     if (!reqInit.method) {
@@ -113,7 +117,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   protected async request<D>(path: string, params?: P, init: RequestInit = {}) {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit: RequestInit = merge({}, this.reqInit, init);
+    const reqInit: RequestInit = merge({}, this.reqInit, this.getRequestOptions?.(), init);
     const { data, query } = params || {} as P;
 
     if (data && !reqInit.body) {

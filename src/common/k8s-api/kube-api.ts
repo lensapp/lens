@@ -109,6 +109,7 @@ export interface IRemoteKubeApiConfig {
   }
   user: {
     token?: string;
+    getToken?: () => string;
     clientCertificateData?: string;
     clientKeyData?: string;
   }
@@ -135,9 +136,13 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
 export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const reqInit: RequestInit = {};
 
-  if (config.user.token) {
+  if (config.user.token && config.user.getToken) {
+    throw new Error("Provide either user.token or user.getToken");
+  }
+
+  if (config.user.token || config.user.getToken) {
     reqInit.headers = {
-      "Authorization": `Bearer ${config.user.token}`
+      "Authorization": `Bearer ${config.user.token ?? config.user.getToken()}`
     };
   }
 
@@ -167,6 +172,13 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     serverAddress: config.cluster.server,
     apiBase: "",
     debug: isDevelopment,
+    ...(config.user.getToken ? {
+      getRequestOptions: () => ({
+        headers: {
+          "Authorization": `Bearer ${config.user.getToken()}`
+        }
+      })
+    } : {})
   }, reqInit);
 
   return new KubeApi({
@@ -195,9 +207,6 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
   watchId?: string;
   retry?: boolean;
-
-  // Request options that are applied for the initial watch request and also subsequent retry requests
-  getRequestOptions?: () => RequestInit;
 };
 
 export class KubeApi<T extends KubeObject> {
@@ -489,12 +498,7 @@ export class KubeApi<T extends KubeObject> {
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const {
-      abortController: { abort, signal } = new AbortController(),
-      namespace,
-      callback = noop,
-      retry,
-      getRequestOptions } = opts;
+    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop, retry } = opts;
     const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
 
     signal.addEventListener("abort", () => {
@@ -503,11 +507,7 @@ export class KubeApi<T extends KubeObject> {
     });
 
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(
-      watchUrl,
-      null,
-      merge({ signal, timeout: 600_000 }, getRequestOptions?.())
-    );
+    const responsePromise = this.request.getResponse(watchUrl, null,{ signal, timeout: 600_000 });
 
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
