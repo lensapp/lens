@@ -27,13 +27,18 @@
   min-height: 650px;
   display: grid;
   grid-gap: $gridGap;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-areas:
+    "barcharts piechars"
+    "issues issues";
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   grid-template-rows:
           [row1-start] 1fr
           [row2-start] 1fr;
 
-  @include media(">1600px") {
-    grid-template-columns: 1fr 1fr;
+  @media (max-width: 1150px) {
+    grid-template-columns: minmax(500px, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas: none;
   }
 
   > *:not(.Spinner) {
