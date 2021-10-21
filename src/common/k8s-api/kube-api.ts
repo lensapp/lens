@@ -22,6 +22,7 @@
 // Base class for building all kubernetes apis
 
 import merge from "lodash/merge";
+import isFunction from "lodash/isfunction";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
@@ -108,8 +109,7 @@ export interface IRemoteKubeApiConfig {
     skipTLSVerify?: boolean;
   }
   user: {
-    token?: string;
-    getToken?: () => string;
+    token?: string | (() => string);
     clientCertificateData?: string;
     clientKeyData?: string;
   }
@@ -133,16 +133,14 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
   });
 }
 
+const getToken = (token: string | (() => string)) => isFunction(token) ? token() : token;
+
 export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const reqInit: RequestInit = {};
 
-  if (config.user.token && config.user.getToken) {
-    throw new Error("Provide either user.token or user.getToken");
-  }
-
-  if (config.user.token || config.user.getToken) {
+  if (config.user.token) {
     reqInit.headers = {
-      "Authorization": `Bearer ${config.user.token ?? config.user.getToken()}`
+      "Authorization": `Bearer ${getToken(config.user.token)}`
     };
   }
 
@@ -172,10 +170,10 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     serverAddress: config.cluster.server,
     apiBase: "",
     debug: isDevelopment,
-    ...(config.user.getToken ? {
+    ...(config.user.token ? {
       getRequestOptions: () => ({
         headers: {
-          "Authorization": `Bearer ${config.user.getToken()}`
+          "Authorization": `Bearer ${getToken(config.user.token)}`
         }
       })
     } : {})
