@@ -22,7 +22,7 @@
 // Base class for building all kubernetes apis
 
 import merge from "lodash/merge";
-import isFunction from "lodash/isfunction";
+import { isFunction } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
