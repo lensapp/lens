@@ -5505,12 +5505,12 @@ esbuild-linux-ppc64le@0.13.8:
   resolved "https://registry.yarnpkg.com/esbuild-linux-ppc64le/-/esbuild-linux-ppc64le-0.13.8.tgz#fdb82a059a5b86bb10fb42091b4ebcf488b9cd46"
   integrity sha512-eZSQ0ERsWkukJp2px/UWJHVNuy0lMoz/HZcRWAbB6reoaBw7S9vMzYNUnflfL3XA6WDs+dZn3ekHE4Y2uWLGig==
 
-esbuild-loader@^2.15.1:
-  version "2.15.1"
-  resolved "https://registry.yarnpkg.com/esbuild-loader/-/esbuild-loader-2.15.1.tgz#5a3940f5d20317f1a35720efa33e933f97c923e9"
-  integrity sha512-JRBL6uTeWplMbylNBt9gxLKMjD8wKnqGq786QV/cm/nPBSNA9/kC7/vNwCXTDPfYqHoWsjyfH7ub9ekN0kdAYQ==
+esbuild-loader@^2.16.0:
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/esbuild-loader/-/esbuild-loader-2.16.0.tgz#a44a57a77ed2810d6b278579271f77d739aa7bc9"
+  integrity sha512-LCJEwkf+nMJbNmVYNgg/0PaIZDdr5OcHw1qbWAZLkrmBRX+KwHY/yAS6ia98UBtwzk/WhsftUBNB6tfPHgFIxw==
   dependencies:
-    esbuild "^0.12.21"
+    esbuild "^0.13.4"
     joycon "^3.0.1"
     json5 "^2.2.0"
     loader-utils "^2.0.0"
@@ -5548,12 +5548,7 @@ esbuild-windows-arm64@0.13.8:
   resolved "https://registry.yarnpkg.com/esbuild-windows-arm64/-/esbuild-windows-arm64-0.13.8.tgz#e59ae004496fd8a5ab67bfc7945a2e47480d6fb9"
   integrity sha512-HW6Mtq5eTudllxY2YgT62MrVcn7oq2o8TAoAvDUhyiEmRmDY8tPwAhb1vxw5/cdkbukM3KdMYtksnUhF/ekWeg==
 
-esbuild@^0.12.21:
-  version "0.12.29"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.29.tgz#be602db7c4dc78944a9dbde0d1ea19d36c1f882d"
-  integrity sha512-w/XuoBCSwepyiZtIRsKsetiLDUVGPVw1E/R3VTFSecIy8UR7Cq3SOtwKHJMFoVqqVG36aGkzh4e8BvpO1Fdc7g==
-
-esbuild@^0.13.8:
+esbuild@^0.13.4, esbuild@^0.13.8:
   version "0.13.8"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.13.8.tgz#bd7cc51b881ab067789f88e17baca74724c1ec4f"
   integrity sha512-A4af7G7YZLfG5OnARJRMtlpEsCkq/zHZQXewgPA864l9D6VjjbH1SuFYK/OSV6BtHwDGkdwyRrX0qQFLnMfUcw==
