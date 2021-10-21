@@ -49,7 +49,6 @@ const dialogState = observable.object({
 
 @observer
 export class PortForwardDialog extends Component<Props> {
-  @observable ready = false;
   @observable currentPort = 0;
   @observable desiredPort = 0;
 
@@ -81,16 +80,13 @@ export class PortForwardDialog extends Component<Props> {
 
     this.currentPort = +portForward.forwardPort;
     this.desiredPort = this.currentPort;
-    this.ready = this.currentPort ? false : true;
   };
 
   onClose = () => {
-    this.ready = false;
   };
 
   changePort = (value: string) => {
     this.desiredPort = Number(value);
-    this.ready = Boolean(this.desiredPort == 0 || this.currentPort !== this.desiredPort);
   };
 
   startPortForward = async () => {
@@ -170,7 +166,6 @@ export class PortForwardDialog extends Component<Props> {
             contentClass="flex gaps column"
             next={this.startPortForward}
             nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
-            disabledNext={!this.ready}
           >
             {this.renderContents()}
           </WizardStep>
