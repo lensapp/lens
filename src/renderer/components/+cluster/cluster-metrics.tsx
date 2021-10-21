@@ -19,14 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cluster-metrics.scss";
+import styles from "./cluster-metrics.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
 import { clusterOverviewStore, MetricType } from "./cluster-overview.store";
 import { BarChart } from "../chart";
-import { bytesToUnits } from "../../utils";
+import { bytesToUnits, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
 import { ZebraStripes } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
@@ -95,7 +95,7 @@ export const ClusterMetrics = observer(() => {
     }
 
     if (!memoryCapacity || !cpuCapacity) {
-      return <ClusterNoMetrics className="empty"/>;
+      return <ClusterNoMetrics className={styles.empty}/>;
     }
 
     return (
@@ -106,12 +106,13 @@ export const ClusterMetrics = observer(() => {
         timeLabelStep={5}
         showLegend={false}
         plugins={[ZebraStripes]}
+        className={styles.chart}
       />
     );
   };
 
   return (
-    <div className="ClusterMetrics flex column">
+    <div className={cssNames(styles.ClusterMetrics, "flex column")}>
       <ClusterMetricSwitchers/>
       {renderMetrics()}
     </div>

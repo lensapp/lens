@@ -19,32 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterPieCharts {
-  background: transparent!important;
-  padding: 0!important;
+.empty {
+  background: var(--contentColor);
+  min-height: 280px;
+  text-align: center;
+  padding: calc(var(--padding) * 2) 0;
+}
 
-  .empty {
-    background: $contentColor;
-    min-height: 280px;
-    text-align: center;
-    padding: $padding * 2;
-  }
-
-  .NodeCharts {
-    margin-bottom: 0;
-  }
-
-  .chart {
-    --flex-gap: #{$padding * 2};
-    background: $contentColor;
-    padding: $padding * 2 $padding;
-
-    .chart-title {
-      margin-bottom: 0;
-    }
-
-    .legend {
-      --flex-gap: #{$padding};
-    }
-  }
+.chart {
+  --flex-gap: calc(var(--padding) * 2);
+  background: var(--contentColor);
+  padding: calc(var(--padding) * 2) var(--padding);
 }

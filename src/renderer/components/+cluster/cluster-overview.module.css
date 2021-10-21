@@ -19,63 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterIssues {
-  min-height: 350px;
+.ClusterOverview {
   position: relative;
-  grid-area: issues;
-
-  &.OnlyClusterIssues {
-    grid-row: row1-start / row2-end;
-  }
+  height: 100%;
+  min-height: 650px;
+  display: grid;
+  grid-gap: calc(var(--margin) * 2);
+  grid-template-areas:
+    "barcharts piechars"
+    "issues issues";
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  grid-template-rows:
+          [row1-start] 1fr
+          [row2-start] 1fr;
 
   @media (max-width: 1150px) {
-    grid-area: unset;
-
-    &.OnlyClusterIssues {
-      grid-row: auto;
-    }
-  }
-
-  .SubHeader {
-    .Icon {
-      font-size: 130%;
-      color: $colorError;
-    }
-  }
-
-  .Table {
-    .TableHead {
-      background-color: transparent;
-      border-bottom: 1px solid $borderFaintColor;
-
-      .TableCell {
-        padding-top: 0;
-      }
-    }
-
-    .TableCell {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-
-      &.message {
-        flex-grow: 3;
-      }
-
-      &.object {
-        flex-grow: 2;
-      }
-    }
-  }
-
-  .no-issues {
-    .Icon {
-      color: white;
-    }
-
-    .ok-title {
-      font-size: large;
-      color: $textColorAccent;
-      font-weight: bold;
-    }
+    grid-template-columns: minmax(500px, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas: none;
   }
 }
