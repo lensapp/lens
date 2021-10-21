@@ -109,7 +109,7 @@ export interface IRemoteKubeApiConfig {
     skipTLSVerify?: boolean;
   }
   user: {
-    token?: string | (() => string);
+    token?: string | (() => Promise<string>);
     clientCertificateData?: string;
     clientKeyData?: string;
   }
@@ -133,14 +133,15 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
   });
 }
 
-const getToken = (token: string | (() => string)) => isFunction(token) ? token() : token;
+// const getToken = (token: string | (() => Promise<string>)) => isFunction(token) ? token() : token;
 
 export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const reqInit: RequestInit = {};
+  const token = config.user.token;
 
-  if (config.user.token) {
+  if (!isFunction(token)) {
     reqInit.headers = {
-      "Authorization": `Bearer ${getToken(config.user.token)}`
+      "Authorization": `Bearer ${token}`
     };
   }
 
@@ -170,10 +171,10 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     serverAddress: config.cluster.server,
     apiBase: "",
     debug: isDevelopment,
-    ...(config.user.token ? {
-      getRequestOptions: () => ({
+    ...(isFunction(token) ? {
+      getRequestOptions: async () => ({
         headers: {
-          "Authorization": `Bearer ${getToken(config.user.token)}`
+          "Authorization": `Bearer ${await token()}`
         }
       })
     } : {})
