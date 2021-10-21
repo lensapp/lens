@@ -51,25 +51,13 @@ interface Props extends OptionalProps {
 interface OptionalProps {
   maxCpu?: number;
   maxMemory?: number;
-  showTitle?: boolean;
 }
 
 @observer
 export class PodDetailsList extends React.Component<Props> {
-  static defaultProps: OptionalProps = {
-    showTitle: true
-  };
-
   private metricsWatcher = interval(120, () => {
     podsStore.loadKubeMetrics(this.props.owner.getNs());
   });
-
-  private sortingCallbacks = {
-    [sortBy.name]: (pod: Pod) => pod.getName(),
-    [sortBy.namespace]: (pod: Pod) => pod.getNs(),
-    [sortBy.cpu]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).cpu,
-    [sortBy.memory]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).memory,
-  };
 
   componentDidMount() {
     this.metricsWatcher.start(true);
@@ -144,27 +132,43 @@ export class PodDetailsList extends React.Component<Props> {
   }
 
   render() {
-    const { pods, showTitle } = this.props;
-    const virtual = pods.length > 100;
+    const { pods } = this.props;
 
-    if (!pods.length && !podsStore.isLoaded) return (
-      <div className="PodDetailsList flex justify-center"><Spinner/></div>
-    );
-    if (!pods.length) return null;
+    if (!podsStore.isLoaded) {
+      return (
+        <div className="PodDetailsList flex justify-center">
+          <Spinner />
+        </div>
+      );
+    }
+
+    if (!pods.length) {
+      return null;
+    }
+
+    const virtual = pods.length > 20;
 
     return (
       <div className="PodDetailsList flex column">
-        {showTitle && <DrawerTitle title="Pods"/>}
+        <DrawerTitle title="Pods" />
         <Table
           tableId="workloads_pod_details_list"
           items={pods}
           selectable
-          virtual={virtual}
           scrollable={false}
-          sortable={this.sortingCallbacks}
+          virtual={virtual}
+          // 660 is the exact hight required for 20 items with the default paddings
+          virtualHeight={660}
+          sortable={{
+            [sortBy.name]: pod => pod.getName(),
+            [sortBy.namespace]: pod => pod.getNs(),
+            [sortBy.cpu]: pod => podsStore.getPodKubeMetrics(pod).cpu,
+            [sortBy.memory]: pod => podsStore.getPodKubeMetrics(pod).memory,
+          }}
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
+          renderRow={!virtual && (pod => this.getTableRow(pod.getId()))}
           className="box grow"
         >
           <TableHead>
@@ -176,9 +180,6 @@ export class PodDetailsList extends React.Component<Props> {
             <TableCell className="memory" sortBy={sortBy.memory}>Memory</TableCell>
             <TableCell className="status">Status</TableCell>
           </TableHead>
-          {
-            !virtual && pods.map(pod => this.getTableRow(pod.getId()))
-          }
         </Table>
       </div>
     );

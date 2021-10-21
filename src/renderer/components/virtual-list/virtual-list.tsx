@@ -44,6 +44,12 @@ interface Props<T extends ItemObject = any> {
   getRow?: (uid: string | number) => React.ReactElement<any>;
   onScroll?: (props: ListOnScrollProps) => void;
   outerRef?: React.Ref<any>
+
+  /**
+   * If specified then AutoSizer will not be used and instead a fixed height
+   * virtual list will be rendered
+   */
+  fixedHeight?: number;
 }
 
 interface State {
@@ -98,34 +104,45 @@ export class VirtualList extends Component<Props, State> {
     this.listRef.current?.scrollToItem(index, align);
   };
 
-  render() {
-    const { width, className, items, getRow, onScroll, outerRef } = this.props;
+  renderList(height: number | undefined) {
+    const { width, items, getRow, onScroll, outerRef } = this.props;
     const { overscanCount } = this.state;
-    const rowData: RowData = {
-      items,
-      getRow
-    };
+
+    return (
+      <VariableSizeList
+        className="list"
+        width={width}
+        height={height}
+        itemSize={this.getItemSize}
+        itemCount={items.length}
+        itemData={{
+          items,
+          getRow
+        }}
+        overscanCount={overscanCount}
+        ref={this.listRef}
+        outerRef={outerRef}
+        onScroll={onScroll}
+      >
+        {Row}
+      </VariableSizeList>
+    );
+  }
+
+  render() {
+    const { className, fixedHeight } = this.props;
 
     return (
       <div className={cssNames("VirtualList", className)}>
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <VariableSizeList
-              className="list"
-              width={width}
-              height={height}
-              itemSize={this.getItemSize}
-              itemCount={items.length}
-              itemData={rowData}
-              overscanCount={overscanCount}
-              ref={this.listRef}
-              outerRef={outerRef}
-              onScroll={onScroll}
-            >
-              {Row}
-            </VariableSizeList>
-          )}
-        </AutoSizer>
+        {
+          typeof fixedHeight === "number"
+            ? this.renderList(fixedHeight)
+            : (
+              <AutoSizer disableWidth>
+                {({ height }) => this.renderList(height)}
+              </AutoSizer>
+            )
+        }
       </div>
     );
   }
