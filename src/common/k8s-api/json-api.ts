@@ -69,13 +69,13 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
-    this.getRequestOptions = config.getRequestOptions;
+    this.getRequestOptions = config.getRequestOptions ?? (() => Promise.resolve({}));
   }
 
   public onData = new EventEmitter<[D, Response]>();
   public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
   
-  private getRequestOptions?: JsonApiConfig["getRequestOptions"];
+  private getRequestOptions: JsonApiConfig["getRequestOptions"];
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
@@ -86,7 +86,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     const reqInit: RequestInit = merge(
       {},
       this.reqInit,
-      this.getRequestOptions ? (await this.getRequestOptions()) : {},
+      await this.getRequestOptions(),
       init
     );
     const { query } = params || {} as P;
@@ -125,7 +125,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     const reqInit: RequestInit = merge(
       {},
       this.reqInit,
-      this.getRequestOptions ? (await this.getRequestOptions()) : {},
+      await this.getRequestOptions(),
       init
     );
     const { data, query } = params || {} as P;
