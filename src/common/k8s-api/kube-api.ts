@@ -133,8 +133,6 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
   });
 }
 
-// const getToken = (token: string | (() => Promise<string>)) => isFunction(token) ? token() : token;
-
 export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const reqInit: RequestInit = {};
   const token = config.user.token;
