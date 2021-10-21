@@ -166,7 +166,6 @@ export class PortForwardDialog extends Component<Props> {
             contentClass="flex gaps column"
             next={this.startPortForward}
             nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
-            disabledNext={false}
           >
             {this.renderContents()}
           </WizardStep>
