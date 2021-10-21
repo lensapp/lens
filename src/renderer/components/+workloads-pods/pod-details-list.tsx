@@ -146,6 +146,8 @@ export class PodDetailsList extends React.Component<Props> {
       return null;
     }
 
+    const virtual = pods.length > 20;
+
     return (
       <div className="PodDetailsList flex column">
         <DrawerTitle title="Pods" />
@@ -154,8 +156,9 @@ export class PodDetailsList extends React.Component<Props> {
           items={pods}
           selectable
           scrollable={false}
-          virtual
-          virtualHeight={600}
+          virtual={virtual}
+          // 660 is the exact hight required for 20 items with the default paddings
+          virtualHeight={660}
           sortable={{
             [sortBy.name]: pod => pod.getName(),
             [sortBy.namespace]: pod => pod.getNs(),
@@ -165,6 +168,7 @@ export class PodDetailsList extends React.Component<Props> {
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
+          renderRow={!virtual && (pod => this.getTableRow(pod.getId()))}
           className="box grow"
         >
           <TableHead>

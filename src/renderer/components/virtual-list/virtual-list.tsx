@@ -104,7 +104,7 @@ export class VirtualList extends Component<Props, State> {
     this.listRef.current?.scrollToItem(index, align);
   };
 
-  renderVSL(height: number | undefined) {
+  renderList(height: number | undefined) {
     const { width, items, getRow, onScroll, outerRef } = this.props;
     const { overscanCount } = this.state;
 
@@ -136,10 +136,10 @@ export class VirtualList extends Component<Props, State> {
       <div className={cssNames("VirtualList", className)}>
         {
           typeof fixedHeight === "number"
-            ? this.renderVSL(fixedHeight)
+            ? this.renderList(fixedHeight)
             : (
               <AutoSizer disableWidth>
-                {({ height }) => this.renderVSL(height)}
+                {({ height }) => this.renderList(height)}
               </AutoSizer>
             )
         }
