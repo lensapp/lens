@@ -28,7 +28,9 @@ export interface SidebarStorageState {
   }
 }
 
+export const defaultSidebarWidth = 200;
+
 export const sidebarStorage = createStorage<SidebarStorageState>("sidebar", {
-  width: 200,
+  width: defaultSidebarWidth,
   expanded: {},
 });
