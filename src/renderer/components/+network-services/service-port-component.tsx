@@ -30,7 +30,6 @@ import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
 import type { ForwardedPort } from "../../port-forward";
-import logger from "../../../common/logger";
 import { Spinner } from "../spinner";
 
 interface Props {
@@ -47,19 +46,13 @@ export class ServicePortComponent extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-    this.init();
+    this.checkExistingPortForwarding();
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => [ portForwardStore.portForwards, this.props.service ], () => this.init()),
+      reaction(() => [portForwardStore.portForwards, this.props.service], () => this.checkExistingPortForwarding()),
     ]);
-  }
-
-  init() {
-    this.checkExistingPortForwarding().catch(error => {
-      logger.error(error);
-    });
   }
 
   async checkExistingPortForwarding() {
@@ -71,7 +64,16 @@ export class ServicePortComponent extends React.Component<Props> {
       port: port.port,
       forwardPort: this.forwardPort,
     };
-    const activePort = await getPortForward(portForward) ?? 0;
+
+    let activePort: number;
+
+    try {
+      activePort = await getPortForward(portForward) ?? 0;
+    } catch (error) {
+      this.isPortForwarded = false;
+
+      return;
+    }
 
     this.forwardPort = activePort;
     this.isPortForwarded = activePort ? true : false;
@@ -89,7 +91,6 @@ export class ServicePortComponent extends React.Component<Props> {
     };
 
     this.waiting = true;
-    this.isPortForwarded = false;
 
     try {
       this.forwardPort = await addPortForward(portForward);
@@ -100,7 +101,8 @@ export class ServicePortComponent extends React.Component<Props> {
         this.isPortForwarded = true;
       }
     } catch (error) {
-      Notifications.error(error);
+      Notifications.error("Error occurred starting port-forward, the local port may not be available");
+      this.checkExistingPortForwarding();
     } finally {
       this.waiting = false;
     }
@@ -122,7 +124,8 @@ export class ServicePortComponent extends React.Component<Props> {
       await removePortForward(portForward);
       this.isPortForwarded = false;
     } catch (error) {
-      Notifications.error(error);
+      Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
+      this.checkExistingPortForwarding();
     } finally {
       this.waiting = false;
     }

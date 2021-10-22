@@ -26,6 +26,7 @@ import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { PortForwardDialog } from "../../port-forward";
+import { Notifications } from "../notifications";
 
 interface Props extends MenuActionsProps {
   portForward: PortForwardItem;
@@ -35,7 +36,13 @@ interface Props extends MenuActionsProps {
 export class PortForwardMenu extends React.Component<Props> {
   @boundMethod
   remove() {
-    return removePortForward(this.props.portForward);
+    const { portForward } = this.props;
+
+    try {
+      removePortForward(portForward);
+    } catch (error) {
+      Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
+    }
   }
 
   renderContent() {
