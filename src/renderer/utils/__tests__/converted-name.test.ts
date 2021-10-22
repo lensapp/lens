@@ -19,19 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterMetrics {
-  position: relative;
-  min-height: 280px;
+import { getConvertedParts } from "../name-parts";
 
-  .Chart {
-    .chart-container {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .empty {
-    margin-top: -45px;
-    text-align: center;
-  }
-}
+describe("getConvertedParts", () => {
+  it.each([
+    ["hello", ["hello"]],
+    ["hello.goodbye", ["hello", "goodbye"]],
+    ["hello.1", ["hello", 1]],
+    ["3-hello.1", [3, "hello", 1]],
+    ["3_hello.1", [3, "hello", 1]],
+    ["3_hello.1/foobar", [3, "hello", 1, "foobar"]],
+    ["3_hello.1/foobar\\new", [3, "hello", 1, "foobar", "new"]],
+  ])("Splits '%s' as into %j", (input, output) => {
+    expect(getConvertedParts(input)).toEqual(output);
+  });
+});

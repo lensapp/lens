@@ -32,6 +32,7 @@ import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
 import { getPath } from "../common/utils/getPath";
+import { defaultPackageMirror, packageMirrors } from "../common/user-store/preferences-helpers";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -50,10 +51,6 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.19", "1.19.12"],
   ["1.20", "1.20.8"],
   ["1.21", bundledVersion]
-]);
-const packageMirrors: Map<string, string> = new Map([
-  ["default", "https://storage.googleapis.com/kubernetes-release/release"],
-  ["china", "https://mirror.azure.cn/kubernetes/kubectl"]
 ]);
 let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3\n";
@@ -389,12 +386,9 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    const mirror = packageMirrors.get(UserStore.getInstance().downloadMirror);
+    // MacOS packages are only available from default
 
-    if (mirror) {
-      return mirror;
-    }
-
-    return packageMirrors.get("default"); // MacOS packages are only available from default
+    return packageMirrors.get(UserStore.getInstance().downloadMirror)
+      ?? packageMirrors.get(defaultPackageMirror);
   }
 }

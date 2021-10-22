@@ -72,6 +72,7 @@ import type { ClusterId } from "../../common/cluster-types";
 import { watchHistoryState } from "../remote-helpers/history-updater";
 import { unmountComponentAtNode } from "react-dom";
 import { PortForwardDialog } from "../port-forward";
+import { DeleteClusterDialog } from "./delete-cluster-dialog";
 
 @observer
 export class App extends React.Component {
@@ -110,13 +111,6 @@ export class App extends React.Component {
     });
     window.addEventListener("online", () => {
       window.location.reload();
-    });
-
-    window.addEventListener("message", (ev: MessageEvent) => {
-      if (ev.data === "teardown") {
-        unmountComponentAtNode(rootElem);
-        window.location.href = "about:blank";
-      }
     });
 
     window.onbeforeunload = () => {
@@ -230,6 +224,7 @@ export class App extends React.Component {
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
           <PortForwardDialog/>
+          <DeleteClusterDialog/>
           <CommandContainer clusterId={App.clusterId}/>
         </ErrorBoundary>
       </Router>

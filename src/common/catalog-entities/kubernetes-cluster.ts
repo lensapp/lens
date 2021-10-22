@@ -23,10 +23,11 @@ import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
-import { requestMain } from "../ipc";
+import { broadcastMessage, requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
+import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -114,7 +115,10 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
       context.menuItems.push({
         title: "Settings",
         icon: "edit",
-        onClick: () => context.navigate(`/entity/${this.metadata.uid}/settings`)
+        onClick: () => broadcastMessage(
+          IpcRendererNavigationEvents.NAVIGATE_IN_APP,
+          `/entity/${this.metadata.uid}/settings`,
+        ),
       });
     }
 

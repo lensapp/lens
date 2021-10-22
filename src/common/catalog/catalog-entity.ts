@@ -172,7 +172,10 @@ export interface CatalogEntitySettingsMenu {
 }
 
 export interface CatalogEntityContextMenuContext {
-  navigate: (url: string) => void;
+  /**
+   * Navigate to the specified pathname
+   */
+  navigate: (pathname: string) => void;
   menuItems: CatalogEntityContextMenu[];
 }
 

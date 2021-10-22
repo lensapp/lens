@@ -60,5 +60,6 @@ export * from "./convertMemory";
 export * from "./convertCpu";
 
 import * as iter from "./iter";
+import * as array from "./array";
 
-export { iter };
+export { iter, array };

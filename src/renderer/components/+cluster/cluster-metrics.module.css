@@ -18,25 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React, { ReactNode, useState } from "react";
 
-import { HotbarStore } from "../../../common/hotbar-store";
-import { MenuItem } from "../menu";
+ .ClusterMetrics {
+  position: relative;
+  min-height: 280px;
+  padding: calc(var(--margin) * 2);
+  background: var(--contentColor);
 
-import type { CatalogEntity } from "../../api/catalog-entity";
+  .chart {
+    :global(.chart-container) {
+      width: 100%;
+      height: 100%;
+    }
+  }
 
-export function HotbarToggleMenuItem(props: { entity: CatalogEntity, addContent: ReactNode, removeContent: ReactNode }) {
-  const store = HotbarStore.getInstance();
-  const add = () => store.addToHotbar(props.entity);
-  const remove = () => store.removeFromHotbar(props.entity.getId());
-  const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
-
-  return (
-    <MenuItem onClick={() => {
-      itemInHotbar ? remove() : add();
-      setItemInHotbar(!itemInHotbar);
-    }}>
-      {itemInHotbar ? props.removeContent : props.addContent }
-    </MenuItem>
-  );
+  .empty {
+    margin-top: -45px;
+    text-align: center;
+  }
 }

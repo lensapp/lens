@@ -26,25 +26,27 @@ import type { MigrationDeclaration } from "../helpers";
 export default {
   version: "5.0.0-beta.5",
   run(store) {
-    const hotbars: Hotbar[] = store.get("hotbars");
+    const rawHotbars = store.get("hotbars");
+    const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars : [];
 
-    hotbars.forEach((hotbar, hotbarIndex) => {
-      hotbar.items.forEach((item, itemIndex) => {
+    for (const hotbar of hotbars) {
+      for (let i = 0; i < hotbar.items.length; i += 1) {
+        const item = hotbar.items[i];
         const entity = catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item?.entity.uid);
 
         if (!entity) {
           // Clear disabled item
-          hotbars[hotbarIndex].items[itemIndex] = null;
+          hotbar.items[i] = null;
         } else {
           // Save additional data
-          hotbars[hotbarIndex].items[itemIndex].entity = {
+          hotbar.items[i].entity = {
             ...item.entity,
             name: entity.metadata.name,
             source: entity.metadata.source
           };
         }
-      });
-    });
+      }
+    }
 
     store.set("hotbars", hotbars);
   }

@@ -24,5 +24,10 @@
     &.warning {
       @include table-cell-warning;
     }
+
+    &.status {
+      @include port-forward-status-colors;
+      flex: 0.6;
+    }
   }
 }

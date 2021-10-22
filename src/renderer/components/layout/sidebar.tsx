@@ -42,6 +42,9 @@ import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
+import { makeObservable, observable } from "mobx";
+import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
+import { HotbarStore } from "../../../common/hotbar-store";
 
 interface Props {
   className?: string;
@@ -50,6 +53,15 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
+  @observable private contextMenu: CatalogEntityContextMenuContext = {
+    menuItems: [],
+    navigate,
+  };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     crdStore.reloadAll();
@@ -194,6 +206,20 @@ export class Sidebar extends React.Component<Props> {
           src={spec.icon?.src}
           className="mr-5"
           onClick={() => navigate("/")}
+          menuItems={this.contextMenu.menuItems}
+          onMenuOpen={() => {
+            const hotbarStore = HotbarStore.getInstance();
+            const isAddedToActive = HotbarStore.getInstance().isAddedToActive(this.clusterEntity);
+            const title = isAddedToActive
+              ? "Remove from Hotbar"
+              : "Add to Hotbar";
+            const onClick = isAddedToActive
+              ? () => hotbarStore.removeFromHotbar(metadata.uid)
+              : () => hotbarStore.addToHotbar(this.clusterEntity);
+
+            this.contextMenu.menuItems = [{ title, onClick }];
+            this.clusterEntity.onContextMenuOpen(this.contextMenu);
+          }}
         />
         <div className={styles.clusterName}>
           {metadata.name}

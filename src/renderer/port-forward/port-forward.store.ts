@@ -81,6 +81,16 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
   async removeSelectedItems() {
     return Promise.all(this.selectedItems.map(removePortForward));
   }
+
+  getById(id: string) {
+    const index = this.getIndexById(id);
+
+    if (index === -1) {
+      return null;
+    }
+    
+    return this.getItems()[index];
+  }
 }
 
 interface PortForwardResult {

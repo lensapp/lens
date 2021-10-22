@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cluster-pie-charts.scss";
+import styles from "./cluster-pie-charts.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -29,7 +29,7 @@ import { Icon } from "../icon";
 import { nodesStore } from "../+nodes/nodes.store";
 import { ChartData, PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
-import { bytesToUnits } from "../../utils";
+import { bytesToUnits, cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 
@@ -173,8 +173,8 @@ export const ClusterPieCharts = observer(() => {
     };
 
     return (
-      <div className="NodeCharts flex justify-center box grow gaps">
-        <div className="chart flex column align-center box grow">
+      <div className="flex justify-center box grow gaps">
+        <div className={cssNames(styles.chart, "flex column align-center box grow")}>
           <PieChart
             data={cpuData}
             title="CPU"
@@ -188,7 +188,7 @@ export const ClusterPieCharts = observer(() => {
           />
           {cpuLimitsOverload && renderLimitWarning()}
         </div>
-        <div className="chart flex column align-center box grow">
+        <div className={cssNames(styles.chart, "flex column align-center box grow")}>
           <PieChart
             data={memoryData}
             title="Memory"
@@ -202,7 +202,7 @@ export const ClusterPieCharts = observer(() => {
           />
           {memoryLimitsOverload && renderLimitWarning()}
         </div>
-        <div className="chart flex column align-center box grow">
+        <div className={cssNames(styles.chart, "flex column align-center box grow")}>
           <PieChart
             data={podsData}
             title="Pods"
@@ -220,7 +220,7 @@ export const ClusterPieCharts = observer(() => {
 
     if (!nodes.length) {
       return (
-        <div className="empty flex column box grow align-center justify-center">
+        <div className={cssNames(styles.empty, "flex column box grow align-center justify-center")}>
           <Icon material="info"/>
           No Nodes Available.
         </div>
@@ -237,14 +237,14 @@ export const ClusterPieCharts = observer(() => {
     const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
 
     if (!memoryCapacity || !cpuCapacity || !podCapacity) {
-      return <ClusterNoMetrics className="empty"/>;
+      return <ClusterNoMetrics className={styles.empty}/>;
     }
 
     return renderCharts();
   };
 
   return (
-    <div className="ClusterPieCharts flex">
+    <div className="flex">
       {renderContent()}
     </div>
   );

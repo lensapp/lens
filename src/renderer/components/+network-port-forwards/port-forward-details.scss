@@ -19,10 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterMetricSwitchers {
-  margin-bottom: $margin * 2;
+.PortForwardDetails {
+  .SubTitle {
+    text-transform: none
+  }
 
-  .metric-switch {
-    text-align: right;
+  .status {
+    @include port-forward-status-colors;
   }
 }

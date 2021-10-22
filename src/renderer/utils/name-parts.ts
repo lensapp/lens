@@ -18,25 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React, { ReactNode, useState } from "react";
 
-import { HotbarStore } from "../../../common/hotbar-store";
-import { MenuItem } from "../menu";
+/**
+ * Split `name` into the parts seperated by one or more of (-, _, or .) and
+ * the sections can be converted to numbers will be converted
+ * @param name A kube object name
+ * @returns The converted parts of the name
+ */
+export function getConvertedParts(name: string): (string | number)[] {
+  return name
+    .split(/[-_./\\]+/)
+    .map(part => {
+      const converted = +part;
 
-import type { CatalogEntity } from "../../api/catalog-entity";
-
-export function HotbarToggleMenuItem(props: { entity: CatalogEntity, addContent: ReactNode, removeContent: ReactNode }) {
-  const store = HotbarStore.getInstance();
-  const add = () => store.addToHotbar(props.entity);
-  const remove = () => store.removeFromHotbar(props.entity.getId());
-  const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
-
-  return (
-    <MenuItem onClick={() => {
-      itemInHotbar ? remove() : add();
-      setItemInHotbar(!itemInHotbar);
-    }}>
-      {itemInHotbar ? props.removeContent : props.addContent }
-    </MenuItem>
-  );
+      return isNaN(converted) ? part : converted;
+    });
 }

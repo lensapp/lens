@@ -79,13 +79,7 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
   logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
   lensViews.delete(clusterId);
 
-  // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
-  // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
-  // Issue: https://github.com/lensapp/lens/issues/811
-  iframe.style.display = "none";
-  iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
-  iframe.removeAttribute("name");
-  iframe.contentWindow.postMessage("teardown", "*");
+  iframe.parentNode.removeChild(iframe);
 }
 
 export function refreshViews(visibleClusterId?: string) {

@@ -19,29 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterOverview {
-  $gridGap: $margin * 2;
+.entityDetails {
+  /* Move Details panel under TopBar line */
+  height: calc(100% - var(--main-layout-header));
+  margin-top: var(--main-layout-header);
+}
 
-  position: relative;
-  height: 100%;
-  min-height: 650px;
-  display: grid;
-  grid-gap: $gridGap;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  grid-template-rows:
-          [row1-start] 1fr
-          [row2-start] 1fr;
+.metadata {
+  margin-right: var(--margin);
+}
 
-  @include media(">1600px") {
-    grid-template-columns: 1fr 1fr;
+.entityIcon {
+  margin-right: calc(var(--margin) * 3);
+
+  .avatar {
+    :global(.MuiAvatar-root) {
+      font-size: 3ch;
+    }
   }
 
-  > *:not(.Spinner) {
-    padding: $gridGap;
-    background: $contentColor;
-
-    > .SubHeader {
-      padding-top: 0;
-    }
+  .hint {
+    text-align: center;
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    margin-top: var(--margin);
+    cursor: default;
+    user-select: none;
+    opacity: 0.5;
   }
 }

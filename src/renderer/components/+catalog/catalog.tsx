@@ -220,7 +220,7 @@ export class Catalog extends React.Component<Props> {
           small
           className={styles.pinIcon}
           material={!isItemInHotbar && "push_pin"}
-          svg={isItemInHotbar && "unpin"}
+          svg={isItemInHotbar && "push_off"}
           tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
           onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
         />

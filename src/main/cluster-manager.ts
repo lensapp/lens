@@ -21,7 +21,7 @@
 
 import "../common/cluster-ipc";
 import type http from "http";
-import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
+import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
@@ -69,21 +69,6 @@ export class ClusterManager extends Singleton {
       if (change.type === "add") {
         this.updateEntityStatus(catalogEntityRegistry.getById(change.newValue));
       }
-    });
-
-    // auto-stop removed clusters
-    autorun(() => {
-      const removedClusters = Array.from(this.store.removedClusters.values());
-
-      if (removedClusters.length > 0) {
-        const meta = removedClusters.map(cluster => cluster.getMeta());
-
-        logger.info(`${logPrefix} removing clusters`, meta);
-        removedClusters.forEach(cluster => cluster.disconnect());
-        this.store.removedClusters.clear();
-      }
-    }, {
-      delay: 250
     });
 
     ipcMainOn("network:offline", this.onNetworkOffline);

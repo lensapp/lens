@@ -23,9 +23,13 @@ import "./port-forwards.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
+import type { RouteComponentProps } from "react-router-dom";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { PortForwardItem, portForwardStore } from "../../port-forward";
 import { PortForwardMenu } from "./port-forward-menu";
+import { PortForwardsRouteParams, portForwardsURL } from "../../../common/routes";
+import { PortForwardDetails } from "./port-forward-details";
+import { navigation } from "../../navigation";
 
 enum columnId {
   name = "name",
@@ -33,16 +37,46 @@ enum columnId {
   kind = "kind",
   port = "port",
   forwardPort = "forwardPort",
+  status = "status",
+}
+
+interface Props extends RouteComponentProps<PortForwardsRouteParams> {
 }
 
 @observer
-export class PortForwards extends React.Component {
+export class PortForwards extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
       portForwardStore.watch(),
     ]);
   }
+
+  get selectedPortForward() {
+    const { match: { params: { forwardport } } } = this.props;
+
+    return portForwardStore.getById(forwardport);
+  }
+
+  onDetails = (item: PortForwardItem) => {
+    if (item === this.selectedPortForward) {
+      this.hideDetails();
+    } else {
+      this.showDetails(item);
+    }
+  };
+
+  showDetails = (item: PortForwardItem) => {
+    navigation.push(portForwardsURL({
+      params: {
+        forwardport: String(item.getForwardPort()),
+      }
+    }));
+  };
+
+  hideDetails = () => {
+    navigation.push(portForwardsURL());
+  };
 
   renderRemoveDialogMessage(selectedItems: PortForwardItem[]) {
     const forwardPorts = selectedItems.map(item => item.getForwardPort()).join(", ");
@@ -68,6 +102,7 @@ export class PortForwards extends React.Component {
             [columnId.kind]: item => item.getKind(),
             [columnId.port]: item => item.getPort(),
             [columnId.forwardPort]: item => item.getForwardPort(),
+            [columnId.status]: item => item.getStatus(),
           }}
           searchFilters={[
             item => item.getSearchFields(),
@@ -79,6 +114,7 @@ export class PortForwards extends React.Component {
             { title: "Kind", className: "kind", sortBy: columnId.kind, id: columnId.kind },
             { title: "Pod Port", className: "port", sortBy: columnId.port, id: columnId.port },
             { title: "Local Port", className: "forwardPort", sortBy: columnId.forwardPort, id: columnId.forwardPort },
+            { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={item => [
             item.getName(),
@@ -86,6 +122,7 @@ export class PortForwards extends React.Component {
             item.getKind(),
             item.getPort(),
             item.getForwardPort(),
+            { title: item.getStatus(), className: item.getStatus().toLowerCase() },
           ]}
           renderItemMenu={pf => (
             <PortForwardMenu
@@ -96,7 +133,15 @@ export class PortForwards extends React.Component {
           customizeRemoveDialog={selectedItems => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}
+          detailsItem={this.selectedPortForward}
+          onDetails={this.onDetails}
         />
+        {this.selectedPortForward && (
+          <PortForwardDetails
+            portForward={this.selectedPortForward}
+            hideDetails={this.hideDetails}
+          />
+        )}
       </>
     );
   }

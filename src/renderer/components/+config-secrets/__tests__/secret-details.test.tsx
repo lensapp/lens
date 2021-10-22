@@ -19,61 +19,31 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterIssues {
-  min-height: 350px;
-  position: relative;
-  grid-column-start: 1;
-  grid-column-end: 3;
+import React from "react";
+import { render } from "@testing-library/react";
+import { SecretDetails } from "../secret-details";
+import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
 
-  @include media("<1024px") {
-    grid-column-start: 1!important;
-    grid-column-end: 1!important;
-  }
+jest.mock("../../kube-object-meta/kube-object-meta");
 
-  .SubHeader {
-    .Icon {
-      font-size: 130%;
-      color: $colorError;
-    }
-  }
 
-  .Table {
-    .TableHead {
-      background-color: transparent;
-      border-bottom: 1px solid $borderFaintColor;
+describe("SecretDetails tests", () => {
+  it("should show the visibility toggle when the secret value is ''", () => {
+    const secret = new Secret({
+      apiVersion: "v1",
+      kind: "secret",
+      metadata: {
+        name: "test",
+        resourceVersion: "1",
+        uid: "uid"
+      },
+      data: {
+        foobar: "",
+      },
+      type: SecretType.Opaque,
+    });
+    const result = render(<SecretDetails object={secret}/>);
 
-      .TableCell {
-        padding-top: 0;
-      }
-    }
-
-    .TableCell {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-
-      &.message {
-        flex-grow: 3;
-      }
-
-      &.object {
-        flex-grow: 2;
-      }
-    }
-  }
-
-  .no-issues {
-    .Icon {
-      color: white;
-    }
-
-    .ok-title {
-      font-size: large;
-      color: $textColorAccent;
-      font-weight: bold;
-    }
-  }
-}
-
-.OnlyClusterIssues {
-  grid-row: row1-start / row2-end;
-}
+    expect(result.getByTestId("foobar-secret-entry").querySelector(".Icon")).toBeDefined();
+  });
+});

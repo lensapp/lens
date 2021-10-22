@@ -32,6 +32,7 @@ import { cssNames } from "../utils";
 import { addPortForward, modifyPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
 import { openPortForward } from ".";
+import { Checkbox } from "../components/checkbox";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -48,7 +49,6 @@ const dialogState = observable.object({
 
 @observer
 export class PortForwardDialog extends Component<Props> {
-  @observable ready = false;
   @observable currentPort = 0;
   @observable desiredPort = 0;
 
@@ -57,7 +57,7 @@ export class PortForwardDialog extends Component<Props> {
     makeObservable(this);
   }
 
-  static open(portForward: ForwardedPort, options : PortForwardDialogOpenOptions = { openInBrowser:  false }) {
+  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
     dialogState.openInBrowser = options.openInBrowser;
@@ -80,16 +80,13 @@ export class PortForwardDialog extends Component<Props> {
 
     this.currentPort = +portForward.forwardPort;
     this.desiredPort = this.currentPort;
-    this.ready = this.currentPort ? false : true;
   };
 
   onClose = () => {
-    this.ready = false;
   };
 
   changePort = (value: string) => {
     this.desiredPort = Number(value);
-    this.ready = Boolean(this.desiredPort == 0 || this.currentPort !== this.desiredPort);
   };
 
   startPortForward = async () => {
@@ -105,7 +102,7 @@ export class PortForwardDialog extends Component<Props> {
         portForward.forwardPort = desiredPort;
         port = await addPortForward(portForward);
       }
-      
+
       if (dialogState.openInBrowser) {
         portForward.forwardPort = port;
         openPortForward(portForward);
@@ -120,7 +117,7 @@ export class PortForwardDialog extends Component<Props> {
   renderContents() {
     return (
       <>
-        <div className="flex gaps align-center">
+        <div className="flex column gaps align-left">
           <div className="input-container flex align-center">
             <div className="current-port" data-testid="current-port">
               Local port to forward from:
@@ -134,6 +131,13 @@ export class PortForwardDialog extends Component<Props> {
               onChange={this.changePort}
             />
           </div>
+          <Checkbox
+            data-testid="port-forward-open"
+            theme="light"
+            label="Open in Browser"
+            value={dialogState.openInBrowser}
+            onChange={value => dialogState.openInBrowser = value}
+          />
         </div>
       </>
     );
@@ -162,7 +166,6 @@ export class PortForwardDialog extends Component<Props> {
             contentClass="flex gaps column"
             next={this.startPortForward}
             nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
-            disabledNext={!this.ready}
           >
             {this.renderContents()}
           </WizardStep>

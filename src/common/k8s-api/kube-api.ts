@@ -22,6 +22,7 @@
 // Base class for building all kubernetes apis
 
 import merge from "lodash/merge";
+import { isFunction } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
@@ -108,7 +109,7 @@ export interface IRemoteKubeApiConfig {
     skipTLSVerify?: boolean;
   }
   user: {
-    token?: string;
+    token?: string | (() => Promise<string>);
     clientCertificateData?: string;
     clientKeyData?: string;
   }
@@ -135,12 +136,6 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
 export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const reqInit: RequestInit = {};
 
-  if (config.user.token) {
-    reqInit.headers = {
-      "Authorization": `Bearer ${config.user.token}`
-    };
-  }
-
   const agentOptions: AgentOptions = {};
 
   if (config.cluster.skipTLSVerify === true) {
@@ -163,10 +158,18 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     reqInit.agent = new Agent(agentOptions);
   }
 
+  const token = config.user.token;
   const request = new KubeJsonApi({
     serverAddress: config.cluster.server,
     apiBase: "",
     debug: isDevelopment,
+    ...(token ? {
+      getRequestOptions: async () => ({
+        headers: {
+          "Authorization": `Bearer ${isFunction(token) ? await token() : token}`
+        }
+      })
+    } : {})
   }, reqInit);
 
   return new KubeApi({

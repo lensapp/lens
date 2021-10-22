@@ -18,25 +18,27 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React, { ReactNode, useState } from "react";
 
-import { HotbarStore } from "../../../common/hotbar-store";
-import { MenuItem } from "../menu";
+export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
 
-import type { CatalogEntity } from "../../api/catalog-entity";
+/**
+ *
+ * @param sources The source arrays
+ * @yields A tuple of the next element from each of the sources
+ * @returns The tuple of all the sources as soon as at least one of the sources is exausted
+ */
+export function* zipStrict<T, N extends number>(...sources: Tuple<T[], N>): Iterator<Tuple<T, N>, Tuple<T[], N>> {
+  const maxSafeLength = sources.reduce((prev, cur) => Math.min(prev, cur.length), Number.POSITIVE_INFINITY);
 
-export function HotbarToggleMenuItem(props: { entity: CatalogEntity, addContent: ReactNode, removeContent: ReactNode }) {
-  const store = HotbarStore.getInstance();
-  const add = () => store.addToHotbar(props.entity);
-  const remove = () => store.removeFromHotbar(props.entity.getId());
-  const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
+  if (!isFinite(maxSafeLength)) {
+    // There are no sources, thus just return
+    return [] as Tuple<T[], N>;
+  }
 
-  return (
-    <MenuItem onClick={() => {
-      itemInHotbar ? remove() : add();
-      setItemInHotbar(!itemInHotbar);
-    }}>
-      {itemInHotbar ? props.removeContent : props.addContent }
-    </MenuItem>
-  );
+  for (let i = 0; i < maxSafeLength; i += 1) {
+    yield sources.map(source => source[i]) as Tuple<T, N>;
+  }
+
+  return sources.map(source => source.slice(maxSafeLength)) as Tuple<T[], N>;
 }

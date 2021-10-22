@@ -22,19 +22,18 @@
 // Common usage utils & helpers
 
 export * from "../../common/utils";
-
-export * from "./cssVar";
-export * from "./cssNames";
 export * from "../../common/event-emitter";
-export * from "./saveFile";
-export * from "./prevDefault";
-export * from "./storageHelper";
-export * from "./createStorage";
-export * from "./interval";
+
 export * from "./copyToClipboard";
-export * from "./isReactNode";
-export * from "../../common/utils/convertMemory";
-export * from "../../common/utils/convertCpu";
-export * from "./metricUnitsToNumber";
+export * from "./createStorage";
+export * from "./cssNames";
+export * from "./cssVar";
 export * from "./display-booleans";
+export * from "./interval";
 export * from "./isMiddleClick";
+export * from "./isReactNode";
+export * from "./metricUnitsToNumber";
+export * from "./name-parts";
+export * from "./prevDefault";
+export * from "./saveFile";
+export * from "./storageHelper";

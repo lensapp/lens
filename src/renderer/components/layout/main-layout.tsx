@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
-import { sidebarStorage } from "./sidebar-storage";
+import { defaultSidebarWidth, sidebarStorage } from "./sidebar-storage";
 
 interface Props {
   sidebar: React.ReactNode;
@@ -46,7 +46,6 @@ export class MainLayout extends React.Component<Props> {
   };
 
   render() {
-    const { onSidebarResize } = this;
     const { className, footer, children, sidebar } = this.props;
     const { width: sidebarWidth } = sidebarStorage.get();
     const style = { "--sidebar-width": `${sidebarWidth}px` } as React.CSSProperties;
@@ -60,7 +59,8 @@ export class MainLayout extends React.Component<Props> {
             placement={ResizeSide.TRAILING}
             growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
             getCurrentExtent={() => sidebarWidth}
-            onDrag={onSidebarResize}
+            onDrag={this.onSidebarResize}
+            onDoubleClick={() => this.onSidebarResize(defaultSidebarWidth)}
             minExtent={120}
             maxExtent={400}
           />

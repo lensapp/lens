@@ -27,7 +27,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, productName } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -133,9 +133,7 @@ app.on("ready", async () => {
 
   bindBroadcastHandlers();
 
-  powerMonitor.on("shutdown", () => {
-    app.exit();
-  });
+  powerMonitor.on("shutdown", () => app.exit());
 
   registerFileProtocol("static", __static);
 
@@ -183,7 +181,8 @@ app.on("ready", async () => {
     await lensProxy.listen();
   } catch (error) {
     dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
-    app.exit();
+
+    return app.exit();
   }
 
   // test proxy connection
@@ -193,13 +192,27 @@ app.on("ready", async () => {
 
     if (getAppVersion() !== versionFromProxy) {
       logger.error("Proxy server responded with invalid response");
-      app.exit();
-    } else {
-      logger.info("⚡ LensProxy connection OK");
+
+      return app.exit();
     }
+
+    logger.info("⚡ LensProxy connection OK");
   } catch (error) {
     logger.error(`🛑 LensProxy: failed connection test: ${error}`);
-    app.exit();
+
+    const hostsPath = isWindows
+      ? "C:\\windows\\system32\\drivers\\etc\\hosts"
+      : "/etc/hosts";
+    const message = [
+      `Failed connection test: ${error}`,
+      "Check to make sure that no other versions of Lens are running",
+      `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
+      "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
+    ];
+
+    dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
+
+    return app.exit();
   }
 
   initializers.initRegistries();

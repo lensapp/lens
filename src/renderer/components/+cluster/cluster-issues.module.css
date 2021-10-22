@@ -18,25 +18,57 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React, { ReactNode, useState } from "react";
 
-import { HotbarStore } from "../../../common/hotbar-store";
-import { MenuItem } from "../menu";
+ .ClusterIssues {
+  min-height: 350px;
+  position: relative;
+  grid-area: issues;
+  padding: calc(var(--margin) * 2) 0;
+  background: var(--contentColor);
 
-import type { CatalogEntity } from "../../api/catalog-entity";
+  &:global(.OnlyClusterIssues) {
+    grid-row: row1-start / row2-end;
+  }
 
-export function HotbarToggleMenuItem(props: { entity: CatalogEntity, addContent: ReactNode, removeContent: ReactNode }) {
-  const store = HotbarStore.getInstance();
-  const add = () => store.addToHotbar(props.entity);
-  const remove = () => store.removeFromHotbar(props.entity.getId());
-  const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
+  @media (max-width: 1150px) {
+    grid-area: unset;
 
-  return (
-    <MenuItem onClick={() => {
-      itemInHotbar ? remove() : add();
-      setItemInHotbar(!itemInHotbar);
-    }}>
-      {itemInHotbar ? props.removeContent : props.addContent }
-    </MenuItem>
-  );
+    &:global(.OnlyClusterIssues) {
+      grid-row: auto;
+    }
+  }
+
+  .SubHeader {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    :global(.Icon) {
+      font-size: 130%;
+      color: var(--colorError);
+    }
+  }
+
+  .message {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 3;
+  }
+
+  .object {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 2;
+  }
+
+  .noIssues {
+    .ok-title {
+      font-size: large;
+      color: var(--textColorAccent);
+      font-weight: bold;
+    }
+
+    .allGood {
+      color: white;
+    }
+  }
 }

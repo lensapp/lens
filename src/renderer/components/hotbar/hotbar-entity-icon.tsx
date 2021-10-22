@@ -44,18 +44,14 @@ interface Props extends DOMAttributes<HTMLElement> {
 
 @observer
 export class HotbarEntityIcon extends React.Component<Props> {
-  @observable private contextMenu: CatalogEntityContextMenuContext;
+  @observable private contextMenu: CatalogEntityContextMenuContext = {
+    menuItems: [],
+    navigate: (url: string) => navigate(url),
+  };
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url),
-    };
   }
 
   get kindIcon() {

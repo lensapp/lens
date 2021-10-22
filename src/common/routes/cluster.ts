@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const clusterRoute: RouteProps = {
-  path: "/cluster"
+  path: "/overview"
 };
 
 export const clusterURL = buildURL(clusterRoute.path);
