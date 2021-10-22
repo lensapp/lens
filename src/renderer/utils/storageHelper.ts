@@ -22,7 +22,7 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 import { action, comparer, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft, isDraft } from "immer";
-import { isEqual } from "lodash";
+import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
 export interface StorageAdapter<T> {
@@ -80,7 +80,7 @@ export class StorageHelper<T> {
     const notDefault = !this.isDefaultValue(data);
 
     if (notEmpty && notDefault) {
-      this.merge(data);
+      this.set(data);
     }
 
     this.initialized = true;
@@ -159,9 +159,11 @@ export class StorageHelper<T> {
         if (newValue && !isDraft(newValue)) {
           Object.assign(draft, newValue);
         }
-      } else {
+      } else if (isPlainObject(value)) {
         Object.assign(draft, value);
       }
+
+      return draft;
     });
 
     this.set(nextValue);
