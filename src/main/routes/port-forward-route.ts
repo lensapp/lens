@@ -134,12 +134,10 @@ export class PortForwardRoute {
       if (!portForward) {
         logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
 
-        let thePort = 0;
-
-        if (forwardPort > 0 && forwardPort < 65536) {
-          thePort = forwardPort;
-        }
-
+        const thePort = 0 < forwardPort && forwardPort < 65536 
+          ? forwardPort 
+          : 0;
+          
         portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
           clusterId: cluster.id,
           kind: resourceType,

@@ -61,7 +61,7 @@ export class PortForwardDialog extends Component<Props> {
   static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
-    dialogState.useHttps = Boolean(portForward.protocol === "https");
+    dialogState.useHttps = portForward.protocol === "https";
     dialogState.openInBrowser = options.openInBrowser;
   }
 
