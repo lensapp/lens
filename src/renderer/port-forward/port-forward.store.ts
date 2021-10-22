@@ -22,11 +22,10 @@
 
 import { makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../common/item.store";
-import { autoBind, createStorage, disposer, getHostedClusterId, openExternal } from "../utils";
+import { autoBind, createStorage, disposer, getHostedClusterId } from "../utils";
 import { ForwardedPort, PortForwardItem } from "./port-forward-item";
 import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
-import { Notifications } from "../components/notifications";
 import logger from "../../common/logger";
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
@@ -176,32 +175,6 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
     
     return [];
   }
-}
-
-export function portForwardAddress(portForward: ForwardedPort) {
-  return `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
-}
-
-export function openPortForward(portForward: ForwardedPort) {
-  const browseTo = portForwardAddress(portForward);
-
-  openExternal(browseTo)
-    .catch(error => {
-      logger.error(`failed to open in browser: ${error}`, {
-        clusterId: portForward.clusterId,
-        port: portForward.port,
-        kind: portForward.kind,
-        namespace: portForward.namespace,
-        name: portForward.name,
-      });
-      Notifications.error(`Failed to open ${browseTo} in browser`);
-    }
-    );
-
-}
-
-export function predictProtocol(name: string) {
-  return name === "https" ? "https" : "http";
 }
 
 export const portForwardStore = new PortForwardStore();
