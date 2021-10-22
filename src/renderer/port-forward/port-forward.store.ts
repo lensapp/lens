@@ -180,8 +180,12 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
   }
 }
 
+export function portForwardAddress(portForward: ForwardedPort) {
+  return `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
+}
+
 export function openPortForward(portForward: ForwardedPort) {
-  const browseTo = `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
+  const browseTo = portForwardAddress(portForward);
 
   openExternal(browseTo)
     .catch(error => {
