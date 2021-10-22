@@ -26,29 +26,28 @@ import type { ForwardedPort } from "./port-forward-item";
 import logger from "../../common/logger";
 
 export function portForwardAddress(portForward: ForwardedPort) {
-    return `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
-  }
-  
-  export function openPortForward(portForward: ForwardedPort) {
-    const browseTo = portForwardAddress(portForward);
-  
-    openExternal(browseTo)
-      .catch(error => {
-        logger.error(`failed to open in browser: ${error}`, {
-          clusterId: portForward.clusterId,
-          port: portForward.port,
-          kind: portForward.kind,
-          namespace: portForward.namespace,
-          name: portForward.name,
-        });
-        Notifications.error(`Failed to open ${browseTo} in browser`);
-      }
-      );
-  
-  }
-  
-  export function predictProtocol(name: string) {
-    return name === "https" ? "https" : "http";
-  }
-  
-  
+  return `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
+}
+
+export function openPortForward(portForward: ForwardedPort) {
+  const browseTo = portForwardAddress(portForward);
+
+  openExternal(browseTo)
+    .catch(error => {
+      logger.error(`failed to open in browser: ${error}`, {
+        clusterId: portForward.clusterId,
+        port: portForward.port,
+        kind: portForward.kind,
+        namespace: portForward.namespace,
+        name: portForward.name,
+      });
+      Notifications.error(`Failed to open ${browseTo} in browser`);
+    }
+    );
+
+}
+
+export function predictProtocol(name: string) {
+  return name === "https" ? "https" : "http";
+}
+
