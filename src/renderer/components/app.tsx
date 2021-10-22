@@ -113,13 +113,6 @@ export class App extends React.Component {
       window.location.reload();
     });
 
-    window.addEventListener("message", (ev: MessageEvent) => {
-      if (ev.data === "teardown") {
-        unmountComponentAtNode(rootElem);
-        window.location.href = "about:blank";
-      }
-    });
-
     window.onbeforeunload = () => {
       logger.info(`[APP]: Unload dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
 
