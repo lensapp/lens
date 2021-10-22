@@ -87,7 +87,7 @@ export class StorageHelper<T> {
     const notDefault = !this.isDefaultValue(data);
 
     if (notEmpty && notDefault) {
-      this.merge(data);
+      this.set(data);
     }
 
     this.initialized = true;
@@ -169,6 +169,8 @@ export class StorageHelper<T> {
       } else if (isPlainObject(value)) {
         Object.assign(draft, value);
       }
+
+      return draft;
     });
 
     this.set(nextValue);

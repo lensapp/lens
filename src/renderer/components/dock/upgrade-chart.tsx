@@ -20,15 +20,14 @@
  */
 
 import React from "react";
-import { computed, makeObservable, observable } from "mobx";
-import { observer } from "mobx-react";
-import type { TabId } from "./dock.store";
-import { TabKind } from "./dock.store";
+import { action, computed, makeObservable, observable } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { InfoPanel, InfoPanelProps } from "./info-panel";
 import { Badge } from "../badge";
+import { Select, SelectOption } from "../select";
+import { dockStore, TabId, TabKind } from "./dock.store";
 import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { Select, SelectOption } from "../select";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { dockViewsManager } from "./dock.views-manager";
 
@@ -44,12 +43,27 @@ export class UpgradeChartInfoPanel extends React.Component<Props> {
     makeObservable(this);
   }
 
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      dockStore.onTabChange(({ tabId }) => this.onTabChange(tabId), {
+        tabKind: TabKind.UPGRADE_CHART,
+        fireImmediately: true,
+      }),
+    ]);
+  }
+
+  @action
+  async onTabChange(tabId: TabId) {
+    await upgradeChartStore.load(tabId);
+    this.selectedVersion = upgradeChartStore.versions.get(tabId)?.[0];
+  }
+
   get tabId(): TabId {
     return this.props.tabId;
   }
 
-  get release(): HelmRelease {
-    return upgradeChartStore.getRelease(this.tabId);
+  get release(): HelmRelease | undefined {
+    return upgradeChartStore.releases.get(this.tabId);
   }
 
   @computed get chartVersions(): SelectOption<IChartVersion>[] {
@@ -63,7 +77,7 @@ export class UpgradeChartInfoPanel extends React.Component<Props> {
   }
 
   upgrade = async () => {
-    await upgradeChartStore.upgrade(this.tabId, this.selectedVersion);
+    await upgradeChartStore.updateRelease(this.tabId, this.selectedVersion);
 
     return (
       <p>

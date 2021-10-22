@@ -42,6 +42,14 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     });
   }
 
+  getByName(name: string, namespace?: string): HelmRelease | undefined {
+    return this.items.find(release => {
+      return release.getName() === name && (
+        namespace ? release.getNs() === namespace : true
+      );
+    });
+  }
+
   watchAssociatedSecrets(): (() => void) {
     return reaction(() => secretsStore.getItems(), () => {
       if (this.isLoading) return;
@@ -106,10 +114,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    const { contextNamespaces } = namespaceStore.context ?? {};
-
-    if (!contextNamespaces) return;
-    await this.loadAll(contextNamespaces);
+    return this.loadAll(namespaceStore.context.contextNamespaces);
   }
 
   async loadItems(namespaces: string[]) {
@@ -137,7 +142,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async update(name: string, namespace: string, payload: IReleaseUpdatePayload) {
     const response = await updateRelease(name, namespace, payload);
 
-    if (this.isLoaded) this.loadFromContextNamespaces();
+    if (this.isLoaded) await this.loadFromContextNamespaces();
 
     return response;
   }
