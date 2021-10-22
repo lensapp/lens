@@ -88,7 +88,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     if (index === -1) {
       return null;
     }
-    
+
     return this.getItems()[index];
   }
 }
@@ -108,7 +108,7 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
     const protocol = portForward.protocol ?? "http";
 
     response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}&protocol=${protocol}`);
-    
+
     if (response?.port && response.port != +portForward.forwardPort) {
       logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
     }
@@ -124,6 +124,7 @@ function getProtocolQuery(protocol: string) {
   if (protocol) {
     return `&protocol=${protocol}`;
   }
+
   return "";
 }
 
@@ -141,13 +142,10 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
 
 export async function modifyPortForward(portForward: ForwardedPort, desiredPort: number): Promise<number> {
   let port = 0;
-  
+
   try {
-    const protocol = portForward.protocol;
-    delete portForward.protocol;
     await removePortForward(portForward);
     portForward.forwardPort = desiredPort;
-    portForward.protocol = protocol;
     port = await addPortForward(portForward);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
@@ -160,7 +158,7 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
 
 export async function removePortForward(portForward: ForwardedPort) {
   try {
-    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
+    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
@@ -175,7 +173,7 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
     return response.portForwards;
   } catch (error) {
     logger.warn(error); // don't care, caller must check 
-    
+
     return [];
   }
 }
@@ -200,6 +198,10 @@ export function openPortForward(portForward: ForwardedPort) {
     }
     );
 
+}
+
+export function predictProtocol(name: string) {
+  return name === "https" ? "https" : "http";
 }
 
 export const portForwardStore = new PortForwardStore();

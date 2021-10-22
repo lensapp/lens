@@ -34,7 +34,7 @@ interface PortForwardArgs {
   name: string;
   port: number;
   forwardPort: number;
-  protocol: string;
+  protocol?: string;
 }
 
 const internalPortRegex = /^forwarding from (?<address>.+) ->/i;
@@ -131,14 +131,15 @@ export class PortForwardRoute {
         namespace, port, forwardPort, protocol,
       });
 
-      let thePort = 0;
-
-      if (forwardPort > 0 && forwardPort < 65536) {
-        thePort = forwardPort;
-      }
-
       if (!portForward) {
         logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
+
+        let thePort = 0;
+
+        if (forwardPort > 0 && forwardPort < 65536) {
+          thePort = forwardPort;
+        }
+
         portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
           clusterId: cluster.id,
           kind: resourceType,
@@ -208,11 +209,10 @@ export class PortForwardRoute {
     const { namespace, resourceType, resourceName } = params;
     const port = Number(query.get("port"));
     const forwardPort = Number(query.get("forwardPort"));
-    const protocol = query.get("protocol");
 
     const portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
-      namespace, port, forwardPort, protocol,
+      namespace, port, forwardPort,
     });
 
     try {
