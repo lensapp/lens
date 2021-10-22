@@ -19,61 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterIssues {
-  min-height: 350px;
+ .ClusterMetrics {
   position: relative;
-  grid-column-start: 1;
-  grid-column-end: 3;
+  min-height: 280px;
+  padding: calc(var(--margin) * 2);
+  background: var(--contentColor);
 
-  @include media("<1024px") {
-    grid-column-start: 1!important;
-    grid-column-end: 1!important;
-  }
-
-  .SubHeader {
-    .Icon {
-      font-size: 130%;
-      color: $colorError;
+  .chart {
+    :global(.chart-container) {
+      width: 100%;
+      height: 100%;
     }
   }
 
-  .Table {
-    .TableHead {
-      background-color: transparent;
-      border-bottom: 1px solid $borderFaintColor;
-
-      .TableCell {
-        padding-top: 0;
-      }
-    }
-
-    .TableCell {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-
-      &.message {
-        flex-grow: 3;
-      }
-
-      &.object {
-        flex-grow: 2;
-      }
-    }
+  .empty {
+    margin-top: -45px;
+    text-align: center;
   }
-
-  .no-issues {
-    .Icon {
-      color: white;
-    }
-
-    .ok-title {
-      font-size: large;
-      color: $textColorAccent;
-      font-weight: bold;
-    }
-  }
-}
-
-.OnlyClusterIssues {
-  grid-row: row1-start / row2-end;
 }

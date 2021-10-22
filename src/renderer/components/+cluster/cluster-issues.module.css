@@ -19,19 +19,56 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterMetrics {
+ .ClusterIssues {
+  min-height: 350px;
   position: relative;
-  min-height: 280px;
+  grid-area: issues;
+  padding: calc(var(--margin) * 2) 0;
+  background: var(--contentColor);
 
-  .Chart {
-    .chart-container {
-      width: 100%;
-      height: 100%;
+  &:global(.OnlyClusterIssues) {
+    grid-row: row1-start / row2-end;
+  }
+
+  @media (max-width: 1150px) {
+    grid-area: unset;
+
+    &:global(.OnlyClusterIssues) {
+      grid-row: auto;
     }
   }
 
-  .empty {
-    margin-top: -45px;
-    text-align: center;
+  .SubHeader {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    :global(.Icon) {
+      font-size: 130%;
+      color: var(--colorError);
+    }
+  }
+
+  .message {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 3;
+  }
+
+  .object {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 2;
+  }
+
+  .noIssues {
+    .ok-title {
+      font-size: large;
+      color: var(--textColorAccent);
+      font-weight: bold;
+    }
+
+    .allGood {
+      color: white;
+    }
   }
 }

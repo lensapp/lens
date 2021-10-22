@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cluster-overview.scss";
+import styles from "./cluster-overview.module.css";
 
 import React from "react";
 import { reaction } from "mobx";
@@ -101,7 +101,7 @@ export class ClusterOverview extends React.Component {
 
     return (
       <TabLayout>
-        <div className="ClusterOverview">
+        <div className={styles.ClusterOverview} data-testid="cluster-overview-page">
           {this.renderClusterOverview(isLoaded, isMetricHidden)}
         </div>
       </TabLayout>

@@ -19,8 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cluster-metric-switchers.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -36,7 +34,7 @@ export const ClusterMetricSwitchers = observer(() => {
   const disableMetrics = !metricsValues.length;
 
   return (
-    <div className="ClusterMetricSwitchers flex gaps">
+    <div className="flex gaps" style={{ marginBottom: "calc(var(--margin) * 2)" }}>
       <div className="box grow">
         <RadioGroup
           asButtons
@@ -48,7 +46,7 @@ export const ClusterMetricSwitchers = observer(() => {
           <Radio label="Worker" value={MetricNodeRole.WORKER}/>
         </RadioGroup>
       </div>
-      <div className="box grow metric-switch">
+      <div className="box grow" style={{ textAlign: "right" }}>
         <RadioGroup
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableMetrics })}
