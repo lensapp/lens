@@ -74,7 +74,7 @@ const commonPageTests: CommonPageTest[] = [{
   page: {
     name: "Cluster",
     href: "/overview",
-    expectedSelector: "div.ClusterOverview div.label",
+    expectedSelector: "div[data-testid='cluster-overview-page'] div.label",
     expectedText: "CPU"
   }
 },

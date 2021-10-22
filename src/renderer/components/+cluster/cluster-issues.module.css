@@ -66,5 +66,9 @@
       color: var(--textColorAccent);
       font-weight: bold;
     }
+
+    .allGood {
+      color: white;
+    }
   }
 }

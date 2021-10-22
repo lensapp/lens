@@ -101,7 +101,7 @@ export class ClusterOverview extends React.Component {
 
     return (
       <TabLayout>
-        <div className={styles.ClusterOverview}>
+        <div className={styles.ClusterOverview} data-testid="cluster-overview-page">
           {this.renderClusterOverview(isLoaded, isMetricHidden)}
         </div>
       </TabLayout>
