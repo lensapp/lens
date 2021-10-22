@@ -25,8 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { cssNames } from "../../utils";
-import { LocaleDate } from "../locale-date";
+import { cssNames, localizeDate } from "../../utils";
 import { eventStore } from "./event.store";
 import logger from "../../../common/logger";
 
@@ -87,7 +86,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
                   {involvedObject.fieldPath}
                 </DrawerItem>
                 <DrawerItem name="Last seen">
-                  <LocaleDate date={lastTimestamp} />
+                  {localizeDate(lastTimestamp)}
                 </DrawerItem>
               </div>
             );

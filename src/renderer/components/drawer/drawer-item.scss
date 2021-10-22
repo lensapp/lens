@@ -32,6 +32,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: $drawerItemNameColor;
+
+    .Icon {
+      opacity: 0;
+      font-weight: normal;
+      margin-left: 8px;
+    }
+
+    &:hover .Icon {
+      opacity: 1;
+      transition: opacity 250ms;
+    }
   }
 
   > .value {
@@ -39,6 +50,10 @@
     word-break: break-word;
     max-width: 100%;
     min-width: 0;
+
+    &.noCopy {
+      user-select: none;
+    }
 
     &:empty:after {
       content: '—'

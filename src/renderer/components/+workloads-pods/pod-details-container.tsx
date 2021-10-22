@@ -24,7 +24,7 @@ import "./pod-details-container.scss";
 import React from "react";
 import type { IPodContainer, IPodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
-import { cssNames } from "../../utils";
+import { cssNames, localizeDate } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
@@ -32,7 +32,6 @@ import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import type { IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
-import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { portForwardStore } from "../../port-forward/port-forward.store";
@@ -70,8 +69,8 @@ export class PodDetailsContainer extends React.Component<Props> {
         <span>
           {lastState}<br/>
           Reason: {status.lastState.terminated.reason} - exit code: {status.lastState.terminated.exitCode}<br/>
-          Started at: {<LocaleDate date={status.lastState.terminated.startedAt} />}<br/>
-          Finished at: {<LocaleDate date={status.lastState.terminated.finishedAt} />}<br/>
+          Started at: {localizeDate(status.lastState.terminated.startedAt)}<br/>
+          Finished at: {localizeDate(status.lastState.terminated.finishedAt)}<br/>
         </span>
       );
     }

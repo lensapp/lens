@@ -19,4 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./locale-date";
+import moment from "moment";
+import { UserStore } from "../../common/user-store";
+
+/**
+ * Parse `date` and reformat it based upon the settings from `UserStore`
+ * @param date The date string
+ */
+export function localizeDate(date: string): string {
+  return moment.tz(date, UserStore.getInstance().localeTimezone).format();
+}

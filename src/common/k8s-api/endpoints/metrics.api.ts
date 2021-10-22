@@ -155,8 +155,11 @@ export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | void {
-  if (!metrics) return;
+export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | undefined {
+  if (!metrics) {
+    return undefined;
+  }
+
   const itemMetrics = { ...metrics };
 
   for (const metric in metrics) {

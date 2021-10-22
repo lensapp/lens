@@ -100,32 +100,25 @@ export class CrdResources extends React.Component<Props> {
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
           isNamespaced && { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
-          ...extraColumns.map(column => {
-            const { name } = column;
-
-            return {
-              title: name,
-              className: name.toLowerCase(),
-              sortBy: name,
-              id: name
-            };
-          }),
+          ...extraColumns.map(({ name }) => ({
+            title: name,
+            className: name.toLowerCase(),
+            sortBy: name,
+            id: name
+          })),
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={crdInstance => [
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
           ...extraColumns.map((column) => {
-            let value = jsonPath.value(crdInstance, parseJsonPath(column.jsonPath.slice(1)));
+            const value = jsonPath.value(crdInstance, parseJsonPath(column.jsonPath.slice(1)));
 
-            if (Array.isArray(value) || typeof value === "object") {
-              value = JSON.stringify(value);
+            if (typeof value === "object") {
+              return JSON.stringify(value);
             }
 
-            return {
-              renderBoolean: true,
-              children: value,
-            };
+            return value.toString();
           }),
           crdInstance.getAge(),
         ]}

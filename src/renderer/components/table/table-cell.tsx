@@ -23,7 +23,7 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
-import { boundMethod, cssNames, displayBooleans } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -35,7 +35,6 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   title?: ReactNode;
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
-  renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
   sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
   showWithColumn?: string // id of the column which follow same visibility rules
   _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
@@ -88,13 +87,13 @@ export class TableCell extends React.Component<TableCellProps> {
   }
 
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, showWithColumn, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,
       sorting: this.isSortable,
     });
-    const content = displayBooleans(displayBoolean, title || children);
+    const content = title || children;
 
     return (
       <div {...cellProps} className={classNames} onClick={this.onClick}>

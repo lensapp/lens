@@ -30,10 +30,10 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
+import { localizeDate } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -70,10 +70,10 @@ export class EventDetails extends React.Component<Props> {
           {event.getSource()}
         </DrawerItem>
         <DrawerItem name="First seen">
-          {event.getFirstSeenTime()} ago (<LocaleDate date={event.firstTimestamp} />)
+          {event.getFirstSeenTime()} ago ({localizeDate(event.firstTimestamp)})
         </DrawerItem>
         <DrawerItem name="Last seen">
-          {event.getLastSeenTime()} ago (<LocaleDate date={event.lastTimestamp} />)
+          {event.getLastSeenTime()} ago ({localizeDate(event.lastTimestamp)})
         </DrawerItem>
         <DrawerItem name="Count">
           {count}

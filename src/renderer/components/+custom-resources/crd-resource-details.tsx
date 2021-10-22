@@ -56,6 +56,10 @@ function convertSpecValue(value: any): any {
     );
   }
 
+  if (typeof value === "boolean") {
+    return value.toString();
+  }
+
   return value;
 }
 
@@ -63,7 +67,7 @@ function convertSpecValue(value: any): any {
 export class CrdResourceDetails extends React.Component<Props> {
   renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
     return columns.map(({ name, jsonPath: jp }) => (
-      <DrawerItem key={name} name={name} renderBoolean>
+      <DrawerItem key={name} name={name}>
         {convertSpecValue(jsonPath.value(resource, parseJsonPath(jp.slice(1))))}
       </DrawerItem>
     ));

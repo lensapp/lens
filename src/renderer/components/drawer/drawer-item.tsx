@@ -21,7 +21,9 @@
 
 import "./drawer-item.scss";
 import React from "react";
-import { cssNames, displayBooleans } from "../../utils";
+import { clipboard } from "electron";
+import { cssNames } from "../../utils";
+import { Icon } from "../icon";
 
 export interface DrawerItemProps extends React.HTMLAttributes<any> {
   name: React.ReactNode;
@@ -29,22 +31,49 @@ export interface DrawerItemProps extends React.HTMLAttributes<any> {
   title?: string;
   labelsOnly?: boolean;
   hidden?: boolean;
-  renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
 }
 
-export class DrawerItem extends React.Component<DrawerItemProps> {
+interface State {
+  isCopied: boolean;
+}
+
+export class DrawerItem extends React.Component<DrawerItemProps, State> {
+  state = {
+    isCopied: false,
+  };
+
+  copyValue = (content: string) => {
+    clipboard.writeText(content);
+    this.setState({ isCopied: true });
+    setTimeout(() => {
+      this.setState({ isCopied: false });
+    }, 3000);
+  };
+
   render() {
-    const { name, title, labelsOnly, children, hidden, className, renderBoolean, ...elemProps } = this.props;
+    const { name, title, labelsOnly, children, hidden, className, ...elemProps } = this.props;
+    const { isCopied } = this.state;
 
-    if (hidden) return null;
+    if (hidden) {
+      return null;
+    }
 
-    const classNames = cssNames("DrawerItem", className, { labelsOnly });
-    const content = displayBooleans(renderBoolean, children);
+    const stringChildren = React.Children.toArray(children).filter(child => typeof child === "string");
+    const canCopy = stringChildren.length > 0;
 
     return (
-      <div {...elemProps} className={classNames} title={title}>
-        <span className="name">{name}</span>
-        <span className="value">{content}</span>
+      <div {...elemProps} className={cssNames("DrawerItem", className, { labelsOnly })} title={title}>
+        <span className="name">
+          {name}
+          {canCopy && (
+            <Icon
+              material={isCopied ? "done" : "content_copy"}
+              tooltip={isCopied ? "Copied!" : "Copy"}
+              onClick={() => this.copyValue(stringChildren.join(""))}
+            />
+          )}
+        </span>
+        <span className={cssNames("value", { noCopy: canCopy })}>{children}</span>
       </div>
     );
   }

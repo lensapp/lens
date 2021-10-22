@@ -25,9 +25,9 @@ import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import { localizeDate } from "../../utils";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -67,7 +67,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
     return (
       <>
         <DrawerItem name="Created" hidden={this.isHidden("creationTimestamp")}>
-          {getAge(true, false)} ago ({<LocaleDate date={creationTimestamp} />})
+          {getAge(true, false)} ago ({localizeDate(creationTimestamp)})
         </DrawerItem>
         <DrawerItem name="Name" hidden={this.isHidden("name")}>
           {getName()}
