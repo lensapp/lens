@@ -37,9 +37,10 @@ export class PortForwardMenu extends React.Component<Props> {
   @boundMethod
   remove() {
     const { portForward } = this.props;
+
     try {
       removePortForward(portForward);
-    } catch(eror) {
+    } catch (error) {
       Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
     }
   }

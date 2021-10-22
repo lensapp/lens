@@ -55,7 +55,7 @@ export class PodContainerPort extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => [ portForwardStore.portForwards, this.props.pod ], () => this.checkExistingPortForwarding()),
+      reaction(() => [portForwardStore.portForwards, this.props.pod], () => this.checkExistingPortForwarding()),
     ]);
   }
 
@@ -70,10 +70,12 @@ export class PodContainerPort extends React.Component<Props> {
     };
 
     let activePort: number;
+
     try {
       activePort = await getPortForward(portForward) ?? 0;
-    } catch(error) {
+    } catch (error) {
       this.isPortForwarded = false;
+
       return;
     }
 
