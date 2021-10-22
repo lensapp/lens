@@ -46,8 +46,19 @@ interface PartialHotbar {
 export default {
   version: "5.0.0-beta.10",
   run(store) {
-    const hotbars = (store.get("hotbars") as Hotbar[] ?? []).filter(Boolean);
+    const rawHotbars = store.get("hotbars");
+    const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars.filter(h => h && typeof h === "object") : [];
     const userDataPath = app.getPath("userData");
+
+    // Hotbars might be empty, if some of the previous migrations weren't run
+    if (hotbars.length === 0) {
+      const hotbar = getEmptyHotbar("default");
+      const { metadata: { uid, name, source } } = catalogEntity;
+
+      hotbar.items[0] = { entity: { uid, name, source } };
+
+      hotbars.push(hotbar);
+    }
 
     try {
       const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
@@ -144,12 +155,13 @@ export default {
         }
       }
 
-      store.set("hotbars", hotbars);
     } catch (error) {
       // ignore files being missing
       if (error.code !== "ENOENT") {
         throw error;
       }
     }
+
+    store.set("hotbars", hotbars);
   }
 } as MigrationDeclaration;
