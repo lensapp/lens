@@ -351,7 +351,7 @@
     "mini-css-extract-plugin": "^1.6.2",
     "node-gyp": "7.1.2",
     "node-loader": "^1.0.3",
-    "nodemon": "^2.0.13",
+    "nodemon": "^2.0.14",
     "playwright": "^1.15.2",
     "postcss": "^8.3.6",
     "postcss-loader": "4.3.0",
