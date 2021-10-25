@@ -25,4 +25,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  .editor {
+    flex: 1;
+  }
 }

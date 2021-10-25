@@ -25,14 +25,15 @@ import yaml from "js-yaml";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { createResourceStore } from "./create-resource.store";
-import { InfoPanel, InfoPanelProps } from "./info-panel";
+import { InfoPanel } from "./info-panel";
 import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../notifications";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
 import logger from "../../../common/logger";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
 
-interface Props extends InfoPanelProps {
+interface Props extends DockTabContentProps {
 }
 
 type SelectOptionTemplate = SelectOption<SelectOptionTemplateValue>;
@@ -44,7 +45,7 @@ interface SelectOptionTemplateValue {
 }
 
 @observer
-export class CreateResourceInfoPanel extends React.Component<Props> {
+export class CreateResource extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
@@ -133,26 +134,27 @@ export class CreateResourceInfoPanel extends React.Component<Props> {
   };
 
   render() {
+    const { tabId } = this;
+
     return (
-      <InfoPanel
-        {...this.props}
-        controls={this.renderControls()}
-        submit={this.create}
-        submitLabel="Create"
-        showNotifications={false}
-      />
+      <DockTabContent
+        tabId={tabId}
+        withEditor
+        editorValue={createResourceStore.getData(tabId)}
+        editorOnChange={value => createResourceStore.setData(tabId, value)}
+      >
+        <InfoPanel
+          tabId={tabId}
+          controls={this.renderControls()}
+          submit={this.create}
+          submitLabel="Create"
+          showNotifications={false}
+        />
+      </DockTabContent>
     );
   }
 }
 
 dockViewsManager.register(TabKind.CREATE_RESOURCE, {
-  InfoPanel: CreateResourceInfoPanel,
-  editor: {
-    getValue(tabId) {
-      return createResourceStore.getData(tabId);
-    },
-    setValue(tabId, value) {
-      createResourceStore.setData(tabId, value);
-    },
-  }
+  Content: CreateResource,
 });

@@ -22,107 +22,58 @@
 import styles from "./dock-tab-content.module.css";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
-import type { DockTab, TabId } from "./dock.store";
-import { dockStore } from "./dock.store";
+import { makeObservable, observable, reaction } from "mobx";
+import { dockStore, TabId } from "./dock.store";
 import { cssNames } from "../../utils";
-import { DockTabComponents, dockViewsManager } from "./dock.views-manager";
 import { MonacoEditor } from "../monaco-editor";
 import throttle from "lodash/throttle";
 
 export interface DockTabContentProps extends React.HTMLAttributes<any> {
+  tabId: TabId;
   className?: string;
-  tab?: DockTab;
-  bindContainerRef?(elem: HTMLElement): void;
+  withEditor?: boolean;
+  editorValue?: string;
+  editorOnChange?(value: string): void;
 }
 
 @observer
 export class DockTabContent extends React.Component<DockTabContentProps> {
-  @observable.ref editor: MonacoEditor;
+  @observable.ref editor?: MonacoEditor;
+  @observable error = "";
 
   constructor(props: DockTabContentProps) {
     super(props);
     makeObservable(this);
 
     disposeOnUnmount(this, [
-      reaction(() => this.tabId, this.onTabChange, { delay: 100 }),
-
       // keep focus on editor's area when <Dock/> just opened
-      reaction(() => dockStore.isOpen, isOpen => isOpen && this.focusEditor()),
+      reaction(() => dockStore.isOpen, isOpen => isOpen && this.editor?.focus()),
 
       // focus to editor on dock's resize or turning into fullscreen mode
-      dockStore.onResize(throttle(() => this.focusEditor(), 250)),
+      dockStore.onResize(throttle(() => this.editor?.focus(), 250)),
     ]);
   }
 
-  @computed get tabId(): TabId | undefined {
-    return this.props.tab?.id;
-  }
-
-  @computed get tabComponents(): DockTabComponents | undefined {
-    return dockViewsManager.get(this.props.tab?.kind);
-  }
-
-  @observable error = "";
-
-  @computed get editorIsVisible() {
-    return Boolean(this.tabComponents?.editor);
-  }
-
-  focusEditor() {
-    if (!this.editorIsVisible) return;
-
-    this.editor.focus();
-  }
-
-  @action
-  onTabChange = () => {
-    this.error = ""; // reset any errors from another tab
-    this.focusEditor(); // focus to editor if available via registered tab views
-  };
-
-  /**
-   * Always keep editor in DOM while (while <Dock/> is open/rendered).
-   * This allows to restore editor's model-view state (cursor pos, selection, etc.)
-   * while switching between different tab.kind-s (e.g. "terminal" tab doesn't have editor)
-   */
-  renderEditor() {
-    const { tabId, tabComponents: { editor } } = this;
-
-    return (
-      <MonacoEditor
-        id={tabId}
-        autoFocus={true}
-        className={cssNames({ hidden: !this.editorIsVisible })}
-        value={editor?.getValue(tabId) ?? ""}
-        onChange={value => {
-          this.error = "";
-          editor?.setValue(tabId, value);
-        }}
-        onError={error => {
-          this.error = this.editorIsVisible ? error : "";
-        }}
-        ref={editor => this.editor = editor}
-      />
-    );
-  }
-
   render() {
-    const { bindContainerRef, className, tab } = this.props;
+    const { className, tabId, withEditor, editorValue, editorOnChange } = this.props;
 
-    if (!tab) return null;
-    const { InfoPanel, Content } = this.tabComponents;
+    if (!tabId) return null;
 
     return (
-      <div
-        data-test-component="dock-tab-content"
-        className={cssNames(styles.DockTabContent, className)}
-        ref={bindContainerRef}
-      >
-        {InfoPanel && <InfoPanel tabId={this.tabId} error={this.error}/>}
-        {Content && <Content {...this.props}/>}
-        {this.renderEditor()}
+      <div className={cssNames(styles.DockTabContent, className)}>
         {this.props.children}
+
+        {withEditor && (
+          <MonacoEditor
+            autoFocus
+            id={tabId}
+            className={styles.editor}
+            value={editorValue ?? ""}
+            onChange={editorOnChange}
+            onError={error => this.error = error}
+            ref={monaco => this.editor = monaco}
+          />
+        )}
       </div>
     );
   }

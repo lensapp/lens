@@ -33,8 +33,10 @@ import debounce from "lodash/debounce";
 
 registerCustomThemes(); // setup
 
+export type MonacoEditorId = string;
+
 export interface MonacoEditorProps {
-  id?: string; // associating editor's ID with created model.uri
+  id?: MonacoEditorId; // associating editor's ID with created model.uri
   value?: string;
   className?: string;
   autoFocus?: boolean;
@@ -59,7 +61,11 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
 @observer
 export class MonacoEditor extends React.Component<MonacoEditorProps> {
   static defaultProps = defaultEditorProps as object;
-  static viewStates = new WeakMap<editor.ITextModel, editor.ICodeEditorViewState>();
+  static viewStates = new WeakMap<Uri, editor.ICodeEditorViewState>();
+
+  static createUri(id: MonacoEditorId): Uri {
+    return Uri.file(`/monaco-editor/${id}`);
+  }
 
   public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
   public dispose = disposer();
@@ -68,11 +74,22 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   @observable.ref editor: editor.IStandaloneCodeEditor;
   @observable dimensions: { width?: number, height?: number } = {};
   @observable unmounting = false;
-  validationErrors = observable.array<string>();
 
   constructor(props: MonacoEditorProps) {
     super(props);
     makeObservable(this);
+  }
+
+  @computed get model(): editor.ITextModel {
+    const uri = MonacoEditor.createUri(this.props.id ?? this.staticId);
+    const model = editor.getModels().find(model => model.uri.toString() == uri.toString());
+
+    if (model) {
+      return model; // already exists
+    }
+
+    const { language, value } = this.props;
+    return editor.createModel(value, language, uri);
   }
 
   @computed get options(): editor.IStandaloneEditorConstructionOptions {
@@ -105,20 +122,31 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
     console.info("[MONACO]: model change", { model, oldModel });
 
-    this.saveViewState(oldModel); // save current view-model state in the editor
+    this.saveViewState(oldModel);
     this.editor.setModel(model);
-    this.editor.restoreViewState(this.getViewState(model)); // restore cursor position, selection, etc.
+    this.restoreViewState(model);
     this.editor.layout();
     this.editor.focus(); // keep focus in editor, e.g. when clicking between dock-tabs
     this.validateLazy();
   };
 
-  @computed get editorId(): string {
-    return this.props.id ?? this.staticId;
+  /**
+   * Save current view-model state in the editor.
+   * This will allow restore cursor position, selected text, etc.
+   * @param {editor.ITextModel} model
+   */
+  saveViewState(model = this.model) {
+    if (!model) return;
+
+    MonacoEditor.viewStates.set(model.uri, this.editor.saveViewState());
   }
 
-  @computed get model(): editor.ITextModel {
-    return this.getModelById(this.editorId);
+  restoreViewState(model = this.model) {
+    if (!model) return;
+
+    const viewState = MonacoEditor.viewStates.get(model.uri);
+
+    this.editor.restoreViewState(viewState);
   }
 
   componentDidMount() {
@@ -132,6 +160,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   componentWillUnmount() {
     this.unmounting = true;
+    this.saveViewState();
     this.destroy();
   }
 
@@ -150,8 +179,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       readOnly,
       ...this.options,
     });
+
     console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
     this.validateLazy(); // validate initial value
+    this.restoreViewState(); // restore previous state if any
 
     if (this.props.autoFocus) {
       this.editor.focus();
@@ -204,33 +235,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.editor?.layout({ width, height });
   }
 
-  createUri(id: string): Uri {
-    return Uri.file(`/monaco-editor/${id}`);
-  }
-
-  getViewState(model = this.model): editor.ICodeEditorViewState {
-    return MonacoEditor.viewStates.get(model) ?? null;
-  }
-
-  saveViewState(model = this.model) {
-    if (!model) return;
-    MonacoEditor.viewStates.set(model, this.editor.saveViewState());
-  }
-
-  getModelById(id: string): editor.ITextModel | null {
-    const uri = this.createUri(id);
-    const model = editor.getModels().find(model => String(model.uri) === String(uri));
-
-    if (model) {
-      return model; // model with corresponding props.id exists
-    }
-
-    // creating new temporary model if not exists regarding to props.ID
-    const { language, value } = this.props;
-
-    return editor.createModel(value, language, uri);
-  }
-
   setValue(value = ""): void {
     if (value == this.getValue()) return;
 
@@ -256,15 +260,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       validators.push(syntaxValidator);
     }
 
-    // console.info('[MONACO]: validating', { value, validators });
-    this.validationErrors.clear(); // reset first
-
     for (const validate of validators) {
       try {
         await validate(value);
       } catch (error) {
         error = String(error);
-        this.validationErrors.push(error);
         this.props.onError?.(error); // emit error outside via callback
       }
     }

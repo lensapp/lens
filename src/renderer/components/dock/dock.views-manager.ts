@@ -21,17 +21,11 @@
 
 import type React from "react";
 import { observable } from "mobx";
-import type { TabId, TabKind } from "./dock.store";
+import type { TabKind } from "./dock.store";
 import type { DockTabContentProps } from "./dock-tab-content";
-import type { InfoPanelProps } from "./info-panel";
 
 export interface DockTabComponents {
-  InfoPanel?: React.ComponentType<InfoPanelProps>;
   Content?: React.ComponentType<DockTabContentProps>;
-  editor?: {
-    getValue(tabId: TabId): string | undefined;
-    setValue(tabId: TabId, value: string): void;
-  }
 }
 
 const dockViews = observable.map<TabKind, DockTabComponents>([], {

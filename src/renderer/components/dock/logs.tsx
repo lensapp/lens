@@ -52,12 +52,12 @@ export class Logs extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this,
-      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true }),
+      reaction(() => this.props.tabId, this.reload, { fireImmediately: true }),
     );
   }
 
   get tabId() {
-    return this.props.tab.id;
+    return this.props.tabId;
   }
 
   load = async () => {

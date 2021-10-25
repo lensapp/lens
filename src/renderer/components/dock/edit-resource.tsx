@@ -24,18 +24,19 @@ import yaml from "js-yaml";
 import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { editResourceStore } from "./edit-resource.store";
-import { InfoPanel, InfoPanelProps } from "./info-panel";
+import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { TabKind } from "./dock.store";
 import { dockViewsManager } from "./dock.views-manager";
 import { createPatch } from "rfc6902";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
 
-interface Props extends InfoPanelProps {
+interface Props extends DockTabContentProps {
 }
 
 @observer
-export class EditResourceInfoPanel extends React.Component<Props> {
+export class EditResource extends React.Component<Props> {
   @observable.ref resource?: KubeObject;
 
   constructor(props: Props) {
@@ -104,36 +105,36 @@ export class EditResourceInfoPanel extends React.Component<Props> {
   };
 
   render() {
-    const { resource } = this;
+    const { resource, tabId } = this;
+    const tabData = editResourceStore.getData(tabId);
 
     if (!resource) return null;
 
     return (
-      <InfoPanel
-        {...this.props}
-        submit={this.save}
-        submitLabel="Save"
-        submittingMessage="Applying.."
-        controls={(
-          <div className="resource-info flex gaps align-center">
-            <span>Kind:</span> <Badge label={resource.kind}/>
-            <span>Name:</span><Badge label={resource.getName()}/>
-            <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
-          </div>
-        )}
-      />
+      <DockTabContent
+        tabId={tabId}
+        withEditor
+        editorValue={tabData?.draft}
+        editorOnChange={v => tabData.draft = v}
+      >
+        <InfoPanel
+          tabId={tabId}
+          submit={this.save}
+          submitLabel="Save"
+          submittingMessage="Applying.."
+          controls={(
+            <div className="resource-info flex gaps align-center">
+              <span>Kind:</span> <Badge label={resource.kind}/>
+              <span>Name:</span><Badge label={resource.getName()}/>
+              <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
+            </div>
+          )}
+        />
+      </DockTabContent>
     );
   }
 }
 
 dockViewsManager.register(TabKind.EDIT_RESOURCE, {
-  InfoPanel: EditResourceInfoPanel,
-  editor: {
-    getValue(tabId) {
-      return editResourceStore.getData(tabId)?.draft ?? "";
-    },
-    setValue(tabId, value) {
-      editResourceStore.getData(tabId).draft = value;
-    },
-  }
+  Content: EditResource,
 });

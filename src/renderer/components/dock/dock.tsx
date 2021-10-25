@@ -31,7 +31,7 @@ import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
 import { dockStore, DockTab } from "./dock.store";
 import { createTerminalTab } from "./terminal.store";
-import { DockTabContent } from "./dock-tab-content";
+import { dockViewsManager } from "./dock.views-manager";
 
 interface Props {
   className?: string;
@@ -78,6 +78,7 @@ export class Dock extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize, height } = dockStore;
+    const { Content: DockTabContent } = dockViewsManager.get(selectedTab?.kind) ?? {};
 
     return (
       <div
@@ -133,7 +134,7 @@ export class Dock extends React.Component<Props> {
           </div>
         </div>
         <div className="tab-content" style={{ flexBasis: isOpen ? height : 0 }}>
-          <DockTabContent tab={selectedTab}/>
+          {selectedTab && <DockTabContent tabId={selectedTab.id}/>}
         </div>
       </div>
     );

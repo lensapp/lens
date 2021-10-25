@@ -22,7 +22,7 @@
 import React from "react";
 import { action, computed, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { InfoPanel, InfoPanelProps } from "./info-panel";
+import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
 import { dockStore, TabId, TabKind } from "./dock.store";
@@ -30,12 +30,14 @@ import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { dockViewsManager } from "./dock.views-manager";
+import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { Spinner } from "../spinner";
 
-interface Props extends InfoPanelProps {
+interface Props extends DockTabContentProps {
 }
 
 @observer
-export class UpgradeChartInfoPanel extends React.Component<Props> {
+export class UpgradeChart extends React.Component<Props> {
   @observable selectedVersion: IChartVersion;
 
   constructor(props: Props) {
@@ -88,46 +90,45 @@ export class UpgradeChartInfoPanel extends React.Component<Props> {
 
   render() {
     if (!upgradeChartStore.isReady(this.tabId)) {
-      return null;
+      return <Spinner center/>;
     }
 
-    const { release, selectedVersion, chartVersions } = this;
+    const { release, selectedVersion, chartVersions, tabId } = this;
 
     return (
-      <InfoPanel
-        {...this.props}
-        submit={this.upgrade}
-        submitLabel="Upgrade"
-        submittingMessage="Updating.."
-        controls={
-          <div className="upgrade flex gaps align-center">
-            <span>Release</span> <Badge label={release.getName()}/>
-            <span>Namespace</span> <Badge label={release.getNs()}/>
-            <span>Version</span> <Badge label={release.getVersion()}/>
-            <span>Upgrade version</span>
-            <Select
-              className="chart-version"
-              menuPlacement="top"
-              themeName="outlined"
-              value={selectedVersion}
-              options={chartVersions}
-              onChange={({ value }: SelectOption<IChartVersion>) => this.selectedVersion = value}
-            />
-          </div>
-        }
-      />
+      <DockTabContent
+        tabId={tabId}
+        withEditor
+        editorValue={upgradeChartStore.values.get(tabId)}
+        editorOnChange={v => upgradeChartStore.values.set(tabId, v)}
+      >
+        <InfoPanel
+          tabId={this.tabId}
+          submit={this.upgrade}
+          submitLabel="Upgrade"
+          submittingMessage="Updating.."
+          controls={
+            <div className="upgrade flex gaps align-center">
+              <span>Release</span> <Badge label={release.getName()}/>
+              <span>Namespace</span> <Badge label={release.getNs()}/>
+              <span>Version</span> <Badge label={release.getVersion()}/>
+              <span>Upgrade version</span>
+              <Select
+                className="chart-version"
+                menuPlacement="top"
+                themeName="outlined"
+                value={selectedVersion}
+                options={chartVersions}
+                onChange={({ value }: SelectOption<IChartVersion>) => this.selectedVersion = value}
+              />
+            </div>
+          }
+        />
+      </DockTabContent>
     );
   }
 }
 
 dockViewsManager.register(TabKind.UPGRADE_CHART, {
-  InfoPanel: UpgradeChartInfoPanel,
-  editor: {
-    getValue(tabId): string {
-      return upgradeChartStore.values.get(tabId);
-    },
-    setValue(tabId, value) {
-      upgradeChartStore.values.set(tabId, value);
-    },
-  }
+  Content: UpgradeChart,
 });
