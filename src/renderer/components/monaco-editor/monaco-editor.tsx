@@ -30,6 +30,7 @@ import { cssNames, disposer, toJS } from "../../utils";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
 import debounce from "lodash/debounce";
+import logger from "../../../common/logger";
 
 registerCustomThemes(); // setup
 
@@ -89,6 +90,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     }
 
     const { language, value } = this.props;
+
     return editor.createModel(value, language, uri);
   }
 
@@ -120,7 +122,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
-    console.info("[MONACO]: model change", { model, oldModel });
+    logger.info("[MONACO]: model change", { model, oldModel });
 
     this.saveViewState(oldModel);
     this.editor.setModel(model);
@@ -152,9 +154,9 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   componentDidMount() {
     try {
       this.createEditor();
-      console.info(`[MONACO]: editor did mounted`);
+      logger.info(`[MONACO]: editor did mounted`);
     } catch (error) {
-      console.error(`[MONACO]: mounting failed: ${error}`, this);
+      logger.error(`[MONACO]: mounting failed: ${error}`, this);
     }
   }
 
@@ -180,7 +182,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.options,
     });
 
-    console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
+    logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
     this.validateLazy(); // validate initial value
     this.restoreViewState(); // restore previous state if any
 
@@ -190,12 +192,13 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     const onDidLayoutChangeDisposer = this.editor.onDidLayoutChange(layoutInfo => {
       this.props.onDidLayoutChange?.(layoutInfo);
-      // console.info("[MONACO]: onDidLayoutChange()", layoutInfo);
+      logger.silly("[MONACO]: onDidLayoutChange()", layoutInfo);
     });
 
     const onValueChangeDisposer = this.editor.onDidChangeModelContent(event => {
       const value = this.editor.getValue();
-      // console.info("[MONACO]: value changed", { value, event });
+
+      logger.silly("[MONACO]: value changed", { value, event });
 
       this.props.onChange?.(value, event);
       this.validateLazy(value);
@@ -203,7 +206,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     const onContentSizeChangeDisposer = this.editor.onDidContentSizeChange((params) => {
       this.props.onDidContentSizeChange?.(params);
-      // console.info("[MONACO]: onDidContentSizeChange():", params)
+      logger.silly("[MONACO]: onDidContentSizeChange():", params);
     });
 
     this.dispose.push(
@@ -229,7 +232,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   @action
   setDimensions(width: number, height: number) {
-    console.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`);
+    logger.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`);
     this.dimensions.width = width;
     this.dimensions.height = height;
     this.editor?.layout({ width, height });
