@@ -82,7 +82,7 @@ export class Dock extends React.Component<Props> {
 
     return (
       <div
-        className={cssNames("Dock", className, { isOpen, isClosed: !isOpen, fullSize })}
+        className={cssNames("Dock", className, { isOpen, fullSize })}
         ref={this.element}
         tabIndex={-1}
       >

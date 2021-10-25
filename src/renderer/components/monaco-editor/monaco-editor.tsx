@@ -30,7 +30,6 @@ import { cssNames, disposer, toJS } from "../../utils";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
 import debounce from "lodash/debounce";
-import logger from "../../../common/logger";
 
 registerCustomThemes(); // setup
 
@@ -122,8 +121,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return () => resizeObserver.unobserve(containerElem);
   }
 
+  // TODO: investigate why replacing console.* to common logger.* calls in a file leads for stucking UI / infinite loop.
+  //  e.g. happens on tab change/create, maybe some other cases
   onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
-    logger.info("[MONACO]: model change", { model, oldModel });
+    console.info("[MONACO]: model change", { model, oldModel });
 
     this.saveViewState(oldModel);
     this.editor.setModel(model);
@@ -156,9 +157,9 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   componentDidMount() {
     try {
       this.createEditor();
-      logger.info(`[MONACO]: editor did mounted`);
+      console.info(`[MONACO]: editor did mount`);
     } catch (error) {
-      logger.error(`[MONACO]: mounting failed: ${error}`, this);
+      console.error(`[MONACO]: mounting failed: ${error}`, this);
     }
   }
 
@@ -184,7 +185,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.options,
     });
 
-    logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
+    console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
     this.validateLazy(); // validate initial value
     this.restoreViewState(); // restore previous state if any
 
@@ -194,13 +195,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     const onDidLayoutChangeDisposer = this.editor.onDidLayoutChange(layoutInfo => {
       this.props.onDidLayoutChange?.(layoutInfo);
-      logger.silly("[MONACO]: onDidLayoutChange()", layoutInfo);
     });
 
     const onValueChangeDisposer = this.editor.onDidChangeModelContent(event => {
       const value = this.editor.getValue();
-
-      logger.silly("[MONACO]: value changed", { value, event });
 
       this.props.onChange?.(value, event);
       this.validateLazy(value);
@@ -208,7 +206,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     const onContentSizeChangeDisposer = this.editor.onDidContentSizeChange((params) => {
       this.props.onDidContentSizeChange?.(params);
-      logger.silly("[MONACO]: onDidContentSizeChange():", params);
     });
 
     this.dispose.push(
@@ -234,7 +231,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   @action
   setDimensions(width: number, height: number) {
-    logger.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`);
+    console.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`);
     this.dimensions.width = width;
     this.dimensions.height = height;
     this.editor?.layout({ width, height });
@@ -265,7 +262,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       try {
         validate(value);
       } catch (error) {
-        logger.silly(`[MONACO]: validation error`, error);
         this.props.onError?.(error); // emit error outside
       }
     }

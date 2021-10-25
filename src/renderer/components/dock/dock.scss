@@ -48,7 +48,7 @@
     }
   }
 
-  &.isClosed {
+  &:not(.isOpen) {
     height: auto !important;
 
     .Tab {
