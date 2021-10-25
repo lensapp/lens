@@ -8,3 +8,8 @@
   margin: $margin * 3 (-$margin * 3);
   background: var(--drawerSubtitleBackground);
 }
+
+.DrawerSubTitle {
+  padding: $padding $padding * 2;
+  background: var(--drawerSubtitleBackground);
+}

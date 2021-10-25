@@ -21,6 +21,13 @@ export type KubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonAp
   apiBase?: string;
 };
 
+/**
+ * A reference to an object in the same namespace
+ */
+export interface LocalObjectReference {
+  name: string;
+}
+
 export interface KubeObjectMetadata {
   uid: string;
   name: string;

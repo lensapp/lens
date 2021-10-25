@@ -25,6 +25,11 @@ export interface ISecretRef {
   name: string;
 }
 
+export interface SecretReference {
+  name: string;
+  namespace?: string;
+}
+
 export interface SecretData extends KubeJsonApiData {
   type: SecretType;
   data?: Record<string, string>;

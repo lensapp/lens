@@ -23,3 +23,14 @@ export class DrawerTitle extends React.Component<DrawerTitleProps> {
     );
   }
 }
+export class DrawerSubTitle extends React.Component<DrawerTitleProps> {
+  render() {
+    const { title, children, className } = this.props;
+
+    return (
+      <div className={cssNames("DrawerSubTitle", className)}>
+        {title || children}
+      </div>
+    );
+  }
+}
