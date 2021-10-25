@@ -303,7 +303,7 @@
     "@types/request": "^2.48.7",
     "@types/request-promise-native": "^1.0.18",
     "@types/semver": "^7.2.0",
-    "@types/sharp": "^0.28.3",
+    "@types/sharp": "^0.29.2",
     "@types/spdy": "^3.4.4",
     "@types/tar": "^4.0.5",
     "@types/tcp-port-used": "^1.0.0",
