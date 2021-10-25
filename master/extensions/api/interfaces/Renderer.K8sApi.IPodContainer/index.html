@@ -698,6 +698,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -837,6 +844,11 @@
                 
                 <h1 id="interface-ipodcontainer">Interface: IPodContainer<a class="headerlink" href="#interface-ipodcontainer" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.IPodContainer</p>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><code>Partial</code>&lt;<code>Record</code>&lt;<code>PodContainerProbe</code>, <code>IContainerProbe</code>>></li>
+</ul>
+<p>↳ <strong><code>IPodContainer</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
@@ -874,7 +886,9 @@
 <p>• <strong>imagePullPolicy</strong>: <code>string</code></p>
 <hr />
 <h3 id="livenessprobe">livenessProbe<a class="headerlink" href="#livenessprobe" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>livenessProbe</strong>: <code>IContainerProbe</code></p>
+<p>• <strong>livenessProbe</strong>: <code>IContainerProbe</code></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>Partial.livenessProbe</p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
@@ -883,7 +897,9 @@
 <p>• <code>Optional</code> <strong>ports</strong>: { <code>containerPort</code>: <code>number</code> ; <code>name?</code>: <code>string</code> ; <code>protocol</code>: <code>string</code>  }[]</p>
 <hr />
 <h3 id="readinessprobe">readinessProbe<a class="headerlink" href="#readinessprobe" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>readinessProbe</strong>: <code>IContainerProbe</code></p>
+<p>• <strong>readinessProbe</strong>: <code>IContainerProbe</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>Partial.readinessProbe</p>
 <hr />
 <h3 id="resources">resources<a class="headerlink" href="#resources" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>resources</strong>: <code>Object</code></p>
@@ -924,7 +940,9 @@
 </table>
 <hr />
 <h3 id="startupprobe">startupProbe<a class="headerlink" href="#startupprobe" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>startupProbe</strong>: <code>IContainerProbe</code></p>
+<p>• <strong>startupProbe</strong>: <code>IContainerProbe</code></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>Partial.startupProbe</p>
 <hr />
 <h3 id="volumemounts">volumeMounts<a class="headerlink" href="#volumemounts" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>volumeMounts</strong>: { <code>mountPath</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>readOnly</code>: <code>boolean</code>  }[]</p>
