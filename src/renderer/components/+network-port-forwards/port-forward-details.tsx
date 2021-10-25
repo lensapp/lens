@@ -23,7 +23,7 @@ import "./port-forward-details.scss";
 
 import React from "react";
 import { Link } from "react-router-dom";
-import type { PortForwardItem } from "../../port-forward";
+import { portForwardAddress, PortForwardItem } from "../../port-forward";
 import { Drawer, DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { podsApi, serviceApi } from "../../../common/k8s-api/endpoints";
@@ -80,6 +80,9 @@ export class PortForwardDetails extends React.Component<Props> {
         <DrawerItem name="Local Port">
           {portForward.getForwardPort()}
         </DrawerItem>
+        <DrawerItem name="Protocol">
+          {portForward.getProtocol()}
+        </DrawerItem>
         <DrawerItem name="Status">
           <span className={cssNames("status", portForward.getStatus().toLowerCase())}>{portForward.getStatus()}</span>
         </DrawerItem>
@@ -96,7 +99,7 @@ export class PortForwardDetails extends React.Component<Props> {
         className="PortForwardDetails"
         usePortal={true}
         open={!!portForward}
-        title="Port Forward"
+        title={`Port Forward: ${portForwardAddress(portForward)}`}
         onClose={hideDetails}
         toolbar={toolbar}
       >

@@ -30,6 +30,7 @@ export interface ForwardedPort {
   name: string;
   port: number;
   forwardPort: number;
+  protocol?: string;
 }
   
 export class PortForwardItem implements ItemObject {
@@ -39,6 +40,7 @@ export class PortForwardItem implements ItemObject {
   name: string;
   port: number;
   forwardPort: number;
+  protocol: string;
   
   constructor(pf: ForwardedPort) {
     this.clusterId = pf.clusterId;
@@ -47,6 +49,7 @@ export class PortForwardItem implements ItemObject {
     this.name = pf.name;
     this.port = pf.port;
     this.forwardPort = pf.forwardPort;
+    this.protocol = pf.protocol ?? "http";
 
     autoBind(this);
   }
@@ -77,6 +80,10 @@ export class PortForwardItem implements ItemObject {
   
   getForwardPort() {
     return this.forwardPort;
+  }
+
+  getProtocol() {
+    return this.protocol;
   }
 
   getStatus() {

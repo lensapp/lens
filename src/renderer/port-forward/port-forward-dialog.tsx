@@ -44,7 +44,8 @@ interface PortForwardDialogOpenOptions {
 const dialogState = observable.object({
   isOpen: false,
   data: null as ForwardedPort,
-  openInBrowser: false
+  useHttps: false,
+  openInBrowser: false,
 });
 
 @observer
@@ -60,6 +61,7 @@ export class PortForwardDialog extends Component<Props> {
   static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
+    dialogState.useHttps = portForward.protocol === "https";
     dialogState.openInBrowser = options.openInBrowser;
   }
 
@@ -96,6 +98,8 @@ export class PortForwardDialog extends Component<Props> {
     try {
       let port: number;
 
+      portForward.protocol = dialogState.useHttps ? "https" : "http";
+
       if (currentPort) {
         port = await modifyPortForward(portForward, desiredPort);
       } else {
@@ -131,6 +135,13 @@ export class PortForwardDialog extends Component<Props> {
               onChange={this.changePort}
             />
           </div>
+          <Checkbox
+            data-testid="port-forward-https"
+            theme="light"
+            label="https"
+            value={dialogState.useHttps}
+            onChange={value => dialogState.useHttps = value}
+          />
           <Checkbox
             data-testid="port-forward-open"
             theme="light"

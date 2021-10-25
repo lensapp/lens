@@ -22,11 +22,10 @@
 
 import { makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../common/item.store";
-import { autoBind, createStorage, disposer, getHostedClusterId, openExternal } from "../utils";
+import { autoBind, createStorage, disposer, getHostedClusterId } from "../utils";
 import { ForwardedPort, PortForwardItem } from "./port-forward-item";
 import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
-import { Notifications } from "../components/notifications";
 import logger from "../../common/logger";
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
@@ -88,7 +87,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     if (index === -1) {
       return null;
     }
-    
+
     return this.getItems()[index];
   }
 }
@@ -105,8 +104,10 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
-    
+    const protocol = portForward.protocol ?? "http";
+
+    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}&protocol=${protocol}`);
+
     if (response?.port && response.port != +portForward.forwardPort) {
       logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
     }
@@ -119,11 +120,19 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   return response?.port;
 }
 
+function getProtocolQuery(protocol: string) {
+  if (protocol) {
+    return `&protocol=${protocol}`;
+  }
+
+  return "";
+}
+
 export async function getPortForward(portForward: ForwardedPort): Promise<number> {
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
+    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
   } catch (error) {
     logger.warn("Error getting port-forward:", error, portForward);
     throw(error);
@@ -166,24 +175,6 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
     
     return [];
   }
-}
-
-export function openPortForward(portForward: ForwardedPort) {
-  const browseTo = `http://localhost:${portForward.forwardPort}`;
-
-  openExternal(browseTo)
-    .catch(error => {
-      logger.error(`failed to open in browser: ${error}`, {
-        clusterId: portForward.clusterId,
-        port: portForward.port,
-        kind: portForward.kind,
-        namespace: portForward.namespace,
-        name: portForward.name,
-      });
-      Notifications.error(`Failed to open ${browseTo} in browser`);
-    }
-    );
-
 }
 
 export const portForwardStore = new PortForwardStore();

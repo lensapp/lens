@@ -37,6 +37,7 @@ enum columnId {
   kind = "kind",
   port = "port",
   forwardPort = "forwardPort",
+  protocol = "protocol",
   status = "status",
 }
 
@@ -102,6 +103,7 @@ export class PortForwards extends React.Component<Props> {
             [columnId.kind]: item => item.getKind(),
             [columnId.port]: item => item.getPort(),
             [columnId.forwardPort]: item => item.getForwardPort(),
+            [columnId.protocol]: item => item.getProtocol(),
             [columnId.status]: item => item.getStatus(),
           }}
           searchFilters={[
@@ -114,6 +116,7 @@ export class PortForwards extends React.Component<Props> {
             { title: "Kind", className: "kind", sortBy: columnId.kind, id: columnId.kind },
             { title: "Pod Port", className: "port", sortBy: columnId.port, id: columnId.port },
             { title: "Local Port", className: "forwardPort", sortBy: columnId.forwardPort, id: columnId.forwardPort },
+            { title: "Protocol", className: "protocol", sortBy: columnId.protocol, id: columnId.protocol },
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={item => [
@@ -122,6 +125,7 @@ export class PortForwards extends React.Component<Props> {
             item.getKind(),
             item.getPort(),
             item.getForwardPort(),
+            item.getProtocol(),
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },
           ]}
           renderItemMenu={pf => (

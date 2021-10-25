@@ -34,6 +34,7 @@ interface PortForwardArgs {
   name: string;
   port: number;
   forwardPort: number;
+  protocol?: string;
 }
 
 const internalPortRegex = /^forwarding from (?<address>.+) ->/i;
@@ -47,7 +48,8 @@ class PortForward {
       pf.kind == forward.kind &&
       pf.name == forward.name &&
       pf.namespace == forward.namespace &&
-      pf.port == forward.port
+      pf.port == forward.port &&
+      (!forward.protocol || pf.protocol == forward.protocol)
     ));
   }
 
@@ -58,6 +60,7 @@ class PortForward {
   public name: string;
   public port: number;
   public forwardPort: number;
+  public protocol: string;
 
   constructor(public kubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
@@ -66,6 +69,7 @@ class PortForward {
     this.name = args.name;
     this.port = args.port;
     this.forwardPort = args.forwardPort;
+    this.protocol = args.protocol ?? "http";
   }
 
   public async start() {
@@ -119,21 +123,21 @@ export class PortForwardRoute {
     const { namespace, resourceType, resourceName } = params;
     const port = Number(query.get("port"));
     const forwardPort = Number(query.get("forwardPort"));
+    const protocol = query.get("protocol");
 
     try {
       let portForward = PortForward.getPortforward({
         clusterId: cluster.id, kind: resourceType, name: resourceName,
-        namespace, port, forwardPort,
+        namespace, port, forwardPort, protocol,
       });
-
-      let thePort = 0;
-
-      if (forwardPort > 0 && forwardPort < 65536) {
-        thePort = forwardPort;
-      }
 
       if (!portForward) {
         logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
+
+        const thePort = 0 < forwardPort && forwardPort < 65536 
+          ? forwardPort 
+          : 0;
+          
         portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
           clusterId: cluster.id,
           kind: resourceType,
@@ -141,6 +145,7 @@ export class PortForwardRoute {
           name: resourceName,
           port,
           forwardPort: thePort,
+          protocol,
         });
 
         const started = await portForward.start();
@@ -169,10 +174,11 @@ export class PortForwardRoute {
     const { namespace, resourceType, resourceName } = params;
     const port = Number(query.get("port"));
     const forwardPort = Number(query.get("forwardPort"));
+    const protocol = query.get("protocol");
 
     const portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
-      namespace, port, forwardPort
+      namespace, port, forwardPort, protocol,
     });
 
     respondJson(response, { port: portForward?.forwardPort ?? null });
@@ -189,6 +195,7 @@ export class PortForwardRoute {
         name: f.name,
         port: f.port,
         forwardPort: f.forwardPort,
+        protocol: f.protocol,
       })
     );
 

@@ -28,7 +28,7 @@ import { observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, removePortForward } from "../../port-forward";
+import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
 import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
 
@@ -91,6 +91,7 @@ export class PodContainerPort extends React.Component<Props> {
       namespace: pod.getNs(),
       port: port.containerPort,
       forwardPort: this.forwardPort,
+      protocol: predictProtocol(port.name),
     };
 
     this.waiting = true;
@@ -149,6 +150,7 @@ export class PodContainerPort extends React.Component<Props> {
           namespace: pod.getNs(),
           port: port.containerPort,
           forwardPort: this.forwardPort,
+          protocol: predictProtocol(port.name),
         };
 
         PortForwardDialog.open(portForward, { openInBrowser: true });
