@@ -20,20 +20,21 @@
  */
 
 import styles from "./dock-tab-content.module.css";
+import throttle from "lodash/throttle";
 import React from "react";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { makeObservable, observable, reaction } from "mobx";
 import { dockStore, TabId } from "./dock.store";
 import { cssNames } from "../../utils";
-import { MonacoEditor } from "../monaco-editor";
-import throttle from "lodash/throttle";
+import { MonacoEditor, MonacoEditorProps } from "../monaco-editor";
+import { DockTabContext } from "./dock-tab-context";
 
 export interface DockTabContentProps extends React.HTMLAttributes<any> {
   tabId: TabId;
   className?: string;
   withEditor?: boolean;
-  editorValue?: string;
-  editorOnChange?(value: string): void;
+  editorValue?: MonacoEditorProps["value"];
+  editorOnChange?: MonacoEditorProps["onChange"];
 }
 
 @observer
@@ -56,24 +57,30 @@ export class DockTabContent extends React.Component<DockTabContentProps> {
 
   render() {
     const { className, tabId, withEditor, editorValue, editorOnChange } = this.props;
+    const { error } = this;
 
     if (!tabId) return null;
 
     return (
       <div className={cssNames(styles.DockTabContent, className)}>
-        {this.props.children}
+        <DockTabContext.Provider value={{ error }}>
+          {this.props.children}
 
-        {withEditor && (
-          <MonacoEditor
-            autoFocus
-            id={tabId}
-            className={styles.editor}
-            value={editorValue ?? ""}
-            onChange={editorOnChange}
-            onError={error => this.error = error}
-            ref={monaco => this.editor = monaco}
-          />
-        )}
+          {withEditor && (
+            <MonacoEditor
+              autoFocus
+              id={tabId}
+              className={styles.editor}
+              value={editorValue ?? ""}
+              onChange={action((value, evt) => {
+                this.error = ""; // reset first
+                editorOnChange?.(value, evt);
+              })}
+              onError={error => this.error = String(error)}
+              onModelChange={() => this.error = ""}
+              ref={monaco => this.editor = monaco}></MonacoEditor>
+          )}
+        </DockTabContext.Provider>
       </div>
     );
   }

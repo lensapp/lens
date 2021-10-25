@@ -46,9 +46,10 @@ export interface MonacoEditorProps {
   language?: "yaml" | "json"; // configure bundled list of languages in via MonacoWebpackPlugin({languages: []})
   options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
   onChange?(value: string, evt: editor.IModelContentChangedEvent): void; // catch latest value updates
-  onError?(error?: string): void; // provide syntax validation errors, etc.
+  onError?(error?: Error | unknown): void; // provide syntax validation error, etc.
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
+  onModelChange?(model: editor.ITextModel, prev?: editor.ITextModel): void;
 }
 
 export const defaultEditorProps: Partial<MonacoEditorProps> = {
@@ -129,6 +130,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.restoreViewState(model);
     this.editor.layout();
     this.editor.focus(); // keep focus in editor, e.g. when clicking between dock-tabs
+    this.props.onModelChange?.(model, oldModel);
     this.validateLazy();
   };
 
@@ -254,21 +256,17 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   @action
-  validate = async (value = this.getValue()): Promise<void> => {
-    const { language } = this.props;
-    const validators: MonacoValidator[] = [];
-    const syntaxValidator: MonacoValidator = monacoValidators[language];
-
-    if (syntaxValidator) {
-      validators.push(syntaxValidator);
-    }
+  validate = (value = this.getValue()) => {
+    const validators: MonacoValidator[] = [
+      monacoValidators[this.props.language], // parsing syntax check
+    ].filter(Boolean);
 
     for (const validate of validators) {
       try {
-        await validate(value);
+        validate(value);
       } catch (error) {
-        error = String(error);
-        this.props.onError?.(error); // emit error outside via callback
+        logger.silly(`[MONACO]: validation error`, error);
+        this.props.onError?.(error); // emit error outside
       }
     }
   };
@@ -279,12 +277,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   bindRef = (elem: HTMLElement) => this.containerElem = elem;
 
   render() {
-    const { className } = this.props;
-
     return (
       <div
         data-test-component="monaco-editor"
-        className={cssNames(styles.MonacoEditor, className)}
+        className={cssNames(styles.MonacoEditor, this.props.className)}
         ref={this.bindRef}
       />
     );

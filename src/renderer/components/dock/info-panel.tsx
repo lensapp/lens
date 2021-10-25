@@ -29,6 +29,7 @@ import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { dockStore, TabId } from "./dock.store";
 import { Notifications } from "../notifications";
+import { DockTabContext, DockTabContextValue } from "./dock-tab-context";
 
 export interface InfoPanelProps {
   tabId: TabId;
@@ -59,6 +60,12 @@ const defaultProps: Partial<InfoPanelProps> = {
 @observer
 export class InfoPanel extends Component<InfoPanelProps> {
   static defaultProps = defaultProps as object;
+  static contextType = DockTabContext;
+  declare context: DockTabContextValue;
+
+  get error() {
+    return this.props.error ?? this.context.error;
+  }
 
   @observable waiting = false;
 
@@ -103,15 +110,13 @@ export class InfoPanel extends Component<InfoPanelProps> {
   };
 
   renderErrorIcon(): React.ReactNode {
-    const { error } = this.props;
-
-    if (!error || !this.props.showInlineInfo) {
+    if (!this.error || !this.props.showInlineInfo) {
       return null;
     }
 
     return (
       <div className="error">
-        <Icon material="error_outline" tooltip={error}/>
+        <Icon material="error_outline" tooltip={this.error}/>
       </div>
     );
   }

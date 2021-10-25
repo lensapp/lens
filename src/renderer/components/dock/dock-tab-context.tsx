@@ -18,29 +18,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import yaml, { YAMLException } from "js-yaml";
 
-export interface MonacoValidator {
-  (value: string): void;
+import React from "react";
+
+export const DockTabContext = React.createContext<DockTabContextValue>({});
+
+export interface DockTabContextValue {
+  error?: string;
 }
-
-export function yamlValidator(value: string) {
-  try {
-    yaml.load(value);
-  } catch (error) {
-    throw String(error as YAMLException);
-  }
-}
-
-export function jsonValidator(value: string) {
-  try {
-    JSON.parse(value);
-  } catch (error) {
-    throw String(error);
-  }
-}
-
-export const monacoValidators = {
-  yaml: yamlValidator,
-  json: jsonValidator,
-};
