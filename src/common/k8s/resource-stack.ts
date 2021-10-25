@@ -121,30 +121,32 @@ export class ResourceStack {
     for(const filename of files) {
       const file = path.join(folderPath, filename);
       const raw = await fse.readFile(file);
-      let resourceData: string;
+      const data = (
+        filename.endsWith(".hb")
+          ? hb.compile(raw.toString())(templateContext)
+          : raw.toString()
+      ).trim();
 
-      if (filename.endsWith(".hb")) {
-        const template = hb.compile(raw.toString());
-
-        resourceData = template(templateContext);
-      } else {
-        resourceData = raw.toString();
+      if (!data) {
+        continue;
       }
 
-      if (!resourceData.trim()) continue;
+      for (const entry of yaml.loadAll(data)) {
+        if (typeof entry !== "object" || !entry) {
+          continue;
+        }
 
-      const resourceArray = yaml.loadAll(resourceData.toString());
+        const resource = entry as Record<string, any>;
 
-      resourceArray.forEach((resource) => {
-        if (resource?.metadata) {
-          resource.metadata.labels ||= {};
+        if (typeof resource.metadata === "object") {
+          resource.metadata.labels ??= {};
           resource.metadata.labels["app.kubernetes.io/name"] = this.name;
           resource.metadata.labels["app.kubernetes.io/managed-by"] = productName;
           resource.metadata.labels["app.kubernetes.io/created-by"] = "resource-stack";
         }
 
         resources.push(yaml.dump(resource));
-      });
+      }
     }
 
     return resources;
