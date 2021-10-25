@@ -111,7 +111,8 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
       logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
     }
   } catch (error) {
-    logger.warn(error); // don't care, caller must check 
+    logger.warn("Error adding port-forward:", error, portForward);
+    throw(error);
   }
   portForwardStore.reset();
 
@@ -124,7 +125,8 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
   try {
     response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
   } catch (error) {
-    logger.warn(error); // don't care, caller must check 
+    logger.warn("Error getting port-forward:", error, portForward);
+    throw(error);
   }
 
   return response?.port;
@@ -133,13 +135,10 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
 export async function modifyPortForward(portForward: ForwardedPort, desiredPort: number): Promise<number> {
   let port = 0;
   
-  try {
-    await removePortForward(portForward);
-    portForward.forwardPort = desiredPort;
-    port = await addPortForward(portForward);
-  } catch (error) {
-    logger.warn(error); // don't care, caller must check 
-  }
+  await removePortForward(portForward);
+  portForward.forwardPort = desiredPort;
+  port = await addPortForward(portForward);
+
   portForwardStore.reset();
 
   return port;
@@ -151,7 +150,8 @@ export async function removePortForward(portForward: ForwardedPort) {
     await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
-    logger.warn(error); // don't care, caller must check 
+    logger.warn("Error removing port-forward:", error, portForward);
+    throw(error);
   }
   portForwardStore.reset();
 }
@@ -162,7 +162,7 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
 
     return response.portForwards;
   } catch (error) {
-    logger.warn(error); // don't care, caller must check 
+    logger.warn("Error getting all port-forwards:", error);
     
     return [];
   }
