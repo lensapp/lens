@@ -69,7 +69,7 @@ type AppComponent = React.ComponentType & {
 };
 
 export async function bootstrap(comp: () => Promise<AppComponent>) {
-  AppPaths.init();
+  await AppPaths.init();
   const rootElem = document.getElementById("app");
 
   await attachChromeDebugger();
