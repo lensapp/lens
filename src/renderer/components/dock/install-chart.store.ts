@@ -98,6 +98,19 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
       return this.loadValues(tabId, attempt + 1);
     }
   }
+
+  clearData(tabId: TabId) {
+    super.clearData(tabId);
+
+    this.details.delete(tabId);
+    this.versions.delete(tabId);
+  }
+
+  reset() {
+    super.reset();
+    this.details.clear();
+    this.versions.clear();
+  }
 }
 
 export const installChartStore = new InstallChartStore();

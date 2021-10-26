@@ -145,18 +145,13 @@ export class LogTabStore extends DockTabStore<LogTabData> {
 
           this.renameTab(tabId);
         } else {
-          this.closeTab(tabId);
+          this.clearData(tabId);
         }
       } catch (error) {
         logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error,);
         this.clearData(tabId);
       }
     }
-  }
-
-  private closeTab(tabId: string) {
-    this.clearData(tabId);
-    dockStore.closeTab(tabId);
   }
 }
 
