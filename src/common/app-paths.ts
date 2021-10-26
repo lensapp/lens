@@ -54,36 +54,32 @@ export class AppPaths {
   private static readonly ipcChannel = "get-app-paths";
 
   /**
-   * Inititalizes the local copy of the paths from electron
+   * Initializes the local copy of the paths from electron.
    */
-  static init(): void {
+  static async init(): Promise<void> {
     logger.info(`[APP-PATHS]: initializing`);
 
     if (AppPaths.paths.get()) {
-      logger.error("[APP-PATHS]: init called more than once");
-
-      return;
+      return void logger.error("[APP-PATHS]: init called more than once");
     }
 
     if (ipcMain) {
       AppPaths.initMain();
     } else {
-      AppPaths.initRenderer();
+      await AppPaths.initRenderer();
     }
   }
 
   private static initMain(): void {
-    AppPaths.paths.set(fromEntries(
-      pathNames.map(pathName => [pathName, app.getPath(pathName)])
-    ));
-    ipcMain.on(AppPaths.ipcChannel, (event) => event.returnValue = toJS(AppPaths.paths.get()));
+    AppPaths.paths.set(fromEntries(pathNames.map(pathName => [pathName, app.getPath(pathName)])));
+    ipcMain.handle(AppPaths.ipcChannel, () => toJS(AppPaths.paths.get()));
   }
 
-  private static initRenderer(): void {
-    const paths = ipcRenderer.sendSync(AppPaths.ipcChannel);
+  private static async initRenderer(): Promise<void> {
+    const paths = await ipcRenderer.invoke(AppPaths.ipcChannel);
 
     if (!paths || typeof paths !== "object") {
-      throw Object.assign(new Error("[APP-PATHS]: ipc channel returned unexpected data"), { data: paths });
+      throw Object.assign(new Error("[APP-PATHS]: ipc handler returned unexpected data"), { data: paths });
     }
 
     AppPaths.paths.set(paths);
