@@ -32,7 +32,7 @@ import type { Align, ListOnScrollProps } from "react-window";
 
 import { SearchStore, searchStore } from "../../../common/search-store";
 import { UserStore } from "../../../common/user-store";
-import { boundMethod, cssNames } from "../../utils";
+import { array, boundMethod, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
 import { logStore } from "./log.store";
@@ -234,7 +234,7 @@ export class LogList extends React.Component<Props> {
   render() {
     const { isLoading } = this.props;
     const isInitLoading = isLoading && !this.logs.length;
-    const rowHeights = new Array(this.logs.length).fill(this.lineHeight);
+    const rowHeights = array.filled(this.logs.length, this.lineHeight);
 
     if (isInitLoading) {
       return (
