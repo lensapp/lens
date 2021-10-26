@@ -20,10 +20,11 @@
  */
 
 import * as uuid from "uuid";
-import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 import { monacoModelsManager } from "./monaco-model-manager";
+import type { ChangeOptions, ReactionOptions } from "../../../common/base-store";
 
 export type TabId = string;
 
@@ -181,11 +182,11 @@ export class DockStore implements DockStorageState {
     if (this.height > this.maxHeight) this.height = this.maxHeight;
   }
 
-  onResize(callback: () => void, options?: IReactionOptions) {
+  onResize(callback: () => void, options?: ChangeOptions) {
     return reaction(() => [this.height, this.fullSize], callback, options);
   }
 
-  onTabChange(callback: (tabId: TabId) => void, options?: IReactionOptions) {
+  onTabChange(callback: (tabId: TabId) => void, options?: ReactionOptions<TabId>) {
     return reaction(() => this.selectedTabId, callback, options);
   }
 

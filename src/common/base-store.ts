@@ -32,8 +32,18 @@ import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
 import { AppPaths } from "./app-paths";
 
+/**
+ * Removing the generic boolean type from `IReactionOptions`
+ */
+export type ReactionOptions<T> = IReactionOptions<T, boolean>;
+
+/**
+ * A form of `IReactionOptions` which disallows changing the equality function
+ */
+export type ChangeOptions = Omit<ReactionOptions<void>, "equals">;
+
 export interface BaseStoreParams<T> extends ConfOptions<T> {
-  syncOptions?: IReactionOptions;
+  syncOptions?: ReactionOptions<T>;
 }
 
 /**

@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction } from "mobx";
+import { action, comparer, computed, IReactionDisposer, makeObservable, reaction } from "mobx";
 import { autoBind, createStorage, noop, ToggleSet } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { Namespace, namespacesApi } from "../../../common/k8s-api/endpoints/namespaces.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ReactionOptions } from "../../../common/base-store";
 
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
@@ -45,7 +46,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.autoLoadAllowedNamespaces();
   }
 
-  public onContextChange(callback: (namespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
+  public onContextChange(callback: (namespaces: string[]) => void, opts: ReactionOptions<string[]> = {}): IReactionDisposer {
     return reaction(() => Array.from(this.contextNamespaces), callback, {
       equals: comparer.shallow,
       ...opts,
