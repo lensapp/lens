@@ -25,9 +25,10 @@ import { isDevelopment, isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
-import { ipcMain } from "electron";
+import { app, ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
+import { WindowManager } from "./window-manager";
 
 let installVersion: null | string = null;
 
@@ -39,7 +40,11 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
   if (arg.doUpdate) {
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
-      autoUpdater.quitAndInstall(true, true);
+      setImmediate(() => {
+        app.removeAllListeners("window-all-closed");
+        WindowManager.getInstance().destroy();
+        autoUpdater.quitAndInstall(true, true);
+      });
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
       autoUpdater.autoInstallOnAppQuit = true;
