@@ -68,23 +68,24 @@ function embed(clusterId: ClusterId, contents: any): string {
   return absPath;
 }
 
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => "99.99.99",
-      getPath: () => "tmp",
-      getLocale: () => "en",
-      setLoginItemSettings: jest.fn(),
-    },
-    ipcMain: {
-      handle: jest.fn(),
-      on: jest.fn(),
-      removeAllListeners: jest.fn(),
-      off: jest.fn(),
-      send: jest.fn(),
-    }
-  };
-});
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    handle: jest.fn(),
+    on: jest.fn(),
+    removeAllListeners: jest.fn(),
+    off: jest.fn(),
+    send: jest.fn(),
+  }
+}));
 
 AppPaths.init();
 

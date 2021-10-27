@@ -117,20 +117,21 @@ const awsCluster = {
   }
 };
 
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => "99.99.99",
-      getPath: () => "tmp",
-      getLocale: () => "en",
-      setLoginItemSettings: (): void => void 0,
-    },
-    ipcMain: {
-      on: jest.fn(),
-      handle: jest.fn(),
-    },
-  };
-});
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
+  },
+}));
 
 AppPaths.init();
 

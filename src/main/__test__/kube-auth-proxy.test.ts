@@ -44,13 +44,6 @@ jest.mock("winston", () => ({
   }
 }));
 
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "tmp",
-    setLoginItemSettings: jest.fn(),
-  },
-}));
-
 jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
@@ -75,21 +68,21 @@ const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcas
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
 const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilUsed>;
 
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => "99.99.99",
-      getPath: () => "tmp",
-      getLocale: () => "en",
-      setLoginItemSettings: (): void => void 0,
-    },
-    ipcMain: {
-      on: jest.fn(),
-      handle: jest.fn(),
-    },
-  };
-});
-
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
+  },
+}));
 AppPaths.init();
 
 describe("kube auth proxy tests", () => {

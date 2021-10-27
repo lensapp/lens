@@ -36,7 +36,13 @@ jest.mock("react-monaco-editor", () => null);
 
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
   },
   ipcMain: {
     on: jest.fn(),

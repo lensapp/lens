@@ -57,9 +57,12 @@ jest.mock("../../../../common/utils/tar");
 jest.mock("electron", () => ({
   app: {
     getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
     getLocale: () => "en",
-    setLoginItemSettings: (): void => void 0,
+    setLoginItemSettings: jest.fn(),
   },
   ipcMain: {
     on: jest.fn(),

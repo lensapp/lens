@@ -42,7 +42,12 @@ jest.mock("../extension-installer", () => ({
 }));
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
     setLoginItemSettings: jest.fn(),
   },
   ipcMain: {
@@ -51,10 +56,10 @@ jest.mock("electron", () => ({
   },
 }));
 
+AppPaths.init();
+
 console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
-
-AppPaths.init();
 
 describe("ExtensionDiscovery", () => {
   beforeEach(() => {
