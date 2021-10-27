@@ -94,6 +94,10 @@ class PortForward {
       }
     });
 
+    this.process.stderr.on("data", (data) => {
+      logger.warn(`[PORT-FORWARD-ROUTE]: kubectl port-forward process stderr: ${data}`);
+    });
+
     const internalPort = await getPortFrom(this.process.stdout, {
       lineRegex: internalPortRegex,
     });

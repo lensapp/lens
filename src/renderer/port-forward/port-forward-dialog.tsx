@@ -112,7 +112,7 @@ export class PortForwardDialog extends Component<Props> {
         openPortForward(portForward);
       }
     } catch (err) {
-      Notifications.error("Error occurred starting port-forward, the local port may not be available");
+      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
     } finally {
       close();
     }
