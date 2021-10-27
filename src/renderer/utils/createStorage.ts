@@ -44,40 +44,40 @@ export function createStorage<T>(key: string, defaultValue: T) {
 
   if (!storage.initialized) {
     storage.initialized = true;
-    init(); // called once per cluster-view
-  }
 
-  async function init() {
-    const filePath = await StorageHelper.getLocalStoragePath();
-
-    try {
-      storage.data = await fse.readJson(filePath);
-    } catch {} finally {
-      if (!isTestEnv) {
-        logger.info(`${logPrefix} loading finished for ${filePath}`);
-      }
-
-      storage.loaded = true;
-    }
-
-    // bind auto-saving data changes to %storage-file.json
-    reaction(() => toJS(storage.data), saveFile, {
-      delay: 250, // lazy, avoid excessive writes to fs
-      equals: comparer.structural, // save only when something really changed
-    });
-
-    async function saveFile(state: Record<string, any> = {}) {
-      logger.info(`${logPrefix} saving ${filePath}`);
+    (async () => {
+      const filePath = await StorageHelper.getLocalStoragePath();
 
       try {
-        await fse.ensureDir(path.dirname(filePath), { mode: 0o755 });
-        await fse.writeJson(filePath, state, { spaces: 2 });
-      } catch (error) {
-        logger.error(`${logPrefix} saving failed: ${error}`, {
-          json: state, jsonFilePath: filePath
-        });
+        storage.data = await fse.readJson(filePath);
+      } catch {} finally {
+        if (!isTestEnv) {
+          logger.info(`${logPrefix} loading finished for ${filePath}`);
+        }
+
+        storage.loaded = true;
       }
-    }
+
+      // bind auto-saving data changes to %storage-file.json
+      reaction(() => toJS(storage.data), saveFile, {
+        delay: 250, // lazy, avoid excessive writes to fs
+        equals: comparer.structural, // save only when something really changed
+      });
+
+      async function saveFile(state: Record<string, any> = {}) {
+        logger.info(`${logPrefix} saving ${filePath}`);
+
+        try {
+          await fse.ensureDir(path.dirname(filePath), { mode: 0o755 });
+          await fse.writeJson(filePath, state, { spaces: 2 });
+        } catch (error) {
+          logger.error(`${logPrefix} saving failed: ${error}`, {
+            json: state, jsonFilePath: filePath
+          });
+        }
+      }
+    })()
+      .catch(error => logger.error(`${logPrefix} Failed to initialize storage: ${error}`));
   }
 
   return new StorageHelper<T>(key, {
