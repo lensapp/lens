@@ -42,7 +42,7 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
 import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
-import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
+import { AutoUpdateLogPrefix, bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
@@ -290,7 +290,10 @@ app.on("activate", (event, hasVisibleWindows) => {
  */
 let blockQuit = !isIntegrationTesting;
 
-autoUpdater.on("before-quit-for-update", () => blockQuit = false);
+autoUpdater.on("before-quit-for-update", () => {
+  logger.info(`${AutoUpdateLogPrefix}: disabling quit blocking`);
+  blockQuit = false;
+});
 
 app.on("will-quit", (event) => {
   // This is called when the close button of the main window is clicked

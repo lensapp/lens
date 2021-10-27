@@ -28,7 +28,6 @@ import { once } from "lodash";
 import { app, ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
-import { WindowManager } from "./window-manager";
 
 let installVersion: null | string = null;
 
@@ -42,8 +41,10 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
       setImmediate(() => {
         app.removeAllListeners("window-all-closed");
-        WindowManager.getInstance().destroy();
+        console.log("Trying to quit and install");
         autoUpdater.quitAndInstall(true, true);
+        console.log("Trying to quit");
+        app.quit();
       });
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
