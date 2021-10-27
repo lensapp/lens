@@ -101,7 +101,7 @@ export class ServicePortComponent extends React.Component<Props> {
         this.isPortForwarded = true;
       }
     } catch (error) {
-      Notifications.error("Error occurred starting port-forward, the local port may not be available");
+      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       this.checkExistingPortForwarding();
     } finally {
       this.waiting = false;
