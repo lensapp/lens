@@ -82,6 +82,8 @@ class PortForward {
       `${this.forwardPort ?? ""}:${this.port}`
     ];
 
+    logger.info("[PORT-FORWARD-ROUTE]: spawning", kubectlBin, args);
+    
     this.process = spawn(kubectlBin, args, {
       env: process.env
     });
