@@ -31,7 +31,7 @@ export interface MonacoThemeData extends editor.IStandaloneThemeData {
 }
 
 // Registered names could be then used in "themes/*.json" in "{monacoTheme: [name]}"
-export const customThemes: Partial<Record<MonacoTheme, MonacoThemeData>> = {
+export const customThemes: Partial<Record<MonacoCustomTheme, MonacoThemeData>> = {
   "clouds-midnight": cloudsMidnight as MonacoThemeData,
 };
 

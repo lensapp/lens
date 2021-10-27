@@ -24,16 +24,14 @@ import glob from "glob";
 import path from "path";
 import os from "os";
 import { promisify } from "util";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, ObservableMap } from "mobx";
 import logger from "../../../common/logger";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
 export interface TemplatesGroup {
   label: string;
-  templates: {
-    [filepath: string]: string; // filepath is relative to templates folder
-  };
+  templates: ObservableMap<string/*filepath*/, string>;
 }
 
 export class CreateResourceStore extends DockTabStore<string> {
@@ -42,16 +40,16 @@ export class CreateResourceStore extends DockTabStore<string> {
     makeObservable(this);
   }
 
-  readonly templateGroups: Record<string, TemplatesGroup> = observable({
+  readonly templateGroups: Record<string, TemplatesGroup> = {
     [this.appTemplatesFolder]: {
       label: "Lens Templates",
-      templates: {},
+      templates: observable.map(),
     },
     [this.userTemplatesFolder]: {
       label: "Custom templates",
-      templates: {},
+      templates: observable.map(),
     },
-  });
+  };
 
   get appTemplatesFolder(): string {
     // production: declare files to copy in "package.json" -> "build.extraResources"
@@ -80,9 +78,7 @@ export class CreateResourceStore extends DockTabStore<string> {
       await fs.ensureDir(sourceFolder);
       const files = await promisify(glob)("**/*.@(yaml|yml|json)", { cwd: sourceFolder });
 
-      templatesGroup.templates = Object.fromEntries(
-        files.map(filePath => [filePath, "" /* empty: content not loaded yet */])
-      );
+      templatesGroup.templates.replace(files.map(filePath => [filePath, "" /*content*/]));
     } catch (error) {
       logger.error(`[CREATE-RESOURCE]: scanning template folders error: ${error}`);
     }
@@ -98,9 +94,11 @@ export class CreateResourceStore extends DockTabStore<string> {
       return ""; // unknown group, exit
     }
 
-    const template = templatesGroup.templates[filePath];
+    const template = templatesGroup.templates.get(filePath);
 
-    if (template) return template; // return cache, preloaded already
+    if (template) {
+      return template; // return cache, preloaded already
+    }
 
     try {
       const templatePath = path.resolve(sourceFolder, filePath);
@@ -110,7 +108,7 @@ export class CreateResourceStore extends DockTabStore<string> {
 
       const textContent = await fs.readFile(templatePath, { encoding: "utf-8" });
 
-      templatesGroup.templates[filePath] = textContent; // save cache
+      templatesGroup.templates.set(filePath, textContent); // save cache
 
       return textContent;
     } catch (error) {

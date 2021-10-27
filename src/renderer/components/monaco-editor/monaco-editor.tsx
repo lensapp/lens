@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import { editor, Uri } from "monaco-editor";
 import { MonacoTheme, registerCustomThemes } from "./monaco-themes";
 import { MonacoValidator, monacoValidators } from "./monaco-validators";
-import { cssNames, disposer, toJS } from "../../utils";
+import { cssNames, disposer, noop, toJS } from "../../utils";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
 import debounce from "lodash/debounce";
@@ -70,6 +70,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
   public dispose = disposer();
+
+  // TODO: investigate why replacing console.* to common/logger.* calls leads for stucking UI / infinite loop..
+  //  e.g. happens on tab change/create, maybe some other cases too.
+  logger = { info: noop, error: noop } as Console;
 
   @observable.ref containerElem: HTMLElement;
   @observable.ref editor: editor.IStandaloneCodeEditor;
@@ -121,10 +125,8 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return () => resizeObserver.unobserve(containerElem);
   }
 
-  // TODO: investigate why replacing console.* to common logger.* calls in a file leads for stucking UI / infinite loop.
-  //  e.g. happens on tab change/create, maybe some other cases
   onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
-    console.info("[MONACO]: model change", { model, oldModel });
+    this.logger.info("[MONACO]: model change", { model, oldModel });
 
     this.saveViewState(oldModel);
     this.editor.setModel(model);
@@ -157,9 +159,9 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   componentDidMount() {
     try {
       this.createEditor();
-      console.info(`[MONACO]: editor did mount`);
+      this.logger.info(`[MONACO]: editor did mount`);
     } catch (error) {
-      console.error(`[MONACO]: mounting failed: ${error}`, this);
+      this.logger.error(`[MONACO]: mounting failed: ${error}`, this);
     }
   }
 
@@ -185,7 +187,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.options,
     });
 
-    console.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
+    this.logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
     this.validateLazy(); // validate initial value
     this.restoreViewState(); // restore previous state if any
 
@@ -231,7 +233,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   @action
   setDimensions(width: number, height: number) {
-    console.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`);
     this.dimensions.width = width;
     this.dimensions.height = height;
     this.editor?.layout({ width, height });

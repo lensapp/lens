@@ -89,8 +89,8 @@ export interface DockStorageState {
 }
 
 export interface DockTabChangeEvent {
-  tabId?: TabId;
-  tab?: DockTab;
+  tab: DockTab;
+  tabId: TabId;
   prevTab?: DockTab;
 }
 
@@ -212,11 +212,11 @@ export class DockStore implements DockStorageState {
     });
   }
 
-  onTabChange(callback?: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {
+  onTabChange(callback: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {
     const { tabKind, dockIsVisible = true, ...reactionOpts } = options;
 
     return reaction(() => this.selectedTab, ((tab, prevTab) => {
-      if (!tab) return; // skip
+      if (!tab) return; // skip when dock is empty
       if (tabKind && tabKind !== tab.kind) return; // handle specific tab.kind only
       if (dockIsVisible && !this.isOpen) return;
 

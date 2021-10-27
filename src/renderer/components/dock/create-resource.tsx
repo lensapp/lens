@@ -41,7 +41,6 @@ type SelectOptionTemplate = SelectOption<SelectOptionTemplateValue>;
 interface SelectOptionTemplateValue {
   sourceFolder: string;
   filePath: string; // relative to `sourceFolder`
-  content?: string; // available after loading (template selection)
 }
 
 @observer
@@ -115,11 +114,10 @@ export class CreateResource extends React.Component<Props> {
     return Object.entries(createResourceStore.templateGroups).map(([sourceFolder, group]) => {
       return {
         label: group.label,
-        options: Object.entries(group.templates).map(([filePath, content]) => {
+        options: Array.from(group.templates.keys()).map(filePath => {
           return {
             label: filePath,
             value: { filePath, sourceFolder },
-            content,
           };
         }),
       };
@@ -127,8 +125,8 @@ export class CreateResource extends React.Component<Props> {
   }
 
   onSelectTemplate = async ({ value }: SelectOptionTemplate) => {
-    const { filePath, sourceFolder, content } = value;
-    const templateContent = content ?? await createResourceStore.loadTemplate({ filePath, sourceFolder });
+    const { filePath, sourceFolder } = value;
+    const templateContent = await createResourceStore.loadTemplate({ filePath, sourceFolder });
 
     createResourceStore.setData(this.tabId, templateContent); // update draft
   };

@@ -23,15 +23,14 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { autoBind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
-import lensDarkTheme from "./themes/lens-dark.json";
-import lensLightTheme from "./themes/lens-light.json";
+import lensDarkThemeJson from "./themes/lens-dark.json";
+import lensLightThemeJson from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";
 import type { MonacoEditorProps } from "./components/monaco-editor";
 
 export type ThemeId = string;
 
 export interface Theme {
-  id?: ThemeId;
   name: string;
   type: "dark" | "light";
   colors: Record<string, string>;
@@ -45,34 +44,23 @@ export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
   // bundled themes from `themes/${themeId}.json`
-  private allThemes = observable.map<string, Theme>({
-    "lens-dark": lensDarkTheme as Theme,
-    "lens-light": lensLightTheme as Theme,
+  private themes = observable.map<ThemeId, Theme>({
+    "lens-dark": lensDarkThemeJson as Theme,
+    "lens-light": lensLightThemeJson as Theme,
   });
-
-  @computed get themes() {
-    return Array.from(this.allThemes.entries()).map(([themeId, themeOriginal]) => {
-      const theme: Required<Theme> = {
-        id: themeId, // take id from map's key
-        ...themeOriginal,
-      };
-
-      return theme;
-    });
-  }
 
   @computed get activeThemeId(): string {
     return UserStore.getInstance().colorTheme;
   }
 
   @computed get activeTheme(): Theme {
-    return this.allThemes.get(this.activeThemeId) ?? this.allThemes.get(ThemeStore.defaultTheme);
+    return this.themes.get(this.activeThemeId) ?? this.themes.get(ThemeStore.defaultTheme);
   }
 
   @computed get themeOptions(): SelectOption<string>[] {
-    return this.themes.map(theme => ({
+    return Array.from(this.themes).map(([themeId, theme]) => ({
       label: theme.name,
-      value: theme.id,
+      value: themeId,
     }));
   }
 
@@ -96,7 +84,7 @@ export class ThemeStore extends Singleton {
   }
 
   getThemeById(themeId: ThemeId): Theme {
-    return this.allThemes.get(themeId);
+    return this.themes.get(themeId);
   }
 
   protected applyTheme(theme: Theme) {
