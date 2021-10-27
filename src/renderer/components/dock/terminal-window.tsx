@@ -28,8 +28,7 @@ import type { Terminal } from "./terminal";
 import { TerminalStore } from "./terminal.store";
 import { ThemeStore } from "../../theme.store";
 import { dockStore, TabId, TabKind } from "./dock.store";
-import { dockViewsManager } from "./dock.views-manager";
-import type { DockTabContentProps } from "./dock-tab-content";
+import { DockTabContentProps, dockViewsManager } from "./dock.views-manager";
 
 interface Props extends DockTabContentProps {
 }

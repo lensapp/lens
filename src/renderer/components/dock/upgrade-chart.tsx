@@ -29,8 +29,8 @@ import { dockStore, TabId, TabKind } from "./dock.store";
 import type { IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { upgradeChartStore } from "./upgrade-chart.store";
-import { dockViewsManager } from "./dock.views-manager";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { DockTabContentProps, dockViewsManager } from "./dock.views-manager";
+import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
 
 interface Props extends DockTabContentProps {
@@ -96,12 +96,7 @@ export class UpgradeChart extends React.Component<Props> {
     const { release, selectedVersion, chartVersions, tabId } = this;
 
     return (
-      <DockTabContent
-        tabId={tabId}
-        withEditor
-        editorValue={upgradeChartStore.values.get(tabId)}
-        editorOnChange={v => upgradeChartStore.values.set(tabId, v)}
-      >
+      <div className="UpgradeChart">
         <InfoPanel
           tabId={this.tabId}
           submit={this.upgrade}
@@ -124,7 +119,12 @@ export class UpgradeChart extends React.Component<Props> {
             </div>
           }
         />
-      </DockTabContent>
+        <EditorPanel
+          tabId={tabId}
+          value={upgradeChartStore.values.get(tabId)}
+          onChange={v => upgradeChartStore.values.set(tabId, v)}
+        />
+      </div>
     );
   }
 }

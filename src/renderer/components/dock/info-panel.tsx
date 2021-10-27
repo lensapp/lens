@@ -29,7 +29,6 @@ import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { dockStore, TabId } from "./dock.store";
 import { Notifications } from "../notifications";
-import { DockTabContext, DockTabContextValue } from "./dock-tab-context";
 
 export interface InfoPanelProps {
   tabId: TabId;
@@ -60,11 +59,9 @@ const defaultProps: Partial<InfoPanelProps> = {
 @observer
 export class InfoPanel extends Component<InfoPanelProps> {
   static defaultProps = defaultProps as object;
-  static contextType = DockTabContext;
-  declare context: DockTabContextValue;
 
-  get error() {
-    return this.props.error ?? this.context.error;
+  get error(): React.ReactNode {
+    return this.props.error;
   }
 
   @observable waiting = false;

@@ -29,9 +29,9 @@ import { InfoPanel } from "./info-panel";
 import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../notifications";
 import { TabKind } from "./dock.store";
-import { dockViewsManager } from "./dock.views-manager";
+import { DockTabContentProps, dockViewsManager } from "./dock.views-manager";
 import logger from "../../../common/logger";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { EditorPanel } from "./editor-panel";
 
 interface Props extends DockTabContentProps {
 }
@@ -135,12 +135,7 @@ export class CreateResource extends React.Component<Props> {
     const { tabId } = this;
 
     return (
-      <DockTabContent
-        tabId={tabId}
-        withEditor
-        editorValue={createResourceStore.getData(tabId)}
-        editorOnChange={value => createResourceStore.setData(tabId, value)}
-      >
+      <div className="CreateResource">
         <InfoPanel
           tabId={tabId}
           controls={this.renderControls()}
@@ -148,7 +143,12 @@ export class CreateResource extends React.Component<Props> {
           submitLabel="Create"
           showNotifications={false}
         />
-      </DockTabContent>
+        <EditorPanel
+          tabId={tabId}
+          value={createResourceStore.getData(tabId)}
+          onChange={value => createResourceStore.setData(tabId, value)}
+        />
+      </div>
     );
   }
 }

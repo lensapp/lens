@@ -21,8 +21,12 @@
 
 import type React from "react";
 import { observable } from "mobx";
-import type { TabKind } from "./dock.store";
-import type { DockTabContentProps } from "./dock-tab-content";
+import type { TabId, TabKind } from "./dock.store";
+
+export interface DockTabContentProps {
+  tabId: TabId;
+  className?: string;
+}
 
 export interface DockTabComponents {
   Content?: React.ComponentType<DockTabContentProps>;

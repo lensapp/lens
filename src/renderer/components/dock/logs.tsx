@@ -33,8 +33,7 @@ import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
 import { LogTabData, logTabStore } from "./log-tab.store";
 import { TabKind } from "./dock.store";
-import { dockViewsManager } from "./dock.views-manager";
-import type { DockTabContentProps } from "./dock-tab-content";
+import { DockTabContentProps, dockViewsManager } from "./dock.views-manager";
 
 interface Props extends DockTabContentProps {
 }

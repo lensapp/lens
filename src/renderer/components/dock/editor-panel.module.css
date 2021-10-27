@@ -19,10 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-
-export const DockTabContext = React.createContext<DockTabContextValue>({});
-
-export interface DockTabContextValue {
-  error?: string;
+.EditorPanel {
+  position: relative;
+  flex: 1;
+  height: 100%;
 }

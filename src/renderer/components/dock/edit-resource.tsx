@@ -28,9 +28,9 @@ import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { TabKind } from "./dock.store";
-import { dockViewsManager } from "./dock.views-manager";
+import { DockTabContentProps, dockViewsManager } from "./dock.views-manager";
 import { createPatch } from "rfc6902";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { EditorPanel } from "./editor-panel";
 
 interface Props extends DockTabContentProps {
 }
@@ -111,12 +111,7 @@ export class EditResource extends React.Component<Props> {
     if (!resource) return null;
 
     return (
-      <DockTabContent
-        tabId={tabId}
-        withEditor
-        editorValue={tabData?.draft}
-        editorOnChange={v => tabData.draft = v}
-      >
+      <div className="EditResource">
         <InfoPanel
           tabId={tabId}
           submit={this.save}
@@ -130,7 +125,12 @@ export class EditResource extends React.Component<Props> {
             </div>
           )}
         />
-      </DockTabContent>
+        <EditorPanel
+          tabId={tabId}
+          value={tabData?.draft}
+          onChange={v => tabData.draft = v}
+        />
+      </div>
     );
   }
 }

@@ -19,69 +19,54 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./dock-tab-content.module.css";
+import styles from "./editor-panel.module.css";
 import throttle from "lodash/throttle";
 import React from "react";
-import { action, makeObservable, observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { dockStore, TabId } from "./dock.store";
+import { dockStore } from "./dock.store";
 import { cssNames } from "../../utils";
 import { MonacoEditor, MonacoEditorProps } from "../monaco-editor";
-import { DockTabContext } from "./dock-tab-context";
+import type { DockTabContentProps } from "./dock.views-manager";
 
-export interface DockTabContentProps extends React.HTMLAttributes<any> {
-  tabId: TabId;
-  className?: string;
-  withEditor?: boolean;
-  editorValue?: MonacoEditorProps["value"];
-  editorOnChange?: MonacoEditorProps["onChange"];
+export interface EditorPanelProps extends DockTabContentProps {
+  value: string;
+  onChange: MonacoEditorProps["onChange"];
+  onError?: MonacoEditorProps["onError"];
 }
 
 @observer
-export class DockTabContent extends React.Component<DockTabContentProps> {
-  @observable.ref editor?: MonacoEditor;
-  @observable error = "";
+export class EditorPanel extends React.Component<EditorPanelProps> {
+  @observable.ref editor: MonacoEditor;
 
-  constructor(props: DockTabContentProps) {
+  constructor(props: EditorPanelProps) {
     super(props);
     makeObservable(this);
 
     disposeOnUnmount(this, [
       // keep focus on editor's area when <Dock/> just opened
-      reaction(() => dockStore.isOpen, isOpen => isOpen && this.editor?.focus()),
+      reaction(() => dockStore.isOpen, isOpen => isOpen && this.editor.focus()),
 
       // focus to editor on dock's resize or turning into fullscreen mode
-      dockStore.onResize(throttle(() => this.editor?.focus(), 250)),
+      dockStore.onResize(throttle(() => this.editor.focus(), 250)),
     ]);
   }
 
   render() {
-    const { className, tabId, withEditor, editorValue, editorOnChange } = this.props;
-    const { error } = this;
+    const { className, tabId, value, onChange, onError } = this.props;
 
     if (!tabId) return null;
 
     return (
-      <div className={cssNames(styles.DockTabContent, className)}>
-        <DockTabContext.Provider value={{ error }}>
-          {this.props.children}
-
-          {withEditor && (
-            <MonacoEditor
-              autoFocus
-              id={tabId}
-              className={styles.editor}
-              value={editorValue ?? ""}
-              onChange={action((value, evt) => {
-                this.error = ""; // reset first
-                editorOnChange?.(value, evt);
-              })}
-              onError={error => this.error = String(error)}
-              onModelChange={() => this.error = ""}
-              ref={monaco => this.editor = monaco}></MonacoEditor>
-          )}
-        </DockTabContext.Provider>
-      </div>
+      <MonacoEditor
+        autoFocus
+        id={tabId}
+        value={value}
+        className={cssNames(styles.EditorPanel, className)}
+        onChange={onChange}
+        onError={onError}
+        ref={monaco => this.editor = monaco}
+      />
     );
   }
 }

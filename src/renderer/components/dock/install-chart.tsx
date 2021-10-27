@@ -39,8 +39,8 @@ import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
-import { dockViewsManager } from "./dock.views-manager";
-import { DockTabContent, DockTabContentProps } from "./dock-tab-content";
+import { DockTabContentProps, dockViewsManager } from "./dock.views-manager";
+import { EditorPanel } from "./editor-panel";
 
 interface Props extends DockTabContentProps {
 }
@@ -195,12 +195,7 @@ export class InstallChart extends Component<Props> {
     );
 
     return (
-      <DockTabContent
-        tabId={tabId}
-        withEditor
-        editorValue={installChartStore.getData(tabId).values}
-        editorOnChange={v => installChartStore.getData(tabId).values = v}
-      >
+      <div className="InstallChart">
         <InfoPanel
           tabId={tabId}
           className="InstallChartInfoPanel"
@@ -210,7 +205,12 @@ export class InstallChart extends Component<Props> {
           submittingMessage="Installing..."
           showSubmitClose={false}
         />
-      </DockTabContent>
+        <EditorPanel
+          tabId={tabId}
+          value={installChartStore.getData(tabId).values}
+          onChange={v => installChartStore.getData(tabId).values = v}
+        />
+      </div>
     );
   }
 }
