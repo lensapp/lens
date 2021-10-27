@@ -22,15 +22,15 @@
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "./cluster";
 import type { ContextHandler } from "./context-handler";
-import { app } from "electron";
 import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../common/kube-helpers";
 import logger from "./logger";
 import { LensProxy } from "./lens-proxy";
+import { AppPaths } from "../common/app-paths";
 
 export class KubeconfigManager {
-  protected configDir = app.getPath("temp");
+  protected configDir = AppPaths.get("temp");
   protected tempFile: string = null;
 
   constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) { }

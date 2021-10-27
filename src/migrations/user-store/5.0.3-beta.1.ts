@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app } from "electron";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 import os from "os";
@@ -27,14 +26,16 @@ import type { ClusterStoreModel } from "../../common/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { isLogicalChildPath, storedKubeConfigFolder } from "../../common/utils";
+import { AppPaths } from "../../common/app-paths";
 
 export default {
   version: "5.0.3-beta.1",
   run(store) {
     try {
       const { syncKubeconfigEntries = [], ...preferences }: UserPreferencesModel = store.get("preferences") ?? {};
-      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(path.resolve(app.getPath("userData"), "lens-cluster-store.json"), "utf-8")) ?? {};
-      const extensionDataDir = path.resolve(app.getPath("userData"), "extension_data");
+      const userData = AppPaths.get("userData");
+      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(path.resolve(userData, "lens-cluster-store.json"), "utf-8")) ?? {};
+      const extensionDataDir = path.resolve(userData, "extension_data");
       const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
       syncPaths.add(path.join(os.homedir(), ".kube"));

@@ -21,6 +21,7 @@
 
 import { app, ipcMain, ipcRenderer } from "electron";
 import { observable, when } from "mobx";
+import path from "path";
 import logger from "./logger";
 import { fromEntries, toJS } from "./utils";
 import { isWindows } from "./vars";
@@ -71,6 +72,12 @@ export class AppPaths {
   }
 
   private static initMain(): void {
+    if (process.env.CICD) {
+      app.setPath("appData", process.env.CICD);
+    }
+
+    app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
+
     AppPaths.paths.set(fromEntries(pathNames.map(pathName => [pathName, app.getPath(pathName)])));
     ipcMain.handle(AppPaths.ipcChannel, () => toJS(AppPaths.paths.get()));
   }

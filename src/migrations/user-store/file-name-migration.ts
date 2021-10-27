@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app } from "electron";
 import fse from "fs-extra";
 import path from "path";
+import { AppPaths } from "../../common/app-paths";
 
 export function fileNameMigration() {
-  const userDataPath = app.getPath("userData");
+  const userDataPath = AppPaths.get("userData");
   const configJsonPath = path.join(userDataPath, "config.json");
   const lensUserStoreJsonPath = path.join(userDataPath, "lens-user-store.json");
 

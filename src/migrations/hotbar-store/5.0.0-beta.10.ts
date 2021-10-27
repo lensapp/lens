@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app } from "electron";
 import fse from "fs-extra";
 import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
+import { AppPaths } from "../../common/app-paths";
 import type { ClusterStoreModel } from "../../common/cluster-store";
 import { defaultHotbarCells, getEmptyHotbar, Hotbar, HotbarItem } from "../../common/hotbar-types";
 import { catalogEntity } from "../../main/catalog-sources/general";
@@ -48,7 +48,7 @@ export default {
   run(store) {
     const rawHotbars = store.get("hotbars");
     const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars.filter(h => h && typeof h === "object") : [];
-    const userDataPath = app.getPath("userData");
+    const userDataPath = AppPaths.get("userData");
 
     // Hotbars might be empty, if some of the previous migrations weren't run
     if (hotbars.length === 0) {
