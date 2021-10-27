@@ -57,8 +57,8 @@ export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
   @observable private contextMenu: CatalogEntityContextMenuContext = {
     menuItems: [],
-    navigate: (url: string, inMainFrame = true) => {
-      if (inMainFrame) {
+    navigate: (url: string, forceMainFrame = true) => {
+      if (forceMainFrame) {
         broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
       } else {
         navigate(url);
