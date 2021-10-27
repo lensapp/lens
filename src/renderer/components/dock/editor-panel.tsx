@@ -30,36 +30,47 @@ import { MonacoEditor, MonacoEditorProps } from "../monaco-editor";
 import type { DockTabContentProps } from "./dock.views-manager";
 
 export interface EditorPanelProps extends DockTabContentProps {
+  autoFocus?: boolean; // default: true
   value: string;
   onChange: MonacoEditorProps["onChange"];
   onError?: MonacoEditorProps["onError"];
 }
 
+const defaultProps: Partial<EditorPanelProps> = {
+  autoFocus: true,
+};
+
 @observer
 export class EditorPanel extends React.Component<EditorPanelProps> {
-  @observable.ref editor: MonacoEditor;
+  static defaultProps = defaultProps as object;
+
+  @observable.ref editor?: MonacoEditor;
 
   constructor(props: EditorPanelProps) {
     super(props);
     makeObservable(this);
+  }
 
+  componentDidMount() {
     disposeOnUnmount(this, [
       // keep focus on editor's area when <Dock/> just opened
-      reaction(() => dockStore.isOpen, isOpen => isOpen && this.editor.focus()),
+      reaction(() => dockStore.isOpen, isOpen => isOpen && this.editor?.focus(), {
+        fireImmediately: true,
+      }),
 
       // focus to editor on dock's resize or turning into fullscreen mode
-      dockStore.onResize(throttle(() => this.editor.focus(), 250)),
+      dockStore.onResize(throttle(() => this.editor?.focus(), 250)),
     ]);
   }
 
   render() {
-    const { className, tabId, value, onChange, onError } = this.props;
+    const { className, autoFocus, tabId, value, onChange, onError } = this.props;
 
     if (!tabId) return null;
 
     return (
       <MonacoEditor
-        autoFocus
+        autoFocus={autoFocus}
         id={tabId}
         value={value}
         className={cssNames(styles.EditorPanel, className)}
