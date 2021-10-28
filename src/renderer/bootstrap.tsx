@@ -52,6 +52,10 @@ import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import cloudsMidnight from "./monaco-themes/Clouds Midnight.json";
 
+if (process.isMainFrame) {
+  SentryInit();
+}
+
 configurePackages();
 
 /**
@@ -72,6 +76,8 @@ type AppComponent = React.ComponentType & {
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app");
 
+  UserStore.createInstance();
+
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
@@ -89,10 +95,6 @@ export async function bootstrap(App: AppComponent) {
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
-
-  UserStore.createInstance();
-
-  SentryInit();
 
   // ClusterStore depends on: UserStore
   const cs = ClusterStore.createInstance();
