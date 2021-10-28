@@ -21,11 +21,11 @@
 
 import path from "path";
 import * as uuid from "uuid";
+import { AppPaths } from "../app-paths";
 import type { ClusterId } from "../cluster-types";
-import { getPath } from "./getPath";
 
 export function storedKubeConfigFolder(): string {
-  return path.resolve(getPath("userData"), "kubeconfigs");
+  return path.resolve(AppPaths.get("userData"), "kubeconfigs");
 }
 
 export function getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {

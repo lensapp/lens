@@ -47,7 +47,7 @@ import { Notice } from "./notice";
 import { SettingLayout } from "../layout/setting-layout";
 import { docsUrl } from "../../../common/vars";
 import { dialog } from "../../remote-helpers";
-import { getPath } from "../../../common/utils/getPath";
+import { AppPaths } from "../../../common/app-paths";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -469,7 +469,7 @@ const supportedFormats = ["tar", "tgz"];
 
 async function installFromSelectFileDialog() {
   const { canceled, filePaths } = await dialog.showOpenDialog({
-    defaultPath: getPath("downloads"),
+    defaultPath: AppPaths.get("downloads"),
     properties: ["openFile", "multiSelections"],
     message: `Select extensions to install (formats: ${supportedFormats.join(", ")}), `,
     buttonLabel: "Use configuration",

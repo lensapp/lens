@@ -23,12 +23,12 @@
 // convert file path cluster icons to their base64 encoded versions
 
 import path from "path";
-import { app } from "electron";
 import fse from "fs-extra";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import type { ClusterModel } from "../../common/cluster-types";
 import { getCustomKubeConfigPath, storedKubeConfigFolder } from "../../common/utils";
+import { AppPaths } from "../../common/app-paths";
 
 interface Pre360ClusterModel extends ClusterModel {
   kubeConfig: string;
@@ -37,7 +37,7 @@ interface Pre360ClusterModel extends ClusterModel {
 export default {
   version: "3.6.0-beta.1",
   run(store) {
-    const userDataPath = app.getPath("userData");
+    const userDataPath = AppPaths.get("userData");
     const storedClusters: Pre360ClusterModel[] = store.get("clusters") ?? [];
     const migratedClusters: ClusterModel[] = [];
 

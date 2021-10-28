@@ -63,13 +63,12 @@ import { ensureDir } from "fs-extra";
 import { Router } from "./router";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
-import * as path from "path";
 import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
+import { AppPaths } from "../common/app-paths";
 
 const onCloseCleanup = disposer();
 const onQuitCleanup = disposer();
 
-const workingDir = path.join(app.getPath("appData"), appName);
 
 SentryInit();
 app.setName(appName);
@@ -82,12 +81,7 @@ if (app.setAsDefaultProtocolClient("lens")) {
   logger.info("📟 Protocol client register failed ❗");
 }
 
-if (process.env.CICD) {
-  app.setPath("appData", process.env.CICD);
-  app.setPath("userData", path.join(process.env.CICD, appName));
-} else {
-  app.setPath("userData", workingDir);
-}
+AppPaths.init();
 
 if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
@@ -127,7 +121,7 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
-  logger.info(`🚀 Starting ${productName} from "${app.getPath("exe")}"`);
+  logger.info(`🚀 Starting ${productName} from "${AppPaths.get("exe")}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
 

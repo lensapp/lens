@@ -26,7 +26,7 @@ import * as uuid from "uuid";
 import { ElectronApplication, Frame, Page, _electron as electron } from "playwright";
 import { noop } from "lodash";
 
-export const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
+export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
   "linux": "./dist/linux-unpacked/open-lens",
   "darwin": "./dist/mac/OpenLens.app/Contents/MacOS/OpenLens",
@@ -65,7 +65,7 @@ export async function start() {
 
   const app = await electron.launch({
     args: ["--integration-testing"], // this argument turns off the blocking of quit
-    executablePath: AppPaths[process.platform],
+    executablePath: appPaths[process.platform],
     bypassCSP: true,
     env: {
       CICD,

@@ -30,6 +30,7 @@ import { noop } from "../../../utils";
 import { ThemeStore } from "../../../theme.store";
 import { TerminalStore } from "../terminal.store";
 import { UserStore } from "../../../../common/user-store";
+import { AppPaths } from "../../../../common/app-paths";
 
 jest.mock("react-monaco-editor", () => ({
   monaco: {
@@ -41,9 +42,20 @@ jest.mock("react-monaco-editor", () => ({
 
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
   },
 }));
+AppPaths.init();
 
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false, },

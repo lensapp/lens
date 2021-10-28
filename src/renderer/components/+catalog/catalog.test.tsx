@@ -31,26 +31,30 @@ import { CatalogEntityRegistry } from "../../../renderer/api/catalog-entity-regi
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { CatalogEntityItem } from "./catalog-entity-item";
 import { CatalogEntityStore } from "./catalog-entity.store";
+import { AppPaths } from "../../../common/app-paths";
 
 mockWindow();
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
+  },
+}));
 
-// avoid TypeError: Cannot read property 'getPath' of undefined
-jest.mock("@electron/remote", () => {
-  return {
-    app: {
-      getPath: () => {
-        // avoid TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
-        return "";
-      },
-    },
-  };
-});
+AppPaths.init();
 
-jest.mock("./hotbar-toggle-menu-item", () => {
-  return {
-    HotbarToggleMenuItem: () => <div>menu item</div>
-  };
-});
+jest.mock("./hotbar-toggle-menu-item", () => ({
+  HotbarToggleMenuItem: () => <div>menu item</div>
+}));
 
 class MockCatalogEntity extends CatalogEntity {
   public apiVersion = "api";

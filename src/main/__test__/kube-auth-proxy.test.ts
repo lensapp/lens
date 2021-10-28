@@ -19,15 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
 jest.mock("winston", () => ({
   format: {
     colorize: jest.fn(),
@@ -35,26 +26,27 @@ jest.mock("winston", () => ({
     simple: jest.fn(),
     label: jest.fn(),
     timestamp: jest.fn(),
-    printf: jest.fn()
+    printf: jest.fn(),
+    padLevels: jest.fn(),
+    ms: jest.fn(),
   },
-  createLogger: jest.fn().mockReturnValue(logger),
+  createLogger: jest.fn().mockReturnValue({
+    silly: jest.fn(),
+    debug: jest.fn(),
+    log: jest.fn(),
+    info: jest.fn(),
+    error: jest.fn(),
+    crit: jest.fn(),
+  }),
   transports: {
     Console: jest.fn(),
     File: jest.fn(),
   }
 }));
 
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "tmp",
-    setLoginItemSettings: jest.fn(),
-  },
-}));
-
 jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
-//jest.mock("../utils/get-port");
 
 import { Cluster } from "../cluster";
 import { KubeAuthProxy } from "../kube-auth-proxy";
@@ -68,12 +60,30 @@ import { UserStore } from "../../common/user-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import mockFs from "mock-fs";
+import { AppPaths } from "../../common/app-paths";
 
 console = new Console(stdout, stderr);
 
 const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
 const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilUsed>;
+
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
+  },
+}));
+AppPaths.init();
 
 describe("kube auth proxy tests", () => {
   beforeEach(() => {

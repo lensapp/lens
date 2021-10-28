@@ -33,7 +33,7 @@ import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration } from "./preferences-helpers";
 import logger from "../../main/logger";
 import type { monaco } from "react-monaco-editor";
-import { getPath } from "../utils/getPath";
+import { AppPaths } from "../app-paths";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -257,5 +257,5 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
  * @returns string
  */
 export function getDefaultKubectlDownloadPath(): string {
-  return path.join(getPath("userData"), "binaries");
+  return path.join(AppPaths.get("userData"), "binaries");
 }

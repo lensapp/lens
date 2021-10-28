@@ -46,6 +46,11 @@ export function getClusterFrameUrl(clusterId: ClusterId) {
  * Get the result of `getClusterIdFromHost` from the current `location.host`
  */
 export function getHostedClusterId(): ClusterId | undefined {
+  // catch being called in main
+  if (typeof location === "undefined") {
+    return undefined;
+  }
+
   return getClusterIdFromHost(location.host);
 }
 

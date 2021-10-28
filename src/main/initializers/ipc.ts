@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, BrowserWindow, dialog, IpcMainInvokeEvent } from "electron";
+import { BrowserWindow, dialog, IpcMainInvokeEvent } from "electron";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../common/cluster-ipc";
@@ -34,6 +34,7 @@ import { ResourceApplier } from "../resource-applier";
 import { WindowManager } from "../window-manager";
 import path from "path";
 import { remove } from "fs-extra";
+import { AppPaths } from "../../common/app-paths";
 
 export function initIpcMainHandlers() {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
@@ -99,7 +100,7 @@ export function initIpcMainHandlers() {
 
     try {
       // remove the local storage file
-      const localStorageFilePath = path.resolve(app.getPath("userData"), "lens-local-storage", `${cluster.id}.json`);
+      const localStorageFilePath = path.resolve(AppPaths.get("userData"), "lens-local-storage", `${cluster.id}.json`);
 
       await remove(localStorageFilePath);
     } catch {}

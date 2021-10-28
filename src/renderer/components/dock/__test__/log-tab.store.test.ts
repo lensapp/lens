@@ -28,6 +28,7 @@ import { logTabStore } from "../log-tab.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 import fse from "fs-extra";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
+import { AppPaths } from "../../../../common/app-paths";
 
 mockWindow();
 
@@ -35,9 +36,21 @@ jest.mock("react-monaco-editor", () => null);
 
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
   },
 }));
+
+AppPaths.init();
 
 podsStore.items.push(new Pod(dockerPod));
 podsStore.items.push(new Pod(deploymentPod1));

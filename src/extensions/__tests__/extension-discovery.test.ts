@@ -26,6 +26,7 @@ import path from "path";
 import { ExtensionDiscovery } from "../extension-discovery";
 import os from "os";
 import { Console } from "console";
+import { AppPaths } from "../../common/app-paths";
 
 jest.setTimeout(60_000);
 
@@ -41,10 +42,21 @@ jest.mock("../extension-installer", () => ({
 }));
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
     setLoginItemSettings: jest.fn(),
   },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
