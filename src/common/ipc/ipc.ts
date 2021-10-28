@@ -49,20 +49,20 @@ function getSubFrames(): ClusterFrameInfo[] {
 }
 
 export function broadcastMessage(channel: string, ...args: any[]) {
-  const views: undefined | ReturnType<typeof webContents.getAllWebContents> | ReturnType<typeof remote.webContents.getAllWebContents> = (webContents || electronRemote?.webContents)?.getAllWebContents();
-
-  if (!views || !Array.isArray(views) || views.length === 0) return;
-  args = args.map(sanitizePayload);
-
-  ipcRenderer?.send(channel, ...args);
-  ipcMain?.emit(channel, ...args);
-
   const subFramesP = ipcRenderer
     ? requestMain(subFramesChannel)
     : Promise.resolve(getSubFrames());
 
   subFramesP
     .then(subFrames => {
+      const views: undefined | ReturnType<typeof webContents.getAllWebContents> | ReturnType<typeof remote.webContents.getAllWebContents> = (webContents || electronRemote?.webContents)?.getAllWebContents();
+
+      if (!views || !Array.isArray(views) || views.length === 0) return;
+      args = args.map(sanitizePayload);
+
+      ipcRenderer?.send(channel, ...args);
+      ipcMain?.emit(channel, ...args);
+
       for (const view of views) {
         let viewType = "unknown";
 
