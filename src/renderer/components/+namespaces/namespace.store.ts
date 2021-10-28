@@ -149,7 +149,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   @computed get hasAllContexts(): boolean {
-    return this.contextNamespaces.length === this.allowedNamespaces.length;
+    return this.selectedNamespaces.length === this.allowedNamespaces.length;
   }
 
   @action
@@ -168,17 +168,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   @action
-  selectAll() {
-    this.selectNamespaces([]); // Empty array means "all"
-  }
-
-  /**
-   * @deprecated This function is broken, `showAll` is opposite of what
-   */
-  @action
   toggleAll(showAll?: boolean) {
-    console.warn("NamespaceStore.toggleAll is deprecated. Use selectAll");
-
     if (typeof showAll === "boolean") {
       if (showAll) {
         this.selectNamespaces(this.allowedNamespaces);
