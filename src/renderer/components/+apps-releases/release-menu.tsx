@@ -21,7 +21,7 @@
 
 import React from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { boundMethod, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { releaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
@@ -35,23 +35,20 @@ interface Props extends MenuActionsProps {
 }
 
 export class HelmReleaseMenu extends React.Component<Props> {
-  @boundMethod
-  remove() {
+  remove = () => {
     return releaseStore.remove(this.props.release);
-  }
+  };
 
-  @boundMethod
-  upgrade() {
+  upgrade = () => {
     const { release, hideDetails } = this.props;
 
     createUpgradeChartTab(release);
     hideDetails?.();
-  }
+  };
 
-  @boundMethod
-  rollback() {
+  rollback = () => {
     ReleaseRollbackDialog.open(this.props.release);
-  }
+  };
 
   renderContent() {
     const { release, toolbar } = this.props;
@@ -67,6 +64,10 @@ export class HelmReleaseMenu extends React.Component<Props> {
             <span className="title">Rollback</span>
           </MenuItem>
         )}
+        <MenuItem onClick={this.upgrade}>
+          <Icon material="refresh" interactive={toolbar} tooltip="Upgrade"/>
+          <span className="title">Upgrade</span>
+        </MenuItem>
       </>
     );
   }
