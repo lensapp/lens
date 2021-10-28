@@ -296,7 +296,7 @@
     "@types/readable-stream": "^2.3.11",
     "@types/request": "^2.48.7",
     "@types/request-promise-native": "^1.0.18",
-    "@types/semver": "^7.2.0",
+    "@types/semver": "^7.3.9",
     "@types/sharp": "^0.29.2",
     "@types/spdy": "^3.4.4",
     "@types/tar": "^4.0.5",
