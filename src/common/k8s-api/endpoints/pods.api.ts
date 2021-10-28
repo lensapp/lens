@@ -85,7 +85,7 @@ export enum PodStatus {
   EVICTED = "Evicted"
 }
 
-export interface IPodContainer {
+export interface IPodContainer extends Partial<Record<PodContainerProbe, IContainerProbe>> {
   name: string;
   image: string;
   command?: string[];
@@ -136,16 +136,19 @@ export interface IPodContainer {
     readOnly: boolean;
     mountPath: string;
   }[];
-  livenessProbe?: IContainerProbe;
-  readinessProbe?: IContainerProbe;
-  startupProbe?: IContainerProbe;
   imagePullPolicy: string;
 }
+
+export type PodContainerProbe = "livenessProbe" | "readinessProbe" | "startupProbe";
 
 interface IContainerProbe {
   httpGet?: {
     path?: string;
-    port: number;
+
+    /**
+     * either a port number or an IANA_SVC_NAME string referring to a port defined in the container
+     */
+    port: number | string;
     scheme: string;
     host?: string;
   };
@@ -438,50 +441,64 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getLivenessProbe(container: IPodContainer) {
-    return this.getProbe(container.livenessProbe);
+    return this.getProbe(container, "livenessProbe");
   }
 
   getReadinessProbe(container: IPodContainer) {
-    return this.getProbe(container.readinessProbe);
+    return this.getProbe(container, "readinessProbe");
   }
 
   getStartupProbe(container: IPodContainer) {
-    return this.getProbe(container.startupProbe);
+    return this.getProbe(container, "startupProbe");
   }
 
-  getProbe(probeData: IContainerProbe) {
-    if (!probeData) return [];
+  private getProbe(container: IPodContainer, field: PodContainerProbe): string[] {
+    const probe: string[] = [];
+    const probeData = container[field];
+
+    if (!probeData) {
+      return probe;
+    }
+
     const {
-      httpGet, exec, tcpSocket, initialDelaySeconds, timeoutSeconds,
-      periodSeconds, successThreshold, failureThreshold
+      httpGet, exec, tcpSocket,
+      initialDelaySeconds = 0,
+      timeoutSeconds = 0,
+      periodSeconds = 0,
+      successThreshold = 0,
+      failureThreshold = 0
     } = probeData;
-    const probe = [];
 
     // HTTP Request
     if (httpGet) {
-      const { path, port, host, scheme } = httpGet;
+      const { path = "", port, host = "", scheme } = httpGet;
+      const resolvedPort = typeof port === "number"
+        ? port
+        // Try and find the port number associated witht the name or fallback to the name itself
+        : container.ports?.find(containerPort => containerPort.name === port)?.containerPort || port;
 
       probe.push(
         "http-get",
-        `${scheme.toLowerCase()}://${host || ""}:${port || ""}${path || ""}`,
+        `${scheme.toLowerCase()}://${host}:${resolvedPort}${path}`,
       );
     }
 
     // Command
-    if (exec && exec.command) {
+    if (exec?.command) {
       probe.push(`exec [${exec.command.join(" ")}]`);
     }
 
     // TCP Probe
-    if (tcpSocket && tcpSocket.port) {
+    if (tcpSocket?.port) {
       probe.push(`tcp-socket :${tcpSocket.port}`);
     }
+
     probe.push(
-      `delay=${initialDelaySeconds || "0"}s`,
-      `timeout=${timeoutSeconds || "0"}s`,
-      `period=${periodSeconds || "0"}s`,
-      `#success=${successThreshold || "0"}`,
-      `#failure=${failureThreshold || "0"}`,
+      `delay=${initialDelaySeconds}s`,
+      `timeout=${timeoutSeconds}s`,
+      `period=${periodSeconds}s`,
+      `#success=${successThreshold}`,
+      `#failure=${failureThreshold}`,
     );
 
     return probe;

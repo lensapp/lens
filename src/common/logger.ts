@@ -19,13 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ipcMain } from "electron";
+import { app, ipcMain } from "electron";
 import winston, { format } from "winston";
 import type Transport from "winston-transport";
 import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
-import { getPath } from "./utils/getPath";
 
 const logLevel = process.env.LOG_LEVEL
   ? process.env.LOG_LEVEL
@@ -66,7 +65,11 @@ if (ipcMain) {
         handleExceptions: false,
         level: logLevel,
         filename: "lens.log",
-        dirname: getPath("logs"),
+        /**
+         * SAFTEY: the `ipcMain` check above should mean that this is only
+         * called in the main process
+         */
+        dirname: app.getPath("logs"),
         maxsize: 16 * 1024,
         maxFiles: 16,
         tailable: true,

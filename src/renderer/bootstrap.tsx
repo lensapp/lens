@@ -35,8 +35,6 @@ import { ClusterStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
 import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { ExtensionLoader } from "../extensions/extension-loader";
-import { App } from "./components/app";
-import { LensApp } from "./lens-app";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
@@ -49,6 +47,11 @@ import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
+import { AppPaths } from "../common/app-paths";
+
+if (process.isMainFrame) {
+  SentryInit();
+}
 
 configurePackages();
 
@@ -67,8 +70,11 @@ type AppComponent = React.ComponentType & {
   init?(rootElem: HTMLElement): Promise<void>;
 };
 
-export async function bootstrap(App: AppComponent) {
+export async function bootstrap(comp: () => Promise<AppComponent>) {
+  await AppPaths.init();
   const rootElem = document.getElementById("app");
+
+  UserStore.createInstance();
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
@@ -87,10 +93,6 @@ export async function bootstrap(App: AppComponent) {
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
-
-  UserStore.createInstance();
-
-  SentryInit();
 
   // ClusterStore depends on: UserStore
   const cs = ClusterStore.createInstance();
@@ -116,9 +118,10 @@ export async function bootstrap(App: AppComponent) {
   cs.registerIpcListener();
 
   // init app's dependencies if any
-  if (App.init) {
-    await App.init(rootElem);
-  }
+  const App = await comp();
+
+  await App.init(rootElem);
+
   render(<>
     {isMac && <div id="draggable-top" />}
     {DefaultProps(App)}
@@ -126,7 +129,11 @@ export async function bootstrap(App: AppComponent) {
 }
 
 // run
-bootstrap(process.isMainFrame ? LensApp : App);
+bootstrap(
+  async () => process.isMainFrame
+    ? (await import("./lens-app")).LensApp
+    : (await import("./components/app")).App
+);
 
 
 /**

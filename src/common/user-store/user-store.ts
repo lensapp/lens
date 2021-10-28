@@ -31,7 +31,7 @@ import path from "path";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, EditorConfiguration, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
-import { getPath } from "../utils/getPath";
+import { AppPaths } from "../app-paths";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -233,5 +233,5 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
  * @returns string
  */
 export function getDefaultKubectlDownloadPath(): string {
-  return path.join(getPath("userData"), "binaries");
+  return path.join(AppPaths.get("userData"), "binaries");
 }

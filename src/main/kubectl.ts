@@ -31,8 +31,8 @@ import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
-import { getPath } from "../common/utils/getPath";
 import { defaultPackageMirror, packageMirrors } from "../common/user-store/preferences-helpers";
+import { AppPaths } from "../common/app-paths";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -81,7 +81,7 @@ export class Kubectl {
   protected dirname: string;
 
   static get kubectlDir() {
-    return path.join(getPath("userData"), "binaries", "kubectl");
+    return path.join(AppPaths.get("userData"), "binaries", "kubectl");
   }
 
   public static readonly bundledKubectlVersion: string = bundledVersion;

@@ -49,7 +49,7 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
       <>
         {!showToken && (
           <>
-            <span className="asterisks">{Array(16).fill("•").join("")}</span>
+            <span className="asterisks">{"•".repeat(16)}</span>
             <Icon
               small material="lock_open"
               tooltip="Show value"

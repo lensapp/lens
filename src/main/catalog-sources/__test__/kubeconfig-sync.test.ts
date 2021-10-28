@@ -28,12 +28,25 @@ import mockFs from "mock-fs";
 import fs from "fs";
 import { ClusterStore } from "../../../common/cluster-store";
 import { ClusterManager } from "../../cluster-manager";
+import { AppPaths } from "../../../common/app-paths";
 
 jest.mock("electron", () => ({
   app: {
-    getPath: () => "/foo",
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
   },
 }));
+
+AppPaths.init();
 
 describe("kubeconfig-sync.source tests", () => {
   beforeEach(() => {

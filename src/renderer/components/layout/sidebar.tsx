@@ -45,6 +45,8 @@ import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { makeObservable, observable } from "mobx";
 import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { broadcastMessage } from "../../../common/ipc";
+import { IpcRendererNavigationEvents } from "../../navigation/events";
 
 interface Props {
   className?: string;
@@ -55,7 +57,13 @@ export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
   @observable private contextMenu: CatalogEntityContextMenuContext = {
     menuItems: [],
-    navigate,
+    navigate: (url: string, forceMainFrame = true) => {
+      if (forceMainFrame) {
+        broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
+      } else {
+        navigate(url);
+      }
+    }
   };
 
   constructor(props: Props) {

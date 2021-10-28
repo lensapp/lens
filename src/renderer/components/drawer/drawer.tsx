@@ -135,11 +135,10 @@ export class Drawer extends React.Component<DrawerProps> {
     if (open) onClose();
   };
 
-  copyK8sObjName = () => {
-    const { title } = this.props;
-    const k8sObjName = title.toString().split(": ")[1];
+  copyTitle = (title: string) => {
+    const k8sObjName = title.split(":")[1] || title; // copy whole if no :
 
-    clipboard.writeText(k8sObjName);
+    clipboard.writeText(k8sObjName.trim());
     this.setState({isCopied: true});
     setTimeout(() => {
       this.setState({isCopied: false});
@@ -163,8 +162,8 @@ export class Drawer extends React.Component<DrawerProps> {
             <div className="drawer-title flex align-center">
               <div className="drawer-title-text flex gaps align-center">
                 {title}
-                {typeof title == "string" && (
-                  <Icon material={copyIcon} tooltip={copyTooltip} onClick={this.copyK8sObjName}/>
+                {title && typeof title == "string" && (
+                  <Icon material={copyIcon} tooltip={copyTooltip} onClick={() => this.copyTitle(title)}/>
                 )}
               </div>
               {toolbar}

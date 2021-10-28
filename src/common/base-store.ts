@@ -30,7 +30,7 @@ import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
-import { getPath } from "./utils/getPath";
+import { AppPaths } from "./app-paths";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: IReactionOptions;
@@ -93,7 +93,7 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   protected cwd() {
-    return getPath("userData");
+    return AppPaths.get("userData");
   }
 
   protected async saveToFile(model: T) {

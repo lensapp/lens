@@ -23,11 +23,21 @@ import { UserStore } from "../../common/user-store";
 import { ContextHandler } from "../context-handler";
 import { PrometheusProvider, PrometheusProviderRegistry, PrometheusService } from "../prometheus";
 import mockFs from "mock-fs";
+import { AppPaths } from "../../common/app-paths";
 
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
     setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
   },
 }));
 
@@ -75,6 +85,8 @@ function getHandler() {
     apiUrl: "http://localhost:81",
   }) as any);
 }
+
+AppPaths.init();
 
 describe("ContextHandler", () => {
   beforeEach(() => {

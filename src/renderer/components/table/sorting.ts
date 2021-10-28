@@ -20,7 +20,7 @@
  */
 
 import type { TableSortCallback } from "./table";
-import { array, Ordering, rectifyOrdering, sortCompare } from "../../utils";
+import { Ordering, rectifyOrdering, sortCompare, tuple } from "../../utils";
 
 export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T> | undefined, orderByRaw: string): T[] {
   if (typeof sortingCallback !== "function") {
@@ -40,7 +40,7 @@ export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T
 
     const leftSortBy = [left.sortBy].flat();
     const rightSortBy = [right.sortBy].flat();
-    const zipIter = array.zipStrict(leftSortBy, rightSortBy);
+    const zipIter = tuple.zip(leftSortBy, rightSortBy);
     let r = zipIter.next();
 
     for (; r.done === false; r = zipIter.next()) {

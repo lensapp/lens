@@ -19,26 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
-type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
-
 /**
- *
- * @param sources The source arrays
- * @yields A tuple of the next element from each of the sources
- * @returns The tuple of all the sources as soon as at least one of the sources is exausted
+ * A inference typed version of `Array(length).fill(value)`
+ * @param length The number of entries
+ * @param value The value of each of the indices
  */
-export function* zipStrict<T, N extends number>(...sources: Tuple<T[], N>): Iterator<Tuple<T, N>, Tuple<T[], N>> {
-  const maxSafeLength = sources.reduce((prev, cur) => Math.min(prev, cur.length), Number.POSITIVE_INFINITY);
-
-  if (!isFinite(maxSafeLength)) {
-    // There are no sources, thus just return
-    return [] as Tuple<T[], N>;
-  }
-
-  for (let i = 0; i < maxSafeLength; i += 1) {
-    yield sources.map(source => source[i]) as Tuple<T, N>;
-  }
-
-  return sources.map(source => source.slice(maxSafeLength)) as Tuple<T[], N>;
+export function filled<T>(length: number, value: T): T[] {
+  return Array(length).fill(value);
 }

@@ -200,10 +200,6 @@ export class LensProxy extends Singleton {
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
 
       if (proxyTarget) {
-        // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
-        // this should be safe because we have already validated cluster uuid
-        res.setHeader("Access-Control-Allow-Origin", "*");
-
         return this.proxy.web(req, res, proxyTarget);
       }
     }

@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import _ from "lodash";
 import type { LensApiRequest } from "../router";
 import { respondJson } from "../utils/http-responses";
 import type { Cluster } from "../cluster";
@@ -33,8 +32,7 @@ export type IMetricsQuery = string | string[] | {
 };
 
 // This is used for backoff retry tracking.
-const MAX_ATTEMPTS = 5;
-const ATTEMPTS = [...(_.fill(Array(MAX_ATTEMPTS - 1), false)), true];
+const ATTEMPTS = [false, false, false, false, true];
 
 // prometheus metrics loader
 async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> {

@@ -19,19 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, ipcMain } from "electron";
 
-const remote = ipcMain ? null : require("@electron/remote");
+import { openExternal } from "../utils";
+import { Notifications } from "../components/notifications";
+import type { ForwardedPort } from "./port-forward-item";
+import logger from "../../common/logger";
 
-/**
- * calls getPath either on app or on the remote's app
- *
- * @deprecated Use a different method for accessing the getPath function
- */
-export function getPath(name: Parameters<typeof app["getPath"]>[0]): string {
-  if (app) {
-    return app.getPath(name);
-  }
-
-  return remote.app.getPath(name);
+export function portForwardAddress(portForward: ForwardedPort) {
+  return `${portForward.protocol ?? "http"}://localhost:${portForward.forwardPort}`;
 }
+
+export function openPortForward(portForward: ForwardedPort) {
+  const browseTo = portForwardAddress(portForward);
+
+  openExternal(browseTo)
+    .catch(error => {
+      logger.error(`failed to open in browser: ${error}`, {
+        clusterId: portForward.clusterId,
+        port: portForward.port,
+        kind: portForward.kind,
+        namespace: portForward.namespace,
+        name: portForward.name,
+      });
+      Notifications.error(`Failed to open ${browseTo} in browser`);
+    }
+    );
+
+}
+
+export function predictProtocol(name: string) {
+  return name === "https" ? "https" : "http";
+}
+

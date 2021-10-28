@@ -20,7 +20,7 @@
  */
 
 import * as uuid from "uuid";
-import type { Tuple } from "./utils";
+import { tuple, Tuple } from "./utils";
 
 export interface HotbarItem {
   entity: {
@@ -46,7 +46,7 @@ export const defaultHotbarCells = 12; // Number is chosen to easy hit any item w
 export function getEmptyHotbar(name: string, id: string = uuid.v4()): Hotbar {
   return {
     id,
-    items: Array(defaultHotbarCells).fill(null) as Tuple<HotbarItem | null, typeof defaultHotbarCells>,
+    items: tuple.filled(defaultHotbarCells, null),
     name,
   };
 }

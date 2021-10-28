@@ -57,7 +57,7 @@ export class PortForwardMenu extends React.Component<Props> {
           <span className="title">Open</span>
         </MenuItem>
         <MenuItem onClick={() => PortForwardDialog.open(portForward)}>
-          <Icon material="edit" tooltip="Change port" interactive={toolbar} />
+          <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
           <span className="title">Edit</span>
         </MenuItem>
       </>

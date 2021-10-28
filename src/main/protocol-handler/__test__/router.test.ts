@@ -29,15 +29,27 @@ import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { ExtensionsStore } from "../../../extensions/extensions-store";
 import { LensProtocolRouterMain } from "../router";
 import mockFs from "mock-fs";
+import { AppPaths } from "../../../common/app-paths";
 
 jest.mock("../../../common/ipc");
 
 jest.mock("electron", () => ({
   app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
     getPath: () => "tmp",
+    getLocale: () => "en",
     setLoginItemSettings: jest.fn(),
   },
+  ipcMain: {
+    on: jest.fn(),
+    handle: jest.fn(),
+  },
 }));
+
+AppPaths.init();
 
 function throwIfDefined(val: any): void {
   if (val != null) {

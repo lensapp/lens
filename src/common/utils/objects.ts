@@ -19,15 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
-import * as uuid from "uuid";
-import { AppPaths } from "../app-paths";
-import type { ClusterId } from "../cluster-types";
-
-export function storedKubeConfigFolder(): string {
-  return path.resolve(AppPaths.get("userData"), "kubeconfigs");
-}
-
-export function getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
-  return path.resolve(storedKubeConfigFolder(), clusterId);
+/**
+ * A better typed version of `Object.fromEntries` where the keys are known to
+ * be a specific subset
+ */
+export function fromEntries<T, Key extends string>(entries: Iterable<readonly [Key, T]>): { [k in Key]: T } {
+  return Object.fromEntries(entries) as { [k in Key]: T };
 }

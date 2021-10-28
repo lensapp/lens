@@ -19,15 +19,41 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
-import * as uuid from "uuid";
-import { AppPaths } from "../app-paths";
-import type { ClusterId } from "../cluster-types";
+import { tuple } from "../../utils";
 
-export function storedKubeConfigFolder(): string {
-  return path.resolve(AppPaths.get("userData"), "kubeconfigs");
-}
+describe("tuple tests", () => {
+  describe("zip()", () => {
+    it("should yield 0 times and return 1 tuple of empty arrays when given empty array", () => {
+      expect(tuple.zip([]).next()).toEqual({
+        done: true,
+        value: [[]],
+      });
+    });
 
-export function getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
-  return path.resolve(storedKubeConfigFolder(), clusterId);
-}
+    it("should yield 1 times and return 2 tuple of empty arrays when given one element array tuples", () => {
+      const i = tuple.zip([1], [2]);
+
+      expect(i.next()).toEqual({
+        done: false,
+        value: [1, 2]
+      });
+      expect(i.next()).toEqual({
+        done: true,
+        value: [[], []],
+      });
+    });
+
+    it("should yield 1 times and return 2 tuple of partial arrays when given one element array tuples", () => {
+      const i = tuple.zip([1], [2, 3]);
+
+      expect(i.next()).toEqual({
+        done: false,
+        value: [1, 2]
+      });
+      expect(i.next()).toEqual({
+        done: true,
+        value: [[], [3]],
+      });
+    });
+  });
+});
