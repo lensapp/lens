@@ -21,54 +21,68 @@
 
 import "./error-boundary.scss";
 
-import React from "react";
+import React, { ErrorInfo } from "react";
+import { observer } from "mobx-react";
 import { Button } from "../button";
 import { navigation } from "../../navigation";
 import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
-import * as Sentry from "@sentry/react";
-import { observer } from "mobx-react";
+
+interface Props {
+}
+
+interface State {
+  error?: Error;
+  errorInfo?: ErrorInfo;
+}
 
 @observer
-export class ErrorBoundary extends React.Component {
-  render() {
-    return (
-      <Sentry.ErrorBoundary
-        fallback={({ error, componentStack, resetError }) => {
-          const slackLink = <a href={slackUrl} rel="noreferrer" target="_blank">Slack</a>;
-          const githubLink = <a href={issuesTrackerUrl} rel="noreferrer" target="_blank">GitHub</a>;
-          const pageUrl = location.pathname;
+export class ErrorBoundary extends React.Component<Props, State> {
+  public state: State = {};
 
-          return (
-            <div className="flex ErrorBoundary column gaps">
-              <h5>
-                App crash at <span className="contrast">{pageUrl}</span>
-              </h5>
-              <p>
-                To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
-              </p>
-              <div className="wrapper">
-                <code className="block">
-                  <p className="contrast">Component stack:</p>
-                  {componentStack}
-                </code>
-                <code className="box grow">
-                  <p className="contrast">Error stack:</p> <br/>
-                  {error.stack}
-                </code>
-              </div>
-              <Button
-                className="box self-flex-start"
-                primary label="Back"
-                onClick={() => {
-                  resetError();
-                  navigation.goBack();
-                }}
-              />
-            </div>
-          );
-        }}>
-        {this.props.children}
-      </Sentry.ErrorBoundary>
-    );
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    this.setState({ error, errorInfo });
+  }
+
+  back = () => {
+    this.setState({ error: null, errorInfo: null });
+    navigation.goBack();
+  };
+
+  render() {
+    const { error, errorInfo } = this.state;
+
+    if (error) {
+      const slackLink = <a href={slackUrl} rel="noreferrer" target="_blank">Slack</a>;
+      const githubLink = <a href={issuesTrackerUrl} rel="noreferrer" target="_blank">Github</a>;
+      const pageUrl = location.pathname;
+
+      return (
+        <div className="ErrorBoundary flex column gaps">
+          <h5>
+            App crash at <span className="contrast">{pageUrl}</span>
+          </h5>
+          <p>
+            To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
+          </p>
+          <div className="wrapper">
+            <code className="block">
+              <p className="contrast">Component stack:</p>
+              {errorInfo.componentStack}
+            </code>
+            <code className="block">
+              <p className="contrast">Error stack:</p>
+              {error.stack}
+            </code>
+          </div>
+          <Button
+            className="box self-flex-start"
+            primary label="Back"
+            onClick={this.back}
+          />
+        </div>
+      );
+    }
+
+    return this.props.children;
   }
 }
