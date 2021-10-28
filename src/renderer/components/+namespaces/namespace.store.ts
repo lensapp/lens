@@ -148,8 +148,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
       .every(namespace => this.selectedNamespaces.includes(namespace));
   }
 
+  /**
+   * Is `true` if all available namespaces are selected, otherwise `false`
+   */
   @computed get hasAllContexts(): boolean {
-    return this.selectedNamespaces.length === this.allowedNamespaces.length;
+    return this.contextNamespaces.length === this.allowedNamespaces.length;
   }
 
   @action
@@ -167,17 +170,21 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.selectNamespaces(namespace);
   }
 
-  @action
-  toggleAll(showAll?: boolean) {
-    if (typeof showAll === "boolean") {
-      if (showAll) {
-        this.selectNamespaces(this.allowedNamespaces);
-      } else {
-        this.selectNamespaces([]); // empty context considered as "All namespaces"
-      }
-    } else {
-      this.toggleAll(!this.hasAllContexts);
-    }
+  /**
+   * Selects all available namespaces.
+   *
+   * Note: If new namespaces appear in the future those will be selected too
+   */
+  selectAll() {
+    this.selectNamespaces([]);
+  }
+
+  /**
+   * @deprecated Use `NamespaceStore.selectAll` instead
+   */
+  toggleAll(selectAll?: boolean) {
+    void selectAll;
+    this.selectAll();
   }
 
   @action
