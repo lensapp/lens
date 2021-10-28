@@ -229,7 +229,7 @@ export const ClusterPieCharts = observer(() => {
 
     if (!metricsLoaded) {
       return (
-        <div className="flex justify-center align-center box grow empty">
+        <div className={cssNames(styles.empty, "flex justify-center align-center box grow")}>
           <Spinner/>
         </div>
       );
