@@ -36,9 +36,8 @@ import { isMac } from "../../../common/vars";
 const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
-    const length = namespaceStore.selectedNamespaces.length ? namespaces.length : 0;
 
-    switch (length) {
+    switch (namespaceStore.selectedNamespaces.length) {
       case 0:
         return <>All namespaces</>;
       case 1:
