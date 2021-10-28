@@ -37,12 +37,14 @@
     }
 
     &.icon {
-      display: flex;
-      flex-grow: 0.3;
+      $iconSize: $unit * 3.5;
+
       padding: 0;
+      display: flex;
+      flex-grow: 0;
+      flex-basis: $iconSize;
 
       figure {
-        $iconSize: $unit * 3.5;
         width: $iconSize;
         height: $iconSize;
         border-radius: 50%;
