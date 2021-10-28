@@ -51,6 +51,10 @@ import { TerminalStore } from "./components/dock/terminal.store";
 import cloudsMidnight from "./monaco-themes/Clouds Midnight.json";
 import { AppPaths } from "../common/app-paths";
 
+if (process.isMainFrame) {
+  SentryInit();
+}
+
 configurePackages();
 
 /**
@@ -72,6 +76,8 @@ export async function bootstrap(comp: () => Promise<AppComponent>) {
   await AppPaths.init();
   const rootElem = document.getElementById("app");
 
+  UserStore.createInstance();
+
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
@@ -89,10 +95,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>) {
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
-
-  UserStore.createInstance();
-
-  SentryInit();
 
   // ClusterStore depends on: UserStore
   const cs = ClusterStore.createInstance();
