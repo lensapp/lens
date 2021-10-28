@@ -73,8 +73,9 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
   @boundMethod
   onButtonClick() {
-    const defaultAction = this.menuItems.find(item => item.defaultAction)?.onClick;
-    const clickAction = defaultAction || (this.menuItems.length === 1 ? this.menuItems[0].onClick : null);
+    const filteredItems = this.props.category ? this.props.category.filteredItems(this.menuItems) : [];
+    const defaultAction = filteredItems.find(item => item.defaultAction)?.onClick;
+    const clickAction = defaultAction || (filteredItems.length === 1 ? filteredItems[0].onClick : null);
 
     clickAction?.();
   }
