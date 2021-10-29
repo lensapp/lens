@@ -23,6 +23,7 @@ import { shellEnv } from "./utils/shell-env";
 import os from "os";
 import { app } from "electron";
 import logger from "./logger";
+import { isSnap } from "../common/vars";
 
 /**
  * shellSync loads what would have been the environment if this application was
@@ -39,11 +40,14 @@ export async function shellSync() {
     env.LANG += ".UTF-8";
   }
 
+  if (!isSnap) {
+    process.env.PATH = env.PATH;
+  }
+
   // The spread operator allows joining of objects. The precedence is last to first.
   process.env = {
     ...env,
     ...process.env,
-    PATH: env.PATH,
   };
 
   logger.debug(`[SHELL-SYNC]: Synced shell env, and updating`, env, process.env);
