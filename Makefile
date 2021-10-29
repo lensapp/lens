@@ -36,7 +36,7 @@ dev: binaries/client build-extensions static/build/LensDev.html
 	yarn dev
 
 .PHONY: lint
-lint:
+lint: node_modules
 	yarn lint
 
 .PHONY: tag-release
