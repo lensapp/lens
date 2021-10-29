@@ -60,6 +60,10 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
   static isMultiSelection = observable.box(false);
   static isMenuOpen = observable.box(false);
 
+  /**
+   * Only updated on every open
+   */
+  private selected = observable.set<string>();
   private didToggle = false;
 
   constructor(props: SelectProps) {
@@ -87,6 +91,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
     disposeOnUnmount(this, [
       reaction(() => this.isMenuOpen, newVal => {
         if (newVal) { // rising edge of selection
+          this.selected.replace(namespaceStore.selectedNames);
           this.didToggle = false;
         }
       }),
@@ -179,7 +184,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
           formatOptionLabel={this.formatOptionLabel}
           className="NamespaceSelectFilter"
           menuClass="NamespaceSelectFilterMenu"
-          sort={(left, right) => +namespaceStore.selectedNames.has(right.value) - +namespaceStore.selectedNames.has(left.value)}
+          sort={(left, right) => +this.selected.has(right.value) - +this.selected.has(left.value)}
         />
       </div>
     );
