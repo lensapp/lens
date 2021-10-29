@@ -37,15 +37,15 @@ const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
 
-    switch (namespaces.length) {
-      case 0:
-      case namespaceStore.allowedNamespaces.length:
-        return <>All namespaces</>;
-      case 1:
-        return <>Namespace: {namespaces[0]}</>;
-      default:
-        return <>Namespaces: {namespaces.join(", ")}</>;
+    if (!namespaceStore.selectedNamespaces.length || !namespaces.length) {
+      return <>All namespaces</>;
     }
+
+    if (namespaces.length === 1) {
+      return <>Namespace: {namespaces[0]}</>;
+    }
+
+    return <>Namespaces: {namespaces.join(", ")}</>;
   };
 
   return (
@@ -101,9 +101,9 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
 
       return (
         <div className="flex gaps align-center">
-          <Icon small material="layers"/>
+          <Icon small material="layers" />
           <span>{namespace}</span>
-          {isSelected && <Icon small material="check" className="box right"/>}
+          {isSelected && <Icon small material="check" className="box right" />}
         </div>
       );
     }
