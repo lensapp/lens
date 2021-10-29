@@ -20,7 +20,7 @@
  */
 
 import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction, } from "mobx";
-import { autoBind, createStorage, noop } from "../../utils";
+import { autoBind, createStorage, noop, ToggleSet } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { Namespace, namespacesApi } from "../../../common/k8s-api/endpoints/namespaces.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
@@ -78,7 +78,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return [];
   }
 
-  @computed get selectedNamespaces(): string[] {
+  /**
+   * @private
+   * The current value (list of namespaces names) in the storage layer
+   */
+  @computed private get selectedNamespaces(): string[] {
     return this.storage.get() ?? [];
   }
 
@@ -89,12 +93,32 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     ].flat()));
   }
 
+  /**
+   * The list of selected namespace names (for filtering)
+   */
   @computed get contextNamespaces(): string[] {
     if (!this.selectedNamespaces.length) {
       return this.allowedNamespaces; // show all namespaces when nothing selected
     }
 
     return this.selectedNamespaces;
+  }
+
+  /**
+   * The set of select namespace names (for filtering)
+   */
+  @computed get selectedNames(): Set<string> {
+    return new Set(this.contextNamespaces);
+  }
+
+  /**
+   * Is true when the the set of namespace names selected is implicitly all
+   *
+   * Namely, this will be true if the user has deselected all namespaces from
+   * the filter or if the user has clicked the "All Namespaces" option
+   */
+  @computed get areAllSelectedImplicitly(): boolean {
+    return this.selectedNamespaces.length === 0;
   }
 
   subscribe() {
@@ -142,10 +166,15 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     }
   }
 
+  /**
+   * Checks if namespace names are selected for filtering
+   * @param namespaces One or several names of namespaces to check if they are selected
+   * @returns `true` if all the provided names are selected
+   */
   hasContext(namespaces: string | string[]): boolean {
     return [namespaces]
       .flat()
-      .every(namespace => this.selectedNamespaces.includes(namespace));
+      .every(namespace => this.selectedNames.has(namespace));
   }
 
   /**
@@ -155,19 +184,39 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return this.contextNamespaces.length === this.allowedNamespaces.length;
   }
 
+  /**
+   * Acts like `toggleSingle` but can work on several at a time
+   * @param namespaces One or many names of namespaces to select
+   */
   @action
   toggleContext(namespaces: string | string[]) {
-    if (this.hasContext(namespaces)) {
-      this.clearSelected(namespaces);
-    } else {
-      this.selectNamespaces([this.selectedNamespaces, namespaces].flat());
+    const nextState = new ToggleSet(this.contextNamespaces);
+
+    for (const namespace of [namespaces].flat()) {
+      nextState.toggle(namespace);
     }
+
+    this.storage.set([...nextState]);
   }
 
-  @action
+  /**
+   * Toggles the selection state of `namespace`. Namely, if it was previously
+   * specifically or implicitly selected then after this call it will be
+   * explicitly deselected.
+   * @param namespace The name of a namespace
+   */
   toggleSingle(namespace: string){
-    this.clearSelected();
-    this.selectNamespaces(namespace);
+    const nextState = new ToggleSet(this.contextNamespaces);
+
+    nextState.toggle(namespace);
+    this.storage.set([...nextState]);
+  }
+
+  /**
+   * Makes the given namespace the sole selected namespace
+   */
+  selectSingle(namespace: string) {
+    this.storage.set([namespace]);
   }
 
   /**
@@ -180,7 +229,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   /**
-   * @deprecated Use `NamespaceStore.selectAll` instead
+   * This function selects all namespaces implicitly.
+   *
+   * NOTE: does not toggle any namespaces
+   * @param selectAll NOT USED
+   * @deprecated Use `NamespaceStore.selectAll` instead.
    */
   toggleAll(selectAll?: boolean) {
     void selectAll;
