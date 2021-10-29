@@ -106,7 +106,7 @@ export class Preferences extends React.Component {
   }
 }
 
-export function ExtensionSettings({ title, id, components: { Hint, Input } }: RegisteredAppPreference) {
+export function ExtensionSettings({ title, id, components: { Hint, Input }}: RegisteredAppPreference) {
   return (
     <React.Fragment>
       <section id={id} className="small">

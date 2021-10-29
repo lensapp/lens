@@ -66,7 +66,7 @@ export interface RegisteredPage {
 }
 
 export function getExtensionPageUrl(target: PageTarget): string {
-  const { extensionId, pageId = "", params: targetParams = {} } = target;
+  const { extensionId, pageId = "", params: targetParams = {}} = target;
 
   const pagePath = ["/extension", sanitizeExtensionName(extensionId), pageId]
     .filter(Boolean)

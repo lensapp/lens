@@ -28,7 +28,7 @@ import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 
-const configs: {(): webpack.Configuration}[] = [];
+const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
   console.info("WEBPACK:main", vars);

@@ -85,7 +85,7 @@ export function RecursiveTreeView({ data }: Props) {
         nodeId={node.id}
         label={node.name}
         onLabelClick={(event) => onLabelClick(event, node.id)}
-        className={cssNames({selected: node.selected})}
+        className={cssNames({ selected: node.selected })}
         title={node.name}
       >
         {Array.isArray(node.children) ? node.children.map((node) => renderTree([node])) : null}

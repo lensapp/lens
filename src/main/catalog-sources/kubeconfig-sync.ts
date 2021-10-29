@@ -212,7 +212,7 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
         // add new clusters to the source
         try {
           const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
-          const cluster = ClusterStore.getInstance().getById(clusterId) || new Cluster({ ...model, id: clusterId});
+          const cluster = ClusterStore.getInstance().getById(clusterId) || new Cluster({ ...model, id: clusterId });
 
           if (!cluster.apiUrl) {
             throw new Error("Cluster constructor failed, see above error");

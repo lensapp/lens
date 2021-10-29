@@ -52,7 +52,7 @@ AppPaths.init();
 describe("user store tests", () => {
   describe("for an empty config", () => {
     beforeEach(() => {
-      mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
+      mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" }});
 
       (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
     });

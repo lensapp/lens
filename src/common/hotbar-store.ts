@@ -73,8 +73,8 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   protected fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (!data.hotbars || !data.hotbars.length) {
       const hotbar = getEmptyHotbar("Default");
-      const { metadata: { uid, name, source } } = catalogEntity;
-      const initialItem = { entity: { uid, name, source } };
+      const { metadata: { uid, name, source }} = catalogEntity;
+      const initialItem = { entity: { uid, name, source }};
 
       hotbar.items[0] = initialItem;
 

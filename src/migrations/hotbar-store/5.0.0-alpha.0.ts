@@ -28,9 +28,9 @@ export default {
   version: "5.0.0-alpha.0",
   run(store) {
     const hotbar = getEmptyHotbar("default");
-    const { metadata: { uid, name, source } } = catalogEntity;
+    const { metadata: { uid, name, source }} = catalogEntity;
 
-    hotbar.items[0] = { entity: { uid, name, source } };
+    hotbar.items[0] = { entity: { uid, name, source }};
 
     store.set("hotbars", [hotbar]);
   }

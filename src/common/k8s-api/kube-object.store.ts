@@ -375,8 +375,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
         timedRetry = setTimeout(() => {
           (
             namespace
-              ? this.loadAll({ namespaces: [namespace], reqInit: { signal } })
-              : this.loadAll({ merge: false, reqInit: { signal } })
+              ? this.loadAll({ namespaces: [namespace], reqInit: { signal }})
+              : this.loadAll({ merge: false, reqInit: { signal }})
           ).then(watch);
         }, 1000);
       } else if (error) { // not sure what to do, best to retry

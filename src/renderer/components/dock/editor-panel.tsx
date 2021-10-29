@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import MonacoEditor, {monaco} from "react-monaco-editor";
+import MonacoEditor, { monaco } from "react-monaco-editor";
 import React from "react";
 import yaml from "js-yaml";
 import { observable, makeObservable } from "mobx";
@@ -97,7 +97,7 @@ export class EditorPanel extends React.Component<Props> {
   render() {
     return (
       <MonacoEditor
-        options={{model: null, ...UserStore.getInstance().getEditorOptions()}}
+        options={{ model: null, ...UserStore.getInstance().getEditorOptions() }}
         theme={ThemeStore.getInstance().activeTheme.monacoTheme}
         language = "yaml"
         onChange = {this.onChange}

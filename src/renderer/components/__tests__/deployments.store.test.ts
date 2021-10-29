@@ -60,7 +60,7 @@ const runningDeployment = new Deployment({
 
 runningDeployment.spec = {
   replicas: 1,
-  selector: { matchLabels: {} },
+  selector: { matchLabels: {}},
   strategy: {
     type: "test",
     rollingUpdate: {
@@ -91,7 +91,7 @@ const failedDeployment = new Deployment({
 
 failedDeployment.spec = {
   replicas: 1,
-  selector: { matchLabels: {} },
+  selector: { matchLabels: {}},
   strategy: {
     type: "test",
     rollingUpdate: {
@@ -122,7 +122,7 @@ const pendingDeployment = new Deployment({
 
 pendingDeployment.spec = {
   replicas: 1,
-  selector: { matchLabels: {} },
+  selector: { matchLabels: {}},
   strategy: {
     type: "test",
     rollingUpdate: {

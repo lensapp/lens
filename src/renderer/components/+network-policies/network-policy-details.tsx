@@ -95,7 +95,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
       <>
         <SubTitle title="To"/>
         {to.map(item => {
-          const { ipBlock: { cidr, except } = {} } = item;
+          const { ipBlock: { cidr, except } = {}} = item;
 
           if (!cidr) return null;
 

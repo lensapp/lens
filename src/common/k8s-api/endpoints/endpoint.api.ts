@@ -83,7 +83,7 @@ export class EndpointAddress implements IEndpointAddress {
 
   getTargetRef(): ITargetRef {
     if (this.targetRef) {
-      return Object.assign(this.targetRef, {apiVersion: "v1"});
+      return Object.assign(this.targetRef, { apiVersion: "v1" });
     } else {
       return null;
     }

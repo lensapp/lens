@@ -134,7 +134,7 @@ export class KubeWatchApi {
     };
   }
 
-  protected log({ message, cssStyle = "", meta = {} }: IKubeWatchLog) {
+  protected log({ message, cssStyle = "", meta = {}}: IKubeWatchLog) {
     if (isProduction && !isDebugging) {
       return;
     }

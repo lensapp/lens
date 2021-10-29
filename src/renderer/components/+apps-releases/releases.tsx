@@ -55,7 +55,7 @@ interface Props extends RouteComponentProps<ReleaseRouteParams> {
 @observer
 export class HelmReleases extends Component<Props> {
   componentDidMount() {
-    const { match: { params: { namespace } } } = this.props;
+    const { match: { params: { namespace }}} = this.props;
 
     if (namespace) {
       namespaceStore.selectNamespaces(namespace);
@@ -68,7 +68,7 @@ export class HelmReleases extends Component<Props> {
   }
 
   get selectedRelease() {
-    const { match: { params: { name, namespace } } } = this.props;
+    const { match: { params: { name, namespace }}} = this.props;
 
     return releaseStore.items.find(release => {
       return release.getName() == name && release.getNs() == namespace;

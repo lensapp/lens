@@ -41,7 +41,7 @@ describe("DeploymentApi", () => {
     it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
       const patchSpy = jest.spyOn(requestMock, "patch");
 
-      sub.scale({ namespace: "default", name: "deployment-1"}, 5);
+      sub.scale({ namespace: "default", name: "deployment-1" }, 5);
 
       expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
         data: {

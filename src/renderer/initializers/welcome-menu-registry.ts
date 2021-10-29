@@ -29,7 +29,7 @@ export function initWelcomeMenuRegistry() {
       {
         title: "Browse Clusters in Catalog",
         icon: "view_list",
-        click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" } } )),
+        click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" }} )),
       }
     ]);
 }

@@ -53,7 +53,7 @@ const dialogState = observable.object({
 
 @observer
 export class AddHelmRepoDialog extends React.Component<Props> {
-  private emptyRepo = {name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: ""};
+  private emptyRepo = { name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: "" };
 
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
   private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c" , "p7s", "p12", "pfx", "pem"];
@@ -96,7 +96,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       buttonLabel: `Use file`,
       filters: [
         fileFilter,
-        { name: "Any", extensions: ["*"]}
+        { name: "Any", extensions: ["*"] }
       ]
     });
 
@@ -128,7 +128,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         />
         <Icon
           material="folder"
-          onClick={() => this.selectFileDialog(fileType, {name: placeholder, extensions: fileExtensions})}
+          onClick={() => this.selectFileDialog(fileType, { name: placeholder, extensions: fileExtensions })}
           tooltip="Browse"
         />
       </div>);

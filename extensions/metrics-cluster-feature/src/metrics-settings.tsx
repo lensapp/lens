@@ -114,7 +114,7 @@ export class MetricsSettings extends React.Component<Props> {
     const statefulSet = forCluster(this.props.cluster, StatefulSet);
 
     try {
-      await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
+      await statefulSet.get({ name: "prometheus", namespace: "lens-metrics" });
       this.featureStates.prometheus = true;
     } catch(e) {
       if (e?.error?.code === 404) {
@@ -127,7 +127,7 @@ export class MetricsSettings extends React.Component<Props> {
     const deployment = forCluster(this.props.cluster, Deployment);
 
     try {
-      await deployment.get({name: "kube-state-metrics", namespace: "lens-metrics"});
+      await deployment.get({ name: "kube-state-metrics", namespace: "lens-metrics" });
       this.featureStates.kubeStateMetrics = true;
     } catch(e) {
       if (e?.error?.code === 404) {
@@ -140,7 +140,7 @@ export class MetricsSettings extends React.Component<Props> {
     const daemonSet = forCluster(this.props.cluster, DaemonSet);
 
     try {
-      await daemonSet.get({name: "node-exporter", namespace: "lens-metrics"});
+      await daemonSet.get({ name: "node-exporter", namespace: "lens-metrics" });
       this.featureStates.nodeExporter = true;
     } catch(e) {
       if (e?.error?.code === 404) {
@@ -207,14 +207,14 @@ export class MetricsSettings extends React.Component<Props> {
       <>
         { this.props.cluster.status.phase !== "connected" && (
           <section>
-            <p style={ {color: "var(--colorError)"} }>
+            <p style={ { color: "var(--colorError)" } }>
               Lens Metrics settings requires established connection to the cluster.
             </p>
           </section>
         )}
         { !this.isActiveMetricsProvider && (
           <section>
-            <p style={ {color: "var(--colorError)"} }>
+            <p style={ { color: "var(--colorError)" } }>
               Other metrics provider is currently active. See &quot;Metrics&quot; tab for details.
             </p>
           </section>

@@ -169,8 +169,8 @@ export class ReleaseDetails extends Component<Props> {
             value={values}
             onChange={text => this.values = text}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
-            className={cssNames("MonacoEditor", {loading: valuesLoading})}
-            options={{readOnly: valuesLoading, ...UserStore.getInstance().getEditorOptions()}}
+            className={cssNames("MonacoEditor", { loading: valuesLoading })}
+            options={{ readOnly: valuesLoading, ...UserStore.getInstance().getEditorOptions() }}
           >
             {valuesLoading && <Spinner center />}
           </MonacoEditor>

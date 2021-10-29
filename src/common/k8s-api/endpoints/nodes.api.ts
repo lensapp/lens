@@ -30,7 +30,7 @@ export class NodesApi extends KubeApi<Node> {
 }
 
 export function getMetricsForAllNodes(): Promise<INodeMetrics> {
-  const opts = { category: "nodes"};
+  const opts = { category: "nodes" };
 
   return metricsApi.getMetrics({
     memoryUsage: opts,

@@ -47,7 +47,7 @@ jest.mock("electron", () => ({
 
 AppPaths.init();
 
-const mockHotbars: {[id: string]: any} = {
+const mockHotbars: { [id: string]: any } = {
   "1": {
     id: "1",
     name: "Default",

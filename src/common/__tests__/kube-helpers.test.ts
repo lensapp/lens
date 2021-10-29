@@ -174,7 +174,7 @@ describe("kube helpers", () => {
       });
 
       it("multiple context is ok", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: "cluster-2"});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "cluster-2" }, name: "cluster-2" });
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
         expect(config.getCurrentContext()).toBe("minikube");
@@ -209,7 +209,7 @@ describe("kube helpers", () => {
       });
 
       it("empty name in context causes it to be removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: ""});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "cluster-2" }, name: "" });
         expect(mockKubeConfig.contexts.length).toBe(2);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
@@ -218,7 +218,7 @@ describe("kube helpers", () => {
       });
 
       it("empty cluster in context causes it to be removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "", user: "cluster-2"}, name: "cluster-2"});
+        mockKubeConfig.contexts.push({ context: { cluster: "", user: "cluster-2" }, name: "cluster-2" });
         expect(mockKubeConfig.contexts.length).toBe(2);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
@@ -227,7 +227,7 @@ describe("kube helpers", () => {
       });
 
       it("empty user in context causes it to be removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "" }, name: "cluster-2" });
         expect(mockKubeConfig.contexts.length).toBe(2);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
@@ -236,8 +236,8 @@ describe("kube helpers", () => {
       });
 
       it("invalid context in between valid contexts is removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-3", user: "cluster-3"}, name: "cluster-3"});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "" }, name: "cluster-2" });
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-3", user: "cluster-3" }, name: "cluster-3" });
         expect(mockKubeConfig.contexts.length).toBe(3);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 

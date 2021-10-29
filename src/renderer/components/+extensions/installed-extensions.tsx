@@ -106,7 +106,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
           ),
           version,
           status: (
-            <div className={cssNames({[styles.enabled]: isEnabled, [styles.invalid]: !isCompatible})}>
+            <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
               {getStatus(extension)}
             </div>
           ),

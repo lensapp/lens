@@ -26,7 +26,7 @@ import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./doc
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import {monacoModelsManager} from "./monaco-model-manager";
+import { monacoModelsManager } from "./monaco-model-manager";
 
 export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default

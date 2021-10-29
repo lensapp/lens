@@ -124,7 +124,7 @@ export class AddCluster extends React.Component {
         </p>
         <div className="flex column">
           <MonacoEditor
-            options={{...UserStore.getInstance().getEditorOptions()}}
+            options={{ ...UserStore.getInstance().getEditorOptions() }}
             className={cssNames("MonacoEditor")}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             language="yaml"
