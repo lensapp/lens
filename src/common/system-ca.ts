@@ -86,7 +86,7 @@ if (isMac) {
 
 if (isWindows) {
   getWinRootCA().then((winRootCAs) => {
-    injectCAs(winRootCAs);
+    winca.inject("+", winRootCAs);
   }).catch((error) => {
     console.error(`[WIN-CA]: Error injecting root CAs from Windows. ${error?.message}`);
   });

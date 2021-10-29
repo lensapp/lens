@@ -70,7 +70,10 @@ describe("inject CA for Windows", () => {
   (deps["win-ca"] && os.platform().includes("win32") ? it: it.skip)("should inject the same ca as winca.inject('+')", async () => {
     const winCAs = await getWinRootCA();
 
-    injectCAs(winCAs);
+    // @ts-ignore
+    const wincaAPI = await import("win-ca/api");
+
+    wincaAPI.inject("+", winCAs);
     const injected = https.globalAgent.options.ca;
 
     const winca = await import("win-ca");
