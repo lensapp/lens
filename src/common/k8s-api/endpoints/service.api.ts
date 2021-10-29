@@ -108,10 +108,6 @@ export class Service extends KubeObject {
       return this.spec.externalIPs;
     }
 
-    if (this.spec.externalName) {
-      return [this.spec.externalName];
-    }
-
     return [];
   }
 
