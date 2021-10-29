@@ -288,7 +288,7 @@
     "@types/react": "^17.0.29",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.9",
-    "@types/react-router-dom": "^5.3.1",
+    "@types/react-router-dom": "^5.3.2",
     "@types/react-select": "3.1.2",
     "@types/react-table": "^7.7.7",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
