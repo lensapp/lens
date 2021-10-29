@@ -110,7 +110,7 @@ describe("inject CA for Windows", () => {
     // @ts-ignore
     const wincaAPI = await import("win-ca/api");
 
-    wincaAPI.inject("+", winCAs);
+    wincaAPI.inject("true", winCAs);
     const injected = https.globalAgent.options.ca;
 
     // @ts-ignore
