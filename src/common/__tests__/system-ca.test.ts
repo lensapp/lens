@@ -37,7 +37,12 @@ describe("inject CA for Mac", () => {
 
   const deps = { ...dependencies, ...devDependencies };
 
-  // skip the test if mac-ca is not installed
+  /**
+   * The test to ensure using getMacRootCA + injectCAs injects CAs in the same way as using 
+   * the auto injection (require('mac-ca'))
+   * 
+   * Skip the test if mac-ca is not installed, or os is not darwin
+   */
   (deps["mac-ca"] && os.platform().includes("darwin") ? it: it.skip)("should inject the same ca as mac-ca", async () => {
     const osxCAs = await getMacRootCA();
 
@@ -66,7 +71,12 @@ describe("inject CA for Windows", () => {
 
   const deps = { ...dependencies, ...devDependencies };
 
-  // skip the test if win-ca is not installed
+  /**
+   * The test to ensure using win-ca/api injects CAs in the same way as using 
+   * the auto injection (require('win-ca').inject('+'))
+   * 
+   * Skip the test if win-ca is not installed, or os is not win32
+   */
   (deps["win-ca"] && os.platform().includes("win32") ? it: it.skip)("should inject the same ca as winca.inject('+')", async () => {
     const winCAs = await getWinRootCA();
 
