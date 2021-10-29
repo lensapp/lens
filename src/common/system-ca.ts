@@ -20,22 +20,74 @@
  */
 
 import { isMac, isWindows } from "./vars";
-import winca from "win-ca";
-import macca from "mac-ca";
-import logger from "../main/logger";
+// @ts-expect-error winca/api module doesn't have a type definition
+import winca from "win-ca/api";
+import https from "https";
+import { exec } from "child_process";
+import { promisify } from "util";
+
+const execAsync = promisify(exec);
+
+/**
+ * Get root CA certificate from MacOSX system keychain
+ */
+export const getMacRootCA = async () => {
+  // inspired mac-ca https://github.com/jfromaniello/mac-ca
+  const args = "find-certificate -a -p";
+  const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g;
+  const systemRootCertsPath = "/System/Library/Keychains/SystemRootCertificates.keychain";
+  const bin = "/usr/bin/security";
+  const trusted = (await execAsync(`${bin} ${args}`)).stdout.toString().split(splitPattern);
+  const rootCA = (await execAsync(`${bin} ${args} ${systemRootCertsPath}`)).stdout.toString().split(splitPattern);
+
+  return [...new Set([...trusted, ...rootCA])];
+};
+
+/**
+ * Get root CA certificate from Windows system certificate store
+ */
+export const getWinRootCA = (): Promise<string[]> => {
+  return new Promise((resolve) => {
+    const CAs: string[] = [];
+
+    winca({
+      format: winca.der2.pem,
+      inject: false,
+      ondata: (ca: string) => {
+        CAs.push(ca);
+      },
+      onend: () => {
+        resolve(CAs);
+      }
+    });
+  });
+};
+
+/**
+ * Add (or merge) CAs to https.globalAgent.options.ca
+ */
+export const injectCAs = async (CAs: Array<string>) => {
+  for (const cert of CAs) {
+    if (Array.isArray(https.globalAgent.options.ca)) {
+      !https.globalAgent.options.ca.includes(cert) && https.globalAgent.options.ca.push(cert);
+    } else {
+      https.globalAgent.options.ca = [cert];
+    }
+  }
+};
 
 if (isMac) {
-  for (const crt of macca.all()) {
-    const attributes = crt.issuer?.attributes?.map((a: any) => `${a.name}=${a.value}`);
-
-    logger.debug(`Using host CA: ${attributes.join(",")}`);
-  }
+  getMacRootCA().then((osxRootCAs) => {
+    injectCAs(osxRootCAs);
+  }).catch((error) => {
+    console.error(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error?.message}`);
+  });
 }
 
 if (isWindows) {
-  try {
-    winca.inject("+"); // see: https://github.com/ukoloff/win-ca#caveats
-  } catch (error) {
-    logger.error(`[CA]: failed to force load: ${error}`);
-  }
+  getWinRootCA().then((winRootCAs) => {
+    injectCAs(winRootCAs);
+  }).catch((error) => {
+    console.error(`[WIN-CA]: Error injecting root CAs from Windows. ${error?.message}`);
+  });
 }
