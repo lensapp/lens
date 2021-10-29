@@ -37,7 +37,7 @@ const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
 
-    if (!namespaceStore.selectedNamespaces.length || !namespaces.length) {
+    if (namespaceStore.areAllSelectedImplicitly || !namespaces.length) {
       return <>All namespaces</>;
     }
 
@@ -60,7 +60,6 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
   static isMultiSelection = observable.box(false);
   static isMenuOpen = observable.box(false);
 
-  private selected = observable.set<string>();
   private didToggle = false;
 
   constructor(props: SelectProps) {
@@ -88,7 +87,6 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
     disposeOnUnmount(this, [
       reaction(() => this.isMenuOpen, newVal => {
         if (newVal) { // rising edge of selection
-          this.selected.replace(namespaceStore.selectedNamespaces);
           this.didToggle = false;
         }
       }),
@@ -116,9 +114,9 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
     if (namespace) {
       if (this.isMultiSelection) {
         this.didToggle = true;
-        namespaceStore.toggleContext(namespace);
-      } else {
         namespaceStore.toggleSingle(namespace);
+      } else {
+        namespaceStore.selectSingle(namespace);
       }
     } else {
       namespaceStore.selectAll();
@@ -181,7 +179,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
           formatOptionLabel={this.formatOptionLabel}
           className="NamespaceSelectFilter"
           menuClass="NamespaceSelectFilterMenu"
-          sort={(left, right) => +this.selected.has(right.value) - +this.selected.has(left.value)}
+          sort={(left, right) => +namespaceStore.selectedNames.has(right.value) - +namespaceStore.selectedNames.has(left.value)}
         />
       </div>
     );
