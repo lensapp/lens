@@ -59,7 +59,7 @@ function mergePreferences(left: ClusterPreferences, right: ClusterPreferences): 
 function mergeLabels(left: Record<string, string>, right: Record<string, string>): Record<string, string> {
   return {
     ...right,
-    ...left
+    ...left,
   };
 }
 
@@ -129,5 +129,5 @@ export default {
     }
 
     store.set("clusters", [...clusters.values()]);
-  }
+  },
 } as MigrationDeclaration;

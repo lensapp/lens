@@ -122,7 +122,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       app.setLoginItemSettings({
         openAtLogin,
         openAsHidden: true,
-        args: ["--hidden"]
+        args: ["--hidden"],
       });
     }, {
       fireImmediately: true,
@@ -135,7 +135,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       automaticLayout: true,
       tabSize: this.editorConfiguration.tabSize,
       minimap: this.editorConfiguration.miniMap,
-      lineNumbers: this.editorConfiguration.lineNumbers
+      lineNumbers: this.editorConfiguration.lineNumbers,
     };
   }
 

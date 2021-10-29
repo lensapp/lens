@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const eventRoute: RouteProps = {
-  path: "/events"
+  path: "/events",
 };
 
 export const eventsURL = buildURL(eventRoute.path);

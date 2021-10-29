@@ -57,12 +57,12 @@ export interface JsonApiConfig {
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
-      "content-type": "application/json"
-    }
+      "content-type": "application/json",
+    },
   };
 
   static configDefault: Partial<JsonApiConfig> = {
-    debug: false
+    debug: false,
   };
 
   constructor(public readonly config: JsonApiConfig, protected reqInit?: RequestInit) {
@@ -87,7 +87,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       {},
       this.reqInit,
       await this.getRequestOptions(),
-      init
+      init,
     );
     const { query } = params || {} as P;
 
@@ -126,7 +126,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       {},
       this.reqInit,
       await this.getRequestOptions(),
-      init
+      init,
     );
     const { data, query } = params || {} as P;
 

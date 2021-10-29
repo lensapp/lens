@@ -62,7 +62,7 @@ export class LogStore {
 
     const message = [
       `Failed to load logs: ${error.message}`,
-      `Reason: ${error.reason} (${error.code})`
+      `Reason: ${error.reason} (${error.code})`,
     ];
 
     this.refresher.stop();
@@ -79,7 +79,7 @@ export class LogStore {
   load = async (tabId: TabId) => {
     try {
       const logs = await this.loadLogs(tabId, {
-        tailLines: this.lines + logLinesToLoad
+        tailLines: this.lines + logLinesToLoad,
       });
 
       this.refresher.start();
@@ -103,7 +103,7 @@ export class LogStore {
     try {
       const oldLogs = this.podLogs.get(tabId);
       const logs = await this.loadLogs(tabId, {
-        sinceTime: this.getLastSinceTime(tabId)
+        sinceTime: this.getLastSinceTime(tabId),
       });
 
       // Add newly received logs to bottom
@@ -131,7 +131,7 @@ export class LogStore {
       ...params,
       timestamps: true,  // Always setting timestamp to separate old logs from new ones
       container: selectedContainer.name,
-      previous
+      previous,
     });
 
     return result.trimEnd().split("\n");

@@ -95,7 +95,7 @@ export class CrdResources extends React.Component<Props> {
             ...searchProps,
             placeholder: `${crd.getResourceKind()} search ...`,
           },
-          ...headerPlaceholders
+          ...headerPlaceholders,
         })}
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
@@ -107,7 +107,7 @@ export class CrdResources extends React.Component<Props> {
               title: name,
               className: name.toLowerCase(),
               sortBy: name,
-              id: name
+              id: name,
             };
           }),
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },

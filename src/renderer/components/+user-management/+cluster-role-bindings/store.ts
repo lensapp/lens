@@ -36,7 +36,7 @@ export class ClusterRoleBindingsStore extends KubeObjectStore<ClusterRoleBinding
   protected sortItems(items: ClusterRoleBinding[]) {
     return super.sortItems(items, [
       clusterRoleBinding => clusterRoleBinding.kind,
-      clusterRoleBinding => clusterRoleBinding.getName()
+      clusterRoleBinding => clusterRoleBinding.getName(),
     ]);
   }
 

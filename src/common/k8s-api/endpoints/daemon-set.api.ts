@@ -129,5 +129,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  daemonSetApi
+  daemonSetApi,
 };

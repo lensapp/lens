@@ -35,8 +35,8 @@ export const configRoute: RouteProps = {
     resourceQuotaRoute,
     limitRangesRoute,
     hpaRoute,
-    pdbRoute
-  ].map(route => route.path.toString())
+    pdbRoute,
+  ].map(route => route.path.toString()),
 };
 
 export const configURL = (params?: URLParams) => configMapsURL(params);

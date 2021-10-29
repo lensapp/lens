@@ -65,12 +65,12 @@ export class PieChart extends React.Component<Props> {
       elements: {
         arc: {
           borderWidth: 1,
-          borderColor: contentColor
+          borderColor: contentColor,
         },
       },
       cutoutPercentage: cutouts[data.datasets.length - 1] || 50,
       responsive: true,
-      ...options
+      ...options,
     };
 
     return (

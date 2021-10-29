@@ -63,7 +63,7 @@ export function intiKubeObjectDetailRegistry() {
         components: {
           // Note: this line is left in the long form as a validation that this usecase is valid
           Details: (props: HpaDetailsProps) => <HpaDetails {...props}/>,
-        }
+        },
       },
       {
         kind: "HorizontalPodAutoscaler",
@@ -79,14 +79,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         components: {
           Details: LimitRangeDetails,
-        }
+        },
       },
       {
         kind: "ConfigMap",
         apiVersions: ["v1"],
         components: {
           Details: ConfigMapDetails,
-        }
+        },
       },
       {
         kind: "ConfigMap",
@@ -94,56 +94,56 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "PodDisruptionBudget",
         apiVersions: ["policy/v1beta1"],
         components: {
           Details: PodDisruptionBudgetDetails,
-        }
+        },
       },
       {
         kind: "ResourceQuota",
         apiVersions: ["v1"],
         components: {
           Details: ResourceQuotaDetails,
-        }
+        },
       },
       {
         kind: "Secret",
         apiVersions: ["v1"],
         components: {
           Details: SecretDetails,
-        }
+        },
       },
       {
         kind: "CustomResourceDefinition",
         apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
         components: {
           Details: CRDDetails,
-        }
+        },
       },
       {
         kind: "Event",
         apiVersions: ["v1"],
         components: {
           Details: EventDetails,
-        }
+        },
       },
       {
         kind: "Namespace",
         apiVersions: ["v1"],
         components: {
           Details: NamespaceDetails,
-        }
+        },
       },
       {
         kind: "Endpoints",
         apiVersions: ["v1"],
         components: {
           Details: EndpointDetails,
-        }
+        },
       },
       {
         kind: "Endpoints",
@@ -151,14 +151,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Ingress",
         apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
         components: {
           Details: IngressDetails,
-        }
+        },
       },
       {
         kind: "Ingress",
@@ -166,14 +166,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "NetworkPolicy",
         apiVersions: ["networking.k8s.io/v1"],
         components: {
           Details: NetworkPolicyDetails,
-        }
+        },
       },
       {
         kind: "NetworkPolicy",
@@ -181,14 +181,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Service",
         apiVersions: ["v1"],
         components: {
           Details: ServiceDetails,
-        }
+        },
       },
       {
         kind: "Service",
@@ -196,14 +196,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Node",
         apiVersions: ["v1"],
         components: {
           Details: NodeDetails,
-        }
+        },
       },
       {
         kind: "Node",
@@ -211,21 +211,21 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "PodSecurityPolicy",
         apiVersions: ["policy/v1beta1"],
         components: {
           Details: PodSecurityPolicyDetails,
-        }
+        },
       },
       {
         kind: "StorageClass",
         apiVersions: ["storage.k8s.io/v1"],
         components: {
           Details: StorageClassDetails,
-        }
+        },
       },
       {
         kind: "StorageClass",
@@ -233,14 +233,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "PersistentVolumeClaim",
         apiVersions: ["v1"],
         components: {
           Details: PersistentVolumeClaimDetails,
-        }
+        },
       },
       {
         kind: "PersistentVolumeClaim",
@@ -248,14 +248,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "PersistentVolume",
         apiVersions: ["v1"],
         components: {
           Details: PersistentVolumeDetails,
-        }
+        },
       },
       {
         kind: "PersistentVolume",
@@ -263,14 +263,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Role",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
           Details: RoleDetails,
-        }
+        },
       },
       {
         kind: "Role",
@@ -278,14 +278,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "ClusterRole",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
           Details: ClusterRoleDetails,
-        }
+        },
       },
       {
         kind: "ClusterRole",
@@ -293,14 +293,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "RoleBinding",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
           Details: RoleBindingDetails,
-        }
+        },
       },
       {
         kind: "RoleBinding",
@@ -308,14 +308,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "ClusterRoleBinding",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
           Details: ClusterRoleBindingDetails,
-        }
+        },
       },
       {
         kind: "ClusterRoleBinding",
@@ -323,14 +323,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "ServiceAccount",
         apiVersions: ["v1"],
         components: {
           Details: ServiceAccountsDetails,
-        }
+        },
       },
       {
         kind: "ServiceAccount",
@@ -338,14 +338,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "CronJob",
         apiVersions: ["batch/v1beta1"],
         components: {
           Details: CronJobDetails,
-        }
+        },
       },
       {
         kind: "CronJob",
@@ -353,14 +353,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "DaemonSet",
         apiVersions: ["apps/v1"],
         components: {
           Details: DaemonSetDetails,
-        }
+        },
       },
       {
         kind: "DaemonSet",
@@ -368,14 +368,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Deployment",
         apiVersions: ["apps/v1"],
         components: {
           Details: DeploymentDetails,
-        }
+        },
       },
       {
         kind: "Deployment",
@@ -383,14 +383,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Job",
         apiVersions: ["batch/v1"],
         components: {
           Details: JobDetails,
-        }
+        },
       },
       {
         kind: "Job",
@@ -398,14 +398,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "Pod",
         apiVersions: ["v1"],
         components: {
           Details: PodDetails,
-        }
+        },
       },
       {
         kind: "Pod",
@@ -413,14 +413,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "ReplicaSet",
         apiVersions: ["apps/v1"],
         components: {
           Details: ReplicaSetDetails,
-        }
+        },
       },
       {
         kind: "ReplicaSet",
@@ -428,14 +428,14 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
       {
         kind: "StatefulSet",
         apiVersions: ["apps/v1"],
         components: {
           Details: StatefulSetDetails,
-        }
+        },
       },
       {
         kind: "StatefulSet",
@@ -443,7 +443,7 @@ export function intiKubeObjectDetailRegistry() {
         priority: 5,
         components: {
           Details: KubeEventDetails,
-        }
+        },
       },
     ]);
 }

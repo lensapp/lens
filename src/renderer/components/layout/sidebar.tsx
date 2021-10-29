@@ -63,7 +63,7 @@ export class Sidebar extends React.Component<Props> {
       } else {
         navigate(url);
       }
-    }
+    },
   };
 
   constructor(props: Props) {

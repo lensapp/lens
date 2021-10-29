@@ -53,7 +53,7 @@ export abstract class PrometheusProvider {
             id: this.id,
             namespace: service.metadata.namespace,
             service: service.metadata.name,
-            port: service.spec.ports[0].port
+            port: service.spec.ports[0].port,
           };
         }
       }

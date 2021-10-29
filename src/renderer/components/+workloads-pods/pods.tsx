@@ -67,7 +67,7 @@ export class Pods extends React.Component<Props> {
             className={cssNames(state, { ready })}
             tooltip={{
               formatters: {
-                tableView: true
+                tableView: true,
               },
               children: Object.keys(state).map(status => (
                 <Fragment key={status}>
@@ -81,7 +81,7 @@ export class Pods extends React.Component<Props> {
                     </div>
                   ))}
                 </Fragment>
-              ))
+              )),
             }}
           />
         </Fragment>
@@ -153,7 +153,7 @@ export class Pods extends React.Component<Props> {
             : "",
           pod.getQosClass(),
           pod.getAge(),
-          { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
+          { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) },
         ]}
       />
     );

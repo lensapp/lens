@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const nodesRoute: RouteProps = {
-  path: "/nodes"
+  path: "/nodes",
 };
 
 export interface NodesRouteParams {

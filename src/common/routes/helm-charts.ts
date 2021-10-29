@@ -24,7 +24,7 @@ import { buildURL } from "../utils/buildUrl";
 import { appsRoute } from "./apps";
 
 export const helmChartsRoute: RouteProps = {
-  path: `${appsRoute.path}/charts/:repo?/:chartName?`
+  path: `${appsRoute.path}/charts/:repo?/:chartName?`,
 };
 
 export interface HelmChartsRouteParams {

@@ -100,7 +100,7 @@ export class HashSet<T> implements Set<T> {
         return index < values.length
           ? { value: [keys[index], values[index]], done: false }
           : { done: true, value: undefined };
-      }
+      },
     });
   }
 
@@ -117,7 +117,7 @@ export class HashSet<T> implements Set<T> {
         return nextIndex < observableValues.length
           ? { value: observableValues[nextIndex++], done: false }
           : { done: true, value: undefined };
-      }
+      },
     });
   }
 
@@ -221,7 +221,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
         return index < values.length
           ? { value: [keys[index], values[index]], done: false }
           : { done: true, value: undefined };
-      }
+      },
     });
   }
 
@@ -238,7 +238,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
         return nextIndex < observableValues.length
           ? { value: observableValues[nextIndex++], done: false }
           : { done: true, value: undefined };
-      }
+      },
     });
   }
 

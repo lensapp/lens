@@ -46,7 +46,7 @@ export class ClusterNameSetting extends React.Component<Props> {
     disposeOnUnmount(this,
       autorun(() => {
         this.name = this.props.cluster.preferences.clusterName || this.props.entity.metadata.name;
-      })
+      }),
     );
   }
 

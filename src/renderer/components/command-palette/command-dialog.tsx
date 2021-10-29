@@ -50,7 +50,7 @@ export class CommandDialog extends React.Component {
     const registry = CommandRegistry.getInstance();
 
     const context = {
-      entity: this.activeEntity
+      entity: this.activeEntity,
     };
 
     return registry.getItems().filter((command) => {
@@ -86,13 +86,13 @@ export class CommandDialog extends React.Component {
 
       if (command.scope === "global") {
         command.action({
-          entity: this.activeEntity
+          entity: this.activeEntity,
         });
       } else if(this.activeEntity) {
         navigate(clusterViewURL({
           params: {
-            clusterId: this.activeEntity.metadata.uid
-          }
+            clusterId: this.activeEntity.metadata.uid,
+          },
         }));
         broadcastMessage(`command-palette:run-action:${this.activeEntity.metadata.uid}`, command.id);
       }

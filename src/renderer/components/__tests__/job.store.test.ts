@@ -78,7 +78,7 @@ const runningPod = new Pod({
     ownerReferences: [{
       uid: "runningJob",
     }],
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -96,7 +96,7 @@ runningPod.status = {
       status: "True",
       lastProbeTime: 1,
       lastTransitionTime: "1",
-    }
+    },
   ],
   hostIP: "10.0.0.1",
   podIP: "10.0.0.1",
@@ -115,7 +115,7 @@ const pendingPod = new Pod({
     ownerReferences: [{
       uid: "pendingJob",
     }],
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -129,7 +129,7 @@ const failedPod = new Pod({
     ownerReferences: [{
       uid: "failedJob",
     }],
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -168,7 +168,7 @@ describe("Job Store tests", () => {
       runningPod,
       failedPod,
       pendingPod,
-      succeededPod
+      succeededPod,
     ]);
   });
 
@@ -177,7 +177,7 @@ describe("Job Store tests", () => {
       failedJob,
       succeededJob,
       runningJob,
-      pendingJob
+      pendingJob,
     ]));
 
     expect(statuses).toEqual([

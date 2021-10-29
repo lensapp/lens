@@ -91,7 +91,7 @@ AppPaths.init();
 describe("ContextHandler", () => {
   beforeEach(() => {
     mockFs({
-      "tmp": {}
+      "tmp": {},
     });
 
     PrometheusProviderRegistry.createInstance();

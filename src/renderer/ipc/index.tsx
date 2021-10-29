@@ -72,8 +72,8 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
       id: notificationId,
       onClose() {
         sendToBackchannel(backchannel, notificationId, { doUpdate: false });
-      }
-    }
+      },
+    },
   );
 }
 
@@ -126,7 +126,7 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
        * least a minute between closing the notification as seeing it again
        */
       onClose: () => notificationLastDisplayedAt.set(clusterId, Date.now()),
-    }
+    },
   );
 }
 

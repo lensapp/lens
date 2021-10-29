@@ -69,7 +69,7 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "cpuUsage",
-          label: "Usage"
+          label: "Usage",
         },
         {
           data: [
@@ -81,7 +81,7 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "cpuRequests",
-          label: "Requests"
+          label: "Requests",
         },
         {
           data: [
@@ -93,7 +93,7 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "cpuLimits",
-          label: "Limits"
+          label: "Limits",
         },
       ],
       labels: createLabels([
@@ -116,7 +116,7 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "memoryUsage",
-          label: "Usage"
+          label: "Usage",
         },
         {
           data: [
@@ -128,7 +128,7 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "memoryRequests",
-          label: "Requests"
+          label: "Requests",
         },
         {
           data: [
@@ -140,7 +140,7 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "memoryLimits",
-          label: "Limits"
+          label: "Limits",
         },
       ],
       labels: [
@@ -148,8 +148,8 @@ export const ClusterPieCharts = observer(() => {
         `Requests: ${bytesToUnits(memoryRequests)}`,
         `Limits: ${bytesToUnits(memoryLimits)}`,
         `Allocatable Capacity: ${bytesToUnits(memoryAllocatableCapacity)}`,
-        `Capacity: ${bytesToUnits(memoryCapacity)}`
-      ]
+        `Capacity: ${bytesToUnits(memoryCapacity)}`,
+      ],
     };
     const podsData: ChartData = {
       datasets: [
@@ -163,13 +163,13 @@ export const ClusterPieCharts = observer(() => {
             defaultColor,
           ],
           id: "podUsage",
-          label: "Usage"
+          label: "Usage",
         },
       ],
       labels: [
         `Usage: ${podUsage || 0}`,
         `Capacity: ${podAllocatableCapacity}`,
-      ]
+      ],
     };
 
     return (

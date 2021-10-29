@@ -26,13 +26,13 @@ describe("kubernetesClusterCategory", () => {
       icon: "Icon",
       title: "Title",
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      onClick: () => {}
+      onClick: () => {},
     };
     const item2 = {
       icon: "Icon 2",
       title: "Title 2",
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      onClick: () => {}
+      onClick: () => {},
     };
 
     it("returns all items if no filter set", () => {

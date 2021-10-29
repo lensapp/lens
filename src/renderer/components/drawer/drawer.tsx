@@ -67,7 +67,7 @@ export class Drawer extends React.Component<DrawerProps> {
   });
 
   public state: State = {
-    isCopied: false
+    isCopied: false,
   };
 
   componentDidMount() {

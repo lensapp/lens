@@ -38,5 +38,5 @@ export const catalogEntityRunContext = {
   navigate: (url: string) => navigate(url),
   setCommandPaletteContext: (entity?: CatalogEntity) => {
     catalogEntityRegistry.activeEntity = entity;
-  }
+  },
 };

@@ -66,5 +66,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  clusterRoleBindingApi
+  clusterRoleBindingApi,
 };

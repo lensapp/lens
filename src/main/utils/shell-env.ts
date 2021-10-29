@@ -52,7 +52,7 @@ export async function shellEnv(shell?: string, forceRetry = false) : Promise<Env
         shellEnvironment(shell),
         new Promise((_resolve, reject) => setTimeout(() => {
           reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
-        }, 30_000))
+        }, 30_000)),
       ]);
     } catch (error) {
       logger.error(`shellEnv: ${error}`);

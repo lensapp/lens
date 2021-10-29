@@ -42,7 +42,7 @@ function initKubernetesClusters() {
         context.menuItems.push({
           title: "Delete",
           icon: "delete",
-          onClick: () => onClusterDelete(entity.metadata.uid)
+          onClick: () => onClusterDelete(entity.metadata.uid),
         });
       }
     });

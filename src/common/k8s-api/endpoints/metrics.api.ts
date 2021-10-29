@@ -87,13 +87,13 @@ export const metricsApi = {
       query: {
         start, end, step,
         "kubernetes_namespace": namespace,
-      }
+      },
     });
   },
 
   async getMetricProviders(): Promise<MetricProviderInfo[]> {
     return apiBase.get("/metrics/providers");
-  }
+  },
 };
 
 export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
@@ -103,7 +103,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
         resultType: "",
         result: [{
           metric: {},
-          values: []
+          values: [],
         } as IMetricsResult],
       },
       status: "",
@@ -144,7 +144,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
     // always return at least empty values array
     result.push({
       metric: {},
-      values: []
+      values: [],
     } as IMetricsResult);
   }
 

@@ -67,7 +67,7 @@ const runningPod = new Pod({
     ownerReferences: [{
       uid: "runningStatefulSet",
     }],
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -85,7 +85,7 @@ runningPod.status = {
       status: "True",
       lastProbeTime: 1,
       lastTransitionTime: "1",
-    }
+    },
   ],
   hostIP: "10.0.0.1",
   podIP: "10.0.0.1",
@@ -104,7 +104,7 @@ const pendingPod = new Pod({
     ownerReferences: [{
       uid: "pendingStatefulSet",
     }],
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -118,7 +118,7 @@ const failedPod = new Pod({
     ownerReferences: [{
       uid: "failedStatefulSet",
     }],
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -136,7 +136,7 @@ describe("StatefulSet Store tests", () => {
     podsStore.items = observable.array([
       runningPod,
       failedPod,
-      pendingPod
+      pendingPod,
     ]);
   });
 
@@ -144,7 +144,7 @@ describe("StatefulSet Store tests", () => {
     const statuses = Object.entries(statefulSetStore.getStatuses([
       failedStatefulSet,
       runningStatefulSet,
-      pendingStatefulSet
+      pendingStatefulSet,
     ]));
 
     expect(statuses).toEqual([

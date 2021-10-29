@@ -58,7 +58,7 @@ export const ZebraStripes = {
   updateOptions(chart: ChartJS) {
     this.options = {
       ...defaultOptions,
-      ...this.getOptions(chart)
+      ...this.getOptions(chart),
     };
   },
 
@@ -122,5 +122,5 @@ export const ZebraStripes = {
 
       cover.style.backgroundPositionX = `${-step * minutes}px`;
     }
-  }
+  },
 };

@@ -75,16 +75,16 @@ const commonPageTests: CommonPageTest[] = [{
     name: "Cluster",
     href: "/overview",
     expectedSelector: "div[data-testid='cluster-overview-page'] div.label",
-    expectedText: "CPU"
-  }
+    expectedText: "CPU",
+  },
 },
 {
   page: {
     name: "Nodes",
     href: "/nodes",
     expectedSelector: "h5.title",
-    expectedText: "Nodes"
-  }
+    expectedText: "Nodes",
+  },
 },
 {
   drawerId: "workloads",
@@ -93,51 +93,51 @@ const commonPageTests: CommonPageTest[] = [{
       name: "Overview",
       href: "/workloads",
       expectedSelector: "h5.box",
-      expectedText: "Overview"
+      expectedText: "Overview",
     },
     {
       name: "Pods",
       href: "/pods",
       expectedSelector: "h5.title",
-      expectedText: "Pods"
+      expectedText: "Pods",
     },
     {
       name: "Deployments",
       href: "/deployments",
       expectedSelector: "h5.title",
-      expectedText: "Deployments"
+      expectedText: "Deployments",
     },
     {
       name: "DaemonSets",
       href: "/daemonsets",
       expectedSelector: "h5.title",
-      expectedText: "Daemon Sets"
+      expectedText: "Daemon Sets",
     },
     {
       name: "StatefulSets",
       href: "/statefulsets",
       expectedSelector: "h5.title",
-      expectedText: "Stateful Sets"
+      expectedText: "Stateful Sets",
     },
     {
       name: "ReplicaSets",
       href: "/replicasets",
       expectedSelector: "h5.title",
-      expectedText: "Replica Sets"
+      expectedText: "Replica Sets",
     },
     {
       name: "Jobs",
       href: "/jobs",
       expectedSelector: "h5.title",
-      expectedText: "Jobs"
+      expectedText: "Jobs",
     },
     {
       name: "CronJobs",
       href: "/cronjobs",
       expectedSelector: "h5.title",
-      expectedText: "Cron Jobs"
+      expectedText: "Cron Jobs",
     },
-  ]
+  ],
 },
 {
   drawerId: "config",
@@ -146,39 +146,39 @@ const commonPageTests: CommonPageTest[] = [{
       name: "ConfigMaps",
       href: "/configmaps",
       expectedSelector: "h5.title",
-      expectedText: "Config Maps"
+      expectedText: "Config Maps",
     },
     {
       name: "Secrets",
       href: "/secrets",
       expectedSelector: "h5.title",
-      expectedText: "Secrets"
+      expectedText: "Secrets",
     },
     {
       name: "Resource Quotas",
       href: "/resourcequotas",
       expectedSelector: "h5.title",
-      expectedText: "Resource Quotas"
+      expectedText: "Resource Quotas",
     },
     {
       name: "Limit Ranges",
       href: "/limitranges",
       expectedSelector: "h5.title",
-      expectedText: "Limit Ranges"
+      expectedText: "Limit Ranges",
     },
     {
       name: "HPA",
       href: "/hpa",
       expectedSelector: "h5.title",
-      expectedText: "Horizontal Pod Autoscalers"
+      expectedText: "Horizontal Pod Autoscalers",
     },
     {
       name: "Pod Disruption Budgets",
       href: "/poddisruptionbudgets",
       expectedSelector: "h5.title",
-      expectedText: "Pod Disruption Budgets"
+      expectedText: "Pod Disruption Budgets",
     },
-  ]
+  ],
 },
 {
   drawerId: "networks",
@@ -187,27 +187,27 @@ const commonPageTests: CommonPageTest[] = [{
       name: "Services",
       href: "/services",
       expectedSelector: "h5.title",
-      expectedText: "Services"
+      expectedText: "Services",
     },
     {
       name: "Endpoints",
       href: "/endpoints",
       expectedSelector: "h5.title",
-      expectedText: "Endpoints"
+      expectedText: "Endpoints",
     },
     {
       name: "Ingresses",
       href: "/ingresses",
       expectedSelector: "h5.title",
-      expectedText: "Ingresses"
+      expectedText: "Ingresses",
     },
     {
       name: "Network Policies",
       href: "/network-policies",
       expectedSelector: "h5.title",
-      expectedText: "Network Policies"
+      expectedText: "Network Policies",
     },
-  ]
+  ],
 },
 {
   drawerId: "storage",
@@ -216,37 +216,37 @@ const commonPageTests: CommonPageTest[] = [{
       name: "Persistent Volume Claims",
       href: "/persistent-volume-claims",
       expectedSelector: "h5.title",
-      expectedText: "Persistent Volume Claims"
+      expectedText: "Persistent Volume Claims",
     },
     {
       name: "Persistent Volumes",
       href: "/persistent-volumes",
       expectedSelector: "h5.title",
-      expectedText: "Persistent Volumes"
+      expectedText: "Persistent Volumes",
     },
     {
       name: "Storage Classes",
       href: "/storage-classes",
       expectedSelector: "h5.title",
-      expectedText: "Storage Classes"
+      expectedText: "Storage Classes",
     },
-  ]
+  ],
 },
 {
   page: {
     name: "Namespaces",
     href: "/namespaces",
     expectedSelector: "h5.title",
-    expectedText: "Namespaces"
-  }
+    expectedText: "Namespaces",
+  },
 },
 {
   page: {
     name: "Events",
     href: "/events",
     expectedSelector: "h5.title",
-    expectedText: "Events"
-  }
+    expectedText: "Events",
+  },
 },
 {
   drawerId: "apps",
@@ -260,9 +260,9 @@ const commonPageTests: CommonPageTest[] = [{
       name: "Releases",
       href: "/apps/releases",
       expectedSelector: "h5.title",
-      expectedText: "Releases"
+      expectedText: "Releases",
     },
-  ]
+  ],
 },
 {
   drawerId: "users",
@@ -271,39 +271,39 @@ const commonPageTests: CommonPageTest[] = [{
       name: "Service Accounts",
       href: "/service-accounts",
       expectedSelector: "h5.title",
-      expectedText: "Service Accounts"
+      expectedText: "Service Accounts",
     },
     {
       name: "Roles",
       href: "/roles",
       expectedSelector: "h5.title",
-      expectedText: "Roles"
+      expectedText: "Roles",
     },
     {
       name: "Cluster Roles",
       href: "/cluster-roles",
       expectedSelector: "h5.title",
-      expectedText: "Cluster Roles"
+      expectedText: "Cluster Roles",
     },
     {
       name: "Role Bindings",
       href: "/role-bindings",
       expectedSelector: "h5.title",
-      expectedText: "Role Bindings"
+      expectedText: "Role Bindings",
     },
     {
       name: "Cluster Role Bindings",
       href: "/cluster-role-bindings",
       expectedSelector: "h5.title",
-      expectedText: "Cluster Role Bindings"
+      expectedText: "Cluster Role Bindings",
     },
     {
       name: "Pod Security Policies",
       href: "/pod-security-policies",
       expectedSelector: "h5.title",
-      expectedText: "Pod Security Policies"
+      expectedText: "Pod Security Policies",
     },
-  ]
+  ],
 },
 {
   drawerId: "custom-resources",
@@ -312,9 +312,9 @@ const commonPageTests: CommonPageTest[] = [{
       name: "Definitions",
       href: "/crd/definitions",
       expectedSelector: "h5.title",
-      expectedText: "Custom Resources"
+      expectedText: "Custom Resources",
     },
-  ]
+  ],
 }];
 
 utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
@@ -440,7 +440,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
         position: {
           y: 0,
           x: 0,
-        }
+        },
       });
     } catch (error) {
       console.log(error);

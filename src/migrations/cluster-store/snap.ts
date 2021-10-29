@@ -53,5 +53,5 @@ export default {
 
 
     store.set("clusters", migratedClusters);
-  }
+  },
 } as MigrationDeclaration;

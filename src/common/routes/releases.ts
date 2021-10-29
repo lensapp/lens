@@ -24,7 +24,7 @@ import { buildURL } from "../utils/buildUrl";
 import { appsRoute } from "./apps";
 
 export const releaseRoute: RouteProps = {
-  path: `${appsRoute.path}/releases/:namespace?/:name?`
+  path: `${appsRoute.path}/releases/:namespace?/:name?`,
 };
 
 export interface ReleaseRouteParams {

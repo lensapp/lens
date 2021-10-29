@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const limitRangesRoute: RouteProps = {
-  path: "/limitranges"
+  path: "/limitranges",
 };
 
 export interface LimitRangeRouteParams {

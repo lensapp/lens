@@ -40,7 +40,7 @@ export function getMetricsForAllNodes(): Promise<INodeMetrics> {
     cpuUsage: opts,
     cpuCapacity: opts,
     fsSize: opts,
-    fsUsage: opts
+    fsUsage: opts,
   });
 }
 
@@ -259,5 +259,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  nodesApi
+  nodesApi,
 };

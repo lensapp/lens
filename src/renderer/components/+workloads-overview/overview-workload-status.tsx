@@ -68,8 +68,8 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
       datasets: [{
         data: [1],
         backgroundColor: [ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor],
-        label: "Empty"
-      }]
+        label: "Empty",
+      }],
     };
 
     if (statuses.some(([, val]) => val > 0)) {

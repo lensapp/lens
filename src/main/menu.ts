@@ -38,7 +38,7 @@ interface MenuItemsOpts extends MenuItemConstructorOptions {
 
 export function initMenu(windowManager: WindowManager) {
   return autorun(() => buildMenu(windowManager), {
-    delay: 100
+    delay: 100,
   });
 }
 
@@ -56,7 +56,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     type: "info",
     buttons: ["Close"],
     message: productName,
-    detail: appInfo.join("\r\n")
+    detail: appInfo.join("\r\n"),
   });
 }
 
@@ -81,7 +81,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "about",
         click(menuItem: MenuItem, browserWindow: BrowserWindow) {
           showAbout(browserWindow);
-        }
+        },
       },
       { type: "separator" },
       {
@@ -98,7 +98,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "extensions",
         click() {
           navigate(extensionsURL());
-        }
+        },
       },
       { type: "separator" },
       { role: "services" },
@@ -113,8 +113,8 @@ export function buildMenu(windowManager: WindowManager) {
         id: "quit",
         click() {
           exitApp();
-        }
-      }
+        },
+      },
     ],
   };
   const fileMenu: MenuItemsOpts = {
@@ -127,7 +127,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "add-cluster",
         click() {
           navigate(addClusterURL());
-        }
+        },
       },
       ...ignoreOnMac([
         { type: "separator" },
@@ -137,15 +137,15 @@ export function buildMenu(windowManager: WindowManager) {
           accelerator: "Ctrl+,",
           click() {
             navigate(preferencesURL());
-          }
+          },
         },
         {
           label: "Extensions",
           accelerator: "Ctrl+Shift+E",
           click() {
             navigate(extensionsURL());
-          }
-        }
+          },
+        },
       ]),
 
       { type: "separator" },
@@ -154,8 +154,8 @@ export function buildMenu(windowManager: WindowManager) {
         {
           role: "close",
           label: "Close Window",
-          accelerator: "Shift+Cmd+W"
-        }
+          accelerator: "Shift+Cmd+W",
+        },
       ] as MenuItemConstructorOptions[] : []),
 
       ...ignoreOnMac([
@@ -165,9 +165,9 @@ export function buildMenu(windowManager: WindowManager) {
           id: "quit",
           click() {
             exitApp();
-          }
-        }
-      ])
+          },
+        },
+      ]),
     ],
   };
   const editMenu: MenuItemsOpts = {
@@ -183,7 +183,7 @@ export function buildMenu(windowManager: WindowManager) {
       { role: "delete" },
       { type: "separator" },
       { role: "selectAll" },
-    ]
+    ],
   };
   const viewMenu: MenuItemsOpts = {
     label: "View",
@@ -195,7 +195,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "catalog",
         click() {
           navigate(catalogURL());
-        }
+        },
       },
       {
         label: "Command Palette...",
@@ -203,7 +203,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "command-palette",
         click() {
           broadcastMessage("command-palette:open");
-        }
+        },
       },
       { type: "separator" },
       {
@@ -212,7 +212,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "go-back",
         click() {
           webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => wc.goBack());
-        }
+        },
       },
       {
         label: "Forward",
@@ -220,7 +220,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "go-forward",
         click() {
           webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => wc.goForward());
-        }
+        },
       },
       {
         label: "Reload",
@@ -228,7 +228,7 @@ export function buildMenu(windowManager: WindowManager) {
         id: "reload",
         click() {
           windowManager.reload();
-        }
+        },
       },
       { role: "toggleDevTools" },
       { type: "separator" },
@@ -236,8 +236,8 @@ export function buildMenu(windowManager: WindowManager) {
       { role: "zoomIn" },
       { role: "zoomOut" },
       { type: "separator" },
-      { role: "togglefullscreen" }
-    ]
+      { role: "togglefullscreen" },
+    ],
   };
   const helpMenu: MenuItemsOpts = {
     role: "help",
@@ -270,10 +270,10 @@ export function buildMenu(windowManager: WindowManager) {
           id: "about",
           click(menuItem: MenuItem, browserWindow: BrowserWindow) {
             showAbout(browserWindow);
-          }
-        }
-      ])
-    ]
+          },
+        },
+      ]),
+    ],
   };
   // Prepare menu items order
   const appMenu = new Map([

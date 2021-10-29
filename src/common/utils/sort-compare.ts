@@ -105,7 +105,7 @@ export function sortCharts(charts: RawHelmChart[]) {
         (chart as ExtendedHelmChart).__version = __version;
 
         return chart as ExtendedHelmChart;
-      })
+      }),
     ),
   );
 

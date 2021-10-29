@@ -45,11 +45,11 @@ document.addEventListener("selectionchange", () => {
 @observer
 export class Badge extends React.Component<BadgeProps> {
   static defaultProps: Partial<BadgeProps> = {
-    expandable: true
+    expandable: true,
   };
 
   static badgeMeta = observable({
-    hasTextSelected: false
+    hasTextSelected: false,
   });
 
   @observable.ref elem: HTMLElement;
@@ -89,7 +89,7 @@ export class Badge extends React.Component<BadgeProps> {
       [styles.clickable]: clickable,
       [styles.interactive]: this.isExpandable,
       [styles.isExpanded]: this.isExpanded,
-      [styles.disabled]: disabled
+      [styles.disabled]: disabled,
     });
 
     return (

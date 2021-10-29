@@ -79,5 +79,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  secretsApi
+  secretsApi,
 };

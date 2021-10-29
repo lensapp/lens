@@ -53,7 +53,7 @@ export class WeblinkAddCommand extends React.Component {
   onSubmit(name: string) {
     WeblinkStore.getInstance().add({
       name: name || this.url,
-      url: this.url
+      url: this.url,
     });
 
     CommandOverlay.close();

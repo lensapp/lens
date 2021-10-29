@@ -60,5 +60,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  configMapApi
+  configMapApi,
 };

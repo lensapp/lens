@@ -31,7 +31,7 @@ import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 
 export default [
-  webpackLensRenderer
+  webpackLensRenderer,
 ];
 
 export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
@@ -70,26 +70,26 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     stats: {
       warningsFilter: [
         /Critical dependency: the request of a dependency is an expression/,
-        /export '.*' was not found in/
-      ]
+        /export '.*' was not found in/,
+      ],
     },
     resolve: {
       extensions: [
         ".js", ".jsx", ".json",
         ".ts", ".tsx",
-      ]
+      ],
     },
     externals: {
-      "node-fetch": "commonjs node-fetch"
+      "node-fetch": "commonjs node-fetch",
     },
     optimization: {
-      minimize: false
+      minimize: false,
     },
     module: {
       rules: [
         {
           test: /\.node$/,
-          use: "node-loader"
+          use: "node-loader",
         },
         getTSLoader(/\.tsx?$/),
         {
@@ -99,17 +99,17 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
             options: {
               name: "images/[name]-[hash:6].[ext]",
               esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (vue/react?)
-            }
-          }
+            },
+          },
         },
         {
           test: /\.(ttf|eot|woff2?)$/,
           use: {
             loader: "url-loader",
             options: {
-              name: "fonts/[name].[ext]"
-            }
-          }
+              name: "fonts/[name].[ext]",
+            },
+          },
         },
         {
           test: /\.s?css$/,
@@ -122,11 +122,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   auto: true,
                   mode: "local",
                   localIdentName: "[name]__[local]--[hash:base64:5]",
-                }
+                },
               },
             },
             {
-              loader: "postcss-loader"
+              loader: "postcss-loader",
             },
             {
               loader: "sass-loader",
@@ -135,14 +135,14 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                 prependData: `@import "${path.basename(sassCommonVars)}";`,
                 sassOptions: {
                   includePaths: [
-                    path.dirname(sassCommonVars)
-                  ]
+                    path.dirname(sassCommonVars),
+                  ],
                 },
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
-      ]
+      ],
     },
 
     plugins: [

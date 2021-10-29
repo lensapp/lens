@@ -62,7 +62,7 @@ describe("Helm Service tests", () => {
             repo: "stable",
             digest: "test",
             created: "now",
-          }
+          },
         ],
         "invalid-semver": [
           {
@@ -114,8 +114,8 @@ describe("Helm Service tests", () => {
             repo: "stable",
             digest: "test",
             created: "now",
-          }
-        ]
+          },
+        ],
       },
       experiment: {
         "fairwind": [
@@ -136,8 +136,8 @@ describe("Helm Service tests", () => {
             digest: "test",
             created: "now",
           },
-        ]
-      }
+        ],
+      },
     });
   });
 
@@ -189,9 +189,9 @@ describe("Helm Service tests", () => {
             repo: "bitnami",
             digest: "test",
             created: "now",
-          }
-        ]
-      }
+          },
+        ],
+      },
     });
   });
 });

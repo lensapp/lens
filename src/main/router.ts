@@ -70,7 +70,7 @@ function getMimeType(filename: string) {
     svg: "image/svg+xml",
     js: "application/javascript",
     woff2: "font/woff2",
-    ttf: "font/ttf"
+    ttf: "font/ttf",
   };
 
   return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
@@ -118,7 +118,7 @@ export class Router {
       response: res,
       query: url.searchParams,
       payload,
-      params
+      params,
     };
   }
 

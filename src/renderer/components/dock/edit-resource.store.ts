@@ -71,7 +71,7 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
             }
           }
         }, {
-          delay: 100 // make sure all kube-object stores are initialized
+          delay: 100, // make sure all kube-object stores are initialized
         }));
       });
     });

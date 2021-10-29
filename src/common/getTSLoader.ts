@@ -30,7 +30,7 @@ import esbuild from "esbuild";
  * @returns ts/tsx webpack loader configuration object
  */
 const getTSLoader = (
-  testRegExp: RegExp, transpileOnly = true
+  testRegExp: RegExp, transpileOnly = true,
 ) => {
   if (process.env.LENS_DEV_USE_ESBUILD_LOADER === "true") {
     console.info(`\n🚀 using esbuild-loader for ts(x)`);
@@ -41,7 +41,7 @@ const getTSLoader = (
       options: {
         loader: "tsx",
         target: "es2015",
-        implementation: esbuild
+        implementation: esbuild,
       },
     };
   }
@@ -53,8 +53,8 @@ const getTSLoader = (
       loader: "ts-loader",
       options: {
         transpileOnly,
-      }
-    }
+      },
+    },
   };
 };
 

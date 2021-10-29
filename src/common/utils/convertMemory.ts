@@ -33,7 +33,7 @@ export function unitsToBytes(value: string) {
   const index = suffixes.indexOf(suffix);
 
   return parseInt(
-    (parseFloat(value) * Math.pow(base, index + 1)).toFixed(1)
+    (parseFloat(value) * Math.pow(base, index + 1)).toFixed(1),
   );
 }
 

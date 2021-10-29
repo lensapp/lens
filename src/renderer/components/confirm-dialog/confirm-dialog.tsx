@@ -97,7 +97,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
         <>
           <p>Confirmation action failed:</p>
           <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
-        </>
+        </>,
       );
     } finally {
       this.isSaving = false;
@@ -117,7 +117,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
         <>
           <p>Cancelling action failed:</p>
           <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
-        </>
+        </>,
       );
     } finally {
       this.isSaving = false;

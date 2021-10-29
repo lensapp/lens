@@ -44,7 +44,7 @@ const dialogState = observable.object({
 @observer
 export class DeploymentScaleDialog extends Component<Props> {
   static defaultProps = {
-    deploymentApi
+    deploymentApi,
   };
 
   @observable ready = false;

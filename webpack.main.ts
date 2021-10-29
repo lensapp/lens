@@ -47,24 +47,24 @@ configs.push((): webpack.Configuration => {
       path: buildDir,
     },
     resolve: {
-      extensions: [".json", ".js", ".ts"]
+      extensions: [".json", ".js", ".ts"],
     },
     externals: [
-      nodeExternals()
+      nodeExternals(),
     ],
     module: {
       rules: [
         {
           test: /\.node$/,
-          use: "node-loader"
+          use: "node-loader",
         },
-        getTSLoader(/\.ts$/)
-      ]
+        getTSLoader(/\.ts$/),
+      ],
     },
     plugins: [
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
-    ].filter(Boolean)
+    ].filter(Boolean),
   };
 });
 

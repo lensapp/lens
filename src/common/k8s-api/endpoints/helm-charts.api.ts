@@ -191,7 +191,7 @@ const helmChartValidator = Joi.object<RawHelmChart>({
     .items(Joi.string())
     .options({
       stripUnknown: {
-        arrays: true
+        arrays: true,
       },
     })
     .default(() => ([])),
@@ -200,7 +200,7 @@ const helmChartValidator = Joi.object<RawHelmChart>({
     .items(Joi.string())
     .options({
       stripUnknown: {
-        arrays: true
+        arrays: true,
       },
     })
     .default(() => ([])),
@@ -209,7 +209,7 @@ const helmChartValidator = Joi.object<RawHelmChart>({
     .items(Joi.string())
     .options({
       stripUnknown: {
-        arrays: true
+        arrays: true,
       },
     })
     .default(() => ([])),
@@ -218,7 +218,7 @@ const helmChartValidator = Joi.object<RawHelmChart>({
     .items(helmChartMaintainerValidator)
     .options({
       stripUnknown: {
-        arrays: true
+        arrays: true,
       },
     })
     .default(() => ([])),
@@ -227,7 +227,7 @@ const helmChartValidator = Joi.object<RawHelmChart>({
     .items(helmChartDependencyValidator)
     .options({
       stripUnknown: {
-        arrays: true
+        arrays: true,
       },
     })
     .default(() => ([])),

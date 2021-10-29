@@ -317,7 +317,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
   protected bindWatchEventsUpdater(delay = 1000) {
     reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
-      delay
+      delay,
     });
   }
 
@@ -352,7 +352,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     const watch = () => this.api.watch({
       namespace,
       abortController,
-      callback
+      callback,
     });
 
     const { signal } = abortController;

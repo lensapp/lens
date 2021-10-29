@@ -38,17 +38,17 @@ jest.mock(
           if (channel === "history:can-go-forward") {
             listener({}, true);
           }
-        }
+        },
       ),
     },
     app: {
       getPath: () => "tmp",
     },
-  })
+  }),
 );
 
 jest.mock("../../+catalog", () => ({
-  previousActiveTab: jest.fn()
+  previousActiveTab: jest.fn(),
 }));
 
 const goBack = jest.fn();
@@ -61,10 +61,10 @@ jest.mock("@electron/remote", () => {
         return [{
           getType: () => "window",
           goBack,
-          goForward
+          goForward,
         }];
-      }
-    }
+      },
+    },
   };
 });
 
@@ -125,9 +125,9 @@ describe("<TopBar/>", () => {
     TopBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       {
         components: {
-          Item: () => <span data-testid={testId}>{text}</span>
-        }
-      }
+          Item: () => <span data-testid={testId}>{text}</span>,
+        },
+      },
     ]);
 
     const { getByTestId } = render(<TopBar/>);

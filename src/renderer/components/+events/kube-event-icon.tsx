@@ -66,7 +66,7 @@ export class KubeEventIcon extends React.Component<Props> {
                 {event.getAge(undefined, undefined, true)}
               </div>
             </div>
-          )
+          ),
         }}
       />
     );

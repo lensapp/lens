@@ -33,7 +33,7 @@ import type { ResourceQuotaRouteParams } from "../../../common/routes";
 enum columnId {
   name = "name",
   namespace = "namespace",
-  age = "age"
+  age = "age",
 }
 
 interface Props extends RouteComponentProps<ResourceQuotaRouteParams> {
@@ -72,7 +72,7 @@ export class ResourceQuotas extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             onAdd: () => AddQuotaDialog.open(),
-            addTooltip: "Create new ResourceQuota"
+            addTooltip: "Create new ResourceQuota",
           }}
         />
         <AddQuotaDialog/>

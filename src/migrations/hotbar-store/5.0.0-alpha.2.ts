@@ -32,7 +32,7 @@ export default {
 
     store.set("hotbars", hotbars.map((hotbar) => ({
       id: uuid.v4(),
-      ...hotbar
+      ...hotbar,
     })));
-  }
+  },
 } as MigrationDeclaration;

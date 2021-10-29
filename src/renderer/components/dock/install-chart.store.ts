@@ -44,7 +44,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
   constructor() {
     super({
-      storageKey: "install_charts"
+      storageKey: "install_charts",
     });
     makeObservable(this);
     autorun(() => {

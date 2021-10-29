@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const welcomeRoute: RouteProps = {
-  path: "/welcome"
+  path: "/welcome",
 };
 
 export const welcomeURL = buildURL(welcomeRoute.path);

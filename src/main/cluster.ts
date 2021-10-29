@@ -251,7 +251,7 @@ export class Cluster implements ClusterModel, ClusterState {
       logger.debug(`[CLUSTER]: Cluster init success`, {
         id: this.id,
         context: this.contextName,
-        apiUrl: this.apiUrl
+        apiUrl: this.apiUrl,
       });
     }
   }
@@ -306,7 +306,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (ipcMain) {
       this.eventDisposers.push(
         reaction(() => this.getState(), () => this.pushState()),
-        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler.setupPrometheus(prefs), { equals: comparer.structural, }),
+        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler.setupPrometheus(prefs), { equals: comparer.structural }),
         () => {
           clearInterval(refreshTimer);
           clearInterval(refreshMetadataTimer);
@@ -545,7 +545,7 @@ export class Cluster implements ClusterModel, ClusterState {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
         kind: "SelfSubjectAccessReview",
-        spec: { resourceAttributes }
+        spec: { resourceAttributes },
       });
 
       return accessReview.body.status.allowed;
@@ -687,7 +687,7 @@ export class Cluster implements ClusterModel, ClusterState {
                 resource: apiResource.apiName,
                 group: apiResource.group,
                 verb: "list",
-                namespace
+                namespace,
               });
 
               this.resourceAccessStatuses.set(apiResource, result);

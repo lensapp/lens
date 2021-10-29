@@ -74,7 +74,7 @@ export class NodeShellSession extends ShellSession {
       .createNamespacedPod("kube-system", {
         metadata: {
           name: this.podId,
-          namespace: "kube-system"
+          namespace: "kube-system",
         },
         spec: {
           nodeName: this.nodeName,
@@ -84,7 +84,7 @@ export class NodeShellSession extends ShellSession {
           hostIPC: true,
           hostNetwork: true,
           tolerations: [{
-            operator: "Exists"
+            operator: "Exists",
           }],
           containers: [{
             name: "shell",
@@ -93,10 +93,10 @@ export class NodeShellSession extends ShellSession {
               privileged: true,
             },
             command: ["nsenter"],
-            args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"]
+            args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"],
           }],
           imagePullSecrets,
-        }
+        },
       });
   }
 
@@ -117,7 +117,7 @@ export class NodeShellSession extends ShellSession {
           (err) => {
             console.log(err);
             reject(err);
-          }
+          },
         )
         .then(req => {
           setTimeout(() => {

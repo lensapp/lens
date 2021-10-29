@@ -42,7 +42,7 @@ export function openPortForward(portForward: ForwardedPort) {
         name: portForward.name,
       });
       Notifications.error(`Failed to open ${browseTo} in browser`);
-    }
+    },
     );
 
 }

@@ -121,7 +121,7 @@ function loadToOptions(rawYaml: string): OptionsResult {
     allowUnknown: true,
     stripUnknown: {
       arrays: true,
-    }
+    },
   });
   const { 
     clusters: rawClusters, 
@@ -210,16 +210,16 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
       "certificate-authority-data": cluster.caData,
       "certificate-authority": cluster.caFile,
       server: cluster.server,
-      "insecure-skip-tls-verify": cluster.skipTLSVerify
-    }
+      "insecure-skip-tls-verify": cluster.skipTLSVerify,
+    },
   }));
   const contexts = kubeConfig.contexts.map(context => ({
     name: context.name,
     context: {
       cluster: context.cluster,
       user: context.user,
-      namespace: context.namespace
-    }
+      namespace: context.namespace,
+    },
   }));
   const users = kubeConfig.users.map(user => ({
     name: user.name,
@@ -232,8 +232,8 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
       exec: user.exec,
       token: user.token,
       username: user.username,
-      password: user.password
-    }
+      password: user.password,
+    },
   }));
   const config = {
     apiVersion: "v1",

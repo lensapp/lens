@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const configMapsRoute: RouteProps = {
-  path: "/configmaps"
+  path: "/configmaps",
 };
 
 export interface ConfigMapsRouteParams {

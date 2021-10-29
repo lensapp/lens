@@ -62,7 +62,7 @@ export class ResourceApplier {
     args.push(
       "--type", "json",
       "--patch", JSON.stringify(patch),
-      "-o", "json"
+      "-o", "json",
     );
 
     try {

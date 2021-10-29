@@ -100,7 +100,7 @@ describe("kube helpers", () => {
       describe("with invalid context object", () => {
         it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalid"))).toEqual(
-            expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'")
+            expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'"),
           );
         });
       });
@@ -108,7 +108,7 @@ describe("kube helpers", () => {
       describe("with invalid cluster object", () => {
         it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidCluster"))).toEqual(
-            expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'")
+            expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'"),
           );
         });
       });
@@ -116,7 +116,7 @@ describe("kube helpers", () => {
       describe("with invalid user object", () => {
         it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
-            expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'")
+            expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'"),
           );
         });
       });

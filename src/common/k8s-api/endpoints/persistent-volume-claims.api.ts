@@ -35,9 +35,9 @@ export function getMetricsForPvc(pvc: PersistentVolumeClaim): Promise<IPvcMetric
 
   return metricsApi.getMetrics({
     diskUsage: opts,
-    diskCapacity: opts
+    diskCapacity: opts,
   }, {
-    namespace: opts.namespace
+    namespace: opts.namespace,
   });
 }
 
@@ -88,7 +88,7 @@ export class PersistentVolumeClaim extends KubeObject {
     return pods.filter(pod => {
       return pod.getVolumes().filter(volume =>
         volume.persistentVolumeClaim &&
-        volume.persistentVolumeClaim.claimName === this.getName()
+        volume.persistentVolumeClaim.claimName === this.getName(),
       ).length > 0;
     });
   }
@@ -128,5 +128,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  pvcApi
+  pvcApi,
 };

@@ -75,7 +75,7 @@ AppPaths.init();
 describe("Extensions", () => {
   beforeEach(async () => {
     mockFs({
-      "tmp": {}
+      "tmp": {},
     });
 
     ExtensionInstallationStateStore.reset();
@@ -84,13 +84,13 @@ describe("Extensions", () => {
       id: "extensionId",
       manifest: {
         name: "test",
-        version: "1.2.3"
+        version: "1.2.3",
       },
       absolutePath: "/absolute/path",
       manifestPath: "/symlinked/path/package.json",
       isBundled: false,
       isEnabled: true,
-      isCompatible: true
+      isCompatible: true,
     });
     ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
     UserStore.createInstance();
@@ -136,11 +136,11 @@ describe("Extensions", () => {
     (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
 
     fireEvent.change(res.getByPlaceholderText("File path or URL", {
-      exact: false
+      exact: false,
     }), {
       target: {
-        value: "https://test.extensionurl/package.tgz"
-      }
+        value: "https://test.extensionurl/package.tgz",
+      },
     });
 
     fireEvent.click(res.getByText("Install"));

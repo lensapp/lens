@@ -49,7 +49,7 @@ export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqP
     podCapacity: opts,
     podAllocatableCapacity: opts,
     fsSize: opts,
-    fsUsage: opts
+    fsUsage: opts,
   }, params);
 }
 
@@ -57,7 +57,7 @@ export enum ClusterStatus {
   ACTIVE = "Active",
   CREATING = "Creating",
   REMOVING = "Removing",
-  ERROR = "Error"
+  ERROR = "Error",
 }
 
 export interface IClusterMetrics<T = IMetrics> {
@@ -135,5 +135,5 @@ if (isClusterPageContext()) { // initialize automatically only when within a clu
 }
 
 export {
-  clusterApi
+  clusterApi,
 };

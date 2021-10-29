@@ -88,7 +88,7 @@ const getFewPodsTabData = (): LogTabData => {
 describe("<LogResourceSelector />", () => {
   beforeEach(() => {
     mockFs({
-      "tmp": {}
+      "tmp": {},
     });
     UserStore.createInstance();
     ThemeStore.createInstance();

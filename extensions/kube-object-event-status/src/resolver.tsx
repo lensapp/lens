@@ -42,7 +42,7 @@ export function resolveStatus(object: KubeObject): KubeObjectStatus {
   return {
     level: KubeObjectStatusLevel.WARNING,
     text: `${event.message}`,
-    timestamp: event.metadata.creationTimestamp
+    timestamp: event.metadata.creationTimestamp,
   };
 }
 
@@ -62,7 +62,7 @@ export function resolveStatusForPods(pod: Pod): KubeObjectStatus {
   return {
     level: KubeObjectStatusLevel.WARNING,
     text: `${event.message}`,
-    timestamp: event.metadata.creationTimestamp
+    timestamp: event.metadata.creationTimestamp,
   };
 }
 
@@ -83,6 +83,6 @@ export function resolveStatusForCronJobs(cronJob: CronJob): KubeObjectStatus {
   return {
     level: KubeObjectStatusLevel.WARNING,
     text: `${event.message}`,
-    timestamp: event.metadata.creationTimestamp
+    timestamp: event.metadata.creationTimestamp,
   };
 }

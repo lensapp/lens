@@ -45,7 +45,7 @@ interface Props {
 
 @observer
 export class CreateResource extends React.Component<Props> {
-  @observable currentTemplates:Map<string,SelectOption> = new Map();
+  @observable currentTemplates:Map<string, SelectOption> = new Map();
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
 
@@ -89,8 +89,8 @@ export class CreateResource extends React.Component<Props> {
 
   onSelectTemplate = (item: SelectOption) => {
     this.currentTemplates.set(this.tabId, item);
-    fs.readFile(item.value,"utf8").then(v => {
-      createResourceStore.setData(this.tabId,v);
+    fs.readFile(item.value, "utf8").then(v => {
+      createResourceStore.setData(this.tabId, v);
       monacoModelsManager.getModel(this.tabId).setValue(v ?? "");
     });
   };

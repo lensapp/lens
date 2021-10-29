@@ -105,7 +105,7 @@ export class KubeconfigManager {
           name: contextName,
           server: this.resolveProxyUrl,
           skipTLSVerify: undefined,
-        }
+        },
       ],
       users: [
         { name: "proxy" },
@@ -116,8 +116,8 @@ export class KubeconfigManager {
           name: contextName,
           cluster: contextName,
           namespace: cluster.defaultNamespace || kubeConfig.getContextObject(contextName).namespace,
-        }
-      ]
+        },
+      ],
     };
     // write
     const configYaml = dumpConfigYaml(proxyConfig);

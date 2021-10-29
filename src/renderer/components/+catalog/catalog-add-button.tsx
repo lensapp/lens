@@ -79,7 +79,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
       const menuItems: CatalogEntityAddMenu[] = [];
       const context: CatalogEntityAddMenuContext = {
         navigate: (url: string) => navigate(url),
-        menuItems
+        menuItems,
       };
 
       category.emit("catalogAddMenu", context);
@@ -142,7 +142,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
               menuItem.onClick();
             }}
             TooltipClasses={{
-              popper: "catalogSpeedDialPopper"
+              popper: "catalogSpeedDialPopper",
             }}
           />;
         })}

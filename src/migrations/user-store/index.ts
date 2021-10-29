@@ -29,7 +29,7 @@ import version503Beta1 from "./5.0.3-beta.1";
 import { fileNameMigration } from "./file-name-migration";
 
 export {
-  fileNameMigration
+  fileNameMigration,
 };
 
 export default joinMigrations(

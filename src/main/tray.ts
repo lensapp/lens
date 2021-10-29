@@ -40,7 +40,7 @@ export function getTrayIcon(): string {
   return path.resolve(
     __static,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    "trayIconTemplate.png"
+    "trayIconTemplate.png",
   );
 }
 
@@ -95,7 +95,7 @@ function createTrayMenu(windowManager: WindowManager): Menu {
           .navigate(preferencesURL())
           .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to navigate to Preferences`, { error }));
       },
-    }
+    },
   ];
 
   if (isAutoUpdateEnabled()) {
@@ -122,7 +122,7 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       label: "Quit App",
       click() {
         exitApp();
-      }
-    }
+      },
+    },
   ]));
 }

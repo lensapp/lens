@@ -36,7 +36,7 @@ export function getMetricsForIngress(ingress: string, namespace: string): Promis
     bytesSentSuccess: opts,
     bytesSentFailure: opts,
     requestDurationSeconds: opts,
-    responseDurationSeconds: opts
+    responseDurationSeconds: opts,
   }, {
     namespace,
   });
@@ -160,7 +160,7 @@ export class Ingress extends KubeObject {
 
     return {
       serviceName,
-      servicePort
+      servicePort,
     };
   }
 
@@ -216,5 +216,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  ingressApi
+  ingressApi,
 };

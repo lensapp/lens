@@ -48,15 +48,15 @@ export const VolumeClaimDiskChart = observer(() => {
       label: `Usage`,
       tooltip: `Volume disk usage`,
       borderColor: "#ffc63d",
-      data: usage.map(([x, y]) => ({ x, y }))
+      data: usage.map(([x, y]) => ({ x, y })),
     },
     {
       id: `${id}-diskCapacity`,
       label: `Capacity`,
       tooltip: `Volume disk capacity`,
       borderColor: chartCapacityColor,
-      data: capacity.map(([x, y]) => ({ x, y }))
-    }
+      data: capacity.map(([x, y]) => ({ x, y })),
+    },
   ];
 
   return (

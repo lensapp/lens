@@ -33,5 +33,5 @@ export default {
     hotbar.items[0] = { entity: { uid, name, source }};
 
     store.set("hotbars", [hotbar]);
-  }
+  },
 } as MigrationDeclaration;

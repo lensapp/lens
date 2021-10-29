@@ -36,7 +36,7 @@ export interface KubeObjectMetaProps {
 
 export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   static defaultHiddenFields: KubeMetaField[] = [
-    "uid", "resourceVersion", "selfLink"
+    "uid", "resourceVersion", "selfLink",
   ];
 
   isHidden(field: KubeMetaField): boolean {

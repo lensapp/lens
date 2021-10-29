@@ -39,5 +39,5 @@ export default {
       }
       store.set(clusterKey, { contextName: clusterKey, kubeConfig: value[1].kubeConfig, preferences: value[1].preferences });
     }
-  }
+  },
 } as MigrationDeclaration;

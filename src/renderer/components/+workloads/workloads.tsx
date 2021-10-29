@@ -43,8 +43,8 @@ export class Workloads extends React.Component {
         title: "Overview",
         component: WorkloadsOverview,
         url: routes.overviewURL(),
-        routePath: routes.overviewRoute.path.toString()
-      }
+        routePath: routes.overviewRoute.path.toString(),
+      },
     ];
 
     if (isAllowedResource("pods")) {
@@ -52,7 +52,7 @@ export class Workloads extends React.Component {
         title: "Pods",
         component: Pods,
         url: routes.podsURL(),
-        routePath: routes.podsRoute.path.toString()
+        routePath: routes.podsRoute.path.toString(),
       });
     }
 

@@ -43,7 +43,7 @@ export class ClusterProxySetting extends React.Component<Props> {
     disposeOnUnmount(this,
       autorun(() => {
         this.proxy = this.props.cluster.preferences.httpsProxy || "";
-      })
+      }),
     );
   }
 

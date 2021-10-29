@@ -75,15 +75,15 @@ export function syncWeblinks() {
             uid: weblinkData.id,
             name: weblinkData.name,
             source: "local",
-            labels: {}
+            labels: {},
           },
           spec: {
-            url: weblinkData.url
+            url: weblinkData.url,
           },
           status: {
             phase: "available",
-            active: true
-          }
+            active: true,
+          },
         });
 
         webLinkEntities.set(weblinkData.id, [

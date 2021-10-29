@@ -44,7 +44,7 @@ export const IngressCharts = observer(() => {
     bytesSentSuccess,
     bytesSentFailure,
     requestDurationSeconds,
-    responseDurationSeconds
+    responseDurationSeconds,
   ] = values;
 
   const datasets = [
@@ -55,14 +55,14 @@ export const IngressCharts = observer(() => {
         label: `Bytes sent, status 2xx`,
         tooltip: `Bytes sent by Ingress controller with successful status`,
         borderColor: "#46cd9e",
-        data: bytesSentSuccess.map(([x, y]) => ({ x, y }))
+        data: bytesSentSuccess.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-bytesSentFailure`,
         label: `Bytes sent, status 5xx`,
         tooltip: `Bytes sent by Ingress controller with error status`,
         borderColor: "#cd465a",
-        data: bytesSentFailure.map(([x, y]) => ({ x, y }))
+        data: bytesSentFailure.map(([x, y]) => ({ x, y })),
       },
     ],
     // Duration
@@ -72,25 +72,25 @@ export const IngressCharts = observer(() => {
         label: `Request`,
         tooltip: `Request duration in seconds`,
         borderColor: "#48b18d",
-        data: requestDurationSeconds.map(([x, y]) => ({ x, y }))
+        data: requestDurationSeconds.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-responseDurationSeconds`,
         label: `Response`,
         tooltip: `Response duration in seconds`,
         borderColor: "#73ba3c",
-        data: responseDurationSeconds.map(([x, y]) => ({ x, y }))
+        data: responseDurationSeconds.map(([x, y]) => ({ x, y })),
       },
-    ]
+    ],
   ];
 
   const durationOptions: ChartOptions = {
     scales: {
       yAxes: [{
         ticks: {
-          callback: value => value
-        }
-      }]
+          callback: value => value,
+        },
+      }],
     },
     tooltips: {
       callbacks: {
@@ -100,9 +100,9 @@ export const IngressCharts = observer(() => {
           const chartTooltipSec = `sec`;
 
           return `${label}: ${parseFloat(value.y as string).toFixed(3)} ${chartTooltipSec}`;
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   const options = [memoryOptions, durationOptions];

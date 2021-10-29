@@ -38,7 +38,7 @@ export interface CopyToClipboardProps {
 export const defaultProps: Partial<CopyToClipboardProps> = {
   getNotificationMessage(copiedText: string) {
     return <p>Copied to clipboard: <em>{copiedText}</em></p>;
-  }
+  },
 };
 
 export class Clipboard extends React.Component<CopyToClipboardProps> {

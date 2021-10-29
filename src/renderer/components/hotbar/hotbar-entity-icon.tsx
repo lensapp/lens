@@ -95,7 +95,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
     const className = cssNames("HotbarEntityIcon", this.props.className, {
       interactive: true,
       active: this.isActive(entity),
-      disabled: !entity
+      disabled: !entity,
     });
 
     const onOpen = async () => {
@@ -103,7 +103,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
 
       menuItems.unshift({
         title: "Remove from Hotbar",
-        onClick: () => remove(entity.metadata.uid)
+        onClick: () => remove(entity.metadata.uid),
       });
 
       this.contextMenu.menuItems = menuItems;

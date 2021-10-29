@@ -67,7 +67,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [],
         users: [],
         contexts: [],
-        currentContext: "foobar"
+        currentContext: "foobar",
       });
 
       expect(configToModels(config, "").length).toBe(0);
@@ -88,7 +88,7 @@ describe("kubeconfig-sync.source tests", () => {
           name: "context-name",
           user: "user-name",
         }],
-        currentContext: "foobar"
+        currentContext: "foobar",
       });
 
       const models = configToModels(config, "/bar");
@@ -135,7 +135,7 @@ describe("kubeconfig-sync.source tests", () => {
             user: "user-name",
           },
         }],
-        currentContext: "foobar"
+        currentContext: "foobar",
       });
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
@@ -178,7 +178,7 @@ describe("kubeconfig-sync.source tests", () => {
             user: "user-name",
           },
         }],
-        currentContext: "foobar"
+        currentContext: "foobar",
       });
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
@@ -232,7 +232,7 @@ describe("kubeconfig-sync.source tests", () => {
             user: "user-name",
           },
         }],
-        currentContext: "foobar"
+        currentContext: "foobar",
       });
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
@@ -276,7 +276,7 @@ describe("kubeconfig-sync.source tests", () => {
             user: "user-name",
           },
         }],
-        currentContext: "foobar"
+        currentContext: "foobar",
       });
 
       computeDiff(newContents, rootSource, filePath);

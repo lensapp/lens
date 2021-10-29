@@ -79,7 +79,7 @@ export class Ingresses extends React.Component<Props> {
             const lines = item.getRoutes().length || 1;
 
             return lines * lineHeight + paddings;
-          }
+          },
         }}
       />
     );
