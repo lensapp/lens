@@ -28,8 +28,20 @@ import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
+// DST Root CA X3, which was expired on 9.30.2021
+export const DSTRootCAX3 = "-----BEGIN CERTIFICATE-----\nMIIDSjCCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/\nMSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT\nDkRTVCBSb290IENBIFgzMB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow\nPzEkMCIGA1UEChMbRGlnaXRhbCBTaWduYXR1cmUgVHJ1c3QgQ28uMRcwFQYDVQQD\nEw5EU1QgUm9vdCBDQSBYMzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB\nAN+v6ZdQCINXtMxiZfaQguzH0yxrMMpb7NnDfcdAwRgUi+DoM3ZJKuM/IUmTrE4O\nrz5Iy2Xu/NMhD2XSKtkyj4zl93ewEnu1lcCJo6m67XMuegwGMoOifooUMM0RoOEq\nOLl5CjH9UL2AZd+3UWODyOKIYepLYYHsUmu5ouJLGiifSKOeDNoJjj4XLh7dIN9b\nxiqKqy69cK3FCxolkHRyxXtqqzTWMIn/5WgTe1QLyNau7Fqckh49ZLOMxt+/yUFw\n7BZy1SbsOFU5Q9D8/RhcQPGX69Wam40dutolucbY38EVAjqr2m7xPi71XAicPNaD\naeQQmxkqtilX4+U9m5/wAl0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNV\nHQ8BAf8EBAMCAQYwHQYDVR0OBBYEFMSnsaR7LHH62+FLkHX/xBVghYkQMA0GCSqG\nSIb3DQEBBQUAA4IBAQCjGiybFwBcqR7uKGY3Or+Dxz9LwwmglSBd49lZRNI+DT69\nikugdB/OEIKcdBodfpga3csTS7MgROSR6cz8faXbauX+5v3gTt23ADq1cEmv8uXr\nAvHRAosZy5Q6XkjEGB5YGV8eAlrwDPGxrancWYaLbumR9YbK+rlmM6pZW87ipxZz\nR8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5\nJDGFoqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo\nOb8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ\n-----END CERTIFICATE-----\n";
+
+export const expiredCA = (cert: string) => {
+  if (typeof cert === "string" && cert.includes(DSTRootCAX3)) {
+    return false;
+  }
+
+  return true;
+};
+
 /**
  * Get root CA certificate from MacOSX system keychain
+ * Only return non-expred certificates.
  */
 export const getMacRootCA = async () => {
   // inspired mac-ca https://github.com/jfromaniello/mac-ca
@@ -40,11 +52,12 @@ export const getMacRootCA = async () => {
   const trusted = (await execAsync(`${bin} ${args}`)).stdout.toString().split(splitPattern);
   const rootCA = (await execAsync(`${bin} ${args} ${systemRootCertsPath}`)).stdout.toString().split(splitPattern);
 
-  return [...new Set([...trusted, ...rootCA])];
+  return [...new Set([...trusted, ...rootCA])].filter(expiredCA);
 };
 
 /**
- * Get root CA certificate from Windows system certificate store
+ * Get root CA certificate from Windows system certificate store.
+ * Only return non-expred certificates.
  */
 export const getWinRootCA = (): Promise<string[]> => {
   return new Promise((resolve) => {
@@ -57,7 +70,7 @@ export const getWinRootCA = (): Promise<string[]> => {
         CAs.push(ca);
       },
       onend: () => {
-        resolve(CAs);
+        resolve(CAs.filter(expiredCA));
       }
     });
   });
@@ -66,7 +79,7 @@ export const getWinRootCA = (): Promise<string[]> => {
 /**
  * Add (or merge) CAs to https.globalAgent.options.ca
  */
-export const injectCAs = async (CAs: Array<string>) => {
+export const injectCAs = (CAs: Array<string>) => {
   for (const cert of CAs) {
     if (Array.isArray(https.globalAgent.options.ca)) {
       !https.globalAgent.options.ca.includes(cert) && https.globalAgent.options.ca.push(cert);

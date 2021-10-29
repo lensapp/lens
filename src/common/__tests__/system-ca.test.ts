@@ -20,7 +20,7 @@
  */
 import https from "https";
 import os from "os";
-import { getMacRootCA, getWinRootCA, injectCAs } from "../system-ca";
+import { getMacRootCA, getWinRootCA, injectCAs, DSTRootCAX3 } from "../system-ca";
 import { dependencies, devDependencies } from "../../../package.json";
 
 describe("inject CA for Mac", () => {
@@ -54,6 +54,15 @@ describe("inject CA for Mac", () => {
 
     // @ts-ignore
     expect(new Set(injected)).toEqual(new Set(injectedByMacCA));
+  });
+
+  (os.platform().includes("darwin") ? it: it.skip)("shouldn't included the expired DST Root CA X3 on Mac", async () => {
+    const osxCAs = await getMacRootCA();
+
+    injectCAs(osxCAs);
+    const injected = https.globalAgent.options.ca;
+
+    expect(injected.includes(DSTRootCAX3)).toBeFalsy();
   });
 });
 
@@ -93,6 +102,19 @@ describe("inject CA for Windows", () => {
 
     // @ts-ignore
     expect(new Set(injected)).toEqual(new Set(injectedByWinCA));
+  });
+
+  (deps["win-ca"] && os.platform().includes("win32") ? it: it.skip)("shouldn't included the expired DST Root CA X3 on Windows", async () => {
+    const winCAs = await getWinRootCA();
+
+    // @ts-ignore
+    const wincaAPI = await import("win-ca/api");
+
+    wincaAPI.inject("+", winCAs);
+    const injected = https.globalAgent.options.ca;
+
+    // @ts-ignore
+    expect(injected.includes(DSTRootCAX3)).toBeFalsy();
   });
 });
 
