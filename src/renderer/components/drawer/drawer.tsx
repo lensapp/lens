@@ -75,14 +75,25 @@ export class Drawer extends React.Component<DrawerProps> {
     window.addEventListener("mousedown", this.onMouseDown);
     window.addEventListener("click", this.onClickOutside);
     window.addEventListener("keydown", this.onEscapeKey);
+    window.addEventListener("click", this.fixUpTripleClick);
   }
 
   componentWillUnmount() {
     this.stopListenLocation();
     window.removeEventListener("mousedown", this.onMouseDown);
     window.removeEventListener("click", this.onClickOutside);
+    window.removeEventListener("click", this.fixUpTripleClick);
     window.removeEventListener("keydown", this.onEscapeKey);
   }
+
+  fixUpTripleClick = (ev: MouseEvent) => {
+    // detail: A count of consecutive clicks that happened in a short amount of time
+    if (ev.detail === 3) {
+      const selection = window.getSelection();
+
+      selection.selectAllChildren(selection.anchorNode?.parentNode);
+    }
+  };
 
   saveScrollPos = () => {
     if (!this.scrollElem) return;
