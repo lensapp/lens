@@ -85,7 +85,8 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+        ],
+        "no-template-curly-in-string": "error",
       }
     },
     {
@@ -146,7 +147,8 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+        ],
+        "no-template-curly-in-string": "error",
       },
     },
     {
@@ -216,7 +218,8 @@ module.exports = {
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
         ],
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "no-template-curly-in-string": "error",
       },
     }
   ]
