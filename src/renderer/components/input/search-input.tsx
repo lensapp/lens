@@ -26,6 +26,7 @@ import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Input, InputProps } from "./input";
+import { isMac } from "../../../common/vars";
 
 interface Props extends InputProps {
   compact?: boolean; // show only search-icon when not focused
@@ -38,9 +39,7 @@ const defaultProps: Partial<Props> = {
   autoFocus: true,
   bindGlobalFocusHotkey: true,
   showClearIcon: true,
-  get placeholder() {
-    return `Search...`;
-  },
+  placeholder: "Search...",
 };
 
 @observer
@@ -60,9 +59,7 @@ export class SearchInput extends React.Component<Props> {
 
   @boundMethod
   onGlobalKey(evt: KeyboardEvent) {
-    const meta = evt.metaKey || evt.ctrlKey;
-
-    if (meta && evt.key === "f") {
+    if (evt.key === "f" && (isMac ? evt.metaKey : evt.ctrlKey)) {
       this.inputRef.current.focus();
     }
   }
