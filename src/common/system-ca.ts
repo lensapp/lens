@@ -21,7 +21,7 @@
 
 import { isMac, isWindows } from "./vars";
 // @ts-expect-error winca/api module doesn't have a type definition
-import winca from "win-ca/api";
+import wincaAPI from "win-ca/api";
 import https from "https";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -50,8 +50,8 @@ export const getWinRootCA = (): Promise<string[]> => {
   return new Promise((resolve) => {
     const CAs: string[] = [];
 
-    winca({
-      format: winca.der2.pem,
+    wincaAPI({
+      format: wincaAPI.der2.pem,
       inject: false,
       ondata: (ca: string) => {
         CAs.push(ca);
@@ -80,14 +80,14 @@ if (isMac) {
   getMacRootCA().then((osxRootCAs) => {
     injectCAs(osxRootCAs);
   }).catch((error) => {
-    console.error(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error?.message}`);
+    console.warn(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error?.message}`);
   });
 }
 
 if (isWindows) {
   getWinRootCA().then((winRootCAs) => {
-    winca.inject("+", winRootCAs);
+    wincaAPI.inject("+", winRootCAs);
   }).catch((error) => {
-    console.error(`[WIN-CA]: Error injecting root CAs from Windows. ${error?.message}`);
+    console.warn(`[WIN-CA]: Error injecting root CAs from Windows. ${error?.message}`);
   });
 }
