@@ -255,7 +255,6 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@sentry/types": "^6.13.3",
-    "@testing-library/dom": "^8.10.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.5.0",
