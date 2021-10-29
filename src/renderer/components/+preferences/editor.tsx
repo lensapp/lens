@@ -35,6 +35,7 @@ enum EditorLineNumbersStyles {
 }
 
 export const Editor = observer(() => {
+  const userStore = UserStore.getInstance();
 
   return (
     <section id="editor">
@@ -43,8 +44,8 @@ export const Editor = observer(() => {
         <FormSwitch
           control={
             <Switcher
-              checked={UserStore.getInstance().editorConfiguration.miniMap.enabled}
-              onChange={v => UserStore.getInstance().enableEditorMinimap(v.target.checked)}
+              checked={userStore.editorConfiguration.miniMap.enabled}
+              onChange={v => userStore.enableEditorMinimap(v.target.checked)}
               name="minimap"
             />
           }
@@ -55,8 +56,8 @@ export const Editor = observer(() => {
         <SubTitle title="Line numbers"/>
         <Select
           options={Object.entries(EditorLineNumbersStyles).map(entry => ({label: entry[1], value: entry[0]}))}
-          value={UserStore.getInstance().editorConfiguration?.lineNumbers}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().setEditorLineNumbers(value)}
+          value={userStore.editorConfiguration?.lineNumbers}
+          onChange={({ value }: SelectOption) => userStore.setEditorLineNumbers(value)}
           themeName="lens"
         />
       </section>
@@ -67,11 +68,17 @@ export const Editor = observer(() => {
           min={1}
           max={10}
           validators={[isNumber]}
-          value={UserStore.getInstance().editorConfiguration.tabSize?.toString()}
-          onChange={(value) => {(Number(value) || value=="") && UserStore.getInstance().setEditorTabSize(Number(value));}}
+          value={userStore.editorConfiguration.tabSize?.toString()}
+          onChange={value => {
+            const n = Number(value);
+
+            if (!isNaN(n)) {
+              userStore.setEditorTabSize(n);
+            }
+          }}
         />
       </section>
     </section>
   );
 });
-    
+

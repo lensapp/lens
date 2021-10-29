@@ -77,6 +77,7 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -138,6 +139,8 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -206,6 +209,8 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
