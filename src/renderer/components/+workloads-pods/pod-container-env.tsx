@@ -40,30 +40,23 @@ interface Props {
 export const ContainerEnvironment = observer((props: Props) => {
   const { container: { env, envFrom }, namespace } = props;
 
-  useEffect(
-    () =>
-      autorun(() => {
-        env && env.forEach(variable => {
-          const { valueFrom } = variable;
+  useEffect( () => autorun(() => {
+    for (const { valueFrom } of env ?? []) {
+      if (valueFrom?.configMapKeyRef) {
+        configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
+      }
+    }
 
-          if (valueFrom && valueFrom.configMapKeyRef) {
-            configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
-          }
-        });
-        envFrom && envFrom.forEach(item => {
-          const { configMapRef, secretRef } = item;
+    for (const { configMapRef, secretRef } of envFrom ?? []) {
+      if (secretRef?.name) {
+        secretsStore.load({ name: secretRef.name, namespace });
+      }
 
-          if (secretRef && secretRef.name) {
-            secretsStore.load({ name: secretRef.name, namespace });
-          }
-
-          if (configMapRef && configMapRef.name) {
-            configMapsStore.load({ name: configMapRef.name, namespace });
-          }
-        });
-      }),
-    []
-  );
+      if (configMapRef?.name) {
+        configMapsStore.load({ name: configMapRef.name, namespace });
+      }
+    }
+  }), []);
 
   const renderEnv = () => {
     const orderedEnv = _.sortBy(env, "name");
