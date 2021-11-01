@@ -41,6 +41,9 @@ jobs:
       - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          cd .lens-ide-overlay
+          git checkout -b v5.2 0d3d9140a0f151c3ca6d7651c092f8ba44091794
+          cd ..
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
           jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
@@ -87,6 +90,9 @@ jobs:
       - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          cd .lens-ide-overlay
+          git checkout -b v5.2 0d3d9140a0f151c3ca6d7651c092f8ba44091794
+          cd ..
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
           jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
@@ -135,6 +141,9 @@ jobs:
       - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          cd .lens-ide-overlay
+          git checkout -b v5.2 0d3d9140a0f151c3ca6d7651c092f8ba44091794
+          cd ..
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
           jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
