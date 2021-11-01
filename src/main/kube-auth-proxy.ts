@@ -21,6 +21,7 @@
 
 import { ChildProcess, spawn } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
+import { randomBytes } from "crypto";
 import { broadcastMessage } from "../common/ipc";
 import type { Cluster } from "./cluster";
 import { Kubectl } from "./kubectl";
@@ -38,6 +39,7 @@ const startingServeRegex = /^starting to serve on (?<address>.+)/i;
 
 export class KubeAuthProxy {
   public lastError: string;
+  public readonly apiPrefix: string;
 
   public get port(): number {
     return this._port;
@@ -56,6 +58,7 @@ export class KubeAuthProxy {
     this.env = env;
     this.cluster = cluster;
     this.kubectl = Kubectl.bundled();
+    this.apiPrefix = `/${randomBytes(8).toString("hex")}`;
   }
 
   get acceptHosts() {
@@ -78,7 +81,8 @@ export class KubeAuthProxy {
       "--kubeconfig", `${this.cluster.kubeConfigPath}`,
       "--context", `${this.cluster.contextName}`,
       "--accept-hosts", this.acceptHosts,
-      "--reject-paths", "^[^/]"
+      "--reject-paths", "^[^/]",
+      "--api-prefix", this.apiPrefix
     ];
 
     if (process.env.DEBUG_PROXY === "true") {
@@ -112,7 +116,7 @@ export class KubeAuthProxy {
     });
 
     await waitUntilUsed(this.port, 500, 10000);
-  
+
     this.ready = true;
   }
 
