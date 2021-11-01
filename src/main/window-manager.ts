@@ -109,6 +109,10 @@ export class WindowManager extends Singleton {
           app.dock?.hide(); // hide icon in dock (mac-os)
         })
         .webContents
+        .on("new-window", (event, url) => {
+          event.preventDefault();
+          shell.openExternal(url);
+        })
         .on("dom-ready", () => {
           appEventBus.emit({ name: "app", action: "dom-ready" });
         })
@@ -146,10 +150,6 @@ export class WindowManager extends Singleton {
 
           // Always disable Node.js integration for all webviews
           webPreferences.nodeIntegration = false;
-        }).setWindowOpenHandler((details) => {
-          shell.openExternal(details.url);
-
-          return { action: "deny" };
         });
     }
 
