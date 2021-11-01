@@ -59,6 +59,11 @@ module.exports = {
           "SwitchCase": 1,
         }],
         "no-unused-vars": "off",
+        "space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
           "warn", {
@@ -117,6 +122,12 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
@@ -188,6 +199,12 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
         "react/display-name": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {

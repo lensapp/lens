@@ -45,7 +45,7 @@ export function buildURL<P extends object = {}, Q extends object = {}>(path: str
 export function buildURLPositional<P extends object = {}, Q extends object = {}>(path: string | any) {
   const builder = buildURL(path);
 
-  return function(params?: P, query?: Q, fragment?: string): string {
+  return function (params?: P, query?: Q, fragment?: string): string {
     return builder({ params, query, fragment });
   };
 }
