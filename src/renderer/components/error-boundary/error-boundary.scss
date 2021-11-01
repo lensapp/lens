@@ -43,4 +43,8 @@
     background: $contentColor;
     color: $textColorSecondary;
   }
+
+  a {
+    color: var(--colorInfo);
+  }
 }

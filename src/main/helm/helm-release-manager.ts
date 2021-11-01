@@ -105,7 +105,9 @@ export async function getRelease(name: string, namespace: string, cluster: Clust
     const helm = await helmCli.binaryPath();
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
-    const { stdout } = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${proxyKubeconfig}`);
+    const { stdout } = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${proxyKubeconfig}`, {
+      maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
+    });
     const release = JSON.parse(stdout);
 
     release.resources = await getResources(name, namespace, cluster);
