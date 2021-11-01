@@ -21,7 +21,7 @@
 
 // Main process
 
-import "../common/system-ca";
+import { injectSystemCAs } from "../common/system-ca";
 import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
@@ -121,6 +121,8 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
+  await injectSystemCAs();
+  
   logger.info(`🚀 Starting ${productName} from "${AppPaths.get("exe")}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();

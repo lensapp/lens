@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "../common/system-ca";
+import { injectSystemCAs } from "../common/system-ca";
 import React from "react";
 import { Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
@@ -42,6 +42,7 @@ import { unmountComponentAtNode } from "react-dom";
 @observer
 export class LensApp extends React.Component {
   static async init(rootElem: HTMLElement) {
+    await injectSystemCAs();
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
     LensProtocolRouterRenderer.createInstance().init();
