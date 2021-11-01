@@ -67,7 +67,7 @@ export class ClusterManager extends React.Component {
             <Route component={EntitySettings} {...routes.entitySettingsRoute} />
             {
               GlobalPageRegistry.getInstance().getItems()
-                .map(({ url, components: { Page } }) => (
+                .map(({ url, components: { Page }}) => (
                   <Route key={url} path={url} component={Page} />
                 ))
             }

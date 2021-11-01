@@ -44,12 +44,12 @@ export abstract class IpcMain extends IpcRegistrar {
   listen(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
     const cleanup = once(() => {
-      logger.info(`[IPC-RENDERER]: removing extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version } });
+      logger.info(`[IPC-RENDERER]: removing extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
 
       return ipcMain.removeListener(prefixedChannel, listener);
     });
 
-    logger.info(`[IPC-RENDERER]: adding extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version } });
+    logger.info(`[IPC-RENDERER]: adding extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
     ipcMain.addListener(prefixedChannel, listener);
     this.extension[Disposers].push(cleanup);
 
@@ -64,10 +64,10 @@ export abstract class IpcMain extends IpcRegistrar {
   handle(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
-    logger.info(`[IPC-RENDERER]: adding extension handler`, { channel, extension: { name: this.extension.name, version: this.extension.version } });
+    logger.info(`[IPC-RENDERER]: adding extension handler`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
     ipcMainHandle(prefixedChannel, handler);
     this.extension[Disposers].push(() => {
-      logger.info(`[IPC-RENDERER]: removing extension handler`, { channel, extension: { name: this.extension.name, version: this.extension.version } });
+      logger.info(`[IPC-RENDERER]: removing extension handler`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
 
       return ipcMain.removeHandler(prefixedChannel);
     });

@@ -246,7 +246,7 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): 
 }
 
 async function unpackExtension(request: InstallRequestValidated, disposeDownloading?: Disposer) {
-  const { id, fileName, tempFile, manifest: { name, version } } = request;
+  const { id, fileName, tempFile, manifest: { name, version }} = request;
 
   ExtensionInstallationStateStore.setInstalling(id);
   disposeDownloading?.();
@@ -386,7 +386,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
     // install extension if not yet exists
     await unpackExtension(validatedRequest, dispose);
   } else {
-    const { manifest: { version: oldVersion } } = ExtensionLoader.getInstance().getExtension(validatedRequest.id);
+    const { manifest: { version: oldVersion }} = ExtensionLoader.getInstance().getExtension(validatedRequest.id);
 
     // otherwise confirmation required (re-install / update)
     const removeNotification = Notifications.info(
@@ -451,7 +451,7 @@ async function installFromInput(input: string) {
 
       await attemptInstall({ fileName, dataP: readFileNotify(input) });
     } else if (InputValidators.isExtensionNameInstall.validate(input)) {
-      const [{ groups: { name, version } }] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
+      const [{ groups: { name, version }}] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
 
       await attemptInstallByInfo({ name, version });
     }

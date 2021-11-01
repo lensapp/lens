@@ -157,7 +157,7 @@ export class CRDDetails extends React.Component<Props> {
         <>
           <DrawerTitle title="Validation"/>
           <MonacoEditor
-            options={{readOnly: true, ...UserStore.getInstance().getEditorOptions()}}
+            options={{ readOnly: true, ...UserStore.getInstance().getEditorOptions() }}
             className={cssNames("MonacoEditor", "validation")}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             language="yaml"

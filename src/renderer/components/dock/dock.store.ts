@@ -23,7 +23,7 @@ import * as uuid from "uuid";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
-import {monacoModelsManager} from "./monaco-model-manager";
+import { monacoModelsManager } from "./monaco-model-manager";
 
 export type TabId = string;
 

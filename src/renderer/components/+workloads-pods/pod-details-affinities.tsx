@@ -46,7 +46,7 @@ export class PodDetailsAffinities extends React.Component<Props> {
         <DrawerParamToggler label={affinitiesNum}>
           <div className="ace-container">
             <MonacoEditor
-              options={{readOnly: true, ...UserStore.getInstance().getEditorOptions()}}
+              options={{ readOnly: true, ...UserStore.getInstance().getEditorOptions() }}
               className={cssNames("MonacoEditor")}
               theme={ThemeStore.getInstance().activeTheme.monacoTheme}
               language="yaml"

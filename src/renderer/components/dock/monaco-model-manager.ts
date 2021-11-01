@@ -18,7 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {monaco} from "react-monaco-editor";
+import { monaco } from "react-monaco-editor";
 
 export type TabId = string;
 
@@ -39,7 +39,7 @@ export class MonacoModelsManager implements ModelsState {
     const uri = this.getUri(tabId);
     const model = monaco.editor.createModel(value, lang, uri); 
 
-    if(!uri) this.models = this.models.concat({ id: tabId, modelUri: model.uri, lang});
+    if(!uri) this.models = this.models.concat({ id: tabId, modelUri: model.uri, lang });
   }
 
   getModel(tabId: string): monaco.editor.ITextModel {

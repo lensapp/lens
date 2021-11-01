@@ -91,7 +91,7 @@ export class HelmChartDetails extends Component<Props> {
     try {
       this.abortController?.abort();
       this.abortController = new AbortController();
-      const { chart: { name, repo } } = this.props;
+      const { chart: { name, repo }} = this.props;
       const { readme } = await getChartDetails(repo, name, { version: chart.version, reqInit: { signal: this.abortController.signal }});
 
       this.readme = readme;

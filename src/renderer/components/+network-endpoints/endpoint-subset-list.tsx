@@ -23,7 +23,7 @@ import "./endpoint-subset-list.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { EndpointSubset, Endpoint, EndpointAddress} from "../../../common/k8s-api/endpoints";
+import { EndpointSubset, Endpoint, EndpointAddress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { boundMethod } from "../../utils";
 import { apiManager } from "../../../common/k8s-api/api-manager";
@@ -47,7 +47,7 @@ export class EndpointSubsetList extends React.Component<Props> {
 
   @boundMethod
   getNotReadyAddressTableRow(ip: string) {
-    const { subset} = this.props;
+    const { subset } = this.props;
     const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
 
     return this.renderAddressTableRow(address);

@@ -53,9 +53,9 @@ export default {
     // Hotbars might be empty, if some of the previous migrations weren't run
     if (hotbars.length === 0) {
       const hotbar = getEmptyHotbar("default");
-      const { metadata: { uid, name, source } } = catalogEntity;
+      const { metadata: { uid, name, source }} = catalogEntity;
 
-      hotbar.items[0] = { entity: { uid, name, source } };
+      hotbar.items[0] = { entity: { uid, name, source }};
 
       hotbars.push(hotbar);
     }
@@ -132,7 +132,7 @@ export default {
       if (hotbars.every(hotbar => hotbar.items.every(item => item?.entity?.uid !== "catalog-entity"))) {
         // note, we will add a new whole hotbar here called "default" if that was previously removed
         const defaultHotbar = hotbars.find(hotbar => hotbar.name === "default");
-        const { metadata: { uid, name, source } } = catalogEntity;
+        const { metadata: { uid, name, source }} = catalogEntity;
 
         if (defaultHotbar) {
           const freeIndex = defaultHotbar.items.findIndex(isNull);
@@ -142,15 +142,15 @@ export default {
             // called "default" is full than overriding a hotbar item
             const hotbar = getEmptyHotbar("initial");
 
-            hotbar.items[0] = { entity: { uid, name, source } };
+            hotbar.items[0] = { entity: { uid, name, source }};
             hotbars.unshift(hotbar);
           } else {
-            defaultHotbar.items[freeIndex] = { entity: { uid, name, source } };
+            defaultHotbar.items[freeIndex] = { entity: { uid, name, source }};
           }
         } else {
           const hotbar = getEmptyHotbar("default");
 
-          hotbar.items[0] = { entity: { uid, name, source } };
+          hotbar.items[0] = { entity: { uid, name, source }};
           hotbars.unshift(hotbar);
         }
       }

@@ -92,7 +92,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   /**
    * Monaco editor configs
    */
-   @observable editorConfiguration:EditorConfiguration = {tabSize: null, miniMap: null, lineNumbers: null};
+   @observable editorConfiguration:EditorConfiguration = { tabSize: null, miniMap: null, lineNumbers: null };
 
   /**
    * The set of file/folder paths to be synced

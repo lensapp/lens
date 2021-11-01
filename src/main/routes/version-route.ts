@@ -27,6 +27,6 @@ export class VersionRoute {
   static async getVersion(request: LensApiRequest) {
     const { response } = request;
 
-    respondJson(response, { version: getAppVersion()}, 200);
+    respondJson(response, { version: getAppVersion() }, 200);
   }
 }

@@ -35,7 +35,7 @@ export class DetectorRegistry extends Singleton {
   }
 
   async detectForCluster(cluster: Cluster): Promise<ClusterMetadata> {
-    const results: {[key: string]: ClusterDetectionResult } = {};
+    const results: { [key: string]: ClusterDetectionResult } = {};
 
     for (const detectorClass of this.registry) {
       const detector = new detectorClass(cluster);

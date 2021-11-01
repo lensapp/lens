@@ -54,7 +54,7 @@ export class PortForwards extends React.Component<Props> {
   }
 
   get selectedPortForward() {
-    const { match: { params: { forwardport } } } = this.props;
+    const { match: { params: { forwardport }}} = this.props;
 
     return portForwardStore.getById(forwardport);
   }

@@ -134,7 +134,7 @@ export class KubeConfigDialog extends React.Component<Props> {
               value={yamlConfig}
               theme={ThemeStore.getInstance().activeTheme.monacoTheme}
               className={cssNames( "MonacoEditor")}
-              options={{readOnly: true, ...UserStore.getInstance().getEditorOptions()}}
+              options={{ readOnly: true, ...UserStore.getInstance().getEditorOptions() }}
             />
             <textarea
               className="config-copy"

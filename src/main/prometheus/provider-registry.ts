@@ -46,7 +46,7 @@ export abstract class PrometheusProvider {
   protected async getFirstNamespacedServer(client: CoreV1Api, ...selectors: string[]): Promise<PrometheusService | undefined> {
     try {
       for (const selector of selectors) {
-        const { body: { items: [service] } } = await client.listServiceForAllNamespaces(null, null, null, selector);
+        const { body: { items: [service] }} = await client.listServiceForAllNamespaces(null, null, null, selector);
 
         if (service) {
           return {

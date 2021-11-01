@@ -74,7 +74,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
       return null;
     }
 
-    const className = cssNames("led", { online: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED}); // TODO: make it more generic
+    const className = cssNames("led", { online: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED }); // TODO: make it more generic
 
     return <div className={className} />;
   }

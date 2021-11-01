@@ -78,7 +78,7 @@ export class ReplicaSet extends WorkloadKubeObject {
 
   declare spec: {
     replicas?: number;
-    selector: { matchLabels: { [app: string]: string } };
+    selector: { matchLabels: { [app: string]: string }};
     template?: {
       metadata: {
         labels: {

@@ -32,7 +32,7 @@ export default {
       if (contextName === "__internal__") continue;
       const cluster = value[1];
 
-      store.set(contextName, { kubeConfig: cluster.kubeConfig, icon: cluster.icon || null, preferences: cluster.preferences || {} });
+      store.set(contextName, { kubeConfig: cluster.kubeConfig, icon: cluster.icon || null, preferences: cluster.preferences || {}});
     }
   }
 } as MigrationDeclaration;

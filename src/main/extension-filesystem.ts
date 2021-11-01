@@ -68,7 +68,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
   }
 
   @action
-  protected fromStore({ extensions }: FSProvisionModel = { extensions: {} }): void {
+  protected fromStore({ extensions }: FSProvisionModel = { extensions: {}}): void {
     this.registeredExtensions.merge(extensions);
   }
 

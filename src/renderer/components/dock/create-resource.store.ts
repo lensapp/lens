@@ -63,7 +63,7 @@ export class CreateResourceStore extends DockTabStore<string> {
     const userTemplates = await this.getTemplates(this.userTemplatesFolder, "ungrouped");
     const lensTemplates = await this.getTemplates(this.lensTemplatesFolder, "lens");
 
-    return {...userTemplates,...lensTemplates};
+    return { ...userTemplates,...lensTemplates };
   }
 
   async watchUserTemplates(callback: ()=> void){

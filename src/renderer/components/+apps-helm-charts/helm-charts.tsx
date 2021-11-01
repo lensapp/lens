@@ -50,7 +50,7 @@ export class HelmCharts extends Component<Props> {
   }
 
   get selectedChart() {
-    const { match: { params: { chartName, repo } } } = this.props;
+    const { match: { params: { chartName, repo }}} = this.props;
 
     return helmChartStore.getByName(chartName, repo);
   }

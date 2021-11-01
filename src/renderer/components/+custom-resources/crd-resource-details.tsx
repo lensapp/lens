@@ -96,7 +96,7 @@ export class CrdResourceDetails extends React.Component<Props> {
   }
 
   render() {
-    const { props: { object, crd } } = this;
+    const { props: { object, crd }} = this;
 
     if (!object || !crd) {
       return null;

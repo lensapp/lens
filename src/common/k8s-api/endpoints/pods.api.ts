@@ -411,7 +411,7 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getNodeSelectors(): string[] {
-    const { nodeSelector = {} } = this.spec;
+    const { nodeSelector = {}} = this.spec;
 
     return Object.entries(nodeSelector).map(values => values.join(": "));
   }

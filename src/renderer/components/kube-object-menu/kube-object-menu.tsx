@@ -89,7 +89,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     return KubeObjectMenuRegistry
       .getInstance()
       .getItemsForKind(object.kind, object.apiVersion)
-      .map(({components: { MenuItem }}, index) => (
+      .map(({ components: { MenuItem }}, index) => (
         <MenuItem
           object={object}
           key={`menu-item-${index}`}

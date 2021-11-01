@@ -24,7 +24,7 @@ import path from "path";
 import os from "os";
 import { ThemeStore } from "../../renderer/theme.store";
 import { getAppVersion, ObservableToggleSet } from "../utils";
-import type {monaco} from "react-monaco-editor";
+import type { monaco } from "react-monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
 
