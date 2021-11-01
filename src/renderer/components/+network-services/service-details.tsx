@@ -67,6 +67,11 @@ export class ServiceDetails extends React.Component<Props> {
 
     const { spec } = service;
     const endpoint = endpointStore.getByName(service.getName(), service.getNs());
+    const externalIps = service.getExternalIps();
+
+    if (externalIps.length === 0 && spec?.externalName) {
+      externalIps.push(spec.externalName);
+    }
 
     return (
       <div className="ServicesDetails">
@@ -106,9 +111,9 @@ export class ServiceDetails extends React.Component<Props> {
           {service.getIpFamilyPolicy()}
         </DrawerItem>
 
-        {service.getExternalIps().length > 0 && (
+        {externalIps.length > 0 && (
           <DrawerItem name="External IPs">
-            {service.getExternalIps().map(ip => <div key={ip}>{ip}</div>)}
+            {externalIps.map(ip => <div key={ip}>{ip}</div>)}
           </DrawerItem>
         )}
 

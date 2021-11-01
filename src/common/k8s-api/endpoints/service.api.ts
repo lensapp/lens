@@ -53,7 +53,7 @@ export interface Service {
     clusterIP: string;
     clusterIPs?: string[];
     externalTrafficPolicy?: string;
-    externalName: string;
+    externalName?: string;
     loadBalancerIP?: string;
     loadBalancerSourceRanges?: string[];
     sessionAffinity: string;
@@ -100,11 +100,15 @@ export class Service extends KubeObject {
   getExternalIps() {
     const lb = this.getLoadBalancer();
 
-    if (lb && lb.ingress) {
+    if (lb?.ingress) {
       return lb.ingress.map(val => val.ip || val.hostname);
     }
 
-    return this.spec.externalIPs || [];
+    if (Array.isArray(this.spec?.externalIPs)) {
+      return this.spec.externalIPs;
+    }
+
+    return [];
   }
 
   getType() {
