@@ -30,7 +30,7 @@ export class IngressApi extends KubeApi<Ingress> {
 }
 
 export function getMetricsForIngress(ingress: string, namespace: string): Promise<IIngressMetrics> {
-  const opts = { category: "ingress", ingress };
+  const opts = { category: "ingress", ingress, namespace };
 
   return metricsApi.getMetrics({
     bytesSentSuccess: opts,
