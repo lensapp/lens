@@ -864,6 +864,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#isclosed" class="md-nav__link">
+    isClosed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#isopen" class="md-nav__link">
     isOpen
   </a>
@@ -1126,6 +1133,7 @@
 <ul>
 <li><a href="./#focusableitems">focusableItems</a></li>
 <li><a href="./#focuseditem">focusedItem</a></li>
+<li><a href="./#isclosed">isClosed</a></li>
 <li><a href="./#isopen">isOpen</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
@@ -1257,9 +1265,14 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a></p>
 <hr />
+<h3 id="isclosed">isClosed<a class="headerlink" href="#isclosed" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>isClosed</strong>(): <code>boolean</code></p>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<hr />
 <h3 id="isopen">isOpen<a class="headerlink" href="#isopen" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>isOpen</strong>(): <code>boolean</code></p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="unsafe_componentwillmount">UNSAFE_componentWillMount<a class="headerlink" href="#unsafe_componentwillmount" title="Permanent link">#</a></h3>
@@ -1272,7 +1285,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillMount</p>
@@ -1308,7 +1321,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillReceiveProps</p>
@@ -1346,7 +1359,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillUpdate</p>
@@ -1372,7 +1385,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="bindref">bindRef<a class="headerlink" href="#bindref" title="Permanent link">#</a></h3>
@@ -1392,12 +1405,12 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="close">close<a class="headerlink" href="#close" title="Permanent link">#</a></h3>
 <p>▸ <strong>close</strong>(): <code>void</code></p>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="componentdidcatch">componentDidCatch<a class="headerlink" href="#componentdidcatch" title="Permanent link">#</a></h3>
@@ -1423,14 +1436,14 @@ the entire component tree to unmount.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidCatch</p>
 <hr />
 <h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentDidMount</strong>(): <code>void</code></p>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidMount</p>
@@ -1452,7 +1465,7 @@ the entire component tree to unmount.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidUpdate</p>
@@ -1466,7 +1479,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead; will stop working in React 17</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillMount</p>
@@ -1501,14 +1514,14 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillReceiveProps</p>
 <hr />
 <h3 id="componentwillunmount">componentWillUnmount<a class="headerlink" href="#componentwillunmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentWillUnmount</strong>(): <code>void</code></p>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillUnmount</p>
@@ -1545,7 +1558,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillUpdate</p>
@@ -1569,7 +1582,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="forceupdate">forceUpdate<a class="headerlink" href="#forceupdate" title="Permanent link">#</a></h3>
@@ -1589,7 +1602,7 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>React.Component.forceUpdate</p>
@@ -1620,14 +1633,14 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>any</code></p>
 <h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>React.Component.getSnapshotBeforeUpdate</p>
 <hr />
 <h3 id="onblur">onBlur<a class="headerlink" href="#onblur" title="Permanent link">#</a></h3>
 <p>▸ <strong>onBlur</strong>(): <code>void</code></p>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onclickoutside">onClickOutside<a class="headerlink" href="#onclickoutside" title="Permanent link">#</a></h3>
@@ -1647,12 +1660,12 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="oncontextmenu">onContextMenu<a class="headerlink" href="#oncontextmenu" title="Permanent link">#</a></h3>
 <p>▸ <strong>onContextMenu</strong>(): <code>void</code></p>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
@@ -1672,7 +1685,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onscrolloutside">onScrollOutside<a class="headerlink" href="#onscrolloutside" title="Permanent link">#</a></h3>
@@ -1692,27 +1705,27 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onwindowresize">onWindowResize<a class="headerlink" href="#onwindowresize" title="Permanent link">#</a></h3>
 <p>▸ <strong>onWindowResize</strong>(): <code>void</code></p>
-<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="open">open<a class="headerlink" href="#open" title="Permanent link">#</a></h3>
 <p>▸ <strong>open</strong>(): <code>void</code></p>
-<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="refreshposition">refreshPosition<a class="headerlink" href="#refreshposition" title="Permanent link">#</a></h3>
 <p>▸ <strong>refreshPosition</strong>(): <code>void</code></p>
-<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <code>Element</code></p>
-<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <h4 id="overrides_5">Overrides<a class="headerlink" href="#overrides_5" title="Permanent link">#</a></h4>
 <p>React.Component.render</p>
@@ -1753,7 +1766,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>React.Component.setState</p>
@@ -1789,14 +1802,14 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
+<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>
 <hr />
 <h3 id="toggle">toggle<a class="headerlink" href="#toggle" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggle</strong>(): <code>void</code></p>
-<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
+<h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
                 
               
