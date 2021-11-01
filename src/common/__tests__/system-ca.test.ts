@@ -84,7 +84,6 @@ const deps = { ...dependencies, ...devDependencies };
   it("should inject the same ca as winca.inject('+')", async () => {
     const winCAs = await getWinRootCA();
 
-    // @ts-ignore
     const wincaAPI = await import("win-ca/api");
 
     wincaAPI.inject("+", winCAs);
@@ -101,7 +100,6 @@ const deps = { ...dependencies, ...devDependencies };
   it("shouldn't included the expired DST Root CA X3 on Windows", async () => {
     const winCAs = await getWinRootCA();
 
-    // @ts-ignore
     const wincaAPI = await import("win-ca/api");
 
     wincaAPI.inject("true", winCAs);

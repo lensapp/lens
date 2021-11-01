@@ -20,7 +20,6 @@
  */
 
 import { isMac, isWindows } from "./vars";
-// @ts-expect-error winca/api module doesn't have a type definition
 import wincaAPI from "win-ca/api";
 import https from "https";
 import { promiseExec } from "./utils/promise-exec";
