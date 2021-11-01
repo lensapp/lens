@@ -41,6 +41,7 @@ export const isCertActive = (cert: string) => {
 export const getMacRootCA = async () => {
   // inspired mac-ca https://github.com/jfromaniello/mac-ca
   const args = "find-certificate -a -p";
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet#other_assertions
   const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g;
   const systemRootCertsPath = "/System/Library/Keychains/SystemRootCertificates.keychain";
   const bin = "/usr/bin/security";
