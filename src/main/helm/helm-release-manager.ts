@@ -22,7 +22,7 @@
 import * as tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { promiseExec } from "../promise-exec";
+import { promiseExec } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import type { Cluster } from "../cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
