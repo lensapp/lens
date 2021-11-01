@@ -50,4 +50,8 @@
     display: block;
     padding-top: 6px;
   }
+
+  a[href] {
+    color: var(--colorInfo);
+  }
 }

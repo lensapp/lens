@@ -119,8 +119,8 @@ export class AddCluster extends React.Component {
       <SettingLayout className="AddClusters">
         <h2>Add Clusters from Kubeconfig</h2>
         <p>
-          Clusters added here are <b>not</b> merged into the <code>~/.kube/config</code> file.
-          Read more about adding clusters <a href={`${docsUrl}/catalog/add-clusters/`} rel="noreferrer" target="_blank">here</a>.
+          Clusters added here are <b>not</b> merged into the <code>~/.kube/config</code> file.{" "}
+          <a href={`${docsUrl}/catalog/add-clusters/`} rel="noreferrer" target="_blank">Read more about adding clusters</a>.
         </p>
         <div className="flex column">
           <MonacoEditor
