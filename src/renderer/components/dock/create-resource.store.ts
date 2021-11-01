@@ -102,15 +102,9 @@ export class CreateResourceStore extends DockTabStore<string> {
 
     try {
       const templatePath = path.resolve(sourceFolder, filePath);
-      const pathExists = await fs.pathExists(templatePath);
-
-      if (!pathExists) return ""; // template file not exists, skip
-
       const textContent = await fs.readFile(templatePath, { encoding: "utf-8" });
 
       templatesGroup.templates.set(filePath, textContent); // save cache
-
-      return textContent;
     } catch (error) {
       logger.error(`[CREATE-RESOURCE]: reading "${sourceFolder}/${filePath}" has failed: ${error}`);
     }
