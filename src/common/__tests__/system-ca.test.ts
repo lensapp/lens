@@ -23,7 +23,10 @@ import os from "os";
 import { getMacRootCA, getWinRootCA, injectCAs, DSTRootCAX3 } from "../system-ca";
 import { dependencies, devDependencies } from "../../../package.json";
 
-describe("inject CA for Mac", () => {
+const deps = { ...dependencies, ...devDependencies };
+
+// Skip the test if mac-ca is not installed, or os is not darwin
+(deps["mac-ca"] && os.platform().includes("darwin") ? describe: describe.skip)("inject CA for Mac", () => {
   // for reset https.globalAgent.options.ca after testing
   let _ca: string | Buffer | (string | Buffer)[];
 
@@ -35,28 +38,23 @@ describe("inject CA for Mac", () => {
     https.globalAgent.options.ca = _ca;
   });
 
-  const deps = { ...dependencies, ...devDependencies };
-
   /**
    * The test to ensure using getMacRootCA + injectCAs injects CAs in the same way as using 
    * the auto injection (require('mac-ca'))
-   * 
-   * Skip the test if mac-ca is not installed, or os is not darwin
    */
-  (deps["mac-ca"] && os.platform().includes("darwin") ? it: it.skip)("should inject the same ca as mac-ca", async () => {
+  it("should inject the same ca as mac-ca", async () => {
     const osxCAs = await getMacRootCA();
 
     injectCAs(osxCAs);
-    const injected = https.globalAgent.options.ca;
+    const injected = https.globalAgent.options.ca as (string | Buffer)[];
 
     await import("mac-ca");
-    const injectedByMacCA = https.globalAgent.options.ca;
+    const injectedByMacCA = https.globalAgent.options.ca as (string | Buffer)[];
 
-    // @ts-ignore
     expect(new Set(injected)).toEqual(new Set(injectedByMacCA));
   });
 
-  (os.platform().includes("darwin") ? it: it.skip)("shouldn't included the expired DST Root CA X3 on Mac", async () => {
+  it("shouldn't included the expired DST Root CA X3 on Mac", async () => {
     const osxCAs = await getMacRootCA();
 
     injectCAs(osxCAs);
@@ -66,7 +64,8 @@ describe("inject CA for Mac", () => {
   });
 });
 
-describe("inject CA for Windows", () => {
+// Skip the test if win-ca is not installed, or os is not win32
+(deps["win-ca"] && os.platform().includes("win32") ? describe: describe.skip)("inject CA for Windows", () => {
   // for reset https.globalAgent.options.ca after testing
   let _ca: string | Buffer | (string | Buffer)[];
 
@@ -78,42 +77,36 @@ describe("inject CA for Windows", () => {
     https.globalAgent.options.ca = _ca;
   });
 
-  const deps = { ...dependencies, ...devDependencies };
-
   /**
    * The test to ensure using win-ca/api injects CAs in the same way as using 
    * the auto injection (require('win-ca').inject('+'))
-   * 
-   * Skip the test if win-ca is not installed, or os is not win32
    */
-  (deps["win-ca"] && os.platform().includes("win32") ? it: it.skip)("should inject the same ca as winca.inject('+')", async () => {
+  it("should inject the same ca as winca.inject('+')", async () => {
     const winCAs = await getWinRootCA();
 
     // @ts-ignore
     const wincaAPI = await import("win-ca/api");
 
     wincaAPI.inject("+", winCAs);
-    const injected = https.globalAgent.options.ca;
+    const injected = https.globalAgent.options.ca as (string | Buffer)[];
 
     const winca = await import("win-ca");
 
     winca.inject("+"); // see: https://github.com/ukoloff/win-ca#caveats
-    const injectedByWinCA = https.globalAgent.options.ca;
+    const injectedByWinCA = https.globalAgent.options.ca as (string | Buffer)[];
 
-    // @ts-ignore
     expect(new Set(injected)).toEqual(new Set(injectedByWinCA));
   });
 
-  (deps["win-ca"] && os.platform().includes("win32") ? it: it.skip)("shouldn't included the expired DST Root CA X3 on Windows", async () => {
+  it("shouldn't included the expired DST Root CA X3 on Windows", async () => {
     const winCAs = await getWinRootCA();
 
     // @ts-ignore
     const wincaAPI = await import("win-ca/api");
 
     wincaAPI.inject("true", winCAs);
-    const injected = https.globalAgent.options.ca;
+    const injected = https.globalAgent.options.ca as (string | Buffer)[];
 
-    // @ts-ignore
     expect(injected.includes(DSTRootCAX3)).toBeFalsy();
   });
 });
