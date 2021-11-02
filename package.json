@@ -3,7 +3,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "5.2.6-beta.0",
+  "version": "5.2.6-beta.1",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -74,7 +74,7 @@
     ]
   },
   "build": {
-    "generateUpdatesFilesForAllChannels": true,
+    "generateUpdatesFilesForAllChannels": false,
     "files": [
       "static/build/main.js"
     ],
@@ -183,8 +183,8 @@
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.15.1",
-    "@sentry/electron": "^2.5.0",
-    "@sentry/integrations": "^6.10.0",
+    "@sentry/electron": "^2.5.4",
+    "@sentry/integrations": "^6.13.3",
     "abort-controller": "^3.0.0",
     "array-move": "^3.0.1",
     "auto-bind": "^4.0.0",
@@ -258,8 +258,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@sentry/react": "^6.8.0",
-    "@sentry/types": "^6.8.0",
+    "@sentry/types": "^6.13.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
@@ -326,7 +325,7 @@
     "css-loader": "^5.2.6",
     "deepdash": "^5.3.5",
     "dompurify": "^2.3.1",
-    "electron": "^13.4.0",
+    "electron": "^12.2.1",
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.12.24",

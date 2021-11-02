@@ -42,9 +42,6 @@ import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../extensions/registries";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { eventStore } from "./+events/event.store";
-import { nodesStore } from "./+nodes/nodes.store";
-import { podsStore } from "./+workloads-pods/pods.store";
 import { kubeWatchApi } from "../../common/k8s-api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
@@ -73,6 +70,7 @@ import { getHostedClusterId } from "../utils";
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import { watchHistoryState } from "../remote-helpers/history-updater";
+import { unmountComponentAtNode } from "react-dom";
 
 @observer
 export class App extends React.Component {
@@ -83,7 +81,7 @@ export class App extends React.Component {
     makeObservable(this);
   }
 
-  static async init() {
+  static async init(rootElem: HTMLElement) {
     catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
 
@@ -112,6 +110,13 @@ export class App extends React.Component {
     window.addEventListener("online", () => {
       window.location.reload();
     });
+
+    window.onbeforeunload = () => {
+      logger.info(`[APP]: Unload dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
+
+      unmountComponentAtNode(rootElem);
+    };
+
     whatInput.ask(); // Start to monitor user input device
 
     // Setup hosted cluster context
@@ -121,7 +126,7 @@ export class App extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
+      kubeWatchApi.subscribeStores([namespaceStore], {
         preload: true,
       }),
 

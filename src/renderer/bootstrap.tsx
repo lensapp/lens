@@ -29,7 +29,7 @@ import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { monaco } from "react-monaco-editor";
-import { render, unmountComponentAtNode } from "react-dom";
+import { render } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { ClusterStore } from "../common/cluster-store";
@@ -52,6 +52,10 @@ import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import cloudsMidnight from "./monaco-themes/Clouds Midnight.json";
 
+if (process.isMainFrame) {
+  SentryInit();
+}
+
 configurePackages();
 
 /**
@@ -66,11 +70,13 @@ async function attachChromeDebugger() {
 }
 
 type AppComponent = React.ComponentType & {
-  init?(): Promise<void>;
+  init?(rootElem: HTMLElement): Promise<void>;
 };
 
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app");
+
+  UserStore.createInstance();
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
@@ -89,10 +95,6 @@ export async function bootstrap(App: AppComponent) {
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
-
-  UserStore.createInstance();
-
-  SentryInit();
 
   // ClusterStore depends on: UserStore
   const cs = ClusterStore.createInstance();
@@ -125,16 +127,8 @@ export async function bootstrap(App: AppComponent) {
 
   // init app's dependencies if any
   if (App.init) {
-    await App.init();
+    await App.init(rootElem);
   }
-  window.addEventListener("message", (ev: MessageEvent) => {
-    if (ev.data === "teardown") {
-      UserStore.getInstance(false)?.unregisterIpcListener();
-      ClusterStore.getInstance(false)?.unregisterIpcListener();
-      unmountComponentAtNode(rootElem);
-      window.location.href = "about:blank";
-    }
-  });
   render(<>
     {isMac && <div id="draggable-top" />}
     {DefaultProps(App)}
