@@ -651,7 +651,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
-      const { body: { items } } = await api.listNamespace();
+      const { body: { items }} = await api.listNamespace();
       const namespaces = items.map(ns => ns.metadata.name);
 
       return namespaces;

@@ -59,6 +59,11 @@ module.exports = {
           "SwitchCase": 1,
         }],
         "no-unused-vars": "off",
+        "space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
           "warn", {
@@ -71,12 +76,17 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
+        "object-curly-spacing": ["error", "always", {
+          "objectsInObjects": false,
+          "arraysInObjects": true,
+        }],
         "linebreak-style": ["error", "unix"],
         "eol-last": ["error", "always"],
         "semi": ["error", "always"],
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -84,8 +94,9 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+        ],
+        "no-template-curly-in-string": "error",
       }
     },
     {
@@ -115,6 +126,12 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
@@ -130,6 +147,11 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
+        "object-curly-spacing": "off",
+        "@typescript-eslint/object-curly-spacing": ["error", "always", {
+          "objectsInObjects": false,
+          "arraysInObjects": true,
+        }],
         "react/prop-types": "off",
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
@@ -138,6 +160,8 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -145,8 +169,9 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+        ],
+        "no-template-curly-in-string": "error",
       },
     },
     {
@@ -183,6 +208,12 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
         "react/display-name": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
@@ -198,6 +229,11 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
+        "object-curly-spacing": "off",
+        "@typescript-eslint/object-curly-spacing": ["error", "always", {
+          "objectsInObjects": false,
+          "arraysInObjects": true,
+        }],
         "react/prop-types": "off",
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
@@ -206,6 +242,8 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -213,10 +251,11 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
         ],
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "no-template-curly-in-string": "error",
       },
     }
   ]

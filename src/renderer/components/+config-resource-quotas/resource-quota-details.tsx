@@ -48,7 +48,7 @@ function transformUnit(name: string, value: string): number {
 }
 
 function renderQuotas(quota: ResourceQuota): JSX.Element[] {
-  const { hard = {}, used = {} } = quota.status;
+  const { hard = {}, used = {}} = quota.status;
 
   return Object.entries(hard)
     .filter(([name]) => used[name])

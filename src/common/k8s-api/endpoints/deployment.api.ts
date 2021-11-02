@@ -61,7 +61,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
         spec: {
           template: {
             metadata: {
-              annotations: {"kubectl.kubernetes.io/restartedAt" : moment.utc().format()}
+              annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() }
             }
           }
         }
@@ -122,7 +122,7 @@ export class Deployment extends WorkloadKubeObject {
 
   declare spec: {
     replicas: number;
-    selector: { matchLabels: { [app: string]: string } };
+    selector: { matchLabels: { [app: string]: string }};
     template: {
       metadata: {
         creationTimestamp?: string;

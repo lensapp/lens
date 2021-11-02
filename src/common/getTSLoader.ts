@@ -23,20 +23,18 @@ import esbuild from "esbuild";
 
 /**
  * A function returning webpack ts/tsx loader
- * 
+ *
  * depends on env LENS_DEV_USE_ESBUILD_LOADER to use esbuild-loader (faster) or good-old ts-loader
- * 
- * @param testRegExp - the regex for webpack to conditional find the files 
+ *
+ * @param testRegExp - the regex for webpack to conditional find the files
  * @returns ts/tsx webpack loader configuration object
  */
 const getTSLoader = (
   testRegExp: RegExp, transpileOnly = true
 ) => {
-  const useEsbuildLoader = process.env.LENS_DEV_USE_ESBUILD_LOADER === "true";
+  if (process.env.LENS_DEV_USE_ESBUILD_LOADER === "true") {
+    console.info(`\n🚀 using esbuild-loader for ts(x)`);
 
-  useEsbuildLoader && console.info(`\n🚀 using esbuild-loader for ts(x)`);
-
-  if (useEsbuildLoader) {
     return {
       test: testRegExp,
       loader: "esbuild-loader",

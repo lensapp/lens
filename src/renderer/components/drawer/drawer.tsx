@@ -109,7 +109,7 @@ export class Drawer extends React.Component<DrawerProps> {
   };
 
   onClickOutside = (evt: MouseEvent) => {
-    const { contentElem, mouseDownTarget, close, props: { open } } = this;
+    const { contentElem, mouseDownTarget, close, props: { open }} = this;
 
     if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
       return;
@@ -139,9 +139,9 @@ export class Drawer extends React.Component<DrawerProps> {
     const k8sObjName = title.split(":")[1] || title; // copy whole if no :
 
     clipboard.writeText(k8sObjName.trim());
-    this.setState({isCopied: true});
+    this.setState({ isCopied: true });
     setTimeout(() => {
-      this.setState({isCopied: false});
+      this.setState({ isCopied: false });
     }, 3000);
   };
 

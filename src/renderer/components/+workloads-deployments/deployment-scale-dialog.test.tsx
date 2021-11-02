@@ -39,7 +39,7 @@ const dummyDeployment: Deployment = {
   selfLink: "link",
   spec: {
     replicas: 1,
-    selector: { matchLabels: { dummy: "label" } },
+    selector: { matchLabels: { dummy: "label" }},
     template: {
       metadata: {
         labels: { dummy: "label" },

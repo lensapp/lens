@@ -86,7 +86,7 @@ export class Sidebar extends React.Component<Props> {
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
       const id = `crd-group:${group}`;
-      const crdGroupsPageUrl = routes.crdURL({ query: { groups: group } });
+      const crdGroupsPageUrl = routes.crdURL({ query: { groups: group }});
 
       return (
         <SidebarItem key={id} id={id} text={group} url={crdGroupsPageUrl}>

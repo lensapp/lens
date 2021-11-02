@@ -63,7 +63,7 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
 
 export class KubeconfigRoute {
   static async routeServiceAccountRoute(request: LensApiRequest) {
-    const { params, response, cluster} = request;
+    const { params, response, cluster } = request;
     const client = (await cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace);
     const secret = secretList.body.items.find(secret => {

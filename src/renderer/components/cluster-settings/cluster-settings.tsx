@@ -119,7 +119,7 @@ export function MetricsSettings({ entity }: EntitySettingViewProps) {
   );
 }
 
-export function NodeShellSettings({entity}: EntitySettingViewProps) {
+export function NodeShellSettings({ entity }: EntitySettingViewProps) {
   const cluster = getClusterForEntity(entity);
 
   if(!cluster) {

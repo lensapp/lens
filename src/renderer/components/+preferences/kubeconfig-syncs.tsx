@@ -46,7 +46,7 @@ interface Value {
   info: SyncInfo;
 }
 
-async function getMapEntry({ filePath, ...data}: KubeconfigSyncEntry): Promise<[string, Value]> {
+async function getMapEntry({ filePath, ...data }: KubeconfigSyncEntry): Promise<[string, Value]> {
   try {
     // stat follows the stat(2) linux syscall spec, namely it follows symlinks
     const stats = await fse.stat(filePath);

@@ -92,11 +92,11 @@ export class MetricsFeature {
   }
 
   async getStatus(): Promise<MetricsStatus> {
-    const status: MetricsStatus = { installed: false, canUpgrade: false};
+    const status: MetricsStatus = { installed: false, canUpgrade: false };
 
     try {
       const namespaceApi = forCluster(this.cluster, Namespace);
-      const namespace = await namespaceApi.get({name: "lens-metrics"});
+      const namespace = await namespaceApi.get({ name: "lens-metrics" });
 
       if (namespace?.kind) {
         const currentVersion = namespace.metadata.annotations?.extensionVersion || "0.0.0";

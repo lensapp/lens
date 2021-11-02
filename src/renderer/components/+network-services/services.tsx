@@ -81,18 +81,26 @@ export class Services extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
-        renderTableContents={service => [
-          service.getName(),
-          <KubeObjectStatusIcon key="icon" object={service} />,
-          service.getNs(),
-          service.getType(),
-          service.getClusterIp(),
-          service.getPorts().join(", "),
-          service.getExternalIps().join(", ") || "-",
-          service.getSelector().map(label => <Badge key={label} label={label}/>),
-          service.getAge(),
-          { title: service.getStatus(), className: service.getStatus().toLowerCase() },
-        ]}
+        renderTableContents={service => {
+          const externalIps = service.getExternalIps();
+
+          if (externalIps.length === 0 && service.spec?.externalName) {
+            externalIps.push(service.spec.externalName);
+          }
+
+          return [
+            service.getName(),
+            <KubeObjectStatusIcon key="icon" object={service} />,
+            service.getNs(),
+            service.getType(),
+            service.getClusterIp(),
+            service.getPorts().join(", "),
+            externalIps.join(", ") || "-",
+            service.getSelector().map(label => <Badge key={label} label={label} />),
+            service.getAge(),
+            { title: service.getStatus(), className: service.getStatus().toLowerCase() },
+          ];
+        }}
       />
     );
   }

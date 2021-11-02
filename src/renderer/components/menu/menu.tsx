@@ -90,6 +90,10 @@ export class Menu extends React.Component<MenuProps, State> {
     return !!this.props.isOpen;
   }
 
+  get isClosed() {
+    return !this.isOpen;
+  }
+
   componentDidMount() {
     if (!this.props.usePortal) {
       const parent = this.elem.parentElement;
@@ -202,19 +206,32 @@ export class Menu extends React.Component<MenuProps, State> {
   };
 
   open() {
-    if (this.isOpen) return;
+    if (this.isOpen) {
+      return;
+    }
+
     this.props.open();
     this.refreshPosition();
-    if (this.props.autoFocus) this.focusNextItem();
+
+    if (this.props.autoFocus) {
+      this.focusNextItem();
+    }
   }
 
   close() {
-    if (!this.isOpen) return;
+    if (this.isClosed) {
+      return;
+    }
+
     this.props.close();
   }
 
   toggle() {
-    this.isOpen ? this.close() : this.open();
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
   }
 
   onKeyDown(evt: KeyboardEvent) {

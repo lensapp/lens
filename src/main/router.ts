@@ -122,7 +122,7 @@ export class Router {
     };
   }
 
-  protected static async handleStaticFile({ params, response, raw: { req } }: LensApiRequest): Promise<void> {
+  protected static async handleStaticFile({ params, response, raw: { req }}: LensApiRequest): Promise<void> {
     let filePath = params.path;
 
     for (let retryCount = 0; retryCount < 5; retryCount += 1) {

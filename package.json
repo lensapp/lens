@@ -297,7 +297,7 @@
     "@types/request-promise-native": "^1.0.18",
     "@types/semver": "^7.3.9",
     "@types/sharp": "^0.29.2",
-    "@types/spdy": "^3.4.4",
+    "@types/spdy": "^3.4.5",
     "@types/tar": "^4.0.5",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
@@ -378,7 +378,7 @@
     "webpack-dev-server": "^3.11.2",
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
-    "xterm": "^4.12.0",
+    "xterm": "^4.14.1",
     "xterm-addon-fit": "^0.5.0"
   }
 }

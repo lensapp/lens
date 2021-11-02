@@ -153,7 +153,7 @@ export class CRDDetails extends React.Component<Props> {
         {validation &&
           <>
             <DrawerTitle title="Validation"/>
-            <MonacoEditor readOnly value={validation}/>
+            <MonacoEditor  readOnly value={validation}/>
           </>
         }
       </div>

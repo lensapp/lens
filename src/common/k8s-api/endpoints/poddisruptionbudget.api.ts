@@ -29,7 +29,7 @@ export interface PodDisruptionBudget {
   spec: {
     minAvailable: string;
     maxUnavailable: string;
-    selector: { matchLabels: { [app: string]: string } };
+    selector: { matchLabels: { [app: string]: string }};
   };
   status: {
     currentHealthy: number

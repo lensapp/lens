@@ -163,7 +163,7 @@ export class CustomResourceDefinition extends KubeObject {
       }
     } else if (this.spec.version) {
       const { additionalPrinterColumns: apc } = this.spec;
-      const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc}) => ({ ...apc, jsonPath: JSONPath }));
+      const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc }) => ({ ...apc, jsonPath: JSONPath }));
 
       return {
         name: this.spec.version,

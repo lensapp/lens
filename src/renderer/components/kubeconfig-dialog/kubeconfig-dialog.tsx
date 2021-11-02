@@ -127,7 +127,7 @@ export class KubeConfigDialog extends React.Component<Props> {
       >
         <Wizard header={header}>
           <WizardStep customButtons={buttons} prev={this.close}>
-            <MonacoEditor readOnly={true} value={yamlConfig}/>
+            <MonacoEditor  readOnly={true} value={yamlConfig}/>
             <textarea
               className="config-copy"
               readOnly defaultValue={yamlConfig}

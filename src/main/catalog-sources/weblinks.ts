@@ -100,7 +100,7 @@ export function syncWeblinks() {
         webLinkEntities.delete(weblinkId);
       }
     }
-  }, {fireImmediately: true});
+  }, { fireImmediately: true });
 
   catalogEntityRegistry.addComputedSource("weblinks", computed(() => Array.from(webLinkEntities.values(), ([link]) => link)));
 }
