@@ -74,7 +74,7 @@
     ]
   },
   "build": {
-    "generateUpdatesFilesForAllChannels": true,
+    "generateUpdatesFilesForAllChannels": false,
     "files": [
       "static/build/main.js"
     ],
