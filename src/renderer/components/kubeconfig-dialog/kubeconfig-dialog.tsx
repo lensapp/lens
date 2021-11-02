@@ -19,23 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./kubeconfig-dialog.scss";
-
+import styles from "./kubeconfig-dialog.module.css";
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
-import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
+import { copyToClipboard, saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
 import { apiBase } from "../../api";
-import MonacoEditor from "react-monaco-editor";
-import { ThemeStore } from "../../theme.store";
-import { UserStore } from "../../../common/user-store";
+import { MonacoEditor } from "../monaco-editor";
 
 interface IKubeconfigDialogData {
   title?: React.ReactNode;
@@ -122,7 +119,7 @@ export class KubeConfigDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className={cssNames("KubeConfigDialog")}
+        className={styles.KubeConfigDialog}
         isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
@@ -130,14 +127,12 @@ export class KubeConfigDialog extends React.Component<Props> {
         <Wizard header={header}>
           <WizardStep customButtons={buttons} prev={this.close}>
             <MonacoEditor
-              language="yaml"
+              readOnly
+              className={styles.editor}
               value={yamlConfig}
-              theme={ThemeStore.getInstance().activeTheme.monacoTheme}
-              className={cssNames( "MonacoEditor")}
-              options={{ readOnly: true, ...UserStore.getInstance().getEditorOptions() }}
             />
             <textarea
-              className="config-copy"
+              className={styles.configCopy}
               readOnly defaultValue={yamlConfig}
               ref={e => this.configTextArea = e}
             />

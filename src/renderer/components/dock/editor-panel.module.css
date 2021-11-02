@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.PodDetailsAffinities {
-  .ace-container {
-    height: 200px
-  }
+.EditorPanel {
+  position: relative;
+  flex: 1;
+  height: 100%;
 }

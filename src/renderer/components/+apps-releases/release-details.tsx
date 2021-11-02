@@ -24,7 +24,7 @@ import "./release-details.scss";
 import React, { Component } from "react";
 import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
-import { observable, reaction, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
 import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../../common/k8s-api/endpoints/helm-releases.api";
@@ -46,8 +46,7 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 import { Checkbox } from "../checkbox";
-import MonacoEditor from "react-monaco-editor";
-import { UserStore } from "../../../common/user-store";
+import { MonacoEditor } from "../monaco-editor";
 
 interface Props {
   release: HelmRelease;
@@ -97,7 +96,7 @@ export class ReleaseDetails extends Component<Props> {
 
   async loadDetails() {
     const { release } = this.props;
-    
+
     try {
       this.details = null;
       this.details = await getRelease(release.getName(), release.getNs());
@@ -165,14 +164,13 @@ export class ReleaseDetails extends Component<Props> {
             disabled={valuesLoading}
           />
           <MonacoEditor
-            language="yaml"
+            readOnly={valuesLoading}
+            className={cssNames({ loading: valuesLoading })}
+            style={{ minHeight: 300 }}
             value={values}
             onChange={text => this.values = text}
-            theme={ThemeStore.getInstance().activeTheme.monacoTheme}
-            className={cssNames("MonacoEditor", { loading: valuesLoading })}
-            options={{ readOnly: valuesLoading, ...UserStore.getInstance().getEditorOptions() }}
           >
-            {valuesLoading && <Spinner center />}
+            {valuesLoading && <Spinner center/>}
           </MonacoEditor>
           <Button
             primary

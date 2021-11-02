@@ -22,11 +22,11 @@
 @import "~xterm";
 
 .TerminalWindow {
-  margin: $padding;
-  margin-left: $padding * 2;
-  margin-top: $padding * 2;
+  --spacing: calc(var(--unit) * 2);
 
-  > .xterm {
-    overflow: hidden;
-  }
+  flex: 1;
+  overflow: hidden;
+  left: var(--spacing) !important;
+  top: var(--spacing) !important;
+  bottom: var(--spacing) !important;
 }

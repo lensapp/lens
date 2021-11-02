@@ -105,7 +105,7 @@ export class Dock extends React.Component<Props> {
     if (!isOpen || !selectedTab) return null;
 
     return (
-      <div className="tab-content" style={{ flexBasis: height }}>
+      <div className="tab-content" style={{ flexBasis: isOpen ? height : 0 }}>
         {this.renderTab(selectedTab)}
       </div>
     );

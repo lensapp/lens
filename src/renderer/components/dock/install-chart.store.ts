@@ -25,7 +25,6 @@ import { DockTabStore } from "./dock-tab.store";
 import { getChartDetails, getChartValues, HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import type { IReleaseUpdateDetails } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Notifications } from "../notifications";
-import { monacoModelsManager } from "./monaco-model-manager";
 
 export interface IChartInstallData {
   name: string;
@@ -91,7 +90,6 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
     if (values) {
       this.setData(tabId, { ...data, values });
-      monacoModelsManager.getModel(tabId).setValue(values);
     } else if (attempt < 4) {
       return this.loadValues(tabId, attempt + 1);
     }
