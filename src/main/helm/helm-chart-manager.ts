@@ -24,7 +24,7 @@ import v8 from "v8";
 import * as yaml from "js-yaml";
 import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
-import { promiseExecFile } from "../promise-exec";
+import { promiseExecFile } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
 import { iter, sortCharts } from "../../common/utils";

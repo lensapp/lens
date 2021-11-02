@@ -20,22 +20,93 @@
  */
 
 import { isMac, isWindows } from "./vars";
-import winca from "win-ca";
-import macca from "mac-ca";
-import logger from "../main/logger";
+import wincaAPI from "win-ca/api";
+import https from "https";
+import { promiseExec } from "./utils/promise-exec";
 
-if (isMac) {
-  for (const crt of macca.all()) {
-    const attributes = crt.issuer?.attributes?.map((a: any) => `${a.name}=${a.value}`);
+// DST Root CA X3, which was expired on 9.30.2021
+export const DSTRootCAX3 = "-----BEGIN CERTIFICATE-----\nMIIDSjCCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/\nMSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT\nDkRTVCBSb290IENBIFgzMB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow\nPzEkMCIGA1UEChMbRGlnaXRhbCBTaWduYXR1cmUgVHJ1c3QgQ28uMRcwFQYDVQQD\nEw5EU1QgUm9vdCBDQSBYMzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB\nAN+v6ZdQCINXtMxiZfaQguzH0yxrMMpb7NnDfcdAwRgUi+DoM3ZJKuM/IUmTrE4O\nrz5Iy2Xu/NMhD2XSKtkyj4zl93ewEnu1lcCJo6m67XMuegwGMoOifooUMM0RoOEq\nOLl5CjH9UL2AZd+3UWODyOKIYepLYYHsUmu5ouJLGiifSKOeDNoJjj4XLh7dIN9b\nxiqKqy69cK3FCxolkHRyxXtqqzTWMIn/5WgTe1QLyNau7Fqckh49ZLOMxt+/yUFw\n7BZy1SbsOFU5Q9D8/RhcQPGX69Wam40dutolucbY38EVAjqr2m7xPi71XAicPNaD\naeQQmxkqtilX4+U9m5/wAl0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNV\nHQ8BAf8EBAMCAQYwHQYDVR0OBBYEFMSnsaR7LHH62+FLkHX/xBVghYkQMA0GCSqG\nSIb3DQEBBQUAA4IBAQCjGiybFwBcqR7uKGY3Or+Dxz9LwwmglSBd49lZRNI+DT69\nikugdB/OEIKcdBodfpga3csTS7MgROSR6cz8faXbauX+5v3gTt23ADq1cEmv8uXr\nAvHRAosZy5Q6XkjEGB5YGV8eAlrwDPGxrancWYaLbumR9YbK+rlmM6pZW87ipxZz\nR8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5\nJDGFoqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo\nOb8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ\n-----END CERTIFICATE-----\n";
 
-    logger.debug(`Using host CA: ${attributes.join(",")}`);
+export function isCertActive(cert: string) {
+  const isExpired = typeof cert !== "string" || cert.includes(DSTRootCAX3);
+
+  return !isExpired;
+}
+
+/**
+ * Get root CA certificate from MacOSX system keychain
+ * Only return non-expred certificates.
+ */
+export async function getMacRootCA() {
+  // inspired mac-ca https://github.com/jfromaniello/mac-ca
+  const args = "find-certificate -a -p";
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet#other_assertions
+  const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g;
+  const systemRootCertsPath = "/System/Library/Keychains/SystemRootCertificates.keychain";
+  const bin = "/usr/bin/security";
+  const trusted = (await promiseExec(`${bin} ${args}`)).stdout.toString().split(splitPattern);
+  const rootCA = (await promiseExec(`${bin} ${args} ${systemRootCertsPath}`)).stdout.toString().split(splitPattern);
+
+  return [...new Set([...trusted, ...rootCA])].filter(isCertActive);
+}
+
+/**
+ * Get root CA certificate from Windows system certificate store.
+ * Only return non-expred certificates.
+ */
+export function getWinRootCA(): Promise<string[]> {
+  return new Promise((resolve) => {
+    const CAs: string[] = [];
+
+    wincaAPI({
+      format: wincaAPI.der2.pem,
+      inject: false,
+      ondata: (ca: string) => {
+        CAs.push(ca);
+      },
+      onend: () => {
+        resolve(CAs.filter(isCertActive));
+      }
+    });
+  });
+}
+
+
+/**
+ * Add (or merge) CAs to https.globalAgent.options.ca
+ */
+export function injectCAs(CAs: string[]) {
+  for (const cert of CAs) {
+    if (Array.isArray(https.globalAgent.options.ca) && !https.globalAgent.options.ca.includes(cert)) {
+      https.globalAgent.options.ca.push(cert);
+    } else {
+      https.globalAgent.options.ca = [cert];
+    }
   }
 }
 
-if (isWindows) {
-  try {
-    winca.inject("+"); // see: https://github.com/ukoloff/win-ca#caveats
-  } catch (error) {
-    logger.error(`[CA]: failed to force load: ${error}`);
+/**
+ * Inject CAs found in OS's (Windoes/MacOSX only) root certificate store to https.globalAgent.options.ca
+ */
+export async function injectSystemCAs() {
+  if (isMac) {
+    try {
+      const osxRootCAs = await getMacRootCA();
+
+      injectCAs(osxRootCAs);
+    } catch (error) {
+      console.warn(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error?.message}`);
+    }
+  }
+  
+  if (isWindows) {
+    try {
+      const winRootCAs = await getWinRootCA();
+
+      wincaAPI.inject("+", winRootCAs);
+
+    } catch (error) {
+      console.warn(`[WIN-CA]: Error injecting root CAs from Windows. ${error?.message}`);
+    }
   }
 }

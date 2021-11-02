@@ -21,7 +21,7 @@
 
 import yaml from "js-yaml";
 import { readFile } from "fs-extra";
-import { promiseExec } from "../promise-exec";
+import { promiseExec } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import { Singleton } from "../../common/utils/singleton";
 import { customRequestPromise } from "../../common/request";

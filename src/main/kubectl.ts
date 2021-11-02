@@ -21,7 +21,7 @@
 
 import path from "path";
 import fs from "fs";
-import { promiseExec } from "./promise-exec";
+import { promiseExec } from "../common/utils/promise-exec";
 import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
