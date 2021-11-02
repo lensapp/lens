@@ -19,21 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// APIs
-import * as App from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import * as Util from "./utils";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
-import logger from "../../common/logger";
+import { UserStore } from "../../common/user-store";
 
-export {
-  App,
-  EventBus,
-  Catalog,
-  Store,
-  Types,
-  Util,
-  logger,
-};
+/**
+ * Get the configured kubectl binaries path.
+ */
+export function getKubectlPath(): string | undefined {
+  return UserStore.getInstance().kubectlBinariesPath;
+}

@@ -21,6 +21,7 @@
 
 import { getAppVersion } from "../../common/utils";
 import { ExtensionsStore } from "../extensions-store";
+import * as Preferences from "./user-preferences";
 
 export const version = getAppVersion();
 export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
@@ -28,3 +29,5 @@ export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl 
 export function getEnabledExtensions(): string[] {
   return ExtensionsStore.getInstance().enabledExtensions;
 }
+
+export { Preferences };

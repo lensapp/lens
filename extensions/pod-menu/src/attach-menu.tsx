@@ -39,6 +39,7 @@ const {
 } = Renderer;
 const {
   Util,
+  App,
 } = Common;
 
 export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
@@ -47,22 +48,34 @@ export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuPro
 export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
   async attachToPod(container?: string) {
     const { object: pod } = this.props;
-    const containerParam = container ? `-c ${container}` : "";
-    let command = `kubectl attach -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam}`;
+
+    const kubectlPath = App.Preferences.getKubectlPath() || "kubectl";
+    const commandParts = [
+      kubectlPath,
+      "attach",
+      "-i",
+      "-t",
+      "-n", pod.getNs(),
+      pod.getName(),
+    ];
 
     if (window.navigator.platform !== "Win32") {
-      command = `exec ${command}`;
+      commandParts.unshift("exec");
+    }
+
+    if (container) {
+      commandParts.push("-c", container);
     }
 
     const shell = createTerminalTab({
       title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()}) [Attached]`
     });
 
-    terminalStore.sendCommand(command, {
+    terminalStore.sendCommand(commandParts.join(" "), {
       enter: true,
       tabId: shell.id
     });
-    
+
     Navigation.hideDetails();
   }
 

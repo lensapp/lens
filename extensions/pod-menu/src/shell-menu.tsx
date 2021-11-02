@@ -39,6 +39,7 @@ const {
 } = Renderer;
 const {
   Util,
+  App,
 } = Common;
 
 export interface PodShellMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
@@ -46,29 +47,44 @@ export interface PodShellMenuProps extends Renderer.Component.KubeObjectMenuProp
 
 export class PodShellMenu extends React.Component<PodShellMenuProps> {
   async execShell(container?: string) {
-    Navigation.hideDetails();
     const { object: pod } = this.props;
-    const containerParam = container ? `-c ${container}` : "";
-    let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`;
+
+    const kubectlPath = App.Preferences.getKubectlPath() || "kubectl";
+    const commandParts = [
+      kubectlPath,
+      "exec",
+      "-i",
+      "-t",
+      "-n", pod.getNs(),
+      pod.getName(),
+    ];
 
     if (window.navigator.platform !== "Win32") {
-      command = `exec ${command}`;
+      commandParts.unshift("exec");
     }
 
+    if (container) {
+      commandParts.push("-c", container);
+    }
+
+    commandParts.push("--");
+
     if (pod.getSelectedNodeOs() === "windows") {
-      command = `${command} powershell`;
+      commandParts.push("powershell");
     } else {
-      command = `${command} sh -c "clear; (bash || ash || sh)"`;
+      commandParts.push('sh -c "clear; (bash || ash || sh)"');
     }
 
     const shell = createTerminalTab({
       title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()})`
     });
 
-    terminalStore.sendCommand(command, {
+    terminalStore.sendCommand(commandParts.join(" "), {
       enter: true,
       tabId: shell.id
     });
+
+    Navigation.hideDetails();
   }
 
   render() {
