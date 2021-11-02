@@ -23,12 +23,13 @@ import "./catalog-add-button.scss";
 import React from "react";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction, makeObservable } from "mobx";
+import { observer } from "mobx-react";
+import { observable, makeObservable, action } from "mobx";
 import { boundMethod } from "../../../common/utils";
 import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
+import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 
 export type CatalogAddButtonProps = {
   category: CatalogCategory
@@ -37,7 +38,7 @@ export type CatalogAddButtonProps = {
 @observer
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
-  protected menuItems = observable.array<CatalogEntityAddMenu>([]);
+  @observable menuItems: CatalogEntityAddMenu[] = [];
 
   constructor(props: CatalogAddButtonProps) {
     super(props);
@@ -45,21 +46,42 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.props.category, (category) => {
-        this.menuItems.clear();
-
-        if (category && category instanceof EventEmitter) {
-          const context: CatalogEntityAddMenuContext = {
-            navigate: (url: string) => navigate(url),
-            menuItems: this.menuItems
-          };
-
-          category.emit("catalogAddMenu", context);
-        }
-      }, { fireImmediately: true })
-    ]);
+    this.updateMenuItems();
   }
+
+  componentDidUpdate(prevProps: CatalogAddButtonProps) {
+    if (prevProps.category != this.props.category) {
+      this.updateMenuItems();
+    }
+  }
+
+  get categories() {
+    return catalogCategoryRegistry.filteredItems;
+  }
+
+  updateMenuItems() {
+    this.menuItems = [];
+
+    if (this.props.category) {
+      this.updateCategoryItems(this.props.category);
+    } else {
+      // Show menu items from all categories
+      this.categories.forEach(this.updateCategoryItems);
+    }
+  }
+
+  @action
+  updateCategoryItems = (category: CatalogCategory) => {
+    const context: CatalogEntityAddMenuContext = {
+      navigate: (url: string) => navigate(url),
+      menuItems: this.menuItems
+    };
+
+    if (category instanceof EventEmitter) {
+      category.emit("catalogAddMenu", context);
+      this.menuItems = category.filteredItems(this.menuItems);
+    }
+  };
 
   @boundMethod
   onOpen() {
@@ -73,17 +95,14 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
   @boundMethod
   onButtonClick() {
-    const filteredItems = this.props.category ? this.props.category.filteredItems(this.menuItems) : [];
-    const defaultAction = filteredItems.find(item => item.defaultAction)?.onClick;
-    const clickAction = defaultAction || (filteredItems.length === 1 ? filteredItems[0].onClick : null);
+    const defaultAction = this.menuItems.find(item => item.defaultAction)?.onClick;
+    const clickAction = defaultAction || (this.menuItems.length === 1 ? this.menuItems[0].onClick : null);
 
     clickAction?.();
   }
 
   render() {
-    const filteredItems = this.props.category ? this.props.category.filteredItems(this.menuItems) : [];
-
-    if (filteredItems.length === 0) {
+    if (this.menuItems.length === 0) {
       return null;
     }
 
@@ -98,7 +117,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         direction="up"
         onClick={this.onButtonClick}
       >
-        {filteredItems.map((menuItem, index) => {
+        {this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
             icon={<Icon material={menuItem.icon}/>}
