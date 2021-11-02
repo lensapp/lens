@@ -35,10 +35,12 @@ export type CatalogAddButtonProps = {
   category: CatalogCategory
 };
 
+type categoryId = string;
+
 @observer
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
-  @observable menuItems: CatalogEntityAddMenu[] = [];
+  @observable menuItems = new Map<categoryId, CatalogEntityAddMenu[]>();
 
   constructor(props: CatalogAddButtonProps) {
     super(props);
@@ -60,7 +62,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   updateMenuItems() {
-    this.menuItems = [];
+    this.menuItems.clear();
 
     if (this.props.category) {
       this.updateCategoryItems(this.props.category);
@@ -72,15 +74,20 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
   @action
   updateCategoryItems = (category: CatalogCategory) => {
-    const context: CatalogEntityAddMenuContext = {
-      navigate: (url: string) => navigate(url),
-      menuItems: this.menuItems
-    };
-
     if (category instanceof EventEmitter) {
+      const menuItems: CatalogEntityAddMenu[] = [];
+      const context: CatalogEntityAddMenuContext = {
+        navigate: (url: string) => navigate(url),
+        menuItems
+      };
+
       category.emit("catalogAddMenu", context);
-      this.menuItems = category.filteredItems(this.menuItems);
+      this.menuItems.set(category.getId(), menuItems);
     }
+  };
+
+  getCategoryFilteredItems = (category: CatalogCategory) => {
+    return category.filteredItems(this.menuItems.get(category.getId()) || []);
   };
 
   @boundMethod
@@ -95,14 +102,21 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
   @boundMethod
   onButtonClick() {
-    const defaultAction = this.menuItems.find(item => item.defaultAction)?.onClick;
-    const clickAction = defaultAction || (this.menuItems.length === 1 ? this.menuItems[0].onClick : null);
+    const defaultAction = this.items.find(item => item.defaultAction)?.onClick;
+    const clickAction = defaultAction || (this.items.length === 1 ? this.items[0].onClick : null);
 
     clickAction?.();
   }
 
+  get items() {
+    const { category } = this.props;
+
+    return category ? this.getCategoryFilteredItems(category) :
+      this.categories.map(this.getCategoryFilteredItems).flat();
+  }
+
   render() {
-    if (this.menuItems.length === 0) {
+    if (this.items.length === 0) {
       return null;
     }
 
@@ -117,7 +131,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         direction="up"
         onClick={this.onButtonClick}
       >
-        {this.menuItems.map((menuItem, index) => {
+        {this.items.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
             icon={<Icon material={menuItem.icon}/>}
