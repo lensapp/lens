@@ -49,7 +49,7 @@ interface WorkloadLogsTabData {
 export class LogTabStore extends DockTabStore<LogTabData> {
   constructor() {
     super({
-      storageKey: "pod_logs"
+      storageKey: "pod_logs",
     });
 
     reaction(() => podsStore.items.length, () => this.updateTabsData());
@@ -63,7 +63,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     return this.createLogsTab(title, {
       pods: pods.length ? pods : [selectedPod],
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
   }
 
@@ -79,7 +79,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     this.createLogsTab(title, {
       pods,
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
   }
 
@@ -103,7 +103,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     this.setData(id, {
       ...data,
       showTimestamps: false,
-      previous: false
+      previous: false,
     });
 
     return id;
@@ -127,7 +127,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
             ...tabData,
             selectedPod,
             selectedContainer,
-            pods
+            pods,
           });
   
           this.renameTab(tabId);
@@ -135,7 +135,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
           this.closeTab(tabId);
         }
       } catch (error) {
-        logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error,);
+        logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error);
         this.data.delete(tabId);
       }
     }

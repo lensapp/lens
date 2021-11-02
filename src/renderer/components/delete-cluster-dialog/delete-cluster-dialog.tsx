@@ -45,7 +45,7 @@ type DialogState = {
 };
 
 const dialogState: DialogState = observable({
-  isOpen: false
+  isOpen: false,
 });
 
 type Props = {};
@@ -59,7 +59,7 @@ export class DeleteClusterDialog extends React.Component {
     super(props);
     makeObservable(this, {
       showContextSwitch: observable,
-      newCurrentContext: observable
+      newCurrentContext: observable,
     });
   }
 
@@ -92,7 +92,7 @@ export class DeleteClusterDialog extends React.Component {
 
   removeContext() {
     dialogState.config.contexts = dialogState.config.contexts.filter(item =>
-      item.name !== dialogState.cluster.contextName
+      item.name !== dialogState.cluster.contextName,
     );
   }
 

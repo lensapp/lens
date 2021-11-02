@@ -50,5 +50,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  podMetricsApi
+  podMetricsApi,
 };

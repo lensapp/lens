@@ -47,5 +47,5 @@ export default {
     if (clusters.length > 0) {
       store.set("clusters", clusters);
     }
-  }
+  },
 } as MigrationDeclaration;

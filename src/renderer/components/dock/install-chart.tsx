@@ -82,8 +82,8 @@ export class InstallChart extends Component<Props> {
     navigate(releaseURL({
       params: {
         name: release.name,
-        namespace: release.namespace
-      }
+        namespace: release.namespace,
+      },
     }));
     dockStore.closeTab(this.tabId);
   }

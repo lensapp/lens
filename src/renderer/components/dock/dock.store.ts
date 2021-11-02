@@ -271,7 +271,7 @@ export class DockStore implements DockStorageState {
       id,
       kind,
       pinned,
-      title
+      title,
     };
 
     // add monaco model

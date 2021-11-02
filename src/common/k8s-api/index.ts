@@ -42,8 +42,8 @@ if (typeof window === "undefined") {
       debug: isDevelopment || isDebugging,
     }, {
       headers: {
-        "Host": `localhost:${params.port}`
-      }
+        "Host": `localhost:${params.port}`,
+      },
     });
   });
 } else {
@@ -53,8 +53,8 @@ if (typeof window === "undefined") {
     debug: isDevelopment || isDebugging,
   }, {
     headers: {
-      "Host": window.location.host
-    }
+      "Host": window.location.host,
+    },
   });
 }
 
@@ -62,15 +62,15 @@ if (isClusterPageContext()) {
   apiKube = new KubeJsonApi({
     serverAddress: `http://127.0.0.1:${window.location.port}`,
     apiBase: apiKubePrefix,
-    debug: isDevelopment
+    debug: isDevelopment,
   }, {
     headers: {
-      "Host": window.location.host
-    }
+      "Host": window.location.host,
+    },
   });
 }
 
 export {
   apiBase,
-  apiKube
+  apiKube,
 };

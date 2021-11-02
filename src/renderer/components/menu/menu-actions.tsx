@@ -48,7 +48,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   static defaultProps: MenuActionsProps = {
     get removeConfirmationMessage() {
       return `Remove item?`;
-    }
+    },
   };
 
   public id = uniqueId("menu_actions_");

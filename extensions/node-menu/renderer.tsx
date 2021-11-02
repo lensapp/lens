@@ -29,8 +29,8 @@ export default class NodeMenuRendererExtension extends Renderer.LensExtension {
       kind: "Node",
       apiVersions: ["v1"],
       components: {
-        MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />
-      }
-    }
+        MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />,
+      },
+    },
   ];
 }

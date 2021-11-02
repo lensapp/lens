@@ -43,7 +43,7 @@ async function addSyncEntries(filePaths: string[]) {
       <p>Selected items has been added to Kubeconfig Sync.</p><br/>
       <p>Check the <Link style={{ textDecoration: "underline" }} to={`${kubernetesURL()}#kube-sync`}>Preferences</Link>{" "}
       to see full list.</p>
-    </div>
+    </div>,
   );
 }
 

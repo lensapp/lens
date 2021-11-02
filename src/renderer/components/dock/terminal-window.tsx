@@ -43,8 +43,8 @@ export class TerminalWindow extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.props.tab.id, tabId => this.activate(tabId), {
-        fireImmediately: true
-      })
+        fireImmediately: true,
+      }),
     ]);
   }
 

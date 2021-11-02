@@ -35,8 +35,8 @@ export default class ClusterMetricsFeatureExtension extends Renderer.LensExtensi
           return (
             <MetricsSettings cluster={entity} />
           );
-        }
-      }
-    }
+        },
+      },
+    },
   ];
 }

@@ -32,7 +32,7 @@ import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 export class CreateResourceStore extends DockTabStore<string> {
   constructor() {
     super({
-      storageKey: "create_resource"
+      storageKey: "create_resource",
     });
     autoBind(this);
     fs.ensureDirSync(this.userTemplatesFolder);
@@ -53,9 +53,9 @@ export class CreateResourceStore extends DockTabStore<string> {
   }
 
   groupTemplates(templates: string[], templatesPath: string, defaultGroup: string) {
-    return groupBy(templates,(v:string) =>
-      path.relative(templatesPath,v).split(path.sep).length>1
-        ? path.parse(path.relative(templatesPath,v)).dir
+    return groupBy(templates, (v:string) =>
+      path.relative(templatesPath, v).split(path.sep).length>1
+        ? path.parse(path.relative(templatesPath, v)).dir
         : defaultGroup);
   }
 
@@ -63,7 +63,7 @@ export class CreateResourceStore extends DockTabStore<string> {
     const userTemplates = await this.getTemplates(this.userTemplatesFolder, "ungrouped");
     const lensTemplates = await this.getTemplates(this.lensTemplatesFolder, "lens");
 
-    return { ...userTemplates,...lensTemplates };
+    return { ...userTemplates, ...lensTemplates };
   }
 
   async watchUserTemplates(callback: ()=> void){
@@ -71,8 +71,8 @@ export class CreateResourceStore extends DockTabStore<string> {
       depth: 1,
       ignoreInitial: true,
       awaitWriteFinish: {
-        stabilityThreshold: 500
-      }
+        stabilityThreshold: 500,
+      },
     }).on("all", () => {
       callback();
     });

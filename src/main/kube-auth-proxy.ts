@@ -82,7 +82,7 @@ export class KubeAuthProxy {
       "--context", `${this.cluster.contextName}`,
       "--accept-hosts", this.acceptHosts,
       "--reject-paths", "^[^/]",
-      "--api-prefix", this.apiPrefix
+      "--api-prefix", this.apiPrefix,
     ];
 
     if (process.env.DEBUG_PROXY === "true") {
@@ -90,7 +90,7 @@ export class KubeAuthProxy {
     }
     logger.debug(`spawning kubectl proxy with args: ${args}`);
 
-    this.proxyProcess = spawn(proxyBin, args, { env: this.env, });
+    this.proxyProcess = spawn(proxyBin, args, { env: this.env });
     this.proxyProcess.on("error", (error) => {
       this.sendIpcLogMessage({ data: error.message, error: true });
       this.exit();

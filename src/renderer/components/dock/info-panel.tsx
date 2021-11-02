@@ -74,7 +74,7 @@ export class InfoPanel extends Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.props.tabId, () => {
         this.waiting = false;
-      })
+      }),
     ]);
   }
 

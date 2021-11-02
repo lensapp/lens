@@ -135,8 +135,8 @@ export class AddQuotaDialog extends React.Component<Props> {
 
       await resourceQuotaApi.create({ namespace, name: quotaName }, {
         spec: {
-          hard: quotas
-        }
+          hard: quotas,
+        },
       });
       this.close();
     } catch (err) {

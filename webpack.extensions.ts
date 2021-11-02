@@ -41,7 +41,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
       path: path.resolve(__dirname, `${outDir}/src/extensions`),
       // can be use in commonjs environments
       // e.g. require('@k8slens/extensions')
-      libraryTarget: "commonjs"
+      libraryTarget: "commonjs",
     },
     cache: isDevelopment,
     optimization: {
@@ -60,9 +60,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
             compilerOptions: {
               declaration: true, // output .d.ts
               sourceMap: false, // to override sourceMap: true in tsconfig.json
-              outDir // where the .d.ts should be located
-            }
-          }
+              outDir, // where the .d.ts should be located
+            },
+          },
         },
         // for src/renderer/components/fonts/roboto-mono-nerd.ttf
         // in src/renderer/components/dock/terminal.ts 95:25-65
@@ -71,9 +71,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
           use: {
             loader: "url-loader",
             options: {
-              name: "fonts/[name].[ext]"
-            }
-          }
+              name: "fonts/[name].[ext]",
+            },
+          },
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,
@@ -82,8 +82,8 @@ export default function generateExtensionTypes(): webpack.Configuration {
             options: {
               name: "images/[name]-[hash:6].[ext]",
               esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (react)
-            }
-          }
+            },
+          },
         },
         // for import scss files
         {
@@ -99,17 +99,17 @@ export default function generateExtensionTypes(): webpack.Configuration {
                 prependData: `@import "${path.basename(sassCommonVars)}";`,
                 sassOptions: {
                   includePaths: [
-                    path.dirname(sassCommonVars)
-                  ]
+                    path.dirname(sassCommonVars),
+                  ],
                 },
-              }
+              },
             },
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js"]
+      extensions: [".ts", ".tsx", ".js"],
     },
     plugins: [
       // In ts-loader's README they said to output a built .d.ts file,
@@ -121,6 +121,6 @@ export default function generateExtensionTypes(): webpack.Configuration {
       //   moduleName: '@k8slens/extensions',
       //    out: 'extension-api.d.ts',
       // })
-    ]
+    ],
   };
 }

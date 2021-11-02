@@ -34,35 +34,35 @@ export function initKubeObjectMenuRegistry() {
         apiVersions: ["v1"],
         components: {
           MenuItem: ServiceAccountMenu,
-        }
+        },
       },
       {
         kind: "CronJob",
         apiVersions: ["batch/v1beta1"],
         components: {
-          MenuItem: CronJobMenu
-        }
+          MenuItem: CronJobMenu,
+        },
       },
       {
         kind: "Deployment",
         apiVersions: ["apps/v1"],
         components: {
-          MenuItem: DeploymentMenu
-        }
+          MenuItem: DeploymentMenu,
+        },
       },
       {
         kind: "ReplicaSet",
         apiVersions: ["apps/v1"],
         components: {
-          MenuItem: ReplicaSetMenu
-        }
+          MenuItem: ReplicaSetMenu,
+        },
       },
       {
         kind: "StatefulSet",
         apiVersions: ["apps/v1"],
         components: {
-          MenuItem: StatefulSetMenu
-        }
-      }
+          MenuItem: StatefulSetMenu,
+        },
+      },
     ]);
 }

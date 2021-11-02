@@ -79,7 +79,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     }
 
     return secrets.map(secret =>
-      <ServiceAccountsSecret key={secret.getId()} secret={secret}/>
+      <ServiceAccountsSecret key={secret.getId()} secret={secret}/>,
     );
   }
 
@@ -123,9 +123,9 @@ export class ServiceAccountsDetails extends React.Component<Props> {
         name,
         uid: null,
         selfLink: null,
-        resourceVersion: null
+        resourceVersion: null,
       },
-      type: SecretType.Opaque
+      type: SecretType.Opaque,
     });
   }
 
@@ -137,7 +137,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     }
     const tokens = secretsStore.items.filter(secret =>
       secret.getNs() == serviceAccount.getNs() &&
-      secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`)
+      secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`),
     );
     const imagePullSecrets = serviceAccount.getImagePullSecrets();
 

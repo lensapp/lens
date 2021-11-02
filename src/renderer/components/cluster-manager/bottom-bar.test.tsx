@@ -69,7 +69,7 @@ describe("<BottomBar />", () => {
     const text = "heee";
 
     StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      { item: <span data-testid={testId} >{text}</span> }
+      { item: <span data-testid={testId} >{text}</span> },
     ]);
     const { getByTestId } = render(<BottomBar />);
 
@@ -81,7 +81,7 @@ describe("<BottomBar />", () => {
     const text = "heee";
 
     StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      { item: () => <span data-testid={testId} >{text}</span> }
+      { item: () => <span data-testid={testId} >{text}</span> },
     ]);
     const { getByTestId } = render(<BottomBar />);
 

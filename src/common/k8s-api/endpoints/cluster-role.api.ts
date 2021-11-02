@@ -54,5 +54,5 @@ if (isClusterPageContext()) { // initialize automatically only when within a clu
 }
 
 export {
-  clusterRoleApi
+  clusterRoleApi,
 };

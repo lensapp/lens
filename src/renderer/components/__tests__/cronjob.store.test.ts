@@ -36,13 +36,13 @@ const spec = {
           terminationGracePeriodSeconds: 1,
           dnsPolicy: "no",
           hostPID: true,
-          schedulerName: "string"
-        }
-      }
-    }
+          schedulerName: "string",
+        },
+      },
+    },
   },
   successfulJobsHistoryLimit: 1,
-  failedJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1,
 };
 
 const scheduledCronJob = new CronJob({
@@ -64,7 +64,7 @@ const suspendedCronJob = new CronJob({
     resourceVersion: "suspendedCronJob",
     uid: "suspendedCronJob",
     namespace: "default",
-  }
+  },
 });
 
 const otherSuspendedCronJob = new CronJob({
@@ -88,7 +88,7 @@ describe("CronJob Store tests", () => {
     const statuses = Object.entries(cronJobStore.getStatuses([
       suspendedCronJob,
       otherSuspendedCronJob,
-      scheduledCronJob
+      scheduledCronJob,
     ]));
 
     expect(statuses).toEqual([

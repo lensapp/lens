@@ -59,7 +59,7 @@ export class CatalogCategoryRegistry {
         this.filters,
         iter.filter,
         this.items.values(),
-      )
+      ),
     );
   }
 

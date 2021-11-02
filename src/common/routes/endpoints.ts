@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const endpointRoute: RouteProps = {
-  path: "/endpoints"
+  path: "/endpoints",
 };
 
 export interface EndpointRouteParams {

@@ -53,7 +53,7 @@ enum sortBy {
   name = "name",
   kind = "kind",
   source = "source",
-  status = "status"
+  status = "status",
 }
 
 const css = makeCss(styles);
@@ -153,7 +153,7 @@ export class Catalog extends React.Component<Props> {
         ok: () => {
           menuItem.onClick();
         },
-        message: menuItem.confirm.message
+        message: menuItem.confirm.message,
       });
     } else {
       menuItem.onClick();
@@ -286,7 +286,7 @@ export class Catalog extends React.Component<Props> {
           !activeCategory && item.kind,
           item.source,
           item.getLabelBadges(),
-          { title: item.phase, className: cssNames(css[item.phase]) }
+          { title: item.phase, className: cssNames(css[item.phase]) },
         ].filter(Boolean)}
         onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}

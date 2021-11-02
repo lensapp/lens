@@ -131,19 +131,19 @@ export class CatalogEntityRegistry {
         this.filters,
         iter.filter,
         this.items.values(),
-      )
+      ),
     );
   }
 
   @computed get entities(): Map<string, CatalogEntity> {
     return new Map(
-      this.items.map(entity => [entity.getId(), entity])
+      this.items.map(entity => [entity.getId(), entity]),
     );
   }
 
   @computed get filteredEntities(): Map<string, CatalogEntity> {
     return new Map(
-      this.filteredItems.map(entity => [entity.getId(), entity])
+      this.filteredItems.map(entity => [entity.getId(), entity]),
     );
   }
 

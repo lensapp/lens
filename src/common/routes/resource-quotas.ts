@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const resourceQuotaRoute: RouteProps = {
-  path: "/resourcequotas"
+  path: "/resourcequotas",
 };
 
 export interface ResourceQuotaRouteParams {

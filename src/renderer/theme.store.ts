@@ -31,7 +31,7 @@ export type ThemeId = string;
 
 export enum MonacoTheme {
   DARK = "clouds-midnight",
-  LIGHT = "vs"
+  LIGHT = "vs",
 }
 
 export enum ThemeType {

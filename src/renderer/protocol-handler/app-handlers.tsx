@@ -41,7 +41,7 @@ export function bindProtocolAddRouteHandlers() {
           <p>
             Unknown Action for <code>lens://app/{tail}</code>.{" "}
             Are you on the latest version?
-          </p>
+          </p>,
         );
       }
 
@@ -53,8 +53,8 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/landing/view/:group/:kind", ({ pathname: { group, kind }}) => {
       navigate(routes.catalogURL({
         params: {
-          group, kind
-        }
+          group, kind,
+        },
       }));
     })
     .addInternalHandler("/cluster", () => {
@@ -69,7 +69,7 @@ export function bindProtocolAddRouteHandlers() {
         Notifications.shortInfo(
           <p>
             Unknown catalog entity <code>{entityId}</code>.
-          </p>
+          </p>,
         );
       }
     })
@@ -83,7 +83,7 @@ export function bindProtocolAddRouteHandlers() {
         Notifications.shortInfo(
           <p>
             Unknown catalog entity <code>{clusterId}</code>.
-          </p>
+          </p>,
         );
       }
     })
@@ -96,7 +96,7 @@ export function bindProtocolAddRouteHandlers() {
         Notifications.shortInfo(
           <p>
             Unknown catalog entity <code>{clusterId}</code>.
-          </p>
+          </p>,
         );
       }
     })

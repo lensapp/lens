@@ -106,5 +106,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  networkPolicyApi
+  networkPolicyApi,
 };

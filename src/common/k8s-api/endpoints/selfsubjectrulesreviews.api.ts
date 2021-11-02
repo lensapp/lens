@@ -27,7 +27,7 @@ export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
   create({ namespace = "default" }): Promise<SelfSubjectRulesReview> {
     return super.create({}, {
       spec: {
-        namespace
+        namespace,
       },
     });
   }
@@ -82,7 +82,7 @@ export class SelfSubjectRulesReview extends KubeObject {
         const separator = apiGroup == "" ? "" : ".";
 
         return resource + separator + apiGroup;
-      })
+      }),
     };
   }
 }
@@ -96,6 +96,6 @@ if (isClusterPageContext()) {
 }
 
 export {
-  selfSubjectRulesReviewApi
+  selfSubjectRulesReviewApi,
 };
 

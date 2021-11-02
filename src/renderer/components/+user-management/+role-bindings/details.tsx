@@ -48,7 +48,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.props.object, () => {
         this.selectedSubjects.clear();
-      })
+      }),
     ]);
   }
 
@@ -62,7 +62,7 @@ export class RoleBindingDetails extends React.Component<Props> {
       labelOk: `Remove`,
       message: (
         <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
-      )
+      ),
     });
   }
 

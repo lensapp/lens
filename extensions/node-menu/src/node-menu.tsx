@@ -32,7 +32,7 @@ const {
     MenuItem,
     Icon,
   },
-  Navigation
+  Navigation,
 } = Renderer;
 const {
   App,

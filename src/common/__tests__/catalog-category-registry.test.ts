@@ -34,8 +34,8 @@ class TestCatalogCategory extends CatalogCategory {
     group: "entity.k8slens.dev",
     versions: [],
     names: {
-      kind: "Test"
-    }
+      kind: "Test",
+    },
   };
 }
 
@@ -50,8 +50,8 @@ class TestCatalogCategory2 extends CatalogCategory {
     group: "entity.k8slens.dev",
     versions: [],
     names: {
-      kind: "Test2"
-    }
+      kind: "Test2",
+    },
   };
 }
 

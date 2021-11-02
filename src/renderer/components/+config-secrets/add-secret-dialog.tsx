@@ -81,7 +81,7 @@ export class AddSecretDialog extends React.Component<Props> {
     [SecretType.ServiceAccountToken]: {
       annotations: [
         { key: "kubernetes.io/service-account.name", required: true },
-        { key: "kubernetes.io/service-account.uid", required: true }
+        { key: "kubernetes.io/service-account.uid", required: true },
       ],
     },
   };
@@ -127,7 +127,7 @@ export class AddSecretDialog extends React.Component<Props> {
         namespace,
         annotations: this.getDataFromFields(annotations),
         labels: this.getDataFromFields(labels),
-      } as KubeObjectMetadata
+      } as KubeObjectMetadata,
     };
 
     try {

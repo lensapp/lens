@@ -79,7 +79,7 @@ export class PodsStore extends KubeObjectStore<Pod> {
     const metrics = this.kubeMetrics.find(metric => {
       return [
         metric.getName() === pod.getName(),
-        metric.getNs() === pod.getNs()
+        metric.getNs() === pod.getNs(),
       ].every(v => v);
     });
 
@@ -97,7 +97,7 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
       return {
         cpu: total.cpu + cpuUnitsToNumber(cpu),
-        memory: total.memory + unitsToBytes(memory)
+        memory: total.memory + unitsToBytes(memory),
       };
     }, empty);
   }

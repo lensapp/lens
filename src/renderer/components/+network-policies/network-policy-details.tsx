@@ -80,7 +80,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
             else {
               return (<DrawerItem name={key} key={key}>(empty)</DrawerItem>);
             }
-          })
+          }),
         )}
       </>
     );

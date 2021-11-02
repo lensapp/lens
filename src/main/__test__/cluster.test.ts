@@ -35,13 +35,13 @@ jest.mock("winston", () => ({
     simple: jest.fn(),
     label: jest.fn(),
     timestamp: jest.fn(),
-    printf: jest.fn()
+    printf: jest.fn(),
   },
   createLogger: jest.fn().mockReturnValue(logger),
   transports: {
     Console: jest.fn(),
     File: jest.fn(),
-  }
+  },
 }));
 
 jest.mock("../../common/ipc");
@@ -85,7 +85,7 @@ describe("create clusters", () => {
         }],
         kind: "Config",
         preferences: {},
-      })
+      }),
     };
 
     mockFs(mockOpts);
@@ -93,7 +93,7 @@ describe("create clusters", () => {
     c = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml"
+      kubeConfigPath: "minikube-config.yml",
     });
   });
 
@@ -126,12 +126,12 @@ describe("create clusters", () => {
     }({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml"
+      kubeConfigPath: "minikube-config.yml",
     });
 
     c.contextHandler = {
       ensureServer: jest.fn(),
-      stopServer: jest.fn()
+      stopServer: jest.fn(),
     } as any;
 
     jest.spyOn(c, "reconnect");

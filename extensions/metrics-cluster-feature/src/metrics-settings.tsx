@@ -30,7 +30,7 @@ const {
   },
   Component: {
     SubTitle, FormSwitch, Switcher, Button,
-  }
+  },
 } = Renderer;
 
 interface Props {
@@ -47,7 +47,7 @@ export class MetricsSettings extends React.Component<Props> {
   @observable featureStates = {
     prometheus: false,
     kubeStateMetrics: false,
-    nodeExporter: false
+    nodeExporter: false,
   };
   @observable canUpgrade = false;
   @observable upgrading = false;
@@ -56,7 +56,7 @@ export class MetricsSettings extends React.Component<Props> {
 
   config: MetricsConfiguration = {
     prometheus: {
-      enabled: false
+      enabled: false,
     },
     persistence: {
       enabled: false,

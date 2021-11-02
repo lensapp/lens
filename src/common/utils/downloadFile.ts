@@ -53,7 +53,7 @@ export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions)
     promise,
     cancel() {
       req.abort();
-    }
+    },
   };
 }
 
@@ -62,6 +62,6 @@ export function downloadJson(args: DownloadFileOptions): DownloadFileTicket<any>
 
   return {
     promise: promise.then(res => JSON.parse(res.toString())),
-    ...rest
+    ...rest,
   };
 }

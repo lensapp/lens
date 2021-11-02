@@ -41,7 +41,7 @@ jest.mock("winston", () => ({
   transports: {
     Console: jest.fn(),
     File: jest.fn(),
-  }
+  },
 }));
 
 jest.mock("../../common/ipc");

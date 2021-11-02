@@ -26,7 +26,7 @@ jest.mock("../api-manager", () => ({
     return {
       registerStore: jest.fn(),
     };
-  }
+  },
 }));
 
 import { IKubeApiParsed, parseKubeApi } from "../kube-api-parse";
@@ -45,7 +45,7 @@ const tests: KubeApiParseTestData[] = [
     apiVersionWithGroup: "apiextensions.k8s.io/v1beta1",
     namespace: undefined,
     resource: "customresourcedefinitions",
-    name: "prometheuses.monitoring.coreos.com"
+    name: "prometheuses.monitoring.coreos.com",
   }],
   ["/api/v1/namespaces/kube-system/pods/coredns-6955765f44-v8p27", {
     apiBase: "/api/v1/pods",
@@ -55,7 +55,7 @@ const tests: KubeApiParseTestData[] = [
     apiVersionWithGroup: "v1",
     namespace: "kube-system",
     resource: "pods",
-    name: "coredns-6955765f44-v8p27"
+    name: "coredns-6955765f44-v8p27",
   }],
   ["/apis/stable.example.com/foo1/crontabs", {
     apiBase: "/apis/stable.example.com/foo1/crontabs",
@@ -132,7 +132,7 @@ const tests: KubeApiParseTestData[] = [
 const throwtests = [
   undefined,
   "",
-  "ajklsmh"
+  "ajklsmh",
 ];
 
 describe("parseApi unit tests", () => {

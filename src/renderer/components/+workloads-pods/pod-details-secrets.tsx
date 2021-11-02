@@ -44,7 +44,7 @@ export class PodDetailsSecrets extends Component<Props> {
       pod.getSecrets().map(secretName => secretsApi.get({
         name: secretName,
         namespace: pod.getNs(),
-      }))
+      })),
     );
 
     secrets.forEach(secret => secret && this.secrets.set(secret.getName(), secret));

@@ -27,6 +27,6 @@ export function metricUnitsToNumber(value: string): number {
   const index = suffixes.indexOf(suffix);
 
   return parseInt(
-    (parseFloat(value) * Math.pow(base, index + 1)).toFixed(1)
+    (parseFloat(value) * Math.pow(base, index + 1)).toFixed(1),
   );
 }

@@ -72,7 +72,7 @@ export function createStorage<T>(key: string, defaultValue: T) {
           await fse.writeJson(filePath, state, { spaces: 2 });
         } catch (error) {
           logger.error(`${logPrefix} saving failed: ${error}`, {
-            json: state, jsonFilePath: filePath
+            json: state, jsonFilePath: filePath,
           });
         }
       }
@@ -94,7 +94,7 @@ export function createStorage<T>(key: string, defaultValue: T) {
       },
       removeItem(key: string) {
         delete storage.data[key];
-      }
+      },
     },
   });
 }

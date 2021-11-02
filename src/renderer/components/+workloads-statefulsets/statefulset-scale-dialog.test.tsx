@@ -42,7 +42,7 @@ const dummyStatefulSet: StatefulSet = {
     serviceName: "dummy",
     replicas: 1,
     selector: {
-      matchLabels: { "label": "label" }
+      matchLabels: { "label": "label" },
     },
     template: {
       metadata: {
@@ -125,7 +125,7 @@ describe("<StatefulSetScaleDialog />", () => {
 
   beforeEach(() => {
     statefulSetApi = new StatefulSetApi({
-      objectConstructor: StatefulSet
+      objectConstructor: StatefulSet,
     });
   });
 

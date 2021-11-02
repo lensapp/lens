@@ -56,7 +56,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   private emptyRepo = { name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: "" };
 
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
-  private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c" , "p7s", "p12", "pfx", "pem"];
+  private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c", "p7s", "p12", "pfx", "pem"];
 
   constructor(props: Props) {
     super(props);
@@ -96,8 +96,8 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       buttonLabel: `Use file`,
       filters: [
         fileFilter,
-        { name: "Any", extensions: ["*"] }
-      ]
+        { name: "Any", extensions: ["*"] },
+      ],
     });
 
     if (!canceled && filePaths.length) {
@@ -116,7 +116,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
     }
   }
 
-  renderFileInput(placeholder:string, fileType:FileType ,fileExtensions:string[]){
+  renderFileInput(placeholder:string, fileType:FileType, fileExtensions:string[]){
     return(
       <div className="flex gaps align-center">
         <Input

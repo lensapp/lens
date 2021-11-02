@@ -27,7 +27,7 @@ describe("formatNodeTaint tests", () => {
       effect: "Foo",
       key: "hello",
       timeAdded: "pre",
-      value: "a"
+      value: "a",
     })).toBe("hello=a:Foo");
   });
 

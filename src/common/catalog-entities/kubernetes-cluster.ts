@@ -59,7 +59,7 @@ export enum LensKubernetesClusterStatus {
   DELETING = "deleting",
   CONNECTING = "connecting",
   CONNECTED = "connected",
-  DISCONNECTED = "disconnected"
+  DISCONNECTED = "disconnected",
 }
 
 export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
@@ -128,14 +128,14 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
-          onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid)
+          onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid),
         });
         break;
       case LensKubernetesClusterStatus.DISCONNECTED:
         context.menuItems.push({
           title: "Connect",
           icon: "link",
-          onClick: () => context.navigate(`/cluster/${this.metadata.uid}`)
+          onClick: () => context.navigate(`/cluster/${this.metadata.uid}`),
         });
         break;
     }
@@ -158,12 +158,12 @@ class KubernetesClusterCategory extends CatalogCategory {
     versions: [
       {
         name: "v1alpha1",
-        entityClass: KubernetesCluster
-      }
+        entityClass: KubernetesCluster,
+      },
     ],
     names: {
-      kind: "KubernetesCluster"
-    }
+      kind: "KubernetesCluster",
+    },
   };
 }
 

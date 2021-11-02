@@ -27,7 +27,7 @@ module.exports = [
     target: "electron-renderer",
     mode: "production",
     optimization: {
-      minimize: false
+      minimize: false,
     },
     module: {
       rules: [
@@ -43,8 +43,8 @@ module.exports = [
         "@k8slens/extensions": "var global.LensExtensions",
         "react": "var global.React",
         "mobx": "var global.Mobx",
-        "mobx-react": "var global.MobxReact"
-      }
+        "mobx-react": "var global.MobxReact",
+      },
     ],
     resolve: {
       extensions: [ ".tsx", ".ts", ".js" ],
@@ -56,7 +56,7 @@ module.exports = [
       path: path.resolve(__dirname, "dist"),
     },
     node: {
-      __dirname: false
-    }
+      __dirname: false,
+    },
   },
 ];

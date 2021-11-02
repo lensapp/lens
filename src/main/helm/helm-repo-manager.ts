@@ -112,7 +112,7 @@ export class HelmRepoManager extends Singleton {
     } catch { }
 
     return {
-      repositories: []
+      repositories: [],
     };
   }
 
@@ -132,7 +132,7 @@ export class HelmRepoManager extends Singleton {
 
       return repositories.map(repo => ({
         ...repo,
-        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`
+        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
       }));
     } catch (error) {
       logger.error(`[HELM]: repositories listing error "${error}"`);

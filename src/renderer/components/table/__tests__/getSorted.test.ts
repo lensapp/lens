@@ -63,19 +63,19 @@ describe("Table tests", () => {
           k: 1,
         }, {
           val: "c",
-          k: 2
+          k: 2,
         }, {
           val: "b.1",
-          k: 3
+          k: 3,
         }, {
           val: "b.2",
-          k: 4
+          k: 4,
         }, {
           val: "d",
-          k: 5
+          k: 5,
         }, {
           val: "b.2",
-          k: -10
+          k: -10,
         }];
         const dup = cloneDeep(i);
         const expected = [
@@ -84,19 +84,19 @@ describe("Table tests", () => {
             k: 1,
           }, {
             val: "b.1",
-            k: 3
+            k: 3,
           }, {
             val: "b.2",
-            k: 4
+            k: 4,
           }, {
             val: "b.2",
-            k: -10
+            k: -10,
           }, {
             val: "c",
-            k: 2
+            k: 2,
           }, {
             val: "d",
-            k: 5
+            k: 5,
           },
         ];
 
@@ -110,19 +110,19 @@ describe("Table tests", () => {
           k: 1,
         }, {
           val: "b.2",
-          k: -10
+          k: -10,
         }, {
           val: "c",
-          k: 2
+          k: 2,
         }, {
           val: "b.1",
-          k: 3
+          k: 3,
         }, {
           val: "b.2",
-          k: 4
+          k: 4,
         }, {
           val: "d",
-          k: 5
+          k: 5,
         }];
         const dup = cloneDeep(i);
         const expected = [
@@ -131,19 +131,19 @@ describe("Table tests", () => {
             k: 1,
           }, {
             val: "b.1",
-            k: 3
+            k: 3,
           }, {
             val: "b.2",
-            k: -10
+            k: -10,
           }, {
             val: "b.2",
-            k: 4
+            k: 4,
           }, {
             val: "c",
-            k: 2
+            k: 2,
           }, {
             val: "d",
-            k: 5
+            k: 5,
           },
         ];
 

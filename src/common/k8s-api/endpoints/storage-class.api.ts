@@ -72,5 +72,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  storageClassApi
+  storageClassApi,
 };

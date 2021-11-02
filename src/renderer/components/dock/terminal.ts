@@ -107,7 +107,7 @@ export class Terminal {
       cursorBlink: true,
       cursorStyle: "bar",
       fontSize: 13,
-      fontFamily: "RobotoMono"
+      fontFamily: "RobotoMono",
     });
 
     // enable terminal addons
@@ -130,7 +130,7 @@ export class Terminal {
 
     this.disposers.push(
       reaction(() => ThemeStore.getInstance().activeTheme.colors, this.setTheme, {
-        fireImmediately: true
+        fireImmediately: true,
       }),
       dockStore.onResize(this.onResize),
       () => onDataHandler.dispose(),

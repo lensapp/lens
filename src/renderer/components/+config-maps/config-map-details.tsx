@@ -55,7 +55,7 @@ export class ConfigMapDetails extends React.Component<Props> {
         if (configMap) {
           this.data.replace(configMap.data); // refresh
         }
-      })
+      }),
     ]);
   }
 
@@ -71,7 +71,7 @@ export class ConfigMapDetails extends React.Component<Props> {
       Notifications.ok(
         <p>
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
-        </p>
+        </p>,
       );
     } catch (error) {
       Notifications.error(`Failed to save config map: ${error}`);

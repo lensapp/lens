@@ -154,7 +154,7 @@ export class LensBinary {
       this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
       tar.x({
         file: this.tarPath,
-        cwd: this.dirname
+        cwd: this.dirname,
       }).then((() => {
         resolve();
       }));
@@ -187,7 +187,7 @@ export class LensBinary {
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: url,
       gzip: true,
-      ...this.requestOpts
+      ...this.requestOpts,
     };
     const stream = request(requestOpts);
 

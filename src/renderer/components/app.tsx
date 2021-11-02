@@ -105,8 +105,8 @@ export class App extends React.Component {
         name: "cluster",
         action: "open",
         params: {
-          clusterId: App.clusterId
-        }
+          clusterId: App.clusterId,
+        },
       });
     });
     window.addEventListener("online", () => {
@@ -132,7 +132,7 @@ export class App extends React.Component {
         preload: true,
       }),
 
-      watchHistoryState()
+      watchHistoryState(),
     ]);
   }
 

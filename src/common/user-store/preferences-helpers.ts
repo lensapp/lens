@@ -43,9 +43,9 @@ export interface EditorConfiguration {
 export const defaultEditorConfig: EditorConfiguration = {
   lineNumbers: "on",
   miniMap: {
-    enabled: true
+    enabled: true,
   },
-  tabSize: 2
+  tabSize: 2,
 };
 
 interface PreferenceDescription<T, R = T> {
@@ -237,7 +237,7 @@ const terminalCopyOnSelect: PreferenceDescription<boolean> = {
 const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, ObservableToggleSet<string>>> = {
   fromStore(val) {
     return new Map(
-      (val ?? []).map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)])
+      (val ?? []).map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)]),
     );
   },
   toStore(val) {
@@ -260,7 +260,7 @@ const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], Map<st
     return new Map(
       val
         ?.map(({ filePath, ...rest }) => [filePath, rest])
-      ?? [[mainKubeFolder, {}]]
+      ?? [[mainKubeFolder, {}]],
     );
   },
   toStore(val) {
@@ -283,13 +283,13 @@ const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConf
 
 const updateChannels = new Map([
   ["latest", {
-    label: "Stable"
+    label: "Stable",
   }],
   ["beta", {
-    label: "Beta"
+    label: "Beta",
   }],
   ["alpha", {
-    label: "Alpha"
+    label: "Alpha",
   }],
 ]);
 const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
@@ -304,7 +304,7 @@ const updateChannel: PreferenceDescription<string> = {
     }
 
     return val;
-  }
+  },
 };
 
 type PreferencesModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<infer T, any> ? T : never;

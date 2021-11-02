@@ -77,7 +77,7 @@ export class PersistentVolumes extends React.Component<Props> {
         renderTableContents={volume => {
           const { claimRef, storageClassName } = volume.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
-            name: storageClassName
+            name: storageClassName,
           }));
 
           return [
@@ -93,7 +93,7 @@ export class PersistentVolumes extends React.Component<Props> {
               </Link>
             ),
             volume.getAge(),
-            { title: volume.getStatus(), className: volume.getStatus().toLowerCase() }
+            { title: volume.getStatus(), className: volume.getStatus().toLowerCase() },
           ];
         }}
       />

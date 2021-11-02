@@ -76,12 +76,12 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
     }
 
     const shell = createTerminalTab({
-      title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()})`
+      title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()})`,
     });
 
     terminalStore.sendCommand(commandParts.join(" "), {
       enter: true,
-      tabId: shell.id
+      tabId: shell.id,
     });
 
     Navigation.hideDetails();

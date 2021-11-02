@@ -98,7 +98,7 @@ export class ApiManager {
   lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
     const {
       kind, apiVersion, name,
-      namespace = parentObject.getNs()
+      namespace = parentObject.getNs(),
     } = ref;
 
     if (!kind) return "";

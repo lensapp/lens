@@ -41,7 +41,7 @@ export class JobStore extends KubeObjectStore<Job> {
   getJobsByOwner(cronJob: CronJob) {
     return this.items.filter(job =>
       job.getNs() == cronJob.getNs() &&
-      job.getOwnerRefs().find(ref => ref.name === cronJob.getName() && ref.kind === cronJob.kind)
+      job.getOwnerRefs().find(ref => ref.name === cronJob.getName() && ref.kind === cronJob.kind),
     );
   }
 

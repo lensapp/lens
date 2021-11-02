@@ -89,7 +89,7 @@ export function Avatar(props: Props) {
       backgroundColor: getBackgroundColor(),
       width,
       height,
-      textTransform: "uppercase"
+      textTransform: "uppercase",
     };
   };
 

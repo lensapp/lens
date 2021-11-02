@@ -75,7 +75,7 @@ export class MetricsRoute {
     try {
       const [prometheusPath, prometheusProvider] = await Promise.all([
         cluster.contextHandler.getPrometheusPath(),
-        cluster.contextHandler.getPrometheusProvider()
+        cluster.contextHandler.getPrometheusProvider(),
       ]);
 
       prometheusMetadata.provider = prometheusProvider?.id;

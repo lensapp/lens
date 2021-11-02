@@ -82,7 +82,7 @@ export enum PodStatus {
   PENDING = "Pending",
   RUNNING = "Running",
   SUCCEEDED = "Succeeded",
-  EVICTED = "Evicted"
+  EVICTED = "Evicted",
 }
 
 export interface IPodContainer extends Partial<Record<PodContainerProbe, IContainerProbe>> {
@@ -310,7 +310,7 @@ export class Pod extends WorkloadKubeObject {
     const runningContainerNames = new Set(
       this.getContainerStatuses()
         .filter(({ state }) => state.running)
-        .map(({ name }) => name)
+        .map(({ name }) => name),
     );
 
     return this.getAllContainers()
@@ -466,7 +466,7 @@ export class Pod extends WorkloadKubeObject {
       timeoutSeconds = 0,
       periodSeconds = 0,
       successThreshold = 0,
-      failureThreshold = 0
+      failureThreshold = 0,
     } = probeData;
 
     // HTTP Request
@@ -529,5 +529,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  podsApi
+  podsApi,
 };

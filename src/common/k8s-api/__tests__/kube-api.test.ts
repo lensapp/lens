@@ -28,11 +28,11 @@ describe("forRemoteCluster", () => {
   it("builds api client", async (done) => {
     const api = forRemoteCluster({
       cluster: {
-        server: "https://127.0.0.1:6443"
+        server: "https://127.0.0.1:6443",
       },
       user: {
-        token: "daa"
-      }
+        token: "daa",
+      },
     }, Pod);
 
     (fetch as any).mockResponse(async (request: any) => {
@@ -41,7 +41,7 @@ describe("forRemoteCluster", () => {
       done();
 
       return {
-        body: ""
+        body: "",
       };
     });
 
@@ -55,7 +55,7 @@ describe("KubeApi", () => {
   beforeEach(() => {
     request = new KubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,
-      apiBase: "/api-kube"
+      apiBase: "/api-kube",
     });
   });
 
@@ -65,24 +65,24 @@ describe("KubeApi", () => {
         return {
           body: JSON.stringify({
             resources: [{
-              name: "ingresses"
-            }] as any[]
-          })
+              name: "ingresses",
+            }] as any[],
+          }),
         };
       } else if (request.url === "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1") {
         // Even if the old API contains ingresses, KubeApi should prefer the apiBase url
         return {
           body: JSON.stringify({
             resources: [{
-              name: "ingresses"
-            }] as any[]
-          })
+              name: "ingresses",
+            }] as any[],
+          }),
         };
       } else {
         return {
           body: JSON.stringify({
-            resources: [] as any[]
-          })
+            resources: [] as any[],
+          }),
         };
       }
     });
@@ -107,22 +107,22 @@ describe("KubeApi", () => {
       if (request.url === "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1") {
         return {
           body: JSON.stringify({
-            resources: [] as any[]
-          })
+            resources: [] as any[],
+          }),
         };
       } else if (request.url === "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1") {
         return {
           body: JSON.stringify({
             resources: [{
-              name: "ingresses"
-            }] as any[]
-          })
+              name: "ingresses",
+            }] as any[],
+          }),
         };
       } else {
         return {
           body: JSON.stringify({
-            resources: [] as any[]
-          })
+            resources: [] as any[],
+          }),
         };
       }
     });

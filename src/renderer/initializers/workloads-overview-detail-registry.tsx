@@ -31,15 +31,15 @@ export function initWorkloadsOverviewDetailRegistry() {
       {
         components: {
           Details: (props: any) => <OverviewStatuses {...props} />,
-        }
+        },
       },
       {
         priority: 5,
         components: {
           Details: () => (
             isAllowedResource("events") && <Events compact hideFilters className="box grow" />
-          )
-        }
-      }
+          ),
+        },
+      },
     ]);
 }

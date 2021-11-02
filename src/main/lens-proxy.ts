@@ -70,8 +70,8 @@ export class LensProxy extends Singleton {
     this.proxyServer = spdy.createServer({
       spdy: {
         plain: true,
-        protocols: ["http/1.1", "spdy/3.1"]
-      }
+        protocols: ["http/1.1", "spdy/3.1"],
+      },
     }, (req: http.IncomingMessage, res: http.ServerResponse) => {
       this.handleRequest(req, res);
     });

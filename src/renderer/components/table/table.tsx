@@ -153,7 +153,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
             _sorting: this.sortParams,
             _nowrap: headElem.props.nowrap,
           });
-        })
+        }),
       });
     }
 
@@ -205,7 +205,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
   renderRows() {
     const {
       noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items,
-      getTableRow, selectedItemId, className, virtualHeight
+      getTableRow, selectedItemId, className, virtualHeight,
     } = this.props;
     const content = this.getContent();
     let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);

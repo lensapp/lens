@@ -25,13 +25,13 @@ const config: MutationObserverInit = {
   subtree: true,
   childList: true,
   attributes: false,
-  characterData: false
+  characterData: false,
 };
 
 export function useMutationObserver(
   root: Element,
   callback: MutationCallback,
-  options: MutationObserverInit = config
+  options: MutationObserverInit = config,
 ) {
 
   useEffect(() => {

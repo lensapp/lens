@@ -71,7 +71,7 @@ const defaultPropsMenu: Partial<MenuProps> = {
   closeOnClickItem: true,
   closeOnClickOutside: true,
   closeOnScroll: false,
-  toggleEvent: "click"
+  toggleEvent: "click",
 };
 
 export class Menu extends React.Component<MenuProps, State> {
@@ -196,12 +196,12 @@ export class Menu extends React.Component<MenuProps, State> {
         top: renderMenuOnTop,
         bottom: !renderMenuOnTop,
         left: renderMenuLeft,
-        right: !renderMenuLeft
+        right: !renderMenuLeft,
       },
       menuStyle: {
         top: renderMenuOnTop ? menuOnTopPosition : menuOnBottomPosition,
         left: renderMenuLeft ? menuOnLeftSidePosition : menuOnRightSidePosition,
-      }
+      },
     });
   };
 
@@ -324,7 +324,7 @@ export class Menu extends React.Component<MenuProps, State> {
     const menuItems = React.Children.toArray(children).map((item: ReactElement<MenuItemProps>, index) => {
       if (item.type === MenuItem) {
         return React.cloneElement(item, {
-          ref: (item: MenuItem) => this.bindItemRef(item, index)
+          ref: (item: MenuItem) => this.bindItemRef(item, index),
         });
       }
 
@@ -340,7 +340,7 @@ export class Menu extends React.Component<MenuProps, State> {
             className={className}
             style={{
               left: this.state?.menuStyle?.left,
-              top: this.state?.menuStyle?.top
+              top: this.state?.menuStyle?.top,
             }}
           >
             {menuItems}

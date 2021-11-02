@@ -58,7 +58,7 @@ export const NodeCharts = observer(() => {
     podUsage,
     podCapacity,
     fsSize,
-    fsUsage
+    fsUsage,
   } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
 
   const datasets = [
@@ -69,29 +69,29 @@ export const NodeCharts = observer(() => {
         label: `Usage`,
         tooltip: `CPU cores usage`,
         borderColor: "#3D90CE",
-        data: cpuUsage.map(([x, y]) => ({ x, y }))
+        data: cpuUsage.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-cpuRequests`,
         label: `Requests`,
         tooltip: `CPU requests`,
         borderColor: "#30b24d",
-        data: cpuRequests.map(([x, y]) => ({ x, y }))
+        data: cpuRequests.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-cpuAllocatableCapacity`,
         label: `Allocatable Capacity`,
         tooltip: `CPU allocatable capacity`,
         borderColor: "#032b4d",
-        data: cpuAllocatableCapacity.map(([x, y]) => ({ x, y }))
+        data: cpuAllocatableCapacity.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-cpuCapacity`,
         label: `Capacity`,
         tooltip: `CPU capacity`,
         borderColor: chartCapacityColor,
-        data: cpuCapacity.map(([x, y]) => ({ x, y }))
-      }
+        data: cpuCapacity.map(([x, y]) => ({ x, y })),
+      },
     ],
     // Memory
     [
@@ -100,36 +100,36 @@ export const NodeCharts = observer(() => {
         label: `Usage`,
         tooltip: `Memory usage`,
         borderColor: "#c93dce",
-        data: memoryUsage.map(([x, y]) => ({ x, y }))
+        data: memoryUsage.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-workloadMemoryUsage`,
         label: `Workload Memory Usage`,
         tooltip: `Workload memory usage`,
         borderColor: "#9cd3ce",
-        data: workloadMemoryUsage.map(([x, y]) => ({ x, y }))
+        data: workloadMemoryUsage.map(([x, y]) => ({ x, y })),
       },
       {
         id: "memoryRequests",
         label: `Requests`,
         tooltip: `Memory requests`,
         borderColor: "#30b24d",
-        data: memoryRequests.map(([x, y]) => ({ x, y }))
+        data: memoryRequests.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-memoryAllocatableCapacity`,
         label: `Allocatable Capacity`,
         tooltip: `Memory allocatable capacity`,
         borderColor: "#032b4d",
-        data: memoryAllocatableCapacity.map(([x, y]) => ({ x, y }))
+        data: memoryAllocatableCapacity.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-memoryCapacity`,
         label: `Capacity`,
         tooltip: `Memory capacity`,
         borderColor: chartCapacityColor,
-        data: memoryCapacity.map(([x, y]) => ({ x, y }))
-      }
+        data: memoryCapacity.map(([x, y]) => ({ x, y })),
+      },
     ],
     // Disk
     [
@@ -138,15 +138,15 @@ export const NodeCharts = observer(() => {
         label: `Usage`,
         tooltip: `Node filesystem usage in bytes`,
         borderColor: "#ffc63d",
-        data: fsUsage.map(([x, y]) => ({ x, y }))
+        data: fsUsage.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-fsSize`,
         label: `Size`,
         tooltip: `Node filesystem size in bytes`,
         borderColor: chartCapacityColor,
-        data: fsSize.map(([x, y]) => ({ x, y }))
-      }
+        data: fsSize.map(([x, y]) => ({ x, y })),
+      },
     ],
     // Pods
     [
@@ -155,25 +155,25 @@ export const NodeCharts = observer(() => {
         label: `Usage`,
         tooltip: `Number of running Pods`,
         borderColor: "#30b24d",
-        data: podUsage.map(([x, y]) => ({ x, y }))
+        data: podUsage.map(([x, y]) => ({ x, y })),
       },
       {
         id: `${id}-podCapacity`,
         label: `Capacity`,
         tooltip: `Node Pods capacity`,
         borderColor: chartCapacityColor,
-        data: podCapacity.map(([x, y]) => ({ x, y }))
-      }
-    ]
+        data: podCapacity.map(([x, y]) => ({ x, y })),
+      },
+    ],
   ];
 
   const podOptions: ChartOptions = {
     scales: {
       yAxes: [{
         ticks: {
-          callback: value => value
-        }
-      }]
+          callback: value => value,
+        },
+      }],
     },
     tooltips: {
       callbacks: {
@@ -182,9 +182,9 @@ export const NodeCharts = observer(() => {
           const value = data[index] as ChartPoint;
 
           return `${label}: ${value.y}`;
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   const options = [cpuOptions, memoryOptions, memoryOptions, podOptions];

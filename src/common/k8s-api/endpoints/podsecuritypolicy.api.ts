@@ -127,5 +127,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  pspApi
+  pspApi,
 };

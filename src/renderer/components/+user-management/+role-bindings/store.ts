@@ -31,7 +31,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   protected sortItems(items: RoleBinding[]) {
     return super.sortItems(items, [
       roleBinding => roleBinding.kind,
-      roleBinding => roleBinding.getName()
+      roleBinding => roleBinding.getName(),
     ]);
   }
 

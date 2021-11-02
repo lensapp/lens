@@ -45,8 +45,8 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
       uid: "1",
       name: "test",
       resourceVersion: "v1",
-      selfLink: "http"
-    }
+      selfLink: "http",
+    },
   });
 
   pod.spec = {
@@ -82,9 +82,9 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
       restartCount: i,
       state: {
         running: {
-          startedAt: "before"
+          startedAt: "before",
         },
-      }
+      },
     });
   }
 
@@ -107,9 +107,9 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
           startedAt: "before",
           exitCode: i+1,
           finishedAt: "later",
-          reason: `reason_${i}`
-        }
-      }
+          reason: `reason_${i}`,
+        },
+      },
     });
   }
 
@@ -129,9 +129,9 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
       restartCount: i,
       state: {
         running: {
-          startedAt: "before"
-        }
-      }
+          startedAt: "before",
+        },
+      },
     });
   }
 
@@ -154,9 +154,9 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
           startedAt: "before",
           exitCode: i+1,
           finishedAt: "later",
-          reason: `reason_${i}`
-        }
-      }
+          reason: `reason_${i}`,
+        },
+      },
     });
   }
 
@@ -183,7 +183,7 @@ describe("Pods", () => {
       return {
         image: "dummy",
         imagePullPolicy: "dummy",
-        name
+        name,
       };
     }
 
@@ -231,7 +231,7 @@ describe("Pods", () => {
       const pod = getDummyPod();
 
       pod.spec.nodeSelector = {
-        "kubernetes.io/os": "foobar"
+        "kubernetes.io/os": "foobar",
       };
 
       expect(pod.getSelectedNodeOs()).toStrictEqual("foobar");
@@ -241,7 +241,7 @@ describe("Pods", () => {
       const pod = getDummyPod();
 
       pod.spec.nodeSelector = {
-        "beta.kubernetes.io/os": "foobar1"
+        "beta.kubernetes.io/os": "foobar1",
       };
 
       expect(pod.getSelectedNodeOs()).toStrictEqual("foobar1");
@@ -252,7 +252,7 @@ describe("Pods", () => {
 
       pod.spec.nodeSelector = {
         "kubernetes.io/os": "foobar2",
-        "beta.kubernetes.io/os": "foobar3"
+        "beta.kubernetes.io/os": "foobar3",
       };
 
       expect(pod.getSelectedNodeOs()).toStrictEqual("foobar2");
@@ -273,7 +273,7 @@ describe("Pods", () => {
         type: "Ready",
         status: "foobar",
         lastProbeTime: 1,
-        lastTransitionTime: "longer ago"
+        lastTransitionTime: "longer ago",
       });
 
       expect(pod.hasIssues()).toStrictEqual(true);
@@ -286,7 +286,7 @@ describe("Pods", () => {
         type: "dummy",
         status: "foobar",
         lastProbeTime: 1,
-        lastTransitionTime: "longer ago"
+        lastTransitionTime: "longer ago",
       });
 
       expect(pod.hasIssues()).toStrictEqual(false);
@@ -298,8 +298,8 @@ describe("Pods", () => {
       pod.status.containerStatuses[0].state = {
         waiting: {
           reason: "CrashLookBackOff",
-          message: "too much foobar"
-        }
+          message: "too much foobar",
+        },
       };
 
       expect(pod.hasIssues()).toStrictEqual(true);

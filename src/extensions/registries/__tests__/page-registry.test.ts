@@ -59,14 +59,14 @@ describe("page registry tests", () => {
     ext = new LensExtension({
       manifest: {
         name: "foo-bar",
-        version: "0.1.1"
+        version: "0.1.1",
       },
       id: "/this/is/fake/package.json",
       absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true,
-      isCompatible: true
+      isCompatible: true,
     });
     UserStore.createInstance();
     ThemeStore.createInstance();
@@ -75,30 +75,30 @@ describe("page registry tests", () => {
     GlobalPageRegistry.createInstance().add({
       id: "page-with-params",
       components: {
-        Page: () => React.createElement("Page with params")
+        Page: () => React.createElement("Page with params"),
       },
       params: {
         test1: "test1-default",
-        test2: "" // no default value, just declaration
+        test2: "", // no default value, just declaration
       },
     }, ext);
     GlobalPageRegistry.createInstance().add([
       {
         id: "test-page",
         components: {
-          Page: () => React.createElement("Text")
-        }
+          Page: () => React.createElement("Text"),
+        },
       },
       {
         id: "another-page",
         components: {
-          Page: () => React.createElement("Text")
+          Page: () => React.createElement("Text"),
         },
       },
       {
         components: {
-          Page: () => React.createElement("Default")
-        }
+          Page: () => React.createElement("Default"),
+        },
       },
     ], ext);
   });
@@ -168,7 +168,7 @@ describe("page registry tests", () => {
       it("returns matching page", () => {
         const page = GlobalPageRegistry.getInstance().getByPageTarget({
           pageId: "test-page",
-          extensionId: ext.name
+          extensionId: ext.name,
         });
 
         expect(page.id).toEqual("test-page");
@@ -177,7 +177,7 @@ describe("page registry tests", () => {
       it("returns null if target not found", () => {
         const page = GlobalPageRegistry.getInstance().getByPageTarget({
           pageId: "wrong-page",
-          extensionId: ext.name
+          extensionId: ext.name,
         });
 
         expect(page).toBeNull();

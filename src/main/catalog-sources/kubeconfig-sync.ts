@@ -89,7 +89,7 @@ export class KubeconfigSyncManager extends Singleton {
     catalogEntityRegistry.addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
       Array.from(iter.flatMap(
         this.sources.values(),
-        ([entities]) => entities.get()
+        ([entities]) => entities.get(),
       ))
     )));
 

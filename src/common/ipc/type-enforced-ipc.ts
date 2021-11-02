@@ -38,7 +38,7 @@ export type Rest<T> = T extends [any, ...infer R] ? R : [];
  */
 export function onceCorrect<
   IPC extends EventEmitter,
-  Listener extends (event: ListenerEvent<IPC>, ...args: any[]) => any
+  Listener extends (event: ListenerEvent<IPC>, ...args: any[]) => any,
 >({
   source,
   channel,
@@ -72,7 +72,7 @@ export function onceCorrect<
  */
 export function onCorrect<
   IPC extends EventEmitter,
-  Listener extends (event: ListenerEvent<IPC>, ...args: any[]) => any
+  Listener extends (event: ListenerEvent<IPC>, ...args: any[]) => any,
 >({
   source,
   channel,

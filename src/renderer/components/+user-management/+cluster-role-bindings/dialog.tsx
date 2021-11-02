@@ -125,7 +125,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
       return {
         value: `${account.getName()}%${account.getNs()}`,
         account,
-        label: <><Icon small material="account_box" /> {name} ({namespace})</>
+        label: <><Icon small material="account_box" /> {name} ({namespace})</>,
       };
     });
   }
@@ -152,7 +152,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
     this.selectedAccounts.replace(
       serviceAccountsStore.items
-        .filter(sa => accountNames.has(sa.getName()))
+        .filter(sa => accountNames.has(sa.getName())),
     );
     this.selectedUsers.replace(uSubjects.map(user => user.name));
     this.selectedGroups.replace(gSubjects.map(group => group.name));
@@ -178,7 +178,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
           roleRef: {
             name: selectedRoleRef.getName(),
             kind: selectedRoleRef.kind,
-          }
+          },
         });
 
       showDetails(selfLink);

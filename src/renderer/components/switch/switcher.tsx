@@ -60,7 +60,7 @@ export const Switcher = withStyles((theme: Theme) =>
       width: 18,
       height: 18,
       marginTop: 2,
-      boxShadow: "none"
+      boxShadow: "none",
     },
     track: {
       borderRadius: 26 / 2,

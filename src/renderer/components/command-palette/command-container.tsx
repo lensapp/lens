@@ -50,7 +50,7 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
 
   private runCommand(command: CommandRegistration) {
     command.action({
-      entity: catalogEntityRegistry.activeEntity
+      entity: catalogEntityRegistry.activeEntity,
     });
   }
 

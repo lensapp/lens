@@ -106,7 +106,7 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
         this.filters,
         iter.filter,
         menuItems.values(),
-      )
+      ),
     );
   }
 }

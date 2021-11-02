@@ -49,7 +49,7 @@ export const LogResourceSelector = observer((props: Props) => {
     save({
       selectedContainer: containers
         .concat(initContainers)
-        .find(container => container.name === option.value)
+        .find(container => container.name === option.value),
     });
     reload();
   };
@@ -65,7 +65,7 @@ export const LogResourceSelector = observer((props: Props) => {
     return items.map(item => {
       return {
         value: item,
-        label: item
+        label: item,
       };
     });
   };
@@ -73,19 +73,19 @@ export const LogResourceSelector = observer((props: Props) => {
   const containerSelectOptions = [
     {
       label: `Containers`,
-      options: getSelectOptions(containers.map(container => container.name))
+      options: getSelectOptions(containers.map(container => container.name)),
     },
     {
       label: `Init Containers`,
       options: getSelectOptions(initContainers.map(container => container.name)),
-    }
+    },
   ];
 
   const podSelectOptions = [
     {
       label: pod.getOwnerRefs()[0]?.name,
-      options: getSelectOptions(pods.map(pod => pod.metadata.name))
-    }
+      options: getSelectOptions(pods.map(pod => pod.metadata.name)),
+    },
   ];
 
   useEffect(() => {

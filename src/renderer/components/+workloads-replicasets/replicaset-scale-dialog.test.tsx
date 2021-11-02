@@ -40,7 +40,7 @@ const dummyReplicaSet: ReplicaSet = {
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: { "label": "label" }
+      matchLabels: { "label": "label" },
     },
     template: {
       metadata: {
@@ -115,7 +115,7 @@ describe("<ReplicaSetScaleDialog />", () => {
 
   beforeEach(() => {
     replicaSetApi = new ReplicaSetApi({
-      objectConstructor: ReplicaSet
+      objectConstructor: ReplicaSet,
     });
   });
 

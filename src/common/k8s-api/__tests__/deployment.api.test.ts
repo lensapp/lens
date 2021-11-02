@@ -46,14 +46,14 @@ describe("DeploymentApi", () => {
       expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
         data: {
           spec: {
-            replicas: 5
-          }
-        }
+            replicas: 5,
+          },
+        },
       },
       {
         headers: {
-          "content-type": "application/merge-patch+json"
-        }
+          "content-type": "application/merge-patch+json",
+        },
       });
     });
   });

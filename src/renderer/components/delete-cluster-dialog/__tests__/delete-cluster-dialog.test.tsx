@@ -128,7 +128,7 @@ describe("<DeleteClusterDialog />", () => {
         id: "test",
         contextName: "test",
         preferences: {
-          clusterName: "minikube"
+          clusterName: "minikube",
         },
         kubeConfigPath: "./temp-kube-config",
       });
@@ -146,7 +146,7 @@ describe("<DeleteClusterDialog />", () => {
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
-          clusterName: "other-cluster"
+          clusterName: "other-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
       });
@@ -163,7 +163,7 @@ describe("<DeleteClusterDialog />", () => {
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
-          clusterName: "other-cluster"
+          clusterName: "other-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
       });
@@ -184,7 +184,7 @@ describe("<DeleteClusterDialog />", () => {
         id: "some-cluster",
         contextName: "test",
         preferences: {
-          clusterName: "test"
+          clusterName: "test",
         },
         kubeConfigPath: "./temp-kube-config",
       });
@@ -209,7 +209,7 @@ describe("<DeleteClusterDialog />", () => {
         id: "some-cluster",
         contextName: "test",
         preferences: {
-          clusterName: "test"
+          clusterName: "test",
         },
         kubeConfigPath: "./temp-kube-config",
       });
@@ -247,7 +247,7 @@ describe("<DeleteClusterDialog />", () => {
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
-          clusterName: "other-cluster"
+          clusterName: "other-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
       });

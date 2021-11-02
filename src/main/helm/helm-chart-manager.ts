@@ -143,9 +143,9 @@ function normalizeHelmCharts(repoName: string, entries: RepoHelmChartList): Repo
               repo: repoName,
             })),
           ),
-        ] as const
+        ] as const,
       ),
       ([, charts]) => !charts.every(chart => chart.deprecated),
-    )
+    ),
   );
 }

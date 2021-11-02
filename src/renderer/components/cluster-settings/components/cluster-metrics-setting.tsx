@@ -69,7 +69,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
 
   onChangeButton = () => {
     Object.keys(ClusterMetricsResourceType).map(value =>
-      this.hiddenMetrics.add(value)
+      this.hiddenMetrics.add(value),
     );
     this.save();
   };

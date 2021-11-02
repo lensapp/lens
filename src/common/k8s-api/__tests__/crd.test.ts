@@ -119,7 +119,7 @@ describe("Crds", () => {
         },
         spec: {
           version: "abc",
-        }
+        },
       });
 
       expect(crd.getVersion()).toBe("abc");

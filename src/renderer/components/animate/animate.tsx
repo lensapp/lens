@@ -48,7 +48,7 @@ export class Animate extends React.Component<AnimateProps> {
   @observable isVisible = !!this.props.enter;
   @observable statusClassName = {
     enter: false,
-    leave: false
+    leave: false,
   };
 
   constructor(props: AnimateProps) {
@@ -68,7 +68,7 @@ export class Animate extends React.Component<AnimateProps> {
       }, {
         delay: Animate.VISIBILITY_DELAY_MS,
         fireImmediately: true,
-      })
+      }),
     ]);
   }
 

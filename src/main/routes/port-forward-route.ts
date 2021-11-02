@@ -79,11 +79,11 @@ class PortForward {
       "port-forward",
       "-n", this.namespace,
       `${this.kind}/${this.name}`,
-      `${this.forwardPort ?? ""}:${this.port}`
+      `${this.forwardPort ?? ""}:${this.port}`,
     ];
 
     this.process = spawn(kubectlBin, args, {
-      env: process.env
+      env: process.env,
     });
     PortForward.portForwards.push(this);
     this.process.on("exit", () => {
@@ -158,7 +158,7 @@ export class PortForwardRoute {
           logger.error("[PORT-FORWARD-ROUTE]: failed to start a port-forward", { namespace, port, resourceType, resourceName });
 
           return respondJson(response, {
-            message: `Failed to forward port ${port} to ${thePort ? forwardPort : "random port"}`
+            message: `Failed to forward port ${port} to ${thePort ? forwardPort : "random port"}`,
           }, 400);
         }
       }
@@ -168,7 +168,7 @@ export class PortForwardRoute {
       logger.error(`[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`, { namespace, port, resourceType, resourceName });
 
       return respondJson(response, {
-        message: `Failed to forward port ${port}`
+        message: `Failed to forward port ${port}`,
       }, 400);
     }
   }
@@ -200,7 +200,7 @@ export class PortForwardRoute {
         port: f.port,
         forwardPort: f.forwardPort,
         protocol: f.protocol,
-      })
+      }),
     );
 
     respondJson(response, { portForwards });
@@ -224,7 +224,7 @@ export class PortForwardRoute {
       logger.error("[PORT-FORWARD-ROUTE]: error stopping a port-forward", { namespace, port, forwardPort, resourceType, resourceName });
 
       return respondJson(response, {
-        message: `error stopping a forward port ${port}`
+        message: `error stopping a forward port ${port}`,
       }, 400);
     }
   }

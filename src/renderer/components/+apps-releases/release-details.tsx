@@ -128,7 +128,7 @@ export class ReleaseDetails extends Component<Props> {
       chart: release.getChart(),
       repo: await release.getRepo(),
       version: release.getVersion(),
-      values: this.values
+      values: this.values,
     };
 
     this.saving = true;
@@ -136,7 +136,7 @@ export class ReleaseDetails extends Component<Props> {
     try {
       await releaseStore.update(name, namespace, data);
       Notifications.ok(
-        <p>Release <b>{name}</b> successfully updated!</p>
+        <p>Release <b>{name}</b> successfully updated!</p>,
       );
     } catch (err) {
       Notifications.error(err);

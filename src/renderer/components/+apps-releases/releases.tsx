@@ -46,7 +46,7 @@ enum columnId {
   version = "version",
   appVersion = "app-version",
   status = "status",
-  updated = "update"
+  updated = "update",
 }
 
 interface Props extends RouteComponentProps<ReleaseRouteParams> {
@@ -87,8 +87,8 @@ export class HelmReleases extends Component<Props> {
     navigation.push(releaseURL({
       params: {
         name: item.getName(),
-        namespace: item.getNs()
-      }
+        namespace: item.getNs(),
+      },
     }));
   };
 
@@ -174,7 +174,7 @@ export class HelmReleases extends Component<Props> {
             />
           )}
           customizeRemoveDialog={selectedItems => ({
-            message: this.renderRemoveDialogMessage(selectedItems)
+            message: this.renderRemoveDialogMessage(selectedItems),
           })}
           detailsItem={this.selectedRelease}
           onDetails={this.onDetails}

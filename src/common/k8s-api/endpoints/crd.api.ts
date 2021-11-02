@@ -117,7 +117,7 @@ export class CustomResourceDefinition extends KubeObject {
       params: {
         group: this.getGroup(),
         name: this.getPluralName(),
-      }
+      },
     });
   }
 
@@ -217,7 +217,7 @@ export class CustomResourceDefinition extends KubeObject {
       return {
         ...condition,
         isReady: status === "True",
-        tooltip: `${message || reason} (${lastTransitionTime})`
+        tooltip: `${message || reason} (${lastTransitionTime})`,
       };
     });
   }
@@ -236,5 +236,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  crdApi
+  crdApi,
 };

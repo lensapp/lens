@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction, } from "mobx";
+import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction } from "mobx";
 import { autoBind, createStorage, noop, ToggleSet } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { Namespace, namespacesApi } from "../../../common/k8s-api/endpoints/namespaces.api";
@@ -258,7 +258,7 @@ export function getDummyNamespace(name: string) {
       name,
       uid: "",
       resourceVersion: "",
-      selfLink: `/api/v1/namespaces/${name}`
-    }
+      selfLink: `/api/v1/namespaces/${name}`,
+    },
   });
 }

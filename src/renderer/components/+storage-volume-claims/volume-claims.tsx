@@ -85,7 +85,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           const pods = pvc.getPods(podsStore.items);
           const { storageClassName } = pvc.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
-            name: storageClassName
+            name: storageClassName,
           }));
 
           return [

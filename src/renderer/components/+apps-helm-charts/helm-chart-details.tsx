@@ -43,7 +43,7 @@ interface Props {
 const LargeTooltip = withStyles({
   tooltip: {
     fontSize: "var(--font-size-small)",
-  }
+  },
 })(Tooltip);
 
 @observer
@@ -148,7 +148,7 @@ export class HelmChartDetails extends Component<Props> {
           </DrawerItem>
           <DrawerItem name="Maintainers" className="maintainers">
             {selectedChart.getMaintainers().map(({ name, email, url }) =>
-              <a key={name} href={url || `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>
+              <a key={name} href={url || `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>,
             )}
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (

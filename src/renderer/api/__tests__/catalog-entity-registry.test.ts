@@ -37,19 +37,19 @@ class FooBarCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "FooBars",
-    icon: "broken"
+    icon: "broken",
   };
   public spec = {
     group: "entity.k8slens.dev",
     versions: [
       {
         name: "v1alpha1",
-        entityClass: WebLink
-      }
+        entityClass: WebLink,
+      },
     ],
     names: {
-      kind: "FooBar"
-    }
+      kind: "FooBar",
+    },
   };
 }
 const entity = new WebLink({
@@ -57,43 +57,43 @@ const entity = new WebLink({
     uid: "test",
     name: "test-link",
     source: "test",
-    labels: {}
+    labels: {},
   },
   spec: {
-    url: "https://k8slens.dev"
+    url: "https://k8slens.dev",
   },
   status: {
-    phase: "available"
-  }
+    phase: "available",
+  },
 });
 const entity2 = new WebLink({
   metadata: {
     uid: "test2",
     name: "test-link",
     source: "test",
-    labels: {}
+    labels: {},
   },
   spec: {
-    url: "https://k8slens.dev"
+    url: "https://k8slens.dev",
   },
   status: {
-    phase: "available"
-  }
+    phase: "available",
+  },
 });
 const entitykc = new KubernetesCluster({
   metadata: {
     uid: "test3",
     name: "test-link",
     source: "test",
-    labels: {}
+    labels: {},
   },
   spec: {
     kubeconfigPath: "",
     kubeconfigContext: "",
   },
   status: {
-    phase: "connected"
-  }
+    phase: "connected",
+  },
 });
 
 describe("CatalogEntityRegistry", () => {
@@ -107,12 +107,12 @@ describe("CatalogEntityRegistry", () => {
           uid: "123",
           name: "foobar",
           source: "test",
-          labels: {}
+          labels: {},
         },
         status: {
-          phase: "disconnected"
+          phase: "disconnected",
         },
-        spec: {}
+        spec: {},
       }];
 
       catalog.replaceItems(items);
@@ -125,12 +125,12 @@ describe("CatalogEntityRegistry", () => {
           uid: "456",
           name: "barbaz",
           source: "test",
-          labels: {}
+          labels: {},
         },
         status: {
-          phase: "disconnected"
+          phase: "disconnected",
         },
-        spec: {}
+        spec: {},
       });
 
       catalog.replaceItems(items);
@@ -146,12 +146,12 @@ describe("CatalogEntityRegistry", () => {
           uid: "123",
           name: "foobar",
           source: "test",
-          labels: {}
+          labels: {},
         },
         status: {
-          phase: "disconnected"
+          phase: "disconnected",
         },
-        spec: {}
+        spec: {},
       }];
 
       catalog.replaceItems(items);
@@ -174,12 +174,12 @@ describe("CatalogEntityRegistry", () => {
           uid: "123",
           name: "foobar",
           source: "test",
-          labels: {}
+          labels: {},
         },
         status: {
-          phase: "disconnected"
+          phase: "disconnected",
         },
-        spec: {}
+        spec: {},
       }];
 
       catalog.replaceItems(items);
@@ -201,12 +201,12 @@ describe("CatalogEntityRegistry", () => {
             uid: "123",
             name: "foobar",
             source: "test",
-            labels: {}
+            labels: {},
           },
           status: {
-            phase: "disconnected"
+            phase: "disconnected",
           },
-          spec: {}
+          spec: {},
         },
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -215,13 +215,13 @@ describe("CatalogEntityRegistry", () => {
             uid: "456",
             name: "barbaz",
             source: "test",
-            labels: {}
+            labels: {},
           },
           status: {
-            phase: "disconnected"
+            phase: "disconnected",
           },
-          spec: {}
-        }
+          spec: {},
+        },
       ];
 
       catalog.replaceItems(items);
@@ -243,12 +243,12 @@ describe("CatalogEntityRegistry", () => {
             uid: "123",
             name: "foobar",
             source: "test",
-            labels: {}
+            labels: {},
           },
           status: {
-            phase: "disconnected"
+            phase: "disconnected",
           },
-          spec: {}
+          spec: {},
         },
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -257,13 +257,13 @@ describe("CatalogEntityRegistry", () => {
             uid: "456",
             name: "barbaz",
             source: "test",
-            labels: {}
+            labels: {},
           },
           status: {
-            phase: "disconnected"
+            phase: "disconnected",
           },
-          spec: {}
-        }
+          spec: {},
+        },
       ];
 
       catalog.replaceItems(items);
@@ -281,13 +281,13 @@ describe("CatalogEntityRegistry", () => {
           uid: "456",
           name: "barbaz",
           source: "test",
-          labels: {}
+          labels: {},
         },
         status: {
-          phase: "disconnected"
+          phase: "disconnected",
         },
-        spec: {}
-      }
+        spec: {},
+      },
     ];
 
     catalog.replaceItems(items);

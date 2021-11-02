@@ -60,7 +60,7 @@ const defaultProps: Partial<Props> = {
   width: "100%",
   initialOffset: 1,
   readyOffset: 10,
-  onScroll: noop
+  onScroll: noop,
 };
 
 export class VirtualList extends Component<Props, State> {
@@ -117,7 +117,7 @@ export class VirtualList extends Component<Props, State> {
         itemCount={items.length}
         itemData={{
           items,
-          getRow
+          getRow,
         }}
         overscanCount={overscanCount}
         ref={this.listRef}
@@ -167,6 +167,6 @@ const Row = observer((props: RowProps) => {
   if (!row) return null;
 
   return React.cloneElement(row, {
-    style: Object.assign({}, row.props.style, style)
+    style: Object.assign({}, row.props.style, style),
   });
 });

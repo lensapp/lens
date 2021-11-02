@@ -58,7 +58,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
       ok: () => {
         menuItem.onClick();
       },
-      message: menuItem.confirm.message
+      message: menuItem.confirm.message,
     });
   } else {
     menuItem.onClick();

@@ -75,7 +75,7 @@ export class Select extends React.Component<SelectProps> {
   private styles: Styles<OptionTypeBase, boolean> = {
     menuPortal: styles => ({
       ...styles,
-      zIndex: "auto"
+      zIndex: "auto",
     }),
   };
 
@@ -150,7 +150,7 @@ export class Select extends React.Component<SelectProps> {
             className={cssNames(menuClass, this.themeClass, props.className)}
           />
         ),
-      }
+      },
     };
 
     return isCreatable

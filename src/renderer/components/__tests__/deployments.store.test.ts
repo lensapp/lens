@@ -31,7 +31,7 @@ const spec = {
     resources: {
       requests: {
         cpu: "2",
-        memory: "2Gi"
+        memory: "2Gi",
       },
     },
     terminationMessagePath: "test",
@@ -44,7 +44,7 @@ const spec = {
   serviceAccountName: "test",
   serviceAccount: "test",
   securityContext: {},
-  schedulerName: "test"
+  schedulerName: "test",
 };
 
 const runningDeployment = new Deployment({
@@ -65,17 +65,17 @@ runningDeployment.spec = {
     type: "test",
     rollingUpdate: {
       maxSurge: 1,
-      maxUnavailable: 1
-    }
+      maxUnavailable: 1,
+    },
   },
   template: {
     metadata: {
       labels: {
-        "name": "kube-state-metrics"
-      }
+        "name": "kube-state-metrics",
+      },
     },
-    spec
-  }
+    spec,
+  },
 };
 
 const failedDeployment = new Deployment({
@@ -96,17 +96,17 @@ failedDeployment.spec = {
     type: "test",
     rollingUpdate: {
       maxSurge: 1,
-      maxUnavailable: 1
-    }
+      maxUnavailable: 1,
+    },
   },
   template: {
     metadata: {
       labels: {
-        "name": "failedpods"
-      }
+        "name": "failedpods",
+      },
     },
-    spec
-  }
+    spec,
+  },
 };
 
 const pendingDeployment = new Deployment({
@@ -127,17 +127,17 @@ pendingDeployment.spec = {
     type: "test",
     rollingUpdate: {
       maxSurge: 1,
-      maxUnavailable: 1
-    }
+      maxUnavailable: 1,
+    },
   },
   template: {
     metadata: {
       labels: {
-        "mydeployment": "true"
-      }
+        "mydeployment": "true",
+      },
     },
-    spec
-  }
+    spec,
+  },
 };
 
 const runningPod = new Pod({
@@ -148,9 +148,9 @@ const runningPod = new Pod({
     resourceVersion: "foobar",
     uid: "foobar",
     labels: {
-      "name": "kube-state-metrics"
+      "name": "kube-state-metrics",
     },
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -168,7 +168,7 @@ runningPod.status = {
       status: "True",
       lastProbeTime: 1,
       lastTransitionTime: "1",
-    }
+    },
   ],
   hostIP: "10.0.0.1",
   podIP: "10.0.0.1",
@@ -185,9 +185,9 @@ const pendingPod = new Pod({
     resourceVersion: "foobar",
     uid: "foobar-pending",
     labels: {
-      "mydeployment": "true"
+      "mydeployment": "true",
     },
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -199,9 +199,9 @@ const failedPod = new Pod({
     resourceVersion: "foobar",
     uid: "foobar-failed",
     labels: {
-      "name": "failedpods"
+      "name": "failedpods",
     },
-    namespace: "default"
+    namespace: "default",
   },
 });
 
@@ -219,7 +219,7 @@ describe("Deployment Store tests", () => {
     podsStore.items = observable.array([
       runningPod,
       failedPod,
-      pendingPod
+      pendingPod,
     ]);
   });
 
@@ -227,7 +227,7 @@ describe("Deployment Store tests", () => {
     const statuses = Object.entries(deploymentStore.getStatuses([
       failedDeployment,
       runningDeployment,
-      pendingDeployment
+      pendingDeployment,
     ]));
 
     expect(statuses).toEqual([

@@ -51,7 +51,7 @@ export function joinMigrations(...declarations: MigrationDeclaration[]): Migrati
         for (const fn of fns) {
           fn(store);
         }
-      }]
-    )
+      }],
+    ),
   );
 }

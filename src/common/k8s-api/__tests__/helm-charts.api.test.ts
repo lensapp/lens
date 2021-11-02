@@ -282,7 +282,7 @@ describe("HelmChart tests", () => {
 
       expect(warnFn).toHaveBeenCalledWith("HelmChart data has unexpected fields", {
         original: anyObject(),
-        unknownFields: ["asdjhajksdhadjks"]
+        unknownFields: ["asdjhajksdhadjks"],
       });
       console.warn = warn;
     });
