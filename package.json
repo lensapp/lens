@@ -196,7 +196,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-updater": "^4.6.1",
     "electron-window-state": "^5.0.3",
-    "filehound": "^1.17.4",
+    "filehound": "^1.17.5",
     "fs-extra": "^9.0.1",
     "glob-to-regexp": "^0.4.1",
     "got": "^11.8.2",
