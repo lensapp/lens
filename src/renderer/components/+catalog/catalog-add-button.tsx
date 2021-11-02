@@ -35,12 +35,12 @@ export type CatalogAddButtonProps = {
   category: CatalogCategory
 };
 
-type categoryId = string;
+type CategoryId = string;
 
 @observer
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
-  @observable menuItems = new Map<categoryId, CatalogEntityAddMenu[]>();
+  @observable menuItems = new Map<CategoryId, CatalogEntityAddMenu[]>();
 
   constructor(props: CatalogAddButtonProps) {
     super(props);
@@ -61,6 +61,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     return catalogCategoryRegistry.filteredItems;
   }
 
+  @action
   updateMenuItems() {
     this.menuItems.clear();
 
