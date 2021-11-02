@@ -39,10 +39,11 @@ import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import logger from "../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 
+injectSystemCAs();
+
 @observer
 export class LensApp extends React.Component {
   static async init(rootElem: HTMLElement) {
-    await injectSystemCAs();
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
     LensProtocolRouterRenderer.createInstance().init();
