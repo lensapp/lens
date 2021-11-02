@@ -1171,6 +1171,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.App.Preferences/</loc>
+         <lastmod>2021-11-02</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.App/</loc>
          <lastmod>2021-11-02</lastmod>
          <changefreq>daily</changefreq>

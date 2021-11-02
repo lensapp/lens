@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/modules/Common.App/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/modules/Common.App.Preferences/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Namespace: App - Lens Extension Development</title>
+        <title>Namespace: Preferences - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#namespace-app" class="md-skip">
+        <a href="#namespace-preferences" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Namespace: App
+              Namespace: Preferences
             
           </span>
         </div>
@@ -706,91 +706,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#namespaces" class="md-nav__link">
-    Namespaces
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#variables" class="md-nav__link">
-    Variables
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#functions" class="md-nav__link">
     Functions
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#variables_1" class="md-nav__link">
-    Variables
-  </a>
-  
-    <nav class="md-nav" aria-label="Variables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#appname" class="md-nav__link">
-    appName
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#islinux" class="md-nav__link">
-    isLinux
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ismac" class="md-nav__link">
-    isMac
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#issnap" class="md-nav__link">
-    isSnap
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#iswindows" class="md-nav__link">
-    isWindows
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#issuestrackerurl" class="md-nav__link">
-    issuesTrackerUrl
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#slackurl" class="md-nav__link">
-    slackUrl
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#version" class="md-nav__link">
-    version
   </a>
   
 </li>
@@ -809,8 +726,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#getenabledextensions" class="md-nav__link">
-    getEnabledExtensions
+  <a href="#getkubectlpath" class="md-nav__link">
+    getKubectlPath
   </a>
   
 </li>
@@ -834,57 +751,19 @@
                 
                 
                 
-                <h1 id="namespace-app">Namespace: App<a class="headerlink" href="#namespace-app" title="Permanent link">#</a></h1>
-<p><a href="../Common/">Common</a>.App</p>
+                <h1 id="namespace-preferences">Namespace: Preferences<a class="headerlink" href="#namespace-preferences" title="Permanent link">#</a></h1>
+<p><a href="../Common/">Common</a>.<a href="../Common.App/">App</a>.Preferences</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="namespaces">Namespaces<a class="headerlink" href="#namespaces" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="../Common.App.Preferences/">Preferences</a></li>
-</ul>
-<h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#appname">appName</a></li>
-<li><a href="./#islinux">isLinux</a></li>
-<li><a href="./#ismac">isMac</a></li>
-<li><a href="./#issnap">isSnap</a></li>
-<li><a href="./#iswindows">isWindows</a></li>
-<li><a href="./#issuestrackerurl">issuesTrackerUrl</a></li>
-<li><a href="./#slackurl">slackUrl</a></li>
-<li><a href="./#version">version</a></li>
-</ul>
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#getenabledextensions">getEnabledExtensions</a></li>
+<li><a href="./#getkubectlpath">getKubectlPath</a></li>
 </ul>
-<h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
-<h3 id="appname">appName<a class="headerlink" href="#appname" title="Permanent link">#</a></h3>
-<p>• <strong>appName</strong>: <code>string</code></p>
-<hr />
-<h3 id="islinux">isLinux<a class="headerlink" href="#islinux" title="Permanent link">#</a></h3>
-<p>• <strong>isLinux</strong>: <code>boolean</code></p>
-<hr />
-<h3 id="ismac">isMac<a class="headerlink" href="#ismac" title="Permanent link">#</a></h3>
-<p>• <strong>isMac</strong>: <code>boolean</code></p>
-<hr />
-<h3 id="issnap">isSnap<a class="headerlink" href="#issnap" title="Permanent link">#</a></h3>
-<p>• <strong>isSnap</strong>: <code>boolean</code> = <code>!!process.env.SNAP</code></p>
-<hr />
-<h3 id="iswindows">isWindows<a class="headerlink" href="#iswindows" title="Permanent link">#</a></h3>
-<p>• <strong>isWindows</strong>: <code>boolean</code></p>
-<hr />
-<h3 id="issuestrackerurl">issuesTrackerUrl<a class="headerlink" href="#issuestrackerurl" title="Permanent link">#</a></h3>
-<p>• <strong>issuesTrackerUrl</strong>: <code>string</code></p>
-<hr />
-<h3 id="slackurl">slackUrl<a class="headerlink" href="#slackurl" title="Permanent link">#</a></h3>
-<p>• <strong>slackUrl</strong>: <code>string</code></p>
-<hr />
-<h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">#</a></h3>
-<p>• <strong>version</strong>: <code>string</code></p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
-<h3 id="getenabledextensions">getEnabledExtensions<a class="headerlink" href="#getenabledextensions" title="Permanent link">#</a></h3>
-<p>▸ <strong>getEnabledExtensions</strong>(): <code>string</code>[]</p>
+<h3 id="getkubectlpath">getKubectlPath<a class="headerlink" href="#getkubectlpath" title="Permanent link">#</a></h3>
+<p>▸ <strong>getKubectlPath</strong>(): <code>string</code> | <code>undefined</code></p>
+<p>Get the configured kubectl binaries path.</p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>string</code>[]</p>
+<p><code>string</code> | <code>undefined</code></p>
                 
               
               
