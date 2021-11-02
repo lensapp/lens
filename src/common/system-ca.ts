@@ -76,10 +76,13 @@ export function getWinRootCA(): Promise<string[]> {
  * Add (or merge) CAs to https.globalAgent.options.ca
  */
 export function injectCAs(CAs: string[]) {
-  const oldCAs = [https.globalAgent.options.ca].flat();
-  const injectedCAs = new Set([...oldCAs, ...CAs]);
-
-  https.globalAgent.options.ca = [...injectedCAs];
+  for (const cert of CAs) {
+    if (Array.isArray(https.globalAgent.options.ca) && !https.globalAgent.options.ca.includes(cert)) {
+      https.globalAgent.options.ca.push(cert);
+    } else {
+      https.globalAgent.options.ca = [cert];
+    }
+  }
 }
 
 /**
