@@ -5205,10 +5205,10 @@ electron@*:
     "@types/node" "^12.0.12"
     extract-zip "^1.0.3"
 
-electron@^12.2.1:
-  version "12.2.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.2.1.tgz#ef138fde11efd01743934c3e0df717cc53ee362b"
-  integrity sha512-Gp+rO81qoaRDP7PTVtBOvnSgDgGlwUuAEWXxi621uOJMIlYFas9ChXe8pjdL0R0vyUpiHVzp6Vrjx41VZqEpsw==
+electron@^13.6.1:
+  version "13.6.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.6.1.tgz#f61c4f269b57c7dc27e0d5476216a988caa9c752"
+  integrity sha512-rZ6Y7RberigruefQpWOiI4bA9ppyT88GQF8htY6N1MrAgal5RrBc+Mh92CcGU7zT9QO+XO3DarSgZafNTepffQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
