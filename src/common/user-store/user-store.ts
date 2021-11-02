@@ -107,7 +107,9 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
   }
 
-  readonly isAllowedToDowngrade = new SemVer(getAppVersion()).prerelease[0] !== "latest";
+  @computed get isAllowedToDowngrade() {
+    return new SemVer(getAppVersion()).prerelease[0] !== this.updateChannel;
+  }
 
   startMainReactions() {
     // track telemetry availability
