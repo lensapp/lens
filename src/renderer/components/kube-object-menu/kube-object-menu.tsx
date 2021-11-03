@@ -27,6 +27,8 @@ import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { hideDetails } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import identity from "lodash/identity";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 export interface KubeObjectMenuProps<T> extends MenuActionsProps {
   object: T | null | undefined;
@@ -74,8 +76,17 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
       return null;
     }
 
+    const breadcrumbParts = [
+      catalogEntityRegistry.activeEntity?.metadata?.name,
+      object.getNs(),
+      object.kind,
+      object.getName(),
+    ];
+
+    const breadcrumb = breadcrumbParts.filter(identity).join("/");
+
     return (
-      <p>Remove {object.kind} <b>{object.getName()}</b>?</p>
+      <p>Remove <b>{breadcrumb}</b>?</p>
     );
   }
 
