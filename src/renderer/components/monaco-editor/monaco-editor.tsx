@@ -21,17 +21,14 @@
 
 import styles from "./monaco-editor.module.css";
 import React from "react";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { editor, Uri } from "monaco-editor";
-import { MonacoTheme, registerCustomThemes } from "./monaco-themes";
-import { MonacoValidator, monacoValidators } from "./monaco-validators";
-import { cssNames, disposer, toJS } from "../../utils";
+import { MonacoTheme, MonacoValidator, monacoValidators } from "./index";
+import { debounce, merge } from "lodash";
+import { cssNames, disposer } from "../../utils";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
-import debounce from "lodash/debounce";
-
-registerCustomThemes(); // setup
 
 export type MonacoEditorId = string;
 
@@ -87,9 +84,13 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     makeObservable(this);
   }
 
+  @computed get id() {
+    return this.props.id ?? this.staticId;
+  }
+
   @computed get model(): editor.ITextModel {
-    const uri = MonacoEditor.createUri(this.props.id ?? this.staticId);
-    const model = editor.getModels().find(model => model.uri.toString() == uri.toString());
+    const uri = MonacoEditor.createUri(this.id);
+    const model = editor.getModel(uri);
 
     if (model) {
       return model; // already exists
@@ -101,10 +102,17 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   @computed get options(): editor.IStandaloneEditorConstructionOptions {
-    return toJS({
-      ...UserStore.getInstance().editorConfiguration,
-      ...(this.props.options ?? {}),
-    });
+    return merge({},
+      UserStore.getInstance().editorConfiguration,
+      this.props.options
+    );
+  }
+
+  @computed get logMetadata() {
+    return {
+      editorId: this.id,
+      model: this.model,
+    };
   }
 
   /**
@@ -128,9 +136,12 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   }
 
   onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
-    this.logger?.info("[MONACO]: model change", { model, oldModel });
+    this.logger?.info("[MONACO]: model change", { model, oldModel }, this.logMetadata);
 
-    this.saveViewState(oldModel);
+    if (oldModel) {
+      this.saveViewState(oldModel);
+    }
+
     this.editor.setModel(model);
     this.restoreViewState(model);
     this.editor.layout();
@@ -144,32 +155,30 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
    * This will allow restore cursor position, selected text, etc.
    * @param {editor.ITextModel} model
    */
-  saveViewState(model = this.model) {
-    if (!model) return;
-
+  private saveViewState(model: editor.ITextModel) {
     MonacoEditor.viewStates.set(model.uri, this.editor.saveViewState());
   }
 
-  restoreViewState(model = this.model) {
-    if (!model) return;
-
+  private restoreViewState(model: editor.ITextModel) {
     const viewState = MonacoEditor.viewStates.get(model.uri);
 
-    this.editor.restoreViewState(viewState);
+    if (viewState) {
+      this.editor.restoreViewState(viewState);
+    }
   }
 
   componentDidMount() {
     try {
       this.createEditor();
-      this.logger?.info(`[MONACO]: editor did mount`);
+      this.logger?.info(`[MONACO]: editor did mount`, this.logMetadata);
     } catch (error) {
-      this.logger?.error(`[MONACO]: mounting failed: ${error}`, this);
+      this.logger?.error(`[MONACO]: mounting failed: ${error}`, this.logMetadata);
     }
   }
 
   componentWillUnmount() {
     this.unmounting = true;
-    this.saveViewState();
+    this.saveViewState(this.model);
     this.destroy();
   }
 
@@ -189,9 +198,9 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.options,
     });
 
-    this.logger?.info(`[MONACO]: editor created for language=${language}, theme=${theme}`);
+    this.logger?.info(`[MONACO]: editor created for language=${language}, theme=${theme}`, this.logMetadata);
     this.validateLazy(); // validate initial value
-    this.restoreViewState(); // restore previous state if any
+    this.restoreViewState(this.model); // restore previous state if any
 
     if (this.props.autoFocus) {
       this.editor.focus();

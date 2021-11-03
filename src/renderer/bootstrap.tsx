@@ -48,12 +48,14 @@ import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import { AppPaths } from "../common/app-paths";
+import { registerCustomThemes } from "./components/monaco-editor";
 
 if (process.isMainFrame) {
   SentryInit();
 }
 
-configurePackages();
+configurePackages(); // global packages
+registerCustomThemes(); // monaco editor themes
 
 /**
  * If this is a development build, wait a second to attach

@@ -377,10 +377,13 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
     await kubeApiServerRow.click();
     await frame.waitForSelector(".Drawer", { state: "visible" });
-    await frame.waitForSelector(".Drawer .drawer-title .Icon >> text=subject").then(button => button.click());
-    await frame.waitForSelector(".Dock.isOpen");
+
+    const showPodLogsIcon = await frame.waitForSelector(".Drawer .drawer-title .Icon >> text=subject");
+
+    showPodLogsIcon.click();
 
     // Check if controls are available
+    await frame.waitForSelector(".Dock.isOpen");
     await frame.waitForSelector(".LogList .VirtualList");
     await frame.waitForSelector(".LogResourceSelector");
 

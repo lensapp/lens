@@ -95,8 +95,14 @@ export interface DockTabChangeEvent {
 }
 
 export interface DockTabChangeEventOptions extends IReactionOptions {
-  tabKind?: TabKind; // filter: by dockStore.selectedTab.kind == tabKind
-  dockIsVisible?: boolean; // filter: dock and selected tab should be visible (default: true)
+  /**
+   * filter: by dockStore.selectedTab.kind == tabKind
+   */
+  tabKind?: TabKind;
+  /**
+   * filter: dock and selected tab should be visible (default: true)
+   */
+  dockIsVisible?: boolean;
 }
 
 export interface DockTabCloseEvent {
