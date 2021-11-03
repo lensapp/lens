@@ -66,7 +66,7 @@ export function getWinRootCA(): Promise<string[]> {
       },
       onend: () => {
         resolve(CAs.filter(isCertActive));
-      }
+      },
     });
   });
 }
@@ -98,7 +98,7 @@ export async function injectSystemCAs() {
       console.warn(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error?.message}`);
     }
   }
-  
+
   if (isWindows) {
     try {
       const winRootCAs = await getWinRootCA();
