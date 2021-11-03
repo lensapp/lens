@@ -91,10 +91,7 @@ export class EditorPanel extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.validate(value);
-
-    if (this.props.onChange) {
-      this.props.onChange(value, this.yamlError);
-    }
+    this.props.onChange?.(value, this.yamlError);
   };
 
   render() {

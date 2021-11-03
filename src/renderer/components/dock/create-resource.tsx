@@ -33,10 +33,10 @@ import { createResourceStore } from "./create-resource.store";
 import type { DockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
-import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
-import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../notifications";
 import { monacoModelsManager } from "./monaco-model-manager";
+import logger from "../../../common/logger";
 
 interface Props {
   className?: string;
@@ -95,7 +95,7 @@ export class CreateResource extends React.Component<Props> {
     });
   };
 
-  create = async () => {
+  create = async (): Promise<undefined> => {
     if (this.error || !this.data.trim()) {
       // do not save when field is empty or there is an error
       return null;
@@ -103,31 +103,31 @@ export class CreateResource extends React.Component<Props> {
 
     // skip empty documents if "---" pasted at the beginning or end
     const resources = jsYaml.safeLoadAll(this.data).filter(Boolean);
-    const createdResources: string[] = [];
-    const errors: string[] = [];
 
-    await Promise.all(
-      resources.map(data => {
-        return resourceApplierApi.update(data)
-          .then(item => createdResources.push(item.metadata.name))
-          .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));
-      })
-    );
-
-    if (errors.length) {
-      errors.forEach(error => Notifications.error(error));
-      if (!createdResources.length) throw errors[0];
+    if (resources.length === 0) {
+      return void logger.info("Nothing to create");
     }
-    const successMessage = (
-      <p>
-        {createdResources.length === 1 ? "Resource" : "Resources"}{" "}
-        <b>{createdResources.join(", ")}</b> successfully created
-      </p>
-    );
 
-    Notifications.ok(successMessage);
+    const createdResources: string[] = [];
 
-    return successMessage;
+    for (const result of await Promise.allSettled(resources.map(resourceApplierApi.update))) {
+      if (result.status === "fulfilled") {
+        createdResources.push(result.value.metadata.name);
+      } else {
+        Notifications.error(result.reason.toString());
+      }
+    }
+
+    if (createdResources.length > 0) {
+      Notifications.ok((
+        <p>
+          {createdResources.length === 1 ? "Resource" : "Resources"}{" "}
+          <b>{createdResources.join(", ")}</b> successfully created
+        </p>
+      ));
+    }
+
+    return undefined;
   };
 
   renderControls(){

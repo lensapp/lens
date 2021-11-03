@@ -24,7 +24,7 @@ import "./edit-resource.scss";
 import React from "react";
 import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import jsYaml from "js-yaml";
+import yaml from "js-yaml";
 import type { DockTab } from "./dock.store";
 import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
@@ -33,6 +33,7 @@ import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { createPatch } from "rfc6902";
 
 interface Props {
   className?: string;
@@ -71,16 +72,17 @@ export class EditResource extends React.Component<Props> {
       return draft;
     }
 
-    return jsYaml.safeDump(this.resource.toPlainObject()); // dump resource first time
+    return yaml.safeDump(this.resource.toPlainObject()); // dump resource first time
   }
 
   @action
   saveDraft(draft: string | object) {
     if (typeof draft === "object") {
-      draft = draft ? jsYaml.safeDump(draft) : undefined;
+      draft = draft ? yaml.safeDump(draft) : undefined;
     }
 
     editResourceStore.setData(this.tabId, {
+      firstDraft: draft, // this must be before the next line
       ...editResourceStore.getData(this.tabId),
       draft,
     });
@@ -95,16 +97,18 @@ export class EditResource extends React.Component<Props> {
     if (this.error) {
       return null;
     }
-    const store = editResourceStore.getStore(this.tabId);
-    const updatedResource: KubeObject = await store.update(this.resource, jsYaml.safeLoad(this.draft));
 
-    this.saveDraft(updatedResource.toPlainObject()); // update with new resourceVersion to avoid further errors on save
-    const resourceType = updatedResource.kind;
-    const resourceName = updatedResource.getName();
+    const store = editResourceStore.getStore(this.tabId);
+    const currentVersion = yaml.safeLoad(this.draft);
+    const firstVersion = yaml.safeLoad(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
+    const patches = createPatch(firstVersion, currentVersion);
+    const updatedResource = await store.patch(this.resource, patches);
+
+    editResourceStore.clearInitialDraft(this.tabId);
 
     return (
       <p>
-        {resourceType} <b>{resourceName}</b> updated.
+        {updatedResource.kind} <b>{updatedResource.getName()}</b> updated.
       </p>
     );
   };
@@ -126,9 +130,9 @@ export class EditResource extends React.Component<Props> {
           submittingMessage="Applying.."
           controls={(
             <div className="resource-info flex gaps align-center">
-              <span>Kind:</span> <Badge label={resource.kind}/>
+              <span>Kind:</span><Badge label={resource.kind}/>
               <span>Name:</span><Badge label={resource.getName()}/>
-              <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
+              <span>Namespace:</span><Badge label={resource.getNs() || "global"}/>
             </div>
           )}
         />

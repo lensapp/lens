@@ -32,6 +32,7 @@ import { parseKubeApi } from "./kube-api-parse";
 import type { KubeJsonApiData } from "./kube-json-api";
 import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
+import type { Patch } from "rfc6902";
 
 export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
   namespaces: string[];
@@ -279,17 +280,27 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return newItem;
   }
 
-  async update(item: T, data: Partial<T>): Promise<T> {
-    const rawItem = await item.update(data);
+  private postUpdate(rawItem: KubeJsonApiData): T {
     const newItem = new this.api.objectConstructor(rawItem);
+    const index = this.items.findIndex(item => item.getId() === newItem.getId());
 
     ensureObjectSelfLink(this.api, newItem);
 
-    const index = this.items.findIndex(item => item.getId() === newItem.getId());
-
-    this.items.splice(index, 1, newItem);
+    if (index < 0) {
+      this.items.push(newItem);
+    } else {
+      this.items[index] = newItem;
+    }
 
     return newItem;
+  }
+
+  async patch(item: T, patch: Patch): Promise<T> {
+    return this.postUpdate(await item.patch(patch));
+  }
+
+  async update(item: T, data: Partial<T>): Promise<T> {
+    return this.postUpdate(await item.update(data));
   }
 
   async remove(item: T) {
