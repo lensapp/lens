@@ -69,7 +69,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
   }
 
   @boundMethod
-  renderRemoveMessage() {
+  getRemoveMessage() {
     const { object } = this.props;
 
     if (!object) {
@@ -110,7 +110,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
   }
 
   render() {
-    const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
+    const { remove, update, getRemoveMessage, isEditable, isRemovable } = this;
     const { className, editable, removable, ...menuProps } = this.props;
 
     return (
@@ -118,7 +118,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
         className={cssNames("KubeObjectMenu", className)}
         updateAction={isEditable ? update : undefined}
         removeAction={isRemovable ? remove : undefined}
-        removeConfirmationMessage={renderRemoveMessage}
+        removeConfirmationMessage={getRemoveMessage}
         {...menuProps}
       >
         {this.getMenuItems()}
