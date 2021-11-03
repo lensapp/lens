@@ -257,40 +257,46 @@ export class Kubectl {
 
       return false;
     }
+
     await ensureDir(this.dirname, 0o755);
 
-    return lockFile.lock(this.dirname).then(async (release) => {
+    try {
+      const release = await lockFile.lock(this.dirname);
+
       logger.debug(`Acquired a lock for ${this.kubectlVersion}`);
       const bundled = await this.checkBundled();
       let isValid = await this.checkBinary(this.path, !bundled);
 
       if (!isValid && !bundled) {
-        await this.downloadKubectl().catch((error) => {
-          logger.error(error);
-          logger.debug(`Releasing lock for ${this.kubectlVersion}`);
-          release();
+        try {
+          await this.downloadKubectl();
+        } catch (error) {
+          logger.error(`[KUBECTL]: failed to download kubectl`, error);
+          logger.debug(`[KUBECTL]: Releasing lock for ${this.kubectlVersion}`);
+          await release();
 
           return false;
-        });
+        }
+
         isValid = await this.checkBinary(this.path, false);
       }
 
       if (!isValid) {
-        logger.debug(`Releasing lock for ${this.kubectlVersion}`);
-        release();
+        logger.debug(`[KUBECTL]: Releasing lock for ${this.kubectlVersion}`);
+        await release();
 
         return false;
       }
-      logger.debug(`Releasing lock for ${this.kubectlVersion}`);
-      release();
+
+      logger.debug(`[KUBECTL]: Releasing lock for ${this.kubectlVersion}`);
+      await release();
 
       return true;
-    }).catch((e) => {
-      logger.error(`Failed to get a lock for ${this.kubectlVersion}`);
-      logger.error(e);
+    } catch (error) {
+      logger.error(`[KUBECTL]: Failed to get a lock for ${this.kubectlVersion}`, error);
 
       return false;
-    });
+    }
   }
 
   public async downloadKubectl() {
