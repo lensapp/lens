@@ -19,39 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.AddClusters {
-  --flex-gap: #{$unit * 2};
-  $spacing: $padding * 2;
+// Monaco editor themes customization
+import { editor } from "monaco-editor";
+import cloudsMidnight from "./monaco-themes/clouds-midnight.json";
 
-  .MonacoEditor {
-    min-height: 600px;
-    max-height: 600px;
-    border: 1px solid var(--colorVague);
-    border-radius: $radius;
+export type MonacoTheme = "vs" | "vs-dark" | "hc-black" | MonacoCustomTheme;
+export type MonacoCustomTheme = "clouds-midnight";
 
-    .theme-light & {
-      border-color: var(--borderFaintColor);
-    }
+export interface MonacoThemeData extends editor.IStandaloneThemeData {
+  name?: string;
+}
 
-    .editor {
-      border-radius: $radius;
-    }
-  }
+// Registered names could be then used in "themes/*.json" in "{monacoTheme: [name]}"
+export const customThemes: Partial<Record<MonacoCustomTheme, MonacoThemeData>> = {
+  "clouds-midnight": cloudsMidnight as MonacoThemeData,
+};
 
-  code {
-    color: $pink-400;
-  }
+export function registerCustomThemes(): void {
+  Object.entries(customThemes).forEach(([name, theme]) => {
+    editor.defineTheme(name, theme);
+  });
+}
 
-  .text-primary {
-    color: var(--textColorAccent);
-  }
-
-  .hint {
-    display: block;
-    padding-top: 6px;
-  }
-
-  a[href] {
-    color: var(--colorInfo);
-  }
+export async function loadCustomTheme(name: string): Promise<MonacoThemeData> {
+  return import(`./monaco-themes/${name}.json`);
 }

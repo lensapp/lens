@@ -23,7 +23,6 @@ import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import fse from "fs-extra";
-
 import { DockTabs } from "../dock-tabs";
 import { dockStore, DockTab, TabKind } from "../dock.store";
 import { noop } from "../../../utils";
@@ -31,14 +30,6 @@ import { ThemeStore } from "../../../theme.store";
 import { TerminalStore } from "../terminal.store";
 import { UserStore } from "../../../../common/user-store";
 import { AppPaths } from "../../../../common/app-paths";
-
-jest.mock("react-monaco-editor", () => ({
-  monaco: {
-    editor: {
-      getModel: jest.fn(),
-    },
-  },
-}));
 
 jest.mock("electron", () => ({
   app: {

@@ -81,7 +81,7 @@
     background: $terminalBackground;
     flex: 1;
     overflow: hidden;
-    transition: flex 60ms ease-in-out;
+    transition: flex-basis 25ms ease-in;
 
     > *:not(.Spinner) {
       position: absolute;
@@ -90,9 +90,5 @@
       right: 0;
       bottom: 0;
     }
-  }
-
-  .MonacoEditor {
-    border: none;
   }
 }

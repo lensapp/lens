@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import * as vars from "./src/common/vars";
 import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars, webpackDevServerPort } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
@@ -27,7 +28,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
-import * as vars from "./src/common/vars";
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTSLoader from "./src/common/getTSLoader";
 
 export default [
@@ -42,7 +43,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
   return {
     context: __dirname,
     target: "electron-renderer",
-    devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
+    devtool: isDevelopment ? "cheap-source-map" : "source-map",
     devServer: {
       contentBase: buildDir,
       port: webpackDevServerPort,
@@ -148,6 +149,14 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     plugins: [
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
+
+      // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+      new MonacoWebpackPlugin({
+        // publicPath: "/",
+        // filename: "[name].worker.js",
+        languages: ["json", "yaml"],
+        globalAPI: isDevelopment,
+      }),
 
       // todo: fix remain warnings about circular dependencies
       // new CircularDependencyPlugin({

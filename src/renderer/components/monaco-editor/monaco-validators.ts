@@ -18,44 +18,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { monaco } from "react-monaco-editor";
+import yaml, { YAMLException } from "js-yaml";
 
-export type TabId = string;
+export interface MonacoValidator {
+  (value: string): void;
+}
 
-interface ModelEntry {
-    id?: TabId;
-    modelUri?: monaco.Uri;
-    lang?: string;
-  }
-
-export interface ModelsState {
-    models: ModelEntry[];
-  }
-
-export class MonacoModelsManager implements ModelsState {
-  models: ModelEntry[] = [];
-
-  addModel(tabId: string, { value = "", lang = "yaml" } = {}) {
-    const uri = this.getUri(tabId);
-    const model = monaco.editor.createModel(value, lang, uri); 
-
-    if(!uri) this.models = this.models.concat({ id: tabId, modelUri: model.uri, lang });
-  }
-
-  getModel(tabId: string): monaco.editor.ITextModel {
-    return monaco.editor.getModel(this.getUri(tabId));
-  }
-
-  getUri(tabId: string): monaco.Uri {
-    return this.models.find(model => model.id == tabId)?.modelUri;
-  }
-
-  removeModel(tabId: string) {
-    const uri = this.getUri(tabId);
-
-    this.models = this.models.filter(v => v.id != tabId);
-    monaco.editor.getModel(uri)?.dispose();
+export function yamlValidator(value: string) {
+  try {
+    yaml.load(value);
+  } catch (error) {
+    throw String(error as YAMLException);
   }
 }
 
-export const monacoModelsManager = new MonacoModelsManager();
+export function jsonValidator(value: string) {
+  try {
+    JSON.parse(value);
+  } catch (error) {
+    throw String(error);
+  }
+}
+
+export const monacoValidators = {
+  yaml: yamlValidator,
+  json: jsonValidator,
+};

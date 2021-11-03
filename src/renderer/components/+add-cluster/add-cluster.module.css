@@ -19,34 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import yaml from "js-yaml";
-import { DrawerItem, DrawerParamToggler } from "../drawer";
-import type { DaemonSet, Deployment, Job, Pod, ReplicaSet, StatefulSet } from "../../../common/k8s-api/endpoints";
-import { MonacoEditor } from "../monaco-editor";
+.AddClusters {
+  --flex-gap: calc(var(--unit) * 2);
 
-interface Props {
-  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
+  code {
+    color: rgb(236, 64, 122);
+  }
+
+  a[href] {
+    color: var(--colorInfo);
+  }
 }
 
-export class PodDetailsAffinities extends React.Component<Props> {
-  render() {
-    const { workload } = this.props;
-    const affinitiesNum = workload.getAffinityNumber();
-    const affinities = workload.getAffinity();
+.editor {
+  min-height: 600px;
+  max-height: 600px;
+  border: 1px solid var(--colorVague);
+  border-radius: var(--border-radius);
+}
 
-    if (!affinitiesNum) return null;
-
-    return (
-      <DrawerItem name="Affinities" className="PodDetailsAffinities">
-        <DrawerParamToggler label={affinitiesNum}>
-          <MonacoEditor
-            readOnly
-            style={{ height: 200 }}
-            value={yaml.dump(affinities)}
-          />
-        </DrawerParamToggler>
-      </DrawerItem>
-    );
+:global(.theme-light) {
+  .editor {
+    border-color: var(--borderFaintColor);
   }
 }

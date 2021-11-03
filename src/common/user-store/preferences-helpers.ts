@@ -24,7 +24,7 @@ import path from "path";
 import os from "os";
 import { ThemeStore } from "../../renderer/theme.store";
 import { getAppVersion, ObservableToggleSet } from "../utils";
-import type { monaco } from "react-monaco-editor";
+import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
 
@@ -32,20 +32,19 @@ export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
 }
 
-export interface KubeconfigSyncValue { }
-
-export interface EditorConfiguration {
-  miniMap?: monaco.editor.IEditorMinimapOptions;
-  lineNumbers?: monaco.editor.LineNumbersType;
-  tabSize?: number;
+export interface KubeconfigSyncValue {
 }
 
+export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptions,
+  "minimap" | "tabSize" | "lineNumbers">;
+
 export const defaultEditorConfig: EditorConfiguration = {
-  lineNumbers: "on",
-  miniMap: {
-    enabled: true,
-  },
   tabSize: 2,
+  lineNumbers: "on",
+  minimap: {
+    enabled: true,
+    side: "right",
+  },
 };
 
 interface PreferenceDescription<T, R = T> {

@@ -19,89 +19,65 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import MonacoEditor, { monaco } from "react-monaco-editor";
+import styles from "./editor-panel.module.css";
+import throttle from "lodash/throttle";
 import React from "react";
-import yaml from "js-yaml";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { dockStore, TabId } from "./dock.store";
-import { monacoModelsManager } from "./monaco-model-manager";
-import { ThemeStore } from "../../theme.store";
-import { UserStore } from "../../../common/user-store";
+import { cssNames } from "../../utils";
+import { MonacoEditor, MonacoEditorProps } from "../monaco-editor";
 
-import "monaco-editor";
-
-interface Props {
-  className?: string;
+export interface EditorPanelProps {
   tabId: TabId;
-  value?: string;
-  onChange(value: string, error?: string): void;
+  value: string;
+  className?: string;
+  autoFocus?: boolean; // default: true
+  onChange: MonacoEditorProps["onChange"];
+  onError?: MonacoEditorProps["onError"];
 }
 
+const defaultProps: Partial<EditorPanelProps> = {
+  autoFocus: true,
+};
 
 @observer
-export class EditorPanel extends React.Component<Props> {
-  model: monaco.editor.ITextModel;
-  public editor: monaco.editor.IStandaloneCodeEditor;
-  @observable yamlError = "";
+export class EditorPanel extends React.Component<EditorPanelProps> {
+  static defaultProps = defaultProps as object;
 
-  constructor(props: Props) {
+  @observable.ref editor?: MonacoEditor;
+
+  constructor(props: EditorPanelProps) {
     super(props);
     makeObservable(this);
   }
 
   componentDidMount() {
-    // validate and run callback with optional error
-    this.onChange(this.props.value || "");
-
     disposeOnUnmount(this, [
-      dockStore.onTabChange(this.onTabChange, { delay: 250 }),
-      dockStore.onResize(this.onResize, { delay: 250 }),
+      // keep focus on editor's area when <Dock/> just opened
+      reaction(() => dockStore.isOpen, isOpen => isOpen && this.editor?.focus(), {
+        fireImmediately: true,
+      }),
+
+      // focus to editor on dock's resize or turning into fullscreen mode
+      dockStore.onResize(throttle(() => this.editor?.focus(), 250)),
     ]);
   }
 
-  editorDidMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
-    this.editor = editor;
-    const model = monacoModelsManager.getModel(this.props.tabId);
-
-    model.setValue(this.props.value ?? "");
-    this.editor.setModel(model);
-  };
-
-  validate(value: string) {
-    try {
-      yaml.loadAll(value);
-      this.yamlError = "";
-    } catch (err) {
-      this.yamlError = err.toString();
-    }
-  }
-
-  onTabChange = () => {
-    this.editor.focus();
-    const model = monacoModelsManager.getModel(this.props.tabId);
-
-    model.setValue(this.props.value ?? "");
-    this.editor.setModel(model);
-  };
-
-  onResize = () => {
-    this.editor.focus();
-  };
-
-  onChange = (value: string) => {
-    this.validate(value);
-    this.props.onChange?.(value, this.yamlError);
-  };
-
   render() {
+    const { className, autoFocus, tabId, value, onChange, onError } = this.props;
+
+    if (!tabId) return null;
+
     return (
       <MonacoEditor
-        options={{ model: null, ...UserStore.getInstance().getEditorOptions() }}
-        theme={ThemeStore.getInstance().activeTheme.monacoTheme}
-        language = "yaml"
-        onChange = {this.onChange}
-        editorDidMount={this.editorDidMount}
+        autoFocus={autoFocus}
+        id={tabId}
+        value={value}
+        className={cssNames(styles.EditorPanel, className)}
+        onChange={onChange}
+        onError={onError}
+        ref={monaco => this.editor = monaco}
       />
     );
   }

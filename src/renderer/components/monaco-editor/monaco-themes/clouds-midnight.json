@@ -1,4 +1,5 @@
 {
+  "name": "clouds-midnight",
   "base": "vs-dark",
   "inherit": true,
   "rules": [
