@@ -103,12 +103,13 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
           <Table selectable className="bindings box grow">
             <TableHead>
               <TableCell checkbox />
-              <TableCell className="binding">Name</TableCell>
               <TableCell className="type">Type</TableCell>
+              <TableCell className="binding">Name</TableCell>
+              <TableCell className="ns">Namespace</TableCell>
             </TableHead>
             {
               subjects.map((subject, i) => {
-                const { kind, name } = subject;
+                const { kind, name, namespace } = subject;
                 const isSelected = selectedSubjects.has(subject);
 
                 return (
@@ -118,8 +119,9 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
                     onClick={prevDefault(() => this.selectedSubjects.toggle(subject))}
                   >
                     <TableCell checkbox isChecked={isSelected} />
-                    <TableCell className="binding">{name}</TableCell>
                     <TableCell className="type">{kind}</TableCell>
+                    <TableCell className="binding">{name}</TableCell>
+                    <TableCell className="ns">{namespace || "-"}</TableCell>
                   </TableRow>
                 );
               })
