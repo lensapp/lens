@@ -89,7 +89,7 @@ export class ClusterFrameHandler extends Singleton {
         this.views.delete(clusterId);
 
         iframe.parentNode.removeChild(iframe);
-      }
+      },
     );
   }
 
@@ -124,7 +124,7 @@ export class ClusterFrameHandler extends Singleton {
           logger.info(`[LENS-VIEW]: cluster id=${clusterId} should now be visible`);
           lensView.frame.style.display = "flex";
           ipcRenderer.send(clusterVisibilityHandler, clusterId);
-        }
+        },
       );
     }
   };
