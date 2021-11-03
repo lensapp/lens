@@ -87,5 +87,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  eventApi
+  eventApi,
 };

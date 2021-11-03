@@ -51,8 +51,8 @@ const mockHotbars: { [id: string]: any } = {
   "1": {
     id: "1",
     name: "Default",
-    items: [] as any
-  }
+    items: [] as any,
+  },
 };
 
 jest.mock("../../../../common/hotbar-store", () => ({
@@ -61,15 +61,15 @@ jest.mock("../../../../common/hotbar-store", () => ({
       hotbars: [mockHotbars["1"]],
       getById: (id: string) => mockHotbars[id],
       remove: () => {},
-      hotbarIndex: () => 0
-    })
-  }
+      hotbarIndex: () => 0,
+    }),
+  },
 }));
 
 describe("<HotbarRemoveCommand />", () => {
   beforeEach(() => {
     mockFs({
-      "tmp": {}
+      "tmp": {},
     });
     UserStore.createInstance();
     ThemeStore.createInstance();

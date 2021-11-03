@@ -49,7 +49,7 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
       autorun(() => {
         this.directory = this.props.cluster.preferences.terminalCWD || "";
         this.defaultNamespace = defaultNamespace || "";
-      })
+      }),
     );
   }
 

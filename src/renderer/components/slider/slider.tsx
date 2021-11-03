@@ -56,7 +56,7 @@ export class Slider extends Component<SliderProps> {
         {...sliderProps}
         classes={{
           root: cssNames("Slider", className),
-          ...this.classNames
+          ...this.classNames,
         }}
       />
     );

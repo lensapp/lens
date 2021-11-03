@@ -28,5 +28,5 @@ export type KubeObjectStatus = {
 export enum KubeObjectStatusLevel {
   INFO = 1,
   WARNING = 2,
-  CRITICAL = 3
+  CRITICAL = 3,
 }

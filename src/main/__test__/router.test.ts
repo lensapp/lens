@@ -44,7 +44,7 @@ describe("Router", () => {
   it("blocks path traversal attacks", async () => {
     const response: any = {
       statusCode: 200,
-      end: jest.fn()
+      end: jest.fn(),
     };
 
     await (Router as any).handleStaticFile({
@@ -63,10 +63,10 @@ describe("Router", () => {
       statusCode: 200,
       write: jest.fn(),
       setHeader: jest.fn(),
-      end: jest.fn()
+      end: jest.fn(),
     };
     const req: any = {
-      url: ""
+      url: "",
     };
 
     await (Router as any).handleStaticFile({

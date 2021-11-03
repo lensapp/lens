@@ -60,7 +60,7 @@ export class ClusterOverview extends React.Component {
       }),
       reaction(
         () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
-        () => this.metricPoller.restart(true)
+        () => this.metricPoller.restart(true),
       ),
     ]);
   }

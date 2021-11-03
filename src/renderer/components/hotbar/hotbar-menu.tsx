@@ -139,8 +139,8 @@ export class HotbarMenu extends React.Component<Props> {
                             menuItems={[
                               {
                                 title: "Remove from Hotbar",
-                                onClick: () => this.removeItem(item.entity.uid)
-                              }
+                                onClick: () => this.removeItem(item.entity.uid),
+                              },
                             ]}
                             disabled
                             size={40}

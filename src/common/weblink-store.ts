@@ -67,7 +67,7 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
     const {
       id = uuid.v4(),
       name,
-      url
+      url,
     } = data;
 
     const weblink = { id, name, url };
@@ -84,7 +84,7 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
 
   toJSON(): WeblinkStoreModel {
     const model: WeblinkStoreModel = {
-      weblinks: this.weblinks
+      weblinks: this.weblinks,
     };
 
     return toJS(model);

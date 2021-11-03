@@ -308,7 +308,7 @@ export class DockStore implements DockStorageState {
       id,
       kind,
       pinned,
-      title
+      title,
     };
 
     this.tabs.push(tab);

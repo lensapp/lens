@@ -103,9 +103,9 @@ export const systemName: InputValidator = {
 
 export const accountId: InputValidator = {
   message: () => `Invalid account ID`,
-  validate: value => (isEmail.validate(value) || systemName.validate(value))
+  validate: value => (isEmail.validate(value) || systemName.validate(value)),
 };
 
 export const conditionalValidators = [
-  isRequired, isEmail, isNumber, isUrl, minLength, maxLength
+  isRequired, isEmail, isNumber, isUrl, minLength, maxLength,
 ];

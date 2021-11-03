@@ -131,9 +131,13 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
 });
 
 export async function checkForUpdates(): Promise<void> {
+  const userStore = UserStore.getInstance();
+
   try {
     logger.info(`📡 Checking for app updates`);
 
+    autoUpdater.channel = userStore.updateChannel;
+    autoUpdater.allowDowngrade = userStore.isAllowedToDowngrade;
     await autoUpdater.checkForUpdates();
   } catch (error) {
     logger.error(`${AutoUpdateLogPrefix}: failed with an error`, { error: String(error) });

@@ -29,7 +29,7 @@ export interface TableStorageModel {
 }
 
 export const tableStorage = createStorage<TableStorageModel>("table_settings", {
-  sortParams: {}
+  sortParams: {},
 });
 
 export function getSortParams(tableId: string): Partial<TableSortParams> {

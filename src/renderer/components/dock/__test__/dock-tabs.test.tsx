@@ -49,11 +49,11 @@ jest.mock("electron", () => ({
 AppPaths.init();
 
 const initialTabs: DockTab[] = [
-  { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false, },
-  { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource", pinned: false, },
-  { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource", pinned: false, },
-  { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart", pinned: false, },
-  { id: "logs", kind: TabKind.POD_LOGS, title: "Logs", pinned: false, },
+  { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
+  { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource", pinned: false },
+  { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource", pinned: false },
+  { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart", pinned: false },
+  { id: "logs", kind: TabKind.POD_LOGS, title: "Logs", pinned: false },
 ];
 
 const getComponent = () => (
@@ -120,7 +120,7 @@ describe("<DockTabs />", () => {
       TabKind.CREATE_RESOURCE,
       TabKind.EDIT_RESOURCE,
       TabKind.INSTALL_CHART,
-      TabKind.POD_LOGS
+      TabKind.POD_LOGS,
     ]);
   });
 
@@ -161,7 +161,7 @@ describe("<DockTabs />", () => {
     rerender(getComponent());
 
     expect(getTabKinds()).toEqual(
-      initialTabs.slice(0, 4).map(tab => tab.kind)
+      initialTabs.slice(0, 4).map(tab => tab.kind),
     );
   });
 
@@ -182,8 +182,8 @@ describe("<DockTabs />", () => {
 
   it("disables 'Close To The Right' item if last tab clicked", () => {
     dockStore.tabs = [
-      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false, },
-      { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs", pinned: false, },
+      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
+      { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs", pinned: false },
     ];
     const { container, getByText } = renderTabs();
     const tab = container.querySelectorAll(".Tab")[1];

@@ -34,7 +34,7 @@ export const networkRoute: RouteProps = {
     ingressRoute,
     networkPoliciesRoute,
     portForwardsRoute,
-  ].map(route => route.path.toString())
+  ].map(route => route.path.toString()),
 };
 
 export const networkURL = (params?: URLParams) => servicesURL(params);

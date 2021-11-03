@@ -44,7 +44,7 @@ export interface Props<T> {
 const defaultProps: Partial<Props<any>> = {
   placeholder: "Add new item...",
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>,
-  inputTheme: "round"
+  inputTheme: "round",
 };
 
 @observer

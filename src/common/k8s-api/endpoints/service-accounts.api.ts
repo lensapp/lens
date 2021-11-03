@@ -62,5 +62,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  serviceAccountsApi
+  serviceAccountsApi,
 };

@@ -45,7 +45,7 @@ describe("renderer/utils/StorageHelper", () => {
         autoInit: false,
         defaultValue: {
           message: "blabla",
-          description: "default"
+          description: "default",
         },
         storage: {
           getItem(key: string): StorageModel {
@@ -59,7 +59,7 @@ describe("renderer/utils/StorageHelper", () => {
           },
           removeItem(key: string) {
             remoteStorageMock.delete(key);
-          }
+          },
         },
       });
 
@@ -72,7 +72,7 @@ describe("renderer/utils/StorageHelper", () => {
             await delay(500); // fake loading timeout
 
             return storageHelper.storage.getItem(key);
-          }
+          },
         },
       });
     });
@@ -119,7 +119,7 @@ describe("renderer/utils/StorageHelper", () => {
 
       // returning object modifies `draft` as well
       storageHelper.merge(draft => ({
-        message: draft.message.replace("2", "3")
+        message: draft.message.replace("2", "3"),
       }));
       expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated3" });
     });
@@ -153,7 +153,7 @@ describe("renderer/utils/StorageHelper", () => {
 
       storageHelper.merge({ lastName: "Black" });
       storageHelper.set("whatever");
-      expect(observedChanges).toEqual([{ ...defaultValue, lastName: "Black" }, "whatever",]);
+      expect(observedChanges).toEqual([{ ...defaultValue, lastName: "Black" }, "whatever"]);
     });
   });
 

@@ -31,7 +31,7 @@ enum EditorLineNumbersStyles {
   on = "On",
   off = "Off",
   relative = "Relative",
-  interval = "Interval"
+  interval = "Interval",
 }
 
 export const Editor = observer(() => {

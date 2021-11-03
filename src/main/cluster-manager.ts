@@ -51,14 +51,14 @@ export class ClusterManager extends Singleton {
     reaction(
       () => this.store.clustersList.map(c => c.getState()),
       () => this.updateCatalog(this.store.clustersList),
-      { fireImmediately: false, }
+      { fireImmediately: false },
     );
 
     // reacting to every cluster's preferences change and total amount of items
     reaction(
       () => this.store.clustersList.map(c => toJS(c.preferences)),
       () => this.updateCatalog(this.store.clustersList),
-      { fireImmediately: false, }
+      { fireImmediately: false },
     );
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
@@ -263,7 +263,7 @@ export function catalogEntityFromCluster(cluster: Cluster) {
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,
       kubeconfigContext: cluster.contextName,
-      icon: {}
+      icon: {},
     },
     status: {
       phase: cluster.disconnected
@@ -271,7 +271,7 @@ export function catalogEntityFromCluster(cluster: Cluster) {
         : LensKubernetesClusterStatus.CONNECTED,
       reason: "",
       message: "",
-      active: !cluster.disconnected
-    }
+      active: !cluster.disconnected,
+    },
   });
 }

@@ -44,7 +44,7 @@ const dialogState = observable.object({
 @observer
 export class StatefulSetScaleDialog extends Component<Props> {
   static defaultProps = {
-    statefulSetApi
+    statefulSetApi,
   };
   @observable ready = false;
   @observable currentReplicas = 0;

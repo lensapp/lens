@@ -108,7 +108,7 @@ export async function getRelease(name: string, namespace: string): Promise<IRele
 
   return {
     ...details,
-    resources
+    resources,
   };
 }
 
@@ -122,7 +122,7 @@ export async function createRelease(payload: IReleaseCreatePayload): Promise<IRe
       chart,
       values,
       ...data,
-    }
+    },
   });
 }
 
@@ -136,7 +136,7 @@ export async function updateRelease(name: string, namespace: string, payload: IR
       chart,
       values,
       ...data,
-    }
+    },
   });
 }
 

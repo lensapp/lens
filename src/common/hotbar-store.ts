@@ -99,7 +99,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   toJSON(): HotbarStoreModel {
     const model: HotbarStoreModel = {
       hotbars: this.hotbars,
-      activeHotbarId: this.activeHotbarId
+      activeHotbarId: this.activeHotbarId,
     };
 
     return toJS(model);
@@ -187,7 +187,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     } else if (0 <= cellIndex && cellIndex < hotbar.items.length) {
       hotbar.items[cellIndex] = newItem;
     } else {
-      logger.error(`[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range`, { entityId: uid, hotbarId: hotbar.id, cellIndex, });
+      logger.error(`[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range`, { entityId: uid, hotbarId: hotbar.id, cellIndex });
     }
   }
 

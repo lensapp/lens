@@ -42,7 +42,7 @@ export class PortForwardDetails extends React.Component<Props> {
     const name = portForward.getName();
     const api = {
       "service": serviceApi,
-      "pod": podsApi
+      "pod": podsApi,
     }[portForward.kind];
 
     if (!api) {

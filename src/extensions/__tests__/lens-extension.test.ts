@@ -32,14 +32,14 @@ describe("lens extension", () => {
     ext = new LensExtension({
       manifest: {
         name: "foo-bar",
-        version: "0.1.1"
+        version: "0.1.1",
       },
       id: "/this/is/fake/package.json",
       absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true,
-      isCompatible: true
+      isCompatible: true,
     });
   });
 

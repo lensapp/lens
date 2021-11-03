@@ -124,7 +124,7 @@ export class Job extends WorkloadKubeObject {
 
   delete() {
     const params: JsonApiParams = {
-      query: { propagationPolicy: "Background" }
+      query: { propagationPolicy: "Background" },
     };
 
     return super.delete(params);
@@ -158,5 +158,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  jobApi
+  jobApi,
 };

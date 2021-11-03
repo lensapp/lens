@@ -35,7 +35,7 @@ export class PersistentVolumesStore extends KubeObjectStore<PersistentVolume> {
 
   getByStorageClass(storageClass: StorageClass): PersistentVolume[] {
     return this.items.filter(volume =>
-      volume.getStorageClassName() === storageClass.getName()
+      volume.getStorageClassName() === storageClass.getName(),
     );
   }
 }

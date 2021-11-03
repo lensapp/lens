@@ -39,7 +39,7 @@ export class PrometheusLens extends PrometheusProvider {
         id: this.id,
         namespace: service.metadata.namespace,
         service: service.metadata.name,
-        port: service.spec.ports[0].port
+        port: service.spec.ports[0].port,
       };
     } catch(error) {
       logger.warn(`PrometheusLens: failed to list services: ${error.response.body.message}`);

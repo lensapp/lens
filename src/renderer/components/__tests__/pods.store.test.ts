@@ -46,7 +46,7 @@ runningPod.status = {
       status: "True",
       lastProbeTime: 1,
       lastTransitionTime: "1",
-    }
+    },
   ],
   hostIP: "10.0.0.1",
   podIP: "10.0.0.1",
@@ -128,7 +128,7 @@ describe("Pod Store tests", () => {
       succeededPod,
       failedPod,
       evictedPod,
-      evictedPod
+      evictedPod,
     ]));
 
     expect(statuses).toEqual([

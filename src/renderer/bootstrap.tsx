@@ -134,7 +134,7 @@ export async function bootstrap(comp: () => Promise<AppComponent>) {
 bootstrap(
   async () => process.isMainFrame
     ? (await import("./lens-app")).LensApp
-    : (await import("./components/app")).App
+    : (await import("./components/app")).App,
 );
 
 

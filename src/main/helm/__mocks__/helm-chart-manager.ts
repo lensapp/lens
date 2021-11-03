@@ -74,7 +74,7 @@ const charts = new Map([
         repo: "stable",
         digest: "test",
         created: "now",
-      }
+      },
     ]),
     "redis": sortCharts([
       {
@@ -92,7 +92,7 @@ const charts = new Map([
         repo: "stable",
         digest: "test",
         created: "now",
-      }
+      },
     ]),
   }],
   ["experiment", {
@@ -113,7 +113,7 @@ const charts = new Map([
         digest: "test",
         deprecated: true,
         created: "now",
-      }
+      },
     ]),
   }],
   ["bitnami", {
@@ -133,7 +133,7 @@ const charts = new Map([
         repo: "bitnami",
         digest: "test",
         created: "now",
-      }
+      },
     ]),
     "pretzel": sortCharts([
       {
@@ -151,7 +151,7 @@ const charts = new Map([
         repo: "bitnami",
         digest: "test",
         created: "now",
-      }
+      },
     ]),
   }],
 ]);

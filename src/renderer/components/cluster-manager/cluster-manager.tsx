@@ -46,7 +46,7 @@ import { catalogURL, getPreviousTabUrl } from "../../../common/routes";
 export class ClusterManager extends React.Component {
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => navigation.location, () => setEntityOnRouteMatch(), { fireImmediately: true })
+      reaction(() => navigation.location, () => setEntityOnRouteMatch(), { fireImmediately: true }),
     ]);
   }
 

@@ -31,18 +31,18 @@ module.exports = {
   settings: {
     react: {
       version: packageJson.devDependencies.react || "detect",
-    }
+    },
   },
   overrides: [
     {
       files: [
-        "**/*.js"
+        "**/*.js",
       ],
       extends: [
         "eslint:recommended",
       ],
       env: {
-        node: true
+        node: true,
       },
       parserOptions: {
         ecmaVersion: 2018,
@@ -51,10 +51,12 @@ module.exports = {
       plugins: [
         "header",
         "unused-imports",
-        "react-hooks"
+        "react-hooks",
       ],
       rules: {
         "header/header": [2, "./license-header"],
+        "comma-dangle": ["error", "always-multiline"],
+        "comma-spacing": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
@@ -70,7 +72,7 @@ module.exports = {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-          }
+          },
         ],
         "quotes": ["error", "double", {
           "avoidEscape": true,
@@ -97,7 +99,7 @@ module.exports = {
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
         ],
         "no-template-curly-in-string": "error",
-      }
+      },
     },
     {
       files: [
@@ -109,7 +111,7 @@ module.exports = {
       ],
       plugins: [
         "header",
-        "unused-imports"
+        "unused-imports",
       ],
       parserOptions: {
         ecmaVersion: 2018,
@@ -138,8 +140,12 @@ module.exports = {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-          }
+          },
         ],
+        "comman-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
+        "comma-spacing": "off",
+        "@typescript-eslint/comma-spacing": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
@@ -181,7 +187,7 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       plugins: [
         "header",
-        "unused-imports"
+        "unused-imports",
       ],
       extends: [
         "plugin:@typescript-eslint/recommended",
@@ -220,8 +226,12 @@ module.exports = {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-          }
+          },
         ],
+        "comman-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
+        "comma-spacing": "off",
+        "@typescript-eslint/comma-spacing": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
@@ -257,6 +267,6 @@ module.exports = {
         "react-hooks/exhaustive-deps": "off",
         "no-template-curly-in-string": "error",
       },
-    }
-  ]
+    },
+  ],
 };

@@ -61,7 +61,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   protected sortVersions = (versions: IChartVersion[]) => {
     return versions
-      .map(chartVersion => ({ ...chartVersion, __version: semver.coerce(chartVersion.version, { includePrerelease: true, loose: true }), }))
+      .map(chartVersion => ({ ...chartVersion, __version: semver.coerce(chartVersion.version, { includePrerelease: true, loose: true }) }))
       .sort(sortCompareChartVersions)
       .map(({ __version, ...chartVersion }) => chartVersion);
   };
@@ -78,7 +78,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
       return versions.map(chart => ({
         repo,
-        version: chart.getVersion()
+        version: chart.getVersion(),
       }));
     };
 

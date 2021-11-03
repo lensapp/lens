@@ -30,7 +30,7 @@ import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
 import { cloneJsonObject } from "../common/utils";
 import type { Patch } from "rfc6902";
-import { promiseExecFile } from "./promise-exec";
+import { promiseExecFile } from "../common/utils/promise-exec";
 
 export class ResourceApplier {
   constructor(protected cluster: Cluster) {}
@@ -62,7 +62,7 @@ export class ResourceApplier {
     args.push(
       "--type", "json",
       "--patch", JSON.stringify(patch),
-      "-o", "json"
+      "-o", "json",
     );
 
     try {

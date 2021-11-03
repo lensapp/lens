@@ -56,7 +56,7 @@ export class UpgradeChart extends React.Component<Props> {
     this.loadVersions();
 
     disposeOnUnmount(this, [
-      reaction(() => this.release, () => this.loadVersions())
+      reaction(() => this.release, () => this.loadVersions()),
     ]);
   }
 

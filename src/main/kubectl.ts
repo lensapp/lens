@@ -21,7 +21,7 @@
 
 import path from "path";
 import fs from "fs";
-import { promiseExec } from "./promise-exec";
+import { promiseExec } from "../common/utils/promise-exec";
 import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
@@ -50,7 +50,7 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.18", "1.18.20"],
   ["1.19", "1.19.12"],
   ["1.20", "1.20.8"],
-  ["1.21", bundledVersion]
+  ["1.21", bundledVersion],
 ]);
 let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3\n";

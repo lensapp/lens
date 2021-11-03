@@ -72,7 +72,7 @@ export class HelmCharts extends Component<Props> {
         params: {
           chartName: chart.getName(),
           repo: chart.getRepository(),
-        }
+        },
       }));
     }
   };
@@ -104,7 +104,7 @@ export class HelmCharts extends Component<Props> {
             searchProps: {
               ...searchProps,
               placeholder: "Search Helm Charts...",
-            }
+            },
           })}
           renderTableHeader={[
             { className: "icon", showWithColumn: columnId.name },
@@ -126,7 +126,7 @@ export class HelmCharts extends Component<Props> {
             chart.getVersion(),
             chart.getAppVersion(),
             { title: chart.getRepository(), className: chart.getRepository().toLowerCase() },
-            { className: "menu" }
+            { className: "menu" },
           ]}
           detailsItem={this.selectedChart}
           onDetails={this.onDetails}

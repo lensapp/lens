@@ -139,7 +139,7 @@ export const ContainerEnvironment = observer((props: Props) => {
     return Object.keys(secret.data).map(key => {
       const secretKeyRef = {
         name: secret.getName(),
-        key
+        key,
       };
 
       const value = (

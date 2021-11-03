@@ -170,7 +170,7 @@ export class TerminalApi extends WebSocketApi {
 
   protected emitError(error: string) {
     this.emitStatus(error, {
-      color: TerminalColor.RED
+      color: TerminalColor.RED,
     });
   }
 }

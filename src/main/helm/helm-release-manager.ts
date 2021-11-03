@@ -22,7 +22,7 @@
 import * as tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { promiseExec } from "../promise-exec";
+import { promiseExec } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import type { Cluster } from "../cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
@@ -69,8 +69,8 @@ export async function installChart(chart: string, values: any, name: string | un
       log: stdout,
       release: {
         name: releaseName,
-        namespace
-      }
+        namespace,
+      },
     };
   } catch (error) {
     throw error?.stderr || error;
@@ -91,7 +91,7 @@ export async function upgradeRelease(name: string, chart: string, values: any, n
 
     return {
       log: stdout,
-      release: getRelease(name, namespace, cluster)
+      release: getRelease(name, namespace, cluster),
     };
   } catch (error) {
     throw error?.stderr || error;

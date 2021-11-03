@@ -44,14 +44,14 @@ export class DeploymentApi extends KubeApi<Deployment> {
     return this.request.patch(this.getScaleApiUrl(params), {
       data: {
         spec: {
-          replicas
-        }
-      }
+          replicas,
+        },
+      },
     },
     {
       headers: {
-        "content-type": "application/merge-patch+json"
-      }
+        "content-type": "application/merge-patch+json",
+      },
     });
   }
 
@@ -61,16 +61,16 @@ export class DeploymentApi extends KubeApi<Deployment> {
         spec: {
           template: {
             metadata: {
-              annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() }
-            }
-          }
-        }
-      }
+              annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
+            },
+          },
+        },
+      },
     },
     {
       headers: {
-        "content-type": "application/strategic-merge-patch+json"
-      }
+        "content-type": "application/strategic-merge-patch+json",
+      },
     });
   }
 }
@@ -246,5 +246,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  deploymentApi
+  deploymentApi,
 };

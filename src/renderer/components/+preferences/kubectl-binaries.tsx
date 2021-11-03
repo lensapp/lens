@@ -36,7 +36,7 @@ export const KubectlBinaries = observer(() => {
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
   const downloadMirrorOptions: SelectOption<string>[] = Array.from(
     packageMirrors.entries(),
-    ([value, { label, platforms }]) => ({ value, label, platforms })
+    ([value, { label, platforms }]) => ({ value, label, platforms }),
   );
 
   const save = () => {

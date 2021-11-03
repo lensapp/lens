@@ -34,5 +34,5 @@ export default {
 
       store.set(contextName, { kubeConfig: cluster.kubeConfig, icon: cluster.icon || null, preferences: cluster.preferences || {}});
     }
-  }
+  },
 } as MigrationDeclaration;

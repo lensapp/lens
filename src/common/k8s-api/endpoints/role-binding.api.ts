@@ -71,5 +71,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  roleBindingApi
+  roleBindingApi,
 };

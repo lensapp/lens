@@ -29,8 +29,8 @@ export const storageRoute: RouteProps = {
   path: [
     volumeClaimsRoute,
     volumesRoute,
-    storageClassesRoute
-  ].map(route => route.path.toString())
+    storageClassesRoute,
+  ].map(route => route.path.toString()),
 };
 
 export const storageURL = (params?: URLParams) => volumeClaimsURL(params);

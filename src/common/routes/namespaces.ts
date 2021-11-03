@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const namespacesRoute: RouteProps = {
-  path: "/namespaces"
+  path: "/namespaces",
 };
 
 export interface NamespacesRouteParams {

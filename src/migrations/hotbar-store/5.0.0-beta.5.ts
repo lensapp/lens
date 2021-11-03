@@ -42,12 +42,12 @@ export default {
           hotbar.items[i].entity = {
             ...item.entity,
             name: entity.metadata.name,
-            source: entity.metadata.source
+            source: entity.metadata.source,
           };
         }
       }
     }
 
     store.set("hotbars", hotbars);
-  }
+  },
 } as MigrationDeclaration;

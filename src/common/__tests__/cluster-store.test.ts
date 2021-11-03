@@ -84,7 +84,7 @@ jest.mock("electron", () => ({
     removeAllListeners: jest.fn(),
     off: jest.fn(),
     send: jest.fn(),
-  }
+  },
 }));
 
 AppPaths.init();
@@ -95,8 +95,8 @@ describe("empty config", () => {
     ClusterStore.resetInstance();
     const mockOpts = {
       "tmp": {
-        "lens-cluster-store.json": JSON.stringify({})
-      }
+        "lens-cluster-store.json": JSON.stringify({}),
+      },
     };
 
     mockFs(mockOpts);
@@ -117,10 +117,10 @@ describe("empty config", () => {
           preferences: {
             terminalCWD: "/tmp",
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
-            clusterName: "minikube"
+            clusterName: "minikube",
           },
-          kubeConfigPath: embed("foo", kubeconfig)
-        })
+          kubeConfigPath: embed("foo", kubeconfig),
+        }),
       );
     });
 
@@ -141,17 +141,17 @@ describe("empty config", () => {
         id: "prod",
         contextName: "foo",
         preferences: {
-          clusterName: "prod"
+          clusterName: "prod",
         },
-        kubeConfigPath: embed("prod", kubeconfig)
+        kubeConfigPath: embed("prod", kubeconfig),
       });
       store.addCluster({
         id: "dev",
         contextName: "foo2",
         preferences: {
-          clusterName: "dev"
+          clusterName: "dev",
         },
-        kubeConfigPath: embed("dev", kubeconfig)
+        kubeConfigPath: embed("dev", kubeconfig),
       });
     });
 
@@ -177,8 +177,8 @@ describe("config with existing clusters", () => {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "99.99.99"
-            }
+              version: "99.99.99",
+            },
           },
           clusters: [
             {
@@ -186,13 +186,13 @@ describe("config with existing clusters", () => {
               kubeConfigPath: "./temp-kube-config",
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
-              workspace: "default"
+              workspace: "default",
             },
             {
               id: "cluster2",
               kubeConfigPath: "./temp-kube-config",
               contextName: "foo2",
-              preferences: { terminalCWD: "/foo2" }
+              preferences: { terminalCWD: "/foo2" },
             },
             {
               id: "cluster3",
@@ -200,11 +200,11 @@ describe("config with existing clusters", () => {
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "foo",
-              ownerRef: "foo"
+              ownerRef: "foo",
             },
-          ]
-        })
-      }
+          ],
+        }),
+      },
     };
 
     mockFs(mockOpts);
@@ -265,8 +265,8 @@ users:
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "99.99.99"
-            }
+              version: "99.99.99",
+            },
           },
           clusters: [
             {
@@ -281,12 +281,12 @@ users:
               kubeConfigPath: "./valid-kube-config",
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
-              workspace: "default"
+              workspace: "default",
             },
 
-          ]
-        })
-      }
+          ],
+        }),
+      },
     };
 
     mockFs(mockOpts);
@@ -326,7 +326,7 @@ const minimalValidKubeConfig = JSON.stringify({
     user: {
       "client-certificate": "/Users/foo/.minikube/client.crt",
       "client-key": "/Users/foo/.minikube/client.key",
-    }
+    },
   }],
   kind: "Config",
   preferences: {},
@@ -340,12 +340,12 @@ describe("pre 2.0 config with an existing cluster", () => {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "1.0.0"
-            }
+              version: "1.0.0",
+            },
           },
           cluster1: minimalValidKubeConfig,
-        })
-      }
+        }),
+      },
     };
 
     mockFs(mockOpts);
@@ -372,8 +372,8 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "2.4.1"
-            }
+              version: "2.4.1",
+            },
           },
           cluster1: {
             kubeConfig: JSON.stringify({
@@ -403,19 +403,19 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
                   "auth-provider": {
                     config: {
                       "access-token": [
-                        "should be string"
+                        "should be string",
                       ],
                       expiry: [
-                        "should be string"
+                        "should be string",
                       ],
-                    }
-                  }
+                    },
+                  },
                 },
-              }]
+              }],
             }),
           },
-        })
-      }
+        }),
+      },
     };
 
     mockFs(mockOpts);
@@ -445,19 +445,19 @@ describe("pre 2.6.0 config with a cluster icon", () => {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "2.4.1"
-            }
+              version: "2.4.1",
+            },
           },
           cluster1: {
             kubeConfig: minimalValidKubeConfig,
             icon: "icon_path",
             preferences: {
-              terminalCWD: "/tmp"
-            }
+              terminalCWD: "/tmp",
+            },
           },
         }),
         "icon_path": testDataIcon,
-      }
+      },
     };
 
     mockFs(mockOpts);
@@ -486,17 +486,17 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "2.6.6"
-            }
+              version: "2.6.6",
+            },
           },
           cluster1: {
             kubeConfig: minimalValidKubeConfig,
             preferences: {
-              terminalCWD: "/tmp"
-            }
+              terminalCWD: "/tmp",
+            },
           },
-        })
-      }
+        }),
+      },
     };
 
     mockFs(mockOpts);
@@ -517,8 +517,8 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
-              version: "3.5.0"
-            }
+              version: "3.5.0",
+            },
           },
           clusters: [
             {
@@ -527,12 +527,12 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
               contextName: "cluster",
               preferences: {
                 icon: "store://icon_path",
-              }
-            }
-          ]
+              },
+            },
+          ],
         }),
         "icon_path": testDataIcon,
-      }
+      },
     };
 
     mockFs(mockOpts);

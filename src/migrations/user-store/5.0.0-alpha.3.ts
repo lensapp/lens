@@ -35,5 +35,5 @@ export default {
     preferences.hiddenTableColumns = Object.entries(oldHiddenTableColumns);
 
     store.set("preferences", preferences);
-  }
+  },
 } as MigrationDeclaration;

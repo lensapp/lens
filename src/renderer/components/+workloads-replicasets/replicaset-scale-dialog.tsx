@@ -44,7 +44,7 @@ const dialogState = observable.object({
 @observer
 export class ReplicaSetScaleDialog extends Component<Props> {
   static defaultProps = {
-    replicaSetApi
+    replicaSetApi,
   };
 
   @observable ready = false;

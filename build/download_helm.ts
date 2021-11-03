@@ -28,7 +28,7 @@ const helmVersion = packageInfo.config.bundledHelmVersion;
 if (!isWindows) {
   Promise.all([
     new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary(),
-    new HelmCli(path.join(process.cwd(), "binaries", "client", "arm64"), helmVersion).ensureBinary()
+    new HelmCli(path.join(process.cwd(), "binaries", "client", "arm64"), helmVersion).ensureBinary(),
   ]);
 } else {
   new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary();

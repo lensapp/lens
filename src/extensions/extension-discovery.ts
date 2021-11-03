@@ -175,8 +175,8 @@ export class ExtensionDiscovery extends Singleton {
       awaitWriteFinish: {
         // Wait 300ms until the file size doesn't change to consider the file written.
         // For a small file like package.json this should be plenty of time.
-        stabilityThreshold: 300
-      }
+        stabilityThreshold: 300,
+      },
     })
       // Extension add is detected by watching "<extensionDir>/package.json" add
       .on("add", this.handleWatchFileAdd)
@@ -370,7 +370,7 @@ export class ExtensionDiscovery extends Singleton {
         manifest,
         isBundled,
         isEnabled,
-        isCompatible
+        isCompatible,
       };
     } catch (error) {
       if (error.code === "ENOTDIR") {
@@ -407,7 +407,7 @@ export class ExtensionDiscovery extends Singleton {
    */
   installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]): Promise<void> {
     const dependencies = Object.fromEntries(
-      extensions.map(extension => [extension.manifest.name, extension.absolutePath])
+      extensions.map(extension => [extension.manifest.name, extension.absolutePath]),
     );
 
     return extensionInstaller.installPackages(packageJsonPath, { dependencies });
@@ -482,7 +482,7 @@ export class ExtensionDiscovery extends Singleton {
 
   toJSON(): ExtensionDiscoveryChannelMessage {
     return toJS({
-      isLoaded: this.isLoaded
+      isLoaded: this.isLoaded,
     });
   }
 

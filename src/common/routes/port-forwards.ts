@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const portForwardsRoute: RouteProps = {
-  path: "/port-forwards/:forwardport?"
+  path: "/port-forwards/:forwardport?",
 };
 
 export interface PortForwardsRouteParams {

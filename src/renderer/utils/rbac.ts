@@ -51,10 +51,10 @@ export const ResourceNames: Record<KubeResource, string> = {
   "rolebindings": "Role Bindings",
   "clusterrolebindings": "Cluster Role Bindings",
   "clusterroles": "Cluster Roles",
-  "serviceaccounts": "Service Accounts"
+  "serviceaccounts": "Service Accounts",
 };
 
 export const ResourceKindMap: Record<string, KubeResource> = Object.fromEntries(
   Object.entries(apiResourceRecord)
-    .map(([resource, { kind }]) => [kind, resource as KubeResource])
+    .map(([resource, { kind }]) => [kind, resource as KubeResource]),
 );

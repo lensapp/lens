@@ -51,7 +51,7 @@ function getContexts(config: KubeConfig): Map<string, Option> {
       .map(({ config, error }) => [config.currentContext, {
         config,
         error,
-      }])
+      }]),
   );
 }
 
@@ -74,7 +74,7 @@ export class AddCluster extends React.Component {
   @computed get allErrors(): string[] {
     return [
       ...this.errors,
-      ...iter.map(this.kubeContexts.values(), ({ error }) => error)
+      ...iter.map(this.kubeContexts.values(), ({ error }) => error),
     ].filter(Boolean);
   }
 

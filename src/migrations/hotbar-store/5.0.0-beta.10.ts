@@ -104,7 +104,7 @@ export default {
               entity: {
                 uid: generateNewIdFor(cluster),
                 name: cluster.preferences.clusterName || cluster.contextName,
-              }
+              },
             });
           }
         }
@@ -163,5 +163,5 @@ export default {
     }
 
     store.set("hotbars", hotbars);
-  }
+  },
 } as MigrationDeclaration;

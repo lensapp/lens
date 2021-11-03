@@ -159,5 +159,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  endpointApi
+  endpointApi,
 };

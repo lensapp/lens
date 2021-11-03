@@ -44,9 +44,9 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
       data: {
         metadata: params,
         spec: {
-          replicas
-        }
-      }
+          replicas,
+        },
+      },
     });
   }
 }
@@ -133,5 +133,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  replicaSetApi
+  replicaSetApi,
 };

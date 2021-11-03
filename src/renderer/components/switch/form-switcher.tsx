@@ -30,8 +30,8 @@ const useStyles = makeStyles({
       fontSize: 14,
       fontWeight: 500,
       flex: 1,
-      color: "var(--textColorAccent)"
-    }
+      color: "var(--textColorAccent)",
+    },
   },
 });
 

@@ -157,5 +157,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  serviceApi
+  serviceApi,
 };

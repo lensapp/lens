@@ -38,7 +38,7 @@ export function getRoleRefSelectOption<T extends KubeObject>(item: T): SelectOpt
           material={item.kind === "Role" ? "person" : "people"}
           tooltip={{
             preferredPositions: TooltipPosition.LEFT,
-            children: item.kind
+            children: item.kind,
           }}
         />
         {" "}

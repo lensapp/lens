@@ -57,7 +57,7 @@ export function isActiveRoute(route: string | string[] | RouteProps): boolean {
 export function getMatchedClusterId(): string {
   const matched = matchPath<ClusterViewRouteParams>(navigation.location.pathname, {
     exact: true,
-    path: clusterViewRoute.path
+    path: clusterViewRoute.path,
   });
 
   return matched?.params.clusterId;

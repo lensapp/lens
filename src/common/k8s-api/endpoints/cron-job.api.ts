@@ -33,14 +33,14 @@ export class CronJobApi extends KubeApi<CronJob> {
     return this.request.patch(this.getUrl(params), {
       data: {
         spec: {
-          suspend: true
-        }
-      }
+          suspend: true,
+        },
+      },
     },
     {
       headers: {
-        "content-type": "application/strategic-merge-patch+json"
-      }
+        "content-type": "application/strategic-merge-patch+json",
+      },
     });
   }
 
@@ -48,14 +48,14 @@ export class CronJobApi extends KubeApi<CronJob> {
     return this.request.patch(this.getUrl(params), {
       data: {
         spec: {
-          suspend: false
-        }
-      }
+          suspend: false,
+        },
+      },
     },
     {
       headers: {
-        "content-type": "application/strategic-merge-patch+json"
-      }
+        "content-type": "application/strategic-merge-patch+json",
+      },
     });
   }
 }
@@ -153,5 +153,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  cronJobApi
+  cronJobApi,
 };

@@ -71,7 +71,7 @@ export function SentryInit() {
     initialScope: {
       tags: {
         "process": processName,
-      }
+      },
     },
     environment: isProduction ? "production" : "development",
   });

@@ -82,5 +82,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  pdbApi
+  pdbApi,
 };

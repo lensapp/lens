@@ -29,18 +29,18 @@ export const catalogEntity = new GeneralEntity({
     uid: "catalog-entity",
     name: "Catalog",
     source: "app",
-    labels: {}
+    labels: {},
   },
   spec: {
     path: catalogURL(),
     icon: {
       material: "view_list",
-      background: "#3d90ce"
-    }
+      background: "#3d90ce",
+    },
   },
   status: {
     phase: "active",
-  }
+  },
 });
 
 const preferencesEntity = new GeneralEntity({
@@ -48,18 +48,18 @@ const preferencesEntity = new GeneralEntity({
     uid: "preferences-entity",
     name: "Preferences",
     source: "app",
-    labels: {}
+    labels: {},
   },
   spec: {
     path: preferencesURL(),
     icon: {
       material: "settings",
-      background: "#3d90ce"
-    }
+      background: "#3d90ce",
+    },
   },
   status: {
     phase: "active",
-  }
+  },
 });
 
 const welcomePageEntity = new GeneralEntity({
@@ -67,24 +67,24 @@ const welcomePageEntity = new GeneralEntity({
     uid: "welcome-page-entity",
     name: "Welcome Page",
     source: "app",
-    labels: {}
+    labels: {},
   },
   spec: {
     path: welcomeURL(),
     icon: {
       material: "meeting_room",
-      background: "#3d90ce"
-    }
+      background: "#3d90ce",
+    },
   },
   status: {
     phase: "active",
-  }
+  },
 });
 
 const generalEntities = observable([
   catalogEntity,
   preferencesEntity,
-  welcomePageEntity
+  welcomePageEntity,
 ]);
 
 export function syncGeneralEntities() {

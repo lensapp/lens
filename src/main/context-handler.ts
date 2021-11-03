@@ -90,7 +90,7 @@ export class ContextHandler {
     const proxyConfig = await this.cluster.getProxyKubeconfig();
     const apiClient = proxyConfig.makeApiClient(CoreV1Api);
     const potentialServices = await Promise.allSettled(
-      providers.map(provider => provider.getPrometheusService(apiClient))
+      providers.map(provider => provider.getPrometheusService(apiClient)),
     );
 
     for (const result of potentialServices) {

@@ -149,6 +149,6 @@ export function openServiceAccountKubeConfig(account: ServiceAccount) {
 
   KubeConfigDialog.open({
     title: `${accountName} kubeconfig`,
-    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`)
+    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`),
   });
 }

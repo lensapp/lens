@@ -62,7 +62,7 @@ export class PodDetailsList extends React.Component<Props> {
   componentDidMount() {
     this.metricsWatcher.start(true);
     disposeOnUnmount(this, [
-      reaction(() => this.props.owner, () => this.metricsWatcher.restart(true))
+      reaction(() => this.props.owner, () => this.metricsWatcher.restart(true)),
     ]);
   }
 

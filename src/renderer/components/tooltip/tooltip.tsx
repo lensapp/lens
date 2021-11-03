@@ -238,7 +238,7 @@ export class Tooltip extends React.Component<TooltipProps> {
     );
 
     if (usePortal) {
-      return createPortal(tooltip, document.body,);
+      return createPortal(tooltip, document.body);
     }
 
     return tooltip;

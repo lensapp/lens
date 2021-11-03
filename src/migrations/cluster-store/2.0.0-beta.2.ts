@@ -36,5 +36,5 @@ export default {
       if (contextName === "__internal__" || value[1].hasOwnProperty("kubeConfig")) continue;
       store.set(contextName, { kubeConfig: value[1] });
     }
-  }
+  },
 } as MigrationDeclaration;

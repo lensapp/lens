@@ -40,23 +40,23 @@ export const ClusterMetrics = observer(() => {
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
   const data = metricValues.map(value => ({
     x: value[0],
-    y: parseFloat(value[1]).toFixed(3)
+    y: parseFloat(value[1]).toFixed(3),
   }));
 
   const datasets = [{
     id: metricType + metricNodeRole,
     label: `${metricType.toUpperCase()} usage`,
     borderColor: colors[metricType],
-    data
+    data,
   }];
   const cpuOptions: ChartOptions = {
     scales: {
       yAxes: [{
         ticks: {
           suggestedMax: cpuCapacity,
-          callback: (value) => value
-        }
-      }]
+          callback: (value) => value,
+        },
+      }],
     },
     tooltips: {
       callbacks: {
@@ -64,18 +64,18 @@ export const ClusterMetrics = observer(() => {
           const value = data.datasets[0].data[index] as ChartPoint;
 
           return value.y.toString();
-        }
-      }
-    }
+        },
+      },
+    },
   };
   const memoryOptions: ChartOptions = {
     scales: {
       yAxes: [{
         ticks: {
           suggestedMax: memoryCapacity,
-          callback: (value: string) => !value ? 0 : bytesToUnits(parseInt(value))
-        }
-      }]
+          callback: (value: string) => !value ? 0 : bytesToUnits(parseInt(value)),
+        },
+      }],
     },
     tooltips: {
       callbacks: {
@@ -83,9 +83,9 @@ export const ClusterMetrics = observer(() => {
           const value = data.datasets[0].data[index] as ChartPoint;
 
           return bytesToUnits(parseInt(value.y as string), 3);
-        }
-      }
-    }
+        },
+      },
+    },
   };
   const options = metricType === MetricType.CPU ? cpuOptions : memoryOptions;
 

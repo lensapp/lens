@@ -32,6 +32,6 @@ const anyKubeconfig = /^kubeconfig$/i;
 export function clearKubeconfigEnvVars(env: Record<string, any>): Record<string, any> {
   return Object.fromEntries(
     Object.entries(env)
-      .filter(([key]) => anyKubeconfig.exec(key) === null)
+      .filter(([key]) => anyKubeconfig.exec(key) === null),
   );
 }

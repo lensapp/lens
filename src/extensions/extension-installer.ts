@@ -54,7 +54,7 @@ export class ExtensionInstaller {
     try {
       // Write the package.json which will be installed in .installDependencies()
       await fs.writeFile(path.join(packageJsonPath), JSON.stringify(packagesJson, null, 2), {
-        mode: 0o600
+        mode: 0o600,
       });
 
       logger.info(`${logModule} installing dependencies at ${extensionPackagesRoot()}`);
@@ -86,7 +86,7 @@ export class ExtensionInstaller {
       const child = child_process.fork(this.npmPath, args, {
         cwd: extensionPackagesRoot(),
         silent: true,
-        env: {}
+        env: {},
       });
       let stderr = "";
 

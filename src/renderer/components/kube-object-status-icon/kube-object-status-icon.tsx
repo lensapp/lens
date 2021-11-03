@@ -124,7 +124,7 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
               {this.renderStatuses(warnings, KubeObjectStatusLevel.WARNING)}
               {this.renderStatuses(infos, KubeObjectStatusLevel.INFO)}
             </div>
-          )
+          ),
         }}
       />
     );

@@ -35,7 +35,7 @@ describe("tuple tests", () => {
 
       expect(i.next()).toEqual({
         done: false,
-        value: [1, 2]
+        value: [1, 2],
       });
       expect(i.next()).toEqual({
         done: true,
@@ -48,7 +48,7 @@ describe("tuple tests", () => {
 
       expect(i.next()).toEqual({
         done: false,
-        value: [1, 2]
+        value: [1, 2],
       });
       expect(i.next()).toEqual({
         done: true,

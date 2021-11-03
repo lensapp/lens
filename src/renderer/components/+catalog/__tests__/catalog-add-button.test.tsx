@@ -35,8 +35,8 @@ class TestCatalogCategory extends CatalogCategory {
     group: "entity.k8slens.dev",
     versions: [],
     names: {
-      kind: "Test"
-    }
+      kind: "Test",
+    },
   };
 }
 
@@ -49,8 +49,8 @@ describe("CatalogAddButton", () => {
         {
           icon: "text_snippet",
           title: "Add from kubeconfig",
-          onClick: () => {}
-        }
+          onClick: () => {},
+        },
       );
     });
 
@@ -68,15 +68,15 @@ describe("CatalogAddButton", () => {
         {
           icon: "text_snippet",
           title: "foobar",
-          onClick: () => {}
-        }
+          onClick: () => {},
+        },
       );
       ctx.menuItems.push(
         {
           icon: "text_snippet",
           title: "Add from kubeconfig",
-          onClick: () => {}
-        }
+          onClick: () => {},
+        },
       );
     });
 

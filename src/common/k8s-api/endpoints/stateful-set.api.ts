@@ -42,14 +42,14 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
     return this.request.patch(this.getScaleApiUrl(params), {
       data: {
         spec: {
-          replicas
-        }
-      }
+          replicas,
+        },
+      },
     },
     {
       headers: {
-        "content-type": "application/merge-patch+json"
-      }
+        "content-type": "application/merge-patch+json",
+      },
     });
   }
 }
@@ -162,5 +162,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  statefulSetApi
+  statefulSetApi,
 };

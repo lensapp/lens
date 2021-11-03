@@ -111,5 +111,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  persistentVolumeApi
+  persistentVolumeApi,
 };

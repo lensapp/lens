@@ -56,7 +56,7 @@ if (ipcMain) {
           },
         }),
       ),
-    })
+    }),
   );
 
   if (!isTestEnv) {
@@ -73,7 +73,7 @@ if (ipcMain) {
         maxsize: 16 * 1024,
         maxFiles: 16,
         tailable: true,
-      })
+      }),
     );
   }
 } else {

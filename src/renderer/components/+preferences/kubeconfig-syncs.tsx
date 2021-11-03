@@ -97,7 +97,7 @@ export class KubeconfigSyncs extends React.Component {
     disposeOnUnmount(this, [
       reaction(() => Array.from(this.syncs.entries(), ([filePath, { data }]) => [filePath, data]), syncs => {
         UserStore.getInstance().syncKubeconfigEntries.replace(syncs);
-      })
+      }),
     ]);
   }
 

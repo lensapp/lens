@@ -38,7 +38,7 @@ interface Props extends ChartProps {
 
 const defaultProps: Partial<Props> = {
   timeLabelStep: 10,
-  plugins: [ZebraStripes]
+  plugins: [ZebraStripes],
 };
 
 @observer
@@ -66,9 +66,9 @@ export class BarChart extends React.Component<Props> {
             borderWidth: { top: 3 },
             barPercentage: 1,
             categoryPercentage: 1,
-            ...item
+            ...item,
           };
-        })
+        }),
     };
 
     if (chartData.datasets.length == 0) {
@@ -104,16 +104,16 @@ export class BarChart extends React.Component<Props> {
             fontColor: textColorPrimary,
             fontSize: 11,
             maxRotation: 0,
-            minRotation: 0
+            minRotation: 0,
           },
           bounds: "data",
           time: {
             unit: "minute",
             displayFormats: {
-              minute: "x"
+              minute: "x",
             },
-            parser: timestamp => moment.unix(parseInt(timestamp))
-          }
+            parser: timestamp => moment.unix(parseInt(timestamp)),
+          },
         }],
         yAxes: [{
           position: "right",
@@ -121,16 +121,16 @@ export class BarChart extends React.Component<Props> {
             color: borderFaintColor,
             drawBorder: false,
             tickMarkLength: 0,
-            zeroLineWidth: 0
+            zeroLineWidth: 0,
           },
           ticks: {
             maxTicksLimit: 6,
             fontColor: textColorPrimary,
             fontSize: 11,
             padding: 8,
-            min: 0
-          }
-        }]
+            min: 0,
+          },
+        }],
       },
       tooltips: {
         mode: "index",
@@ -147,25 +147,25 @@ export class BarChart extends React.Component<Props> {
           labelColor: ({ datasetIndex }) => {
             return {
               borderColor: "darkgray",
-              backgroundColor: chartData.datasets[datasetIndex].borderColor as string
+              backgroundColor: chartData.datasets[datasetIndex].borderColor as string,
             };
-          }
-        }
+          },
+        },
       },
       animation: {
-        duration: 0
+        duration: 0,
       },
       elements: {
         rectangle: {
-          backgroundColor: getBarColor.bind(null)
-        }
+          backgroundColor: getBarColor.bind(null),
+        },
       },
       plugins: {
         ZebraStripes: {
           stripeColor: chartStripesColor,
-          interval: chartData.datasets[0].data.length
-        }
-      }
+          interval: chartData.datasets[0].data.length,
+        },
+      },
     };
     const options = merge(barOptions, customOptions);
 
@@ -200,9 +200,9 @@ export const memoryOptions: ChartOptions = {
 
           return bytesToUnits(value);
         },
-        stepSize: 1
-      }
-    }]
+        stepSize: 1,
+      },
+    }],
   },
   tooltips: {
     callbacks: {
@@ -211,9 +211,9 @@ export const memoryOptions: ChartOptions = {
         const value = data[index] as ChartPoint;
 
         return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 // Default options for all charts with cpu units or other decimal numbers
@@ -229,9 +229,9 @@ export const cpuOptions: ChartOptions = {
           if (float < 100) return float.toFixed(2);
 
           return float.toFixed(1);
-        }
-      }
-    }]
+        },
+      },
+    }],
   },
   tooltips: {
     callbacks: {
@@ -240,7 +240,7 @@ export const cpuOptions: ChartOptions = {
         const value = data[index] as ChartPoint;
 
         return `${label}: ${parseFloat(value.y as string).toPrecision(2)}`;
-      }
-    }
-  }
+      },
+    },
+  },
 };

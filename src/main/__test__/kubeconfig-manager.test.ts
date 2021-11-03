@@ -43,7 +43,7 @@ jest.mock("winston", () => ({
   transports: {
     Console: jest.fn(),
     File: jest.fn(),
-  }
+  },
 }));
 
 import { KubeconfigManager } from "../kubeconfig-manager";
@@ -102,7 +102,7 @@ describe("kubeconfig manager tests", () => {
         }],
         kind: "Config",
         preferences: {},
-      })
+      }),
     };
 
     mockFs(mockOpts);

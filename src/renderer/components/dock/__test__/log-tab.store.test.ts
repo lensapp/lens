@@ -74,7 +74,7 @@ describe("log tab store", () => {
 
     logTabStore.createPodTab({
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
 
     expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
@@ -82,7 +82,7 @@ describe("log tab store", () => {
       selectedPod,
       selectedContainer,
       showTimestamps: false,
-      previous: false
+      previous: false,
     });
   });
 
@@ -93,7 +93,7 @@ describe("log tab store", () => {
 
     logTabStore.createPodTab({
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
 
     expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
@@ -101,7 +101,7 @@ describe("log tab store", () => {
       selectedPod,
       selectedContainer,
       showTimestamps: false,
-      previous: false
+      previous: false,
     });
   });
 
@@ -111,7 +111,7 @@ describe("log tab store", () => {
 
     logTabStore.createPodTab({
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
 
     podsStore.items.pop();
@@ -121,7 +121,7 @@ describe("log tab store", () => {
       selectedPod,
       selectedContainer,
       showTimestamps: false,
-      previous: false
+      previous: false,
     });
   });
 
@@ -131,7 +131,7 @@ describe("log tab store", () => {
 
     logTabStore.createPodTab({
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
 
     podsStore.items.push(new Pod(deploymentPod3));
@@ -141,7 +141,7 @@ describe("log tab store", () => {
       selectedPod,
       selectedContainer,
       showTimestamps: false,
-      previous: false
+      previous: false,
     });
   });
 
@@ -152,7 +152,7 @@ describe("log tab store", () => {
 
     const id = logTabStore.createPodTab({
       selectedPod,
-      selectedContainer
+      selectedContainer,
     });
 
     podsStore.items.clear();

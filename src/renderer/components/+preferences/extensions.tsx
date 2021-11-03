@@ -31,7 +31,7 @@ export const Extensions = observer(() => {
     <section id="extensions">
       <h2>Extensions</h2>
       {extensions.filter(e => !e.showInPreferencesTab).map((extension) =>
-        <ExtensionSettings key={extension.id} {...extension}/>
+        <ExtensionSettings key={extension.id} {...extension}/>,
       )}
     </section>
   );

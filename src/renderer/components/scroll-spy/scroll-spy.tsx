@@ -71,7 +71,7 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
         parentId,
         name,
         selected,
-        children: getNavigation(section)
+        children: getNavigation(section),
       });
     });
 
@@ -87,7 +87,7 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   const observeSections = () => {
     const options: IntersectionObserverInit = {
       root: document.getElementById(htmlFor) || getSectionsParentElement(),
-      rootMargin
+      rootMargin,
     };
 
     sections.current.forEach((section) => {

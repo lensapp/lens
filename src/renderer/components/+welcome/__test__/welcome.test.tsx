@@ -35,7 +35,7 @@ jest.mock(
     app: {
       getPath: () => "tmp",
     },
-  })
+  }),
 );
 
 describe("<Welcome/>", () => {
@@ -56,8 +56,8 @@ describe("<Welcome/>", () => {
 
     WelcomeBannerRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       {
-        Banner: () => <div data-testid={testId} />
-      }
+        Banner: () => <div data-testid={testId} />,
+      },
     ]);
 
     const { container } = render(<Welcome />);
@@ -70,12 +70,12 @@ describe("<Welcome/>", () => {
     WelcomeBannerRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       {
         width: 100,
-        Banner: () => <div />
+        Banner: () => <div />,
       },
       {
         width: 800,
-        Banner: () => <div />
-      }
+        Banner: () => <div />,
+      },
     ]);
 
     render(<Welcome />);
@@ -85,10 +85,10 @@ describe("<Welcome/>", () => {
       width: `800px`,
     });
     expect(screen.queryByTestId("welcome-text-container")).toHaveStyle({
-      width: `${defaultWidth}px`
+      width: `${defaultWidth}px`,
     });
     expect(screen.queryByTestId("welcome-menu-container")).toHaveStyle({
-      width: `${defaultWidth}px`
+      width: `${defaultWidth}px`,
     });
   });
 });

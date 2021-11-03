@@ -47,7 +47,7 @@ export class Stepper extends React.Component<StepperProps, {}> {
           const isLast = i === stepsCount - 1;
           const stepClass = {
             done: stepNumber < step,
-            active: stepNumber === step
+            active: stepNumber === step,
           };
 
           return (

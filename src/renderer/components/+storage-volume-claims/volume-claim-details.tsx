@@ -80,7 +80,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const { metrics } = this;
     const pods = volumeClaim.getPods(podsStore.items);
     const metricTabs = [
-      "Disk"
+      "Disk",
     ];
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.VolumeClaim);
 

@@ -63,7 +63,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
         ok: () => {
           menuItem.onClick();
         },
-        message: menuItem.confirm.message
+        message: menuItem.confirm.message,
       });
     } else {
       menuItem.onClick();
@@ -90,7 +90,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
             tooltip={menuItem.title}
             {...{ [key]: menuItem.icon }}
           />
-        </MenuItem>
+        </MenuItem>,
       );
     }
 
@@ -100,7 +100,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
         entity={entity}
         addContent={<Icon material="push_pin" small tooltip="Add to Hotbar"/>}
         removeContent={<Icon svg="push_off" small tooltip="Remove from Hotbar"/>}
-      />
+      />,
     );
 
     return items;

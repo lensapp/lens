@@ -35,9 +35,9 @@ jest.mock("../extensions-store", () => ({
   ExtensionsStore: {
     getInstance: () => ({
       whenLoaded: Promise.resolve(true),
-      mergeState: jest.fn()
-    })
-  }
+      mergeState: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock(
@@ -118,13 +118,13 @@ jest.mock(
               ]);
             }, 10);
           }
-        }
+        },
       ),
     },
   }),
   {
     virtual: true,
-  }
+  },
 );
 
 describe("ExtensionLoader", () => {
@@ -189,11 +189,11 @@ describe("ExtensionLoader", () => {
     expect(ExtensionsStore.getInstance().mergeState).toHaveBeenCalledWith({
       "manifest/path": {
         enabled: false,
-        name: "TestExtension"
+        name: "TestExtension",
       },
       "manifest/path2": {
         enabled: true,
-        name: "TestExtension2"
+        name: "TestExtension2",
       }});
   });
 });

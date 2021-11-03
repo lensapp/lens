@@ -33,7 +33,7 @@ interface Props extends UseTableOptions<any> {
   title?: React.ReactNode;
 }
 
-export function List({ columns, data, title, items, filters, }: Props) {
+export function List({ columns, data, title, items, filters }: Props) {
   const [search, setSearch] = useState<string>("");
   const query = search.toLowerCase();
 

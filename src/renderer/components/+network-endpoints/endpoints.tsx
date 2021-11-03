@@ -53,7 +53,7 @@ export class Endpoints extends React.Component<Props> {
           [columnId.age]: endpoint => endpoint.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          endpoint => endpoint.getSearchFields()
+          endpoint => endpoint.getSearchFields(),
         ]}
         renderHeaderTitle="Endpoints"
         renderTableHeader={[
@@ -75,7 +75,7 @@ export class Endpoints extends React.Component<Props> {
             const lines = item.getEndpointSubsets().length || 1;
 
             return lines * lineHeight + paddings;
-          }
+          },
         }}
       />
     );

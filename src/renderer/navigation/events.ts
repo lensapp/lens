@@ -56,7 +56,7 @@ function bindClusterManagerRouteEvents() {
   reaction(() => getMatchedClusterId(), clusterId => {
     broadcastMessage(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, clusterId);
   }, {
-    fireImmediately: true
+    fireImmediately: true,
   });
 
   // Handle navigation via IPC

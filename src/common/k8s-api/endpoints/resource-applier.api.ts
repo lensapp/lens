@@ -25,7 +25,7 @@ import { apiBase } from "../index";
 import type { Patch } from "rfc6902";
 
 export const annotations = [
-  "kubectl.kubernetes.io/last-applied-configuration"
+  "kubectl.kubernetes.io/last-applied-configuration",
 ];
 
 export async function update(resource: object | string): Promise<KubeJsonApiData> {

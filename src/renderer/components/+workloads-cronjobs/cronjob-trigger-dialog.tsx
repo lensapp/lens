@@ -87,7 +87,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     try {
       const cronjobDefinition = await cronJobApi.get({
         name: cronjob.getName(),
-        namespace: cronjob.getNs()
+        namespace: cronjob.getNs(),
       });
 
       await jobApi.create({
@@ -104,7 +104,7 @@ export class CronJobTriggerDialog extends Component<Props> {
             name: cronjob.metadata.name,
             uid: cronjob.metadata.uid,
           }],
-        } as KubeObjectMetadata
+        } as KubeObjectMetadata,
       });
 
       close();
