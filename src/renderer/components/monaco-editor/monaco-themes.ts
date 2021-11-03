@@ -21,7 +21,7 @@
 
 // Monaco editor themes customization
 import { editor } from "monaco-editor";
-import cloudsMidnight from "./monaco-theme.clouds-midnight.json";
+import cloudsMidnight from "./monaco-themes/clouds-midnight.json";
 
 export type MonacoTheme = "vs" | "vs-dark" | "hc-black" | MonacoCustomTheme;
 export type MonacoCustomTheme = "clouds-midnight";
@@ -42,5 +42,5 @@ export function registerCustomThemes(): void {
 }
 
 export async function loadCustomTheme(name: string): Promise<MonacoThemeData> {
-  return import(`./monaco-theme.${name}.json`);
+  return import(`./monaco-themes/${name}.json`);
 }
