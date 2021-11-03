@@ -54,7 +54,7 @@ export const defaultEditorProps: Partial<MonacoEditorProps> = {
   get theme(): MonacoTheme {
     // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
     return ThemeStore.getInstance().activeTheme.monacoTheme;
-  }
+  },
 };
 
 @observer
@@ -104,7 +104,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
   @computed get options(): editor.IStandaloneEditorConstructionOptions {
     return merge({},
       UserStore.getInstance().editorConfiguration,
-      this.props.options
+      this.props.options,
     );
   }
 

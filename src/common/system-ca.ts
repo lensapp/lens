@@ -66,7 +66,7 @@ export function getWinRootCA(): Promise<string[]> {
       },
       onend: () => {
         resolve(CAs.filter(isCertActive));
-      }
+      },
     });
   });
 }
