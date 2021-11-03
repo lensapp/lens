@@ -38,7 +38,7 @@ export class PageFiltersList extends React.Component<Props> {
   static defaultProps: Props = {
     get filters() {
       return pageFilters.activeFilters;
-    }
+    },
   };
 
   reset = () => pageFilters.reset();

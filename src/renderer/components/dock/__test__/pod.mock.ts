@@ -27,7 +27,7 @@ export const dockerPod = {
     name: "dockerExporter",
     creationTimestamp: "dummy",
     resourceVersion: "dummy",
-    namespace: "default"
+    namespace: "default",
   },
   spec: {
     initContainers: [] as any,
@@ -35,8 +35,8 @@ export const dockerPod = {
       {
         name: "docker-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
+        imagePullPolicy: "pull",
+      },
     ],
     serviceAccountName: "dummy",
     serviceAccount: "dummy",
@@ -52,7 +52,7 @@ export const dockerPod = {
     hostIP: "dummy",
     podIP: "dummy",
     startTime: "dummy",
-  }
+  },
 };
 
 export const deploymentPod1 = {
@@ -71,32 +71,32 @@ export const deploymentPod1 = {
       uid: "uuid",
       controller: true,
       blockOwnerDeletion: true,
-    }]
+    }],
   },
   spec: {
     initContainers: [
       {
         name: "init-node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
+        imagePullPolicy: "pull",
       },
       {
         name: "init-node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
+        imagePullPolicy: "pull",
+      },
     ],
     containers: [
       {
         name: "node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
+        imagePullPolicy: "pull",
       },
       {
         name: "node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
+        imagePullPolicy: "pull",
+      },
     ],
     serviceAccountName: "dummy",
     serviceAccount: "dummy",
@@ -112,7 +112,7 @@ export const deploymentPod1 = {
     hostIP: "dummy",
     podIP: "dummy",
     startTime: "dummy",
-  }
+  },
 };
 
 export const deploymentPod2 = {
@@ -131,32 +131,32 @@ export const deploymentPod2 = {
       uid: "uuid",
       controller: true,
       blockOwnerDeletion: true,
-    }]
+    }],
   },
   spec: {
     initContainers: [
       {
         name: "init-node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
+        imagePullPolicy: "pull",
       },
       {
         name: "init-node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
+        imagePullPolicy: "pull",
+      },
     ],
     containers: [
       {
         name: "node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
+        imagePullPolicy: "pull",
       },
       {
         name: "node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
+        imagePullPolicy: "pull",
+      },
     ],
     serviceAccountName: "dummy",
     serviceAccount: "dummy",
@@ -172,7 +172,7 @@ export const deploymentPod2 = {
     hostIP: "dummy",
     podIP: "dummy",
     startTime: "dummy",
-  }
+  },
 };
 
 export const deploymentPod3 = {
@@ -191,20 +191,20 @@ export const deploymentPod3 = {
       uid: "uuid",
       controller: true,
       blockOwnerDeletion: true,
-    }]
+    }],
   },
   spec: {
     containers: [
       {
         name: "node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
+        imagePullPolicy: "pull",
       },
       {
         name: "node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
+        imagePullPolicy: "pull",
+      },
     ],
     serviceAccountName: "dummy",
     serviceAccount: "dummy",
@@ -220,5 +220,5 @@ export const deploymentPod3 = {
     hostIP: "dummy",
     podIP: "dummy",
     startTime: "dummy",
-  }
+  },
 };

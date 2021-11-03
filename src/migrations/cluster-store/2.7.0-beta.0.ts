@@ -34,5 +34,5 @@ export default {
       cluster.workspace = "default";
       store.set(clusterKey, cluster);
     }
-  }
+  },
 } as MigrationDeclaration;

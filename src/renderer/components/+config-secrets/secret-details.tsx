@@ -59,7 +59,7 @@ export class SecretDetails extends React.Component<Props> {
           this.data = secret.data;
           this.revealSecret.clear();
         }
-      })
+      }),
     ]);
   }
 

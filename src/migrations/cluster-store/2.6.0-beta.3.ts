@@ -58,12 +58,12 @@ export default {
           user["auth-provider"].config = authConfig;
           kubeConfig.users = [{
             name: userObj.name,
-            user
+            user,
           }];
           cluster.kubeConfig = yaml.dump(kubeConfig);
           store.set(clusterKey, cluster);
         }
       }
     }
-  }
+  },
 } as MigrationDeclaration;

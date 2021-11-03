@@ -41,7 +41,7 @@ export function bindProtocolAddRouteHandlers() {
           <p>
             Unknown Action for <code>lens://app/{tail}</code>.{" "}
             Are you on the latest version?
-          </p>
+          </p>,
         );
       }
 
@@ -50,60 +50,60 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/landing", () => {
       navigate(routes.catalogURL());
     })
-    .addInternalHandler("/landing/view/:group/:kind", ({ pathname: { group, kind } }) => {
+    .addInternalHandler("/landing/view/:group/:kind", ({ pathname: { group, kind }}) => {
       navigate(routes.catalogURL({
         params: {
-          group, kind
-        }
+          group, kind,
+        },
       }));
     })
     .addInternalHandler("/cluster", () => {
       navigate(routes.addClusterURL());
     })
-    .addInternalHandler("/entity/:entityId/settings", ({ pathname: { entityId } }) => {
+    .addInternalHandler("/entity/:entityId/settings", ({ pathname: { entityId }}) => {
       const entity = catalogEntityRegistry.getById(entityId);
 
       if (entity) {
-        navigate(routes.entitySettingsURL({ params: { entityId } }));
+        navigate(routes.entitySettingsURL({ params: { entityId }}));
       } else {
         Notifications.shortInfo(
           <p>
             Unknown catalog entity <code>{entityId}</code>.
-          </p>
+          </p>,
         );
       }
     })
     // Handlers below are deprecated and only kept for backward compact purposes
-    .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId } }) => {
+    .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId }}) => {
       const cluster = ClusterStore.getInstance().getById(clusterId);
 
       if (cluster) {
-        navigate(routes.clusterViewURL({ params: { clusterId } }));
+        navigate(routes.clusterViewURL({ params: { clusterId }}));
       } else {
         Notifications.shortInfo(
           <p>
             Unknown catalog entity <code>{clusterId}</code>.
-          </p>
+          </p>,
         );
       }
     })
-    .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId } }) => {
+    .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId }}) => {
       const cluster = ClusterStore.getInstance().getById(clusterId);
 
       if (cluster) {
-        navigate(routes.entitySettingsURL({ params: { entityId: clusterId } }));
+        navigate(routes.entitySettingsURL({ params: { entityId: clusterId }}));
       } else {
         Notifications.shortInfo(
           <p>
             Unknown catalog entity <code>{clusterId}</code>.
-          </p>
+          </p>,
         );
       }
     })
     .addInternalHandler("/extensions", () => {
       navigate(routes.extensionsURL());
     })
-    .addInternalHandler(`/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`, ({ pathname, search: { version } }) => {
+    .addInternalHandler(`/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`, ({ pathname, search: { version }}) => {
       const name = [
         pathname[EXTENSION_PUBLISHER_MATCH],
         pathname[EXTENSION_NAME_MATCH],

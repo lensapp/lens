@@ -30,86 +30,86 @@ export class DistributionDetector extends BaseClusterDetector {
     this.version = await this.getKubernetesVersion();
 
     if (this.isRke()) {
-      return { value: "rke", accuracy: 80};
+      return { value: "rke", accuracy: 80 };
     }
 
     if (this.isRancherDesktop()) {
-      return { value: "rancher-desktop", accuracy: 80};
+      return { value: "rancher-desktop", accuracy: 80 };
     }
 
     if (this.isK3s()) {
-      return { value: "k3s", accuracy: 80};
+      return { value: "k3s", accuracy: 80 };
     }
 
     if (this.isGKE()) {
-      return { value: "gke", accuracy: 80};
+      return { value: "gke", accuracy: 80 };
     }
 
     if (this.isEKS()) {
-      return { value: "eks", accuracy: 80};
+      return { value: "eks", accuracy: 80 };
     }
 
     if (this.isIKS()) {
-      return { value: "iks", accuracy: 80};
+      return { value: "iks", accuracy: 80 };
     }
 
     if (this.isAKS()) {
-      return { value: "aks", accuracy: 80};
+      return { value: "aks", accuracy: 80 };
     }
 
     if (this.isDigitalOcean()) {
-      return { value: "digitalocean", accuracy: 90};
+      return { value: "digitalocean", accuracy: 90 };
     }
 
     if (this.isK0s()) {
-      return { value: "k0s", accuracy: 80};
+      return { value: "k0s", accuracy: 80 };
     }
 
     if (this.isVMWare()) {
-      return { value: "vmware", accuracy: 90};
+      return { value: "vmware", accuracy: 90 };
     }
 
     if (this.isMirantis()) {
-      return { value: "mirantis", accuracy: 90};
+      return { value: "mirantis", accuracy: 90 };
     }
 
     if (this.isAlibaba()) {
-      return { value: "alibaba", accuracy: 90};
+      return { value: "alibaba", accuracy: 90 };
     }
 
     if (this.isHuawei()) {
-      return { value: "huawei", accuracy: 90};
+      return { value: "huawei", accuracy: 90 };
     }
 
     if (this.isTke()) {
-      return { value: "tencent", accuracy: 90};
+      return { value: "tencent", accuracy: 90 };
     }
 
     if (this.isMinikube()) {
-      return { value: "minikube", accuracy: 80};
+      return { value: "minikube", accuracy: 80 };
     }
 
     if (this.isMicrok8s()) {
-      return { value: "microk8s", accuracy: 80};
+      return { value: "microk8s", accuracy: 80 };
     }
 
     if (this.isKind()) {
-      return { value: "kind", accuracy: 70};
+      return { value: "kind", accuracy: 70 };
     }
 
     if (this.isDockerDesktop()) {
-      return { value: "docker-desktop", accuracy: 80};
+      return { value: "docker-desktop", accuracy: 80 };
     }
 
     if (this.isCustom() && await this.isOpenshift()) {
-      return { value: "openshift", accuracy: 90};
+      return { value: "openshift", accuracy: 90 };
     }
 
     if (this.isCustom()) {
-      return { value: "custom", accuracy: 10};
+      return { value: "custom", accuracy: 10 };
     }
 
-    return { value: "unknown", accuracy: 10};
+    return { value: "unknown", accuracy: 10 };
   }
 
   public async getKubernetesVersion() {

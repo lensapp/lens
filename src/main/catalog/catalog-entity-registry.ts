@@ -46,8 +46,8 @@ export class CatalogEntityRegistry {
     return Array.from(
       iter.filter(
         iter.flatMap(this.sources.values(), source => source.get()),
-        entity => this.categoryRegistry.getCategoryForEntity(entity)
-      )
+        entity => this.categoryRegistry.getCategoryForEntity(entity),
+      ),
     );
   }
 

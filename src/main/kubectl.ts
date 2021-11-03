@@ -21,7 +21,7 @@
 
 import path from "path";
 import fs from "fs";
-import { promiseExec } from "./promise-exec";
+import { promiseExec } from "../common/utils/promise-exec";
 import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
@@ -50,7 +50,7 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.18", "1.18.20"],
   ["1.19", "1.19.12"],
   ["1.20", "1.20.8"],
-  ["1.21", bundledVersion]
+  ["1.21", bundledVersion],
 ]);
 let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3\n";
@@ -346,10 +346,10 @@ export class Kubectl {
     bashScript += `export PATH="${helmPath}:${kubectlPath}:$PATH"\n`;
     bashScript += "export KUBECONFIG=\"$tempkubeconfig\"\n";
 
-    bashScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n";
-    bashScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n";
-    bashScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n";
-    bashScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n";
+    bashScript += `NO_PROXY=\",\${NO_PROXY:-localhost},\"\n`;
+    bashScript += `NO_PROXY=\"\${NO_PROXY//,localhost,/,}\"\n`;
+    bashScript += `NO_PROXY=\"\${NO_PROXY//,127.0.0.1,/,}\"\n`;
+    bashScript += `NO_PROXY=\"localhost,127.0.0.1\${NO_PROXY%,}\"\n`;
     bashScript += "export NO_PROXY\n";
     bashScript += "unset tempkubeconfig\n";
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 });
@@ -371,24 +371,26 @@ export class Kubectl {
     zshScript += `helmpath=\"${helmPath}"\n`;
     zshScript += "p=\":$kubectlpath:\"\n";
     zshScript += "d=\":$PATH:\"\n";
-    zshScript += "d=${d//$p/:}\n";
-    zshScript += "d=${d/#:/}\n";
-    zshScript += "export PATH=\"$helmpath:$kubectlpath:${d/%:/}\"\n";
+    zshScript += `d=\${d//$p/:}\n`;
+    zshScript += `d=\${d/#:/}\n`;
+    zshScript += `export PATH=\"$helmpath:$kubectlpath:\${d/%:/}\"\n`;
     zshScript += "export KUBECONFIG=\"$tempkubeconfig\"\n";
-    zshScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n";
-    zshScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n";
-    zshScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n";
-    zshScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n";
+    zshScript += `NO_PROXY=\",\${NO_PROXY:-localhost},\"\n`;
+    zshScript += `NO_PROXY=\"\${NO_PROXY//,localhost,/,}\"\n`;
+    zshScript += `NO_PROXY=\"\${NO_PROXY//,127.0.0.1,/,}\"\n`;
+    zshScript += `NO_PROXY=\"localhost,127.0.0.1\${NO_PROXY%,}\"\n`;
     zshScript += "export NO_PROXY\n";
     zshScript += "unset tempkubeconfig\n";
     zshScript += "unset OLD_ZDOTDIR\n";
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 });
   }
 
-  protected getDownloadMirror() {
+  protected getDownloadMirror(): string {
     // MacOS packages are only available from default
 
-    return packageMirrors.get(UserStore.getInstance().downloadMirror)
+    const mirror = packageMirrors.get(UserStore.getInstance().downloadMirror)
       ?? packageMirrors.get(defaultPackageMirror);
+
+    return mirror.url;
   }
 }

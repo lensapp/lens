@@ -53,7 +53,7 @@ jest.mock("electron", () => ({
 AppPaths.init();
 
 jest.mock("./hotbar-toggle-menu-item", () => ({
-  HotbarToggleMenuItem: () => <div>menu item</div>
+  HotbarToggleMenuItem: () => <div>menu item</div>,
 }));
 
 class MockCatalogEntity extends CatalogEntity {
@@ -146,7 +146,7 @@ describe("<Catalog />", () => {
           expect(onRun).toHaveBeenCalled();
           done();
         }, 500);
-      }
+      },
     );
 
     render(
@@ -155,7 +155,7 @@ describe("<Catalog />", () => {
         location={mockLocation}
         match={mockMatch}
         catalogEntityStore={catalogEntityStore}
-      />
+      />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
@@ -180,7 +180,7 @@ describe("<Catalog />", () => {
           done();
         }, 500);
         e.preventDefault();
-      }
+      },
     );
 
     render(
@@ -189,7 +189,7 @@ describe("<Catalog />", () => {
         location={mockLocation}
         match={mockMatch}
         catalogEntityStore={catalogEntityStore}
-      />
+      />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
@@ -215,7 +215,7 @@ describe("<Catalog />", () => {
         }, 500);
 
         throw new Error("error!");
-      }
+      },
     );
 
     render(
@@ -224,7 +224,7 @@ describe("<Catalog />", () => {
         location={mockLocation}
         match={mockMatch}
         catalogEntityStore={catalogEntityStore}
-      />
+      />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
@@ -245,7 +245,7 @@ describe("<Catalog />", () => {
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
         // no op
-      }
+      },
     );
 
     render(
@@ -254,7 +254,7 @@ describe("<Catalog />", () => {
         location={mockLocation}
         match={mockMatch}
         catalogEntityStore={catalogEntityStore}
-      />
+      />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
@@ -282,7 +282,7 @@ describe("<Catalog />", () => {
         }, 500);
 
         e.preventDefault();
-      }
+      },
     );
 
     render(
@@ -291,7 +291,7 @@ describe("<Catalog />", () => {
         location={mockLocation}
         match={mockMatch}
         catalogEntityStore={catalogEntityStore}
-      />
+      />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
@@ -317,7 +317,7 @@ describe("<Catalog />", () => {
         }, 500);
 
         throw new Error("rejection!");
-      }
+      },
     );
 
     render(
@@ -326,7 +326,7 @@ describe("<Catalog />", () => {
         location={mockLocation}
         match={mockMatch}
         catalogEntityStore={catalogEntityStore}
-      />
+      />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));

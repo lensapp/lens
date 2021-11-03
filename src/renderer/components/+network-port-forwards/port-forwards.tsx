@@ -54,7 +54,7 @@ export class PortForwards extends React.Component<Props> {
   }
 
   get selectedPortForward() {
-    const { match: { params: { forwardport } } } = this.props;
+    const { match: { params: { forwardport }}} = this.props;
 
     return portForwardStore.getById(forwardport);
   }
@@ -71,7 +71,7 @@ export class PortForwards extends React.Component<Props> {
     navigation.push(portForwardsURL({
       params: {
         forwardport: String(item.getForwardPort()),
-      }
+      },
     }));
   };
 
@@ -135,7 +135,7 @@ export class PortForwards extends React.Component<Props> {
             />
           )}
           customizeRemoveDialog={selectedItems => ({
-            message: this.renderRemoveDialogMessage(selectedItems)
+            message: this.renderRemoveDialogMessage(selectedItems),
           })}
           detailsItem={this.selectedPortForward}
           onDetails={this.onDetails}

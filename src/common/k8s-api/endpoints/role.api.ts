@@ -51,5 +51,5 @@ if (isClusterPageContext()) {
 }
 
 export{
-  roleApi
+  roleApi,
 };

@@ -39,121 +39,121 @@ export function initCommandRegistry() {
         id: "app.showPreferences",
         title: "Preferences: Open",
         scope: "global",
-        action: () => navigate(routes.preferencesURL())
+        action: () => navigate(routes.preferencesURL()),
       },
       {
         id: "cluster.viewHelmCharts",
         title: "Cluster: View Helm Charts",
         scope: "entity",
-        action: () => navigate(routes.helmChartsURL())
+        action: () => navigate(routes.helmChartsURL()),
       },
       {
         id: "cluster.viewHelmReleases",
         title: "Cluster: View Helm Releases",
         scope: "entity",
-        action: () => navigate(routes.releaseURL())
+        action: () => navigate(routes.releaseURL()),
       },
       {
         id: "cluster.viewConfigMaps",
         title: "Cluster: View ConfigMaps",
         scope: "entity",
-        action: () => navigate(routes.configMapsURL())
+        action: () => navigate(routes.configMapsURL()),
       },
       {
         id: "cluster.viewSecrets",
         title: "Cluster: View Secrets",
         scope: "entity",
-        action: () => navigate(routes.secretsURL())
+        action: () => navigate(routes.secretsURL()),
       },
       {
         id: "cluster.viewResourceQuotas",
         title: "Cluster: View ResourceQuotas",
         scope: "entity",
-        action: () => navigate(routes.resourceQuotaURL())
+        action: () => navigate(routes.resourceQuotaURL()),
       },
       {
         id: "cluster.viewLimitRanges",
         title: "Cluster: View LimitRanges",
         scope: "entity",
-        action: () => navigate(routes.limitRangeURL())
+        action: () => navigate(routes.limitRangeURL()),
       },
       {
         id: "cluster.viewHorizontalPodAutoscalers",
         title: "Cluster: View HorizontalPodAutoscalers (HPA)",
         scope: "entity",
-        action: () => navigate(routes.hpaURL())
+        action: () => navigate(routes.hpaURL()),
       },
       {
         id: "cluster.viewPodDisruptionBudget",
         title: "Cluster: View PodDisruptionBudgets",
         scope: "entity",
-        action: () => navigate(routes.pdbURL())
+        action: () => navigate(routes.pdbURL()),
       },
       {
         id: "cluster.viewServices",
         title: "Cluster: View Services",
         scope: "entity",
-        action: () => navigate(routes.servicesURL())
+        action: () => navigate(routes.servicesURL()),
       },
       {
         id: "cluster.viewEndpoints",
         title: "Cluster: View Endpoints",
         scope: "entity",
-        action: () => navigate(routes.endpointURL())
+        action: () => navigate(routes.endpointURL()),
       },
       {
         id: "cluster.viewIngresses",
         title: "Cluster: View Ingresses",
         scope: "entity",
-        action: () => navigate(routes.ingressURL())
+        action: () => navigate(routes.ingressURL()),
       },
       {
         id: "cluster.viewNetworkPolicies",
         title: "Cluster: View NetworkPolicies",
         scope: "entity",
-        action: () => navigate(routes.networkPoliciesURL())
+        action: () => navigate(routes.networkPoliciesURL()),
       },
       {
         id: "cluster.viewNodes",
         title: "Cluster: View Nodes",
         scope: "entity",
-        action: () => navigate(routes.nodesURL())
+        action: () => navigate(routes.nodesURL()),
       },
       {
         id: "cluster.viewPods",
         title: "Cluster: View Pods",
         scope: "entity",
-        action: () => navigate(routes.podsURL())
+        action: () => navigate(routes.podsURL()),
       },
       {
         id: "cluster.viewDeployments",
         title: "Cluster: View Deployments",
         scope: "entity",
-        action: () => navigate(routes.deploymentsURL())
+        action: () => navigate(routes.deploymentsURL()),
       },
       {
         id: "cluster.viewDaemonSets",
         title: "Cluster: View DaemonSets",
         scope: "entity",
-        action: () => navigate(routes.daemonSetsURL())
+        action: () => navigate(routes.daemonSetsURL()),
       },
       {
         id: "cluster.viewStatefulSets",
         title: "Cluster: View StatefulSets",
         scope: "entity",
-        action: () => navigate(routes.statefulSetsURL())
+        action: () => navigate(routes.statefulSetsURL()),
       },
       {
         id: "cluster.viewJobs",
         title: "Cluster: View Jobs",
         scope: "entity",
-        action: () => navigate(routes.jobsURL())
+        action: () => navigate(routes.jobsURL()),
       },
       {
         id: "cluster.viewCronJobs",
         title: "Cluster: View CronJobs",
         scope: "entity",
-        action: () => navigate(routes.cronJobsURL())
+        action: () => navigate(routes.cronJobsURL()),
       },
       {
         id: "cluster.viewCurrentClusterSettings",
@@ -162,46 +162,46 @@ export function initCommandRegistry() {
         action: () => navigate(routes.entitySettingsURL({
           params: {
             entityId: getActiveClusterEntity()?.id,
-          }
+          },
         })),
-        isActive: (context) => !!context.entity
+        isActive: (context) => !!context.entity,
       },
       {
         id: "cluster.openTerminal",
         title: "Cluster: Open terminal",
         scope: "entity",
         action: () => createTerminalTab(),
-        isActive: (context) => !!context.entity
+        isActive: (context) => !!context.entity,
       },
       {
         id: "hotbar.switchHotbar",
         title: "Hotbar: Switch ...",
         scope: "global",
-        action: () => CommandOverlay.open(<HotbarSwitchCommand />)
+        action: () => CommandOverlay.open(<HotbarSwitchCommand />),
       },
       {
         id: "hotbar.addHotbar",
         title: "Hotbar: Add Hotbar ...",
         scope: "global",
-        action: () => CommandOverlay.open(<HotbarAddCommand />)
+        action: () => CommandOverlay.open(<HotbarAddCommand />),
       },
       {
         id: "hotbar.removeHotbar",
         title: "Hotbar: Remove Hotbar ...",
         scope: "global",
-        action: () => CommandOverlay.open(<HotbarRemoveCommand />)
+        action: () => CommandOverlay.open(<HotbarRemoveCommand />),
       },
       {
         id: "hotbar.renameHotbar",
         title: "Hotbar: Rename Hotbar ...",
         scope: "global",
-        action: () => CommandOverlay.open(<HotbarRenameCommand />)
+        action: () => CommandOverlay.open(<HotbarRenameCommand />),
       },
       {
         id: "catalog.searchEntities",
         title: "Catalog: Activate Entity ...",
         scope: "global",
-        action: () => CommandOverlay.open(<ActivateEntityCommand />)
+        action: () => CommandOverlay.open(<ActivateEntityCommand />),
       },
     ]);
 }

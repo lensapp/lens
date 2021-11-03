@@ -31,10 +31,10 @@ import path from "path";
 import React from "react";
 import { SemVer } from "semver";
 import URLParse from "url-parse";
-import { Disposer, disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar, } from "../../../common/utils";
+import { Disposer, disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
-import { extensionDisplayName, LensExtensionId, LensExtensionManifest, sanitizeExtensionName, } from "../../../extensions/lens-extension";
+import { extensionDisplayName, LensExtensionId, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import logger from "../../../main/logger";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -121,7 +121,7 @@ async function uninstallExtension(extensionId: LensExtensionId): Promise<boolean
     await when(() => !loader.userExtensions.has(extensionId));
 
     Notifications.ok(
-      <p>Extension <b>{displayName}</b> successfully uninstalled!</p>
+      <p>Extension <b>{displayName}</b> successfully uninstalled!</p>,
     );
 
     return true;
@@ -238,7 +238,7 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): 
       <div className="flex column gaps">
         <p>Installing <em>{fileName}</em> has failed, skipping.</p>
         <p>Reason: <em>{message}</em></p>
-      </div>
+      </div>,
     );
   }
 
@@ -246,7 +246,7 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): 
 }
 
 async function unpackExtension(request: InstallRequestValidated, disposeDownloading?: Disposer) {
-  const { id, fileName, tempFile, manifest: { name, version } } = request;
+  const { id, fileName, tempFile, manifest: { name, version }} = request;
 
   ExtensionInstallationStateStore.setInstalling(id);
   disposeDownloading?.();
@@ -283,7 +283,7 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
     ExtensionLoader.getInstance().setIsEnabled(id, true);
 
     Notifications.ok(
-      <p>Extension <b>{displayName}</b> successfully installed!</p>
+      <p>Extension <b>{displayName}</b> successfully installed!</p>,
     );
   } catch (error) {
     const message = getMessageFromError(error);
@@ -375,7 +375,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
         <b>Extension Install Collision:</b>
         <p>The <em>{name}</em> extension is currently {curState.toLowerCase()}.</p>
         <p>Will not proceed with this current install request.</p>
-      </div>
+      </div>,
     );
   }
 
@@ -386,7 +386,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
     // install extension if not yet exists
     await unpackExtension(validatedRequest, dispose);
   } else {
-    const { manifest: { version: oldVersion } } = ExtensionLoader.getInstance().getExtension(validatedRequest.id);
+    const { manifest: { version: oldVersion }} = ExtensionLoader.getInstance().getExtension(validatedRequest.id);
 
     // otherwise confirmation required (re-install / update)
     const removeNotification = Notifications.info(
@@ -410,7 +410,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
       </div>,
       {
         onClose: dispose,
-      }
+      },
     );
   }
 }
@@ -451,7 +451,7 @@ async function installFromInput(input: string) {
 
       await attemptInstall({ fileName, dataP: readFileNotify(input) });
     } else if (InputValidators.isExtensionNameInstall.validate(input)) {
-      const [{ groups: { name, version } }] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
+      const [{ groups: { name, version }}] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
 
       await attemptInstallByInfo({ name, version });
     }
@@ -474,8 +474,8 @@ async function installFromSelectFileDialog() {
     message: `Select extensions to install (formats: ${supportedFormats.join(", ")}), `,
     buttonLabel: "Use configuration",
     filters: [
-      { name: "tarball", extensions: supportedFormats }
-    ]
+      { name: "tarball", extensions: supportedFormats },
+    ],
   });
 
   if (!canceled) {
@@ -503,7 +503,7 @@ export class Extensions extends React.Component<Props> {
             when(() => !ExtensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
           ]);
         }
-      })
+      }),
     ]);
   }
 

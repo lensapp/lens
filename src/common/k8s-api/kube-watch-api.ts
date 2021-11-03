@@ -82,7 +82,7 @@ export class KubeWatchApi {
   }
 
   subscribeStores(stores: KubeObjectStore<KubeObject>[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
-    const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
+    const { preload = true, waitUntilLoaded = true, loadOnce = false } = opts;
     const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
     const unsubscribeList: Function[] = [];
     let isUnsubscribed = false;
@@ -134,7 +134,7 @@ export class KubeWatchApi {
     };
   }
 
-  protected log({ message, cssStyle = "", meta = {} }: IKubeWatchLog) {
+  protected log({ message, cssStyle = "", meta = {}}: IKubeWatchLog) {
     if (isProduction && !isDebugging) {
       return;
     }

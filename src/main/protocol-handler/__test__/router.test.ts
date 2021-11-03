@@ -60,7 +60,7 @@ function throwIfDefined(val: any): void {
 describe("protocol router tests", () => {
   beforeEach(() => {
     mockFs({
-      "tmp": {}
+      "tmp": {},
     });
     ExtensionsStore.createInstance();
     ExtensionLoader.createInstance();

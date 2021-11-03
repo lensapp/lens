@@ -47,7 +47,7 @@ class KubectlDownloader {
     const response = await requestPromise({
       method: "HEAD",
       uri: this.url,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     }).catch(console.error);
 
     if (response.headers["etag"]) {
@@ -89,7 +89,7 @@ class KubectlDownloader {
     console.log(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: this.url,
-      gzip: true
+      gzip: true,
     };
     const stream = request(requestOpts);
 

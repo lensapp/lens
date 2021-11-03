@@ -43,7 +43,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   constructor() {
     super({
-      storageKey: "chart_releases"
+      storageKey: "chart_releases",
     });
 
     makeObservable(this);
@@ -108,7 +108,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
     await Promise.all([
       !releaseStore.isLoaded && releaseStore.loadFromContextNamespaces(),
-      !values && this.loadValues(tabId)
+      !values && this.loadValues(tabId),
     ]);
   }
 
@@ -146,7 +146,7 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: DockTabCr
 
     upgradeChartStore.setData(tab.id, {
       releaseName: release.getName(),
-      releaseNamespace: release.getNs()
+      releaseNamespace: release.getNs(),
     });
   }
 

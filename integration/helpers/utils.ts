@@ -69,7 +69,7 @@ export async function start() {
     bypassCSP: true,
     env: {
       CICD,
-      ...process.env
+      ...process.env,
     },
     timeout: 100_000,
   } as Parameters<typeof electron["launch"]>[0]);

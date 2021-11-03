@@ -66,7 +66,7 @@ export interface RegisteredPage {
 }
 
 export function getExtensionPageUrl(target: PageTarget): string {
-  const { extensionId, pageId = "", params: targetParams = {} } = target;
+  const { extensionId, pageId = "", params: targetParams = {}} = target;
 
   const pagePath = ["/extension", sanitizeExtensionName(extensionId), pageId]
     .filter(Boolean)
@@ -137,7 +137,7 @@ class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
         if (notAStringValue && !(parse || stringify)) {
           throw new Error(
             `PageRegistry: param's "${paramName}" initialization has failed: 
-              paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`
+              paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`,
           );
         }
 

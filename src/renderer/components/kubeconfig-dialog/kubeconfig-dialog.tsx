@@ -134,7 +134,7 @@ export class KubeConfigDialog extends React.Component<Props> {
               value={yamlConfig}
               theme={ThemeStore.getInstance().activeTheme.monacoTheme}
               className={cssNames( "MonacoEditor")}
-              options={{readOnly: true, ...UserStore.getInstance().getEditorOptions()}}
+              options={{ readOnly: true, ...UserStore.getInstance().getEditorOptions() }}
             />
             <textarea
               className="config-copy"
@@ -154,6 +154,6 @@ export function openServiceAccountKubeConfig(account: ServiceAccount) {
 
   KubeConfigDialog.open({
     title: `${accountName} kubeconfig`,
-    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`)
+    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`),
   });
 }

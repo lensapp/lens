@@ -53,7 +53,7 @@ function getContexts(config: KubeConfig): Map<string, Option> {
       .map(({ config, error }) => [config.currentContext, {
         config,
         error,
-      }])
+      }]),
   );
 }
 
@@ -76,7 +76,7 @@ export class AddCluster extends React.Component {
   @computed get allErrors(): string[] {
     return [
       ...this.errors,
-      ...iter.map(this.kubeContexts.values(), ({ error }) => error)
+      ...iter.map(this.kubeContexts.values(), ({ error }) => error),
     ].filter(Boolean);
   }
 
@@ -119,12 +119,12 @@ export class AddCluster extends React.Component {
       <SettingLayout className="AddClusters">
         <h2>Add Clusters from Kubeconfig</h2>
         <p>
-          Clusters added here are <b>not</b> merged into the <code>~/.kube/config</code> file.
-          Read more about adding clusters <a href={`${docsUrl}/catalog/add-clusters/`} rel="noreferrer" target="_blank">here</a>.
+          Clusters added here are <b>not</b> merged into the <code>~/.kube/config</code> file.{" "}
+          <a href={`${docsUrl}/catalog/add-clusters/`} rel="noreferrer" target="_blank">Read more about adding clusters</a>.
         </p>
         <div className="flex column">
           <MonacoEditor
-            options={{...UserStore.getInstance().getEditorOptions()}}
+            options={{ ...UserStore.getInstance().getEditorOptions() }}
             className={cssNames("MonacoEditor")}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             language="yaml"

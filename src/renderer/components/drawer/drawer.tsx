@@ -67,7 +67,7 @@ export class Drawer extends React.Component<DrawerProps> {
   });
 
   public state: State = {
-    isCopied: false
+    isCopied: false,
   };
 
   componentDidMount() {
@@ -75,14 +75,25 @@ export class Drawer extends React.Component<DrawerProps> {
     window.addEventListener("mousedown", this.onMouseDown);
     window.addEventListener("click", this.onClickOutside);
     window.addEventListener("keydown", this.onEscapeKey);
+    window.addEventListener("click", this.fixUpTripleClick);
   }
 
   componentWillUnmount() {
     this.stopListenLocation();
     window.removeEventListener("mousedown", this.onMouseDown);
     window.removeEventListener("click", this.onClickOutside);
+    window.removeEventListener("click", this.fixUpTripleClick);
     window.removeEventListener("keydown", this.onEscapeKey);
   }
+
+  fixUpTripleClick = (ev: MouseEvent) => {
+    // detail: A count of consecutive clicks that happened in a short amount of time
+    if (ev.detail === 3) {
+      const selection = window.getSelection();
+
+      selection.selectAllChildren(selection.anchorNode?.parentNode);
+    }
+  };
 
   saveScrollPos = () => {
     if (!this.scrollElem) return;
@@ -109,7 +120,7 @@ export class Drawer extends React.Component<DrawerProps> {
   };
 
   onClickOutside = (evt: MouseEvent) => {
-    const { contentElem, mouseDownTarget, close, props: { open } } = this;
+    const { contentElem, mouseDownTarget, close, props: { open }} = this;
 
     if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
       return;
@@ -139,9 +150,9 @@ export class Drawer extends React.Component<DrawerProps> {
     const k8sObjName = title.split(":")[1] || title; // copy whole if no :
 
     clipboard.writeText(k8sObjName.trim());
-    this.setState({isCopied: true});
+    this.setState({ isCopied: true });
     setTimeout(() => {
-      this.setState({isCopied: false});
+      this.setState({ isCopied: false });
     }, 3000);
   };
 

@@ -56,8 +56,8 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
         icon: "delete",
         onClick: async () => WeblinkStore.getInstance().removeById(this.metadata.uid),
         confirm: {
-          message: `Remove Web Link "${this.metadata.name}" from ${productName}?`
-        }
+          message: `Remove Web Link "${this.metadata.name}" from ${productName}?`,
+        },
       });
     }
 
@@ -72,19 +72,19 @@ export class WebLinkCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Web Links",
-    icon: "public"
+    icon: "public",
   };
   public spec = {
     group: "entity.k8slens.dev",
     versions: [
       {
         name: "v1alpha1",
-        entityClass: WebLink
-      }
+        entityClass: WebLink,
+      },
     ],
     names: {
-      kind: "WebLink"
-    }
+      kind: "WebLink",
+    },
   };
   public static onAdd?: () => void;
 
@@ -97,7 +97,7 @@ export class WebLinkCategory extends CatalogCategory {
         title: "Add web link",
         onClick: () => {
           WebLinkCategory.onAdd();
-        }
+        },
       });
     });
   }

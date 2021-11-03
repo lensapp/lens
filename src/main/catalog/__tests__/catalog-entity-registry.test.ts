@@ -52,28 +52,28 @@ describe("CatalogEntityRegistry", () => {
       uid: "test",
       name: "test-link",
       source: "test",
-      labels: {}
+      labels: {},
     },
     spec: {
-      url: "https://k8slens.dev"
+      url: "https://k8slens.dev",
     },
     status: {
-      phase: "available"
-    }
+      phase: "available",
+    },
   });
   const invalidEntity = new InvalidEntity({
     metadata: {
       uid: "invalid",
       name: "test-link",
       source: "test",
-      labels: {}
+      labels: {},
     },
     spec: {
-      url: "https://k8slens.dev"
+      url: "https://k8slens.dev",
     },
     status: {
-      phase: "available"
-    }
+      phase: "available",
+    },
   });
 
   beforeEach(() => {

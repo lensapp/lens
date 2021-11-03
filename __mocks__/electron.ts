@@ -28,6 +28,6 @@ export default {
   },
   dialog: jest.fn(),
   ipcRenderer: {
-    on: jest.fn()
-  }
+    on: jest.fn(),
+  },
 };

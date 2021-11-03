@@ -21,7 +21,7 @@
 
 // Main process
 
-import "../common/system-ca";
+import { injectSystemCAs } from "../common/system-ca";
 import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
@@ -66,12 +66,14 @@ import { initTray } from "./tray";
 import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
 
+injectSystemCAs();
+
 const onCloseCleanup = disposer();
 const onQuitCleanup = disposer();
 
-
 SentryInit();
 app.setName(appName);
+
 
 logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
@@ -120,7 +122,7 @@ app.on("second-instance", (event, argv) => {
   WindowManager.getInstance(false)?.ensureMainWindow();
 });
 
-app.on("ready", async () => {
+app.on("ready", async () => {  
   logger.info(`🚀 Starting ${productName} from "${AppPaths.get("exe")}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();

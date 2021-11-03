@@ -46,7 +46,7 @@ import { catalogURL, getPreviousTabUrl } from "../../../common/routes";
 export class ClusterManager extends React.Component {
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => navigation.location, () => setEntityOnRouteMatch(), { fireImmediately: true })
+      reaction(() => navigation.location, () => setEntityOnRouteMatch(), { fireImmediately: true }),
     ]);
   }
 
@@ -67,7 +67,7 @@ export class ClusterManager extends React.Component {
             <Route component={EntitySettings} {...routes.entitySettingsRoute} />
             {
               GlobalPageRegistry.getInstance().getItems()
-                .map(({ url, components: { Page } }) => (
+                .map(({ url, components: { Page }}) => (
                   <Route key={url} path={url} component={Page} />
                 ))
             }

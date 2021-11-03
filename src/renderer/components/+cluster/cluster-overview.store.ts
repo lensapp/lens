@@ -29,12 +29,12 @@ import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export enum MetricType {
   MEMORY = "memory",
-  CPU = "cpu"
+  CPU = "cpu",
 }
 
 export enum MetricNodeRole {
   MASTER = "master",
-  WORKER = "worker"
+  WORKER = "worker",
 }
 
 export interface ClusterOverviewStorageState {

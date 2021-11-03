@@ -133,7 +133,7 @@ export class ExtensionLoader extends Singleton {
         .map(([extId, extension]) => [extId, {
           enabled: extension.isEnabled,
           name: extension.manifest.name,
-        }])
+        }]),
     );
   }
 
@@ -254,7 +254,7 @@ export class ExtensionLoader extends Singleton {
     this.autoInitExtensions(async (extension: LensMainExtension) => {
       // Each .add returns a function to remove the item
       const removeItems = [
-        registries.MenuRegistry.getInstance().add(extension.appMenus)
+        registries.MenuRegistry.getInstance().add(extension.appMenus),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

@@ -36,7 +36,7 @@ export function ReactTable({ columns, data, headless }: Props) {
       minWidth: 20,
       width: 100,
     }),
-    []
+    [],
   );
 
   const {
@@ -76,7 +76,7 @@ export function ReactTable({ columns, data, headless }: Props) {
         </div>
       );
     },
-    [columns, prepareRow, rows]
+    [columns, prepareRow, rows],
   );
 
   return (
@@ -102,7 +102,7 @@ export function ReactTable({ columns, data, headless }: Props) {
       </div>}
 
       <div {...getTableBodyProps()}>
-        {rows.map((row, index) => RenderRow({index}))}
+        {rows.map((row, index) => RenderRow({ index }))}
       </div>
     </div>
   );

@@ -31,22 +31,22 @@ export default class PodMenuRendererExtension extends Renderer.LensExtension {
       kind: "Pod",
       apiVersions: ["v1"],
       components: {
-        MenuItem: (props: PodAttachMenuProps) => <PodAttachMenu {...props} />
-      }
+        MenuItem: (props: PodAttachMenuProps) => <PodAttachMenu {...props} />,
+      },
     }, 
     {
       kind: "Pod",
       apiVersions: ["v1"],
       components: {
-        MenuItem: (props: PodShellMenuProps) => <PodShellMenu {...props} />
-      }
+        MenuItem: (props: PodShellMenuProps) => <PodShellMenu {...props} />,
+      },
     },
     {
       kind: "Pod",
       apiVersions: ["v1"],
       components: {
-        MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />
-      }
-    }
+        MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />,
+      },
+    },
   ];
 }

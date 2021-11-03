@@ -35,5 +35,5 @@ export {
   Store,
   Types,
   Util,
-  logger
+  logger,
 };

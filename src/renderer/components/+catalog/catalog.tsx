@@ -52,7 +52,7 @@ enum sortBy {
   name = "name",
   kind = "kind",
   source = "source",
-  status = "status"
+  status = "status",
 }
 
 interface Props extends RouteComponentProps<CatalogViewRouteParam> {
@@ -107,7 +107,7 @@ export class Catalog extends React.Component<Props> {
           console.error(error);
           Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
-      }, {fireImmediately: true}),
+      }, { fireImmediately: true }),
     ]);
 
     // If active category is filtered out, automatically switch to the first category
@@ -151,7 +151,7 @@ export class Catalog extends React.Component<Props> {
         ok: () => {
           menuItem.onClick();
         },
-        message: menuItem.confirm.message
+        message: menuItem.confirm.message,
       });
     } else {
       menuItem.onClick();
@@ -167,7 +167,7 @@ export class Catalog extends React.Component<Props> {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     if (activeCategory) {
-      navigate(catalogURL({ params: {group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
+      navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
     } else {
       navigate(catalogURL({ params: { group: browseCatalogTab }}));
     }

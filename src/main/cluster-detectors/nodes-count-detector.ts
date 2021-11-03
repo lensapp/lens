@@ -29,7 +29,7 @@ export class NodesCountDetector extends BaseClusterDetector {
     if (!this.cluster.accessible) return null;
     const nodeCount = await this.getNodeCount();
 
-    return { value: nodeCount, accuracy: 100};
+    return { value: nodeCount, accuracy: 100 };
   }
 
   protected async getNodeCount(): Promise<number> {

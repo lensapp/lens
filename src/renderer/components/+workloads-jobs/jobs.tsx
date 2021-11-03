@@ -81,7 +81,7 @@ export class Jobs extends React.Component<Props> {
             condition && {
               title: condition.type,
               className: kebabCase(condition.type),
-            }
+            },
           ];
         }}
       />

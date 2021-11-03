@@ -58,14 +58,14 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
       ok: () => {
         menuItem.onClick();
       },
-      message: menuItem.confirm.message
+      message: menuItem.confirm.message,
     });
   } else {
     menuItem.onClick();
   }
 }
 
-export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...props}: HotbarIconProps) => {
+export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...props }: HotbarIconProps) => {
   const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -104,7 +104,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...prop
         className="HotbarIconMenu"
         isOpen={menuOpen}
         toggleEvent="contextmenu"
-        position={{right: true, bottom: true }} // FIXME: position does not work
+        position={{ right: true, bottom: true }} // FIXME: position does not work
         open={() => {
           onMenuOpen?.();
           toggleMenu();

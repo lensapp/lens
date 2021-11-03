@@ -35,7 +35,7 @@ describe("SecretDetails tests", () => {
       metadata: {
         name: "test",
         resourceVersion: "1",
-        uid: "uid"
+        uid: "uid",
       },
       data: {
         foobar: "",

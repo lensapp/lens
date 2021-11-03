@@ -135,7 +135,7 @@ export class Events extends React.Component<Props> {
         />
       </>,
       title,
-      ...headerPlaceholders
+      ...headerPlaceholders,
     };
   };
 
@@ -193,7 +193,7 @@ export class Events extends React.Component<Props> {
                     {message}
                   </Tooltip>
                 </Fragment>
-              )
+              ),
             },
             event.getNs(),
             <Link key="link" to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))} onClick={stopPropagation}>

@@ -10,9 +10,9 @@ Lens releases are built by CICD automatically on git tags. The typical release p
     - `major`
     - `minor`
     - `patch`
-    - `premajor` [--preid=<prerelease-id>]
-    - `preminor` [--preid=<prerelease-id>]
-    - `prepatch` [--preid=<prerelease-id>]
+    - `premajor [--preid=<prerelease-id>]`
+    - `preminor [--preid=<prerelease-id>]`
+    - `prepatch [--preid=<prerelease-id>]`
     - `prerelease [--preid=<prerelease-id>]`
       
       where `<prerelease-id>` is generally one of:
@@ -27,6 +27,8 @@ Lens releases are built by CICD automatically on git tags. The typical release p
     - `git push origin :refs/tags/vX.Y.Z-beta.N` (removes the tag from https://github.com/lensapp/lens)
     - `git tag -fa vX.Y.Z-beta.N` (move the tag locally to the current commit)
     - `git push origin --tags` (update the tags on https://github.com/lensapp/lens to reflect this local change)
+
+    Once the tag has been updated on origin (e.g. by `git push origin --tags`) the azure jobs are automatically triggered again.
 
 1. Once CI passes again go to the releases tab on GitHub. You can use the existing draft release prepared by k8slens-bot (select the correct tag). Or you can create a new release from the tag that was created, and make sure that the change log is the same as that of the PR, and the title is the tag. Either way, click the prerelease checkbox if this is not a new major, minor, or patch version before clicking `Publish release`.
 1. Merge the release PR after the release is published. If it is a patch release then there is no need to squash the cherry-picked commits as part of the merge. GitHub should delete the branch once it is merged.

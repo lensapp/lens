@@ -57,19 +57,19 @@ export class GeneralCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "General",
-    icon: "settings"
+    icon: "settings",
   };
   public spec = {
     group: "entity.k8slens.dev",
     versions: [
       {
         name: "v1alpha1",
-        entityClass: GeneralEntity
-      }
+        entityClass: GeneralEntity,
+      },
     ],
     names: {
-      kind: "General"
-    }
+      kind: "General",
+    },
   };
 }
 

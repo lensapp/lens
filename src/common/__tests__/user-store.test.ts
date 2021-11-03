@@ -52,7 +52,7 @@ AppPaths.init();
 describe("user store tests", () => {
   describe("for an empty config", () => {
     beforeEach(() => {
-      mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
+      mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" }});
 
       (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
     });
@@ -106,7 +106,7 @@ describe("user store tests", () => {
           "config.json": JSON.stringify({
             user: { username: "foobar" },
             preferences: { colorTheme: "light" },
-            lastSeenAppVersion: "1.2.3"
+            lastSeenAppVersion: "1.2.3",
           }),
           "lens-cluster-store.json": JSON.stringify({
             clusters: [
@@ -118,15 +118,15 @@ describe("user store tests", () => {
                 id: "barfoo",
                 kubeConfigPath: "some/other/path",
               },
-            ]
+            ],
           } as ClusterStoreModel),
           "extension_data": {},
         },
         "some": {
           "other": {
             "path": "is file",
-          }
-        }
+          },
+        },
       });
 
       UserStore.createInstance();

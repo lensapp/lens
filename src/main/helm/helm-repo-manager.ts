@@ -21,7 +21,7 @@
 
 import yaml from "js-yaml";
 import { readFile } from "fs-extra";
-import { promiseExec } from "../promise-exec";
+import { promiseExec } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import { Singleton } from "../../common/utils/singleton";
 import { customRequestPromise } from "../../common/request";
@@ -112,7 +112,7 @@ export class HelmRepoManager extends Singleton {
     } catch { }
 
     return {
-      repositories: []
+      repositories: [],
     };
   }
 
@@ -132,7 +132,7 @@ export class HelmRepoManager extends Singleton {
 
       return repositories.map(repo => ({
         ...repo,
-        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`
+        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
       }));
     } catch (error) {
       logger.error(`[HELM]: repositories listing error "${error}"`);

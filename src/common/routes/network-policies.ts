@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const networkPoliciesRoute: RouteProps = {
-  path: "/network-policies"
+  path: "/network-policies",
 };
 
 export interface NetworkPoliciesRouteParams {

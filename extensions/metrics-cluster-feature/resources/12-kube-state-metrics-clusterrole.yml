@@ -32,6 +32,13 @@ rules:
     - list
     - watch
   - apiGroups:
+    - networking.k8s.io
+    resources:
+    - ingresses
+    verbs:
+    - list
+    - watch
+  - apiGroups:
     - apps
     resources:
     - statefulsets

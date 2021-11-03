@@ -28,12 +28,12 @@ export function cssVar(elem: HTMLElement) {
 
       return {
         toString: () => value,
-        valueOf: () => parseFloat(value)
+        valueOf: () => parseFloat(value),
       };
     },
     set(name: string, value: number | string) {
       if (typeof value === "number") value = `${value}px`;
       elem.style.setProperty(name, value);
-    }
+    },
   };
 }

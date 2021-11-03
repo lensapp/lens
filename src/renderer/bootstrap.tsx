@@ -110,7 +110,7 @@ export async function bootstrap(comp: () => Promise<AppComponent>) {
   const { base, ...params } = cloudsMidnight;
   const baseTheme = base as monaco.editor.BuiltinTheme;
 
-  monaco.editor.defineTheme("clouds-midnight", {base: baseTheme, ...params});
+  monaco.editor.defineTheme("clouds-midnight", { base: baseTheme, ...params });
 
   // ThemeStore depends on: UserStore
   ThemeStore.createInstance();
@@ -140,7 +140,7 @@ export async function bootstrap(comp: () => Promise<AppComponent>) {
 bootstrap(
   async () => process.isMainFrame
     ? (await import("./lens-app")).LensApp
-    : (await import("./components/app")).App
+    : (await import("./components/app")).App,
 );
 
 

@@ -77,7 +77,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   getReleaseSecret(release: HelmRelease) {
     return secretsStore.getByLabel({
       owner: "helm",
-      name: release.getName()
+      name: release.getName(),
     })
       .find(secret => secret.getNs() == release.getNs());
   }

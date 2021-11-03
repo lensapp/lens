@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const volumeClaimsRoute: RouteProps = {
-  path: "/persistent-volume-claims"
+  path: "/persistent-volume-claims",
 };
 
 export interface VolumeClaimsRouteParams {

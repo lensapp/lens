@@ -35,9 +35,9 @@ export default {
       { id: slackUrl, name: "Lens Community Slack", url: slackUrl },
       { id: "https://kubernetes.io/docs/home/", name: "Kubernetes Documentation", url: "https://kubernetes.io/docs/home/" },
       { id: "https://twitter.com/k8slens", name: "Lens on Twitter", url: "https://twitter.com/k8slens" },
-      { id: "https://medium.com/k8slens", name: "Lens Official Blog", url: "https://medium.com/k8slens" }
+      { id: "https://medium.com/k8slens", name: "Lens Official Blog", url: "https://medium.com/k8slens" },
     );
 
     store.set("weblinks", weblinks);
-  }
+  },
 } as MigrationDeclaration;

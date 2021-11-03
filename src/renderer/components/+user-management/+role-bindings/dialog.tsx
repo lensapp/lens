@@ -95,11 +95,11 @@ export class RoleBindingDialog extends React.Component<Props> {
     }));
     const users = Array.from(this.selectedUsers, user => ({
       name: user,
-      kind: "User" as const
+      kind: "User" as const,
     }));
     const groups = Array.from(this.selectedGroups, group => ({
       name: group,
-      kind: "Group" as const
+      kind: "Group" as const,
     }));
 
     return [
@@ -130,7 +130,7 @@ export class RoleBindingDialog extends React.Component<Props> {
       return {
         value: `${account.getName()}%${account.getNs()}`,
         account,
-        label: <><Icon small material="account_box" /> {name} ({namespace})</>
+        label: <><Icon small material="account_box" /> {name} ({namespace})</>,
       };
     });
   }
@@ -159,7 +159,7 @@ export class RoleBindingDialog extends React.Component<Props> {
 
     this.selectedAccounts.replace(
       serviceAccountsStore.items
-        .filter(sa => accountNames.has(sa.getName()))
+        .filter(sa => accountNames.has(sa.getName())),
     );
     this.selectedUsers.replace(uSubjects.map(user => user.name));
     this.selectedGroups.replace(gSubjects.map(group => group.name));
@@ -186,7 +186,7 @@ export class RoleBindingDialog extends React.Component<Props> {
           roleRef: {
             name: selectedRoleRef.getName(),
             kind: selectedRoleRef.kind,
-          }
+          },
         });
 
       showDetails(roleBinding.selfLink);

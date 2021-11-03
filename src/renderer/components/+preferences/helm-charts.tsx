@@ -91,7 +91,7 @@ export class HelmCharts extends React.Component {
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(
-        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>
+        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>,
       );
     }
   }

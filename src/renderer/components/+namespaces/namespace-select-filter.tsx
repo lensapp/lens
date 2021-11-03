@@ -37,15 +37,15 @@ const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
 
-    switch (namespaces.length) {
-      case 0:
-      case namespaceStore.allowedNamespaces.length:
-        return <>All namespaces</>;
-      case 1:
-        return <>Namespace: {namespaces[0]}</>;
-      default:
-        return <>Namespaces: {namespaces.join(", ")}</>;
+    if (namespaceStore.areAllSelectedImplicitly || !namespaces.length) {
+      return <>All namespaces</>;
     }
+
+    if (namespaces.length === 1) {
+      return <>Namespace: {namespaces[0]}</>;
+    }
+
+    return <>Namespaces: {namespaces.join(", ")}</>;
   };
 
   return (
@@ -60,6 +60,9 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
   static isMultiSelection = observable.box(false);
   static isMenuOpen = observable.box(false);
 
+  /**
+   * Only updated on every open
+   */
   private selected = observable.set<string>();
   private didToggle = false;
 
@@ -88,7 +91,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
     disposeOnUnmount(this, [
       reaction(() => this.isMenuOpen, newVal => {
         if (newVal) { // rising edge of selection
-          this.selected.replace(namespaceStore.selectedNamespaces);
+          this.selected.replace(namespaceStore.selectedNames);
           this.didToggle = false;
         }
       }),
@@ -101,9 +104,9 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
 
       return (
         <div className="flex gaps align-center">
-          <Icon small material="layers"/>
+          <Icon small material="layers" />
           <span>{namespace}</span>
-          {isSelected && <Icon small material="check" className="box right"/>}
+          {isSelected && <Icon small material="check" className="box right" />}
         </div>
       );
     }
@@ -116,15 +119,12 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
     if (namespace) {
       if (this.isMultiSelection) {
         this.didToggle = true;
-        namespaceStore.toggleContext(namespace);
-      } else {
         namespaceStore.toggleSingle(namespace);
+      } else {
+        namespaceStore.selectSingle(namespace);
       }
     } else {
-      /**
-       * WARNING: only ever call this method with `false` as an argument
-       */
-      namespaceStore.toggleAll(false);
+      namespaceStore.selectAll();
     }
   };
 

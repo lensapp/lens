@@ -128,7 +128,7 @@ export class ReleaseDetails extends Component<Props> {
       chart: release.getChart(),
       repo: await release.getRepo(),
       version: release.getVersion(),
-      values: this.values
+      values: this.values,
     };
 
     this.saving = true;
@@ -136,7 +136,7 @@ export class ReleaseDetails extends Component<Props> {
     try {
       await releaseStore.update(name, namespace, data);
       Notifications.ok(
-        <p>Release <b>{name}</b> successfully updated!</p>
+        <p>Release <b>{name}</b> successfully updated!</p>,
       );
     } catch (err) {
       Notifications.error(err);
@@ -169,8 +169,8 @@ export class ReleaseDetails extends Component<Props> {
             value={values}
             onChange={text => this.values = text}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
-            className={cssNames("MonacoEditor", {loading: valuesLoading})}
-            options={{readOnly: valuesLoading, ...UserStore.getInstance().getEditorOptions()}}
+            className={cssNames("MonacoEditor", { loading: valuesLoading })}
+            options={{ readOnly: valuesLoading, ...UserStore.getInstance().getEditorOptions() }}
           >
             {valuesLoading && <Spinner center />}
           </MonacoEditor>

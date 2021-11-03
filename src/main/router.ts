@@ -70,7 +70,7 @@ function getMimeType(filename: string) {
     svg: "image/svg+xml",
     js: "application/javascript",
     woff2: "font/woff2",
-    ttf: "font/ttf"
+    ttf: "font/ttf",
   };
 
   return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
@@ -118,11 +118,11 @@ export class Router {
       response: res,
       query: url.searchParams,
       payload,
-      params
+      params,
     };
   }
 
-  protected static async handleStaticFile({ params, response, raw: { req } }: LensApiRequest): Promise<void> {
+  protected static async handleStaticFile({ params, response, raw: { req }}: LensApiRequest): Promise<void> {
     let filePath = params.path;
 
     for (let retryCount = 0; retryCount < 5; retryCount += 1) {

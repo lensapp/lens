@@ -62,7 +62,7 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules } } = ingress;
+    const { spec: { rules }} = ingress;
 
     if (!rules || !rules.length) return null;
 

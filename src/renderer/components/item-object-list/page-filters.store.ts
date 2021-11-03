@@ -61,8 +61,8 @@ export class PageFiltersStore {
           this.addFilter({ type: FilterType.SEARCH, value: search }, true);
         }
       }, {
-        fireImmediately: true
-      })
+        fireImmediately: true,
+      }),
     ];
 
     return () => disposers.forEach(dispose => dispose());

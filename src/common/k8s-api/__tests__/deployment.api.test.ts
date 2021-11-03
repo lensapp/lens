@@ -41,19 +41,19 @@ describe("DeploymentApi", () => {
     it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
       const patchSpy = jest.spyOn(requestMock, "patch");
 
-      sub.scale({ namespace: "default", name: "deployment-1"}, 5);
+      sub.scale({ namespace: "default", name: "deployment-1" }, 5);
 
       expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
         data: {
           spec: {
-            replicas: 5
-          }
-        }
+            replicas: 5,
+          },
+        },
       },
       {
         headers: {
-          "content-type": "application/merge-patch+json"
-        }
+          "content-type": "application/merge-patch+json",
+        },
       });
     });
   });

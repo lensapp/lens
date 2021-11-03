@@ -23,31 +23,31 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const preferencesRoute: RouteProps = {
-  path: "/preferences"
+  path: "/preferences",
 };
 
 export const appRoute: RouteProps = {
-  path: `${preferencesRoute.path}/app`
+  path: `${preferencesRoute.path}/app`,
 };
 
 export const proxyRoute: RouteProps = {
-  path: `${preferencesRoute.path}/proxy`
+  path: `${preferencesRoute.path}/proxy`,
 };
 
 export const kubernetesRoute: RouteProps = {
-  path: `${preferencesRoute.path}/kubernetes`
+  path: `${preferencesRoute.path}/kubernetes`,
 };
 
 export const editorRoute: RouteProps = {
-  path: `${preferencesRoute.path}/editor`
+  path: `${preferencesRoute.path}/editor`,
 };
 
 export const telemetryRoute: RouteProps = {
-  path: `${preferencesRoute.path}/telemetry`
+  path: `${preferencesRoute.path}/telemetry`,
 };
 
 export const extensionRoute: RouteProps = {
-  path: `${preferencesRoute.path}/extensions`
+  path: `${preferencesRoute.path}/extensions`,
 };
 
 export const preferencesURL = buildURL(preferencesRoute.path);

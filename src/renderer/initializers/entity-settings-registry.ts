@@ -33,7 +33,7 @@ export function initEntitySettingsRegistry() {
         group: "Settings",
         components: {
           View: clusterSettings.GeneralSettings,
-        }
+        },
       },
       {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -42,7 +42,7 @@ export function initEntitySettingsRegistry() {
         group: "Settings",
         components: {
           View: clusterSettings.ProxySettings,
-        }
+        },
       },
       {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -51,7 +51,7 @@ export function initEntitySettingsRegistry() {
         group: "Settings",
         components: {
           View: clusterSettings.TerminalSettings,
-        }
+        },
       },
       {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -60,7 +60,7 @@ export function initEntitySettingsRegistry() {
         group: "Settings",
         components: {
           View: clusterSettings.NamespacesSettings,
-        }
+        },
       },
       {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -69,7 +69,7 @@ export function initEntitySettingsRegistry() {
         group: "Settings",
         components: {
           View: clusterSettings.MetricsSettings,
-        }
+        },
       },
       {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -78,7 +78,7 @@ export function initEntitySettingsRegistry() {
         group: "Settings",
         components: {
           View: clusterSettings.NodeShellSettings,
-        }
-      }
+        },
+      },
     ]);
 }

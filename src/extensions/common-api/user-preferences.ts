@@ -19,14 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { RouteProps } from "react-router";
-import { buildURL } from "../utils/buildUrl";
+import { UserStore } from "../../common/user-store";
 
-export const pdbRoute: RouteProps = {
-  path: "/poddisruptionbudgets",
-};
-
-export interface PodDisruptionBudgetsRouteParams {
+/**
+ * Get the configured kubectl binaries path.
+ */
+export function getKubectlPath(): string | undefined {
+  return UserStore.getInstance().kubectlBinariesPath;
 }
-
-export const pdbURL = buildURL<PodDisruptionBudgetsRouteParams>(pdbRoute.path);

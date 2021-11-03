@@ -28,7 +28,7 @@ export function interval(timeSec = 1, callback: IntervalCallback, autoRun = fals
   let timer = -1;
   let isRunning = false;
   const intervalManager = {
-    start (runImmediately = false) {
+    start(runImmediately = false) {
       if (isRunning) return;
       const tick = () => callback(++count);
 
@@ -36,18 +36,18 @@ export function interval(timeSec = 1, callback: IntervalCallback, autoRun = fals
       timer = window.setInterval(tick, 1000 * timeSec);
       if (runImmediately) tick();
     },
-    stop () {
+    stop() {
       count = 0;
       isRunning = false;
       clearInterval(timer);
     },
-    restart (runImmediately = false) {
+    restart(runImmediately = false) {
       this.stop();
       this.start(runImmediately);
     },
     get isRunning() {
       return isRunning;
-    }
+    },
   };
 
   if (autoRun) intervalManager.start();

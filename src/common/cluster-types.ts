@@ -119,7 +119,7 @@ export interface ClusterPrometheusPreferences {
 export enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,
-  Offline = 0
+  Offline = 0,
 }
 
 /**
@@ -131,7 +131,7 @@ export enum ClusterMetadataKey {
   DISTRIBUTION = "distribution",
   NODES_COUNT = "nodes",
   LAST_SEEN = "lastSeen",
-  PROMETHEUS = "prometheus"
+  PROMETHEUS = "prometheus",
 }
 
 /**

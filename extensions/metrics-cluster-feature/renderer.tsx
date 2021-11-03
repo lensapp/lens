@@ -31,12 +31,12 @@ export default class ClusterMetricsFeatureExtension extends Renderer.LensExtensi
       title: "Lens Metrics",
       priority: 5,
       components: {
-        View: ({ entity = null }: { entity: Common.Catalog.KubernetesCluster}) => {
+        View: ({ entity = null }: { entity: Common.Catalog.KubernetesCluster }) => {
           return (
             <MetricsSettings cluster={entity} />
           );
-        }
-      }
-    }
+        },
+      },
+    },
   ];
 }

@@ -263,7 +263,7 @@ export class WindowManager extends Singleton {
           enableRemoteModule: true,
           contextIsolation: false,
           nodeIntegrationInSubFrames: true,
-        }
+        },
       });
       await this.splashWindow.loadURL("static://splash.html");
     }

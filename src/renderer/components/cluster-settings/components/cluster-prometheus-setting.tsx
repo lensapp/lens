@@ -44,7 +44,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
   @computed get options(): SelectOption<string>[] {
     return [
       { value: "", label: "Auto detect" },
-      ...this.loadedOptions.map(({ name, id }) => ({ value: id, label: name }))
+      ...this.loadedOptions.map(({ name, id }) => ({ value: id, label: name })),
     ];
   }
 
@@ -57,7 +57,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     return Boolean(
       this.loadedOptions
         .find(opt => opt.id === this.provider)
-        ?.isConfigurable
+        ?.isConfigurable,
     );
   }
 
@@ -79,7 +79,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
         } else {
           this.provider = "";
         }
-      })
+      }),
     );
 
     metricsApi
@@ -108,7 +108,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
       namespace: parsed[0],
       service: parsed[1],
       port: parseInt(parsed[2]),
-      prefix: apiPrefix
+      prefix: apiPrefix,
     };
   };
 

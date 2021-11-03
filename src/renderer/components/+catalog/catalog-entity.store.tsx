@@ -52,7 +52,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
   watch() {
     return disposer(
       reaction(() => this.entities, () => this.loadAll()),
-      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100}),
+      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100 }),
     );
   }
 

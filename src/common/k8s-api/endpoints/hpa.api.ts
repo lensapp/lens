@@ -111,7 +111,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
       return {
         ...condition,
         isReady: status === "True",
-        tooltip: `${message || reason} (${lastTransitionTime})`
+        tooltip: `${message || reason} (${lastTransitionTime})`,
       };
     });
   }
@@ -143,7 +143,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
   getMetricValues(metric: IHpaMetric): string {
     const metricType = metric.type.toLowerCase();
     const currentMetric = this.getCurrentMetrics().find(current =>
-      metric.type == current.type && this.getMetricName(metric) == this.getMetricName(current)
+      metric.type == current.type && this.getMetricName(metric) == this.getMetricName(current),
     );
     const current = currentMetric ? currentMetric[metricType] : null;
     const target = metric[metricType];
@@ -173,5 +173,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  hpaApi
+  hpaApi,
 };

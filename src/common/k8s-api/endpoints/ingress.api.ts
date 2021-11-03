@@ -30,13 +30,13 @@ export class IngressApi extends KubeApi<Ingress> {
 }
 
 export function getMetricsForIngress(ingress: string, namespace: string): Promise<IIngressMetrics> {
-  const opts = { category: "ingress", ingress };
+  const opts = { category: "ingress", ingress, namespace };
 
   return metricsApi.getMetrics({
     bytesSentSuccess: opts,
     bytesSentFailure: opts,
     requestDurationSeconds: opts,
-    responseDurationSeconds: opts
+    responseDurationSeconds: opts,
   }, {
     namespace,
   });
@@ -128,7 +128,7 @@ export class Ingress extends KubeObject {
   }
 
   getRoutes() {
-    const { spec: { tls, rules } } = this;
+    const { spec: { tls, rules }} = this;
 
     if (!rules) return [];
 
@@ -160,12 +160,12 @@ export class Ingress extends KubeObject {
 
     return {
       serviceName,
-      servicePort
+      servicePort,
     };
   }
 
   getHosts() {
-    const { spec: { rules } } = this;
+    const { spec: { rules }} = this;
 
     if (!rules) return [];
 
@@ -174,7 +174,7 @@ export class Ingress extends KubeObject {
 
   getPorts() {
     const ports: number[] = [];
-    const { spec: { tls, rules, backend, defaultBackend } } = this;
+    const { spec: { tls, rules, backend, defaultBackend }} = this;
     const httpPort = 80;
     const tlsPort = 443;
     // Note: not using the port name (string)
@@ -196,7 +196,7 @@ export class Ingress extends KubeObject {
   }
 
   getLoadBalancers() {
-    const { status: { loadBalancer = { ingress: [] } } } = this;
+    const { status: { loadBalancer = { ingress: [] }}} = this;
 
     return (loadBalancer.ingress ?? []).map(address => (
       address.hostname || address.ip
@@ -216,5 +216,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  ingressApi
+  ingressApi,
 };

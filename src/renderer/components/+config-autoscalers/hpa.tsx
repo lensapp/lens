@@ -40,7 +40,7 @@ enum columnId {
   maxPods = "max-pods",
   replicas = "replicas",
   age = "age",
-  status = "status"
+  status = "status",
 }
 
 interface Props extends RouteComponentProps<HpaRouteParams> {
@@ -72,7 +72,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           [columnId.age]: item => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          item => item.getSearchFields()
+          item => item.getSearchFields(),
         ]}
         renderHeaderTitle="Horizontal Pod Autoscalers"
         renderTableHeader={[
@@ -107,7 +107,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
                 expandable={false}
               />
             );
-          })
+          }),
         ]}
       />
     );

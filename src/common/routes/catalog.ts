@@ -27,7 +27,7 @@ export interface CatalogViewRouteParam {
   kind?: string;
 }
 export const catalogRoute: RouteProps = {
-  path: "/catalog/:group?/:kind?"
+  path: "/catalog/:group?/:kind?",
 };
 
 export const getPreviousTabUrl = (path: string) => {
@@ -36,8 +36,8 @@ export const getPreviousTabUrl = (path: string) => {
   return catalogURL({
     params: {
       group: group || browseCatalogTab,
-      kind
-    }
+      kind,
+    },
   });
 };
 

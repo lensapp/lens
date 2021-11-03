@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {boundMethod, boundClass} from "autobind-decorator";
+import { boundMethod, boundClass } from "autobind-decorator";
 import autoBindClass, { Options } from "auto-bind";
 import autoBindReactClass from "auto-bind/react";
 

@@ -28,7 +28,7 @@ import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 
-const configs: {(): webpack.Configuration}[] = [];
+const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
   console.info("WEBPACK:main", vars);
@@ -47,24 +47,24 @@ configs.push((): webpack.Configuration => {
       path: buildDir,
     },
     resolve: {
-      extensions: [".json", ".js", ".ts"]
+      extensions: [".json", ".js", ".ts"],
     },
     externals: [
-      nodeExternals()
+      nodeExternals(),
     ],
     module: {
       rules: [
         {
           test: /\.node$/,
-          use: "node-loader"
+          use: "node-loader",
         },
-        getTSLoader(/\.ts$/)
-      ]
+        getTSLoader(/\.ts$/),
+      ],
     },
     plugins: [
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
-    ].filter(Boolean)
+    ].filter(Boolean),
   };
 });
 

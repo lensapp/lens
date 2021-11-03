@@ -48,7 +48,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.props.object, () => {
         this.selectedSubjects.clear();
-      })
+      }),
     ]);
   }
 
@@ -62,7 +62,7 @@ export class RoleBindingDetails extends React.Component<Props> {
       labelOk: `Remove`,
       message: (
         <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
-      )
+      ),
     });
   }
 
@@ -99,9 +99,9 @@ export class RoleBindingDetails extends React.Component<Props> {
           <Table selectable className="bindings box grow">
             <TableHead>
               <TableCell checkbox />
-              <TableCell className="binding">Name</TableCell>
               <TableCell className="type">Type</TableCell>
-              <TableCell className="type">Namespace</TableCell>
+              <TableCell className="binding">Name</TableCell>
+              <TableCell className="ns">Namespace</TableCell>
             </TableHead>
             {
               subjects.map((subject, i) => {
@@ -115,8 +115,8 @@ export class RoleBindingDetails extends React.Component<Props> {
                     onClick={prevDefault(() => this.selectedSubjects.toggle(subject))}
                   >
                     <TableCell checkbox isChecked={isSelected} />
-                    <TableCell className="binding">{name}</TableCell>
                     <TableCell className="type">{kind}</TableCell>
+                    <TableCell className="binding">{name}</TableCell>
                     <TableCell className="ns">{namespace || "-"}</TableCell>
                   </TableRow>
                 );

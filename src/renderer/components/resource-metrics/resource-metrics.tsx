@@ -48,7 +48,7 @@ export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
 export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
 
 const defaultProps: Partial<Props> = {
-  interval: 60  // 1 min
+  interval: 60,  // 1 min
 };
 
 ResourceMetrics.defaultProps = defaultProps;

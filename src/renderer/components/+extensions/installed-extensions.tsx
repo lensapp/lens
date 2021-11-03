@@ -76,16 +76,16 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
       },
       {
         Header: "Status",
-        accessor: "status"
+        accessor: "status",
       },
       {
         Header: "",
         accessor: "actions",
         disableSortBy: true,
         width: 20,
-        className: "actions"
-      }
-    ], []
+        className: "actions",
+      },
+    ], [],
   );
 
   const data = useMemo(
@@ -106,7 +106,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
           ),
           version,
           status: (
-            <div className={cssNames({[styles.enabled]: isEnabled, [styles.invalid]: !isCompatible})}>
+            <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
               {getStatus(extension)}
             </div>
           ),
@@ -142,10 +142,10 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
                 <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
               </MenuItem>
             </MenuActions>
-          )
+          ),
         };
       });
-    }, [extensions, ExtensionInstallationStateStore.anyUninstalling]
+    }, [extensions, ExtensionInstallationStateStore.anyUninstalling],
   );
 
   if (!ExtensionDiscovery.getInstance().isLoaded) {

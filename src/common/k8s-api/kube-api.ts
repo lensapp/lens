@@ -123,13 +123,13 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
     debug: isDevelopment,
   }, {
     headers: {
-      "Host": `${cluster.metadata.uid}.localhost:${url.port}`
-    }
+      "Host": `${cluster.metadata.uid}.localhost:${url.port}`,
+    },
   });
 
   return new KubeApi({
     objectConstructor: kubeClass,
-    request
+    request,
   });
 }
 
@@ -166,15 +166,15 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     ...(token ? {
       getRequestOptions: async () => ({
         headers: {
-          "Authorization": `Bearer ${isFunction(token) ? await token() : token}`
-        }
-      })
-    } : {})
+          "Authorization": `Bearer ${isFunction(token) ? await token() : token}`,
+        },
+      }),
+    } : {}),
   }, reqInit);
 
   return new KubeApi({
     objectConstructor: kubeClass,
-    request
+    request,
   });
 }
 
@@ -221,7 +221,7 @@ export class KubeApi<T extends KubeObject> {
       objectConstructor,
       request = apiKube,
       kind = options.objectConstructor?.kind,
-      isNamespaced = options.objectConstructor?.namespaced
+      isNamespaced = options.objectConstructor?.namespaced,
     } = options || {};
 
     if (!options.apiBase) {
@@ -292,7 +292,7 @@ export class KubeApi<T extends KubeObject> {
 
     return {
       apiPrefix: this.apiPrefix,
-      apiGroup: this.apiGroup
+      apiGroup: this.apiGroup,
     };
   }
 
@@ -306,10 +306,10 @@ export class KubeApi<T extends KubeObject> {
 
       // The apiPrefix and apiGroup might change due to fallbackApiBases, so we must override them
       Object.defineProperty(this, "apiPrefix", {
-        value: apiPrefix
+        value: apiPrefix,
       });
       Object.defineProperty(this, "apiGroup", {
-        value: apiGroup
+        value: apiGroup,
       });
 
       const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
@@ -444,9 +444,9 @@ export class KubeApi<T extends KubeObject> {
         apiVersion: this.apiVersionWithGroup,
         metadata: {
           name,
-          namespace
-        }
-      }, data)
+          namespace,
+        },
+      }, data),
     });
     const parsed = this.parseResponse(res);
 

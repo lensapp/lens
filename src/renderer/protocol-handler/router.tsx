@@ -63,10 +63,10 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
             <p>
               Unknown action <code>{rawUrl}</code>.{" "}
               Are you on the latest version?
-            </p>
+            </p>,
           );
         }
-      }
+      },
     });
     onCorrect({
       channel: proto.ProtocolHandlerExtension,
@@ -81,7 +81,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
               <p>
                 Unknown action <code>{rawUrl}</code>.{" "}
                 Are you on the latest version of the extension?
-              </p>
+              </p>,
             );
             break;
           case RouteAttempt.MISSING_EXTENSION:
@@ -90,11 +90,11 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
                 Missing extension for action <code>{rawUrl}</code>.{" "}
                 Not able to find extension in our known list.{" "}
                 Try installing it manually.
-              </p>
+              </p>,
             );
             break;
         }
-      }
+      },
     });
     onCorrect({
       channel: ProtocolHandlerInvalid,
@@ -113,7 +113,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
       },
       verifier: (args): args is [string, string] => {
         return args.length === 2 && typeof args[0] === "string";
-      }
+      },
     });
   }
 }

@@ -49,7 +49,7 @@ interface State {
 
 export class Wizard extends React.Component<WizardProps, State> {
   public state: State = {
-    step: this.getValidStep(this.props.step)
+    step: this.getValidStep(this.props.step),
   };
 
   get steps() {
@@ -69,7 +69,7 @@ export class Wizard extends React.Component<WizardProps, State> {
         isFirst: this.isFirstStep,
         isLast: this.isLastStep,
         ...commonProps,
-        ...stepProps
+        ...stepProps,
       } as WizardStepProps<any>);
     });
   }

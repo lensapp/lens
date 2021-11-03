@@ -165,7 +165,7 @@ export const terminalStore = new Proxy({}, {
     const res = (ts as any)?.[p];
 
     if (typeof res === "function") {
-      return function(...args: any[]) {
+      return function (...args: any[]) {
         return res.apply(ts, args);
       };
     }

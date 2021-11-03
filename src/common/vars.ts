@@ -60,7 +60,7 @@ defineGlobal("__static", {
       : (process.resourcesPath ?? contextDir);
 
     return path.resolve(root, "static");
-  }
+  },
 });
 
 // Apis

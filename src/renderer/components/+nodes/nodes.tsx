@@ -115,7 +115,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `CPU: ${cpuUsagePercentLabel}\%, cores: ${cores}`
+          children: `CPU: ${cpuUsagePercentLabel}\%, cores: ${cores}`,
         }}
       />
     );
@@ -134,7 +134,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `Memory: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+          children: `Memory: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`,
         }}
       />
     );
@@ -153,7 +153,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `Disk: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+          children: `Disk: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`,
         }}
       />
     );
@@ -177,7 +177,7 @@ export class Nodes extends React.Component<Props> {
               <div key={key} className="flex gaps align-center">
                 <div className="name">{upperFirst(key)}</div>
                 <div className="value">{value}</div>
-              </div>
+              </div>,
             )}
           </Tooltip>
         </div>);

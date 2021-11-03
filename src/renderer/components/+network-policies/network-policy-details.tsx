@@ -80,7 +80,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
             else {
               return (<DrawerItem name={key} key={key}>(empty)</DrawerItem>);
             }
-          })
+          }),
         )}
       </>
     );
@@ -95,7 +95,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
       <>
         <SubTitle title="To"/>
         {to.map(item => {
-          const { ipBlock: { cidr, except } = {} } = item;
+          const { ipBlock: { cidr, except } = {}} = item;
 
           if (!cidr) return null;
 

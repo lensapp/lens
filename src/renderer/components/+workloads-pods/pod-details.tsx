@@ -63,7 +63,7 @@ export class PodDetails extends React.Component<Props> {
       reaction(() => this.props.object, () => {
         this.metrics = null;
         this.containerMetrics = null;
-      })
+      }),
     ]);
   }
 

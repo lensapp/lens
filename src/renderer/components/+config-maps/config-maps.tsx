@@ -55,7 +55,7 @@ export class ConfigMaps extends React.Component<Props> {
         }}
         searchFilters={[
           item => item.getSearchFields(),
-          item => item.getKeys()
+          item => item.getKeys(),
         ]}
         renderHeaderTitle="Config Maps"
         renderTableHeader={[

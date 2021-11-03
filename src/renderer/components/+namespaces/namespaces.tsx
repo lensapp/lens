@@ -58,7 +58,7 @@ export class Namespaces extends React.Component<Props> {
           }}
           searchFilters={[
             item => item.getSearchFields(),
-            item => item.getStatus()
+            item => item.getStatus(),
           ]}
           renderHeaderTitle="Namespaces"
           renderTableHeader={[

@@ -42,7 +42,7 @@ class HelmService {
     const repositories = await HelmRepoManager.getInstance().repositories();
 
     return Object.fromEntries(
-      await Promise.all(repositories.map(async repo => [repo.name, await HelmChartManager.forRepo(repo).charts()]))
+      await Promise.all(repositories.map(async repo => [repo.name, await HelmChartManager.forRepo(repo).charts()])),
     );
   }
 

@@ -24,7 +24,7 @@ import "./create-resource.scss";
 import React from "react";
 import path from "path";
 import fs from "fs-extra";
-import {Select, GroupSelectOption, SelectOption} from "../select";
+import { Select, GroupSelectOption, SelectOption } from "../select";
 import yaml from "js-yaml";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
@@ -45,7 +45,7 @@ interface Props {
 
 @observer
 export class CreateResource extends React.Component<Props> {
-  @observable currentTemplates:Map<string,SelectOption> = new Map();
+  @observable currentTemplates:Map<string, SelectOption> = new Map();
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
 
@@ -65,9 +65,9 @@ export class CreateResource extends React.Component<Props> {
   }
 
   convertToGroup(group:string, items:string[]):GroupSelectOption {
-    const options = items.map(v => ({label: path.parse(v).name, value: v}));
+    const options = items.map(v => ({ label: path.parse(v).name, value: v }));
 
-    return {label: group, options};
+    return { label: group, options };
   }
 
   get tabId() {
@@ -89,8 +89,8 @@ export class CreateResource extends React.Component<Props> {
 
   onSelectTemplate = (item: SelectOption) => {
     this.currentTemplates.set(this.tabId, item);
-    fs.readFile(item.value,"utf8").then(v => {
-      createResourceStore.setData(this.tabId,v);
+    fs.readFile(item.value, "utf8").then(v => {
+      createResourceStore.setData(this.tabId, v);
       monacoModelsManager.getModel(this.tabId).setValue(v ?? "");
     });
   };

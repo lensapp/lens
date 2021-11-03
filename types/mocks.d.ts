@@ -20,6 +20,7 @@
  */
 declare module "mac-ca"
 declare module "win-ca"
+declare module "win-ca/api"
 declare module "@hapi/call"
 declare module "@hapi/subtext"
 

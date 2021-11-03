@@ -164,8 +164,8 @@ export class NodeDetails extends React.Component<Props> {
                       <div key={key} className="flex gaps align-center">
                         <div className="name">{upperFirst(key)}</div>
                         <div className="value">{value}</div>
-                      </div>
-                    )
+                      </div>,
+                    ),
                   }}
                 />
               );

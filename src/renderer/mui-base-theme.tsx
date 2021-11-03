@@ -32,7 +32,7 @@ const defaultTheme = createTheme({
     },
     MuiTooltip: {
       placement: "top",
-    }
+    },
   },
   overrides: {
     MuiIconButton: {
@@ -40,9 +40,9 @@ const defaultTheme = createTheme({
         "&:hover": {
           color: "var(--iconActiveColor)",
           backgroundColor: "var(--iconActiveBackground)",
-        }
-      }
-    }
+        },
+      },
+    },
   },
 });
 

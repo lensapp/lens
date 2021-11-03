@@ -23,7 +23,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
 export const secretsRoute: RouteProps = {
-  path: "/secrets"
+  path: "/secrets",
 };
 
 export interface SecretsRouteParams {

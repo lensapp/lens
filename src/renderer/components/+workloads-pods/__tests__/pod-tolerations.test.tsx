@@ -36,13 +36,13 @@ const tolerations: IToleration[] =[
     key: "CriticalAddonsOnly",
     operator: "Exist",
     effect: "NoExecute",
-    tolerationSeconds: 3600
+    tolerationSeconds: 3600,
   },
   {
     key: "node.kubernetes.io/not-ready",
     operator: "NoExist",
     effect: "NoSchedule",
-    tolerationSeconds: 7200
+    tolerationSeconds: 7200,
   },
 ];
 

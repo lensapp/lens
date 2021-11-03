@@ -35,17 +35,17 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
         "name": cluster.contextName,
         "cluster": {
           "server": cluster.apiUrl,
-          "certificate-authority-data": secret.data["ca.crt"]
-        }
-      }
+          "certificate-authority-data": secret.data["ca.crt"],
+        },
+      },
     ],
     "users": [
       {
         "name": username,
         "user": {
           "token": tokenData.toString("utf8"),
-        }
-      }
+        },
+      },
     ],
     "contexts": [
       {
@@ -54,16 +54,16 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
           "user": username,
           "cluster": cluster.contextName,
           "namespace": secret.metadata.namespace,
-        }
-      }
+        },
+      },
     ],
-    "current-context": cluster.contextName
+    "current-context": cluster.contextName,
   };
 }
 
 export class KubeconfigRoute {
   static async routeServiceAccountRoute(request: LensApiRequest) {
-    const { params, response, cluster} = request;
+    const { params, response, cluster } = request;
     const client = (await cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace);
     const secret = secretList.body.items.find(secret => {

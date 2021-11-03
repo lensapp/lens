@@ -37,9 +37,9 @@ describe("extension compatibility", () => {
     });
 
     it("has no extension comparator", () => {
-      const manifest = { name: "extensionName", version: "0.0.1"};
+      const manifest = { name: "extensionName", version: "0.0.1" };
 
-      expect(isCompatibleExtension(manifest,)).toBe(false);
+      expect(isCompatibleExtension(manifest)).toBe(false);
     });
     
     it.each([
@@ -76,9 +76,9 @@ describe("extension compatibility", () => {
         expected: false,
       },
     ])("extension comparator test: %p", ({ comparator, expected }) => {
-      const manifest: LensExtensionManifest = { name: "extensionName", version: "0.0.1", engines: { lens: comparator}};
+      const manifest: LensExtensionManifest = { name: "extensionName", version: "0.0.1", engines: { lens: comparator }};
 
-      expect(isCompatibleExtension(manifest,)).toBe(expected);
+      expect(isCompatibleExtension(manifest)).toBe(expected);
     });
   });
 
@@ -91,9 +91,9 @@ describe("extension compatibility", () => {
     });
     
     it("has no extension comparator", () => {
-      const manifest = { name: "extensionName", version: "0.0.1"};
+      const manifest = { name: "extensionName", version: "0.0.1" };
 
-      expect(isCompatibleExtension(manifest,)).toBe(false);
+      expect(isCompatibleExtension(manifest)).toBe(false);
     });
     
     it.each([
@@ -130,9 +130,9 @@ describe("extension compatibility", () => {
         expected: false,
       },
     ])("extension comparator test: %p", ({ comparator, expected }) => {
-      const manifest: LensExtensionManifest = { name: "extensionName", version: "0.0.1", engines: { lens: comparator}};
+      const manifest: LensExtensionManifest = { name: "extensionName", version: "0.0.1", engines: { lens: comparator }};
 
-      expect(isCompatibleExtension(manifest,)).toBe(expected);
+      expect(isCompatibleExtension(manifest)).toBe(expected);
     });
   });
 });

@@ -49,7 +49,7 @@ export const HotbarSelector = observer(({ hotbar }: Props) => {
           onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
           tooltip={{
             preferredPositions: [TooltipPosition.TOP, TooltipPosition.TOP_LEFT],
-            children: hotbar.name
+            children: hotbar.name,
           }}
           className="SelectorIndex"
         />

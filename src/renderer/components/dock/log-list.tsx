@@ -66,7 +66,7 @@ export class LogList extends React.Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.props.logs, this.onLogsInitialLoad),
       reaction(() => this.props.logs, this.onLogsUpdate),
-      reaction(() => this.props.logs, this.onUserScrolledUp)
+      reaction(() => this.props.logs, this.onUserScrolledUp),
     ]);
   }
 
@@ -215,7 +215,7 @@ export class LogList extends React.Component<Props> {
           <React.Fragment key={piece + index}>
             <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
             {overlay}
-          </React.Fragment>
+          </React.Fragment>,
         );
       });
     }

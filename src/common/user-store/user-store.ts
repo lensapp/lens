@@ -92,7 +92,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   /**
    * Monaco editor configs
    */
-   @observable editorConfiguration:EditorConfiguration = {tabSize: null, miniMap: null, lineNumbers: null};
+   @observable editorConfiguration:EditorConfiguration = { tabSize: null, miniMap: null, lineNumbers: null };
 
   /**
    * The set of file/folder paths to be synced
@@ -107,7 +107,9 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
   }
 
-  readonly isAllowedToDowngrade = new SemVer(getAppVersion()).prerelease[0] !== "latest";
+  @computed get isAllowedToDowngrade() {
+    return new SemVer(getAppVersion()).prerelease[0] !== this.updateChannel;
+  }
 
   startMainReactions() {
     // track telemetry availability
@@ -120,7 +122,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       app.setLoginItemSettings({
         openAtLogin,
         openAsHidden: true,
-        args: ["--hidden"]
+        args: ["--hidden"],
       });
     }, {
       fireImmediately: true,
@@ -133,7 +135,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       automaticLayout: true,
       tabSize: this.editorConfiguration.tabSize,
       minimap: this.editorConfiguration.miniMap,
-      lineNumbers: this.editorConfiguration.lineNumbers
+      lineNumbers: this.editorConfiguration.lineNumbers,
     };
   }
 

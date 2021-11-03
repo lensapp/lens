@@ -45,12 +45,12 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["kind", { apiVersion: "", metadata: {uid: "", name: "", resourceVersion: "", selfLink: ""} }],
-        ["apiVersion", { kind: "", metadata: {uid: "", name: "", resourceVersion: "", selfLink: ""} }],
+        ["kind", { apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
+        ["apiVersion", { kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
         ["metadata", { kind: "", apiVersion: "" }],
-        ["metadata.uid", { kind: "", apiVersion: "", metadata: { name: "", resourceVersion: "", selfLink: ""} }],
-        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", resourceVersion: "", selfLink: "" } }],
-        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", selfLink: "" } }],
+        ["metadata.uid", { kind: "", apiVersion: "", metadata: { name: "", resourceVersion: "", selfLink: "" }}],
+        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", resourceVersion: "", selfLink: "" }}],
+        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", selfLink: "" }}],
       ];
 
       it.each(tests)("should reject with missing: %s", (missingField, input) => {
@@ -61,23 +61,23 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["kind", { kind: 1, apiVersion: "", metadata: {} }],
-        ["apiVersion", { apiVersion: 1, kind: "", metadata: {} }],
+        ["kind", { kind: 1, apiVersion: "", metadata: {}}],
+        ["apiVersion", { apiVersion: 1, kind: "", metadata: {}}],
         ["metadata", { kind: "", apiVersion: "", metadata: "" }],
-        ["metadata.uid", { kind: "", apiVersion: "", metadata: { uid: 1 } }],
-        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", name: 1 } }],
-        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: 1 } }],
-        ["metadata.selfLink", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: 1 } }],
-        ["metadata.namespace", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", namespace: 1 } }],
-        ["metadata.creationTimestamp", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", creationTimestamp: 1 } }],
-        ["metadata.continue", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", continue: 1 } }],
-        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: 1 } }],
-        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: [1] } }],
-        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: {} } }],
-        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: 1 } }],
-        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: { food: 1 } } }],
-        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: 1 } }],
-        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: 1 } } }],
+        ["metadata.uid", { kind: "", apiVersion: "", metadata: { uid: 1 }}],
+        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", name: 1 }}],
+        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: 1 }}],
+        ["metadata.selfLink", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: 1 }}],
+        ["metadata.namespace", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", namespace: 1 }}],
+        ["metadata.creationTimestamp", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", creationTimestamp: 1 }}],
+        ["metadata.continue", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", continue: 1 }}],
+        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: 1 }}],
+        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: [1] }}],
+        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: {}}}],
+        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: 1 }}],
+        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: { food: 1 }}}],
+        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: 1 }}],
+        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: 1 }}}],
       ];
 
       it.each(tests)("should reject with wrong type for field: %s", (missingField, input) => {
@@ -86,7 +86,7 @@ describe("KubeObject", () => {
     }
 
     it("should accept valid KubeJsonApiData (ignoring other fields)", () => {
-      const valid = { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: "" } } };
+      const valid = { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: "" }}};
 
       expect(KubeObject.isJsonApiData(valid)).toBe(true);
     });
@@ -118,8 +118,8 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["kind", { apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
-        ["apiVersion", { kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
+        ["kind", { apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
+        ["apiVersion", { kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
         ["metadata", { kind: "", apiVersion: "" }],
       ];
 
@@ -131,23 +131,23 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["kind", { kind: 1, apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
-        ["apiVersion", { apiVersion: 1, kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
+        ["kind", { kind: 1, apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
+        ["apiVersion", { apiVersion: 1, kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
         ["metadata", { kind: "", apiVersion: "", metadata: "" }],
-        ["metadata.uid", { kind: "", apiVersion: "", metadata: { uid: 1, name: "", resourceVersion: "", selfLink: "" } }],
-        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", name: 1, resourceVersion: "", selfLink: "" } }],
-        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: 1, selfLink: "" } }],
-        ["metadata.selfLink", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: 1 } }],
-        ["metadata.namespace", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", namespace: 1 } }],
-        ["metadata.creationTimestamp", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", creationTimestamp: 1 } }],
-        ["metadata.continue", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", continue: 1 } }],
-        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: 1 } }],
-        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: [1] } }],
-        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: {} } }],
-        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: 1 } }],
-        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: { food: 1 } } }],
-        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: 1 } }],
-        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: 1 } } }],
+        ["metadata.uid", { kind: "", apiVersion: "", metadata: { uid: 1, name: "", resourceVersion: "", selfLink: "" }}],
+        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", name: 1, resourceVersion: "", selfLink: "" }}],
+        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: 1, selfLink: "" }}],
+        ["metadata.selfLink", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: 1 }}],
+        ["metadata.namespace", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", namespace: 1 }}],
+        ["metadata.creationTimestamp", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", creationTimestamp: 1 }}],
+        ["metadata.continue", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", continue: 1 }}],
+        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: 1 }}],
+        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: [1] }}],
+        ["metadata.finalizers", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", finalizers: {}}}],
+        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: 1 }}],
+        ["metadata.labels", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", labels: { food: 1 }}}],
+        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: 1 }}],
+        ["metadata.annotations", { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: 1 }}}],
       ];
 
       it.each(tests)("should reject with wrong type for field: %s", (missingField, input) => {
@@ -156,7 +156,7 @@ describe("KubeObject", () => {
     }
 
     it("should accept valid Partial<KubeJsonApiData> (ignoring other fields)", () => {
-      const valid = { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: "" } } };
+      const valid = { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: "" }}};
 
       expect(KubeObject.isPartialJsonApiData(valid)).toBe(true);
     });
@@ -197,8 +197,8 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["kind", { apiVersion: "", items: [], metadata: { resourceVersion: "", selfLink: "" } }],
-        ["apiVersion", { kind: "", items: [], metadata: { resourceVersion: "", selfLink: "" } }],
+        ["kind", { apiVersion: "", items: [], metadata: { resourceVersion: "", selfLink: "" }}],
+        ["apiVersion", { kind: "", items: [], metadata: { resourceVersion: "", selfLink: "" }}],
         ["metadata", { kind: "", items: [], apiVersion: "" }],
       ];
 
@@ -210,15 +210,15 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["kind", { kind: 1, items: [], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" } }],
-        ["apiVersion", { kind: "", items: [], apiVersion: 1, metadata: { resourceVersion: "", selfLink: "" } }],
+        ["kind", { kind: 1, items: [], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }}],
+        ["apiVersion", { kind: "", items: [], apiVersion: 1, metadata: { resourceVersion: "", selfLink: "" }}],
         ["metadata", { kind: "", items: [], apiVersion: "", metadata: 1 }],
-        ["metadata.resourceVersion", { kind: "", items: [], apiVersion: "", metadata: { resourceVersion: 1, selfLink: "" } }],
-        ["metadata.selfLink", { kind: "", items: [], apiVersion: "", metadata: { resourceVersion: "", selfLink: 1 } }],
-        ["items", { kind: "", items: 1, apiVersion: "", metadata: { resourceVersion: "", selfLink: "" } }],
-        ["items", { kind: "", items: "", apiVersion: "", metadata: { resourceVersion: "", selfLink: "" } }],
-        ["items", { kind: "", items: {}, apiVersion: "", metadata: { resourceVersion: "", selfLink: "" } }],
-        ["items[0]", { kind: "", items: [""], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" } }],
+        ["metadata.resourceVersion", { kind: "", items: [], apiVersion: "", metadata: { resourceVersion: 1, selfLink: "" }}],
+        ["metadata.selfLink", { kind: "", items: [], apiVersion: "", metadata: { resourceVersion: "", selfLink: 1 }}],
+        ["items", { kind: "", items: 1, apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }}],
+        ["items", { kind: "", items: "", apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }}],
+        ["items", { kind: "", items: {}, apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }}],
+        ["items[0]", { kind: "", items: [""], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }}],
       ];
 
       it.each(tests)("should reject with wrong type for field: %s", (missingField, input) => {
@@ -227,7 +227,7 @@ describe("KubeObject", () => {
     }
 
     it("should accept valid KubeJsonApiDataList (ignoring other fields)", () => {
-      const valid = { kind: "", items: [false], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" } };
+      const valid = { kind: "", items: [false], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }};
 
       expect(KubeObject.isJsonApiDataList(valid, isBoolean)).toBe(true);
     });

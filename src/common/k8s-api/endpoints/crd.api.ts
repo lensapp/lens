@@ -117,7 +117,7 @@ export class CustomResourceDefinition extends KubeObject {
       params: {
         group: this.getGroup(),
         name: this.getPluralName(),
-      }
+      },
     });
   }
 
@@ -163,7 +163,7 @@ export class CustomResourceDefinition extends KubeObject {
       }
     } else if (this.spec.version) {
       const { additionalPrinterColumns: apc } = this.spec;
-      const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc}) => ({ ...apc, jsonPath: JSONPath }));
+      const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc }) => ({ ...apc, jsonPath: JSONPath }));
 
       return {
         name: this.spec.version,
@@ -217,7 +217,7 @@ export class CustomResourceDefinition extends KubeObject {
       return {
         ...condition,
         isReady: status === "True",
-        tooltip: `${message || reason} (${lastTransitionTime})`
+        tooltip: `${message || reason} (${lastTransitionTime})`,
       };
     });
   }
@@ -236,5 +236,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  crdApi
+  crdApi,
 };

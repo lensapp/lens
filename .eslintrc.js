@@ -31,18 +31,18 @@ module.exports = {
   settings: {
     react: {
       version: packageJson.devDependencies.react || "detect",
-    }
+    },
   },
   overrides: [
     {
       files: [
-        "**/*.js"
+        "**/*.js",
       ],
       extends: [
         "eslint:recommended",
       ],
       env: {
-        node: true
+        node: true,
       },
       parserOptions: {
         ecmaVersion: 2018,
@@ -51,25 +51,36 @@ module.exports = {
       plugins: [
         "header",
         "unused-imports",
-        "react-hooks"
+        "react-hooks",
       ],
       rules: {
         "header/header": [2, "./license-header"],
+        "comma-dangle": ["error", "always-multiline"],
+        "comma-spacing": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
         "no-unused-vars": "off",
+        "space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
           "warn", {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-          }
+          },
         ],
         "quotes": ["error", "double", {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
+        }],
+        "object-curly-spacing": ["error", "always", {
+          "objectsInObjects": false,
+          "arraysInObjects": true,
         }],
         "linebreak-style": ["error", "unix"],
         "eol-last": ["error", "always"],
@@ -77,6 +88,7 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -84,9 +96,10 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
-      }
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+        ],
+        "no-template-curly-in-string": "error",
+      },
     },
     {
       files: [
@@ -98,7 +111,7 @@ module.exports = {
       ],
       plugins: [
         "header",
-        "unused-imports"
+        "unused-imports",
       ],
       parserOptions: {
         ecmaVersion: 2018,
@@ -115,20 +128,35 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-          }
+          },
         ],
+        "comman-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
+        "comma-spacing": "off",
+        "@typescript-eslint/comma-spacing": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
         "quotes": ["error", "double", {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
+        }],
+        "object-curly-spacing": "off",
+        "@typescript-eslint/object-curly-spacing": ["error", "always", {
+          "objectsInObjects": false,
+          "arraysInObjects": true,
         }],
         "react/prop-types": "off",
         "semi": "off",
@@ -138,6 +166,8 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -145,8 +175,9 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+        ],
+        "no-template-curly-in-string": "error",
       },
     },
     {
@@ -156,7 +187,7 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       plugins: [
         "header",
-        "unused-imports"
+        "unused-imports",
       ],
       extends: [
         "plugin:@typescript-eslint/recommended",
@@ -183,20 +214,35 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
         "react/display-name": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": ["error", {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always",
+        }],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-          }
+          },
         ],
+        "comman-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
+        "comma-spacing": "off",
+        "@typescript-eslint/comma-spacing": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
         "quotes": ["error", "double", {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
+        }],
+        "object-curly-spacing": "off",
+        "@typescript-eslint/object-curly-spacing": ["error", "always", {
+          "objectsInObjects": false,
+          "arraysInObjects": true,
         }],
         "react/prop-types": "off",
         "semi": "off",
@@ -206,6 +252,8 @@ module.exports = {
         "object-shorthand": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
         "padding-line-between-statements": [
           "error",
           { "blankLine": "always", "prev": "*", "next": "return" },
@@ -213,11 +261,12 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
         ],
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "no-template-curly-in-string": "error",
       },
-    }
-  ]
+    },
+  ],
 };

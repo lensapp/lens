@@ -90,5 +90,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  resourceQuotaApi
+  resourceQuotaApi,
 };

@@ -154,7 +154,7 @@ export abstract class ShellSession {
       env.LENS_SESSION = "true";
       env.WSLENV = [
         process.env.WSLENV,
-        "KUBECONFIG/up:LENS_SESSION/u"
+        "KUBECONFIG/up:LENS_SESSION/u",
       ]
         .filter(Boolean)
         .join(":");
@@ -183,7 +183,7 @@ export abstract class ShellSession {
     env.NO_PROXY = [
       "localhost",
       "127.0.0.1",
-      env.NO_PROXY
+      env.NO_PROXY,
     ]
       .filter(Boolean)
       .join();

@@ -100,7 +100,7 @@ describe("kube helpers", () => {
       describe("with invalid context object", () => {
         it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalid"))).toEqual(
-            expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'")
+            expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'"),
           );
         });
       });
@@ -108,7 +108,7 @@ describe("kube helpers", () => {
       describe("with invalid cluster object", () => {
         it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidCluster"))).toEqual(
-            expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'")
+            expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'"),
           );
         });
       });
@@ -116,7 +116,7 @@ describe("kube helpers", () => {
       describe("with invalid user object", () => {
         it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
-            expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'")
+            expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'"),
           );
         });
       });
@@ -174,7 +174,7 @@ describe("kube helpers", () => {
       });
 
       it("multiple context is ok", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: "cluster-2"});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "cluster-2" }, name: "cluster-2" });
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
         expect(config.getCurrentContext()).toBe("minikube");
@@ -209,7 +209,7 @@ describe("kube helpers", () => {
       });
 
       it("empty name in context causes it to be removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: ""});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "cluster-2" }, name: "" });
         expect(mockKubeConfig.contexts.length).toBe(2);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
@@ -218,7 +218,7 @@ describe("kube helpers", () => {
       });
 
       it("empty cluster in context causes it to be removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "", user: "cluster-2"}, name: "cluster-2"});
+        mockKubeConfig.contexts.push({ context: { cluster: "", user: "cluster-2" }, name: "cluster-2" });
         expect(mockKubeConfig.contexts.length).toBe(2);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
@@ -227,7 +227,7 @@ describe("kube helpers", () => {
       });
 
       it("empty user in context causes it to be removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "" }, name: "cluster-2" });
         expect(mockKubeConfig.contexts.length).toBe(2);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
@@ -236,8 +236,8 @@ describe("kube helpers", () => {
       });
 
       it("invalid context in between valid contexts is removed", async () => {
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
-        mockKubeConfig.contexts.push({context: {cluster: "cluster-3", user: "cluster-3"}, name: "cluster-3"});
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-2", user: "" }, name: "cluster-2" });
+        mockKubeConfig.contexts.push({ context: { cluster: "cluster-3", user: "cluster-3" }, name: "cluster-3" });
         expect(mockKubeConfig.contexts.length).toBe(3);
         const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 

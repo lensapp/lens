@@ -44,7 +44,7 @@ const dialogState = observable.object({
 @observer
 export class ReplicaSetScaleDialog extends Component<Props> {
   static defaultProps = {
-    replicaSetApi
+    replicaSetApi,
   };
 
   @observable ready = false;
@@ -118,12 +118,14 @@ export class ReplicaSetScaleDialog extends Component<Props> {
     }
   };
 
+  private readonly scaleMin = 0;
+
   desiredReplicasUp = () => {
-    this.desiredReplicas < this.scaleMax && this.desiredReplicas++;
+    this.desiredReplicas = Math.min(this.scaleMax, this.desiredReplicas + 1);
   };
 
   desiredReplicasDown = () => {
-    this.desiredReplicas > 0 && this.desiredReplicas--;
+    this.desiredReplicas = Math.max(this.scaleMin, this.desiredReplicas - 1);
   };
 
   renderContents() {

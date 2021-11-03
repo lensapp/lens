@@ -71,7 +71,7 @@ const defaultPropsMenu: Partial<MenuProps> = {
   closeOnClickItem: true,
   closeOnClickOutside: true,
   closeOnScroll: false,
-  toggleEvent: "click"
+  toggleEvent: "click",
 };
 
 export class Menu extends React.Component<MenuProps, State> {
@@ -88,6 +88,10 @@ export class Menu extends React.Component<MenuProps, State> {
 
   get isOpen() {
     return !!this.props.isOpen;
+  }
+
+  get isClosed() {
+    return !this.isOpen;
   }
 
   componentDidMount() {
@@ -192,29 +196,42 @@ export class Menu extends React.Component<MenuProps, State> {
         top: renderMenuOnTop,
         bottom: !renderMenuOnTop,
         left: renderMenuLeft,
-        right: !renderMenuLeft
+        right: !renderMenuLeft,
       },
       menuStyle: {
         top: renderMenuOnTop ? menuOnTopPosition : menuOnBottomPosition,
         left: renderMenuLeft ? menuOnLeftSidePosition : menuOnRightSidePosition,
-      }
+      },
     });
   };
 
   open() {
-    if (this.isOpen) return;
+    if (this.isOpen) {
+      return;
+    }
+
     this.props.open();
     this.refreshPosition();
-    if (this.props.autoFocus) this.focusNextItem();
+
+    if (this.props.autoFocus) {
+      this.focusNextItem();
+    }
   }
 
   close() {
-    if (!this.isOpen) return;
+    if (this.isClosed) {
+      return;
+    }
+
     this.props.close();
   }
 
   toggle() {
-    this.isOpen ? this.close() : this.open();
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
   }
 
   onKeyDown(evt: KeyboardEvent) {
@@ -307,7 +324,7 @@ export class Menu extends React.Component<MenuProps, State> {
     const menuItems = React.Children.toArray(children).map((item: ReactElement<MenuItemProps>, index) => {
       if (item.type === MenuItem) {
         return React.cloneElement(item, {
-          ref: (item: MenuItem) => this.bindItemRef(item, index)
+          ref: (item: MenuItem) => this.bindItemRef(item, index),
         });
       }
 
@@ -323,7 +340,7 @@ export class Menu extends React.Component<MenuProps, State> {
             className={className}
             style={{
               left: this.state?.menuStyle?.left,
-              top: this.state?.menuStyle?.top
+              top: this.state?.menuStyle?.top,
             }}
           >
             {menuItems}

@@ -31,7 +31,7 @@ interface Props extends DOMAttributes<any>{
   className?: string;
 }
 
-export function RemovableItem({icon, onRemove, children, className, ...rest}: Props) {
+export function RemovableItem({ icon, onRemove, children, className, ...rest }: Props) {
   return (
     <div className={cssNames(styles.item, "flex gaps align-center justify-space-between", className)} {...rest}>
       {icon && (

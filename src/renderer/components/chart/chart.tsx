@@ -56,7 +56,7 @@ export enum ChartKind {
   PIE = "pie",
   BAR = "bar",
   LINE = "line",
-  DOUGHNUT = "doughnut"
+  DOUGHNUT = "doughnut",
 }
 
 const defaultProps: Partial<ChartProps> = {
@@ -66,7 +66,7 @@ const defaultProps: Partial<ChartProps> = {
   showLegend: true,
   legendPosition: "bottom",
   plugins: [],
-  redraw: false
+  redraw: false,
 };
 
 export class Chart extends React.Component<ChartProps> {
@@ -108,9 +108,9 @@ export class Chart extends React.Component<ChartProps> {
       ...data,
       datasets: data.datasets && data.datasets.map(set => {
         return {
-          ...set
+          ...set,
         };
-      })
+      }),
     };
   }
 
@@ -153,7 +153,7 @@ export class Chart extends React.Component<ChartProps> {
 
         datasets[index] = {
           ...datasets[index],
-          ...props
+          ...props,
         };
       } else {
         datasets[datasetIndex] = next;
@@ -190,7 +190,7 @@ export class Chart extends React.Component<ChartProps> {
           return labelElem(label, color);
         })}
         {!labels && datasets.map(({ borderColor, label, tooltip }) =>
-          labelElem(label, borderColor as any, tooltip)
+          labelElem(label, borderColor as any, tooltip),
         )}
       </div>
     );
@@ -206,7 +206,7 @@ export class Chart extends React.Component<ChartProps> {
       options: {
         ...options,
         legend: {
-          display: false
+          display: false,
         },
       },
       data: this.currentChartData,

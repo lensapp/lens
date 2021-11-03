@@ -44,9 +44,9 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
       data: {
         metadata: params,
         spec: {
-          replicas
-        }
-      }
+          replicas,
+        },
+      },
     });
   }
 }
@@ -78,7 +78,7 @@ export class ReplicaSet extends WorkloadKubeObject {
 
   declare spec: {
     replicas?: number;
-    selector: { matchLabels: { [app: string]: string } };
+    selector: { matchLabels: { [app: string]: string }};
     template?: {
       metadata: {
         labels: {
@@ -133,5 +133,5 @@ if (isClusterPageContext()) {
 }
 
 export {
-  replicaSetApi
+  replicaSetApi,
 };

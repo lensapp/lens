@@ -63,7 +63,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
       kubeWatchApi.subscribeStores(stores, {
         preload: true,
         namespaces: clusterContext.contextNamespaces,
-      })
+      }),
     ]);
   }
 

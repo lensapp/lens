@@ -29,5 +29,5 @@ export const base64 = {
   },
   encode(data: string) {
     return Utf8.parse(data).toString(Base64);
-  }
+  },
 };

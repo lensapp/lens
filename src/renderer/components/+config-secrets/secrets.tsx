@@ -85,7 +85,7 @@ export class Secrets extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
-            addTooltip: "Create new Secret"
+            addTooltip: "Create new Secret",
           }}
         />
         <AddSecretDialog/>
