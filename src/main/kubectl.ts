@@ -385,10 +385,12 @@ export class Kubectl {
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 });
   }
 
-  protected getDownloadMirror() {
+  protected getDownloadMirror(): string {
     // MacOS packages are only available from default
 
-    return packageMirrors.get(UserStore.getInstance().downloadMirror)
+    const mirror = packageMirrors.get(UserStore.getInstance().downloadMirror)
       ?? packageMirrors.get(defaultPackageMirror);
+
+    return mirror.url;
   }
 }
