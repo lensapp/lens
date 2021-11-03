@@ -32,8 +32,6 @@ import { AppPaths } from "../../../../common/app-paths";
 
 mockWindow();
 
-jest.mock("react-monaco-editor", () => null);
-
 jest.mock("electron", () => ({
   app: {
     getVersion: () => "99.99.99",

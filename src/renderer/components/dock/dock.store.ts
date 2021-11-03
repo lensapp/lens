@@ -20,10 +20,9 @@
  */
 
 import * as uuid from "uuid";
-import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
+import { action, comparer, computed, IReactionOptions, makeObservable, observable, reaction, runInAction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
-import { monacoModelsManager } from "./monaco-model-manager";
 
 export type TabId = string;
 
@@ -87,6 +86,27 @@ export interface DockStorageState {
   tabs: DockTab[];
   selectedTabId?: TabId;
   isOpen?: boolean;
+}
+
+export interface DockTabChangeEvent {
+  tab: DockTab;
+  tabId: TabId;
+  prevTab?: DockTab;
+}
+
+export interface DockTabChangeEventOptions extends IReactionOptions {
+  /**
+   * filter: by dockStore.selectedTab.kind == tabKind
+   */
+  tabKind?: TabKind;
+  /**
+   * filter: dock and selected tab should be visible (default: true)
+   */
+  dockIsVisible?: boolean;
+}
+
+export interface DockTabCloseEvent {
+  tabId: TabId; // closed tab id
 }
 
 export class DockStore implements DockStorageState {
@@ -158,12 +178,6 @@ export class DockStore implements DockStorageState {
   private init() {
     // adjust terminal height if window size changes
     window.addEventListener("resize", throttle(this.adjustHeight, 250));
-    // create monaco models
-    this.whenReady.then(() => {this.tabs.forEach(tab => {
-      if (this.usesMonacoEditor(tab)) {
-        monacoModelsManager.addModel(tab.id);
-      }
-    });});
   }
 
   get maxHeight() {
@@ -185,19 +199,42 @@ export class DockStore implements DockStorageState {
     return reaction(() => [this.height, this.fullSize], callback, options);
   }
 
-  onTabChange(callback: (tabId: TabId) => void, options?: IReactionOptions) {
-    return reaction(() => this.selectedTabId, callback, options);
+  onTabClose(callback: (evt: DockTabCloseEvent) => void, options: IReactionOptions = {}) {
+    return reaction(() => dockStore.tabs.map(tab => tab.id), (tabs: TabId[], prevTabs?: TabId[]) => {
+      if (!Array.isArray(prevTabs)) {
+        return; // tabs not yet modified
+      }
+
+      const closedTabs: TabId[] = prevTabs.filter(id => !tabs.includes(id));
+
+      if (closedTabs.length > 0) {
+        runInAction(() => {
+          closedTabs.forEach(tabId => callback({ tabId }));
+        });
+      }
+    }, {
+      equals: comparer.structural,
+      ...options,
+    });
+  }
+
+  onTabChange(callback: (evt: DockTabChangeEvent) => void, options: DockTabChangeEventOptions = {}) {
+    const { tabKind, dockIsVisible = true, ...reactionOpts } = options;
+
+    return reaction(() => this.selectedTab, ((tab, prevTab) => {
+      if (!tab) return; // skip when dock is empty
+      if (tabKind && tabKind !== tab.kind) return; // handle specific tab.kind only
+      if (dockIsVisible && !this.isOpen) return;
+
+      callback({
+        tab, prevTab,
+        tabId: tab.id,
+      });
+    }), reactionOpts);
   }
 
   hasTabs() {
     return this.tabs.length > 0;
-  }
-
-  usesMonacoEditor(tab: DockTab): boolean {
-    return [TabKind.CREATE_RESOURCE,
-      TabKind.EDIT_RESOURCE,
-      TabKind.INSTALL_CHART,
-      TabKind.UPGRADE_CHART].includes(tab.kind);
   }
 
   @action
@@ -274,11 +311,6 @@ export class DockStore implements DockStorageState {
       title,
     };
 
-    // add monaco model
-    if (this.usesMonacoEditor(tab)) {
-      monacoModelsManager.addModel(id);
-    }
-
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
@@ -292,11 +324,6 @@ export class DockStore implements DockStorageState {
 
     if (!tab || tab.pinned) {
       return;
-    }
-
-    // remove monaco model
-    if (this.usesMonacoEditor(tab)) {
-      monacoModelsManager.removeModel(tabId);
     }
 
     this.tabs = this.tabs.filter(tab => tab.id !== tabId);

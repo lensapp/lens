@@ -19,18 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { jest } from "@jest/globals";
 import { ClusterPageRegistry, getExtensionPageUrl, GlobalPageRegistry, PageParams } from "../page-registry";
 import { LensExtension } from "../../lens-extension";
 import React from "react";
 import fse from "fs-extra";
 import { Console } from "console";
-import { stdout, stderr } from "process";
+import { stderr, stdout } from "process";
+import { TerminalStore } from "../../../renderer/components/dock/terminal.store";
 import { ThemeStore } from "../../../renderer/theme.store";
-import { TerminalStore } from "../../renderer-api/components";
 import { UserStore } from "../../../common/user-store";
 import { AppPaths } from "../../../common/app-paths";
-
-jest.mock("react-monaco-editor", () => null);
 
 jest.mock("electron", () => ({
   app: {

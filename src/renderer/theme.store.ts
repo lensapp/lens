@@ -19,37 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, reaction, makeObservable } from "mobx";
-import { autoBind, iter, Singleton } from "./utils";
+import { computed, makeObservable, observable, reaction } from "mobx";
+import { autoBind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
-import darkTheme from "./themes/lens-dark.json";
-import lightTheme from "./themes/lens-light.json";
+import lensDarkThemeJson from "./themes/lens-dark.json";
+import lensLightThemeJson from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";
+import type { MonacoEditorProps } from "./components/monaco-editor";
 
 export type ThemeId = string;
 
-export enum MonacoTheme {
-  DARK = "clouds-midnight",
-  LIGHT = "vs",
-}
-
-export enum ThemeType {
-  DARK = "dark",
-  LIGHT = "light",
-}
-
 export interface Theme {
-  type: ThemeType;
   name: string;
+  type: "dark" | "light";
   colors: Record<string, string>;
   description: string;
   author: string;
-  monacoTheme: string;
-}
-
-export interface ThemeItems extends Theme {
-  id: string;
+  monacoTheme: MonacoEditorProps["theme"];
 }
 
 export class ThemeStore extends Singleton {
@@ -57,27 +44,23 @@ export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
   // bundled themes from `themes/${themeId}.json`
-  private allThemes = observable.map<string, Theme>([
-    ["lens-dark", { ...darkTheme, type: ThemeType.DARK, monacoTheme: MonacoTheme.DARK }],
-    ["lens-light", { ...lightTheme, type: ThemeType.LIGHT, monacoTheme: MonacoTheme.LIGHT }],
-  ]);
-
-  @computed get themes(): ThemeItems[] {
-    return Array.from(iter.map(this.allThemes, ([id, theme]) => ({ id, ...theme })));
-  }
+  private themes = observable.map<ThemeId, Theme>({
+    "lens-dark": lensDarkThemeJson as Theme,
+    "lens-light": lensLightThemeJson as Theme,
+  });
 
   @computed get activeThemeId(): string {
     return UserStore.getInstance().colorTheme;
   }
 
   @computed get activeTheme(): Theme {
-    return this.allThemes.get(this.activeThemeId) ?? this.allThemes.get("lens-dark");
+    return this.themes.get(this.activeThemeId) ?? this.themes.get(ThemeStore.defaultTheme);
   }
 
   @computed get themeOptions(): SelectOption<string>[] {
-    return this.themes.map(theme => ({
+    return Array.from(this.themes).map(([themeId, theme]) => ({
       label: theme.name,
-      value: theme.id,
+      value: themeId,
     }));
   }
 
@@ -101,7 +84,7 @@ export class ThemeStore extends Singleton {
   }
 
   getThemeById(themeId: ThemeId): Theme {
-    return this.allThemes.get(themeId);
+    return this.themes.get(themeId);
   }
 
   protected applyTheme(theme: Theme) {
@@ -118,6 +101,6 @@ export class ThemeStore extends Singleton {
     // Adding universal theme flag which can be used in component styles
     const body = document.querySelector("body");
 
-    body.classList.toggle("theme-light", theme.type === ThemeType.LIGHT);
+    body.classList.toggle("theme-light", theme.type === "light");
   }
 }

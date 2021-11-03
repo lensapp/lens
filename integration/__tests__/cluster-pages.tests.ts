@@ -378,11 +378,12 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await kubeApiServerRow.click();
     await frame.waitForSelector(".Drawer", { state: "visible" });
 
-    const logButton = await frame.waitForSelector("ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']");
+    const showPodLogsIcon = await frame.waitForSelector(".Drawer .drawer-title .Icon >> text=subject");
 
-    await logButton.click();
+    showPodLogsIcon.click();
 
     // Check if controls are available
+    await frame.waitForSelector(".Dock.isOpen");
     await frame.waitForSelector(".LogList .VirtualList");
     await frame.waitForSelector(".LogResourceSelector");
 
@@ -447,31 +448,31 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await frame.waitForTimeout(100_000);
     }
 
-    const inputField = await frame.waitForSelector(".CreateResource div.react-monaco-editor-container");
+    const testPodName = "nginx-create-pod-test";
+    const monacoEditor = await frame.waitForSelector(`.Dock.isOpen [data-test-component="monaco-editor"]`);
 
-    await inputField.click();
-    await inputField.type("apiVersion: v1", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type("kind: Pod", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type("metadata:", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type("  name: nginx-create-pod-test", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.press("Backspace", { delay: 10 });
-    await inputField.type("spec:", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type("  containers:", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type("- name: nginx-create-pod-test", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
-    await inputField.type("  image: nginx:alpine", { delay: 10 });
-    await inputField.press("Enter", { delay: 10 });
+    await monacoEditor.click();
+    await monacoEditor.type("apiVersion: v1", { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type("kind: Pod", { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type("metadata:", { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type(`  name: ${testPodName}`, { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.press("Backspace", { delay: 10 });
+    await monacoEditor.type("spec:", { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type("  containers:", { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type(`- name: ${testPodName}`, { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
+    await monacoEditor.type("  image: nginx:alpine", { delay: 10 });
+    await monacoEditor.press("Enter", { delay: 10 });
 
-    await frame.click("button.Button >> text='Create & Close'");
-    await frame.click("div.TableCell >> text=nginx-create-pod-test");
-    await frame.waitForSelector("div.drawer-title-text >> text='Pod: nginx-create-pod-test'");
+    await frame.click(".Dock .Button >> text='Create'");
+    await frame.waitForSelector(`.TableCell >> text=${testPodName}`);
   }, 10*60*1000);
 });

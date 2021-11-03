@@ -22,7 +22,7 @@
 import "./upgrade-chart.scss";
 
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import type { DockTab } from "./dock.store";
@@ -86,9 +86,15 @@ export class UpgradeChart extends React.Component<Props> {
     this.version = this.versions[0];
   }
 
-  onChange = (value: string, error?: string) => {
+  @action
+  onChange = (value: string) => {
+    this.error = "";
     upgradeChartStore.values.setData(this.tabId, value);
-    this.error = error;
+  };
+
+  @action
+  onError = (error: Error | string) => {
+    this.error = error.toString();
   };
 
   upgrade = async () => {
@@ -118,7 +124,7 @@ export class UpgradeChart extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, release, value, error, onChange, upgrade, versions, version } = this;
+    const { tabId, release, value, error, onChange, onError, upgrade, versions, version } = this;
     const { className } = this.props;
 
     if (!release || upgradeChartStore.isLoading() || !version) {
@@ -157,6 +163,7 @@ export class UpgradeChart extends React.Component<Props> {
           tabId={tabId}
           value={value}
           onChange={onChange}
+          onError={onError}
         />
       </div>
     );

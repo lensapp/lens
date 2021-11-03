@@ -24,30 +24,27 @@ import "./create-resource.scss";
 import React from "react";
 import path from "path";
 import fs from "fs-extra";
-import { Select, GroupSelectOption, SelectOption } from "../select";
+import { GroupSelectOption, Select, SelectOption } from "../select";
 import yaml from "js-yaml";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
 import type { DockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../notifications";
-import { monacoModelsManager } from "./monaco-model-manager";
 import logger from "../../../common/logger";
 
 interface Props {
-  className?: string;
   tab: DockTab;
 }
 
 @observer
 export class CreateResource extends React.Component<Props> {
-  @observable currentTemplates:Map<string, SelectOption> = new Map();
+  @observable currentTemplates: Map<string, SelectOption> = new Map();
   @observable error = "";
-  @observable templates:GroupSelectOption<SelectOption>[] = [];
+  @observable templates: GroupSelectOption<SelectOption>[] = [];
 
   constructor(props: Props) {
     super(props);
@@ -59,12 +56,12 @@ export class CreateResource extends React.Component<Props> {
     createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
   }
 
-  updateGroupSelectOptions(templates :Record<string, string[]>) {
+  updateGroupSelectOptions(templates: Record<string, string[]>) {
     this.templates = Object.entries(templates)
       .map(([name, grouping]) => this.convertToGroup(name, grouping));
   }
 
-  convertToGroup(group:string, items:string[]):GroupSelectOption {
+  convertToGroup(group: string, items: string[]): GroupSelectOption {
     const options = items.map(v => ({ label: path.parse(v).name, value: v }));
 
     return { label: group, options };
@@ -82,16 +79,19 @@ export class CreateResource extends React.Component<Props> {
     return this.currentTemplates.get(this.tabId) ?? null;
   }
 
-  onChange = (value: string, error?: string) => {
+  onChange = (value: string) => {
+    this.error = ""; // reset first, validation goes later
     createResourceStore.setData(this.tabId, value);
-    this.error = error;
+  };
+
+  onError = (error: Error | string) => {
+    this.error = error.toString();
   };
 
   onSelectTemplate = (item: SelectOption) => {
     this.currentTemplates.set(this.tabId, item);
     fs.readFile(item.value, "utf8").then(v => {
       createResourceStore.setData(this.tabId, v);
-      monacoModelsManager.getModel(this.tabId).setValue(v ?? "");
     });
   };
 
@@ -129,42 +129,42 @@ export class CreateResource extends React.Component<Props> {
     return undefined;
   };
 
-  renderControls(){
+  renderControls() {
     return (
       <div className="flex gaps align-center">
         <Select
-          autoConvertOptions = {false}
+          autoConvertOptions={false}
+          controlShouldRenderValue={false} // always keep initial placeholder
           className="TemplateSelect"
           placeholder="Select Template ..."
           options={this.templates}
           menuPlacement="top"
           themeName="outlined"
           onChange={v => this.onSelectTemplate(v)}
-          value = {this.currentTemplate}
+          value={this.currentTemplate}
         />
       </div>
     );
   }
 
-
   render() {
-    const { tabId, data, error, create, onChange } = this;
-    const { className } = this.props;
+    const { tabId, data, error } = this;
 
     return (
-      <div className={cssNames("CreateResource flex column", className)}>
+      <div className="CreateResource flex column">
         <InfoPanel
           tabId={tabId}
           error={error}
           controls={this.renderControls()}
-          submit={create}
+          submit={this.create}
           submitLabel="Create"
           showNotifications={false}
         />
         <EditorPanel
           tabId={tabId}
           value={data}
-          onChange={onChange}
+          onChange={this.onChange}
+          onError={this.onError}
         />
       </div>
     );

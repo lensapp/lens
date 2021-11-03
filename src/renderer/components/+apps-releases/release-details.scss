@@ -86,13 +86,7 @@
     font-size: small;
   }
 
-  .values {
-    .MonacoEditor {
-      min-height: 300px;
-    }
-
-    .MonacoEditor + .Button {
-      align-self: flex-start;
-    }
+  .values + .Button {
+    align-self: flex-start;
   }
 }

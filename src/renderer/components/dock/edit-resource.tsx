@@ -26,7 +26,6 @@ import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import type { DockTab } from "./dock.store";
-import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
@@ -36,7 +35,6 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { createPatch } from "rfc6902";
 
 interface Props {
-  className?: string;
   tab: DockTab;
 }
 
@@ -88,9 +86,13 @@ export class EditResource extends React.Component<Props> {
     });
   }
 
-  onChange = (draft: string, error?: string) => {
-    this.error = error;
+  onChange = (draft: string) => {
+    this.error = ""; // reset first
     this.saveDraft(draft);
+  };
+
+  onError = (error?: Error | string) => {
+    this.error = error.toString();
   };
 
   save = async () => {
@@ -114,14 +116,14 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, error, onChange, save, draft, isReadyForEditing, resource } = this;
+    const { tabId, error, onChange, onError, save, draft, isReadyForEditing, resource } = this;
 
     if (!isReadyForEditing) {
       return <Spinner center/>;
     }
 
     return (
-      <div className={cssNames("EditResource flex column", this.props.className)}>
+      <div className="EditResource flex column">
         <InfoPanel
           tabId={tabId}
           error={error}
@@ -140,6 +142,7 @@ export class EditResource extends React.Component<Props> {
           tabId={tabId}
           value={draft}
           onChange={onChange}
+          onError={onError}
         />
       </div>
     );
