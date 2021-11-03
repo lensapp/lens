@@ -89,13 +89,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     module: {
       rules: [
         {
-          // Allow to load raw file contents with dynamic imports, e.g. import("../some-path.txt?raw")
-          // See also: https://webpack.js.org/guides/asset-modules/
-          use: "raw-loader",
-          resourceQuery: /raw/,
-          enforce: "post",
-        },
-        {
           test: /\.node$/,
           use: "node-loader",
         },
