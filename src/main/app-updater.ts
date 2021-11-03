@@ -21,14 +21,14 @@
 
 import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
-import { isDevelopment, isPublishConfigured, isTestEnv } from "../common/vars";
+import { isDevelopment, isMac, isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
-import { app, ipcMain } from "electron";
+import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
-import { WindowManager } from "./window-manager";
+import { autoUpdater as electronAutoUpdater } from "electron";
 
 let installVersion: null | string = null;
 
@@ -41,8 +41,14 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
       setImmediate(() => {
-        app.removeAllListeners("window-all-closed");
-        WindowManager.getInstance().destroy();
+        if (isMac) {
+          /**
+           * This is a necessary workaround until electron-updater is fixed.
+           * The problem is that it downloads it but then never tries to
+           * download it from itself via electron.
+           */
+          electronAutoUpdater.checkForUpdates();
+        }
         autoUpdater.quitAndInstall(true, true);
       });
     } else {
@@ -65,7 +71,12 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
 
   const userStore = UserStore.getInstance();
 
-  autoUpdater.logger = logger;
+  autoUpdater.logger = {
+    info: message => logger.info(`[AUTO-UPDATE]: electron-updater: ${message}`),
+    warn: message => logger.warn(`[AUTO-UPDATE]: electron-updater: ${message}`),
+    error: message => logger.error(`[AUTO-UPDATE]: electron-updater: ${message}`),
+    debug: message =>  logger.debug(`[AUTO-UPDATE]: electron-updater: ${message}`),
+  };
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.channel = userStore.updateChannel;
