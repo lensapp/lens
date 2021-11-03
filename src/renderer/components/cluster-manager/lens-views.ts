@@ -71,24 +71,28 @@ export class ClusterFrameHandler extends Singleton {
 
     logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
 
-    // we cannot wait forever because cleanup would be blocked for broken cluster connections
-    when(() => cluster.ready, { timeout: 5_000 })
-      .then(() => logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`))
-      .finally(() => this.autoCleanOnRemove(clusterId, iframe));
-  }
+    const dispose = when(
+      () => cluster.ready,
+      () => logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`),
+    );
 
-  private autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
     when(
+      // cluster.disconnect is set to `false` when the cluster starts to connect
+      () => !cluster.disconnected,
       () => {
-        const cluster = ClusterStore.getInstance().getById(clusterId);
+        when(
+          () => {
+            const cluster = ClusterStore.getInstance().getById(clusterId);
 
-        return !cluster || (cluster.disconnected && this.views.get(clusterId)?.isLoaded);
-      },
-      () => {
-        logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
-        this.views.delete(clusterId);
-
-        iframe.parentNode.removeChild(iframe);
+            return !cluster || (cluster.disconnected && this.views.get(clusterId)?.isLoaded);
+          },
+          () => {
+            logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
+            this.views.delete(clusterId);
+            iframe.parentNode.removeChild(iframe);
+            dispose();
+          },
+        );
       },
     );
   }
