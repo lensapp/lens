@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`kube-object-menu given no kube object, renders 1`] = `
+<div>
+  <i
+    class="Icon material interactive focusable"
+    id="menu_actions_1"
+    tabindex="0"
+  >
+    <span
+      class="icon"
+      data-icon-name="more_vert"
+    >
+      more_vert
+    </span>
+  </i>
+</div>
+`;
