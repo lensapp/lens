@@ -30,13 +30,13 @@ import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { IHasName } from "../../../main/cluster";
 
 
-export interface KubeObjectMenuProps<T> extends MenuActionsProps {
-  object: T | null | undefined;
+export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
+  object: TKubeObject | null | undefined;
   editable?: boolean;
   removable?: boolean;
 }
 
-interface KubeObjectMenuDependencies<T> extends KubeObjectMenuProps<T>{
+interface KubeObjectMenuDependencies<TKubeObject> extends KubeObjectMenuProps<TKubeObject>{
   apiManager: IGettableStore,
   kubeObjectMenuRegistry: IHasGettableItemsForKind
   cluster: IHasName,
@@ -44,7 +44,7 @@ interface KubeObjectMenuDependencies<T> extends KubeObjectMenuProps<T>{
   editResourceTab: Function,
 }
 
-export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuDependencies<T>> {
+export class KubeObjectMenu<TKubeObject extends KubeObject> extends React.Component<KubeObjectMenuDependencies<TKubeObject>> {
   get dependencies() {
     const {
       apiManager,
