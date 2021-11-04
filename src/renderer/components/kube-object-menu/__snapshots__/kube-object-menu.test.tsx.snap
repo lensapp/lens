@@ -1,18 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`kube-object-menu given no kube object, renders 1`] = `
-<div>
-  <i
-    class="Icon material interactive focusable"
-    id="menu_actions_1"
-    tabindex="0"
-  >
-    <span
-      class="icon"
-      data-icon-name="more_vert"
+exports[`kube-object-menu given kube object, renders 1`] = `
+<body>
+  <div>
+    <ul
+      class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
     >
-      more_vert
-    </span>
-  </i>
-</div>
+      <div>
+        Some menu item
+      </div>
+    </ul>
+  </div>
+</body>
+`;
+
+exports[`kube-object-menu given no kube object, renders 1`] = `
+<body>
+  <div>
+    <ul
+      class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+    />
+  </div>
+</body>
 `;

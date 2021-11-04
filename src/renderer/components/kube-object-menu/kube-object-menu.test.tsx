@@ -23,9 +23,12 @@ import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObjectMenu } from "./kube-object-menu";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
-import type { IHasGettableItemsForKind } from "../../../extensions/registries";
+import type {
+  IHasGettableItemsForKind,
+  KubeObjectMenuRegistration,
+} from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { IHasName } from "../../../main/cluster";
@@ -36,11 +39,16 @@ describe("kube-object-menu", () => {
   let apiManagerStub: IGettableStore;
   let clusterStub : IHasName;
   let kubeObjectMenuRegistryStub: IHasGettableItemsForKind;
-  let objectStub: any;  
+  let objectStub: KubeObject | null;
 
   beforeEach(() => {
     // TODO: Remove illegal global overwrites for what should be a dependency somewhere.
-    window.requestIdleCallback = () => 42;
+    // TODO: Remove usage of experimental browser API.
+    window.requestIdleCallback = (callback: IdleRequestCallback): number => {
+      callback(undefined);
+
+      return undefined;
+    };
 
     window.cancelIdleCallback = () => {};
 
@@ -51,9 +59,18 @@ describe("kube-object-menu", () => {
 
     clusterStub = { name: "Some cluster name" };
 
+    const MenuItemComponentStub : React.FC = () => <div>Some menu item</div>;
+
+    const menuItemStub: KubeObjectMenuRegistration = {
+      apiVersions: ["irrelevant"],
+      components: { MenuItem: MenuItemComponentStub },
+      kind: "irrelevant",
+    };
+
+    
     kubeObjectMenuRegistryStub = {
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      getItemsForKind: (kind: string, apiVersion: string): any => undefined,
+      getItemsForKind: (kind: string, apiVersion: string): any => [menuItemStub],
     };
 
     hideDetailsStub = () => {};
@@ -64,14 +81,34 @@ describe("kube-object-menu", () => {
   it("given no kube object, renders", () => {
     objectStub = null;
 
-    const { container } = render(<KubeObjectMenu object={objectStub}
+    const { baseElement } = render(<KubeObjectMenu object={objectStub}
       apiManager={apiManagerStub}
       cluster={clusterStub}
       kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
       hideDetails={hideDetailsStub}
       editResourceTab={editResourceTabStub}
+      toolbar={true}
     />);
 
-    expect(container).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("given kube object, renders", () => {
+    objectStub = KubeObject.create({
+      apiVersion: "some-api-version",
+      kind: "some-kind",
+      metadata: { uid: "some-uid", name: "some-name", resourceVersion: "some-resource-version" },
+    });
+
+    const { baseElement } = render(<KubeObjectMenu object={objectStub}
+      apiManager={apiManagerStub}
+      cluster={clusterStub}
+      kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
+      hideDetails={hideDetailsStub}
+      editResourceTab={editResourceTabStub}
+      toolbar={true}
+    />);
+
+    expect(baseElement).toMatchSnapshot();
   });
 });
