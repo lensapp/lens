@@ -49,6 +49,12 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
            */
           electronAutoUpdater.checkForUpdates();
         } else if (isLinux) {
+          /**
+           * This is a necessary workaround until electron-updater is fixed.
+           * The problem is that because linux updating is not implemented at
+           * all via electron. Electron's autoUpdater.quitAndInstall() is never
+           * called.
+           */
           electronAutoUpdater.emit("before-quit-for-update");
         }
         autoUpdater.quitAndInstall(true, true);
