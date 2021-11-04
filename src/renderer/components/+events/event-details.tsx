@@ -27,12 +27,13 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -42,7 +43,16 @@ export class EventDetails extends React.Component<Props> {
   render() {
     const { object: event } = this.props;
 
-    if (!event) return null;
+    if (!event) {
+      return null;
+    }
+
+    if (!(event instanceof KubeEvent)) {
+      logger.error("[EventDetails]: passed object that is not an instanceof KubeEvent", event);
+
+      return null;
+    }
+
     const { message, reason, count, type, involvedObject } = event;
     const { kind, name, namespace, fieldPath } = involvedObject;
 

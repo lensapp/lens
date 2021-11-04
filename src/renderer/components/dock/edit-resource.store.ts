@@ -31,6 +31,7 @@ import {monacoModelsManager} from "./monaco-model-manager";
 export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default
   draft?: string; // edited draft in yaml
+  firstDraft?: string;
 }
 
 export class EditResourceStore extends DockTabStore<EditingResource> {
@@ -104,6 +105,10 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     }) || [];
 
     return dockStore.getTabById(tabId);
+  }
+
+  clearInitialDraft(tabId: TabId): void {
+    delete this.getData(tabId)?.firstDraft;
   }
 
   reset() {

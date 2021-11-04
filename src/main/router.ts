@@ -198,5 +198,6 @@ export class Router {
 
     // Resource Applier API
     this.router.add({ method: "post", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.applyResource);
+    this.router.add({ method: "patch", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.patchResource);
   }
 }

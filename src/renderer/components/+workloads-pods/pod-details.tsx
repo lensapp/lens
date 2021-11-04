@@ -43,6 +43,7 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getDetailsUrl } from "../kube-detail-params";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
@@ -77,7 +78,16 @@ export class PodDetails extends React.Component<Props> {
   render() {
     const { object: pod } = this.props;
 
-    if (!pod) return null;
+    if (!pod) {
+      return null;
+    }
+
+    if (!(pod instanceof Pod)) {
+      logger.error("[PodDetails]: passed object that is not an instanceof Pod", pod);
+
+      return null;
+    }
+
     const { status, spec } = pod;
     const { conditions, podIP } = status;
     const podIPs = pod.getIPs();

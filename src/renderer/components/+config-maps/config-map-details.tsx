@@ -30,8 +30,9 @@ import { Input } from "../input";
 import { Button } from "../button";
 import { configMapsStore } from "./config-maps.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { ConfigMap } from "../../../common/k8s-api/endpoints";
+import { ConfigMap } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
+import logger from "../../../common/logger";
 
 interface Props extends KubeObjectDetailsProps<ConfigMap> {
 }
@@ -72,6 +73,8 @@ export class ConfigMapDetails extends React.Component<Props> {
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
         </p>
       );
+    } catch (error) {
+      Notifications.error(`Failed to save config map: ${error}`);
     } finally {
       this.isSaving = false;
     }
@@ -80,7 +83,16 @@ export class ConfigMapDetails extends React.Component<Props> {
   render() {
     const { object: configMap } = this.props;
 
-    if (!configMap) return null;
+    if (!configMap) {
+      return null;
+    }
+
+    if (!(configMap instanceof ConfigMap)) {
+      logger.error("[ConfigMapDetails]: passed object that is not an instanceof ConfigMap", configMap);
+
+      return null;
+    }
+
     const data = Array.from(this.data.entries());
 
     return (
@@ -91,22 +103,20 @@ export class ConfigMapDetails extends React.Component<Props> {
             <>
               <DrawerTitle title="Data"/>
               {
-                data.map(([name, value]) => {
-                  return (
-                    <div key={name} className="data">
-                      <div className="name">{name}</div>
-                      <div className="flex gaps align-flex-start">
-                        <Input
-                          multiLine
-                          theme="round-black"
-                          className="box grow"
-                          value={value}
-                          onChange={v => this.data.set(name, v)}
-                        />
-                      </div>
+                data.map(([name, value]) => (
+                  <div key={name} className="data">
+                    <div className="name">{name}</div>
+                    <div className="flex gaps align-flex-start">
+                      <Input
+                        multiLine
+                        theme="round-black"
+                        className="box grow"
+                        value={value}
+                        onChange={v => this.data.set(name, v)}
+                      />
                     </div>
-                  );
-                })
+                  </div>
+                ))
               }
               <Button
                 primary
