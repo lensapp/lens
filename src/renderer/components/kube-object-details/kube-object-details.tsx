@@ -35,6 +35,7 @@ import logger from "../../../main/logger";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { hideDetails, kubeDetailsUrlParam } from "../kube-detail-params";
+import { InjectNaive } from "../kube-object-menu/inject-naive/inject-naive";
 
 
 export interface KubeObjectDetailsProps<T extends KubeObject = KubeObject> {
@@ -104,7 +105,7 @@ export class KubeObjectDetails extends React.Component {
           className="KubeObjectDetails flex column"
           open={isOpen}
           title=""
-          toolbar={<KubeObjectMenu object={object} toolbar={true} />}
+          toolbar={<InjectNaive Component={KubeObjectMenu} object={object} toolbar={true} />}
           onClose={hideDetails}
         >
           {isLoading && <Spinner center />}
@@ -144,7 +145,7 @@ export class KubeObjectDetails extends React.Component {
         className="KubeObjectDetails flex column"
         open={isOpen}
         title={title}
-        toolbar={<KubeObjectMenu object={object} toolbar={true}/>}
+        toolbar={<InjectNaive Component={KubeObjectMenu} object={object} toolbar={true}/>}
         onClose={hideDetails}
       >
         {isLoading && <Spinner center/>}

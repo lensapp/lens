@@ -36,6 +36,7 @@ import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
+import { InjectNaive } from "../kube-object-menu/inject-naive/inject-naive";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -140,7 +141,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
           }),
           ...[customizeHeader].flat(),
         ]}
-        renderItemMenu={item => <KubeObjectMenu object={item} />}
+        renderItemMenu={item => <InjectNaive Component={KubeObjectMenu} object={item} />}
       />
     );
   }

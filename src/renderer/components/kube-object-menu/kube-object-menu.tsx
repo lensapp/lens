@@ -22,13 +22,13 @@
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { hideDetails } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
-import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import identity from "lodash/identity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+
+import type { KubeObjectMenuRegistry } from "../../../extensions/registries";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
+import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+
 
 export interface KubeObjectMenuProps<T> extends MenuActionsProps {
   object: T | null | undefined;
@@ -36,13 +36,39 @@ export interface KubeObjectMenuProps<T> extends MenuActionsProps {
   removable?: boolean;
 }
 
-export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuProps<T>> {
+interface KubeObjectMenuDependencies<T> extends KubeObjectMenuProps<T>{
+  apiManager: ApiManager,
+  hideDetails: Function,
+  editResourceTab: Function,
+  catalogEntityRegistry: CatalogEntityRegistry,
+  kubeObjectMenuRegistry: KubeObjectMenuRegistry
+}
+
+export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuDependencies<T>> {
+  get dependencies() {
+    const {
+      apiManager,
+      hideDetails,
+      editResourceTab,
+      catalogEntityRegistry,
+      kubeObjectMenuRegistry,
+    } = this.props;
+
+    return {
+      apiManager,
+      editResourceTab,
+      hideDetails,
+      kubeObjectMenuRegistry,
+      catalogEntityRegistry,
+    };
+  }
+
   get store() {
     const { object } = this.props;
 
     if (!object) return null;
 
-    return apiManager.getStore(object.selfLink);
+    return this.dependencies.apiManager.getStore(object.selfLink);
   }
 
   get isEditable() {
@@ -55,13 +81,13 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
   @boundMethod
   async update() {
-    hideDetails();
-    editResourceTab(this.props.object);
+    this.dependencies.hideDetails();
+    this.dependencies.editResourceTab(this.props.object);
   }
 
   @boundMethod
   async remove() {
-    hideDetails();
+    this.dependencies.hideDetails();
     const { object, removeAction } = this.props;
 
     if (removeAction) await removeAction();
@@ -77,7 +103,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     }
 
     const breadcrumbParts = [
-      catalogEntityRegistry.activeEntity?.metadata?.name,
+      this.dependencies.catalogEntityRegistry.activeEntity?.metadata?.name,
       object.getNs(),
       object.kind,
       object.getName(),
@@ -97,8 +123,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
       return [];
     }
 
-    return KubeObjectMenuRegistry
-      .getInstance()
+    return this.dependencies.kubeObjectMenuRegistry
       .getItemsForKind(object.kind, object.apiVersion)
       .map(({ components: { MenuItem }}, index) => (
         <MenuItem

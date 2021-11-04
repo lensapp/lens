@@ -32,6 +32,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { showDetails } from "../kube-detail-params";
+import { InjectNaive } from "../kube-object-menu/inject-naive/inject-naive";
 
 
 enum sortBy {
@@ -115,6 +116,6 @@ export class DeploymentReplicaSets extends React.Component<Props> {
 
 export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
   return (
-    <KubeObjectMenu {...props}/>
+    <InjectNaive Component={KubeObjectMenu} {...props}/>
   );
 }
