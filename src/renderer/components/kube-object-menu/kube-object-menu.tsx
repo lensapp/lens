@@ -27,7 +27,7 @@ import identity from "lodash/identity";
 
 import type { IHasGettableItemsForKind } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
-import type { Cluster } from "../../../main/cluster";
+import type { IHasName } from "../../../main/cluster";
 
 
 export interface KubeObjectMenuProps<T> extends MenuActionsProps {
@@ -39,7 +39,7 @@ export interface KubeObjectMenuProps<T> extends MenuActionsProps {
 interface KubeObjectMenuDependencies<T> extends KubeObjectMenuProps<T>{
   apiManager: IGettableStore,
   kubeObjectMenuRegistry: IHasGettableItemsForKind
-  cluster: Cluster,
+  cluster: IHasName,
   hideDetails: Function,
   editResourceTab: Function,
 }
