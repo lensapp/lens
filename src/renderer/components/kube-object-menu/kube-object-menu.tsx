@@ -25,7 +25,10 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import identity from "lodash/identity";
 
-import type { KubeObjectMenuRegistry } from "../../../extensions/registries";
+import type {
+  IHasGettableItemsForKind,
+} from "../../../extensions/registries";
+
 import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 
@@ -38,10 +41,10 @@ export interface KubeObjectMenuProps<T> extends MenuActionsProps {
 
 interface KubeObjectMenuDependencies<T> extends KubeObjectMenuProps<T>{
   apiManager: IGettableStore,
+  kubeObjectMenuRegistry: IHasGettableItemsForKind
   hideDetails: Function,
   editResourceTab: Function,
   catalogEntityRegistry: CatalogEntityRegistry,
-  kubeObjectMenuRegistry: KubeObjectMenuRegistry
 }
 
 export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuDependencies<T>> {
@@ -125,11 +128,13 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
     return this.dependencies.kubeObjectMenuRegistry
       .getItemsForKind(object.kind, object.apiVersion)
-      .map(({ components: { MenuItem }}, index) => (
+      .map(({ components: { MenuItem }}: { components: { MenuItem: React.ReactType<any> }}, index: number) => (
         <MenuItem
           object={object}
-          key={`menu-item-${index}`}
           toolbar={toolbar}
+
+          // TODO: Fix misuse of index in key
+          key={`menu-item-${index}`}
         />
       ));
   }
