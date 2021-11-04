@@ -25,12 +25,9 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import identity from "lodash/identity";
 
-import type {
-  IHasGettableItemsForKind,
-} from "../../../extensions/registries";
-
-import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { IHasGettableItemsForKind } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
+import type { Cluster } from "../../../main/cluster";
 
 
 export interface KubeObjectMenuProps<T> extends MenuActionsProps {
@@ -42,9 +39,9 @@ export interface KubeObjectMenuProps<T> extends MenuActionsProps {
 interface KubeObjectMenuDependencies<T> extends KubeObjectMenuProps<T>{
   apiManager: IGettableStore,
   kubeObjectMenuRegistry: IHasGettableItemsForKind
+  cluster: Cluster,
   hideDetails: Function,
   editResourceTab: Function,
-  catalogEntityRegistry: CatalogEntityRegistry,
 }
 
 export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuDependencies<T>> {
@@ -53,7 +50,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
       apiManager,
       hideDetails,
       editResourceTab,
-      catalogEntityRegistry,
+      cluster,
       kubeObjectMenuRegistry,
     } = this.props;
 
@@ -62,7 +59,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
       editResourceTab,
       hideDetails,
       kubeObjectMenuRegistry,
-      catalogEntityRegistry,
+      cluster,
     };
   }
 
@@ -106,7 +103,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     }
 
     const breadcrumbParts = [
-      this.dependencies.catalogEntityRegistry.activeEntity?.metadata?.name,
+      this.dependencies.cluster?.name,
       object.getNs(),
       object.kind,
       object.getName(),

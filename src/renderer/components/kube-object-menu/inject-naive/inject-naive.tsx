@@ -24,7 +24,7 @@ import { editResourceTab } from "../../dock/edit-resource.store";
 import { hideDetails } from "../../kube-detail-params";
 import { apiManager } from "../../../../common/k8s-api/api-manager";
 import { KubeObjectMenuRegistry } from "../../../../extensions/registries";
-import { catalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import { getActiveClusterEntity } from "../../../api/catalog-entity-registry";
 
 
 interface Props {
@@ -34,13 +34,14 @@ interface Props {
 
 export const InjectNaive = ({ Component, ...props }: Props) => {
   const kubeObjectMenuRegistry = KubeObjectMenuRegistry.getInstance();
-  
+  const cluster = getActiveClusterEntity();
+
   return (
     <Component
       editResourceTab={editResourceTab}
       hideDetails={hideDetails}
       apiManager={apiManager}
       kubeObjectMenuRegistry={kubeObjectMenuRegistry}
-      catalogEntityRegistry={catalogEntityRegistry}
+      cluster={cluster}
       {...props} />);
 };
