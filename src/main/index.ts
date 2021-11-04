@@ -65,6 +65,7 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
+import { ShellSession } from "./shell-session/shell-session";
 
 injectSystemCAs();
 
@@ -228,6 +229,7 @@ app.on("ready", async () => {
   onQuitCleanup.push(
     initMenu(windowManager),
     initTray(windowManager),
+    () => ShellSession.cleanup(),
   );
 
   installDeveloperTools();
