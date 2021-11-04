@@ -286,7 +286,10 @@ app.on("activate", (event, hasVisibleWindows) => {
  */
 let blockQuit = !isIntegrationTesting;
 
-autoUpdater.on("before-quit-for-update", () => blockQuit = false);
+autoUpdater.on("before-quit-for-update", () => {
+  logger.debug("Unblocking quit for update");
+  blockQuit = false;
+});
 
 app.on("will-quit", (event) => {
   // This is called when the close button of the main window is clicked
