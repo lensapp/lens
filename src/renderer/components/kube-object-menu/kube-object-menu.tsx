@@ -40,8 +40,8 @@ interface KubeObjectMenuDependencies<TKubeObject> extends KubeObjectMenuProps<TK
   apiManager: IGettableStore,
   kubeObjectMenuRegistry: IHasGettableItemsForKind
   cluster: IHasName,
-  hideDetails: Function,
-  editResourceTab: Function,
+  hideDetails: () => void,
+  editResourceTab: (kubeObject: TKubeObject) => void,
 }
 
 export class KubeObjectMenu<TKubeObject extends KubeObject> extends React.Component<KubeObjectMenuDependencies<TKubeObject>> {
