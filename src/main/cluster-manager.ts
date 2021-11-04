@@ -192,6 +192,11 @@ export class ClusterManager extends Singleton {
           cluster.accessibleNamespaces = entity.spec.accessibleNamespaces;
         }
 
+        if (entity.spec.metrics.source !== "local") {
+          cluster.preferences.prometheusProvider ||= { type: entity.spec.metrics?.prometheus?.type ?? "" };
+          cluster.preferences.prometheus = entity.spec.metrics.prometheus.address;
+        }
+
         this.updateEntityFromCluster(cluster);
       }
     }
