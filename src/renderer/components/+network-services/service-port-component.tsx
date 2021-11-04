@@ -28,7 +28,7 @@ import { observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { addPortForward, getPortForward, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
+import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
 import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
 
@@ -92,6 +92,9 @@ export class ServicePortComponent extends React.Component<Props> {
 
     this.waiting = true;
 
+    // determine how many port-forwards are already active
+    const { length } = await getPortForwards();
+
     try {
       this.forwardPort = await addPortForward(portForward);
 
@@ -99,6 +102,11 @@ export class ServicePortComponent extends React.Component<Props> {
         portForward.forwardPort = this.forwardPort;
         openPortForward(portForward);
         this.isPortForwarded = true;
+
+        // if this is the first port-forward show the about notification
+        if (!length) {
+          aboutPortForwarding();
+        }
       }
     } catch (error) {
       Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);

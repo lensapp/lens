@@ -29,9 +29,9 @@ import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
 import { Notifications } from "../components/notifications";
 import { cssNames } from "../utils";
-import { addPortForward, modifyPortForward } from "./port-forward.store";
+import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
-import { openPortForward } from ".";
+import { aboutPortForwarding, openPortForward } from ".";
 import { Checkbox } from "../components/checkbox";
 
 interface Props extends Partial<DialogProps> {
@@ -95,6 +95,9 @@ export class PortForwardDialog extends Component<Props> {
     const { portForward } = this;
     const { currentPort, desiredPort, close } = this;
 
+    // determine how many port-forwards are already active
+    const { length } = await getPortForwards();
+
     try {
       let port: number;
 
@@ -105,6 +108,11 @@ export class PortForwardDialog extends Component<Props> {
       } else {
         portForward.forwardPort = desiredPort;
         port = await addPortForward(portForward);
+
+        // if this is the first port-forward show the about notification
+        if (!length) {
+          aboutPortForwarding();
+        }
       }
 
       if (dialogState.openInBrowser) {
