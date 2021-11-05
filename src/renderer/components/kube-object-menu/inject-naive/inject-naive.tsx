@@ -36,12 +36,18 @@ export const InjectNaive = ({ Component, ...props }: Props) => {
   const kubeObjectMenuRegistry = KubeObjectMenuRegistry.getInstance();
   const cluster = getActiveClusterEntity();
 
+  const dependencies = {
+    editResourceTab,
+    hideDetails,
+    apiManager,
+    kubeObjectMenuRegistry,
+    cluster,
+  };
+
   return (
     <Component
-      editResourceTab={editResourceTab}
-      hideDetails={hideDetails}
-      apiManager={apiManager}
-      kubeObjectMenuRegistry={kubeObjectMenuRegistry}
-      cluster={cluster}
-      {...props} />);
+      dependencies={dependencies}
+      {...props}
+    />
+  );
 };

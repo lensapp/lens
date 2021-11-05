@@ -29,15 +29,7 @@ import type { IHasGettableItemsForKind } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { IHasName } from "../../../main/cluster";
 
-export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
-  object: TKubeObject | null | undefined;
-  editable?: boolean;
-  removable?: boolean;
-  toolbar?: boolean;
-}
-
-interface KubeObjectMenuDependencies<TKubeObject>
-  extends KubeObjectMenuProps<TKubeObject> {
+export interface KubeObjectMenuDependencies<TKubeObject>{
   apiManager: IGettableStore;
   kubeObjectMenuRegistry: IHasGettableItemsForKind;
   cluster: IHasName;
@@ -45,25 +37,19 @@ interface KubeObjectMenuDependencies<TKubeObject>
   editResourceTab: (kubeObject: TKubeObject) => void;
 }
 
+export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
+  object: TKubeObject | null | undefined;
+  editable?: boolean;
+  removable?: boolean;
+  toolbar?: boolean;
+  dependencies?: KubeObjectMenuDependencies<TKubeObject>
+}
+
 export class KubeObjectMenu<
   TKubeObject extends KubeObject,
-> extends React.Component<KubeObjectMenuDependencies<TKubeObject>> {
+> extends React.Component<KubeObjectMenuProps<TKubeObject>> {
   get dependencies() {
-    const {
-      apiManager,
-      hideDetails,
-      editResourceTab,
-      cluster,
-      kubeObjectMenuRegistry,
-    } = this.props;
-
-    return {
-      apiManager,
-      editResourceTab,
-      hideDetails,
-      kubeObjectMenuRegistry,
-      cluster,
-    };
+    return this.props.dependencies;
   }
 
   get store() {

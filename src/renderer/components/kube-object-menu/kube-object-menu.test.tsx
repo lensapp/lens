@@ -22,7 +22,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { KubeObjectMenu } from "./kube-object-menu";
+import { KubeObjectMenu, KubeObjectMenuDependencies } from "./kube-object-menu";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
@@ -43,6 +43,7 @@ describe("kube-object-menu", () => {
   let clusterStub: IHasName;
   let kubeObjectMenuRegistryStub: IHasGettableItemsForKind;
   let objectStub: KubeObject | null;
+  let dependencies: KubeObjectMenuDependencies<KubeObject>;
 
   beforeEach(() => {
     // TODO: Remove illegal global overwrites for what should be a dependency somewhere.
@@ -56,9 +57,8 @@ describe("kube-object-menu", () => {
     window.cancelIdleCallback = () => {};
 
     apiManagerStub = {
-      // eslint-disable-next-line unused-imports/no-unused-vars-ts
-
       getStore: <TKubeObjectStore extends KubeObjectStore<KubeObject>>(
+        // eslint-disable-next-line unused-imports/no-unused-vars-ts
         api: string | KubeApi<KubeObject>,
       ): TKubeObjectStore | undefined => undefined,
     };
@@ -83,6 +83,14 @@ describe("kube-object-menu", () => {
     hideDetailsStub = () => {};
 
     editResourceTabStub = () => {};
+
+    dependencies = {
+      apiManager: apiManagerStub,
+      cluster: clusterStub,
+      kubeObjectMenuRegistry: kubeObjectMenuRegistryStub,
+      hideDetails: hideDetailsStub,
+      editResourceTab: editResourceTabStub,
+    };
   });
 
   it("given no kube object, renders", () => {
@@ -91,12 +99,8 @@ describe("kube-object-menu", () => {
     const { baseElement } = render(
       <KubeObjectMenu
         object={objectStub}
-        apiManager={apiManagerStub}
-        cluster={clusterStub}
-        kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
-        hideDetails={hideDetailsStub}
-        editResourceTab={editResourceTabStub}
         toolbar={true}
+        dependencies={ dependencies }
       />,
     );
 
@@ -128,11 +132,7 @@ describe("kube-object-menu", () => {
 
           <KubeObjectMenu
             object={objectStub}
-            apiManager={apiManagerStub}
-            cluster={clusterStub}
-            kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
-            hideDetails={hideDetailsStub}
-            editResourceTab={editResourceTabStub}
+            dependencies={dependencies}
             toolbar={true}
             removeAction={removeActionMock}
           />
