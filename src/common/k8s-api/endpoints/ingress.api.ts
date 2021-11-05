@@ -154,7 +154,7 @@ export class Ingress extends KubeObject {
     return routes;
   }
 
-  getServiceNamePort(): IExtensionsBackend | undefined {
+  getServiceNamePort(): IExtensionsBackend {
     const { spec: { backend, defaultBackend } = {}} = this;
 
     const serviceName = defaultBackend?.service?.name ?? backend?.serviceName;
