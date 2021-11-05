@@ -117,6 +117,7 @@ describe("kube-object-menu", () => {
           uid: "some-uid",
           name: "some-name",
           resourceVersion: "some-resource-version",
+          namespace: "some-namespace",
         },
       });
 
@@ -179,6 +180,84 @@ describe("kube-object-menu", () => {
 
           expect(queryByTestId("confirmation-dialog")).toBeNull();        });
       });
+    });
+  });
+
+  describe("given kube object with namespace", () => {
+    let baseElement: Element;
+    let getByTestId: (arg0: string) => any;
+
+    beforeEach(async () => {
+      objectStub = KubeObject.create({
+        apiVersion: "some-api-version",
+        kind: "some-kind",
+        metadata: {
+          uid: "some-uid",
+          name: "some-name",
+          resourceVersion: "some-resource-version",
+          namespace: "some-namespace",
+        },
+      });
+
+      ({ baseElement, getByTestId } = render(
+        <div>
+          <ConfirmDialog/>
+
+          <KubeObjectMenu
+            object={objectStub}
+            dependencies={dependencies}
+            toolbar={true}
+            removeAction={() => {}}
+          />
+        </div>,
+      ));
+    });
+
+    it("when removing kube object, renders confirmation dialog with namespace", () => {
+      const menuItem = getByTestId("menu-action-remove");
+
+      userEvent.click(menuItem);
+
+      expect(baseElement).toMatchSnapshot();
+    });
+  });
+
+  describe("given kube object without namespace", () => {
+    let baseElement: Element;
+    let getByTestId: (arg0: string) => any;
+
+    beforeEach(async () => {
+      objectStub = KubeObject.create({
+        apiVersion: "some-api-version",
+        kind: "some-kind",
+        metadata: {
+          uid: "some-uid",
+          name: "some-name",
+          resourceVersion: "some-resource-version",
+          namespace: undefined,
+        },
+      });
+
+      ({ baseElement, getByTestId } = render(
+        <div>
+          <ConfirmDialog/>
+
+          <KubeObjectMenu
+            object={objectStub}
+            dependencies={dependencies}
+            toolbar={true}
+            removeAction={() => {}}
+          />
+        </div>,
+      ));
+    });
+
+    it("when removing kube object, renders confirmation dialog without namespace", () => {
+      const menuItem = getByTestId("menu-action-remove");
+
+      userEvent.click(menuItem);
+
+      expect(baseElement).toMatchSnapshot();
     });
   });
 });
