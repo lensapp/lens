@@ -37,7 +37,7 @@ describe("kube-object-menu", () => {
   let hideDetailsStub: () => void;
   let editResourceTabStub: () => void;
   let apiManagerStub: IGettableStore;
-  let clusterStub : IHasName;
+  let clusterStub: IHasName;
   let kubeObjectMenuRegistryStub: IHasGettableItemsForKind;
   let objectStub: KubeObject | null;
 
@@ -54,12 +54,15 @@ describe("kube-object-menu", () => {
 
     apiManagerStub = {
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      getStore: <TKubeObjectStore extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): TKubeObjectStore | undefined => undefined,
+
+      getStore: <TKubeObjectStore extends KubeObjectStore<KubeObject>>(
+        api: string | KubeApi<KubeObject>,
+      ): TKubeObjectStore | undefined => undefined,
     };
 
     clusterStub = { name: "Some cluster name" };
 
-    const MenuItemComponentStub : React.FC = () => <div>Some menu item</div>;
+    const MenuItemComponentStub: React.FC = () => <div>Some menu item</div>;
 
     const menuItemStub: KubeObjectMenuRegistration = {
       apiVersions: ["irrelevant"],
@@ -67,10 +70,11 @@ describe("kube-object-menu", () => {
       kind: "irrelevant",
     };
 
-    
     kubeObjectMenuRegistryStub = {
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      getItemsForKind: (kind: string, apiVersion: string): any => [menuItemStub],
+      getItemsForKind: (kind: string, apiVersion: string): any => [
+        menuItemStub,
+      ],
     };
 
     hideDetailsStub = () => {};
@@ -81,14 +85,17 @@ describe("kube-object-menu", () => {
   it("given no kube object, renders", () => {
     objectStub = null;
 
-    const { baseElement } = render(<KubeObjectMenu object={objectStub}
-      apiManager={apiManagerStub}
-      cluster={clusterStub}
-      kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
-      hideDetails={hideDetailsStub}
-      editResourceTab={editResourceTabStub}
-      toolbar={true}
-    />);
+    const { baseElement } = render(
+      <KubeObjectMenu
+        object={objectStub}
+        apiManager={apiManagerStub}
+        cluster={clusterStub}
+        kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
+        hideDetails={hideDetailsStub}
+        editResourceTab={editResourceTabStub}
+        toolbar={true}
+      />,
+    );
 
     expect(baseElement).toMatchSnapshot();
   });
@@ -97,17 +104,24 @@ describe("kube-object-menu", () => {
     objectStub = KubeObject.create({
       apiVersion: "some-api-version",
       kind: "some-kind",
-      metadata: { uid: "some-uid", name: "some-name", resourceVersion: "some-resource-version" },
+      metadata: {
+        uid: "some-uid",
+        name: "some-name",
+        resourceVersion: "some-resource-version",
+      },
     });
 
-    const { baseElement } = render(<KubeObjectMenu object={objectStub}
-      apiManager={apiManagerStub}
-      cluster={clusterStub}
-      kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
-      hideDetails={hideDetailsStub}
-      editResourceTab={editResourceTabStub}
-      toolbar={true}
-    />);
+    const { baseElement } = render(
+      <KubeObjectMenu
+        object={objectStub}
+        apiManager={apiManagerStub}
+        cluster={clusterStub}
+        kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
+        hideDetails={hideDetailsStub}
+        editResourceTab={editResourceTabStub}
+        toolbar={true}
+      />,
+    );
 
     expect(baseElement).toMatchSnapshot();
   });

@@ -29,7 +29,6 @@ import type { IHasGettableItemsForKind } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { IHasName } from "../../../main/cluster";
 
-
 export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
   object: TKubeObject | null | undefined;
   editable?: boolean;
@@ -37,15 +36,18 @@ export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
   toolbar?: boolean;
 }
 
-interface KubeObjectMenuDependencies<TKubeObject> extends KubeObjectMenuProps<TKubeObject>{
-  apiManager: IGettableStore,
-  kubeObjectMenuRegistry: IHasGettableItemsForKind
-  cluster: IHasName,
-  hideDetails: () => void,
-  editResourceTab: (kubeObject: TKubeObject) => void,
+interface KubeObjectMenuDependencies<TKubeObject>
+  extends KubeObjectMenuProps<TKubeObject> {
+  apiManager: IGettableStore;
+  kubeObjectMenuRegistry: IHasGettableItemsForKind;
+  cluster: IHasName;
+  hideDetails: () => void;
+  editResourceTab: (kubeObject: TKubeObject) => void;
 }
 
-export class KubeObjectMenu<TKubeObject extends KubeObject> extends React.Component<KubeObjectMenuDependencies<TKubeObject>> {
+export class KubeObjectMenu<
+  TKubeObject extends KubeObject,
+> extends React.Component<KubeObjectMenuDependencies<TKubeObject>> {
   get dependencies() {
     const {
       apiManager,
@@ -113,7 +115,9 @@ export class KubeObjectMenu<TKubeObject extends KubeObject> extends React.Compon
     const breadcrumb = breadcrumbParts.filter(identity).join("/");
 
     return (
-      <p>Remove <b>{breadcrumb}</b>?</p>
+      <p>
+        Remove <b>{breadcrumb}</b>?
+      </p>
     );
   }
 
@@ -126,15 +130,21 @@ export class KubeObjectMenu<TKubeObject extends KubeObject> extends React.Compon
 
     return this.dependencies.kubeObjectMenuRegistry
       .getItemsForKind(object.kind, object.apiVersion)
-      .map(({ components: { MenuItem }}: { components: { MenuItem: React.ReactType<any> }}, index: number) => (
-        <MenuItem
-          object={object}
-          toolbar={toolbar}
-
-          // TODO: Fix misuse of index in key
-          key={`menu-item-${index}`}
-        />
-      ));
+      .map(
+        (
+          {
+            components: { MenuItem },
+          }: { components: { MenuItem: React.ReactType<any> }},
+          index: number,
+        ) => (
+          <MenuItem 
+            object={object}
+            toolbar={toolbar}
+            // TODO: Fix misuse of index in key
+            key={`menu-item-${index}`}
+          />
+        ),
+      );
   }
 
   render() {
