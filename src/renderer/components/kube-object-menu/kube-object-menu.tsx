@@ -92,9 +92,7 @@ export class KubeObjectMenu<
     }
 
     const breadcrumbParts = [
-      this.dependencies.clusterName,
       object.getNs(),
-      object.kind,
       object.getName(),
     ];
 
@@ -102,7 +100,7 @@ export class KubeObjectMenu<
 
     return (
       <p>
-        Remove <b>{breadcrumb}</b>?
+        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.dependencies.clusterName}</b>?
       </p>
     );
   }
@@ -116,20 +114,14 @@ export class KubeObjectMenu<
 
     return this.dependencies.kubeObjectMenuRegistry
       .getItemsForKind(object.kind, object.apiVersion)
-      .map(
-        (
-          {
-            components: { MenuItem },
-          }: { components: { MenuItem: React.ReactType<any> }},
-          index: number,
-        ) => (
-          <MenuItem
-            object={object}
-            toolbar={toolbar}
-            // TODO: Fix misuse of index in key
-            key={`menu-item-${index}`}
-          />
-        ),
+      .map(({ components: { MenuItem }}: { components: { MenuItem: React.ReactType<any> }}, index: number) => (
+        <MenuItem
+          object={object}
+          toolbar={toolbar}
+          // TODO: Fix misuse of index in key
+          key={`menu-item-${index}`}
+        />
+      ),
       );
   }
 

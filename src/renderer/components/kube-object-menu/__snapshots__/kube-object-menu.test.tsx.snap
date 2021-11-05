@@ -111,8 +111,14 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         <div>
           <p>
             Remove 
+            some-kind
+             
             <b>
-              Some cluster name/some-kind/some-name
+              some-name
+            </b>
+             from 
+            <b>
+              Some cluster name
             </b>
             ?
           </p>
