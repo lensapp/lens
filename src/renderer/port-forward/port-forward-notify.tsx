@@ -27,7 +27,7 @@ import { navigate } from "../navigation";
 import { getHostedClusterId } from "../utils";
 
 
-export async function aboutPortForwarding() {
+export function aboutPortForwarding() {
   const notificationId = `port-forward-notification-${getHostedClusterId()}`;
 
   Notifications.info(
