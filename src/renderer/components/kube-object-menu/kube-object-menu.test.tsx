@@ -24,6 +24,7 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
+import userEvent from "@testing-library/user-event";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import type {
   IHasGettableItemsForKind,
@@ -32,6 +33,8 @@ import type {
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { IHasName } from "../../../main/cluster";
+import { ConfirmDialog } from "../confirm-dialog";
+import asyncFn from "@async-fn/jest";
 
 describe("kube-object-menu", () => {
   let hideDetailsStub: () => void;
@@ -64,7 +67,7 @@ describe("kube-object-menu", () => {
 
     const MenuItemComponentStub: React.FC = () => <div>Some menu item</div>;
 
-    const menuItemStub: KubeObjectMenuRegistration = {
+    const dynamicMenuItemStub: KubeObjectMenuRegistration = {
       apiVersions: ["irrelevant"],
       components: { MenuItem: MenuItemComponentStub },
       kind: "irrelevant",
@@ -73,7 +76,7 @@ describe("kube-object-menu", () => {
     kubeObjectMenuRegistryStub = {
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
       getItemsForKind: (kind: string, apiVersion: string): any => [
-        menuItemStub,
+        dynamicMenuItemStub,
       ],
     };
 
@@ -100,29 +103,86 @@ describe("kube-object-menu", () => {
     expect(baseElement).toMatchSnapshot();
   });
 
-  it("given kube object, renders", () => {
-    objectStub = KubeObject.create({
-      apiVersion: "some-api-version",
-      kind: "some-kind",
-      metadata: {
-        uid: "some-uid",
-        name: "some-name",
-        resourceVersion: "some-resource-version",
-      },
+  describe("given kube object", () => {
+    let baseElement: Element;
+    let removeActionMock: any;
+    let getByTestId: (arg0: string) => any;
+    let queryByTestId: (arg0: string) => any;
+
+    beforeEach(async () => {
+      objectStub = KubeObject.create({
+        apiVersion: "some-api-version",
+        kind: "some-kind",
+        metadata: {
+          uid: "some-uid",
+          name: "some-name",
+          resourceVersion: "some-resource-version",
+        },
+      });
+
+      removeActionMock = asyncFn();
+
+      ({ baseElement, getByTestId, queryByTestId } = render(
+        <div>
+          <ConfirmDialog/>
+
+          <KubeObjectMenu
+            object={objectStub}
+            apiManager={apiManagerStub}
+            cluster={clusterStub}
+            kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
+            hideDetails={hideDetailsStub}
+            editResourceTab={editResourceTabStub}
+            toolbar={true}
+            removeAction={removeActionMock}
+          />
+        </div>,
+      ));
     });
 
-    const { baseElement } = render(
-      <KubeObjectMenu
-        object={objectStub}
-        apiManager={apiManagerStub}
-        cluster={clusterStub}
-        kubeObjectMenuRegistry={kubeObjectMenuRegistryStub}
-        hideDetails={hideDetailsStub}
-        editResourceTab={editResourceTabStub}
-        toolbar={true}
-      />,
-    );
+    it("renders", () => {
+      expect(baseElement).toMatchSnapshot();
+    });
 
-    expect(baseElement).toMatchSnapshot();
+    it("does not open a confirmation dialog yet", () => {
+      expect(queryByTestId("confirmation-dialog")).toBeNull();
+    });
+
+    describe("when removing kube object", () => {
+      beforeEach(() => {
+        const menuItem = getByTestId("menu-action-remove");
+
+        userEvent.click(menuItem);
+      });
+
+      it("renders", () => {
+        expect(baseElement).toMatchSnapshot();
+      });
+
+      it("opens a confirmation dialog", () => {
+        getByTestId("confirmation-dialog");
+      });
+
+      describe("when remove is confirmed", () => {
+        beforeEach(() => {
+          const confirmRemovalButton = getByTestId("confirm");
+
+          userEvent.click(confirmRemovalButton);
+        });
+
+        it("calls for removal of the kube object", () => {
+          expect(removeActionMock).toHaveBeenCalledWith();
+        });
+
+        it("does not close the confirmation dialog yet", () => {
+          getByTestId("confirmation-dialog");
+        });
+
+        it("when removal resolves, closes the confirmation dialog", async () => {
+          await removeActionMock.resolve();
+
+          expect(queryByTestId("confirmation-dialog")).toBeNull();        });
+      });
+    });
   });
 });

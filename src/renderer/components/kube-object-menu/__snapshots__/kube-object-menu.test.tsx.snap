@@ -1,15 +1,146 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`kube-object-menu given kube object, renders 1`] = `
+exports[`kube-object-menu given kube object renders 1`] = `
 <body>
   <div>
-    <ul
-      class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+    <div>
+      <ul
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      >
+        <div>
+          Some menu item
+        </div>
+        <li
+          class="MenuItem"
+          data-menu-action-remove-test="true"
+          data-testid="menu-action-remove"
+          tabindex="0"
+        >
+          <i
+            class="Icon material interactive focusable"
+            id="tooltip_target_3"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="delete"
+            >
+              delete
+            </span>
+            <div />
+          </i>
+          <span
+            class="title"
+          >
+            Remove
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+  />
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
+  </div>
+</body>
+`;
+
+exports[`kube-object-menu given kube object when removing kube object renders 1`] = `
+<body>
+  <div>
+    <div>
+      <ul
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      >
+        <div>
+          Some menu item
+        </div>
+        <li
+          class="MenuItem"
+          data-menu-action-remove-test="true"
+          data-testid="menu-action-remove"
+          tabindex="0"
+        >
+          <i
+            class="Icon material interactive focusable"
+            id="tooltip_target_7"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="delete"
+            >
+              delete
+            </span>
+            <div />
+          </i>
+          <span
+            class="title"
+          >
+            Remove
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    data-testid="confirmation-dialog"
+  >
+    <div
+      class="box"
     >
-      <div>
-        Some menu item
+      <div
+        class="confirm-content"
+      >
+        <i
+          class="Icon material focusable big"
+        >
+          <span
+            class="icon"
+            data-icon-name="warning"
+          >
+            warning
+          </span>
+        </i>
+         
+        <div>
+          <p>
+            Remove 
+            <b>
+              Some cluster name/some-kind/some-name
+            </b>
+            ?
+          </p>
+        </div>
       </div>
-    </ul>
+      <div
+        class="confirm-buttons"
+      >
+        <button
+          class="Button cancel plain"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          class="Button ok primary"
+          data-testid="confirm"
+          type="button"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
   </div>
 </body>
 `;

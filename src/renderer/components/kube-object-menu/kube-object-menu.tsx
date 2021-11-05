@@ -137,7 +137,7 @@ export class KubeObjectMenu<
           }: { components: { MenuItem: React.ReactType<any> }},
           index: number,
         ) => (
-          <MenuItem 
+          <MenuItem
             object={object}
             toolbar={toolbar}
             // TODO: Fix misuse of index in key
