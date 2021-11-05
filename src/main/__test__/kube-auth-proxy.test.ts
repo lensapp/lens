@@ -177,34 +177,34 @@ describe("kube auth proxy tests", () => {
       await proxy.run();
       listeners["error"]({ message: "foobarbat" });
 
-      expect(mockBroadcastIpc).toBeCalledWith("kube-auth:foobar", { data: "foobarbat", error: true });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { data: "foobarbat", error: true });
     });
 
     it("should call spawn and broadcast exit", async () => {
       await proxy.run();
       listeners["exit"](0);
 
-      expect(mockBroadcastIpc).toBeCalledWith("kube-auth:foobar", { data: "proxy exited with code: 0", error: false });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { data: "proxy exited with code: 0", error: false });
     });
 
     it("should call spawn and broadcast errors from stderr", async () => {
       await proxy.run();
       listeners["stderr/data"]("an error");
 
-      expect(mockBroadcastIpc).toBeCalledWith("kube-auth:foobar", { data: "an error", error: true });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { data: "an error", error: true });
     });
 
     it("should call spawn and broadcast stdout serving info", async () => {
       await proxy.run();
 
-      expect(mockBroadcastIpc).toBeCalledWith("kube-auth:foobar", { data: "Authentication proxy started\n" });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { data: "Authentication proxy started\n" });
     });
 
     it("should call spawn and broadcast stdout other info", async () => {
       await proxy.run();
       listeners["stdout/data"]("some info");
 
-      expect(mockBroadcastIpc).toBeCalledWith("kube-auth:foobar", { data: "some info" });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { data: "some info" });
     });
   });
 });
