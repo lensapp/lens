@@ -22,17 +22,17 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { rolesStore } from "../../+roles/store";
-import { Role } from "../../../../../common/k8s-api/endpoints";
+import { clusterRolesStore } from "../../+cluster-roles/store";
+import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import { RoleBindingDialog } from "../dialog";
 
-jest.mock("../../+roles/store");
+jest.mock("../../+cluster-roles/store");
 
 describe("RoleBindingDialog tests", () => {
   beforeEach(() => {
-    (rolesStore as any).items = [new Role({
+    (clusterRolesStore as any).items = [new ClusterRole({
       apiVersion: "rbac.authorization.k8s.io/v1",
-      kind: "Role",
+      kind: "ClusterRole",
       metadata: {
         name: "foobar",
         resourceVersion: "1",
@@ -56,7 +56,10 @@ describe("RoleBindingDialog tests", () => {
     RoleBindingDialog.open();
     const res = render(<RoleBindingDialog />);
 
-    userEvent.keyboard("a");
-    await res.findAllByText("foobar");
+    userEvent.click(await res.findByText("Select role", { exact: false }));
+
+    await res.findAllByText("foobar", {
+      exact: false,
+    });
   });
 });
