@@ -27,12 +27,11 @@ import identity from "lodash/identity";
 
 import type { IHasGettableItemsForKind } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
-import type { IHasName } from "../../../main/cluster";
 
 export interface KubeObjectMenuDependencies<TKubeObject>{
   apiManager: IGettableStore;
   kubeObjectMenuRegistry: IHasGettableItemsForKind;
-  cluster: IHasName;
+  clusterName: string,
   hideDetails: () => void;
   editResourceTab: (kubeObject: TKubeObject) => void;
 }
@@ -93,7 +92,7 @@ export class KubeObjectMenu<
     }
 
     const breadcrumbParts = [
-      this.dependencies.cluster?.name,
+      this.dependencies.clusterName,
       object.getNs(),
       object.kind,
       object.getName(),

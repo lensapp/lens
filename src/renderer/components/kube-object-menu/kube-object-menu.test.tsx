@@ -32,7 +32,6 @@ import type {
 } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { IHasName } from "../../../main/cluster";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn from "@async-fn/jest";
 
@@ -40,7 +39,6 @@ describe("kube-object-menu", () => {
   let hideDetailsStub: () => void;
   let editResourceTabStub: () => void;
   let apiManagerStub: IGettableStore;
-  let clusterStub: IHasName;
   let kubeObjectMenuRegistryStub: IHasGettableItemsForKind;
   let objectStub: KubeObject | null;
   let dependencies: KubeObjectMenuDependencies<KubeObject>;
@@ -63,8 +61,6 @@ describe("kube-object-menu", () => {
       ): TKubeObjectStore | undefined => undefined,
     };
 
-    clusterStub = { name: "Some cluster name" };
-
     const MenuItemComponentStub: React.FC = () => <div>Some menu item</div>;
 
     const dynamicMenuItemStub: KubeObjectMenuRegistration = {
@@ -85,8 +81,8 @@ describe("kube-object-menu", () => {
     editResourceTabStub = () => {};
 
     dependencies = {
+      clusterName: "Some cluster name",
       apiManager: apiManagerStub,
-      cluster: clusterStub,
       kubeObjectMenuRegistry: kubeObjectMenuRegistryStub,
       hideDetails: hideDetailsStub,
       editResourceTab: editResourceTabStub,

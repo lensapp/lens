@@ -25,7 +25,8 @@ import { hideDetails } from "../../kube-detail-params";
 import { apiManager } from "../../../../common/k8s-api/api-manager";
 import { KubeObjectMenuRegistry } from "../../../../extensions/registries";
 import { getActiveClusterEntity } from "../../../api/catalog-entity-registry";
-
+import type { KubeObjectMenuDependencies } from "../kube-object-menu";
+import type { KubeObject } from "../../../../common/k8s-api/kube-object";
 
 interface Props {
   Component: React.ReactType<any>
@@ -36,12 +37,12 @@ export const InjectNaive = ({ Component, ...props }: Props) => {
   const kubeObjectMenuRegistry = KubeObjectMenuRegistry.getInstance();
   const cluster = getActiveClusterEntity();
 
-  const dependencies = {
+  const dependencies: KubeObjectMenuDependencies<KubeObject> = {
+    clusterName: cluster.name,
     editResourceTab,
     hideDetails,
     apiManager,
     kubeObjectMenuRegistry,
-    cluster,
   };
 
   return (
