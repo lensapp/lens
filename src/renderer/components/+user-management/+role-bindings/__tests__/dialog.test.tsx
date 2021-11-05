@@ -19,31 +19,44 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import React from "react";
-import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { Icon } from "../icon";
-import type { SelectOption } from "../select";
-import { TooltipPosition } from "../tooltip";
+import { rolesStore } from "../../+roles/store";
+import { Role } from "../../../../../common/k8s-api/endpoints";
+import { RoleBindingDialog } from "../dialog";
 
-export type ServiceAccountOption = SelectOption<string> & { account: ServiceAccount };
+jest.mock("../../+roles/store");
 
-export function getRoleRefSelectOption<T extends KubeObject>(item: T): SelectOption<T> {
-  return {
-    value: item,
-    label: (
-      <>
-        <Icon
-          small
-          material={item.kind === "Role" ? "person" : "people"}
-          tooltip={{
-            preferredPositions: TooltipPosition.LEFT,
-            children: item.kind,
-          }}
-        />
-        {" "}
-        {item.getName()}
-      </>
-    ),
-  };
-}
+describe("RoleBindingDialog tests", () => {
+  beforeEach(() => {
+    (rolesStore as any).items = [new Role({
+      apiVersion: "rbac.authorization.k8s.io/v1",
+      kind: "Role",
+      metadata: {
+        name: "foobar",
+        resourceVersion: "1",
+        uid: "1",
+      },
+    })];
+  });
+
+  afterEach(() => {
+    RoleBindingDialog.close();
+    jest.resetAllMocks();
+  });
+
+  it("should render without any errors", () => {
+    const { container } = render(<RoleBindingDialog />);
+
+    expect(container).toBeInstanceOf(HTMLElement);
+  });
+
+  it("role select should be searchable", async () => {
+    RoleBindingDialog.open();
+    const res = render(<RoleBindingDialog />);
+
+    userEvent.keyboard("a");
+    await res.findAllByText("foobar");
+  });
+});
