@@ -93,6 +93,7 @@ export class KubeObjectMenu<
     this.dependencies.hideDetails();
     const { object, removeAction } = this.props;
 
+    // TODO: currently only branch for removeAction() is unit tested, and store.remove() is not.
     if (removeAction) await removeAction();
     else await this.store.remove(object);
   }
