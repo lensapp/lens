@@ -25,6 +25,7 @@ import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { RequireExactlyOne } from "type-fest";
 
 export class IngressApi extends KubeApi<Ingress> {
 }
@@ -58,7 +59,7 @@ export interface ILoadBalancerIngress {
 // extensions/v1beta1
 interface IExtensionsBackend {
   serviceName: string;
-  servicePort: number;
+  servicePort: number | string;
 }
 
 // networking.k8s.io/v1
@@ -102,13 +103,13 @@ export interface Ingress {
     // extensions/v1beta1
     backend?: IExtensionsBackend;
     // networking.k8s.io/v1
-    defaultBackend?: INetworkingBackend & {
+    defaultBackend?: RequireExactlyOne<INetworkingBackend & {
       resource: {
         apiGroup: string;
         kind: string;
         name: string;
       }
-    }
+    }>
   };
   status: {
     loadBalancer: {
@@ -153,10 +154,11 @@ export class Ingress extends KubeObject {
     return routes;
   }
 
-  getServiceNamePort() {
-    const { spec } = this;
-    const serviceName = spec?.defaultBackend?.service.name ?? spec?.backend?.serviceName;
-    const servicePort = spec?.defaultBackend?.service.port.number ?? spec?.defaultBackend?.service.port.name ?? spec?.backend?.servicePort;
+  getServiceNamePort(): IExtensionsBackend | undefined {
+    const { spec: { backend, defaultBackend } = {}} = this;
+
+    const serviceName = defaultBackend?.service?.name ?? backend?.serviceName;
+    const servicePort = defaultBackend?.service?.port.number ?? defaultBackend?.service?.port.name ?? backend?.servicePort;
 
     return {
       serviceName,
