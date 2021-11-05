@@ -129,11 +129,11 @@ export class KubeAuthProxy {
     this.ready = false;
 
     if (this.proxyProcess) {
-      logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
+      logger.info("[KUBE-AUTH]: stopping local proxy", { clusterId: this.cluster.id });
+      this.proxyProcess.kill();
       this.proxyProcess.removeAllListeners();
       this.proxyProcess.stderr.removeAllListeners();
       this.proxyProcess.stdout.removeAllListeners();
-      this.proxyProcess.kill();
       this.proxyProcess = null;
     }
   }
