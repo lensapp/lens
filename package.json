@@ -341,6 +341,7 @@
     "eslint-plugin-unused-imports": "^1.1.5",
     "file-loader": "^6.2.0",
     "flex.box": "^3.4.4",
+    "fork-ts-checker-webpack-plugin": "^5.2.1",
     "hoist-non-react-statics": "^3.3.2",
     "html-webpack-plugin": "^4.5.2",
     "include-media": "^1.4.9",

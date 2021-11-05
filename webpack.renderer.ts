@@ -25,6 +25,7 @@ import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
@@ -147,6 +148,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
 
     plugins: [
       new ProgressBarPlugin(),
+      new ForkTsCheckerPlugin(),
 
       // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       new MonacoWebpackPlugin({
