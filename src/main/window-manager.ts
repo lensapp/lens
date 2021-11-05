@@ -119,7 +119,7 @@ export class WindowManager extends Singleton {
           logger.info("[WINDOW-MANAGER]: Main window loaded");
         })
         .on("will-attach-webview", (event, webPreferences, params) => {
-          logger.info("[WINDOW-MANAGER]: Attaching webview");
+          logger.debug("[WINDOW-MANAGER]: Attaching webview");
           // Following is security recommendations because we allow webview tag (webviewTag: true)
           // suggested by https://www.electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
           // and https://www.electronjs.org/docs/tutorial/security#10-do-not-use-allowpopups

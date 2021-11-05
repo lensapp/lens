@@ -21,9 +21,8 @@
 
 import styles from "./cluster-status.module.css";
 
-import { ipcRenderer } from "electron";
 import { computed, observable, makeObservable } from "mobx";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { ClusterStore } from "../../../common/cluster-store";
@@ -33,10 +32,9 @@ import { cssNames, IClassName } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
-import type { ClusterId } from "../../../common/cluster-types";
+import type { ClusterId, KubeAuthUpdate } from "../../../common/cluster-types";
 
 interface Props {
   className?: IClassName;
@@ -45,7 +43,7 @@ interface Props {
 
 @observer
 export class ClusterStatus extends React.Component<Props> {
-  @observable authOutput: KubeAuthProxyLog[] = [];
+  @observable authOutput: KubeAuthUpdate[] = [];
   @observable isReconnecting = false;
 
   constructor(props: Props) {
@@ -58,31 +56,31 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   @computed get hasErrors(): boolean {
-    return this.authOutput.some(({ error }) => error) || !!this.cluster.failureReason;
+    return this.authOutput.some(({ isError }) => isError);
   }
 
-  async componentDidMount() {
-    ipcRendererOn(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
-      this.authOutput.push({
-        data: res.data.trimRight(),
-        error: res.error,
-      });
-    });
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: KubeAuthUpdate) => {
+        this.authOutput.push(res);
+      }),
+    ]);
   }
-
-  componentWillUnmount() {
-    ipcRenderer.removeAllListeners(`kube-auth:${this.props.clusterId}`);
-  }
-
-  activateCluster = async (force = false) => {
-    await requestMain(clusterActivateHandler, this.props.clusterId, force);
-  };
 
   reconnect = async () => {
     this.authOutput = [];
     this.isReconnecting = true;
-    await this.activateCluster(true);
-    this.isReconnecting = false;
+
+    try {
+      await requestMain(clusterActivateHandler, this.props.clusterId, true);
+    } catch (error) {
+      this.authOutput.push({
+        message: error.toString(),
+        isError: true,
+      });
+    } finally {
+      this.isReconnecting = false;
+    }
   };
 
   manageProxySettings = () => {
@@ -94,58 +92,68 @@ export class ClusterStatus extends React.Component<Props> {
     }));
   };
 
-  renderContent() {
-    const { authOutput, cluster, hasErrors } = this;
-    const failureReason = cluster.failureReason;
+  renderAuthenticationOutput() {
+    return (
+      <pre>
+        {
+          this.authOutput.map(({ message, isError }, index) => (
+            <p key={index} className={cssNames({ error: isError })}>
+              {message.trim()}
+            </p>
+          ))
+        }
+      </pre>
+    );
+  }
 
-    if (!hasErrors || this.isReconnecting) {
-      return (
-        <div className="flex items-center column gaps">
-          <Spinner singleColor={false} className={styles.spinner} />
-          <pre className="kube-auth-out">
-            <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
-            {authOutput.map(({ data, error }, index) => {
-              return <p key={index} className={cssNames({ error })}>{data}</p>;
-            })}
-          </pre>
-        </div>
-      );
+  renderStatusIcon() {
+    if (this.hasErrors) {
+      return <Icon material="cloud_off" className={styles.icon} />;
     }
 
     return (
-      <div className="flex items-center column gaps">
-        <Icon material="cloud_off" className={styles.icon} />
-        <h2>
-          {cluster.preferences.clusterName}
-        </h2>
-        <pre>
-          {authOutput.map(({ data, error }, index) => {
-            return <p key={index} className={cssNames({ error })}>{data}</p>;
-          })}
+      <>
+        <Spinner singleColor={false} className={styles.spinner} />
+        <pre className="kube-auth-out">
+          <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
         </pre>
-        {failureReason && (
-          <div className="error">{failureReason}</div>
-        )}
-        <Button
-          primary
-          label="Reconnect"
-          className="box center"
-          onClick={this.reconnect}
-          waiting={this.isReconnecting}
-        />
-        <a
-          className="box center interactive"
-          onClick={this.manageProxySettings}>
-          Manage Proxy Settings
-        </a>
-      </div>
+      </>
     );
+  }
+
+  renderReconnectionHelp() {
+    if (this.hasErrors && !this.isReconnecting) {
+      return (
+        <>
+          <Button
+            primary
+            label="Reconnect"
+            className="box center"
+            onClick={this.reconnect}
+            waiting={this.isReconnecting}
+          />
+          <a
+            className="box center interactive"
+            onClick={this.manageProxySettings}
+          >
+            Manage Proxy Settings
+          </a>
+        </>
+      );
+    }
+
+    return undefined;
   }
 
   render() {
     return (
       <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
-        {this.renderContent()}
+        <div className="flex items-center column gaps">
+          <h2>{this.cluster.preferences.clusterName}</h2>
+          {this.renderStatusIcon()}
+          {this.renderAuthenticationOutput()}
+          {this.renderReconnectionHelp()}
+        </div>
       </div>
     );
   }

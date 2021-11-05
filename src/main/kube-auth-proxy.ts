@@ -22,7 +22,6 @@
 import { ChildProcess, spawn } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
-import { broadcastMessage } from "../common/ipc";
 import type { Cluster } from "./cluster";
 import { Kubectl } from "./kubectl";
 import logger from "./logger";
@@ -30,22 +29,16 @@ import * as url from "url";
 import { getPortFrom } from "./utils/get-port";
 import { makeObservable, observable, when } from "mobx";
 
-export interface KubeAuthProxyLog {
-  data: string;
-  error?: boolean; // stream=stderr
-}
-
 const startingServeRegex = /^starting to serve on (?<address>.+)/i;
 
 export class KubeAuthProxy {
-  public lastError: string;
   public readonly apiPrefix: string;
 
   public get port(): number {
     return this._port;
   }
 
-  protected _port: number;
+  protected _port?: number;
   protected cluster: Cluster;
   protected env: NodeJS.ProcessEnv = null;
   protected proxyProcess: ChildProcess;
@@ -92,67 +85,56 @@ export class KubeAuthProxy {
 
     this.proxyProcess = spawn(proxyBin, args, { env: this.env });
     this.proxyProcess.on("error", (error) => {
-      this.sendIpcLogMessage({ data: error.message, error: true });
+      this.cluster.broadcastConnectUpdate(error.message, true);
       this.exit();
     });
 
     this.proxyProcess.on("exit", (code) => {
-      this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 });
+      this.cluster.broadcastConnectUpdate(`proxy exited with code: ${code}`, code > 0);
+      this.exit();
+    });
+
+    this.proxyProcess.on("disconnect", () => {
+      this.cluster.broadcastConnectUpdate("Proxy disconnected communications", true );
       this.exit();
     });
 
     this.proxyProcess.stderr.on("data", (data) => {
-      this.lastError = this.parseError(data.toString());
-      this.sendIpcLogMessage({ data: data.toString(), error: true });
+      this.cluster.broadcastConnectUpdate(data.toString(), true);
+    });
+
+    this.proxyProcess.stdout.on("data", (data: any) => {
+      if (typeof this._port === "number") {
+        this.cluster.broadcastConnectUpdate(data.toString());
+      }
     });
 
     this._port = await getPortFrom(this.proxyProcess.stdout, {
       lineRegex: startingServeRegex,
-      onFind: () => this.sendIpcLogMessage({ data: "Authentication proxy started\n" }),
+      onFind: () => this.cluster.broadcastConnectUpdate("Authentication proxy started"),
     });
 
-    this.proxyProcess.stdout.on("data", (data: any) => {
-      this.sendIpcLogMessage({ data: data.toString() });
-    });
+    try {
+      await waitUntilUsed(this.port, 500, 10000);
+      this.ready = true;
+    } catch (error) {
+      this.cluster.broadcastConnectUpdate("Proxy port failed to be used within timelimit, restarting...", true);
+      this.exit();
 
-    await waitUntilUsed(this.port, 500, 10000);
-
-    this.ready = true;
-  }
-
-  protected parseError(data: string) {
-    const error = data.split("http: proxy error:").slice(1).join("").trim();
-    let errorMsg = error;
-    const jsonError = error.split("Response: ")[1];
-
-    if (jsonError) {
-      try {
-        const parsedError = JSON.parse(jsonError);
-
-        errorMsg = parsedError.error_description || parsedError.error || jsonError;
-      } catch (_) {
-        errorMsg = jsonError.trim();
-      }
+      return this.run();
     }
-
-    return errorMsg;
-  }
-
-  protected sendIpcLogMessage(res: KubeAuthProxyLog) {
-    const channel = `kube-auth:${this.cluster.id}`;
-
-    logger.info(`[KUBE-AUTH]: out-channel "${channel}"`, { ...res, meta: this.cluster.getMeta() });
-    broadcastMessage(channel, res);
   }
 
   public exit() {
     this.ready = false;
-    if (!this.proxyProcess) return;
-    logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
-    this.proxyProcess.kill();
-    this.proxyProcess.removeAllListeners();
-    this.proxyProcess.stderr.removeAllListeners();
-    this.proxyProcess.stdout.removeAllListeners();
-    this.proxyProcess = null;
+
+    if (this.proxyProcess) {
+      logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
+      this.proxyProcess.removeAllListeners();
+      this.proxyProcess.stderr.removeAllListeners();
+      this.proxyProcess.stdout.removeAllListeners();
+      this.proxyProcess.kill();
+      this.proxyProcess = null;
+    }
   }
 }

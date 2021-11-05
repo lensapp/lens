@@ -123,6 +123,14 @@ export enum ClusterStatus {
 }
 
 /**
+ * The message format for the "kube-auth:<cluster-id>" channels
+ */
+export interface KubeAuthUpdate {
+  message: string;
+  isError: boolean;
+}
+
+/**
  * The OpenLens known static metadata keys
  */
 export enum ClusterMetadataKey {
@@ -173,7 +181,6 @@ export interface ClusterState {
   disconnected: boolean;
   accessible: boolean;
   ready: boolean;
-  failureReason: string;
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]

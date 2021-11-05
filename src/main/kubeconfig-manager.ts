@@ -49,7 +49,7 @@ export class KubeconfigManager {
       try {
         this.tempFile = await this.createProxyKubeconfig();
       } catch (err) {
-        logger.error(`Failed to created temp config for auth-proxy`, { err });
+        logger.error(`[KUBECONFIG-MANAGER]: Failed to created temp config for auth-proxy`, { err });
       }
     }
 
@@ -61,7 +61,7 @@ export class KubeconfigManager {
       return;
     }
 
-    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    logger.info(`[KUBECONFIG-MANAGER]: Deleting temporary kubeconfig: ${this.tempFile}`);
     await fs.unlink(this.tempFile);
   }
 
@@ -70,7 +70,7 @@ export class KubeconfigManager {
       return;
     }
 
-    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    logger.info(`[KUBECONFIG-MANAGER]: Deleting temporary kubeconfig: ${this.tempFile}`);
     await fs.unlink(this.tempFile);
     this.tempFile = undefined;
   }
@@ -80,8 +80,7 @@ export class KubeconfigManager {
       await this.contextHandler.ensureServer();
       this.tempFile = await this.createProxyKubeconfig();
     } catch (err) {
-      console.log(err);
-      logger.error(`Failed to created temp config for auth-proxy`, { err });
+      logger.error(`[KUBECONFIG-MANAGER]: Failed to created temp config for auth-proxy`, err);
     }
   }
 
@@ -124,7 +123,7 @@ export class KubeconfigManager {
 
     await fs.ensureDir(path.dirname(tempFile));
     await fs.writeFile(tempFile, configYaml, { mode: 0o600 });
-    logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
+    logger.debug(`[KUBECONFIG-MANAGER]: Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;
   }
