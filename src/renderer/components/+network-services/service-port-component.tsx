@@ -92,10 +92,10 @@ export class ServicePortComponent extends React.Component<Props> {
 
     this.waiting = true;
 
-    // determine how many port-forwards are already active
-    const { length } = await getPortForwards();
-
     try {
+      // determine how many port-forwards are already active
+      const { length } = await getPortForwards();
+
       this.forwardPort = await addPortForward(portForward);
 
       if (this.forwardPort) {
