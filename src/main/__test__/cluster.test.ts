@@ -20,6 +20,8 @@ jest.mock("winston", () => ({
     label: jest.fn(),
     timestamp: jest.fn(),
     printf: jest.fn(),
+    padLevels: jest.fn(),
+    ms: jest.fn(),
   },
   createLogger: jest.fn().mockReturnValue(logger),
   transports: {
@@ -31,6 +33,23 @@ jest.mock("winston", () => ({
 jest.mock("../../common/ipc");
 jest.mock("request");
 jest.mock("request-promise-native");
+
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getName: () => "lens",
+    setName: jest.fn(),
+    setPath: jest.fn(),
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: jest.fn(),
+  },
+  ipcMain: {
+    on: jest.fn(),
+    once: jest.fn(),
+    handle: jest.fn(),
+  },
+}));
 
 import { Console } from "console";
 import mockFs from "mock-fs";

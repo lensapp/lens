@@ -375,9 +375,13 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   @action disconnect() {
-    logger.info(`[CLUSTER]: disconnecting`, { id: this.id });
+    logger.info(`[CLUSTER]: disconnecting cluster`, { id: this.id });
+
+    ipcMain.once(`cluster:${this.id}:frame-removed`, () => {
+      this.contextHandler?.stopServer();
+    });
+
     this.eventsDisposer();
-    this.contextHandler?.stopServer();
     this.disconnected = true;
     this.online = false;
     this.accessible = false;

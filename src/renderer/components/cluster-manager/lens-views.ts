@@ -5,6 +5,7 @@
 
 import { action, IReactionDisposer, makeObservable, observable, when } from "mobx";
 import logger from "../../../main/logger";
+import { broadcastMessage } from "../../../common/ipc";
 import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../../common/cluster-types";
@@ -72,6 +73,7 @@ export class ClusterFrameHandler extends Singleton {
             logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
             this.views.delete(clusterId);
             iframe.parentNode.removeChild(iframe);
+            broadcastMessage(`cluster:${clusterId}:frame-removed`);
             dispose();
           },
         );

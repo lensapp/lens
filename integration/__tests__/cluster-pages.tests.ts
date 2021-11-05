@@ -312,6 +312,8 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   }, 10*60*1000);
 
   afterEach(async () => {
+    await frame.click(`[data-testid="sidebar-cluster-dropdown"]`);
+    await frame.click(`.Menu >> text="Disconnect"`);
     await cleanup();
   }, 10*60*1000);
 
@@ -321,6 +323,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await frame.waitForSelector(`.Menu >> text="Settings"`);
     await frame.waitForSelector(`.Menu >> text="Disconnect"`);
     await frame.waitForSelector(`.Menu >> text="Delete"`);
+    await frame.click(`[data-testid="sidebar-cluster-dropdown"]`);
   });
 
   it("should navigate around common cluster pages", async () => {
