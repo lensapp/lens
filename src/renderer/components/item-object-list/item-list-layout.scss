@@ -58,13 +58,8 @@
 }
 
 .ItemListLayoutVisibilityMenu {
-  .MenuItem {
-    padding: 0;
-  }
-
   .Checkbox {
-    width: 100%;
-    padding: var(--spacing);
-    cursor: pointer;
+    --checkbox-color: inherit;
+    color: var(--checkbox-color);
   }
 }
