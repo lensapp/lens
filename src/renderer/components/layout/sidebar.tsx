@@ -206,7 +206,7 @@ export class Sidebar extends React.Component<Props> {
     const { metadata, spec } = this.clusterEntity;
 
     return (
-      <div className={styles.cluster}>
+      <div className={styles.cluster} tabIndex={0}>
         <HotbarIcon
           uid={metadata.uid}
           title={metadata.name}
@@ -232,6 +232,7 @@ export class Sidebar extends React.Component<Props> {
         <div className={styles.clusterName}>
           {metadata.name}
         </div>
+        <Icon material="arrow_drop_down"/>
       </div>
     );
   }

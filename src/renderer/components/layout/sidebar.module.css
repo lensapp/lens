@@ -42,7 +42,19 @@
 }
 
 .cluster {
-  @apply flex items-center m-5;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  cursor: pointer;
+
+  &:focus-visible {
+    background: var(--blue);
+    color: white;
+  }
+
+  &:hover {
+    background: var(--sidebarLogoBackground);
+  }
 }
 
 .clusterName {
