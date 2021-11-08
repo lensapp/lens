@@ -28,6 +28,7 @@ import { ShellOpenError, ShellSession } from "./shell-session";
 import { get } from "lodash";
 import { Node, NodesApi } from "../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
+import logger from "../logger";
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
@@ -67,14 +68,14 @@ export class NodeShellSession extends ShellSession {
     const nodeOs = node.getOperatingSystem();
 
     switch (nodeOs) {
+      default:
+        logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
       case "linux":
         args.push("sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))");
         break;
       case "windows":
         args.push("powershell");
         break;
-      default:
-        throw new Error(`Cannot open node shell for ${this.nodeName}: unknown operating sytem ${nodeOs}`);
     }
 
     return super.open(shell, args, env);
