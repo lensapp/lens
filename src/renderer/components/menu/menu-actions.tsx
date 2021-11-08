@@ -144,7 +144,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
               </MenuItem>
             )}
             {removeAction && (
-              <MenuItem onClick={this.remove} data-menu-action-remove-test data-testid="menu-action-remove">
+              <MenuItem onClick={this.remove} data-testid="menu-action-remove">
                 <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
                 <span className="title">Delete</span>
               </MenuItem>

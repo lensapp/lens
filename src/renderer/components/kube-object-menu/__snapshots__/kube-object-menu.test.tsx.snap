@@ -12,7 +12,6 @@ exports[`kube-object-menu given kube object renders 1`] = `
         </div>
         <li
           class="MenuItem"
-          data-menu-action-remove-test="true"
           data-testid="menu-action-remove"
           tabindex="0"
         >
@@ -61,7 +60,6 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         </div>
         <li
           class="MenuItem"
-          data-menu-action-remove-test="true"
           data-testid="menu-action-remove"
           tabindex="0"
         >
@@ -163,7 +161,6 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         </div>
         <li
           class="MenuItem"
-          data-menu-action-remove-test="true"
           data-testid="menu-action-remove"
           tabindex="0"
         >
@@ -265,7 +262,6 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         </div>
         <li
           class="MenuItem"
-          data-menu-action-remove-test="true"
           data-testid="menu-action-remove"
           tabindex="0"
         >
