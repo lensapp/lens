@@ -7,9 +7,9 @@ exports[`kube-object-menu given kube object renders 1`] = `
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
-        <div>
+        <li>
           Some menu item
-        </div>
+        </li>
         <li
           class="MenuItem"
           data-testid="menu-action-remove"
@@ -55,9 +55,9 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
-        <div>
+        <li>
           Some menu item
-        </div>
+        </li>
         <li
           class="MenuItem"
           data-testid="menu-action-remove"
@@ -156,9 +156,9 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
-        <div>
+        <li>
           Some menu item
-        </div>
+        </li>
         <li
           class="MenuItem"
           data-testid="menu-action-remove"
@@ -257,9 +257,9 @@ exports[`kube-object-menu given kube object without namespace when removing kube
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
-        <div>
+        <li>
           Some menu item
-        </div>
+        </li>
         <li
           class="MenuItem"
           data-testid="menu-action-remove"

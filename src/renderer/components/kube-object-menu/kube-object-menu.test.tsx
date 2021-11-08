@@ -26,20 +26,18 @@ import { KubeObjectMenu, KubeObjectMenuDependencies } from "./kube-object-menu";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
-import type {
-  IHasGettableItemsForKind,
-  KubeObjectMenuRegistration,
-} from "../../../extensions/registries";
+import type { KubeObjectMenuRegistration } from "../../../extensions/registries";
 import type { IGettableStore } from "../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn from "@async-fn/jest";
+import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 
 describe("kube-object-menu", () => {
   let hideDetailsStub: () => void;
   let editResourceTabStub: () => void;
   let apiManagerStub: IGettableStore;
-  let kubeObjectMenuRegistryStub: IHasGettableItemsForKind;
+  let kubeObjectMenuRegistry: KubeObjectMenuRegistry;
   let objectStub: KubeObject | null;
   let dependencies: KubeObjectMenuDependencies<KubeObject>;
 
@@ -61,20 +59,33 @@ describe("kube-object-menu", () => {
       ): TKubeObjectStore | undefined => undefined,
     };
 
-    const MenuItemComponentStub: React.FC = () => <div>Some menu item</div>;
+    // TODO: Remove global shared state
+    KubeObjectMenuRegistry.resetInstance();
+    KubeObjectMenuRegistry.createInstance();
+    kubeObjectMenuRegistry = KubeObjectMenuRegistry.getInstance();
 
-    const dynamicMenuItemStub: KubeObjectMenuRegistration = {
-      apiVersions: ["irrelevant"],
-      components: { MenuItem: MenuItemComponentStub },
-      kind: "irrelevant",
-    };
+    const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
 
-    kubeObjectMenuRegistryStub = {
-      // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      getItemsForKind: (kind: string, apiVersion: string): any => [
-        dynamicMenuItemStub,
-      ],
-    };
+    addDynamicMenuItem({
+      kubeObjectMenuRegistry,
+      MenuItemComponent,
+      apiVersions: ["some-api-version"],
+      kind: "some-kind",
+    });
+
+    addDynamicMenuItem({
+      kubeObjectMenuRegistry,
+      MenuItemComponent,
+      apiVersions: ["some-unrelated-api-version"],
+      kind: "some-kind",
+    });
+
+    addDynamicMenuItem({
+      kubeObjectMenuRegistry,
+      MenuItemComponent,
+      apiVersions: ["some-api-version"],
+      kind: "some-unrelated-kind",
+    });
 
     hideDetailsStub = () => {};
 
@@ -83,7 +94,7 @@ describe("kube-object-menu", () => {
     dependencies = {
       clusterName: "Some cluster name",
       apiManager: apiManagerStub,
-      kubeObjectMenuRegistry: kubeObjectMenuRegistryStub,
+      kubeObjectMenuRegistry,
       hideDetails: hideDetailsStub,
       editResourceTab: editResourceTabStub,
     };
@@ -125,7 +136,7 @@ describe("kube-object-menu", () => {
 
       ({ baseElement, getByTestId, queryByTestId } = render(
         <div>
-          <ConfirmDialog/>
+          <ConfirmDialog />
 
           <KubeObjectMenu
             object={objectStub}
@@ -178,7 +189,8 @@ describe("kube-object-menu", () => {
         it("when removal resolves, closes the confirmation dialog", async () => {
           await removeActionMock.resolve();
 
-          expect(queryByTestId("confirmation-dialog")).toBeNull();        });
+          expect(queryByTestId("confirmation-dialog")).toBeNull();
+        });
       });
     });
   });
@@ -201,7 +213,7 @@ describe("kube-object-menu", () => {
 
       ({ baseElement, getByTestId } = render(
         <div>
-          <ConfirmDialog/>
+          <ConfirmDialog />
 
           <KubeObjectMenu
             object={objectStub}
@@ -240,7 +252,7 @@ describe("kube-object-menu", () => {
 
       ({ baseElement, getByTestId } = render(
         <div>
-          <ConfirmDialog/>
+          <ConfirmDialog />
 
           <KubeObjectMenu
             object={objectStub}
@@ -261,3 +273,23 @@ describe("kube-object-menu", () => {
     });
   });
 });
+
+const addDynamicMenuItem = ({
+  kubeObjectMenuRegistry,
+  MenuItemComponent,
+  apiVersions,
+  kind,
+}: {
+  kubeObjectMenuRegistry: KubeObjectMenuRegistry;
+  MenuItemComponent: React.ComponentType;
+  apiVersions: string[];
+  kind: string;
+}) => {
+  const dynamicMenuItemStub: KubeObjectMenuRegistration = {
+    apiVersions,
+    kind,
+    components: { MenuItem: MenuItemComponent },
+  };
+
+  kubeObjectMenuRegistry.add(dynamicMenuItemStub);
+};
