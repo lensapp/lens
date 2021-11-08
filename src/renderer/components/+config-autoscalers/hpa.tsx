@@ -50,11 +50,14 @@ interface Props extends RouteComponentProps<HpaRouteParams> {
 export class HorizontalPodAutoscalers extends React.Component<Props> {
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
-    const metricsRemainCount = metrics.length - 1;
-    const metricsRemain = metrics.length > 1 ? <>{metricsRemainCount} more...</> : null;
-    const metricValues = hpa.getMetricValues(metrics[0]);
 
-    return <p>{metricValues} {metricsRemain && "+"}{metricsRemain}</p>;
+    if (metrics.length === 0) {
+      return <p>--</p>;
+    }
+
+    const metricsRemain = metrics.length > 1 ? `+${metrics.length - 1} more...` : "";
+
+    return <p>{hpa.getMetricValues(metrics[0])} {metricsRemain}</p>;
   }
 
   render() {
