@@ -40,7 +40,6 @@ export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
   object: TKubeObject | null | undefined;
   editable?: boolean;
   removable?: boolean;
-  toolbar?: boolean;
   dependencies?: KubeObjectMenuDependencies<TKubeObject>
 }
 
