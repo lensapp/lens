@@ -19,13 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { boundMethod, base64, EventEmitter } from "../utils";
+import { boundMethod, base64, EventEmitter, getHostedClusterId } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
 import url from "url";
 import { makeObservable, observable } from "mobx";
-import type { ParsedUrlQueryInput } from "querystring";
+import { ipcRenderer } from "electron";
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -50,7 +50,7 @@ enum TerminalColor {
 export type TerminalApiQuery = Record<string, string> & {
   id: string;
   node?: string;
-  type?: string | "node";
+  type?: string;
 };
 
 export class TerminalApi extends WebSocketApi {
@@ -60,7 +60,13 @@ export class TerminalApi extends WebSocketApi {
   @observable public isReady = false;
   public readonly url: string;
 
-  constructor(protected options: TerminalApiQuery) {
+  public static async new(options: TerminalApiQuery): Promise<TerminalApi> {
+    const shellToken = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), options.id);
+
+    return new TerminalApi({ ...options, shellToken });
+  }
+
+  private constructor(query: TerminalApiQuery) {
     super({
       logging: isDevelopment,
       flushOnOpen: false,
@@ -69,13 +75,9 @@ export class TerminalApi extends WebSocketApi {
     makeObservable(this);
 
     const { hostname, protocol, port } = location;
-    const query: ParsedUrlQueryInput = {
-      id: options.id,
-    };
 
-    if (options.node) {
-      query.node = options.node;
-      query.type = options.type || "node";
+    if (query.node) {
+      query.type ||= "node";
     }
 
     this.url = url.format({
