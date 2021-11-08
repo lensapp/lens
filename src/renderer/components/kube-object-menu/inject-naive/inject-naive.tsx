@@ -29,7 +29,7 @@ import type { KubeObjectMenuDependencies } from "../kube-object-menu";
 import type { KubeObject } from "../../../../common/k8s-api/kube-object";
 
 interface Props {
-  Component: React.ReactType<any>
+  Component: React.ElementType<any>
   [key: string]: any,
 }
 
