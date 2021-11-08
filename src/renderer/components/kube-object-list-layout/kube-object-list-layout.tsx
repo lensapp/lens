@@ -36,10 +36,12 @@ import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
   dependentStores?: KubeObjectStore<KubeObject>[];
+  subscribeStores?: boolean;
 }
 
 const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
   onDetails: (item: KubeObject) => toggleDetails(item.selfLink),
+  subscribeStores: true,
 };
 
 @observer
@@ -56,15 +58,17 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
   }
 
   componentDidMount() {
-    const { store, dependentStores = [] } = this.props;
+    const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
-    disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores(stores, {
-        preload: true,
-        namespaces: clusterContext.contextNamespaces,
-      }),
-    ]);
+    if (subscribeStores) {
+      disposeOnUnmount(this, [
+        kubeWatchApi.subscribeStores(stores, {
+          preload: true,
+          namespaces: clusterContext.contextNamespaces,
+        }),
+      ]);
+    }
   }
 
   render() {
