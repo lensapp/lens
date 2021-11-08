@@ -103,7 +103,7 @@ export class Catalog extends React.Component<Props> {
             this.activeTab = routeTab;
             this.catalogEntityStore.activeCategory = item;
           });
-        } catch(error) {
+        } catch (error) {
           console.error(error);
           Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
@@ -167,15 +167,15 @@ export class Catalog extends React.Component<Props> {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     if (activeCategory) {
-      navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
+      navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind } }));
     } else {
-      navigate(catalogURL({ params: { group: browseCatalogTab }}));
+      navigate(catalogURL({ params: { group: browseCatalogTab } }));
     }
   };
 
   renderNavigation() {
     return (
-      <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>
+      <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange} />
     );
   }
 
@@ -212,23 +212,7 @@ export class Catalog extends React.Component<Props> {
     const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(item.entity);
 
     return (
-      <div className={styles.entityName}>
-        {item.name}
-        <Icon
-          small
-          className={styles.pinIcon}
-          material={!isItemInHotbar && "push_pin"}
-          svg={isItemInHotbar && "push_off"}
-          tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
-          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
-        />
-      </div>
-    );
-  }
-
-  renderIcon(item: CatalogEntityItem<CatalogEntity>) {
-    return (
-      <RenderDelay>
+      <>
         <HotbarIcon
           uid={`catalog-icon-${item.getId()}`}
           title={item.getName()}
@@ -238,7 +222,16 @@ export class Catalog extends React.Component<Props> {
           background={item.entity.spec.icon?.background}
           size={24}
         />
-      </RenderDelay>
+        <span>{item.name}</span>
+        <Icon
+          small
+          className={styles.pinIcon}
+          material={!isItemInHotbar && "push_pin"}
+          svg={isItemInHotbar ? "push_off" : "push_pin"}
+          tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
+          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
+        />
+      </>
     );
   }
 
@@ -268,8 +261,7 @@ export class Catalog extends React.Component<Props> {
           entity => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "Icon", className: styles.iconCell, id: "icon" },
-          { title: "Name", sortBy: sortBy.name, id: "name" },
+          { title: "Name", className: styles.entityName, sortBy: sortBy.name, id: "name" },
           !activeCategory && { title: "Kind", sortBy: sortBy.kind, id: "kind" },
           { title: "Source", className: styles.sourceCell, sortBy: sortBy.source, id: "source" },
           { title: "Labels", className: styles.labelsCell, id: "labels" },
@@ -279,7 +271,6 @@ export class Catalog extends React.Component<Props> {
           disabled: !item.enabled,
         })}
         renderTableContents={item => [
-          this.renderIcon(item),
           this.renderName(item),
           !activeCategory && item.kind,
           item.source,

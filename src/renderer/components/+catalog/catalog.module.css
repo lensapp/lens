@@ -19,44 +19,53 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Catalog {}
+.Catalog {
+  :global(.TableRow):hover .pinIcon {
+    display: block;
+  }
+}
 
 .entityName {
   position: relative;
-  width: min-content;
+  width: 100%;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-right: 24px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--padding);
+  padding-bottom: 0;
+  padding-right: 24px; // + reserved space for .pinIcon
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;  
+    padding-left: var(--padding);
+  }
+
+  :global(.HotbarIcon){
+    align-self: center;
+
+    div {
+      /* icons with plain text */
+      font-size: var(--unit);
+    }
+
+    .Icon {
+      /* icons with font-icon */
+      font-size: var(--small-size);
+    }
+  }
 
   .pinIcon {
     position: absolute;
     right: 0;
-    opacity: 0;
     transition: none;
+    display: none;
 
     &:hover {
-      /* Drop styles defined for <Icon/> */
+      /* Drop styles defined for <Icon/>  */
       background-color: transparent;
       box-shadow: none;
     }
-  }
-}
-
-.iconCell {
-  padding-top: calc(var(--padding) / 2);
-  flex: 0 0 40px !important;
-
-  :global(.content) {
-    display: none; /* hide "Icon" text in the header */
-  }
-
-  div * {
-    font-size: var(--unit); /* icon's with plain text */
-  }
-
-  :global(.Icon) {
-    font-size: var(--small-size) !important;
   }
 }
 
