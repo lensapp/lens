@@ -58,15 +58,8 @@ export class TerminalApi extends WebSocketApi {
 
   public onReady = new EventEmitter<[]>();
   @observable public isReady = false;
-  public readonly url: string;
 
-  public static async new(options: TerminalApiQuery): Promise<TerminalApi> {
-    const shellToken = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), options.id);
-
-    return new TerminalApi({ ...options, shellToken });
-  }
-
-  private constructor(query: TerminalApiQuery) {
+  constructor(protected query: TerminalApiQuery) {
     super({
       logging: isDevelopment,
       flushOnOpen: false,
@@ -74,26 +67,30 @@ export class TerminalApi extends WebSocketApi {
     });
     makeObservable(this);
 
-    const { hostname, protocol, port } = location;
-
     if (query.node) {
       query.type ||= "node";
     }
+  }
 
-    this.url = url.format({
+  async connect() {
+    this.emitStatus("Connecting ...");
+
+    const shellToken = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), this.query.id);
+    const { hostname, protocol, port } = location;
+    const socketUrl = url.format({
       protocol: protocol.includes("https") ? "wss" : "ws",
       hostname,
       port,
       pathname: "/api",
-      query,
+      query: {
+        ...this.query,
+        shellToken,
+      },
       slashes: true,
     });
-  }
 
-  connect() {
-    this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
-    super.connect(this.url);
+    super.connect(socketUrl);
   }
 
   destroy() {

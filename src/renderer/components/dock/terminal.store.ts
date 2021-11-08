@@ -65,12 +65,12 @@ export class TerminalStore extends Singleton {
     });
   }
 
-  async connect(tabId: TabId) {
+  connect(tabId: TabId) {
     if (this.isConnected(tabId)) {
       return;
     }
     const tab: ITerminalTab = dockStore.getTabById(tabId);
-    const api = await TerminalApi.new({
+    const api = new TerminalApi({
       id: tabId,
       node: tab.node,
     });
