@@ -102,7 +102,11 @@ export interface Ingress {
     }[];
     // extensions/v1beta1
     backend?: IExtensionsBackend;
-    // networking.k8s.io/v1
+    /**
+     * The default backend which is exactly on of:
+     * - service
+     * - resource
+     */
     defaultBackend?: RequireExactlyOne<INetworkingBackend & {
       resource: {
         apiGroup: string;
