@@ -96,7 +96,7 @@ describe("kube-object-menu", () => {
       <KubeObjectMenu
         object={objectStub}
         toolbar={true}
-        dependencies={ dependencies }
+        dependencies={dependencies}
       />,
     );
 
