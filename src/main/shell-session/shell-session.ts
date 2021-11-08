@@ -22,7 +22,7 @@
 import fse from "fs-extra";
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
-import type * as WebSocket from "ws";
+import type WebSocket from "ws";
 import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";

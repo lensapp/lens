@@ -19,29 +19,38 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type http from "http";
 import url from "url";
 import logger from "../logger";
-import * as WebSocket from "ws";
+import { Server as WebSocketServer } from "ws";
 import { NodeShellSession, LocalShellSession } from "../shell-session";
 import type { ProxyApiRequestArgs } from "./types";
 import { ClusterManager } from "../cluster-manager";
+import { appName, appSemVer } from "../../common/vars";
+import { LensProxy } from "../lens-proxy";
 
-export function shellApiRequest({ req, socket, head }: ProxyApiRequestArgs) {
-  const ws = new WebSocket.Server({ noServer: true });
+export function shellApiRequest({ req, socket, head }: ProxyApiRequestArgs): void {
+  const cluster = ClusterManager.getInstance().getClusterForRequest(req);
 
-  ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
-    const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+  if (
+    socket.remoteAddress !== "127.0.0.1"
+    || !req.headers["user-agent"]?.includes(` ${appName}/${appSemVer} `)
+    || !req.headers.origin?.endsWith(`.localhost:${LensProxy.getInstance().port}`)
+    || !cluster
+  ) {
+    socket.write("Invalid shell request");
+
+    return void socket.end();
+  }
+
+  const ws = new WebSocketServer({ noServer: true });
+
+  ws.handleUpgrade(req, socket, head, (webSocket) => {
     const nodeParam = url.parse(req.url, true).query["node"]?.toString();
     const shell = nodeParam
-      ? new NodeShellSession(socket, cluster, nodeParam)
-      : new LocalShellSession(socket, cluster);
+      ? new NodeShellSession(webSocket, cluster, nodeParam)
+      : new LocalShellSession(webSocket, cluster);
 
     shell.open()
-      .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
-  }));
-
-  ws.handleUpgrade(req, socket, head, (con) => {
-    ws.emit("connection", con, req);
+      .catch(error => logger.error(`[SHELL-SESSION]: failed to open a ${nodeParam ? "node" : "local"} shell`, error));
   });
 }
