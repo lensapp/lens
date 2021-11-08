@@ -167,9 +167,9 @@ export class Catalog extends React.Component<Props> {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     if (activeCategory) {
-      navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind } }));
+      navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
     } else {
-      navigate(catalogURL({ params: { group: browseCatalogTab } }));
+      navigate(catalogURL({ params: { group: browseCatalogTab }}));
     }
   };
 
