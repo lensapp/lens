@@ -65,7 +65,7 @@ export class ShellRequestAuthenticator extends Singleton {
     const authToken = clusterTokens.get(tabId);
     const buf = Uint8Array.from(Buffer.from(token, "base64"));
 
-    if (authToken instanceof Uint8Array && crypto.timingSafeEqual(authToken, buf)) {
+    if (authToken instanceof Uint8Array && authToken.length === buf.length && crypto.timingSafeEqual(authToken, buf)) {
       // remove the token because it is a single use token
       clusterTokens.delete(tabId);
 
