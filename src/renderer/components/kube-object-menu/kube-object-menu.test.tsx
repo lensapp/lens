@@ -116,7 +116,7 @@ describe("kube-object-menu", () => {
 
   describe("given kube object", () => {
     let baseElement: Element;
-    let removeActionMock: any;
+    let removeActionMock: ReturnType<typeof asyncFn>;
 
     beforeEach(async () => {
       objectStub = KubeObject.create({

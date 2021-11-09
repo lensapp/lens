@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.1.1.tgz#9274ec7460652f9c632c59addf24efb1684ef876"
   integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
 
-"@async-fn/jest@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.4.2.tgz#61b3e35aa1e7398675915b0c6f4967f0c26e0488"
-  integrity sha512-1o34++KnmxnW510+WNlEFjEIZHBhDWnxVmIs97z4z/3nyTLxSw7mz7tF2bhTdiPH0ahJlGpdaWzwqlBJopM06Q==
+"@async-fn/jest@^1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.4.3.tgz#0face4d639339c84f57aeae16575e03137af394f"
+  integrity sha512-Aft4dLjDFlR7ddBQB/PJisCMy/145gNh+Rnt4wE0QBjxDSG9i3VHzP4MYpfFifBI5Ja5JRsHInX1jn+wMf2Gzw==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
