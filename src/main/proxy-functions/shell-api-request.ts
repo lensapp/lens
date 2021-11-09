@@ -19,29 +19,78 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type http from "http";
-import url from "url";
 import logger from "../logger";
-import * as WebSocket from "ws";
+import { Server as WebSocketServer } from "ws";
 import { NodeShellSession, LocalShellSession } from "../shell-session";
 import type { ProxyApiRequestArgs } from "./types";
 import { ClusterManager } from "../cluster-manager";
+import URLParse from "url-parse";
+import { ExtendedMap, Singleton } from "../../common/utils";
+import type { ClusterId } from "../../common/cluster-types";
+import { ipcMainHandle } from "../../common/ipc";
+import * as uuid from "uuid";
 
-export function shellApiRequest({ req, socket, head }: ProxyApiRequestArgs) {
-  const ws = new WebSocket.Server({ noServer: true });
+export class ShellRequestAuthenticator extends Singleton {
+  private tokens = new ExtendedMap<ClusterId, Map<string, string>>();
 
-  ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
-    const cluster = ClusterManager.getInstance().getClusterForRequest(req);
-    const nodeParam = url.parse(req.url, true).query["node"]?.toString();
-    const shell = nodeParam
-      ? new NodeShellSession(socket, cluster, nodeParam)
-      : new LocalShellSession(socket, cluster);
+  init() {
+    ipcMainHandle("cluster:shell-api", (event, clusterId, tabId) => {
+      const authToken = uuid.v4();
+
+      this.tokens
+        .getOrInsert(clusterId, () => new Map())
+        .set(tabId, authToken);
+
+      return authToken;
+    });
+  }
+
+  /**
+   * Authenticates a single use token for creating a new shell
+   * @param clusterId The `ClusterId` for the shell
+   * @param tabId The ID for the shell
+   * @param token The value that is being presented as a one time authentication token
+   * @returns `true` if `token` was valid, false otherwise
+   */
+  authenticate(clusterId: ClusterId, tabId: string, token: string): boolean {
+    const clusterTokens = this.tokens.get(clusterId);
+
+    if (!clusterTokens) {
+      return false;
+    }
+
+    const authToken = clusterTokens.get(tabId);
+
+    // need both conditions to prevent `undefined === undefined` being true here
+    if (typeof authToken === "string" && authToken === token) {
+      // remove the token because it is a single use token
+      clusterTokens.delete(tabId);
+
+      return true;
+    }
+
+    return false;
+  }
+}
+
+export function shellApiRequest({ req, socket, head }: ProxyApiRequestArgs): void {
+  const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+  const { query: { node, shellToken, id: tabId }} = new URLParse(req.url, true);
+
+  if (!cluster || !ShellRequestAuthenticator.getInstance().authenticate(cluster.id, tabId, shellToken)) {
+    socket.write("Invalid shell request");
+
+    return void socket.end();
+  }
+
+  const ws = new WebSocketServer({ noServer: true });
+
+  ws.handleUpgrade(req, socket, head, (webSocket) => {
+    const shell = node
+      ? new NodeShellSession(webSocket, cluster, node)
+      : new LocalShellSession(webSocket, cluster);
 
     shell.open()
-      .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
-  }));
-
-  ws.handleUpgrade(req, socket, head, (con) => {
-    ws.emit("connection", con, req);
+      .catch(error => logger.error(`[SHELL-SESSION]: failed to open a ${node ? "node" : "local"} shell`, error));
   });
 }

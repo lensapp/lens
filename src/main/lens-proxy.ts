@@ -82,7 +82,7 @@ export class LensProxy extends Singleton {
         const reqHandler = isInternal ? shellApiRequest : kubeApiRequest;
 
         (async () => reqHandler({ req, socket, head }))()
-          .catch(error => logger.error(logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`)));
+          .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
       });
   }
 

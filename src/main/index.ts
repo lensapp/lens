@@ -64,7 +64,7 @@ import { Router } from "./router";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import * as path from "path";
-import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
+import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 
 const onCloseCleanup = disposer();
 const onQuitCleanup = disposer();
@@ -140,6 +140,7 @@ app.on("ready", async () => {
   registerFileProtocol("static", __static);
 
   PrometheusProviderRegistry.createInstance();
+  ShellRequestAuthenticator.createInstance().init();
   initializers.initPrometheusProviderRegistry();
 
   /**

@@ -19,13 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { boundMethod, base64, EventEmitter } from "../utils";
+import { boundMethod, base64, EventEmitter, getHostedClusterId } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
 import url from "url";
 import { makeObservable, observable } from "mobx";
-import type { ParsedUrlQueryInput } from "querystring";
+import { ipcRenderer } from "electron";
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -50,7 +50,7 @@ enum TerminalColor {
 export type TerminalApiQuery = Record<string, string> & {
   id: string;
   node?: string;
-  type?: string | "node";
+  type?: string;
 };
 
 export class TerminalApi extends WebSocketApi {
@@ -58,9 +58,8 @@ export class TerminalApi extends WebSocketApi {
 
   public onReady = new EventEmitter<[]>();
   @observable public isReady = false;
-  public readonly url: string;
 
-  constructor(protected options: TerminalApiQuery) {
+  constructor(protected query: TerminalApiQuery) {
     super({
       logging: isDevelopment,
       flushOnOpen: false,
@@ -68,30 +67,30 @@ export class TerminalApi extends WebSocketApi {
     });
     makeObservable(this);
 
-    const { hostname, protocol, port } = location;
-    const query: ParsedUrlQueryInput = {
-      id: options.id,
-    };
-
-    if (options.node) {
-      query.node = options.node;
-      query.type = options.type || "node";
+    if (query.node) {
+      query.type ||= "node";
     }
+  }
 
-    this.url = url.format({
+  async connect() {
+    this.emitStatus("Connecting ...");
+
+    const shellToken = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), this.query.id);
+    const { hostname, protocol, port } = location;
+    const socketUrl = url.format({
       protocol: protocol.includes("https") ? "wss" : "ws",
       hostname,
       port,
       pathname: "/api",
-      query,
+      query: {
+        ...this.query,
+        shellToken,
+      },
       slashes: true,
     });
-  }
 
-  connect() {
-    this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
-    super.connect(this.url);
+    super.connect(socketUrl);
   }
 
   destroy() {
