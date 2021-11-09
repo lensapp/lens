@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObjectMenu, KubeObjectMenuDependencies } from "./kube-object-menu";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -117,8 +117,6 @@ describe("kube-object-menu", () => {
   describe("given kube object", () => {
     let baseElement: Element;
     let removeActionMock: any;
-    let getByTestId: (arg0: string) => any;
-    let queryByTestId: (arg0: string) => any;
 
     beforeEach(async () => {
       objectStub = KubeObject.create({
@@ -134,7 +132,7 @@ describe("kube-object-menu", () => {
 
       removeActionMock = asyncFn();
 
-      ({ baseElement, getByTestId, queryByTestId } = render(
+      ({ baseElement } = render(
         <div>
           <ConfirmDialog />
 
@@ -153,12 +151,12 @@ describe("kube-object-menu", () => {
     });
 
     it("does not open a confirmation dialog yet", () => {
-      expect(queryByTestId("confirmation-dialog")).toBeNull();
+      expect(screen.queryByTestId("confirmation-dialog")).toBeNull();
     });
 
     describe("when removing kube object", () => {
       beforeEach(() => {
-        const menuItem = getByTestId("menu-action-remove");
+        const menuItem = screen.getByTestId("menu-action-remove");
 
         userEvent.click(menuItem);
       });
@@ -168,12 +166,12 @@ describe("kube-object-menu", () => {
       });
 
       it("opens a confirmation dialog", () => {
-        getByTestId("confirmation-dialog");
+        screen.getByTestId("confirmation-dialog");
       });
 
       describe("when remove is confirmed", () => {
         beforeEach(() => {
-          const confirmRemovalButton = getByTestId("confirm");
+          const confirmRemovalButton = screen.getByTestId("confirm");
 
           userEvent.click(confirmRemovalButton);
         });
@@ -183,13 +181,13 @@ describe("kube-object-menu", () => {
         });
 
         it("does not close the confirmation dialog yet", () => {
-          getByTestId("confirmation-dialog");
+          screen.getByTestId("confirmation-dialog");
         });
 
         it("when removal resolves, closes the confirmation dialog", async () => {
           await removeActionMock.resolve();
 
-          expect(queryByTestId("confirmation-dialog")).toBeNull();
+          expect(screen.queryByTestId("confirmation-dialog")).toBeNull();
         });
       });
     });
