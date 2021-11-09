@@ -50,7 +50,11 @@ describe("kube-object-menu", () => {
       return undefined;
     };
 
-    window.cancelIdleCallback = () => {};
+    window.cancelIdleCallback = cancelIdleCallback => {
+      if (typeof cancelIdleCallback === "function") {
+        cancelIdleCallback();
+      }
+    };
 
     apiManagerStub = {
       getStore: <TKubeObjectStore extends KubeObjectStore<KubeObject>>(
