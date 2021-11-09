@@ -89,7 +89,7 @@ export class TerminalApi extends WebSocketApi {
       pathname: "/api",
       query: {
         ...this.query,
-        shellToken: authTokenArray.toString(),
+        shellToken: Buffer.from(authTokenArray).toString("base64"),
       },
       slashes: true,
     });

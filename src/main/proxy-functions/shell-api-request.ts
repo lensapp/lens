@@ -63,15 +63,7 @@ export class ShellRequestAuthenticator extends Singleton {
     }
 
     const authToken = clusterTokens.get(tabId);
-    const buf = Uint8Array.from(token.split(",").map(ar => {
-      const res = +ar;
-
-      if (isNaN(res)) {
-        throw new TypeError("Token must be a CSV list of digits");
-      }
-
-      return res;
-    }));
+    const buf = Uint8Array.from(Buffer.from(token, "base64"));
 
     if (authToken instanceof Uint8Array && crypto.timingSafeEqual(authToken, buf)) {
       // remove the token because it is a single use token
