@@ -240,27 +240,20 @@ export class ClusterManager extends Singleton {
   }
 
   getClusterForRequest(req: http.IncomingMessage): Cluster {
-    let cluster: Cluster = null;
-
     // lens-server is connecting to 127.0.0.1:<port>/<uid>
     if (req.headers.host.startsWith("127.0.0.1")) {
       const clusterId = req.url.split("/")[1];
-
-      cluster = this.store.getById(clusterId);
+      const cluster = this.store.getById(clusterId);
 
       if (cluster) {
         // we need to swap path prefix so that request is proxied to kube api
         req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
       }
-    } else if (req.headers["x-cluster-id"]) {
-      cluster = this.store.getById(req.headers["x-cluster-id"].toString());
-    } else {
-      const clusterId = getClusterIdFromHost(req.headers.host);
 
-      cluster = this.store.getById(clusterId);
+      return cluster;
     }
 
-    return cluster;
+    return this.store.getById(getClusterIdFromHost(req.headers.host));
   }
 }
 

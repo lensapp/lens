@@ -224,10 +224,7 @@ export class KubeApi<T extends KubeObject> {
       isNamespaced = options.objectConstructor?.namespaced,
     } = options || {};
 
-    if (!options.apiBase) {
-      options.apiBase = objectConstructor.apiBase;
-    }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase);
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase || objectConstructor.apiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
