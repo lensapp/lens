@@ -80,7 +80,7 @@ export class LensProxy extends Singleton {
         const cluster = getClusterForRequest(req);
 
         if (!cluster) {
-          return void logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request`);
+          return void logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
         }
 
         const reqHandler = isInternal ? shellApiRequest : kubeApiRequest;
