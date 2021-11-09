@@ -9763,7 +9763,7 @@ node-fetch@2.6.1:
 
 node-fetch@lensapp/node-fetch#2.x:
   version "2.6.6"
-  resolved "https://codeload.github.com/lensapp/node-fetch/tar.gz/2eab2ed3e66aa66cae941319687ab0c69cd42c85"
+  resolved "https://codeload.github.com/lensapp/node-fetch/tar.gz/c869d40ba7dd3bce392c34e36118c225b6ada8fb"
   dependencies:
     whatwg-url "^5.0.0"
 
