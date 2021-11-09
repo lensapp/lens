@@ -47,6 +47,7 @@ import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { broadcastMessage } from "../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
+import { SidebarCluster } from "./sidebar-cluster";
 
 interface Props {
   className?: string;
@@ -246,7 +247,8 @@ export class Sidebar extends React.Component<Props> {
 
     return (
       <div className={cssNames("flex flex-col", className)} data-testid="cluster-sidebar">
-        {this.renderCluster()}
+        {/* {this.renderCluster()} */}
+        <SidebarCluster clusterEntity={this.clusterEntity}/>
         <div className={styles.sidebarNav}>
           <SidebarItem
             id="cluster"
