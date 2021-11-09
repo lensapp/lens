@@ -80,7 +80,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
     contextMenu.menuItems = [{ title, onClick }];
     clusterEntity.onContextMenuOpen(contextMenu);
 
-    setOpened(true);
+    toggle();
   };
 
   const toggle = () => {
