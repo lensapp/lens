@@ -36,6 +36,18 @@
   text-overflow: ellipsis;
 }
 
+:global(.ItemListLayout) {
+  .badge {
+    max-width: unset;
+  }
+
+  .badge:not(.isExpanded) {
+    white-space: unset;
+    overflow: unset;
+    text-overflow: unset;
+  }
+}
+
 .badge:not(.flat) {
   background: var(--colorVague);
   border-radius: 3px;

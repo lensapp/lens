@@ -54,6 +54,19 @@
     &.menu {
       @include table-cell-action;
     }
+
+    &.labels {
+      overflow-x: scroll;
+      text-overflow: unset;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      :not(:last-of-type) {
+        margin-right: 0.5em;
+      }
+    }
   }
 }
 
