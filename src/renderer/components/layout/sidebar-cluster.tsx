@@ -97,7 +97,14 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
   const id = `cluster-${metadata.uid}`;
 
   return (
-    <div className={styles.SidebarCluster} tabIndex={0} id={id} onKeyDown={onKeyDown} role="menubar">
+    <div
+      id={id}
+      className={styles.SidebarCluster}
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      role="menubar"
+      data-testid="sidebar-cluster-dropdown"
+    >
       <Avatar
         title={metadata.name}
         colorHash={`${metadata.name}-${metadata.source}`}
