@@ -278,7 +278,7 @@
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^0.9.1",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "14.17.27",
+    "@types/node": "14.17.33",
     "@types/node-fetch": "^2.5.12",
     "@types/npm": "^2.0.32",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
