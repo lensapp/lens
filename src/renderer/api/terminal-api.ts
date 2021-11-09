@@ -81,7 +81,12 @@ export class TerminalApi extends WebSocketApi {
       this.emitStatus("Connecting ...");
     }
 
-    const shellToken = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), this.query.id);
+    const authTokenArray = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), this.query.id);
+
+    if (!(authTokenArray instanceof Uint8Array)) {
+      throw new TypeError("ShellApi token is not a Uint8Array");
+    }
+
     const { hostname, protocol, port } = location;
     const socketUrl = url.format({
       protocol: protocol.includes("https") ? "wss" : "ws",
@@ -90,7 +95,7 @@ export class TerminalApi extends WebSocketApi {
       pathname: "/api",
       query: {
         ...this.query,
-        shellToken,
+        shellToken: Buffer.from(authTokenArray).toString("base64"),
       },
       slashes: true,
     });

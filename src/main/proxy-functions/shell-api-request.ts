@@ -28,14 +28,17 @@ import URLParse from "url-parse";
 import { ExtendedMap, Singleton } from "../../common/utils";
 import type { ClusterId } from "../../common/cluster-types";
 import { ipcMainHandle } from "../../common/ipc";
-import * as uuid from "uuid";
+import crypto from "crypto";
+import { promisify } from "util";
+
+const randomBytes = promisify(crypto.randomBytes);
 
 export class ShellRequestAuthenticator extends Singleton {
-  private tokens = new ExtendedMap<ClusterId, Map<string, string>>();
+  private tokens = new ExtendedMap<ClusterId, Map<string, Uint8Array>>();
 
   init() {
-    ipcMainHandle("cluster:shell-api", (event, clusterId, tabId) => {
-      const authToken = uuid.v4();
+    ipcMainHandle("cluster:shell-api", async (event, clusterId, tabId) => {
+      const authToken = Uint8Array.from(await randomBytes(128));
 
       this.tokens
         .getOrInsert(clusterId, () => new Map())
@@ -60,9 +63,9 @@ export class ShellRequestAuthenticator extends Singleton {
     }
 
     const authToken = clusterTokens.get(tabId);
+    const buf = Uint8Array.from(Buffer.from(token, "base64"));
 
-    // need both conditions to prevent `undefined === undefined` being true here
-    if (typeof authToken === "string" && authToken === token) {
+    if (authToken instanceof Uint8Array && authToken.length === buf.length && crypto.timingSafeEqual(authToken, buf)) {
       // remove the token because it is a single use token
       clusterTokens.delete(tabId);
 
