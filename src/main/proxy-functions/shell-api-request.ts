@@ -87,8 +87,8 @@ export function shellApiRequest({ req, socket, head }: ProxyApiRequestArgs): voi
 
   ws.handleUpgrade(req, socket, head, (webSocket) => {
     const shell = node
-      ? new NodeShellSession(webSocket, cluster, node)
-      : new LocalShellSession(webSocket, cluster);
+      ? new NodeShellSession(webSocket, cluster, node, tabId)
+      : new LocalShellSession(webSocket, cluster, tabId);
 
     shell.open()
       .catch(error => logger.error(`[SHELL-SESSION]: failed to open a ${node ? "node" : "local"} shell`, error));

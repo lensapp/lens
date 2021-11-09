@@ -40,8 +40,8 @@ export class NodeShellSession extends ShellSession {
     return undefined;
   }
 
-  constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string) {
-    super(socket, cluster);
+  constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string, terminalId: string) {
+    super(socket, cluster, terminalId);
   }
 
   public async open() {
@@ -78,7 +78,7 @@ export class NodeShellSession extends ShellSession {
         break;
     }
 
-    return super.open(shell, args, env);
+    await this.openShellProcess(shell, args, env);
   }
 
   protected createNodeShellPod() {

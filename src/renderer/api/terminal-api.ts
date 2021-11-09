@@ -73,7 +73,13 @@ export class TerminalApi extends WebSocketApi {
   }
 
   async connect() {
-    this.emitStatus("Connecting ...");
+    if (!this.socket) {
+      /**
+       * Only emit this message if we are not "reconnecting", so as to keep the
+       * output display clean when the computer wakes from sleep
+       */
+      this.emitStatus("Connecting ...");
+    }
 
     const shellToken = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), this.query.id);
     const { hostname, protocol, port } = location;
