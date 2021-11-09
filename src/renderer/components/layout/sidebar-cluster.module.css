@@ -47,6 +47,11 @@
 }
 
 .menu {
-  width: 184px;
+  width: 185px;
   margin-top: -10px;
+}
+
+.avatar {
+  font-weight: 500;
+  margin-right: 1.25rem;
 }

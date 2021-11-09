@@ -83,6 +83,12 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
     toggle();
   };
 
+  const onKeyDown = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+    if (evt.code == "Space") {
+      toggle();
+    }
+  };
+
   const toggle = () => {
     setOpened(!opened);
   };
@@ -91,13 +97,14 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
   const id = `cluster-${metadata.uid}`;
 
   return (
-    <div className={styles.SidebarCluster} tabIndex={0} id={id}>
+    <div className={styles.SidebarCluster} tabIndex={0} id={id} onKeyDown={onKeyDown} role="menubar">
       <Avatar
         title={metadata.name}
         colorHash={`${metadata.name}-${metadata.source}`}
         width={40}
         height={40}
         src={spec.icon?.src}
+        className={styles.avatar}
       />
       <div className={styles.clusterName}>
         {metadata.name}
