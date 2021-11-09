@@ -28,7 +28,6 @@ export function noop<T extends any[]>(...args: T): void {
 
 export * from "./app-version";
 export * from "./autobind";
-export * from "./base64";
 export * from "./camelCase";
 export * from "./cloneJson";
 export * from "./cluster-id-url-parsing";
@@ -62,9 +61,11 @@ export * from "./types";
 import * as iter from "./iter";
 import * as array from "./array";
 import * as tuple from "./tuple";
+import * as base64 from "./base64";
 
 export {
   iter,
   array,
   tuple,
+  base64,
 };
