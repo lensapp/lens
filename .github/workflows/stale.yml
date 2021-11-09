@@ -1,0 +1,14 @@
+name: Cull Stale Issues
+on:
+  schedule:
+    - cron: "30 1 * * *"
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses:  actions/stale@4
+        with:
+          only-issue-labels: "needs-information"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          # -1 here means that PRs will never be marked as stale
+          days-before-pr-stale: -1
