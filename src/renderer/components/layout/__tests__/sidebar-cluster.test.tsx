@@ -67,7 +67,6 @@ describe("<SidebarCluster/>", () => {
     const { getByTestId, getByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
     const link = getByTestId("sidebar-cluster-dropdown");
 
-    // HotbarStore.createInstance();
     fireEvent.click(link);
     expect(await getByText("Add to Hotbar")).toBeInTheDocument();
   });
