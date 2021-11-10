@@ -1200,24 +1200,29 @@
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left"><code>backend?</code></td>
 <td align="left"><code>IExtensionsBackend</code></td>
+<td align="left">-</td>
 </tr>
 <tr>
 <td align="left"><code>defaultBackend?</code></td>
-<td align="left"><code>INetworkingBackend</code> &amp; { <code>resource</code>: { <code>apiGroup</code>: <code>string</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code>  }  }</td>
+<td align="left"><code>RequireExactlyOne</code>&lt;<code>INetworkingBackend</code> &amp; { <code>resource</code>: { <code>apiGroup</code>: <code>string</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code>  }  }, <code>"resource"</code> | <code>"service"</code>></td>
+<td align="left">The default backend which is exactly on of: - service - resource</td>
 </tr>
 <tr>
 <td align="left"><code>rules?</code></td>
 <td align="left">{ <code>host?</code>: <code>string</code> ; <code>http</code>: { <code>paths</code>: { <code>backend</code>: <code>IIngressBackend</code> ; <code>path?</code>: <code>string</code>  }[]  }  }[]</td>
+<td align="left">-</td>
 </tr>
 <tr>
 <td align="left"><code>tls</code></td>
 <td align="left">{ <code>secretName</code>: <code>string</code>  }[]</td>
+<td align="left">-</td>
 </tr>
 </tbody>
 </table>
@@ -1423,27 +1428,9 @@
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getsearchfields">getSearchFields</a></p>
 <hr />
 <h3 id="getservicenameport">getServiceNamePort<a class="headerlink" href="#getservicenameport" title="Permanent link">#</a></h3>
-<p>▸ <strong>getServiceNamePort</strong>(): <code>Object</code></p>
+<p>▸ <strong>getServiceNamePort</strong>(): <code>IExtensionsBackend</code></p>
 <h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
-<p><code>Object</code></p>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>serviceName</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>servicePort</code></td>
-<td align="left"><code>string</code> | <code>number</code></td>
-</tr>
-</tbody>
-</table>
+<p><code>IExtensionsBackend</code></p>
 <hr />
 <h3 id="gettimedifffromnow">getTimeDiffFromNow<a class="headerlink" href="#gettimedifffromnow" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
