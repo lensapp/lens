@@ -28,7 +28,6 @@ import { cssNames, Disposer } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { KubeObjectMenu } from "../kube-object-menu";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
@@ -36,7 +35,8 @@ import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
-import { InjectNaive } from "../kube-object-menu/inject-naive/inject-naive";
+import { Inject } from "@ogre-tools/injectable-react";
+import KubeObjectMenuInjectable from "../kube-object-menu/kube-object-menu.injectable";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -141,7 +141,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
           }),
           ...[customizeHeader].flat(),
         ]}
-        renderItemMenu={item => <InjectNaive Component={KubeObjectMenu} object={item} />}
+        renderItemMenu={item => <Inject injectableKey={KubeObjectMenuInjectable} object={item} />}
       />
     );
   }

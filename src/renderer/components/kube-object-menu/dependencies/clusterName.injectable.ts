@@ -19,36 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { editResourceTab } from "../../dock/edit-resource.store";
-import { hideDetails } from "../../kube-detail-params";
-import { apiManager } from "../../../../common/k8s-api/api-manager";
-import { KubeObjectMenuRegistry } from "../../../../extensions/registries";
-import { getActiveClusterEntity } from "../../../api/catalog-entity-registry";
-import type { KubeObjectMenuDependencies } from "../kube-object-menu";
-import type { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import type { ICluster } from "../../../../main/cluster";
+import type { IInjectable } from "@ogre-tools/injectable";
+import clusterInjectable from "./cluster.injectable";
 
-interface Props {
-  Component: React.ElementType<any>
-  [key: string]: any,
+interface IDependencies {
+  cluster: ICluster;
 }
 
-export const InjectNaive = ({ Component, ...props }: Props) => {
-  const kubeObjectMenuRegistry = KubeObjectMenuRegistry.getInstance();
-  const cluster = getActiveClusterEntity();
+const clusterNameInjectable: IInjectable<
+  string | undefined,
+  IDependencies
+> = {
+  getDependencies: di => ({
+    cluster: di.inject(clusterInjectable),
+  }),
 
-  const dependencies: KubeObjectMenuDependencies<KubeObject> = {
-    clusterName: cluster.name,
-    editResourceTab,
-    hideDetails,
-    apiManager,
-    kubeObjectMenuRegistry,
-  };
+  instantiate: ({ cluster }) => cluster?.name,
 
-  return (
-    <Component
-      dependencies={dependencies}
-      {...props}
-    />
-  );
+  lifecycle: lifecycleEnum.transient,
 };
+
+export default clusterNameInjectable;

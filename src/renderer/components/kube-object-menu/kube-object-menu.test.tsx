@@ -20,28 +20,41 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { KubeObjectMenu, KubeObjectMenuDependencies } from "./kube-object-menu";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
-import type { KubeApi } from "../../../common/k8s-api/kube-api";
+import type { IConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import type { KubeObjectMenuRegistration } from "../../../extensions/registries";
-import type { IGettableStore } from "../../../common/k8s-api/api-manager";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn from "@async-fn/jest";
-import { KubeObjectMenuRegistry } from "../../../extensions/registries";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
+
+import { Inject } from "@ogre-tools/injectable-react";
+import clusterInjectable from "./dependencies/cluster.injectable";
+import apiManagerInjectable from "./dependencies/apiManager.injectable";
+import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
+import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
+import { TabKind } from "../dock/dock.store";
+import KubeObjectMenuInjectable from "./kube-object-menu.injectable";
+import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
+import { renderFor, IDiRender } from "../test-utils/renderFor";
 
 describe("kube-object-menu", () => {
-  let hideDetailsStub: () => void;
-  let editResourceTabStub: () => void;
-  let apiManagerStub: IGettableStore;
-  let kubeObjectMenuRegistry: KubeObjectMenuRegistry;
   let objectStub: KubeObject | null;
-  let dependencies: KubeObjectMenuDependencies<KubeObject>;
+  let di: IConfigurableDependencyInjectionContainer;
+  let render: IDiRender;
 
   beforeEach(() => {
+    di = getDiForUnitTesting();
+
+    // TODO: Remove global shared state
+    KubeObjectMenuRegistry.resetInstance();
+    KubeObjectMenuRegistry.createInstance();
+
+    render = renderFor(di);
+
     // TODO: Remove illegal global overwrites for what should be a dependency somewhere.
     // TODO: Remove usage of experimental browser API.
     window.requestIdleCallback = (callback: IdleRequestCallback): number => {
@@ -52,62 +65,66 @@ describe("kube-object-menu", () => {
 
     window.cancelIdleCallback = () => {};
 
-    apiManagerStub = {
-      getStore: <TKubeObjectStore extends KubeObjectStore<KubeObject>>(
-        // eslint-disable-next-line unused-imports/no-unused-vars-ts
-        api: string | KubeApi<KubeObject>,
-      ): TKubeObjectStore | undefined => undefined,
-    };
+    di.override(clusterInjectable, {
+      name: "Some name",
+    });
 
-    // TODO: Remove global shared state
-    KubeObjectMenuRegistry.resetInstance();
-    KubeObjectMenuRegistry.createInstance();
-    kubeObjectMenuRegistry = KubeObjectMenuRegistry.getInstance();
+    di.override(apiManagerInjectable, {
+      getStore: () => undefined,
+    });
 
-    const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
+    di.override(hideDetailsInjectable, () => {});
+
+    di.override(editResourceTabInjectable, () => ({
+      id: "irrelevant",
+      kind: TabKind.TERMINAL,
+      pinned: false,
+      title: "irrelevant",
+    }));
 
     addDynamicMenuItem({
-      kubeObjectMenuRegistry,
-      MenuItemComponent,
+      di,
       apiVersions: ["some-api-version"],
       kind: "some-kind",
     });
 
     addDynamicMenuItem({
-      kubeObjectMenuRegistry,
-      MenuItemComponent,
+      di,
       apiVersions: ["some-unrelated-api-version"],
       kind: "some-kind",
     });
 
     addDynamicMenuItem({
-      kubeObjectMenuRegistry,
-      MenuItemComponent,
+      di,
       apiVersions: ["some-api-version"],
       kind: "some-unrelated-kind",
     });
+  });
 
-    hideDetailsStub = () => {};
+  it("given no cluster, does not crash", () => {
+    di.override(clusterInjectable, null);
 
-    editResourceTabStub = () => {};
+    objectStub = null;
 
-    dependencies = {
-      clusterName: "Some cluster name",
-      apiManager: apiManagerStub,
-      kubeObjectMenuRegistry,
-      hideDetails: hideDetailsStub,
-      editResourceTab: editResourceTabStub,
-    };
+    expect(() => {
+      render(
+        <Inject
+          injectableKey={KubeObjectMenuInjectable}
+          object={objectStub}
+          toolbar={true}
+        />,
+      );
+    }).not.toThrow();
   });
 
   it("given no kube object, renders", () => {
     objectStub = null;
 
     const { baseElement } = render(
-      <KubeObjectMenu
+      <Inject
+        injectableKey={KubeObjectMenuInjectable}
         object={objectStub}
         toolbar={true}
-        dependencies={dependencies}
       />,
     );
 
@@ -136,9 +153,9 @@ describe("kube-object-menu", () => {
         <div>
           <ConfirmDialog />
 
-          <KubeObjectMenu
+          <Inject
+            injectableKey={KubeObjectMenuInjectable}
             object={objectStub}
-            dependencies={dependencies}
             toolbar={true}
             removeAction={removeActionMock}
           />
@@ -195,7 +212,6 @@ describe("kube-object-menu", () => {
 
   describe("given kube object with namespace", () => {
     let baseElement: Element;
-    let getByTestId: (arg0: string) => any;
 
     beforeEach(async () => {
       objectStub = KubeObject.create({
@@ -209,13 +225,13 @@ describe("kube-object-menu", () => {
         },
       });
 
-      ({ baseElement, getByTestId } = render(
+      ({ baseElement } = render(
         <div>
           <ConfirmDialog />
 
-          <KubeObjectMenu
+          <Inject
+            injectableKey={KubeObjectMenuInjectable}
             object={objectStub}
-            dependencies={dependencies}
             toolbar={true}
             removeAction={() => {}}
           />
@@ -224,7 +240,7 @@ describe("kube-object-menu", () => {
     });
 
     it("when removing kube object, renders confirmation dialog with namespace", () => {
-      const menuItem = getByTestId("menu-action-remove");
+      const menuItem = screen.getByTestId("menu-action-remove");
 
       userEvent.click(menuItem);
 
@@ -234,7 +250,6 @@ describe("kube-object-menu", () => {
 
   describe("given kube object without namespace", () => {
     let baseElement: Element;
-    let getByTestId: (arg0: string) => any;
 
     beforeEach(async () => {
       objectStub = KubeObject.create({
@@ -248,13 +263,13 @@ describe("kube-object-menu", () => {
         },
       });
 
-      ({ baseElement, getByTestId } = render(
+      ({ baseElement } = render(
         <div>
           <ConfirmDialog />
 
-          <KubeObjectMenu
+          <Inject
+            injectableKey={KubeObjectMenuInjectable}
             object={objectStub}
-            dependencies={dependencies}
             toolbar={true}
             removeAction={() => {}}
           />
@@ -263,7 +278,7 @@ describe("kube-object-menu", () => {
     });
 
     it("when removing kube object, renders confirmation dialog without namespace", () => {
-      const menuItem = getByTestId("menu-action-remove");
+      const menuItem = screen.getByTestId("menu-action-remove");
 
       userEvent.click(menuItem);
 
@@ -273,21 +288,25 @@ describe("kube-object-menu", () => {
 });
 
 const addDynamicMenuItem = ({
-  kubeObjectMenuRegistry,
-  MenuItemComponent,
+  di,
   apiVersions,
   kind,
 }: {
-  kubeObjectMenuRegistry: KubeObjectMenuRegistry;
-  MenuItemComponent: React.ComponentType;
+  di: any;
   apiVersions: string[];
   kind: string;
 }) => {
+  const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
+
   const dynamicMenuItemStub: KubeObjectMenuRegistration = {
     apiVersions,
     kind,
     components: { MenuItem: MenuItemComponent },
   };
+
+  const kubeObjectMenuRegistry: KubeObjectMenuRegistry = di.inject(
+    kubeObjectMenuRegistryInjectable,
+  );
 
   kubeObjectMenuRegistry.add(dynamicMenuItemStub);
 };

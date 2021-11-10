@@ -18,27 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { editResourceTab } from "../../dock/edit-resource.store";
+import type { IInjectable } from "@ogre-tools/injectable";
 
-import type React from "react";
-import { BaseRegistry } from "./base-registry";
+const editResourceTabInjectable: IInjectable<typeof editResourceTab> = {
+  getDependencies: () => ({}),
+  instantiate: () => editResourceTab,
+};
 
-export interface KubeObjectMenuComponents {
-  MenuItem: React.ComponentType<any>;
-}
-
-export interface KubeObjectMenuRegistration {
-  kind: string;
-  apiVersions: string[];
-  components: KubeObjectMenuComponents;
-}
-
-export interface IKubeObjectMenuRegistry {
-  getItemsForKind(kind: string, apiVersion: string): any;
-}
-
-export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistration> implements IKubeObjectMenuRegistry {
-  getItemsForKind = (kind: string, apiVersion: string) =>
-    this.getItems().filter((item) =>
-      item.kind === kind && item.apiVersions.includes(apiVersion),
-    );
-}
+export default editResourceTabInjectable;

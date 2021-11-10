@@ -18,27 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from "react";
 
-import type React from "react";
-import { BaseRegistry } from "./base-registry";
+import {
+  render as testingLibraryRender,
+  RenderResult,
+} from "@testing-library/react";
 
-export interface KubeObjectMenuComponents {
-  MenuItem: React.ComponentType<any>;
-}
+import type { IConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 
-export interface KubeObjectMenuRegistration {
-  kind: string;
-  apiVersions: string[];
-  components: KubeObjectMenuComponents;
-}
+import { DiContextProvider } from "@ogre-tools/injectable-react";
 
-export interface IKubeObjectMenuRegistry {
-  getItemsForKind(kind: string, apiVersion: string): any;
-}
+export type IDiRender = (ui: React.ReactElement) => RenderResult;
 
-export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistration> implements IKubeObjectMenuRegistry {
-  getItemsForKind = (kind: string, apiVersion: string) =>
-    this.getItems().filter((item) =>
-      item.kind === kind && item.apiVersions.includes(apiVersion),
-    );
-}
+type IDiRenderFor = (
+  di: IConfigurableDependencyInjectionContainer,
+) => IDiRender;
+
+export const renderFor: IDiRenderFor = di => ui =>
+  testingLibraryRender(
+    <DiContextProvider value={{ di }}>{ui}</DiContextProvider>,
+  );
+

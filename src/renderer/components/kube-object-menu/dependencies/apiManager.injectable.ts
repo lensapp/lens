@@ -18,27 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { IApiManager, apiManager } from "../../../../common/k8s-api/api-manager";
+import type { IInjectable } from "@ogre-tools/injectable";
 
-import type React from "react";
-import { BaseRegistry } from "./base-registry";
+const apiManagerInjectable: IInjectable<IApiManager> = {
+  getDependencies: () => ({}),
+  instantiate: () => apiManager,
+};
 
-export interface KubeObjectMenuComponents {
-  MenuItem: React.ComponentType<any>;
-}
-
-export interface KubeObjectMenuRegistration {
-  kind: string;
-  apiVersions: string[];
-  components: KubeObjectMenuComponents;
-}
-
-export interface IKubeObjectMenuRegistry {
-  getItemsForKind(kind: string, apiVersion: string): any;
-}
-
-export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistration> implements IKubeObjectMenuRegistry {
-  getItemsForKind = (kind: string, apiVersion: string) =>
-    this.getItems().filter((item) =>
-      item.kind === kind && item.apiVersions.includes(apiVersion),
-    );
-}
+export default apiManagerInjectable;

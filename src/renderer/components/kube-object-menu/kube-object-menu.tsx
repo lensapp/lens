@@ -22,16 +22,16 @@
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
+import { MenuActions, MenuActionsProps } from "../menu";
 import identity from "lodash/identity";
 
-import type { IHasGettableItemsForKind } from "../../../extensions/registries";
-import type { IGettableStore } from "../../../common/k8s-api/api-manager";
+import type { IKubeObjectMenuRegistry } from "../../../extensions/registries";
+import type { IApiManager } from "../../../common/k8s-api/api-manager";
 
-export interface KubeObjectMenuDependencies<TKubeObject>{
-  apiManager: IGettableStore;
-  kubeObjectMenuRegistry: IHasGettableItemsForKind;
-  clusterName: string,
+export interface KubeObjectMenuDependencies<TKubeObject> {
+  apiManager: IApiManager;
+  kubeObjectMenuRegistry: IKubeObjectMenuRegistry;
+  clusterName: string;
   hideDetails: () => void;
   editResourceTab: (kubeObject: TKubeObject) => void;
 }
@@ -40,22 +40,21 @@ export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
   object: TKubeObject | null | undefined;
   editable?: boolean;
   removable?: boolean;
-  dependencies?: KubeObjectMenuDependencies<TKubeObject>
 }
+
+export interface KubeObjectMenuPropsAndDependencies<TKubeObject>
+  extends KubeObjectMenuProps<TKubeObject>,
+    KubeObjectMenuDependencies<TKubeObject> {}
 
 export class KubeObjectMenu<
   TKubeObject extends KubeObject,
-> extends React.Component<KubeObjectMenuProps<TKubeObject>> {
-  get dependencies() {
-    return this.props.dependencies;
-  }
-
+> extends React.Component<KubeObjectMenuPropsAndDependencies<TKubeObject>> {
   get store() {
     const { object } = this.props;
 
     if (!object) return null;
 
-    return this.dependencies.apiManager.getStore(object.selfLink);
+    return this.props.apiManager.getStore(object.selfLink);
   }
 
   get isEditable() {
@@ -68,13 +67,13 @@ export class KubeObjectMenu<
 
   @boundMethod
   async update() {
-    this.dependencies.hideDetails();
-    this.dependencies.editResourceTab(this.props.object);
+    this.props.hideDetails();
+    this.props.editResourceTab(this.props.object);
   }
 
   @boundMethod
   async remove() {
-    this.dependencies.hideDetails();
+    this.props.hideDetails();
     const { object, removeAction } = this.props;
 
     // TODO: currently only branch for removeAction() is unit tested, and store.remove() is not.
@@ -90,16 +89,13 @@ export class KubeObjectMenu<
       return null;
     }
 
-    const breadcrumbParts = [
-      object.getNs(),
-      object.getName(),
-    ];
+    const breadcrumbParts = [object.getNs(), object.getName()];
 
     const breadcrumb = breadcrumbParts.filter(identity).join("/");
 
     return (
       <p>
-        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.dependencies.clusterName}</b>?
+        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.props.clusterName}</b>?
       </p>
     );
   }
@@ -111,16 +107,22 @@ export class KubeObjectMenu<
       return [];
     }
 
-    return this.dependencies.kubeObjectMenuRegistry
+    return this.props.kubeObjectMenuRegistry
       .getItemsForKind(object.kind, object.apiVersion)
-      .map(({ components: { MenuItem }}: { components: { MenuItem: React.ReactType<any> }}, index: number) => (
-        <MenuItem
-          object={object}
-          toolbar={toolbar}
-          // TODO: Fix misuse of index in key
-          key={`menu-item-${index}`}
-        />
-      ),
+      .map(
+        (
+          {
+            components: { MenuItem },
+          }: { components: { MenuItem: React.ReactType<any> }},
+          index: number,
+        ) => (
+          <MenuItem
+            object={object}
+            toolbar={toolbar}
+            // TODO: Fix misuse of index in key
+            key={`menu-item-${index}`}
+          />
+        ),
       );
   }
 

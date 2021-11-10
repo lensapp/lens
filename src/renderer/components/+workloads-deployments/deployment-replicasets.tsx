@@ -24,7 +24,7 @@ import "./deployment-replicasets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { ReplicaSet } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object-menu";
+import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { Spinner } from "../spinner";
 import { prevDefault, stopPropagation } from "../../utils";
 import { DrawerTitle } from "../drawer";
@@ -32,8 +32,8 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { showDetails } from "../kube-detail-params";
-import { InjectNaive } from "../kube-object-menu/inject-naive/inject-naive";
-
+import { Inject } from "@ogre-tools/injectable-react";
+import KubeObjectMenuInjectable from "../kube-object-menu/kube-object-menu.injectable";
 
 enum sortBy {
   name = "name",
@@ -115,7 +115,6 @@ export class DeploymentReplicaSets extends React.Component<Props> {
 }
 
 export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
-  return (
-    <InjectNaive Component={KubeObjectMenu} {...props}/>
-  );
+  return <Inject injectableKey={KubeObjectMenuInjectable} {...props} />;
 }
+

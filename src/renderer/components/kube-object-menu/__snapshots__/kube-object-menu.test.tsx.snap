@@ -17,7 +17,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_3"
+            id="tooltip_target_4"
             tabindex="0"
           >
             <span
@@ -65,7 +65,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_7"
+            id="tooltip_target_8"
             tabindex="0"
           >
             <span
@@ -116,7 +116,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
             </b>
              from 
             <b>
-              Some cluster name
+              Some name
             </b>
             ?
           </p>
@@ -166,7 +166,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_32"
+            id="tooltip_target_33"
             tabindex="0"
           >
             <span
@@ -217,7 +217,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
             </b>
              from 
             <b>
-              Some cluster name
+              Some name
             </b>
             ?
           </p>
@@ -267,7 +267,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_40"
+            id="tooltip_target_41"
             tabindex="0"
           >
             <span
@@ -318,7 +318,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
             </b>
              from 
             <b>
-              Some cluster name
+              Some name
             </b>
             ?
           </p>

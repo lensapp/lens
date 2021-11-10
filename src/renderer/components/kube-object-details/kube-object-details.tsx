@@ -29,14 +29,13 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
-import { KubeObjectMenu } from "../kube-object-menu";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import logger from "../../../main/logger";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { hideDetails, kubeDetailsUrlParam } from "../kube-detail-params";
-import { InjectNaive } from "../kube-object-menu/inject-naive/inject-naive";
-
+import { Inject } from "@ogre-tools/injectable-react";
+import KubeObjectMenuInjectable from "../kube-object-menu/kube-object-menu.injectable";
 
 export interface KubeObjectDetailsProps<T extends KubeObject = KubeObject> {
   className?: string;
@@ -105,7 +104,7 @@ export class KubeObjectDetails extends React.Component {
           className="KubeObjectDetails flex column"
           open={isOpen}
           title=""
-          toolbar={<InjectNaive Component={KubeObjectMenu} object={object} toolbar={true} />}
+          toolbar={<Inject injectableKey={KubeObjectMenuInjectable} object={object} toolbar={true} />}
           onClose={hideDetails}
         >
           {isLoading && <Spinner center />}
@@ -145,7 +144,7 @@ export class KubeObjectDetails extends React.Component {
         className="KubeObjectDetails flex column"
         open={isOpen}
         title={title}
-        toolbar={<InjectNaive Component={KubeObjectMenu} object={object} toolbar={true}/>}
+        toolbar={<Inject injectableKey={KubeObjectMenuInjectable} object={object} toolbar={true}/>}
         onClose={hideDetails}
       >
         {isLoading && <Spinner center/>}

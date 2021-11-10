@@ -27,11 +27,11 @@ import type { KubeApi } from "./kube-api";
 import type { KubeObject } from "./kube-object";
 import { IKubeObjectRef, parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
-export interface IGettableStore {
+export interface IApiManager {
   getStore<TKubeObjectStore extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): TKubeObjectStore | undefined;
 }
 
-export class ApiManager implements IGettableStore {
+export class ApiManager implements IApiManager {
   private apis = observable.map<string, KubeApi<KubeObject>>();
   private stores = observable.map<string, KubeObjectStore<KubeObject>>();
 
