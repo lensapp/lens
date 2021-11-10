@@ -1,0 +1,1724 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Lens Extension Development and API.">
+      
+      
+      
+        <meta name="author" content="Mirantis, Inc.">
+      
+      
+        <link rel="canonical" href="https://api-docs.k8slens.dev/v5.2.7/extensions/api/modules/renderer.component/">
+      
+      
+        
+      
+      <link rel="icon" href="../../../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.1.8+insiders-2.9.2">
+    
+    
+      
+        <title>Namespace: Component - Lens Extension Development</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.92048cb8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.73e53a79.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    
+      
+
+  
+
+
+  
+
+  
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-159377374-2","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __scope(t,e="../../../.."){return new URL(e,location).pathname+"."+t}function __get(t,e=localStorage,n){return JSON.parse(e.getItem(__scope(t,n)))}function __set(t,e,n=localStorage,o){try{n.setItem(__scope(t,o),JSON.stringify(e))}catch(t){}}</script>
+    
+      <script>var palette=__get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#namespace-component" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Lens Extension Development" class="md-header__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Lens Extension Development
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Namespace: Component
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m10-3a5 5 0 0 1 5 5 5 5 0 0 1-5 5H7a5 5 0 0 1-5-5 5 5 0 0 1 5-5h10M7 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3h10a3 3 0 0 0 3-3 3 3 0 0 0-3-3H7z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    Lens Extension Development
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/your-first-extension/" class="md-nav__link">
+        Your First Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/anatomy/" class="md-nav__link">
+        Extension Anatomy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/wrapping-up/" class="md-nav__link">
+        Wrapping Up
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Extension Capabilities
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Capabilities
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/common-capabilities/" class="md-nav__link">
+        Common Capabilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/styling/" class="md-nav__link">
+        Styling
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Extension Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/generator/" class="md-nav__link">
+        Generator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/main-extension/" class="md-nav__link">
+        Main Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/renderer-extension/" class="md-nav__link">
+        Renderer Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/catalog/" class="md-nav__link">
+        Catalog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/resource-stack/" class="md-nav__link">
+        Resource Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/stores/" class="md-nav__link">
+        Stores
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/working-with-mobx/" class="md-nav__link">
+        Working with MobX
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/protocol-handlers/" class="md-nav__link">
+        Protocol Handlers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/ipc/" class="md-nav__link">
+        IPC
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Testing and Publishing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Testing and Publishing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/testing/" class="md-nav__link">
+        Testing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/publishing/" class="md-nav__link">
+        Publishing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of contents
+  </a>
+  
+    <nav class="md-nav" aria-label="Table of contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enumerations" class="md-nav__link">
+    Enumerations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interfaces" class="md-nav__link">
+    Interfaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-aliases" class="md-nav__link">
+    Type aliases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    Variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-aliases_1" class="md-nav__link">
+    Type aliases
+  </a>
+  
+    <nav class="md-nav" aria-label="Type aliases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#icondata" class="md-nav__link">
+    IconData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inputprops" class="md-nav__link">
+    InputProps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menucontextvalue" class="md-nav__link">
+    MenuContextValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notificationid" class="md-nav__link">
+    NotificationId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notificationmessage" class="md-nav__link">
+    NotificationMessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radioprops" class="md-nav__link">
+    RadioProps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablecellelem" class="md-nav__link">
+    TableCellElem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tableheadelem" class="md-nav__link">
+    TableHeadElem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tableorderby" class="md-nav__link">
+    TableOrderBy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablerowelem" class="md-nav__link">
+    TableRowElem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablesortby" class="md-nav__link">
+    TableSortBy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablesortcallback" class="md-nav__link">
+    TableSortCallback
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablesortcallbacks" class="md-nav__link">
+    TableSortCallbacks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablesortparams" class="md-nav__link">
+    TableSortParams
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables_1" class="md-nav__link">
+    Variables
+  </a>
+  
+    <nav class="md-nav" aria-label="Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputvalidators" class="md-nav__link">
+    InputValidators
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menucontext" class="md-nav__link">
+    MenuContext
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switcher" class="md-nav__link">
+    Switcher
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpuoptions" class="md-nav__link">
+    cpuOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubedetailsurlparam" class="md-nav__link">
+    kubeDetailsUrlParam
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubeselectedurlparam" class="md-nav__link">
+    kubeSelectedUrlParam
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logtabstore" class="md-nav__link">
+    logTabStore
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memoryoptions" class="md-nav__link">
+    memoryOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notificationsstore" class="md-nav__link">
+    notificationsStore
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orderbyurlparam" class="md-nav__link">
+    orderByUrlParam
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortbyurlparam" class="md-nav__link">
+    sortByUrlParam
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminalstore" class="md-nav__link">
+    terminalStore
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#draweritemlabels" class="md-nav__link">
+    DrawerItemLabels
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formswitch" class="md-nav__link">
+    FormSwitch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#submenu" class="md-nav__link">
+    SubMenu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tablayout" class="md-nav__link">
+    TabLayout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createterminaltab" class="md-nav__link">
+    createTerminalTab
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getdetailsurl" class="md-nav__link">
+    getDetailsUrl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hidedetails" class="md-nav__link">
+    hideDetails
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#showdetails" class="md-nav__link">
+    showDetails
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toggledetails" class="md-nav__link">
+    toggleDetails
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withtooltip" class="md-nav__link">
+    withTooltip
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                
+                <h1 id="namespace-component">Namespace: Component<a class="headerlink" href="#namespace-component" title="Permanent link">#</a></h1>
+<p><a href="../renderer/">Renderer</a>.Component</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
+<h3 id="enumerations">Enumerations<a class="headerlink" href="#enumerations" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="../../enums/renderer.component.notificationstatus/">NotificationStatus</a></li>
+<li><a href="../../enums/renderer.component.tooltipposition/">TooltipPosition</a></li>
+</ul>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="../../classes/renderer.component.badge/">Badge</a></li>
+<li><a href="../../classes/renderer.component.barchart/">BarChart</a></li>
+<li><a href="../../classes/renderer.component.button/">Button</a></li>
+<li><a href="../../classes/renderer.component.checkbox/">Checkbox</a></li>
+<li><a href="../../classes/renderer.component.commandoverlay/">CommandOverlay</a></li>
+<li><a href="../../classes/renderer.component.confirmdialog/">ConfirmDialog</a></li>
+<li><a href="../../classes/renderer.component.dialog/">Dialog</a></li>
+<li><a href="../../classes/renderer.component.drawer/">Drawer</a></li>
+<li><a href="../../classes/renderer.component.draweritem/">DrawerItem</a></li>
+<li><a href="../../classes/renderer.component.drawerparamtoggler/">DrawerParamToggler</a></li>
+<li><a href="../../classes/renderer.component.drawertitle/">DrawerTitle</a></li>
+<li><a href="../../classes/renderer.component.icon/">Icon</a></li>
+<li><a href="../../classes/renderer.component.input/">Input</a></li>
+<li><a href="../../classes/renderer.component.kubeeventdetails/">KubeEventDetails</a></li>
+<li><a href="../../classes/renderer.component.kubeobjectdetails/">KubeObjectDetails</a></li>
+<li><a href="../../classes/renderer.component.kubeobjectlistlayout/">KubeObjectListLayout</a></li>
+<li><a href="../../classes/renderer.component.kubeobjectmenu/">KubeObjectMenu</a></li>
+<li><a href="../../classes/renderer.component.kubeobjectmeta/">KubeObjectMeta</a></li>
+<li><a href="../../classes/renderer.component.lineprogress/">LineProgress</a></li>
+<li><a href="../../classes/renderer.component.mainlayout/">MainLayout</a></li>
+<li><a href="../../classes/renderer.component.menu/">Menu</a></li>
+<li><a href="../../classes/renderer.component.menuactions/">MenuActions</a></li>
+<li><a href="../../classes/renderer.component.menuitem/">MenuItem</a></li>
+<li><a href="../../classes/renderer.component.namespaceselect/">NamespaceSelect</a></li>
+<li><a href="../../classes/renderer.component.namespaceselectfilter/">NamespaceSelectFilter</a></li>
+<li><a href="../../classes/renderer.component.notifications/">Notifications</a></li>
+<li><a href="../../classes/renderer.component.notificationsstore/">NotificationsStore</a></li>
+<li><a href="../../classes/renderer.component.pagelayout/">PageLayout</a></li>
+<li><a href="../../classes/renderer.component.piechart/">PieChart</a></li>
+<li><a href="../../classes/renderer.component.poddetailslist/">PodDetailsList</a></li>
+<li><a href="../../classes/renderer.component.radio/">Radio</a></li>
+<li><a href="../../classes/renderer.component.radiogroup/">RadioGroup</a></li>
+<li><a href="../../classes/renderer.component.searchinput/">SearchInput</a></li>
+<li><a href="../../classes/renderer.component.select/">Select</a></li>
+<li><a href="../../classes/renderer.component.settinglayout/">SettingLayout</a></li>
+<li><a href="../../classes/renderer.component.slider/">Slider</a></li>
+<li><a href="../../classes/renderer.component.spinner/">Spinner</a></li>
+<li><a href="../../classes/renderer.component.statusbrick/">StatusBrick</a></li>
+<li><a href="../../classes/renderer.component.stepper/">Stepper</a></li>
+<li><a href="../../classes/renderer.component.subtitle/">SubTitle</a></li>
+<li><a href="../../classes/renderer.component.tab/">Tab</a></li>
+<li><a href="../../classes/renderer.component.table/">Table</a></li>
+<li><a href="../../classes/renderer.component.tablecell/">TableCell</a></li>
+<li><a href="../../classes/renderer.component.tablehead/">TableHead</a></li>
+<li><a href="../../classes/renderer.component.tablerow/">TableRow</a></li>
+<li><a href="../../classes/renderer.component.tabs/">Tabs</a></li>
+<li><a href="../../classes/renderer.component.terminalstore/">TerminalStore</a></li>
+<li><a href="../../classes/renderer.component.tooltip/">Tooltip</a></li>
+<li><a href="../../classes/renderer.component.wizard/">Wizard</a></li>
+<li><a href="../../classes/renderer.component.wizardlayout/">WizardLayout</a></li>
+<li><a href="../../classes/renderer.component.wizardstep/">WizardStep</a></li>
+</ul>
+<h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="../../interfaces/renderer.component.badgeprops/">BadgeProps</a></li>
+<li><a href="../../interfaces/renderer.component.buttonprops/">ButtonProps</a></li>
+<li><a href="../../interfaces/renderer.component.checkboxprops/">CheckboxProps</a></li>
+<li><a href="../../interfaces/renderer.component.confirmdialogbooleanparams/">ConfirmDialogBooleanParams</a></li>
+<li><a href="../../interfaces/renderer.component.confirmdialogparams/">ConfirmDialogParams</a></li>
+<li><a href="../../interfaces/renderer.component.confirmdialogprops/">ConfirmDialogProps</a></li>
+<li><a href="../../interfaces/renderer.component.dialogprops/">DialogProps</a></li>
+<li><a href="../../interfaces/renderer.component.draweritemlabelsprops/">DrawerItemLabelsProps</a></li>
+<li><a href="../../interfaces/renderer.component.draweritemprops/">DrawerItemProps</a></li>
+<li><a href="../../interfaces/renderer.component.drawerparamtogglerprops/">DrawerParamTogglerProps</a></li>
+<li><a href="../../interfaces/renderer.component.drawerprops/">DrawerProps</a></li>
+<li><a href="../../interfaces/renderer.component.drawertitleprops/">DrawerTitleProps</a></li>
+<li><a href="../../interfaces/renderer.component.groupselectoption/">GroupSelectOption</a></li>
+<li><a href="../../interfaces/renderer.component.icondatafnarg/">IconDataFnArg</a></li>
+<li><a href="../../interfaces/renderer.component.iconprops/">IconProps</a></li>
+<li><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></li>
+<li><a href="../../interfaces/renderer.component.kubeeventdetailsprops/">KubeEventDetailsProps</a></li>
+<li><a href="../../interfaces/renderer.component.kubeobjectdetailsprops/">KubeObjectDetailsProps</a></li>
+<li><a href="../../interfaces/renderer.component.kubeobjectlistlayoutprops/">KubeObjectListLayoutProps</a></li>
+<li><a href="../../interfaces/renderer.component.kubeobjectmenuprops/">KubeObjectMenuProps</a></li>
+<li><a href="../../interfaces/renderer.component.kubeobjectmetaprops/">KubeObjectMetaProps</a></li>
+<li><a href="../../interfaces/renderer.component.lineprogressprops/">LineProgressProps</a></li>
+<li><a href="../../interfaces/renderer.component.menuactionsprops/">MenuActionsProps</a></li>
+<li><a href="../../interfaces/renderer.component.menuitemprops/">MenuItemProps</a></li>
+<li><a href="../../interfaces/renderer.component.menuposition/">MenuPosition</a></li>
+<li><a href="../../interfaces/renderer.component.menuprops/">MenuProps</a></li>
+<li><a href="../../interfaces/renderer.component.notification/">Notification</a></li>
+<li><a href="../../interfaces/renderer.component.radiogroupprops/">RadioGroupProps</a></li>
+<li><a href="../../interfaces/renderer.component.selectoption/">SelectOption</a></li>
+<li><a href="../../interfaces/renderer.component.selectprops/">SelectProps</a></li>
+<li><a href="../../interfaces/renderer.component.settinglayoutprops/">SettingLayoutProps</a></li>
+<li><a href="../../interfaces/renderer.component.sliderprops/">SliderProps</a></li>
+<li><a href="../../interfaces/renderer.component.spinnerprops/">SpinnerProps</a></li>
+<li><a href="../../interfaces/renderer.component.statusbrickprops/">StatusBrickProps</a></li>
+<li><a href="../../interfaces/renderer.component.stepperprops/">StepperProps</a></li>
+<li><a href="../../interfaces/renderer.component.tablayoutprops/">TabLayoutProps</a></li>
+<li><a href="../../interfaces/renderer.component.tablayoutroute/">TabLayoutRoute</a></li>
+<li><a href="../../interfaces/renderer.component.tabprops/">TabProps</a></li>
+<li><a href="../../interfaces/renderer.component.tablecellprops/">TableCellProps</a></li>
+<li><a href="../../interfaces/renderer.component.tableheadprops/">TableHeadProps</a></li>
+<li><a href="../../interfaces/renderer.component.tableprops/">TableProps</a></li>
+<li><a href="../../interfaces/renderer.component.tablerowprops/">TableRowProps</a></li>
+<li><a href="../../interfaces/renderer.component.tabsprops/">TabsProps</a></li>
+<li><a href="../../interfaces/renderer.component.tooltipcontentformatters/">TooltipContentFormatters</a></li>
+<li><a href="../../interfaces/renderer.component.tooltipdecoratorprops/">TooltipDecoratorProps</a></li>
+<li><a href="../../interfaces/renderer.component.tooltipprops/">TooltipProps</a></li>
+<li><a href="../../interfaces/renderer.component.wizardlayoutprops/">WizardLayoutProps</a></li>
+<li><a href="../../interfaces/renderer.component.wizardprops/">WizardProps</a></li>
+<li><a href="../../interfaces/renderer.component.wizardstepprops/">WizardStepProps</a></li>
+</ul>
+<h3 id="type-aliases">Type aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#icondata">IconData</a></li>
+<li><a href="./#inputprops">InputProps</a></li>
+<li><a href="./#menucontextvalue">MenuContextValue</a></li>
+<li><a href="./#notificationid">NotificationId</a></li>
+<li><a href="./#notificationmessage">NotificationMessage</a></li>
+<li><a href="./#radioprops">RadioProps</a></li>
+<li><a href="./#tablecellelem">TableCellElem</a></li>
+<li><a href="./#tableheadelem">TableHeadElem</a></li>
+<li><a href="./#tableorderby">TableOrderBy</a></li>
+<li><a href="./#tablerowelem">TableRowElem</a></li>
+<li><a href="./#tablesortby">TableSortBy</a></li>
+<li><a href="./#tablesortcallback">TableSortCallback</a></li>
+<li><a href="./#tablesortcallbacks">TableSortCallbacks</a></li>
+<li><a href="./#tablesortparams">TableSortParams</a></li>
+</ul>
+<h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#inputvalidators">InputValidators</a></li>
+<li><a href="./#menucontext">MenuContext</a></li>
+<li><a href="./#switcher">Switcher</a></li>
+<li><a href="./#cpuoptions">cpuOptions</a></li>
+<li><a href="./#kubedetailsurlparam">kubeDetailsUrlParam</a></li>
+<li><a href="./#kubeselectedurlparam">kubeSelectedUrlParam</a></li>
+<li><a href="./#logtabstore">logTabStore</a></li>
+<li><a href="./#memoryoptions">memoryOptions</a></li>
+<li><a href="./#notificationsstore">notificationsStore</a></li>
+<li><a href="./#orderbyurlparam">orderByUrlParam</a></li>
+<li><a href="./#sortbyurlparam">sortByUrlParam</a></li>
+<li><a href="./#terminalstore">terminalStore</a></li>
+</ul>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#draweritemlabels">DrawerItemLabels</a></li>
+<li><a href="./#formswitch">FormSwitch</a></li>
+<li><a href="./#submenu">SubMenu</a></li>
+<li><a href="./#tablayout">TabLayout</a></li>
+<li><a href="./#createterminaltab">createTerminalTab</a></li>
+<li><a href="./#getdetailsurl">getDetailsUrl</a></li>
+<li><a href="./#hidedetails">hideDetails</a></li>
+<li><a href="./#showdetails">showDetails</a></li>
+<li><a href="./#toggledetails">toggleDetails</a></li>
+<li><a href="./#withtooltip">withTooltip</a></li>
+</ul>
+<h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
+<h3 id="icondata">IconData<a class="headerlink" href="#icondata" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>IconData</strong>: <code>string</code> | <code>React.ReactNode</code> | (<code>opt</code>: <a href="../../interfaces/renderer.component.icondatafnarg/">IconDataFnArg</a>) =&gt; <code>React.ReactNode</code></p>
+<p>One of the folloing:
+- A material icon name
+- A react node
+- Or a function that produces a react node</p>
+<hr />
+<h3 id="inputprops">InputProps<a class="headerlink" href="#inputprops" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;InputElementProps, <code>"onChange"</code> | <code>"onSubmit"</code>> &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>React.ReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <a href="./#icondata">IconData</a> ; <code>iconRight?</code>: <a href="./#icondata">IconData</a> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/renderer.component.tooltipprops/">TooltipProps</a>, <code>"targetId"</code>> ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a> | <a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a>[] ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code><InputElement\>) => <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code><InputElement\>) => <code>void</code>  }</p>
+<hr />
+<h3 id="menucontextvalue">MenuContextValue<a class="headerlink" href="#menucontextvalue" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>MenuContextValue</strong>: <a href="../../classes/renderer.component.menu/">Menu</a></p>
+<hr />
+<h3 id="notificationid">NotificationId<a class="headerlink" href="#notificationid" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>NotificationId</strong>: <code>string</code> | <code>number</code></p>
+<hr />
+<h3 id="notificationmessage">NotificationMessage<a class="headerlink" href="#notificationmessage" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>NotificationMessage</strong>: <code>React.ReactNode</code> | <code>React.ReactNode</code>[] | <code>JsonApiErrorParsed</code></p>
+<hr />
+<h3 id="radioprops">RadioProps<a class="headerlink" href="#radioprops" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>RadioProps</strong>: <code>React.HTMLProps</code>&lt;any> &amp; { <code>checked?</code>: <code>boolean</code> ; <code>disabled?</code>: <code>boolean</code> ; <code>label?</code>: <code>React.ReactNode</code> | <code>any</code> ; <code>name?</code>: <code>string</code> ; <code>value?</code>: <code>any</code> ; <code>onChange?</code>: (<code>value</code>: <code>ChangeEvent</code><HTMLInputElement\>) => <code>void</code>  }</p>
+<hr />
+<h3 id="tablecellelem">TableCellElem<a class="headerlink" href="#tablecellelem" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableCellElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/renderer.component.tablecellprops/">TableCellProps</a>></p>
+<hr />
+<h3 id="tableheadelem">TableHeadElem<a class="headerlink" href="#tableheadelem" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableHeadElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/renderer.component.tableheadprops/">TableHeadProps</a>></p>
+<hr />
+<h3 id="tableorderby">TableOrderBy<a class="headerlink" href="#tableorderby" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableOrderBy</strong>: <code>"asc"</code> | <code>"desc"</code> | <code>string</code></p>
+<hr />
+<h3 id="tablerowelem">TableRowElem<a class="headerlink" href="#tablerowelem" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableRowElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/renderer.component.tablerowprops/">TableRowProps</a>></p>
+<hr />
+<h3 id="tablesortby">TableSortBy<a class="headerlink" href="#tablesortby" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableSortBy</strong>: <code>string</code></p>
+<hr />
+<h3 id="tablesortcallback">TableSortCallback<a class="headerlink" href="#tablesortcallback" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableSortCallback</strong><Item\>: (<code>data</code>: <code>Item</code>) => <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>data</code>): <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<hr />
+<h3 id="tablesortcallbacks">TableSortCallbacks<a class="headerlink" href="#tablesortcallbacks" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableSortCallbacks</strong>&lt;Item>: <code>Record</code>&lt;string, <a href="./#tablesortcallback">TableSortCallback</a>&lt;Item>></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="tablesortparams">TableSortParams<a class="headerlink" href="#tablesortparams" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>TableSortParams</strong>: <code>Object</code></p>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>orderBy</code></td>
+<td align="left"><a href="./#tableorderby">TableOrderBy</a></td>
+</tr>
+<tr>
+<td align="left"><code>sortBy</code></td>
+<td align="left"><a href="./#tablesortby">TableSortBy</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
+<h3 id="inputvalidators">InputValidators<a class="headerlink" href="#inputvalidators" title="Permanent link">#</a></h3>
+<p>• <strong>InputValidators</strong>: <code>Object</code></p>
+<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>accountId</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>isEmail</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>isExtensionNameInstall</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>isExtensionNameInstallRegex</code></td>
+<td align="left"><code>RegExp</code></td>
+</tr>
+<tr>
+<td align="left"><code>isNumber</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>isPath</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>isRequired</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>isUrl</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>maxLength</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>minLength</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+<tr>
+<td align="left"><code>systemName</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="menucontext">MenuContext<a class="headerlink" href="#menucontext" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>MenuContext</strong>: <code>Context</code>&lt;<a href="../../classes/renderer.component.menu/">Menu</a>></p>
+<hr />
+<h3 id="switcher">Switcher<a class="headerlink" href="#switcher" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>Switcher</strong>: <code>ComponentType</code>&lt;<code>Pick</code>&lt;Props, <code>"name"</code> | <code>"prefix"</code> | <code>"defaultValue"</code> | <code>"id"</code> | <code>"title"</code> | <code>"className"</code> | <code>"dangerouslySetInnerHTML"</code> | <code>"onCopy"</code> | <code>"onCopyCapture"</code> | <code>"onCut"</code> | <code>"onCutCapture"</code> | <code>"onPaste"</code> | <code>"onPasteCapture"</code> | <code>"onCompositionEnd"</code> | <code>"onCompositionEndCapture"</code> | <code>"onCompositionStart"</code> | <code>"onCompositionStartCapture"</code> | <code>"onCompositionUpdate"</code> | <code>"onCompositionUpdateCapture"</code> | <code>"onFocus"</code> | <code>"onFocusCapture"</code> | <code>"onBlur"</code> | <code>"onBlurCapture"</code> | <code>"onChange"</code> | <code>"onChangeCapture"</code> | <code>"onBeforeInput"</code> | <code>"onBeforeInputCapture"</code> | <code>"onInput"</code> | <code>"onInputCapture"</code> | <code>"onReset"</code> | <code>"onResetCapture"</code> | <code>"onSubmit"</code> | <code>"onSubmitCapture"</code> | <code>"onInvalid"</code> | <code>"onInvalidCapture"</code> | <code>"onLoad"</code> | <code>"onLoadCapture"</code> | <code>"onError"</code> | <code>"onErrorCapture"</code> | <code>"onKeyDown"</code> | <code>"onKeyDownCapture"</code> | <code>"onKeyPress"</code> | <code>"onKeyPressCapture"</code> | <code>"onKeyUp"</code> | <code>"onKeyUpCapture"</code> | <code>"onAbort"</code> | <code>"onAbortCapture"</code> | <code>"onCanPlay"</code> | <code>"onCanPlayCapture"</code> | <code>"onCanPlayThrough"</code> | <code>"onCanPlayThroughCapture"</code> | <code>"onDurationChange"</code> | <code>"onDurationChangeCapture"</code> | <code>"onEmptied"</code> | <code>"onEmptiedCapture"</code> | <code>"onEncrypted"</code> | <code>"onEncryptedCapture"</code> | <code>"onEnded"</code> | <code>"onEndedCapture"</code> | <code>"onLoadedData"</code> | <code>"onLoadedDataCapture"</code> | <code>"onLoadedMetadata"</code> | <code>"onLoadedMetadataCapture"</code> | <code>"onLoadStart"</code> | <code>"onLoadStartCapture"</code> | <code>"onPause"</code> | <code>"onPauseCapture"</code> | <code>"onPlay"</code> | <code>"onPlayCapture"</code> | <code>"onPlaying"</code> | <code>"onPlayingCapture"</code> | <code>"onProgress"</code> | <code>"onProgressCapture"</code> | <code>"onRateChange"</code> | <code>"onRateChangeCapture"</code> | <code>"onSeeked"</code> | <code>"onSeekedCapture"</code> | <code>"onSeeking"</code> | <code>"onSeekingCapture"</code> | <code>"onStalled"</code> | <code>"onStalledCapture"</code> | <code>"onSuspend"</code> | <code>"onSuspendCapture"</code> | <code>"onTimeUpdate"</code> | <code>"onTimeUpdateCapture"</code> | <code>"onVolumeChange"</code> | <code>"onVolumeChangeCapture"</code> | <code>"onWaiting"</code> | <code>"onWaitingCapture"</code> | <code>"onAuxClick"</code> | <code>"onAuxClickCapture"</code> | <code>"onClick"</code> | <code>"onClickCapture"</code> | <code>"onContextMenu"</code> | <code>"onContextMenuCapture"</code> | <code>"onDoubleClick"</code> | <code>"onDoubleClickCapture"</code> | <code>"onDrag"</code> | <code>"onDragCapture"</code> | <code>"onDragEnd"</code> | <code>"onDragEndCapture"</code> | <code>"onDragEnter"</code> | <code>"onDragEnterCapture"</code> | <code>"onDragExit"</code> | <code>"onDragExitCapture"</code> | <code>"onDragLeave"</code> | <code>"onDragLeaveCapture"</code> | <code>"onDragOver"</code> | <code>"onDragOverCapture"</code> | <code>"onDragStart"</code> | <code>"onDragStartCapture"</code> | <code>"onDrop"</code> | <code>"onDropCapture"</code> | <code>"onMouseDown"</code> | <code>"onMouseDownCapture"</code> | <code>"onMouseEnter"</code> | <code>"onMouseLeave"</code> | <code>"onMouseMove"</code> | <code>"onMouseMoveCapture"</code> | <code>"onMouseOut"</code> | <code>"onMouseOutCapture"</code> | <code>"onMouseOver"</code> | <code>"onMouseOverCapture"</code> | <code>"onMouseUp"</code> | <code>"onMouseUpCapture"</code> | <code>"onSelect"</code> | <code>"onSelectCapture"</code> | <code>"onTouchCancel"</code> | <code>"onTouchCancelCapture"</code> | <code>"onTouchEnd"</code> | <code>"onTouchEndCapture"</code> | <code>"onTouchMove"</code> | <code>"onTouchMoveCapture"</code> | <code>"onTouchStart"</code> | <code>"onTouchStartCapture"</code> | <code>"onPointerDown"</code> | <code>"onPointerDownCapture"</code> | <code>"onPointerMove"</code> | <code>"onPointerMoveCapture"</code> | <code>"onPointerUp"</code> | <code>"onPointerUpCapture"</code> | <code>"onPointerCancel"</code> | <code>"onPointerCancelCapture"</code> | <code>"onPointerEnter"</code> | <code>"onPointerEnterCapture"</code> | <code>"onPointerLeave"</code> | <code>"onPointerLeaveCapture"</code> | <code>"onPointerOver"</code> | <code>"onPointerOverCapture"</code> | <code>"onPointerOut"</code> | <code>"onPointerOutCapture"</code> | <code>"onGotPointerCapture"</code> | <code>"onGotPointerCaptureCapture"</code> | <code>"onLostPointerCapture"</code> | <code>"onLostPointerCaptureCapture"</code> | <code>"onScroll"</code> | <code>"onScrollCapture"</code> | <code>"onWheel"</code> | <code>"onWheelCapture"</code> | <code>"onAnimationStart"</code> | <code>"onAnimationStartCapture"</code> | <code>"onAnimationEnd"</code> | <code>"onAnimationEndCapture"</code> | <code>"onAnimationIteration"</code> | <code>"onAnimationIterationCapture"</code> | <code>"onTransitionEnd"</code> | <code>"onTransitionEndCapture"</code> | <code>"style"</code> | <code>"hidden"</code> | <code>"autoFocus"</code> | <code>"disabled"</code> | <code>"form"</code> | <code>"formAction"</code> | <code>"formEncType"</code> | <code>"formMethod"</code> | <code>"formNoValidate"</code> | <code>"formTarget"</code> | <code>"type"</code> | <code>"value"</code> | <code>"defaultChecked"</code> | <code>"suppressContentEditableWarning"</code> | <code>"suppressHydrationWarning"</code> | <code>"accessKey"</code> | <code>"contentEditable"</code> | <code>"contextMenu"</code> | <code>"dir"</code> | <code>"draggable"</code> | <code>"lang"</code> | <code>"placeholder"</code> | <code>"slot"</code> | <code>"spellCheck"</code> | <code>"tabIndex"</code> | <code>"translate"</code> | <code>"radioGroup"</code> | <code>"role"</code> | <code>"about"</code> | <code>"datatype"</code> | <code>"inlist"</code> | <code>"property"</code> | <code>"resource"</code> | <code>"typeof"</code> | <code>"vocab"</code> | <code>"autoCapitalize"</code> | <code>"autoCorrect"</code> | <code>"autoSave"</code> | <code>"color"</code> | <code>"itemProp"</code> | <code>"itemScope"</code> | <code>"itemType"</code> | <code>"itemID"</code> | <code>"itemRef"</code> | <code>"results"</code> | <code>"security"</code> | <code>"unselectable"</code> | <code>"inputMode"</code> | <code>"is"</code> | <code>"aria-activedescendant"</code> | <code>"aria-atomic"</code> | <code>"aria-autocomplete"</code> | <code>"aria-busy"</code> | <code>"aria-checked"</code> | <code>"aria-colcount"</code> | <code>"aria-colindex"</code> | <code>"aria-colspan"</code> | <code>"aria-controls"</code> | <code>"aria-current"</code> | <code>"aria-describedby"</code> | <code>"aria-details"</code> | <code>"aria-disabled"</code> | <code>"aria-dropeffect"</code> | <code>"aria-errormessage"</code> | <code>"aria-expanded"</code> | <code>"aria-flowto"</code> | <code>"aria-grabbed"</code> | <code>"aria-haspopup"</code> | <code>"aria-hidden"</code> | <code>"aria-invalid"</code> | <code>"aria-keyshortcuts"</code> | <code>"aria-label"</code> | <code>"aria-labelledby"</code> | <code>"aria-level"</code> | <code>"aria-live"</code> | <code>"aria-modal"</code> | <code>"aria-multiline"</code> | <code>"aria-multiselectable"</code> | <code>"aria-orientation"</code> | <code>"aria-owns"</code> | <code>"aria-placeholder"</code> | <code>"aria-posinset"</code> | <code>"aria-pressed"</code> | <code>"aria-readonly"</code> | <code>"aria-relevant"</code> | <code>"aria-required"</code> | <code>"aria-roledescription"</code> | <code>"aria-rowcount"</code> | <code>"aria-rowindex"</code> | <code>"aria-rowspan"</code> | <code>"aria-selected"</code> | <code>"aria-setsize"</code> | <code>"aria-sort"</code> | <code>"aria-valuemax"</code> | <code>"aria-valuemin"</code> | <code>"aria-valuenow"</code> | <code>"aria-valuetext"</code> | <code>"action"</code> | <code>"checked"</code> | <code>"readOnly"</code> | <code>"required"</code> | <code>"size"</code> | <code>"ref"</code> | <code>"key"</code> | <code>"innerRef"</code> | <code>"icon"</code> | <code>"checkedIcon"</code> | <code>"disableFocusRipple"</code> | <code>"edge"</code> | <code>"buttonRef"</code> | <code>"centerRipple"</code> | <code>"disableRipple"</code> | <code>"disableTouchRipple"</code> | <code>"focusRipple"</code> | <code>"focusVisibleClassName"</code> | <code>"onFocusVisible"</code> | <code>"TouchRippleProps"</code> | <code>"inputProps"</code> | <code>"inputRef"</code>> &amp; <code>StyledComponentProps</code>&lt;<code>"checked"</code> | <code>"track"</code> | <code>"root"</code> | <code>"thumb"</code> | <code>"focusVisible"</code> | <code>"switchBase"</code>>></p>
+<hr />
+<h3 id="cpuoptions">cpuOptions<a class="headerlink" href="#cpuoptions" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>cpuOptions</strong>: <code>ChartOptions</code></p>
+<hr />
+<h3 id="kubedetailsurlparam">kubeDetailsUrlParam<a class="headerlink" href="#kubedetailsurlparam" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>kubeDetailsUrlParam</strong>: <a href="../../classes/renderer.navigation.pageparam/">PageParam</a>&lt;string></p>
+<p>Used to store <code>object.selfLink</code> to show more info about resource in the details panel.</p>
+<hr />
+<h3 id="kubeselectedurlparam">kubeSelectedUrlParam<a class="headerlink" href="#kubeselectedurlparam" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>kubeSelectedUrlParam</strong>: <a href="../../classes/renderer.navigation.pageparam/">PageParam</a>&lt;string></p>
+<p>Used to highlight last active/selected table row with the resource.</p>
+<p><strong><code>example</code></strong>
+If we go to "Nodes (page) -&gt; Node (details) -&gt; Pod (details)",
+last clicked Node should be "active" while Pod details are shown).</p>
+<hr />
+<h3 id="logtabstore">logTabStore<a class="headerlink" href="#logtabstore" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>logTabStore</strong>: <code>LogTabStore</code></p>
+<hr />
+<h3 id="memoryoptions">memoryOptions<a class="headerlink" href="#memoryoptions" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>memoryOptions</strong>: <code>ChartOptions</code></p>
+<hr />
+<h3 id="notificationsstore">notificationsStore<a class="headerlink" href="#notificationsstore" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>notificationsStore</strong>: <a href="../../classes/renderer.component.notificationsstore/">NotificationsStore</a></p>
+<hr />
+<h3 id="orderbyurlparam">orderByUrlParam<a class="headerlink" href="#orderbyurlparam" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>orderByUrlParam</strong>: <a href="../../classes/renderer.navigation.pageparam/">PageParam</a>&lt;string></p>
+<hr />
+<h3 id="sortbyurlparam">sortByUrlParam<a class="headerlink" href="#sortbyurlparam" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>sortByUrlParam</strong>: <a href="../../classes/renderer.navigation.pageparam/">PageParam</a>&lt;string></p>
+<hr />
+<h3 id="terminalstore">terminalStore<a class="headerlink" href="#terminalstore" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>terminalStore</strong>: <a href="../../classes/renderer.component.terminalstore/">TerminalStore</a></p>
+<p><strong><code>deprecated</code></strong> use <code>TerminalStore.getInstance()</code> instead</p>
+<h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
+<h3 id="draweritemlabels">DrawerItemLabels<a class="headerlink" href="#draweritemlabels" title="Permanent link">#</a></h3>
+<p>▸ <strong>DrawerItemLabels</strong>(<code>props</code>): <code>Element</code></p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>props</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.draweritemlabelsprops/">DrawerItemLabelsProps</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>Element</code></p>
+<hr />
+<h3 id="formswitch">FormSwitch<a class="headerlink" href="#formswitch" title="Permanent link">#</a></h3>
+<p>▸ <strong>FormSwitch</strong>(<code>props</code>): <code>Element</code></p>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>props</code></td>
+<td align="left"><code>FormControlLabelProps</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>Element</code></p>
+<hr />
+<h3 id="submenu">SubMenu<a class="headerlink" href="#submenu" title="Permanent link">#</a></h3>
+<p>▸ <strong>SubMenu</strong>(<code>props</code>): <code>Element</code></p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>props</code></td>
+<td align="left"><code>Partial</code>&lt;<a href="../../interfaces/renderer.component.menuprops/">MenuProps</a>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>Element</code></p>
+<hr />
+<h3 id="tablayout">TabLayout<a class="headerlink" href="#tablayout" title="Permanent link">#</a></h3>
+<p>▸ <code>Const</code> <strong>TabLayout</strong>(<code>__namedParameters</code>): <code>Element</code></p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>__namedParameters</code></td>
+<td align="left"><a href="../../interfaces/renderer.component.tablayoutprops/">TabLayoutProps</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>Element</code></p>
+<hr />
+<h3 id="createterminaltab">createTerminalTab<a class="headerlink" href="#createterminaltab" title="Permanent link">#</a></h3>
+<p>▸ <strong>createTerminalTab</strong>(<code>tabParams?</code>): <code>Required</code>&lt;DockTabCreate></p>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>tabParams</code></td>
+<td align="left"><code>DockTabCreateSpecific</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>Required</code>&lt;DockTabCreate></p>
+<hr />
+<h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
+<p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>selfLink</code></td>
+<td align="left"><code>string</code></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>resetSelected</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">false</td>
+</tr>
+<tr>
+<td align="left"><code>mergeGlobals</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">true</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
+<h3 id="hidedetails">hideDetails<a class="headerlink" href="#hidedetails" title="Permanent link">#</a></h3>
+<p>▸ <strong>hideDetails</strong>(): <code>void</code></p>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
+<p>▸ <strong>showDetails</strong>(<code>selfLink?</code>, <code>resetSelected?</code>): <code>void</code></p>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>selfLink</code></td>
+<td align="left"><code>string</code></td>
+<td align="left">""</td>
+</tr>
+<tr>
+<td align="left"><code>resetSelected</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">true</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="toggledetails">toggleDetails<a class="headerlink" href="#toggledetails" title="Permanent link">#</a></h3>
+<p>▸ <strong>toggleDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>selfLink</code></td>
+<td align="left"><code>string</code></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>resetSelected</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">true</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
+<p>▸ <strong>withTooltip</strong>&lt;T>(<code>Target</code>): <code>T</code></p>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>T</code>: <code>ComponentType</code>&lt;any></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Target</code></td>
+<td align="left"><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<p><code>T</code></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
+          </div>
+        
+        
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/lensapp/lens" target="_blank" rel="noopener" title="Lens on GitHub" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://twitter.com/k8slens" target="_blank" rel="noopener" title="Lens on Twitter" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+      <a href="http://k8slens.slack.com/" target="_blank" rel="noopener" title="Lens on Slack" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://k8slens.dev/" target="_blank" rel="noopener" title="Lens Website" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.df8cae7d.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.82217815.min.js"></script>
+      
+    
+  </body>
+</html>
