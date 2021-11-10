@@ -37,11 +37,11 @@ interface IMessage {
 }
 
 export enum WebSocketApiState {
-  PENDING = -1,
-  OPEN,
-  CONNECTING,
-  RECONNECTING,
-  CLOSED,
+  PENDING = "pending",
+  OPEN = "open",
+  CONNECTING = "connecting",
+  RECONNECTING = "reconnecting",
+  CLOSED = "closed",
 }
 
 export class WebSocketApi {
