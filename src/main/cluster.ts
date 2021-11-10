@@ -28,7 +28,7 @@ import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "../common/kube-helpers";
 import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
-import logger from "./logger";
+import logger from "../common/logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";

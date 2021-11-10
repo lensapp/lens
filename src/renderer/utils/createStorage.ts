@@ -25,7 +25,7 @@ import path from "path";
 import { comparer, observable, reaction, toJS, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import { isTestEnv } from "../../common/vars";
 
 const storage = observable({

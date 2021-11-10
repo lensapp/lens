@@ -26,7 +26,7 @@ import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
 import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
-import logger from "./logger";
+import logger from "../common/logger";
 import { KubeAuthProxy } from "./kube-auth-proxy";
 
 export interface PrometheusDetails {

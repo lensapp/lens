@@ -31,7 +31,7 @@ import { DeploymentScaleDialog } from "./components/+workloads-deployments/deplo
 import { CronJobTriggerDialog } from "./components/+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./components/+custom-resources/custom-resources";
 import { isAllowedResource } from "../common/utils/allowed-resource";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../extensions/registries/page-registry";
 import type { ExtensionLoader } from "../extensions/extension-loader";
@@ -108,7 +108,7 @@ export class ClusterFrame extends React.Component {
       {
         timeout: 15_000,
         onError: (error) => {
-          console.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
+          logger.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
           Notifications.error("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
         },
       },

@@ -21,13 +21,11 @@
 
 import type Conf from "conf";
 import type { Migrations } from "conf/dist/source/types";
+import logger from "../common/logger";
 import { ExtendedMap, iter } from "../common/utils";
-import { isTestEnv } from "../common/vars";
 
 export function migrationLog(...args: any[]) {
-  if (!isTestEnv) {
-    console.log(...args);
-  }
+  logger.info(...args);
 }
 
 export interface MigrationDeclaration {

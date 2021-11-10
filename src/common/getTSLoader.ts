@@ -20,6 +20,7 @@
  */
 
 import esbuild from "esbuild";
+import logger from "./logger";
 
 /**
  * A function returning webpack ts/tsx loader
@@ -33,7 +34,7 @@ const getTSLoader = (
   testRegExp: RegExp, transpileOnly = true,
 ) => {
   if (process.env.LENS_DEV_USE_ESBUILD_LOADER === "true") {
-    console.info(`\n🚀 using esbuild-loader for ts(x)`);
+    logger.info(`🚀 using esbuild-loader for ts(x)`);
 
     return {
       test: testRegExp,

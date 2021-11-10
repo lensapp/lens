@@ -25,7 +25,7 @@ import request from "request";
 import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
-import type winston from "winston";
+import logger from "../common/logger";
 
 export type LensBinaryOpts = {
   version: string;
@@ -48,7 +48,6 @@ export class LensBinary {
   protected arch: string;
   protected originalBinaryName: string;
   protected requestOpts: request.Options;
-  protected logger: Console | winston.Logger;
 
   constructor(opts: LensBinaryOpts) {
     const baseDir = opts.baseDir;
@@ -57,7 +56,6 @@ export class LensBinary {
     this.binaryName = opts.newBinaryName || opts.originalBinaryName;
     this.binaryVersion = opts.version;
     this.requestOpts = opts.requestOpts;
-    this.logger = console;
     let arch = null;
 
     if (process.env.BINARY_ARCH) {
@@ -82,10 +80,6 @@ export class LensBinary {
     if (tarName) {
       this.tarPath = path.join(this.dirname, tarName);
     }
-  }
-
-  public setLogger(logger: Console | winston.Logger) {
-    this.logger = logger;
   }
 
   protected binaryDir() {
@@ -124,7 +118,7 @@ export class LensBinary {
 
       return this.dirname;
     } catch (err) {
-      this.logger.error(err);
+      logger.error(err);
 
       return "";
     }
@@ -141,17 +135,17 @@ export class LensBinary {
 
     if (!isValid) {
       await this.downloadBinary().catch((error) => {
-        this.logger.error(error);
+        logger.error(error);
       });
       if (this.tarPath) await this.untarBinary();
       if (this.originalBinaryName != this.binaryName) await this.renameBinary();
-      this.logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`);
+      logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`);
     }
   }
 
   protected async untarBinary() {
     return new Promise<void>(resolve => {
-      this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
+      logger.debug(`Extracting ${this.originalBinaryName} binary`);
       tar.x({
         file: this.tarPath,
         cwd: this.dirname,
@@ -163,7 +157,7 @@ export class LensBinary {
 
   protected async renameBinary() {
     return new Promise<void>((resolve, reject) => {
-      this.logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`);
+      logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`);
       fs.rename(this.getOriginalBinaryPath(), this.getBinaryPath(), (err) => {
         if (err) {
           reject(err);
@@ -183,7 +177,7 @@ export class LensBinary {
     const file = fs.createWriteStream(binaryPath);
     const url = this.getUrl();
 
-    this.logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`);
+    logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`);
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: url,
       gzip: true,
@@ -192,12 +186,12 @@ export class LensBinary {
     const stream = request(requestOpts);
 
     stream.on("complete", () => {
-      this.logger.info(`Download of ${this.originalBinaryName} finished`);
+      logger.info(`Download of ${this.originalBinaryName} finished`);
       file.end();
     });
 
     stream.on("error", (error) => {
-      this.logger.error(error);
+      logger.error(error);
       fs.unlink(binaryPath, () => {
         // do nothing
       });
@@ -206,7 +200,7 @@ export class LensBinary {
 
     return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
-        this.logger.debug(`${this.originalBinaryName} binary download closed`);
+        logger.debug(`${this.originalBinaryName} binary download closed`);
         if (!this.tarPath) fs.chmod(binaryPath, 0o755, (err) => {
           if (err) reject(err);
         });

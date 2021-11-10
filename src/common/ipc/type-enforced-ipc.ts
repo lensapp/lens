@@ -21,7 +21,7 @@
 
 import type { EventEmitter } from "events";
 import { ipcMain } from "electron";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import type { Disposer } from "../utils";
 import { ipcMainHandle } from "./ipc";
 

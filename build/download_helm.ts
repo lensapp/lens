@@ -25,11 +25,11 @@ import * as path from "path";
 
 const helmVersion = packageInfo.config.bundledHelmVersion;
 
-if (!isWindows) {
+if (isWindows) {
+  new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary();
+} else {
   Promise.all([
     new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary(),
     new HelmCli(path.join(process.cwd(), "binaries", "client", "arm64"), helmVersion).ensureBinary(),
   ]);
-} else {
-  new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary();
 }

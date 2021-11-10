@@ -24,7 +24,7 @@ import { action, comparer, computed, makeObservable, observable, reaction } from
 import { BaseStore } from "./base-store";
 import { Cluster } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import { appEventBus } from "./event-bus";
 import { ipcMainHandle, requestMain } from "./ipc";
 import { disposer, toJS } from "./utils";

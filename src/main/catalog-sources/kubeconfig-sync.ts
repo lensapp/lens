@@ -27,7 +27,7 @@ import fs from "fs";
 import path from "path";
 import type stream from "stream";
 import { bytesToUnits, Disposer, ExtendedObservableMap, iter, noop, Singleton, storedKubeConfigFolder } from "../../common/utils";
-import logger from "../logger";
+import logger from "../../common/logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
 import { Cluster } from "../cluster";
@@ -370,8 +370,7 @@ function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, D
         })
         .on("error", error => logger.error(`${logPrefix} watching file/folder failed: ${error}`, { filePath }));
     } catch (error) {
-      console.log(error.stack);
-      logger.warn(`${logPrefix} failed to start watching changes: ${error}`);
+      logger.warn(`${logPrefix} failed to start watching changes:`, error);
     }
   })();
 

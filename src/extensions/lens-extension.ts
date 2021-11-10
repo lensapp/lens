@@ -22,7 +22,7 @@
 import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, makeObservable, computed } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import { Disposer, disposer } from "../common/utils";

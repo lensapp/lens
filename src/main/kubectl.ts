@@ -22,7 +22,7 @@
 import path from "path";
 import fs from "fs";
 import { promiseExecFile } from "../common/utils/promise-exec";
-import logger from "./logger";
+import logger from "../common/logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "./helm/helm-cli";

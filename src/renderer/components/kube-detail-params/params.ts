@@ -18,6 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import logger from "../../../common/logger";
 import { createPageParam, navigation } from "../../navigation";
 
 /**
@@ -62,7 +63,7 @@ export function hideDetails() {
 }
 
 export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
-  console.debug("getDetailsUrl", { selfLink, resetSelected, mergeGlobals });
+  logger.debug("getDetailsUrl", { selfLink, resetSelected, mergeGlobals });
   const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
 
   params.set(kubeDetailsUrlParam.name, selfLink);

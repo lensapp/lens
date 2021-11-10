@@ -22,6 +22,7 @@ import path from "path";
 import sharp from "sharp";
 import jsdom from "jsdom";
 import fs from "fs-extra";
+import logger from "../src/common/logger";
 
 export async function generateTrayIcon(
   {
@@ -52,9 +53,9 @@ export async function generateTrayIcon(
 
     // Save icon
     await fs.writeFile(pngIconDestPath, pngIconBuffer);
-    console.info(`[DONE]: Tray icon saved at "${pngIconDestPath}"`);
+    logger.info(`[DONE]: Tray icon saved at "${pngIconDestPath}"`);
   } catch (err) {
-    console.error(`[ERROR]: ${err}`);
+    logger.error(`[ERROR]: ${err}`);
   }
 }
 

@@ -22,7 +22,7 @@ import type { InstallRequestValidated } from "../create-temp-files-and-validate/
 import { Disposer, extractTar, noop } from "../../../../../common/utils";
 import { ExtensionInstallationStateStore } from "../../extension-install.store";
 import { extensionDisplayName } from "../../../../../extensions/lens-extension";
-import logger from "../../../../../main/logger";
+import logger from "../../../../../common/logger";
 import type { ExtensionLoader } from "../../../../../extensions/extension-loader";
 import { Notifications } from "../../../notifications";
 import { getMessageFromError } from "../../get-message-from-error/get-message-from-error";

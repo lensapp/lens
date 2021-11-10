@@ -27,7 +27,7 @@ import { readFile } from "fs-extra";
 import type { Cluster } from "./cluster";
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { HelmApiRoute, KubeconfigRoute, MetricsRoute, PortForwardRoute, ResourceApplierApiRoute, VersionRoute } from "./routes";
-import logger from "./logger";
+import logger from "../common/logger";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;

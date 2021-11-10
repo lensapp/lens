@@ -19,31 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-    padLevels: jest.fn(),
-    ms: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue({
-    silly: jest.fn(),
-    debug: jest.fn(),
-    log: jest.fn(),
-    info: jest.fn(),
-    error: jest.fn(),
-    crit: jest.fn(),
-  }),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
-
 jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");

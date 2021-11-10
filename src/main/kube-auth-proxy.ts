@@ -24,7 +24,7 @@ import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "./cluster";
 import { Kubectl } from "./kubectl";
-import logger from "./logger";
+import logger from "../common/logger";
 import * as url from "url";
 import { getPortFrom } from "./utils/get-port";
 import { makeObservable, observable, when } from "mobx";

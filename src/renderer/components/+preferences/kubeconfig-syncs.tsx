@@ -26,7 +26,7 @@ import { Notice } from "../+extensions/notice";
 
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
-import logger from "../../../main/logger";
+import logger from "../../../common/logger";
 import { iter, multiSet } from "../../utils";
 import { SubTitle } from "../layout/sub-title";
 import { PathPicker } from "../path-picker/path-picker";

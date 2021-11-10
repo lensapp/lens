@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import logger from "../logger";
+import logger from "../../common/logger";
 import { Server as WebSocketServer } from "ws";
 import { NodeShellSession, LocalShellSession } from "../shell-session";
 import type { ProxyApiRequestArgs } from "./types";

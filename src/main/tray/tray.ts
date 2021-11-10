@@ -26,7 +26,7 @@ import { autorun, IComputedValue } from "mobx";
 import { showAbout } from "../menu/menu";
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { WindowManager } from "../window-manager";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { isDevelopment, isWindows, productName } from "../../common/vars";
 import { exitApp } from "../exit-app";
 import { preferencesURL } from "../../common/routes";

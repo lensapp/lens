@@ -25,6 +25,7 @@ import { stringify } from "querystring";
 import type { RequestInit } from "node-fetch";
 import { autoBind, bifurcateArray } from "../../utils";
 import Joi from "joi";
+import logger from "../../logger";
 
 export type RepoHelmChartList = Record<string, RawHelmChart[]>;
 
@@ -321,7 +322,7 @@ export class HelmChart {
     const [actualErrors, unknownDetails] = bifurcateArray(error.details, ({ type }) => type === "object.unknown");
 
     if (unknownDetails.length > 0) {
-      console.warn("HelmChart data has unexpected fields", { original: data, unknownFields: unknownDetails.flatMap(d => d.path) });
+      logger.warn("HelmChart data has unexpected fields", { original: data, unknownFields: unknownDetails.flatMap(d => d.path) });
     }
 
     if (actualErrors.length === 0) {
@@ -334,7 +335,7 @@ export class HelmChart {
       throw validationError;
     }
 
-    console.warn("[HELM-CHART]: failed to validate data", data, validationError);
+    logger.warn("[HELM-CHART]: failed to validate data", data, validationError);
 
     return undefined;
   }

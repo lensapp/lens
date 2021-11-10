@@ -32,6 +32,7 @@ import { createPageParam } from "../../navigation";
 import { getSortParams, setSortParams } from "./table.storage";
 import { computed, makeObservable } from "mobx";
 import { getSorted } from "./sorting";
+import logger from "../../../common/logger";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
@@ -110,7 +111,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
     const { sortable, tableId } = this.props;
 
     if (sortable && !tableId) {
-      console.error("Table must have props.tableId if props.sortable is specified");
+      logger.error("Table must have props.tableId if props.sortable is specified");
     }
   }
 

@@ -20,6 +20,7 @@
  */
 
 import { anyObject } from "jest-mock-extended";
+import logger from "../../logger";
 import { HelmChart } from "../endpoints/helm-charts.api";
 
 describe("HelmChart tests", () => {
@@ -262,9 +263,6 @@ describe("HelmChart tests", () => {
     });
 
     it("should warn on unknown fields", () => {
-      const { warn } = console;
-      const warnFn = console.warn = jest.fn();
-
       HelmChart.create({
         apiVersion: "1",
         name: "1",
@@ -280,11 +278,10 @@ describe("HelmChart tests", () => {
         "asdjhajksdhadjks": 1,
       } as any);
 
-      expect(warnFn).toHaveBeenCalledWith("HelmChart data has unexpected fields", {
+      expect(logger.warn).toHaveBeenCalledWith("HelmChart data has unexpected fields", {
         original: anyObject(),
         unknownFields: ["asdjhajksdhadjks"],
       });
-      console.warn = warn;
     });
   });
 });

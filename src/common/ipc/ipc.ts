@@ -25,7 +25,7 @@
 
 import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
 import type remote from "@electron/remote";

@@ -24,6 +24,7 @@ import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
 import { isDevelopment } from "../../common/vars";
+import logger from "../../common/logger";
 
 interface WebsocketApiParams {
   /**
@@ -136,7 +137,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
 
   reconnect(): void {
     if (!this.socket) {
-      return void console.error("[WEBSOCKET-API]: cannot reconnect to a socket that is not connected");
+      return void logger.error("[WEBSOCKET-API]: cannot reconnect to a socket that is not connected");
     }
 
     this.connect(this.socket.url);
@@ -214,7 +215,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
 
   protected writeLog(...data: any[]) {
     if (this.params.logging) {
-      console.debug(...data);
+      logger.debug(...data);
     }
   }
 }

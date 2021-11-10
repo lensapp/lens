@@ -26,6 +26,7 @@ import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { Pod, PodMetrics, podMetricsApi, podsApi } from "../../../common/k8s-api/endpoints";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
+import logger from "../../../common/logger";
 
 export class PodsStore extends KubeObjectStore<Pod> {
   api = podsApi;
@@ -43,7 +44,7 @@ export class PodsStore extends KubeObjectStore<Pod> {
     try {
       this.kubeMetrics.replace(await podMetricsApi.list({ namespace }));
     } catch (error) {
-      console.warn("loadKubeMetrics failed", error);
+      logger.warn("loadKubeMetrics failed", error);
     }
   }
 

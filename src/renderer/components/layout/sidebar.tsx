@@ -43,6 +43,7 @@ import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { SidebarCluster } from "./sidebar-cluster";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import logger from "../../../common/logger";
 
 interface Props {
   className?: string;
@@ -127,7 +128,7 @@ export class Sidebar extends React.Component<Props> {
       const { extensionId, id: pageId, url, components } = page;
 
       if (subMenu.components.Icon) {
-        console.warn(
+        logger.warn(
           "ClusterPageMenuRegistration has components.Icon defined and a valid parentId. Icon will not be displayed",
           {
             id: subMenu.id,

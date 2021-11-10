@@ -28,7 +28,7 @@ import os from "os";
 import path from "path";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn, requestMain } from "../common/ipc";
 import { Singleton, toJS } from "../common/utils";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
 import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";

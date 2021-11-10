@@ -24,7 +24,7 @@ import fse from "fs-extra";
 import path from "path";
 import os from "os";
 import yaml from "js-yaml";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
 import { resolvePath } from "./utils";
 import Joi from "joi";
@@ -123,10 +123,10 @@ function loadToOptions(rawYaml: string): OptionsResult {
       arrays: true,
     },
   });
-  const { 
-    clusters: rawClusters, 
-    users: rawUsers, 
-    contexts: rawContexts, 
+  const {
+    clusters: rawClusters,
+    users: rawUsers,
+    contexts: rawContexts,
     "current-context": currentContext,
   } = value ?? {};
   const clusters = newClusters(rawClusters);

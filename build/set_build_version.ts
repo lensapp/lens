@@ -23,6 +23,7 @@ import * as path from "path";
 import appInfo from "../package.json";
 import semver from "semver";
 import fastGlob from "fast-glob";
+import logger from "../src/common/logger";
 
 const packagePath = path.join(__dirname, "../package.json");
 const versionInfo = semver.parse(appInfo.version);
@@ -63,7 +64,7 @@ async function writeOutNewVersions() {
   ]);
 }
 
-function main() {
+async function main() {
   const prereleaseParts: string[] = [getBuildChannel()];
 
   if (versionInfo.prerelease && versionInfo.prerelease.length > 1) {
@@ -74,11 +75,12 @@ function main() {
 
   appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}-${prereleaseParts.join(".")}`;
 
-  writeOutNewVersions()
-    .catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
+  try {
+    await writeOutNewVersions();
+  } catch (error) {
+    logger.error("Failed to write new build versions", error);
+    process.exit(1);
+  }
 }
 
 main();

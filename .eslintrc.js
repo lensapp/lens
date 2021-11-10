@@ -58,6 +58,7 @@ module.exports = {
         "header/header": [2, "./license-header"],
         "comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "error",
+        "no-console": "error",
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
@@ -124,6 +125,7 @@ module.exports = {
       rules: {
         "no-constant-condition": ["error", { "checkLoops": false }],
         "header/header": [2, "./license-header"],
+        "no-console": "error",
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -210,6 +212,7 @@ module.exports = {
         "no-constant-condition": ["error", { "checkLoops": false }],
         "header/header": [2, "./license-header"],
         "react/prop-types": "off",
+        "no-console": "error",
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",

@@ -22,7 +22,7 @@ import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions,
 import { autorun, IComputedValue } from "mobx";
 import type { WindowManager } from "../window-manager";
 import { appName, isMac, isWindows, docsUrl, supportUrl, productName } from "../../common/vars";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
 import * as packageJson from "../../../package.json";

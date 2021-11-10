@@ -23,7 +23,7 @@ import { match, matchPath } from "react-router";
 import { countBy } from "lodash";
 import { iter } from "../utils";
 import { pathToRegexp } from "path-to-regexp";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
 import { ExtensionsStore } from "../../extensions/extensions-store";

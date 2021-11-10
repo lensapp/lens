@@ -23,7 +23,7 @@ import { ipcRenderer } from "electron";
 import { reaction } from "mobx";
 import { getMatchedClusterId, navigate } from "./helpers";
 import { broadcastMessage, ipcRendererOn } from "../../common/ipc";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 
 export const enum IpcRendererNavigationEvents {
   RELOAD_PAGE = "renderer:page-reload",

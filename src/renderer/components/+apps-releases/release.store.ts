@@ -28,6 +28,7 @@ import type { Secret } from "../../../common/k8s-api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
+import logger from "../../../common/logger";
 
 export class ReleaseStore extends ItemStore<HelmRelease> {
   releaseSecrets = observable.map<string, Secret>();
@@ -95,7 +96,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       this.failedLoading = false;
     } catch (error) {
       this.failedLoading = true;
-      console.warn("Loading Helm Chart releases has failed", error);
+      logger.warn("Loading Helm Chart releases has failed", error);
 
       if (error.error) {
         Notifications.error(error.error);

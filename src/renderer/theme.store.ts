@@ -22,7 +22,7 @@
 import { comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { autoBind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import lensDarkThemeJson from "./themes/lens-dark.json";
 import lensLightThemeJson from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";

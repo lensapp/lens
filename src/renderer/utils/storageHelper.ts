@@ -23,7 +23,7 @@
 import { action, comparer, makeObservable, observable, toJS, when } from "mobx";
 import { produce, Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import { getHostedClusterId } from "../../common/utils";
 import path from "path";
 import { AppPaths } from "../../common/app-paths";

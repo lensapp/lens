@@ -30,7 +30,7 @@ import { appEventBus } from "../event-bus";
 import path from "path";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import { AppPaths } from "../app-paths";
 
 export interface UserStoreModel {

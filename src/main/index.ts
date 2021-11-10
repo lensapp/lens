@@ -34,7 +34,7 @@ import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
 import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
-import logger from "./logger";
+import logger from "../common/logger";
 import { appEventBus } from "../common/event-bus";
 import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
@@ -285,8 +285,7 @@ app.on("ready", async () => {
     extensionLoader.initExtensions(extensions);
   } catch (error) {
     dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
-    console.error(error);
-    console.trace();
+    logger.error(`Could not load extensions`, error);
   }
 
   setTimeout(() => {

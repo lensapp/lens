@@ -22,7 +22,7 @@ import { downloadFile, ExtendableDisposer } from "../../../../common/utils";
 import { InputValidators } from "../../input";
 import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
-import logger from "../../../../main/logger";
+import logger from "../../../../common/logger";
 import { Notifications } from "../../notifications";
 import path from "path";
 import React from "react";

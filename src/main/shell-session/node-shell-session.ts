@@ -28,7 +28,7 @@ import { ShellOpenError, ShellSession } from "./shell-session";
 import { get } from "lodash";
 import { Node, NodesApi } from "../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { TerminalChannels } from "../../renderer/api/terminal-api";
 
 export class NodeShellSession extends ShellSession {

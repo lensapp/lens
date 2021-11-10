@@ -22,7 +22,7 @@
 import { ipcRenderer } from "electron";
 import { createBrowserHistory, createMemoryHistory } from "history";
 import { createObservableHistory, ObservableSearchParamsOptions } from "mobx-observable-history";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 
 export const searchParamsOptions: ObservableSearchParamsOptions = {
   skipEmpty: true, // skip empty params, e.g. "?x=&y2=" will be "?y=2"

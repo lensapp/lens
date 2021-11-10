@@ -20,7 +20,7 @@
  */
 
 import { action, IReactionDisposer, makeObservable, observable, when } from "mobx";
-import logger from "../../../main/logger";
+import logger from "../../../common/logger";
 import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
 import { ClusterStore } from "../../../common/cluster-store";
 import type { ClusterId } from "../../../common/cluster-types";

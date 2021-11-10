@@ -25,7 +25,7 @@ import type { ContextHandler } from "./context-handler";
 import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../common/kube-helpers";
-import logger from "./logger";
+import logger from "../common/logger";
 import { LensProxy } from "./lens-proxy";
 import { AppPaths } from "../common/app-paths";
 

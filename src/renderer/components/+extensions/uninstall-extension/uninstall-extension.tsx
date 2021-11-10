@@ -20,7 +20,7 @@
  */
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { extensionDisplayName, LensExtensionId } from "../../../../extensions/lens-extension";
-import logger from "../../../../main/logger";
+import logger from "../../../../common/logger";
 import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
 import { Notifications } from "../../notifications";

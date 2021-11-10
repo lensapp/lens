@@ -26,7 +26,7 @@ import httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../common/vars";
 import type { Router } from "./router";
 import type { ContextHandler } from "./context-handler";
-import logger from "./logger";
+import logger from "../common/logger";
 import { Singleton } from "../common/utils";
 import type { Cluster } from "./cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";

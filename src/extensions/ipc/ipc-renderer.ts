@@ -24,6 +24,7 @@ import { Disposers } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
 import type { Disposer } from "../../common/utils";
 import { once } from "lodash";
+import logger from "../../common/logger";
 
 export abstract class IpcRenderer extends IpcRegistrar {
   constructor(extension: LensRendererExtension) {
@@ -44,12 +45,12 @@ export abstract class IpcRenderer extends IpcRegistrar {
   listen(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
     const cleanup = once(() => {
-      console.info(`[IPC-RENDERER]: removing extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
+      logger.info(`[IPC-RENDERER]: removing extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
 
       return ipcRenderer.removeListener(prefixedChannel, listener);
     });
 
-    console.info(`[IPC-RENDERER]: adding extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
+    logger.info(`[IPC-RENDERER]: adding extension listener`, { channel, extension: { name: this.extension.name, version: this.extension.version }});
     ipcRenderer.addListener(prefixedChannel, listener);
     this.extension[Disposers].push(cleanup);
 

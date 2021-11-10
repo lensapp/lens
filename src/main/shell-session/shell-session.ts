@@ -31,7 +31,7 @@ import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/event-bus";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";

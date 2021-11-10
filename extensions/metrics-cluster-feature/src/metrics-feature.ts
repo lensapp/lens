@@ -24,6 +24,7 @@ import semver from "semver";
 import * as path from "path";
 
 const { ResourceStack, forCluster, StorageClass, Namespace } = Renderer.K8sApi;
+const { logger } = Common;
 
 type ResourceStack = Renderer.K8sApi.ResourceStack;
 
@@ -110,7 +111,7 @@ export class MetricsFeature {
       if (e?.error?.code === 404) {
         status.installed = false;
       } else {
-        console.warn("[LENS-METRICS] failed to resolve install state", e);
+        logger.warn("[LENS-METRICS] failed to resolve install state", e);
       }
     }
 

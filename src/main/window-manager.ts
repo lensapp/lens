@@ -28,7 +28,7 @@ import { BundledExtensionsLoaded, ipcMainOn } from "../common/ipc";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
-import logger from "./logger";
+import logger from "../common/logger";
 import { isMac, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 

@@ -21,7 +21,7 @@
 
 import type { LensApiRequest } from "../router";
 import { helmService } from "../helm/helm-service";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { respondJson, respondText } from "../utils/http-responses";
 import { getBoolean } from "../utils/parse-query";
 

@@ -20,7 +20,7 @@
  */
 
 import { action, computed, observable } from "mobx";
-import logger from "../../../main/logger";
+import logger from "../../../common/logger";
 import { disposer } from "../../utils";
 import type { ExtendableDisposer } from "../../utils";
 import * as uuid from "uuid";

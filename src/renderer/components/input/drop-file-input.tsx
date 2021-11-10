@@ -24,7 +24,7 @@ import React from "react";
 import { boundMethod, cssNames, IClassName } from "../../utils";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import logger from "../../../main/logger";
+import logger from "../../../common/logger";
 
 export interface DropFileInputProps extends React.DOMAttributes<any> {
   className?: IClassName;

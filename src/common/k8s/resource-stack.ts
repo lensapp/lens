@@ -23,7 +23,7 @@ import path from "path";
 import hb from "handlebars";
 import { ResourceApplier } from "../../main/resource-applier";
 import type { KubernetesCluster } from "../catalog-entities";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import { app } from "electron";
 import { requestMain } from "../ipc";
 import { clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../cluster-ipc";

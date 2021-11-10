@@ -23,7 +23,7 @@ import type { LensApiRequest } from "../router";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 import { Kubectl } from "../kubectl";
 import * as tcpPortUsed from "tcp-port-used";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { getPortFrom } from "../utils/get-port";
 import { respondJson } from "../utils/http-responses";
 
@@ -138,10 +138,10 @@ export class PortForwardRoute {
       if (!portForward) {
         logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
 
-        const thePort = 0 < forwardPort && forwardPort < 65536 
-          ? forwardPort 
+        const thePort = 0 < forwardPort && forwardPort < 65536
+          ? forwardPort
           : 0;
-          
+
         portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
           clusterId: cluster.id,
           kind: resourceType,

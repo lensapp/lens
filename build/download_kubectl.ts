@@ -27,6 +27,7 @@ import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
 import { noop } from "lodash";
 import { isLinux, isMac } from "../src/common/vars";
+import logger from "../src/common/logger";
 
 class KubectlDownloader {
   public kubectlVersion: string;
@@ -48,7 +49,7 @@ class KubectlDownloader {
       method: "HEAD",
       uri: this.url,
       resolveWithFullResponse: true,
-    }).catch(console.error);
+    }).catch(logger.error);
 
     if (response.headers["etag"]) {
       return response.headers["etag"].replace(/"/g, "");
@@ -65,12 +66,12 @@ class KubectlDownloader {
       const etag = await this.urlEtag();
 
       if (hash == etag) {
-        console.log("Kubectl md5sum matches the remote etag");
+        logger.info("Kubectl md5sum matches the remote etag");
 
         return true;
       }
 
-      console.log(`Kubectl md5sum ${hash} does not match the remote etag ${etag}, unlinking and downloading again`);
+      logger.info(`Kubectl md5sum ${hash} does not match the remote etag ${etag}, unlinking and downloading again`);
       await fs.promises.unlink(this.path);
     }
 
@@ -79,14 +80,14 @@ class KubectlDownloader {
 
   public async downloadKubectl() {
     if (await this.checkBinary()) {
-      return console.log("Already exists and is valid");
+      return logger.info("Already exists and is valid");
     }
 
     await ensureDir(path.dirname(this.path), 0o755);
 
     const file = fs.createWriteStream(this.path);
 
-    console.log(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
+    logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: this.url,
       gzip: true,
@@ -94,19 +95,19 @@ class KubectlDownloader {
     const stream = request(requestOpts);
 
     stream.on("complete", () => {
-      console.log("kubectl binary download finished");
+      logger.info("kubectl binary download finished");
       file.end(noop);
     });
 
     stream.on("error", (error) => {
-      console.log(error);
+      logger.info(error);
       fs.unlink(this.path, noop);
       throw error;
     });
 
     return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
-        console.log("kubectl binary download closed");
+        logger.info("kubectl binary download closed");
         fs.chmod(this.path, 0o755, (err) => {
           if (err) reject(err);
         });
@@ -133,9 +134,9 @@ if (isMac) {
 }
 
 downloads.forEach((dlOpts) => {
-  console.log(dlOpts);
+  logger.info(dlOpts);
   const downloader = new KubectlDownloader(downloadVersion, dlOpts.platform, dlOpts.arch, dlOpts.target);
 
-  console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
-  downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
+  logger.info(`Downloading: ${JSON.stringify(dlOpts)}`);
+  downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => logger.info("Download complete")));
 });

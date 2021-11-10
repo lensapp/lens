@@ -20,7 +20,7 @@
  */
 import fse from "fs-extra";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
-import logger from "../../../../main/logger";
+import logger from "../../../../common/logger";
 import { Notifications } from "../../notifications";
 
 export const readFileNotify = async (filePath: string, showError = true): Promise<Buffer | null> => {

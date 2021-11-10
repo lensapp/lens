@@ -35,6 +35,7 @@ import { orderBy } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import registeredCommandsInjectable from "./registered-commands/registered-commands.injectable";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import logger from "../../../common/logger";
 
 interface Dependencies {
   commands: IComputedValue<Map<string, RegisteredCommand>>;
@@ -67,7 +68,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         },
       });
     } catch (error) {
-      console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
+      logger.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
     }
   };
 
@@ -78,7 +79,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
     try {
       return command.isActive(context);
     } catch (error) {
-      console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
+      logger.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
     }
 
     return false;

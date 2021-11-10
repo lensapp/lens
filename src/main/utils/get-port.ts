@@ -21,7 +21,7 @@
 
 import type { Readable } from "stream";
 import URLParse from "url-parse";
-import logger from "../logger";
+import logger from "../../common/logger";
 
 interface GetPortArgs {
   /**

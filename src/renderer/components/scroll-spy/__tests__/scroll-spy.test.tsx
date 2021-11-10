@@ -78,19 +78,11 @@ describe("<ScrollSpy/>", () => {
   });
 
   it("throws if no sections founded", () => {
-    // Prevent writing to stderr during this render.
-    const err = console.error;
-
-    console.error = jest.fn();
-
     expect(() => render(<ScrollSpy render={() => (
       <div>
         Content
       </div>
     )}/>)).toThrow();
-
-    // Restore writing to stderr.
-    console.error = err;
   });
 });
 
@@ -176,8 +168,6 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
       expect(queryByTitle("Application")).toHaveAttribute("aria-expanded");
       expect(queryByTitle("Kubernetes")).toHaveAttribute("aria-expanded");
     });
-
-    // console.log(prettyDOM());
   });
 
   it("skips sections without headings", async () => {

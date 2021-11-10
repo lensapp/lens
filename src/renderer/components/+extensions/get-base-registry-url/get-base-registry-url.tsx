@@ -20,6 +20,7 @@
  */
 
 import React from "react";
+import logger from "../../../../common/logger";
 import { defaultExtensionRegistryUrl, ExtensionRegistry, ExtensionRegistryLocation } from "../../../../common/user-store/preferences-helpers";
 import { promiseExecFile } from "../../../utils";
 import { Notifications } from "../../notifications";
@@ -46,7 +47,7 @@ export const getBaseRegistryUrl = ({ getRegistryUrlPreference }: Dependencies) =
         return stdout.trim();
       } catch (error) {
         Notifications.error(<p>Failed to get configured registry from <code>.npmrc</code>. Falling back to default registry</p>);
-        console.warn("[EXTENSIONS]: failed to get configured registry from .npmrc", error);
+        logger.warn("[EXTENSIONS]: failed to get configured registry from .npmrc", error);
       }
       // fallthrough
     }

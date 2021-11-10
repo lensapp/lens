@@ -26,6 +26,7 @@ import { TerminalApi, TerminalChannels } from "../../api/terminal-api";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
 import { Notifications } from "../notifications";
+import logger from "../../../common/logger";
 
 export interface ITerminalTab extends DockTab {
   node?: string; // activate node shell mode
@@ -146,7 +147,7 @@ export class TerminalStore extends Singleton {
         data: command,
       });
     } else {
-      console.warn("The selected tab is does not have a connection. Cannot send command.", { tabId: dockStore.selectedTabId, command });
+      logger.warn("The selected tab is does not have a connection. Cannot send command.", { tabId: dockStore.selectedTabId, command });
     }
   }
 

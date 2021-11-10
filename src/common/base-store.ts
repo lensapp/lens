@@ -25,7 +25,7 @@ import type { Options as ConfOptions } from "conf/dist/source/types";
 import { ipcMain, ipcRenderer } from "electron";
 import { IEqualsComparer, makeObservable, reaction, runInAction } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
-import logger from "../main/logger";
+import logger from "./logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
@@ -75,7 +75,7 @@ export abstract class BaseStore<T> extends Singleton {
     const res: any = this.fromStore(this.storeConfig.store);
 
     if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-      console.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+      logger.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
     this.enableSync();

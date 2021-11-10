@@ -19,31 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
-
 jest.mock("../../common/ipc");
 jest.mock("../context-handler");
 jest.mock("request");

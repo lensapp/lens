@@ -27,7 +27,7 @@ import path from "path";
 import { AppPaths } from "../../common/app-paths";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
 import { Disposer, toJS } from "../../common/utils";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery";
 import { ExtensionsStore } from "../extensions-store";
@@ -360,11 +360,7 @@ export class ExtensionLoader {
     try {
       return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
-      if (ipcRenderer) {
-        console.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
-      } else {
-        logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error}`, { extension });
-      }
+      logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
     }
 
     return null;

@@ -20,7 +20,7 @@
  */
 
 import shellEnvironment from "shell-env";
-import logger from "../logger";
+import logger from "../../common/logger";
 
 export type EnvironmentVariables = Record<string, string>;
 

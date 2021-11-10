@@ -19,33 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    padLevels: jest.fn(),
-    ms: jest.fn(),
-    printf: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
-
 import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
@@ -123,7 +96,6 @@ describe("kubeconfig manager tests", () => {
   it("should create 'temp' kube config with proxy", async () => {
     const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
 
-    expect(logger.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
     // this causes an intermittent "ENXIO: no such device or address, read" error
     //    const file = await fse.readFile(await kubeConfManager.getPath());

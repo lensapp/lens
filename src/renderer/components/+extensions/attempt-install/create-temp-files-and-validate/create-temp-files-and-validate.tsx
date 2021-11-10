@@ -21,7 +21,7 @@
 import { validatePackage } from "../validate-package/validate-package";
 import { ExtensionDiscovery } from "../../../../../extensions/extension-discovery";
 import { getMessageFromError } from "../../get-message-from-error/get-message-from-error";
-import logger from "../../../../../main/logger";
+import logger from "../../../../../common/logger";
 import { Notifications } from "../../../notifications";
 import path from "path";
 import fse from "fs-extra";

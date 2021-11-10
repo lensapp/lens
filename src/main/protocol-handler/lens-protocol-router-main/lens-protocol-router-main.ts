@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import logger from "../../logger";
+import logger from "../../../common/logger";
 import * as proto from "../../../common/protocol-handler";
 import URLParse from "url-parse";
 import type { LensExtension } from "../../../extensions/lens-extension";

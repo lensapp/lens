@@ -28,6 +28,7 @@ import { SemVer } from "semver";
 import URLParse from "url-parse";
 import type { InstallRequest } from "../attempt-install/install-request";
 import lodash from "lodash";
+import logger from "../../../../common/logger";
 
 export interface ExtensionInfo {
   name: string;
@@ -63,10 +64,10 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl }: Dep
   } catch (error) {
     if (error instanceof SyntaxError) {
       // assume invalid JSON
-      console.warn("Set registry has invalid json", { url: baseUrl }, error);
+      logger.warn("Set registry has invalid json", { url: baseUrl }, error);
       Notifications.error("Failed to get valid registry information for that extension. Registry did not return valid JSON");
     } else {
-      console.error("Failed to download registry information", error);
+      logger.error("Failed to download registry information", error);
       Notifications.error(`Failed to get valid registry information for that extension. ${error}`);
     }
 

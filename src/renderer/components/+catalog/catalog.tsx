@@ -46,6 +46,7 @@ import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import { Avatar } from "../avatar";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { getLabelBadges } from "./helpers";
+import logger from "../../../common/logger";
 
 export const previousActiveTab = createStorage("catalog-previous-active-tab", browseCatalogTab);
 
@@ -105,7 +106,7 @@ export class Catalog extends React.Component<Props> {
             this.catalogEntityStore.activeCategory = item;
           });
         } catch (error) {
-          console.error(error);
+          logger.error(`[CATALOG]: Unknown category for ${routeTab}:`, error);
           Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
       }, { fireImmediately: true }),

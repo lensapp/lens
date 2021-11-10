@@ -86,7 +86,7 @@ class WatchCount {
 
     const newCount = this.#data.get(store) + 1;
 
-    logger.info(`[KUBE-WATCH-API]: inc() count for ${store.api.objectConstructor.apiBase} is now ${newCount}`);
+    logger.debug(`[KUBE-WATCH-API]: inc() count for ${store.api.objectConstructor.apiBase} is now ${newCount}`);
     this.#data.set(store, newCount);
 
     return newCount;
@@ -151,10 +151,10 @@ export class KubeWatchApi {
           if (curSelectedAll && prevSelectedAll) {
             const action = namespaces.length > prevNamespaces.length ? "created" : "deleted";
 
-            return console.debug(`[KUBE-WATCH-API]: Not changing watch for ${store.api.apiBase} because a new namespace was ${action} but all namespaces are selected`);
+            return this.log(`[KUBE-WATCH-API]: Not changing watch for ${store.api.apiBase} because a new namespace was ${action} but all namespaces are selected`);
           }
 
-          console.log(`[KUBE-WATCH-API]: changing watch ${store.api.apiBase}`, namespaces);
+          this.log(`[KUBE-WATCH-API]: changing watch ${store.api.apiBase}`, namespaces);
           childController.abort();
           unsubscribe();
           childController = new WrappedAbortController(parent);
@@ -195,10 +195,10 @@ export class KubeWatchApi {
     });
   }
 
-  protected log(message: any, meta: any) {
+  protected log(message: any, meta: object = {}) {
     const log = message instanceof Error
-      ? console.error
-      : console.debug;
+      ? logger.error
+      : logger.debug;
 
     log("[KUBE-WATCH-API]:", message, {
       time: new Date().toLocaleString(),

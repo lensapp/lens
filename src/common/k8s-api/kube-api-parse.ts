@@ -23,7 +23,7 @@
 
 import { splitArray } from "../utils";
 import { isDebugging } from "../vars";
-import logger from "../../main/logger";
+import logger from "../../common/logger";
 import { inspect } from "util";
 
 export interface IKubeObjectRef {

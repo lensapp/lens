@@ -19,14 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import packageInfo from "../../package.json";
+import packageInfo from "../../../package.json";
 import path from "path";
-import { Kubectl } from "../../src/main/kubectl";
-import { isWindows } from "../common/vars";
+import { Kubectl } from "../kubectl";
+import { isWindows } from "../../common/vars";
+import { UserStore } from "../../common/user-store";
 
-jest.mock("../common/user-store");
+jest.mock("../../common/app-paths", () => ({
+  AppPaths: {
+    get: () => "tmp",
+    getAsync: () => "tmp",
+  },
+}));
 
 describe("kubectlVersion", () => {
+  beforeEach(() => {
+    UserStore.createInstance();
+  });
+
+  afterEach(() => {
+    UserStore.resetInstance();
+  });
+
   it("returns bundled version if exactly same version used", async () => {
     const kubectl = new Kubectl(Kubectl.bundled().kubectlVersion);
 
@@ -42,6 +56,14 @@ describe("kubectlVersion", () => {
 });
 
 describe("getPath()", () => {
+  beforeEach(() => {
+    UserStore.createInstance();
+  });
+
+  afterEach(() => {
+    UserStore.resetInstance();
+  });
+
   it("returns path to downloaded kubectl binary", async () => {
     const { bundledKubectlVersion } = packageInfo.config;
     const kubectl = new Kubectl(bundledKubectlVersion);
@@ -61,12 +83,7 @@ describe("getPath()", () => {
     const kubectl = new Kubectl(bundledKubectlVersion);
 
     jest.spyOn(kubectl, "getBundledPath").mockReturnValue("/invalid/path/kubectl");
-    const kubectlPath = await kubectl.getPath();
-    let binaryName = "kubectl";
 
-    if (isWindows) {
-      binaryName += ".exe";
-    }
-    expect(kubectlPath).toBe(binaryName);
+    expect(await kubectl.getPath()).toBe("kubectl");
   });
 });

@@ -22,7 +22,7 @@
 import { anyObject } from "jest-mock-extended";
 import { merge } from "lodash";
 import mockFs from "mock-fs";
-import logger from "../../main/logger";
+import logger from "../logger";
 import { AppPaths } from "../app-paths";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { ClusterStore } from "../cluster-store";
@@ -253,21 +253,14 @@ describe("HotbarStore", () => {
       hotbarStore.add({ name: "hottest", id: "hottest" });
       hotbarStore.setActiveHotbar("hottest");
 
-      const { error } = logger;
-      const mocked = jest.fn();
-
-      logger.error = mocked;
-
       hotbarStore.addToHotbar(testCluster, -1);
-      expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+      expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
       hotbarStore.addToHotbar(testCluster, 12);
-      expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+      expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
       hotbarStore.addToHotbar(testCluster, 13);
-      expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
-
-      logger.error = error;
+      expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
     });
 
     it("throws an error if getId is invalid or returns not a string", () => {
@@ -305,12 +298,6 @@ describe("HotbarStore", () => {
     });
 
     it("throws if invalid arguments provided", () => {
-      // Prevent writing to stderr during this render.
-      const { error, warn } = console;
-
-      console.error = jest.fn();
-      console.warn = jest.fn();
-
       const hotbarStore = HotbarStore.getInstance();
 
       hotbarStore.addToHotbar(testCluster);
@@ -319,10 +306,6 @@ describe("HotbarStore", () => {
       expect(() => hotbarStore.restackItems(2, -1)).toThrow();
       expect(() => hotbarStore.restackItems(14, 1)).toThrow();
       expect(() => hotbarStore.restackItems(11, 112)).toThrow();
-
-      // Restore writing to stderr.
-      console.error = error;
-      console.warn = warn;
     });
 
     it("checks if entity already pinned to hotbar", () => {

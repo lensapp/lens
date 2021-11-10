@@ -20,7 +20,7 @@
  */
 
 import type { Cluster } from "../cluster";
-import logger from "../logger";
+import logger from "../../common/logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";

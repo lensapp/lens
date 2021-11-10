@@ -23,7 +23,7 @@ import AwaitLock from "await-lock";
 import child_process from "child_process";
 import fs from "fs-extra";
 import path from "path";
-import logger from "../main/logger";
+import logger from "../common/logger";
 import { extensionPackagesRoot } from "./extension-loader";
 import type { PackageJson } from "type-fest";
 

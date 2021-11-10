@@ -22,7 +22,7 @@
 import { shellEnv } from "./utils/shell-env";
 import os from "os";
 import { app } from "electron";
-import logger from "./logger";
+import logger from "../common/logger";
 import { isSnap } from "../common/vars";
 
 /**
