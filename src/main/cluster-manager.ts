@@ -41,6 +41,8 @@ export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
   deleting = observable.set<ClusterId>();
 
+  @observable visibleCluster: ClusterId | undefined = undefined;
+
   constructor() {
     super();
     makeObservable(this);
@@ -61,8 +63,22 @@ export class ClusterManager extends Singleton {
       { fireImmediately: false },
     );
 
-    reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
-      this.syncClustersFromCatalog(entities);
+    reaction(
+      () => catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster),
+      entities => this.syncClustersFromCatalog(entities),
+    );
+
+    reaction(() => [
+      catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster),
+      this.visibleCluster,
+    ] as const, ([entities, visibleCluster]) => {
+      for (const entity of entities) {
+        if (entity.getId() === visibleCluster) {
+          entity.status.active = true;
+        } else {
+          entity.status.active = false;
+        }
+      }
     });
 
     observe(this.deleting, change => {

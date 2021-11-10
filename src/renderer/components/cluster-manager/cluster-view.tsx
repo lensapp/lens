@@ -25,7 +25,7 @@ import { computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { ClusterStatus } from "./cluster-status";
-import { hasLoadedView, initView, refreshViews } from "./lens-views";
+import { ClusterFrameHandler } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
@@ -57,7 +57,7 @@ export class ClusterView extends React.Component<Props> {
   @computed get isReady(): boolean {
     const { cluster, clusterId } = this;
 
-    return cluster?.ready && cluster?.available && hasLoadedView(clusterId);
+    return cluster?.ready && cluster?.available && ClusterFrameHandler.getInstance().hasLoadedView(clusterId);
   }
 
   componentDidMount() {
@@ -65,25 +65,23 @@ export class ClusterView extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    refreshViews();
+    ClusterFrameHandler.getInstance().clearVisibleCluster();
     catalogEntityRegistry.activeEntity = null;
   }
 
   bindEvents() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
-        refreshViews(clusterId); // refresh visibility of active cluster
-        initView(clusterId); // init cluster-view (iframe), requires parent container #lens-views to be in DOM
+        ClusterFrameHandler.getInstance().setVisibleCluster(clusterId);
+        ClusterFrameHandler.getInstance().initView(clusterId);
         requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
-        catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+        catalogEntityRegistry.activeEntity = clusterId;
       }, {
         fireImmediately: true,
       }),
 
-      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], (values) => {
-        const disconnected = values[1];
-
-        if (hasLoadedView(this.clusterId) && disconnected) {
+      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], ([, disconnected]) => {
+        if (ClusterFrameHandler.getInstance().hasLoadedView(this.clusterId) && disconnected) {
           navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
         }
       }),
