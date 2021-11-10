@@ -26,11 +26,8 @@ import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
 import { searchUrlParam } from "../input";
-import { makeCss } from "../../../common/utils/makeCss";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
-
-const css = makeCss(styles);
 
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
   constructor(public entity: T, private registry: CatalogEntityRegistry) {
@@ -79,7 +76,7 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     return this.labels
       .map(label => (
         <Badge
-          className={css.badge}
+          className={styles.badge}
           key={label}
           label={label}
           title={label}
