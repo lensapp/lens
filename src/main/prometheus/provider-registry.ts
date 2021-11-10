@@ -20,8 +20,8 @@
  */
 
 import type { CoreV1Api } from "@kubernetes/client-node";
+import { inspect } from "util";
 import { Singleton } from "../../common/utils";
-import logger from "../logger";
 
 export type PrometheusService = {
   id: string;
@@ -43,7 +43,7 @@ export abstract class PrometheusProvider {
     return `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}",namespace="${namespace}",status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
   }
 
-  protected async getFirstNamespacedServer(client: CoreV1Api, ...selectors: string[]): Promise<PrometheusService | undefined> {
+  protected async getFirstNamespacedService(client: CoreV1Api, ...selectors: string[]): Promise<PrometheusService> {
     try {
       for (const selector of selectors) {
         const { body: { items: [service] }} = await client.listServiceForAllNamespaces(null, null, null, selector);
@@ -58,10 +58,26 @@ export abstract class PrometheusProvider {
         }
       }
     } catch (error) {
-      logger.warn(`${this.name}: failed to list services: ${error.toString()}`);
+      throw new Error(`Failed to list services for Prometheus${this.name} in all namespaces: ${error.response.body.message}`);
     }
 
-    return undefined;
+    throw new Error(`No service found for Prometheus${this.name} from any namespace`);
+  }
+
+  protected async getNamespacedService(client: CoreV1Api, name: string, namespace: string): Promise<PrometheusService> {
+    try {
+      const resp = await client.readNamespacedService(name, namespace);
+      const service = resp.body;
+
+      return {
+        id: this.id,
+        namespace: service.metadata.namespace,
+        service: service.metadata.name,
+        port: service.spec.ports[0].port,
+      };
+    } catch(error) {
+      throw new Error(`Failed to list services for Prometheus${this.name} in namespace=${inspect(namespace, false, undefined, false)}: ${error.response.body.message}`);
+    }
   }
 }
 

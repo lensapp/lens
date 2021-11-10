@@ -73,12 +73,9 @@ export class MetricsRoute {
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
     try {
-      const [prometheusPath, prometheusProvider] = await Promise.all([
-        cluster.contextHandler.getPrometheusPath(),
-        cluster.contextHandler.getPrometheusProvider(),
-      ]);
+      const { prometheusPath, provider } = await cluster.contextHandler.getPrometheusDetails();
 
-      prometheusMetadata.provider = prometheusProvider?.id;
+      prometheusMetadata.provider = provider?.id;
       prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
 
       if (!prometheusPath) {
@@ -99,7 +96,7 @@ export class MetricsRoute {
       } else {
         const queries = Object.entries<Record<string, string>>(payload)
           .map(([queryName, queryOpts]) => (
-            prometheusProvider.getQuery(queryOpts, queryName)
+            provider.getQuery(queryOpts, queryName)
           ));
         const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
@@ -107,9 +104,10 @@ export class MetricsRoute {
         respondJson(response, data);
       }
       prometheusMetadata.success = true;
-    } catch {
+    } catch (error) {
       prometheusMetadata.success = false;
       respondJson(response, {});
+      logger.warn(`[METRICS-ROUTE]: failed to get metrics for clusterId=${cluster.id}:`, error);
     } finally {
       cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
     }

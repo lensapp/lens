@@ -124,7 +124,7 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
-      const service = await getHandler().getPrometheusService();
+      const service = await (getHandler() as any).getPrometheusService();
 
       expect(service).toBeUndefined();
     });
@@ -152,7 +152,7 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
-      const service = await getHandler().getPrometheusService();
+      const service = await (getHandler() as any).getPrometheusService();
 
       expect(service.id === `id_${failures}`);
     });
@@ -180,7 +180,7 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
       }
 
-      const service = await getHandler().getPrometheusService();
+      const service = await (getHandler() as any).getPrometheusService();
 
       expect(service.id === "id_0");
     });
@@ -214,7 +214,7 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
-      const service = await getHandler().getPrometheusService();
+      const service = await (getHandler() as any).getPrometheusService();
 
       expect(service.id === "id_0");
     });
@@ -227,7 +227,7 @@ describe("ContextHandler", () => {
       reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
 
-      const service = await getHandler().getPrometheusService();
+      const service = await (getHandler() as any).getPrometheusService();
 
       expect(service.id).not.toBe("id_2");
     });
