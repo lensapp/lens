@@ -146,6 +146,10 @@ export class LensProxy extends Singleton {
           res.flushHeaders();
         }
       }
+
+      proxyRes.on("aborted", () => { // happens when proxy target aborts connection
+        res.end();
+      });
     });
 
     proxy.on("error", (error, req, res, target) => {
