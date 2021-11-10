@@ -21,7 +21,7 @@
 
 // Main process
 
-import "../common/system-ca";
+import { injectSystemCAs } from "../common/system-ca";
 import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
@@ -64,7 +64,9 @@ import { Router } from "./router";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import * as path from "path";
-import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
+import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
+
+injectSystemCAs();
 
 const onCloseCleanup = disposer();
 const onQuitCleanup = disposer();
@@ -73,6 +75,7 @@ const workingDir = path.join(app.getPath("appData"), appName);
 
 SentryInit();
 app.setName(appName);
+
 
 logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
@@ -140,6 +143,7 @@ app.on("ready", async () => {
   registerFileProtocol("static", __static);
 
   PrometheusProviderRegistry.createInstance();
+  ShellRequestAuthenticator.createInstance().init();
   initializers.initPrometheusProviderRegistry();
 
   /**

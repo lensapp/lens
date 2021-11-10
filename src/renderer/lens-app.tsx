@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "../common/system-ca";
+import { injectSystemCAs } from "../common/system-ca";
 import React from "react";
 import { Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
@@ -39,6 +39,8 @@ import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import { registerKeyboardShortcuts } from "./keyboard-shortcuts";
 import logger from "../common/logger";
 import { unmountComponentAtNode } from "react-dom";
+
+injectSystemCAs();
 
 @observer
 export class LensApp extends React.Component {
