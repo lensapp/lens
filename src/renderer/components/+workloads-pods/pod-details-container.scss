@@ -58,4 +58,11 @@
 
     @include pod-status-colors;
   }
+
+  ul.argument-list {
+    li {
+      font-family: monospace;
+      word-break: break-all;
+    }
+  }
 }
