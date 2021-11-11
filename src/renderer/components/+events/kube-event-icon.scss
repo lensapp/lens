@@ -21,7 +21,7 @@
 
 .KubeEventIcon {
   &.warning {
-    color: $golden;
+    color: var(--golden);
   }
 }
 

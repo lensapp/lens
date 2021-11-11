@@ -22,7 +22,7 @@
 .HelmChartDetails {
   .intro-logo {
     margin-right: $margin * 2;
-    background: $helmLogoBackground;
+    background: var(--helmLogoBackground);
     border-radius: $radius;
     max-width: 150px;
     max-height: 100px;
@@ -39,7 +39,7 @@
   .intro-contents {
     .description {
       font-weight: bold;
-      color: $textColorAccent;
+      color: var(--textColorAccent);
       padding-bottom: $padding;
 
       .Button {

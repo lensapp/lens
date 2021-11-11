@@ -28,7 +28,7 @@ $node-status-color-list: (
   ready: #4caf50,
   scheduling-disabled: #ff9800,
   invalid-license: #ce3933,
-  cordoned: $colorWarning
+  cordoned: var(--colorWarning)
 );
 
 @mixin node-status-bgs {

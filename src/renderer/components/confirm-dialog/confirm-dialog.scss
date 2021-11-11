@@ -25,7 +25,7 @@
 
   &.warning {
     .Button.ok {
-      background: $colorSoftError;
+      background: var(--colorSoftError);
     }
   }
 
@@ -46,7 +46,7 @@
     > .Icon {
       margin-left: inherit;
       margin-right: $margin * 2;
-      color: $colorSoftError;
+      color: var(--colorSoftError);
     }
 
     > :not(.Icon) {

@@ -50,7 +50,7 @@
   }
 }
 
-@mixin pseudo-link($color: $primary) {
+@mixin pseudo-link($color: var(--primary)) {
   color: $color;
   text-decoration: underline;
   cursor: pointer;

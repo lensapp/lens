@@ -80,11 +80,11 @@
   }
 
   a {
-    color: $primary;
+    color: var(--primary);
     transition: 150ms color;
 
     &:hover {
-      color: $textColorAccent;
+      color: var(--textColorAccent);
     }
   }
 }

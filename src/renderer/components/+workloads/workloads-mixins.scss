@@ -20,36 +20,36 @@
  */
 
 // Pods
-$pod-status-running-color: $colorOk;
-$pod-status-pending-color: $colorWarning;
-$pod-status-evicted-color: $colorError;
-$pod-status-succeeded-color: $colorSuccess;
-$pod-status-failed-color: $colorError;
-$pod-status-terminated-color: $colorTerminated;
-$pod-status-terminating-color: $colorTerminated;
-$pod-status-unknown-color: $colorVague;
-$pod-status-complete-color: $colorSuccess;
-$pod-status-crash-loop-color: $colorError;
-$pod-scheduled: $colorOk;
-$pod-ready: $colorOk;
-$pod-initialized: $colorOk;
-$pod-unschedulable: $colorError;
-$pod-containers-ready: $colorInfo;
-$pod-error: $colorError;
-$pod-container-creating: $colorInfo;
+$pod-status-running-color: var(--colorOk);
+$pod-status-pending-color: var(--colorWarning);
+$pod-status-evicted-color: var(--colorError);
+$pod-status-succeeded-color: var(--colorSuccess);
+$pod-status-failed-color: var(--colorError);
+$pod-status-terminated-color: var(--colorTerminated);
+$pod-status-terminating-color: var(--colorTerminated);
+$pod-status-unknown-color: var(--colorVague);
+$pod-status-complete-color: var(--colorSuccess);
+$pod-status-crash-loop-color: var(--colorError);
+$pod-scheduled: var(--colorOk);
+$pod-ready: var(--colorOk);
+$pod-initialized: var(--colorOk);
+$pod-unschedulable: var(--colorError);
+$pod-containers-ready: var(--colorInfo);
+$pod-error: var(--colorError);
+$pod-container-creating: var(--colorInfo);
 
 // Deployments
-$deployment-available: $colorOk;
-$deployment-progressing: $colorInfo;
-$deployment-replicafailure: $colorError;
+$deployment-available: var(--colorOk);
+$deployment-progressing: var(--colorInfo);
+$deployment-replicafailure: var(--colorError);
 
 // Jobs
-$job-complete: $colorSuccess;
-$job-failed: $colorError;
+$job-complete: var(--colorSuccess);
+$job-failed: var(--colorError);
 
 // Cronjob
-$cronjob-scheduled: $colorSuccess;
-$cronjob-suspended: $colorTerminated;
+$cronjob-scheduled: var(--colorSuccess);
+$cronjob-suspended: var(--colorTerminated);
 
 // Pod Statuses
 $pod-status-color-list: (

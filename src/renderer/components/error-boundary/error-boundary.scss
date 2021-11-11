@@ -38,10 +38,10 @@
 
   code {
     max-height: none;
-    border: 5px solid $borderFaintColor;
+    border: 5px solid var(--borderFaintColor);
     white-space: pre-wrap;
-    background: $contentColor;
-    color: $textColorSecondary;
+    background: var(--contentColor);
+    color: var(--textColorSecondary);
   }
 
   a {

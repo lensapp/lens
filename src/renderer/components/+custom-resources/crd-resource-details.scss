@@ -23,7 +23,7 @@
   .status {
     .ready {
       color: white;
-      background-color: $colorOk;
+      background-color: var(--colorOk);
     }
   }
 }

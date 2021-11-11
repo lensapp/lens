@@ -20,7 +20,7 @@
  */
 
 .ItemListLayout {
-  background: $contentColor;
+  background: var(--contentColor);
   height: 100%;
 
   > .header {

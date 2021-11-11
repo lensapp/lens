@@ -43,7 +43,7 @@
   }
 
   &.singleColor {
-    @include spinner-color($textColorPrimary);
+    @include spinner-color(var(--textColorPrimary));
     animation: $rotateAnimation;
   }
 

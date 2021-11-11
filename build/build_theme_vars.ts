@@ -31,7 +31,7 @@ const banner = `/*
 */`;
 
 const themeCssVars = Object.entries(defaultBaseLensTheme.colors)
-  .map(([varName, value]) => `--${varName}: var(--${varName}, ${value});`);
+  .map(([varName, value]) => `--${varName}: ${value};`);
 
 const content = `
 ${banner}

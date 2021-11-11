@@ -91,7 +91,7 @@ export class ThemeStore extends Singleton {
     if (!this.styles) {
       this.styles = document.createElement("style");
       this.styles.id = "lens-theme";
-      document.head.prepend(this.styles);
+      document.head.append(this.styles);
     }
     const cssVars = Object.entries(theme.colors).map(([cssName, color]) => {
       return `--${cssName}: ${color};`;

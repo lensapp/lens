@@ -26,7 +26,7 @@
         flex-grow: 3;
 
         &.warning {
-          color: $colorError;
+          color: var(--colorError);
         }
       }
 
