@@ -20,8 +20,8 @@
  */
 
 $service-status-color-list: (
-  active: $colorOk,
-  pending: $colorWarning
+  active: var(--colorOk),
+  pending: var(--colorWarning)
 );
 
 @mixin service-status-colors {
@@ -33,7 +33,7 @@ $service-status-color-list: (
 }
 
 $port-forward-status-color-list: (
-  active: $colorOk,
+  active: var(--colorOk),
 );
 
 @mixin port-forward-status-colors {

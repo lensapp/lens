@@ -31,7 +31,7 @@
 
   span {
     cursor: pointer;
-    color: $primary;
+    color: var(--primary);
     text-decoration: underline;
     position: relative;
     padding-right: 1em;

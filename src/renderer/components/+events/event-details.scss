@@ -22,7 +22,7 @@
 .EventDetails {
   .type {
     .warning {
-      color: $colorError;
+      color: var(--colorError);
     }
   }
 }

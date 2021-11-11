@@ -56,11 +56,11 @@
       }
     }
 
-    @each $status, $color in (ok: $colorOk, error: $colorError, info: $colorInfo) {
+    @each $status, $color in (ok: var(--colorOk), error: var(--colorError), info: var(--colorInfo)) {
       &.#{$status} {
         background: $color;
         color: $color-white;
-        box-shadow: 0 0 20px $boxShadow;
+        box-shadow: 0 0 20px var(--boxShadow);
       }
     }
 

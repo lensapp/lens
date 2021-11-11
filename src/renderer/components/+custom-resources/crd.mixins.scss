@@ -21,11 +21,11 @@
 
 // CRD conditions from here https://github.com/kubernetes/apiextensions-apiserver/blob/master/pkg/apis/apiextensions/types.go
 $crd-condition-colors: (
-  Established: $colorSuccess,
-  NamesAccepted: $colorOk,
-  NonStructuralSchema: $colorError,
-  Terminating: $colorTerminated,
-  KubernetesAPIApprovalPolicyConformant: $colorWarning
+  Established: var(--colorSuccess),
+  NamesAccepted: var(--colorOk),
+  NonStructuralSchema: var(--colorError),
+  Terminating: var(--colorTerminated),
+  KubernetesAPIApprovalPolicyConformant: var(--colorWarning)
 );
 
 @mixin crd-condition-bgc {

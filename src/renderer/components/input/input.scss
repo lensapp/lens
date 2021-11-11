@@ -27,7 +27,7 @@
   &.invalid.dirty:not(.validating) {
     label:after {
       width: 100%;
-      background: $colorError;
+      background: var(--colorError);
     }
   }
 
@@ -48,7 +48,7 @@
     --flex-gap: $padding * 0.6667;
     position: relative;
     padding: $padding * 0.75 0;
-    border-bottom: 1px solid $halfGray;
+    border-bottom: 1px solid var(--halfGray);
     line-height: 1;
 
     &:after {
@@ -59,7 +59,7 @@
       transform: translateX(-50%);
       width: 0;
       height: 2px;
-      background: $primary;
+      background: var(--primary);
     }
   }
 
@@ -115,17 +115,17 @@
     &.round {
       &.invalid.dirty {
         label {
-          border-color: $colorSoftError;
+          border-color: var(--colorSoftError);
         }
       }
       label {
         border-radius: $radius;
-        border: 1px solid $halfGray;
+        border: 1px solid var(--halfGray);
         color: inherit;
         padding: $padding * 0.25 * 3 $padding * 0.25 * 3;
 
         &:focus-within {
-          border-color: $colorInfo;
+          border-color: var(--colorInfo);
         }
 
         &:after {
@@ -145,7 +145,7 @@
           }
 
           &:focus-within {
-            border-color: $colorInfo;
+            border-color: var(--colorInfo);
           }
         }
       }
@@ -154,7 +154,7 @@
 }
 
 .Tooltip.InputTooltipError {
-  --bgc: #{$colorError};
+  --bgc: var(--colorError);
   --border: none;
   --color: white;
 }

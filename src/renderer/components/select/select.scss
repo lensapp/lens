@@ -23,13 +23,13 @@
 // Docs: https://react-select.com/styles
 
 html {
-  $menuBackgroundColor: $contentColor;
+  $menuBackgroundColor: var(--contentColor);
 
   --select-menu-bgc: #{$menuBackgroundColor};
-  --select-menu-border-color: #{$halfGray};
-  --select-option-selected-color: #{$inputOptionHoverColor};
-  --select-option-focused-bgc: #{$colorInfo};
-  --select-option-focused-color: #{$textColorAccent};
+  --select-menu-border-color: var(--halfGray);
+  --select-option-selected-color: var(--inputOptionHoverColor);
+  --select-option-focused-bgc: var(--colorInfo);
+  --select-option-focused-color: var(--textColorAccent);
 
   .Select {
     position: relative;
@@ -50,12 +50,12 @@ html {
       border-radius: $radius;
       background: var(--select-menu-bgc);
       min-height: 0;
-      box-shadow: 0 0 0 1px $halfGray;
+      box-shadow: 0 0 0 1px var(--halfGray);
       cursor: pointer;
       line-height: 1;
 
       &--is-focused {
-        box-shadow: 0 0 0 1px $primary;
+        box-shadow: 0 0 0 1px var(--primary);
       }
     }
 
@@ -110,7 +110,7 @@ html {
       cursor: pointer;
 
       &:active {
-        background: $primary;
+        background: var(--primary);
       }
 
       &--is-selected {
@@ -144,14 +144,14 @@ html {
     }
 
     &__multi-value {
-      background: $layoutBackground;
+      background: var(--layoutBackground);
 
       &__remove {
         background: inherit;
 
         &:hover {
-          background: $colorError;
-          color: $textColorAccent;
+          background: var(--colorError);
+          color: var(--textColorAccent);
         }
       }
     }
@@ -166,12 +166,12 @@ html {
   .Select, .Select__menu {
     &.theme-light {
       --select-menu-bgc: white;
-      --select-option-selected-color: $textColorSecondary;
+      --select-option-selected-color: var(--textColorSecondary);
 
       .Select {
         &__multi-value {
           background: none;
-          box-shadow: 0 0 0 1px $textColorSecondary;
+          box-shadow: 0 0 0 1px var(--textColorSecondary);
         }
 
         &__option {
@@ -196,8 +196,8 @@ html {
 
     &.theme-outlined {
       .Select__control {
-        box-shadow: 0 0 0 1px $colorVague;
-        color: $primary;
+        box-shadow: 0 0 0 1px var(--colorVague);
+        color: var(--primary);
 
         .Select__value-container {
           padding: 0 $padding * 0.5;
@@ -219,7 +219,7 @@ html {
 
       :focus-within {
         &.Select__control {
-          box-shadow: 0 0 0 1px $colorInfo;
+          box-shadow: 0 0 0 1px var(--colorInfo);
         }
       }
 

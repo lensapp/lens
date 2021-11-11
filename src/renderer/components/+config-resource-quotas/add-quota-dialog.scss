@@ -33,14 +33,14 @@
 
     .quota {
       --flex-gap: #{$padding};
-      border: 1px solid $halfGray;
+      border: 1px solid var(--halfGray);
       border-radius: $radius;
       margin: $margin * 0.5;
       padding: $padding * 0.5 $padding;
       transition: all 150ms ease;
 
       &:hover {
-        box-shadow: inset 0 0 0 1px $borderColor;
+        box-shadow: inset 0 0 0 1px var(--borderColor);
       }
 
       .name {
@@ -48,7 +48,7 @@
       }
 
       .value {
-        color: $contentColor;
+        color: var(--contentColor);
       }
 
       .Icon:hover {

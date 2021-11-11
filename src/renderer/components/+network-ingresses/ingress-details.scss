@@ -20,7 +20,7 @@
  */
 
 .IngressDetails {
-  --titles-color: #{$textColorSecondary};
+  --titles-color: var(--textColorSecondary);
 
   .rules {
     margin-bottom: $margin * 2

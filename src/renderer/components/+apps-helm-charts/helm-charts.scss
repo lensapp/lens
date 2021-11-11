@@ -48,7 +48,7 @@
         width: $iconSize;
         height: $iconSize;
         border-radius: 50%;
-        background: $helmImgBackground url(helm-placeholder.svg) center center no-repeat;
+        background: var(--helmImgBackground) url(helm-placeholder.svg) center center no-repeat;
         background-size: 72%; // bg size looks same as image on top of it
         margin: auto;
 
@@ -58,7 +58,7 @@
           height: inherit;
           visibility: hidden;
           border-radius: inherit;
-          background-color: $helmImgBackground;
+          background-color: var(--helmImgBackground);
           padding: $padding * 0.5;
 
           &.visible {
@@ -74,11 +74,11 @@
 
     &.repository {
       &.stable {
-        color: $helmStableRepo;
+        color: var(--helmStableRepo);
       }
 
       &.incubator {
-        color: $helmIncubatorRepo;
+        color: var(--helmIncubatorRepo);
       }
     }
   }

@@ -20,7 +20,7 @@
  */
 
 .SubHeader {
-  color: $textColorAccent;
+  color: var(--textColorAccent);
   font-weight: $font-weight-bold;
   text-align: center;
 
@@ -29,6 +29,6 @@
   }
 
   &.withLine {
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--borderColor);
   }
 }

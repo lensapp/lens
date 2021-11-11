@@ -24,18 +24,18 @@
 
   display: grid;
   grid-template-columns: minmax(var(--drawer-item-title-width), min-content) auto;
-  border-bottom: 1px solid $borderFaintColor;
+  border-bottom: 1px solid var(--borderFaintColor);
   padding: $padding 0;
 
   > .name {
     padding-right: $padding;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: $drawerItemNameColor;
+    color: var(--drawerItemNameColor);
   }
 
   > .value {
-    color: $drawerItemValueColor;
+    color: var(--drawerItemValueColor);
     word-break: break-word;
     max-width: 100%;
     min-width: 0;
@@ -53,7 +53,7 @@
     }
 
     a {
-      color: $primary;
+      color: var(--primary);
     }
   }
 
