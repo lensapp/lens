@@ -301,6 +301,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
           name: item.getName(), namespace: item.getNs(),
         },
         patch,
+        "json",
       ),
     );
   }
