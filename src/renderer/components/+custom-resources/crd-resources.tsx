@@ -129,6 +129,15 @@ export class CrdResources extends React.Component<Props> {
           }),
           crdInstance.getAge(),
         ]}
+        renderFailedToLoadDetails={() => {
+          if (!crd.getPreferedVersion().served) {
+            return (
+              <p>Prefered version is not served.</p>
+            );
+          }
+
+          return undefined;
+        }}
       />
     );
   }

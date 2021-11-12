@@ -97,6 +97,7 @@ export interface ItemListLayoutProps<I extends ItemObject> {
   // other
   customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
   renderFooter?: (parent: ItemListLayout<I>) => React.ReactNode;
+  renderFailedToLoadDetails?: () => React.ReactNode;
 
   filterCallbacks?: ItemsFilters<I>;
 }
@@ -322,7 +323,7 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
 
   renderNoItems() {
     if (this.failedToLoad) {
-      return <NoItems>Failed to load items.</NoItems>;
+      return <NoItems>Failed to load items.{this.props.renderFailedToLoadDetails?.()}</NoItems>;
     }
 
     if (!this.isReady) {

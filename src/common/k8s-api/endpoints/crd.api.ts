@@ -153,11 +153,7 @@ export class CustomResourceDefinition extends KubeObject {
     // Prefer the modern `versions` over the legacy `version`
     if (this.spec.versions) {
       for (const version of this.spec.versions) {
-        /**
-         * If the version is not served then 404 errors will occur
-         * We should also prefer the storage version
-         */
-        if (version.served && version.storage) {
+        if (version.storage) {
           return version;
         }
       }
