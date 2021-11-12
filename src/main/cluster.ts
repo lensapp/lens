@@ -32,7 +32,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-types";
+import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../common/cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
 import { storedKubeConfigFolder, toJS } from "../common/utils";
 import type { Response } from "request";
@@ -117,12 +117,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable disconnected = true;
-  /**
-   * Connection failure reason
-   *
-   * @observable
-   */
-  @observable failureReason: string;
   /**
    * Does user have admin like access
    *
@@ -358,14 +352,20 @@ export class Cluster implements ClusterModel, ClusterState {
     if (this.disconnected || !this.accessible) {
       await this.reconnect();
     }
+
+    this.broadcastConnectUpdate("Refreshing connection status ...");
     await this.refreshConnectionStatus();
 
     if (this.accessible) {
+      this.broadcastConnectUpdate("Refreshing cluster accessibility ...");
       await this.refreshAccessibility();
-      this.ensureKubectl(); // download kubectl in background, so it's not blocking dashboard
+      // download kubectl in background, so it's not blocking dashboard
+      this.ensureKubectl()
+        .catch(error => logger.warn(`[CLUSTER]: failed to download kubectl for clusterId=${this.id}`, error));
+      this.broadcastConnectUpdate("Connected, waiting for view to load ...");
     }
-    this.activated = true;
 
+    this.activated = true;
     this.pushState();
   }
 
@@ -445,9 +445,8 @@ export class Cluster implements ClusterModel, ClusterState {
   private async refreshAccessibility(): Promise<void> {
     this.isAdmin = await this.isClusterAdmin();
     this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
-
-    await this.refreshAllowedResources();
-
+    this.allowedNamespaces = await this.getAllowedNamespaces();
+    this.allowedResources = await this.getAllowedResources();
     this.ready = true;
   }
 
@@ -460,15 +459,6 @@ export class Cluster implements ClusterModel, ClusterState {
 
     this.online = connectionStatus > ClusterStatus.Offline;
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
-  }
-
-  /**
-   * @internal
-   */
-  @action
-  async refreshAllowedResources() {
-    this.allowedNamespaces = await this.getAllowedNamespaces();
-    this.allowedResources = await this.getAllowedResources();
   }
 
   async getKubeconfig(): Promise<KubeConfig> {
@@ -501,34 +491,35 @@ export class Cluster implements ClusterModel, ClusterState {
 
       this.metadata.version = versionData.value;
 
-      this.failureReason = null;
-
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`);
+      logger.error(`[CLUSTER]: Failed to connect to "${this.contextName}": ${error}`);
 
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
-          this.failureReason = "Invalid credentials";
-
-          return ClusterStatus.AccessDenied;
-        } else {
-          this.failureReason = error.error || error.message;
-
-          return ClusterStatus.Offline;
-        }
-      } else if (error.failed === true) {
-        if (error.timedOut === true) {
-          this.failureReason = "Connection timed out";
-
-          return ClusterStatus.Offline;
-        } else {
-          this.failureReason = "Failed to fetch credentials";
+          this.broadcastConnectUpdate("Invalid credentials", true);
 
           return ClusterStatus.AccessDenied;
         }
+
+        this.broadcastConnectUpdate(error.error || error.message, true);
+
+        return ClusterStatus.Offline;
       }
-      this.failureReason = error.message;
+
+      if (error.failed === true) {
+        if (error.timedOut === true) {
+          this.broadcastConnectUpdate("Connection timed out", true);
+
+          return ClusterStatus.Offline;
+        }
+
+        this.broadcastConnectUpdate("Failed to fetch credentials", true);
+
+        return ClusterStatus.AccessDenied;
+      }
+
+      this.broadcastConnectUpdate(error.message, true);
 
       return ClusterStatus.Offline;
     }
@@ -579,7 +570,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   toJSON(): ClusterModel {
-    const model: ClusterModel = {
+    return toJS({
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
@@ -589,29 +580,24 @@ export class Cluster implements ClusterModel, ClusterState {
       metadata: this.metadata,
       accessibleNamespaces: this.accessibleNamespaces,
       labels: this.labels,
-    };
-
-    return toJS(model);
+    });
   }
 
   /**
    * Serializable cluster-state used for sync btw main <-> renderer
    */
   getState(): ClusterState {
-    const state: ClusterState = {
+    return toJS({
       apiUrl: this.apiUrl,
       online: this.online,
       ready: this.ready,
       disconnected: this.disconnected,
       accessible: this.accessible,
-      failureReason: this.failureReason,
       isAdmin: this.isAdmin,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
-    };
-
-    return toJS(state);
+    });
   }
 
   /**
@@ -641,6 +627,17 @@ export class Cluster implements ClusterModel, ClusterState {
       accessible: this.accessible,
       disconnected: this.disconnected,
     };
+  }
+
+  /**
+   * broadcast an authentication update concerning this cluster
+   * @internal
+   */
+  broadcastConnectUpdate(message: string, isError = false): void {
+    const update: KubeAuthUpdate = { message, isError };
+
+    logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: this.getMeta() });
+    broadcastMessage(`cluster:${this.id}:connection-update`, update);
   }
 
   protected async getAllowedNamespaces() {
