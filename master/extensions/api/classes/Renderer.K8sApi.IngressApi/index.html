@@ -975,6 +975,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#patch" class="md-nav__link">
+    patch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#refreshresourceversion" class="md-nav__link">
     refreshResourceVersion
   </a>
@@ -1066,6 +1073,7 @@
 <li><a href="./#modifywatchevent">modifyWatchEvent</a></li>
 <li><a href="./#normalizequery">normalizeQuery</a></li>
 <li><a href="./#parseresponse">parseResponse</a></li>
+<li><a href="./#patch">patch</a></li>
 <li><a href="./#refreshresourceversion">refreshResourceVersion</a></li>
 <li><a href="./#setresourceversion">setResourceVersion</a></li>
 <li><a href="./#update">update</a></li>
@@ -1448,9 +1456,53 @@
 <h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#parseresponse">parseResponse</a></p>
 <hr />
+<h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
+<p>▸ <strong>patch</strong>(<code>__namedParameters?</code>, <code>data?</code>, <code>strategy?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>__namedParameters</code></td>
+<td align="left"><code>Object</code></td>
+<td align="left"><code>{}</code></td>
+</tr>
+<tr>
+<td align="left"><code>__namedParameters.name</code></td>
+<td align="left"><code>string</code></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>__namedParameters.namespace</code></td>
+<td align="left"><code>string</code></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>data?</code></td>
+<td align="left"><code>Patch</code> | <code>Partial</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>strategy</code></td>
+<td align="left"><code>KubeApiPatchType</code></td>
+<td align="left"><code>"strategic"</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#patch">patch</a></p>
+<hr />
 <h3 id="refreshresourceversion">refreshResourceVersion<a class="headerlink" href="#refreshresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>refreshResourceVersion</strong>(<code>params?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>[]></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1465,14 +1517,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>[]></p>
-<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#refreshresourceversion">refreshResourceVersion</a></p>
 <hr />
 <h3 id="setresourceversion">setResourceVersion<a class="headerlink" href="#setresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>setResourceVersion</strong>(<code>namespace?</code>, <code>newVersion</code>): <code>void</code></p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1494,14 +1546,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#setresourceversion">setResourceVersion</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>__namedParameters?</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1528,14 +1580,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
-<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#update">update</a></p>
 <hr />
 <h3 id="watch">watch<a class="headerlink" href="#watch" title="Permanent link">#</a></h3>
 <p>▸ <strong>watch</strong>(<code>opts?</code>): () =&gt; <code>void</code></p>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1550,12 +1602,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>fn</code></p>
 <p>▸ (): <code>void</code></p>
-<h5 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h5>
+<h5 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
-<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#watch">watch</a></p>
                 
               
