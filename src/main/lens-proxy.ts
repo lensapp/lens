@@ -60,12 +60,10 @@ export class LensProxy extends Singleton {
 
   public port: number;
 
-  constructor(protected router: Router, functions: LensProxyFunctions) {
+  constructor(protected router: Router, { shellApiRequest, kubeApiRequest, getClusterForRequest }: LensProxyFunctions) {
     super();
 
-    const { shellApiRequest, kubeApiRequest } = functions;
-
-    this.getClusterForRequest = functions.getClusterForRequest;
+    this.getClusterForRequest = getClusterForRequest;
 
     this.proxyServer = spdy.createServer({
       spdy: {
@@ -79,10 +77,16 @@ export class LensProxy extends Singleton {
     this.proxyServer
       .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
         const isInternal = req.url.startsWith(`${apiPrefix}?`);
+        const cluster = getClusterForRequest(req);
+
+        if (!cluster) {
+          return void logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
+        }
+
         const reqHandler = isInternal ? shellApiRequest : kubeApiRequest;
 
-        (async () => reqHandler({ req, socket, head }))()
-          .catch(error => logger.error(logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`)));
+        (async () => reqHandler({ req, socket, head, cluster }))()
+          .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
       });
   }
 
@@ -142,6 +146,10 @@ export class LensProxy extends Singleton {
           res.flushHeaders();
         }
       }
+
+      proxyRes.on("aborted", () => { // happens when proxy target aborts connection
+        res.end();
+      });
     });
 
     proxy.on("error", (error, req, res, target) => {

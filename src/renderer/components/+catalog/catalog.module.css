@@ -19,43 +19,59 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.list :global(.TableRow) {
-  .entityName {
-    position: relative;
-    width: min-content;
-    max-width: 100%;
+.Catalog {
+  :global(.TableHead) .entityName {
+    /* offset for icon to align texts in the column */
+    padding-left: calc(21px + var(--padding) * 2.5);
+  }
+
+  :global(.TableRow):hover .pinIcon {
+    display: block;
+  }
+}
+
+.entityName {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--padding);
+  padding-bottom: 0;
+  padding-right: 24px; // + reserved space for .pinIcon
+
+  > span {
     overflow: hidden;
-    text-overflow: ellipsis;
-    padding-right: 24px;
+    text-overflow: ellipsis;  
+    padding-left: var(--padding);
+  }
 
-    .pinIcon {
-      position: absolute;
-      right: 0;
-      opacity: 0;
-      transition: none;
+  :global(.HotbarIcon){
+    align-self: center;
 
-      &:hover {
-        /* Drop styles defined for <Icon/> */
-        background-color: transparent;
-        box-shadow: none;
-      }
+    div {
+      /* icons with plain text */
+      font-size: var(--unit);
+    }
+
+    .Icon {
+      /* icons with font-icon */
+      font-size: var(--small-size);
     }
   }
 
-  &:hover .pinIcon {
-    opacity: 1;
+  .pinIcon {
+    position: absolute;
+    right: 0;
+    transition: none;
+    display: none;
+
+    &:hover {
+      /* Drop styles defined for <Icon/>  */
+      background-color: transparent;
+      box-shadow: none;
+    }
   }
-}
-
-.iconCell {
-  @apply flex items-center max-w-[40px];
-}
-
-.iconCell > div * {
-  font-size: var(--unit);
-}
-
-.nameCell {
 }
 
 .sourceCell {
@@ -64,14 +80,16 @@
 
 .statusCell {
   max-width: 100px;
-}
 
-.connected, .available {
-  color: var(--colorSuccess);
-}
+  :global {
+    .connected, .available {
+      color: var(--colorSuccess);
+    }
 
-.disconnected, .deleting, .unavailable {
-  color: var(--halfGray);
+    .disconnected, .deleting, .unavailable {
+      color: var(--halfGray);
+    }
+  }
 }
 
 .labelsCell {

@@ -236,13 +236,10 @@ export class Node extends KubeObject {
   }
 
   getOperatingSystem(): string {
-    const label = this.getLabels().find(label => label.startsWith("kubernetes.io/os="));
-
-    if (label) {
-      return label.split("=", 2)[1];
-    }
-
-    return "linux";
+    return this.metadata?.labels?.["kubernetes.io/os"]
+      || this.metadata?.labels?.["beta.kubernetes.io/os"]
+      || this.status?.nodeInfo?.operatingSystem
+      || "linux";
   }
 
   isUnschedulable() {

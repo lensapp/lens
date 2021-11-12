@@ -19,12 +19,39 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * Function expands generic CSS Modules literal types and adds dictionary with arbitrary
- * indexes.
- * @param styles Styles imported from CSS Module having only literal types
- * @returns Passed style list with expanded typescript types
- */
-export function makeCss<T>(styles: T) {
-  return styles as typeof styles & { [key: string]: string };
+.SidebarCluster {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  cursor: pointer;
+
+  &:focus-visible {
+    background: var(--blue);
+    color: white;
+  }
+
+  &:hover {
+    background: var(--sidebarLogoBackground);
+  }
+}
+
+.clusterName {
+  font-weight: bold;
+  overflow: hidden;
+  word-break: break-word;
+  color: var(--textColorAccent);
+  display: -webkit-box;
+  /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.menu {
+  width: 185px;
+  margin-top: -10px;
+}
+
+.avatar {
+  font-weight: 500;
+  margin-right: 1.25rem;
 }

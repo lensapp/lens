@@ -19,26 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type * as WebSocket from "ws";
+import type WebSocket from "ws";
 import { v4 as uuid } from "uuid";
 import * as k8s from "@kubernetes/client-node";
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../cluster";
 import { ShellOpenError, ShellSession } from "./shell-session";
 import { get } from "lodash";
+import { Node, NodesApi } from "../../common/k8s-api/endpoints";
+import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
+import logger from "../logger";
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
 
-  protected podId = `node-shell-${uuid()}`;
+  protected readonly podName = `node-shell-${uuid()}`;
   protected kc: KubeConfig;
 
-  protected get cwd(): string | undefined {
-    return undefined;
-  }
+  protected readonly cwd: string | undefined = undefined;
 
-  constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string) {
-    super(socket, cluster);
+  constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string, terminalId: string) {
+    super(socket, cluster, terminalId);
   }
 
   public async open() {
@@ -55,10 +56,27 @@ export class NodeShellSession extends ShellSession {
       throw new ShellOpenError("failed to create node pod", error);
     }
 
-    const args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
     const env = await this.getCachedShellEnv();
+    const args = ["exec", "-i", "-t", "-n", "kube-system", this.podName, "--"];
+    const nodeApi = new NodesApi({
+      objectConstructor: Node,
+      request: KubeJsonApi.forCluster(this.cluster),
+    });
+    const node = await nodeApi.get({ name: this.nodeName });
+    const nodeOs = node.getOperatingSystem();
 
-    await super.open(shell, args, env);
+    switch (nodeOs) {
+      default:
+        logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
+      case "linux":
+        args.push("sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))");
+        break;
+      case "windows":
+        args.push("powershell");
+        break;
+    }
+
+    await this.openShellProcess(shell, args, env);
   }
 
   protected createNodeShellPod() {
@@ -73,7 +91,7 @@ export class NodeShellSession extends ShellSession {
       .makeApiClient(k8s.CoreV1Api)
       .createNamespacedPod("kube-system", {
         metadata: {
-          name: this.podId,
+          name: this.podName,
           namespace: "kube-system",
         },
         spec: {
@@ -101,33 +119,39 @@ export class NodeShellSession extends ShellSession {
   }
 
   protected waitForRunningPod(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const watch = new k8s.Watch(this.kc);
+    logger.debug(`[NODE-SHELL]: waiting for ${this.podName} to be running`);
 
-      watch
+    return new Promise((resolve, reject) => {
+      new k8s.Watch(this.kc)
         .watch(`/api/v1/namespaces/kube-system/pods`,
           {},
           // callback is called for each received object.
-          (type, obj) => {
-            if (obj.metadata.name == this.podId && obj.status.phase === "Running") {
-              resolve();
+          (type, { metadata: { name }, status }) => {
+            if (name === this.podName) {
+              switch (status.phase) {
+                case "Running":
+                  return resolve();
+                case "Failed":
+                  return reject(`Failed to be created: ${status.message || "unknown error"}`);
+              }
             }
           },
           // done callback is called if the watch terminates normally
           (err) => {
-            console.log(err);
+            logger.error(`[NODE-SHELL]: ${this.podName} was not created in time`);
             reject(err);
           },
         )
         .then(req => {
           setTimeout(() => {
-            console.log("aborting");
+            logger.error(`[NODE-SHELL]: aborting wait for ${this.podName}, timing out`);
             req.abort();
-          }, 2 * 60 * 1000);
+            reject("Pod creation timed out");
+          }, 2 * 60 * 1000); // 2 * 60 * 1000
         })
-        .catch(err => {
-          console.log("watch failed");
-          reject(err);
+        .catch(error => {
+          logger.error(`[NODE-SHELL]: waiting for ${this.podName} failed: ${error}`);
+          reject(error);
         });
     });
   }
@@ -141,6 +165,7 @@ export class NodeShellSession extends ShellSession {
     this
       .kc
       .makeApiClient(k8s.CoreV1Api)
-      .deleteNamespacedPod(this.podId, "kube-system");
+      .deleteNamespacedPod(this.podName, "kube-system")
+      .catch(error => logger.warn(`[NODE-SHELL]: failed to remove pod shell`, error));
   }
 }

@@ -19,24 +19,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.sidebarNav {
-  @apply flex overflow-auto flex-col;
-  width: var(--sidebar-width);
-  padding-bottom: calc(var(--padding) * 3);
+import React from "react";
+import { portForwardsURL } from "../../common/routes/port-forwards";
+import { Button } from "../components/button";
+import { Notifications, notificationsStore } from "../components/notifications";
+import { navigate } from "../navigation";
+import { getHostedClusterId } from "../utils";
 
-  /* Shadow above scrolling content from https://gist.github.com/distinctgrey/7548778 */
-  background:
-    linear-gradient(var(--sidebarBackground) 30%, rgba(255,255,255,0)),
-    linear-gradient(rgba(255,255,255,0), var(--sidebarBackground) 70%) 0 100%,
-    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
-    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
-  background-repeat: no-repeat;
-  background-size: 100% 40px, 100% 40px, 100% 12px, 100% 12px;
-  background-attachment: local, local, scroll, scroll;
-}
 
-.sidebarNav :global(.Icon) {
-  box-sizing: content-box;
-  padding: 3px;
-  border-radius: 50%;
+export function aboutPortForwarding() {
+  const notificationId = `port-forward-notification-${getHostedClusterId()}`;
+
+  Notifications.info(
+    (
+      <div className="flex column gaps">
+        <b>Port Forwarding</b>
+        <p>
+            You can manage your port forwards on the Port Forwarding Page.
+        </p>
+        <div className="flex gaps row align-left box grow">
+          <Button
+            active
+            outlined
+            label="Go to Port Forwarding"
+            onClick={() => {
+              navigate(portForwardsURL());
+              notificationsStore.remove(notificationId);
+            }}
+          />
+        </div>
+      </div>
+    ),
+    {
+      id: notificationId,
+      timeout: 10_000,
+    },
+  );
 }

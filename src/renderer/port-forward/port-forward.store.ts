@@ -47,7 +47,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     const savedPortForwards = this.storage.get(); // undefined on first load
 
     if (Array.isArray(savedPortForwards)) {
-      logger.info("[PORT_FORWARD] starting saved port-forwards");
+      logger.info("[PORT-FORWARD-STORE] starting saved port-forwards");
       await Promise.all(savedPortForwards.map(addPortForward));
     }
   }
@@ -108,11 +108,12 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
 
     response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}&protocol=${protocol}`);
 
-    if (response?.port && response.port != +portForward.forwardPort) {
-      logger.warn(`specified ${portForward.forwardPort} got ${response.port}`);
+    // expecting the received port to be the specified port, unless the specified port is 0, which indicates any available port is suitable
+    if (portForward.forwardPort && response?.port && response.port != +portForward.forwardPort) {
+      logger.warn(`[PORT-FORWARD-STORE] specified ${portForward.forwardPort} got ${response.port}`);
     }
   } catch (error) {
-    logger.warn("Error adding port-forward:", error, portForward);
+    logger.warn("[PORT-FORWARD-STORE] Error adding port-forward:", error, portForward);
     throw(error);
   }
   portForwardStore.reset();
@@ -134,7 +135,7 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
   try {
     response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
   } catch (error) {
-    logger.warn("Error getting port-forward:", error, portForward);
+    logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
     throw(error);
   }
 
@@ -159,7 +160,7 @@ export async function removePortForward(portForward: ForwardedPort) {
     await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
-    logger.warn("Error removing port-forward:", error, portForward);
+    logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
     throw(error);
   }
   portForwardStore.reset();
@@ -171,7 +172,7 @@ export async function getPortForwards(): Promise<ForwardedPort[]> {
 
     return response.portForwards;
   } catch (error) {
-    logger.warn("Error getting all port-forwards:", error);
+    logger.warn("[PORT-FORWARD-STORE] Error getting all port-forwards:", error);
     
     return [];
   }

@@ -49,9 +49,9 @@ const LargeTooltip = withStyles({
 @observer
 export class HelmChartDetails extends Component<Props> {
   @observable chartVersions: HelmChart[];
-  @observable selectedChart: HelmChart;
-  @observable readme: string = null;
-  @observable error: string = null;
+  @observable selectedChart?: HelmChart;
+  @observable readme?: string;
+  @observable error?: string;
 
   private abortController?: AbortController;
 
@@ -68,6 +68,10 @@ export class HelmChartDetails extends Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.props.chart, async ({ name, repo, version }) => {
         try {
+          this.selectedChart = undefined;
+          this.chartVersions = undefined;
+          this.readme = undefined;
+
           const { readme, versions } = await getChartDetails(repo, name, { version });
 
           this.readme = readme;

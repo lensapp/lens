@@ -20,7 +20,7 @@
  */
 
 import type { Request } from "node-fetch";
-import { Pod } from "../endpoints/pods.api";
+import { Pod, PodsApi } from "../endpoints/pods.api";
 import { forRemoteCluster, KubeApi } from "../kube-api";
 import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
@@ -34,7 +34,33 @@ class TestKubeObject extends KubeObject {
 class TestKubeApi extends KubeApi<TestKubeObject> {}
 
 describe("forRemoteCluster", () => {
-  it("builds api client", async (done) => {
+  it("builds api client for KubeObject", async () => {
+    const api = forRemoteCluster({
+      cluster: {
+        server: "https://127.0.0.1:6443",
+      },
+      user: {
+        token: "daa",
+      },
+    }, Pod);
+
+    expect(api).toBeInstanceOf(KubeApi);
+  });
+
+  it("builds api client for given KubeApi", async () => {
+    const api = forRemoteCluster({
+      cluster: {
+        server: "https://127.0.0.1:6443",
+      },
+      user: {
+        token: "daa",
+      },
+    }, Pod, PodsApi);
+
+    expect(api).toBeInstanceOf(PodsApi);
+  });
+
+  it("calls right api endpoint", async () => {
     const api = forRemoteCluster({
       cluster: {
         server: "https://127.0.0.1:6443",
@@ -47,12 +73,12 @@ describe("forRemoteCluster", () => {
     (fetch as any).mockResponse(async (request: any) => {
       expect(request.url).toEqual("https://127.0.0.1:6443/api/v1/pods");
 
-      done();
-
       return {
-        body: "",
+        body: "hello",
       };
     });
+
+    expect.hasAssertions();
 
     await api.list();
   });

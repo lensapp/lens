@@ -165,40 +165,40 @@ interface IContainerProbe {
   failureThreshold?: number;
 }
 
+export interface ContainerStateRunning {
+  startedAt: string;
+}
+
+export interface ContainerStateWaiting {
+  reason: string;
+  message: string;
+}
+
+export interface ContainerStateTerminated {
+  startedAt: string;
+  finishedAt: string;
+  exitCode: number;
+  reason: string;
+  containerID?: string;
+  message?: string;
+  signal?: number;
+}
+
+/**
+ * ContainerState holds a possible state of container. Only one of its members
+ * may be specified. If none of them is specified, the default one is
+ * `ContainerStateWaiting`.
+ */
+export interface ContainerState {
+  running?: ContainerStateRunning;
+  waiting?: ContainerStateWaiting;
+  terminated?: ContainerStateTerminated;
+}
+
 export interface IPodContainerStatus {
   name: string;
-  state?: {
-    [index: string]: object;
-    running?: {
-      startedAt: string;
-    };
-    waiting?: {
-      reason: string;
-      message: string;
-    };
-    terminated?: {
-      startedAt: string;
-      finishedAt: string;
-      exitCode: number;
-      reason: string;
-    };
-  };
-  lastState?: {
-    [index: string]: object;
-    running?: {
-      startedAt: string;
-    };
-    waiting?: {
-      reason: string;
-      message: string;
-    };
-    terminated?: {
-      startedAt: string;
-      finishedAt: string;
-      exitCode: number;
-      reason: string;
-    };
-  };
+  state?: ContainerState;
+  lastState?: ContainerState;
   ready: boolean;
   restartCount: number;
   image: string;
@@ -373,23 +373,16 @@ export class Pod extends WorkloadKubeObject {
   }
 
   // Returns pod phase or container error if occurred
-  getStatusMessage() {
-    if (this.getReason() === PodStatus.EVICTED) return "Evicted";
-    if (this.metadata.deletionTimestamp) return "Terminating";
-
-    const statuses = this.getContainerStatuses(false); // not including initContainers
-
-    for (const { state } of statuses.reverse()) {
-      if (state.waiting) {
-        return state.waiting.reason || "Waiting";
-      }
-
-      if (state.terminated) {
-        return state.terminated.reason || "Terminated";
-      }
+  getStatusMessage(): string {
+    if (this.getReason() === PodStatus.EVICTED) {
+      return "Evicted";
     }
 
-    return this.getStatusPhase();
+    if (this.metadata.deletionTimestamp) {
+      return "Terminating";
+    }
+
+    return this.getStatusPhase() || "Waiting";
   }
 
   getStatusPhase() {
