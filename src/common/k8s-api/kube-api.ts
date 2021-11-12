@@ -115,7 +115,7 @@ export interface IRemoteKubeApiConfig {
   }
 }
 
-export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+export function forCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): KubeApi<T> {
   const url = new URL(apiBase.config.serverAddress);
   const request = new KubeJsonApi({
     serverAddress: apiBase.config.serverAddress,
@@ -127,15 +127,18 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
     },
   });
 
-  return new KubeApi({
+  if (!apiClass) {
+    apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y;
+  }
+
+  return new apiClass({
     objectConstructor: kubeClass,
     request,
   });
 }
 
-export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+export function forRemoteCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): Y {
   const reqInit: RequestInit = {};
-
   const agentOptions: AgentOptions = {};
 
   if (config.cluster.skipTLSVerify === true) {
@@ -172,8 +175,12 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     } : {}),
   }, reqInit);
 
-  return new KubeApi({
-    objectConstructor: kubeClass,
+  if (!apiClass) {
+    apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y;
+  }
+
+  return new apiClass({
+    objectConstructor: kubeClass as KubeObjectConstructor<T>,
     request,
   });
 }
