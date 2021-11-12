@@ -19,10 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type { Request } from "node-fetch";
 import { Pod } from "../endpoints/pods.api";
 import { forRemoteCluster, KubeApi } from "../kube-api";
 import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
+
+class TestKubeObject extends KubeObject {
+  static kind = "Pod";
+  static namespaced = true;
+  static apiBase = "/api/v1/pods";
+}
+
+class TestKubeApi extends KubeApi<TestKubeObject> {}
 
 describe("forRemoteCluster", () => {
   it("builds api client", async (done) => {
@@ -140,5 +149,64 @@ describe("KubeApi", () => {
     await kubeApi.get();
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("extensions");
+  });
+
+  describe("patch", () => {
+    let api: TestKubeApi;
+
+    beforeEach(() => {
+      api = new TestKubeApi({
+        request,
+        objectConstructor: TestKubeObject,
+      });
+    });
+
+    it("sends strategic patch by default", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("PATCH");
+        expect(request.headers.get("content-type")).toMatch("strategic-merge-patch");
+        expect(request.body.toString()).toEqual(JSON.stringify({ spec: { replicas: 2 }}));
+
+        return {};
+      });
+
+      await api.patch({ name: "test", namespace: "default" }, {
+        spec: { replicas: 2 },
+      });
+    });
+
+    it("allows to use merge patch", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("PATCH");
+        expect(request.headers.get("content-type")).toMatch("merge-patch");
+        expect(request.body.toString()).toEqual(JSON.stringify({ spec: { replicas: 2 }}));
+
+        return {};
+      });
+
+      await api.patch({ name: "test", namespace: "default" }, {
+        spec: { replicas: 2 },
+      }, "merge");
+    });
+
+    it("allows to use json patch", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("PATCH");
+        expect(request.headers.get("content-type")).toMatch("json-patch");
+        expect(request.body.toString()).toEqual(JSON.stringify([{ op: "replace", path: "/spec/replicas", value: 2 }]));
+
+        return {};
+      });
+
+      await api.patch({ name: "test", namespace: "default" }, [
+        { op: "replace", path: "/spec/replicas", value: 2 },
+      ], "json");
+    });
   });
 });
