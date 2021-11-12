@@ -1310,7 +1310,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <p>• <strong>storageClassApi</strong>: <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<a href="../../classes/Renderer.K8sApi.StorageClass/"><code>StorageClass</code></a>></p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="forcluster">forCluster<a class="headerlink" href="#forcluster" title="Permanent link">#</a></h3>
-<p>▸ <strong>forCluster</strong>&lt;<code>T</code>>(<code>cluster</code>, <code>kubeClass</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
+<p>▸ <strong>forCluster</strong>&lt;<code>T</code>, <code>Y</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1324,6 +1324,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <td align="left"><code>T</code></td>
 <td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>KubeObjectMetadata</code>, <code>any</code>, <code>any</code>, <code>T</code>></td>
 </tr>
+<tr>
+<td align="left"><code>Y</code></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>, <code>Y</code>><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></td>
+</tr>
 </tbody>
 </table>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
@@ -1332,16 +1336,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left"><code>cluster</code></td>
 <td align="left"><a href="../../interfaces/Renderer.K8sApi.ILocalKubeApiConfig/"><code>ILocalKubeApiConfig</code></a></td>
+<td align="left"><code>undefined</code></td>
 </tr>
 <tr>
 <td align="left"><code>kubeClass</code></td>
 <td align="left"><code>KubeObjectConstructor</code>&lt;<code>T</code>></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>apiClass</code></td>
+<td align="left">(<code>apiOpts</code>: <code>IKubeApiOptions</code>&lt;<code>T</code>>) =&gt; <code>Y</code></td>
+<td align="left"><code>null</code></td>
 </tr>
 </tbody>
 </table>
@@ -1349,7 +1361,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
 <hr />
 <h3 id="forremotecluster">forRemoteCluster<a class="headerlink" href="#forremotecluster" title="Permanent link">#</a></h3>
-<p>▸ <strong>forRemoteCluster</strong>&lt;<code>T</code>>(<code>config</code>, <code>kubeClass</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
+<p>▸ <strong>forRemoteCluster</strong>&lt;<code>T</code>, <code>Y</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass?</code>): <code>Y</code></p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1363,6 +1375,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <td align="left"><code>T</code></td>
 <td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>KubeObjectMetadata</code>, <code>any</code>, <code>any</code>, <code>T</code>></td>
 </tr>
+<tr>
+<td align="left"><code>Y</code></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>, <code>Y</code>><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></td>
+</tr>
 </tbody>
 </table>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
@@ -1371,21 +1387,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left"><code>config</code></td>
 <td align="left"><a href="../../interfaces/Renderer.K8sApi.IRemoteKubeApiConfig/"><code>IRemoteKubeApiConfig</code></a></td>
+<td align="left"><code>undefined</code></td>
 </tr>
 <tr>
 <td align="left"><code>kubeClass</code></td>
 <td align="left"><code>KubeObjectConstructor</code>&lt;<code>T</code>></td>
+<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>apiClass</code></td>
+<td align="left">(<code>apiOpts</code>: <code>IKubeApiOptions</code>&lt;<code>T</code>>) =&gt; <code>Y</code></td>
+<td align="left"><code>null</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
+<p><code>Y</code></p>
 <hr />
 <h3 id="isallowedresource">isAllowedResource<a class="headerlink" href="#isallowedresource" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAllowedResource</strong>(<code>resource</code>): <code>boolean</code></p>
