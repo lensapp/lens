@@ -23,7 +23,7 @@ import styles from "./sidebar.module.css";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Workloads } from "../+workloads";
@@ -42,6 +42,7 @@ import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { SidebarCluster } from "./sidebar-cluster";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props {
   className?: string;
@@ -51,8 +52,10 @@ interface Props {
 export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
 
-  async componentDidMount() {
-    crdStore.reloadAll();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([crdStore]),
+    ]);
   }
 
   renderCustomResources() {
