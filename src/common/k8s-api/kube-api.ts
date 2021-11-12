@@ -37,6 +37,7 @@ import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
+import type { Patch } from "rfc6902";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -205,6 +206,14 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
   watchId?: string;
   retry?: boolean;
+};
+
+export type KubeApiPatchType = "merge" | "json" | "strategic";
+
+const patchTypeHeaders: Record<KubeApiPatchType, string> = {
+  "merge": "application/merge-patch+json",
+  "json": "application/json-patch+json",
+  "strategic": "application/strategic-merge-patch+json",
 };
 
 export class KubeApi<T extends KubeObject> {
@@ -470,6 +479,24 @@ export class KubeApi<T extends KubeObject> {
 
     if (Array.isArray(parsed)) {
       throw new Error(`PUT request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
+    }
+
+    return parsed;
+  }
+
+  async patch({ name = "", namespace = "default" } = {}, data?: Partial<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
+    await this.checkPreferredVersion();
+    const apiUrl = this.getUrl({ namespace, name });
+
+    const res = await this.request.patch(apiUrl, { data }, {
+      headers: {
+        "content-type": patchTypeHeaders[strategy],
+      },
+    });
+    const parsed = this.parseResponse(res);
+
+    if (Array.isArray(parsed)) {
+      throw new Error(`PATCH request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
     }
 
     return parsed;

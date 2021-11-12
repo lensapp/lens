@@ -295,16 +295,30 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   async patch(item: T, patch: Patch): Promise<T> {
-    return this.postUpdate(await item.patch(patch));
+    return this.postUpdate(
+      await this.api.patch(
+        { 
+          name: item.getName(), namespace: item.getNs(),
+        },
+        patch,
+        "json",
+      ),
+    );
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
-    return this.postUpdate(await item.update(data));
+    return this.postUpdate(
+      await this.api.update(
+        { 
+          name: item.getName(), namespace: item.getNs(),
+        },
+        data,
+      ),
+    );
   }
 
   async remove(item: T) {
-    await item.delete();
-    this.items.remove(item);
+    await this.api.delete({ name: item.getName(), namespace: item.getNs() });
     this.selectedItemsIds.delete(item.getId());
   }
 
