@@ -32,6 +32,8 @@ import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/event-bus";
 import logger from "../logger";
+import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
+import { deserialize, serialize } from "v8";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -145,18 +147,24 @@ export abstract class ShellSession {
 
   protected abstract get cwd(): string | undefined;
 
-  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string>, cwd: string): pty.IPty {
-    if (!ShellSession.processes.has(this.terminalId)) {
+  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string>, cwd: string): { shellProcess: pty.IPty, resume: boolean } {
+    const resume = ShellSession.processes.has(this.terminalId);
+
+    if (!resume) {
       ShellSession.processes.set(this.terminalId, pty.spawn(shell, args, {
+        rows: 30,
         cols: 80,
         cwd,
         env,
         name: "xterm-256color",
-        rows: 30,
       }));
     }
 
-    return ShellSession.processes.get(this.terminalId);
+    const shellProcess = ShellSession.processes.get(this.terminalId);
+
+    logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
+
+    return { shellProcess, resume };
   }
 
   constructor(protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
@@ -166,19 +174,27 @@ export abstract class ShellSession {
     this.terminalId = `${cluster.id}:${terminalId}`;
   }
 
+  protected send(message: TerminalMessage): void {
+    this.websocket.send(serialize(message));
+  }
+
   protected async openShellProcess(shell: string, args: string[], env: Record<string, any>) {
     const cwd = (this.cwd && await fse.pathExists(this.cwd))
     	? this.cwd
     	: env.HOME;
-    const shellProcess = this.ensureShellProcess(shell, args, env, cwd);
+    const { shellProcess, resume } = this.ensureShellProcess(shell, args, env, cwd);
+
+    if (resume) {
+      this.send({ type: TerminalChannels.CONNECTED });
+    }
 
     this.running = true;
-    shellProcess.onData(data => this.sendResponse(data));
+    shellProcess.onData(data => this.send({ type: TerminalChannels.STDOUT, data }));
     shellProcess.onExit(({ exitCode }) => {
       this.running = false;
 
       if (exitCode > 0) {
-        this.sendResponse("Terminal will auto-close in 15 seconds ...");
+        this.send({ type: TerminalChannels.STDOUT, data: "Terminal will auto-close in 15 seconds ..." });
         setTimeout(() => this.exit(), 15 * 1000);
       } else {
         this.exit();
@@ -186,29 +202,37 @@ export abstract class ShellSession {
     });
 
     this.websocket
-      .on("message", (data: string) => {
+      .on("message", (data: string | Uint8Array) => {
         if (!this.running) {
           return;
         }
 
-        const message = Buffer.from(data.slice(1, data.length), "base64").toString();
+        if (typeof data === "string") {
+          return void logger.silly(`[SHELL-SESSION]: Received message from ${this.terminalId}`, { data });
+        }
 
-        switch (data[0]) {
-          case "0":
-            shellProcess.write(message);
-            break;
-          case "4":
-            const { Width, Height } = JSON.parse(message);
+        try {
+          const message: TerminalMessage = deserialize(data);
 
-            shellProcess.resize(Width, Height);
-            break;
+          switch (message.type) {
+            case TerminalChannels.STDIN:
+              shellProcess.write(message.data);
+              break;
+            case TerminalChannels.RESIZE:
+              shellProcess.resize(message.data.width, message.data.height);
+              break;
+            default:
+              logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
+              break;
+          }
+        } catch (error) {
+          logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
         }
       })
-      .on("close", (code) => {
+      .on("close", code => {
         logger.debug(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${code}`);
 
-        if (this.running && code !== WebSocketCloseEvent.AbnormalClosure) {
-          // This code is the one that gets sent when the network is turned off
+        if (this.running && code !== WebSocketCloseEvent.AbnormalClosure && code !== WebSocketCloseEvent.GoingAway) {
           try {
             logger.info(`[SHELL-SESSION]: Killing shell process for ${this.terminalId}`);
             process.kill(shellProcess.pid);
@@ -299,9 +323,5 @@ export abstract class ShellSession {
     if (this.websocket.readyState == this.websocket.OPEN) {
       this.websocket.close(code);
     }
-  }
-
-  protected sendResponse(msg: string) {
-    this.websocket.send(`1${Buffer.from(msg).toString("base64")}`);
   }
 }

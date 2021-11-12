@@ -29,6 +29,7 @@ import { get } from "lodash";
 import { Node, NodesApi } from "../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
 import logger from "../logger";
+import { TerminalChannels } from "../../renderer/api/terminal-api";
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
@@ -51,7 +52,10 @@ export class NodeShellSession extends ShellSession {
       await this.waitForRunningPod();
     } catch (error) {
       this.deleteNodeShellPod();
-      this.sendResponse(`Error occurred: ${get(error, "response.body.message", error?.toString() || "unknown error")}`);
+      this.send({
+        type: TerminalChannels.STDOUT,
+        data: `Error occurred: ${get(error, "response.body.message", error?.toString() || "unknown error")}`,
+      });
 
       throw new ShellOpenError("failed to create node pod", error);
     }
