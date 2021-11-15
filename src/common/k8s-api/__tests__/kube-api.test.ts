@@ -234,4 +234,40 @@ describe("KubeApi", () => {
       ], "json");
     });
   });
+
+  describe("delete", () => {
+    let api: TestKubeApi;
+
+    beforeEach(() => {
+      api = new TestKubeApi({
+        request,
+        objectConstructor: TestKubeObject,
+      });
+    });
+
+    it("sends correct request", async () => {
+      expect.hasAssertions();
+      (fetch as any).mockResponse(async (request: Request) => {
+        console.log(request.url);
+        expect(request.method).toEqual("DELETE");
+        expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background");
+
+        return {};
+      });
+
+      await api.delete({ name: "foo", namespace: "default" });
+    });
+
+    it("allows to change propagationPolicy", async () => {
+      expect.hasAssertions();
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("DELETE");
+        expect(request.url).toMatch("propagationPolicy=Orphan");
+
+        return {};
+      });
+
+      await api.delete({ name: "foo", namespace: "default", propagationPolicy: "Orphan" });
+    });
+  });
 });

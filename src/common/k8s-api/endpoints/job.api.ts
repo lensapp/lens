@@ -24,7 +24,6 @@ import { autoBind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { JsonApiParams } from "../json-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
@@ -120,14 +119,6 @@ export class Job extends WorkloadKubeObject {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
 
     return [...containers].map(container => container.image);
-  }
-
-  delete() {
-    const params: JsonApiParams = {
-      query: { propagationPolicy: "Background" },
-    };
-
-    return super.delete(params);
   }
 }
 

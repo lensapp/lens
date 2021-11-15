@@ -98,6 +98,8 @@ export interface ILocalKubeApiConfig {
   }
 }
 
+export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
+
 /**
  * @deprecated
  */
@@ -502,11 +504,16 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async delete({ name = "", namespace = "default" }) {
+  async delete({ name = "", namespace = "default", propagationPolicy = "Background" }: { name: string, namespace: string, propagationPolicy?: PropagationPolicy }) {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
+    const reqInit = {
+      query: {
+        propagationPolicy,
+      },
+    };
 
-    return this.request.del(apiUrl);
+    return this.request.del(apiUrl, reqInit);
   }
 
   getWatchUrl(namespace = "", query: IKubeApiQueryParams = {}) {
