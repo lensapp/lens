@@ -476,6 +476,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeStatus/</loc>
+         <lastmod>2021-11-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.LimitRange/</loc>
          <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
