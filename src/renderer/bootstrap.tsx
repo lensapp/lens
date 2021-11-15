@@ -50,6 +50,9 @@ import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import { AppPaths } from "../common/app-paths";
 import { registerCustomThemes } from "./components/monaco-editor";
+import { getDi } from "./components/getDi";
+import { DiContextProvider } from "@ogre-tools/injectable-react";
+import type { IDependencyInjectionContainer } from "@ogre-tools/injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -73,7 +76,7 @@ type AppComponent = React.ComponentType & {
   init(rootElem: HTMLElement): Promise<void>;
 };
 
-export async function bootstrap(comp: () => Promise<AppComponent>) {
+export async function bootstrap(comp: () => Promise<AppComponent>, di: IDependencyInjectionContainer) {
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
@@ -147,17 +150,26 @@ export async function bootstrap(comp: () => Promise<AppComponent>) {
 
   await App.init(rootElem);
 
-  render(<>
-    {isMac && <div id="draggable-top" />}
-    {DefaultProps(App)}
-  </>, rootElem);
+  render(
+    <DiContextProvider value={{ di }}>
+      {isMac && <div id="draggable-top" />}
+
+      {DefaultProps(App)}
+    </DiContextProvider>,
+
+    rootElem,
+  );
 }
+
+const di = getDi();
 
 // run
 bootstrap(
-  async () => process.isMainFrame
-    ? (await import("./root-frame")).RootFrame
-    : (await import("./cluster-frame")).ClusterFrame,
+  async () =>
+    process.isMainFrame
+      ? (await import("./root-frame")).RootFrame
+      : (await import("./cluster-frame")).ClusterFrame,
+  di,
 );
 
 
