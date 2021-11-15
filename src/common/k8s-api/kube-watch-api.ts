@@ -25,131 +25,131 @@
 import type { KubeObjectStore } from "./kube-object.store";
 import type { ClusterContext } from "./cluster-context";
 
-import plimit from "p-limit";
 import { comparer, observable, reaction, makeObservable } from "mobx";
-import { autoBind, Disposer, noop } from "../utils";
-import type { KubeApi } from "./kube-api";
+import { autoBind, disposer, Disposer, ExtendedMap, noop } from "../utils";
 import type { KubeJsonApiData } from "./kube-json-api";
-import { isDebugging, isProduction } from "../vars";
+import { isProduction } from "../vars";
 import type { KubeObject } from "./kube-object";
+import AbortController from "abort-controller";
+import { once } from "lodash";
+
+class WrappedAbortController extends AbortController {
+  constructor(protected parent: AbortController) {
+    super();
+
+    parent.signal.addEventListener("abort", () => {
+      this.abort();
+    });
+  }
+}
 
 export interface IKubeWatchEvent<T extends KubeJsonApiData> {
   type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
   object?: T;
 }
 
-export interface IKubeWatchSubscribeStoreOptions {
-  namespaces?: string[]; // default: all accessible namespaces
-  preload?: boolean; // preload store items, default: true
-  waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
-  loadOnce?: boolean; // check store.isLoaded to skip loading if done already, default: false
-}
-
-export interface IKubeWatchLog {
-  message: string | string[] | Error;
-  meta?: object;
-  cssStyle?: string;
+export interface KubeWatchSubscribeStoreOptions {
+  /**
+   * The namespaces to watch, if not specified then changes to the set of
+   * selected namespaces will be watched as well
+   *
+   * @default all selected namespaces
+   */
+  namespaces?: string[];
 }
 
 export class KubeWatchApi {
   @observable context: ClusterContext = null;
+  duplicateWatchSet = new ExtendedMap<KubeObjectStore<KubeObject>, number>();
 
   constructor() {
     makeObservable(this);
     autoBind(this);
   }
 
-  isAllowedApi(api: KubeApi<KubeObject>): boolean {
-    return Boolean(this.context?.cluster.isAllowedResource(api.kind));
-  }
+  private subscribeStore(store: KubeObjectStore<KubeObject>, parent: AbortController, watchChanges: boolean, namespaces: string[]): Disposer {
+    const count = this.duplicateWatchSet.getOrInsert(store, () => 1);
 
-  preloadStores(stores: KubeObjectStore<KubeObject>[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
-    const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
-    const preloading: Promise<any>[] = [];
-
-    for (const store of stores) {
-      preloading.push(limitRequests(async () => {
-        if (store.isLoaded && opts.loadOnce) return; // skip
-
-        return store.loadAll({ namespaces: opts.namespaces });
-      }));
+    if (count > 1) {
+      // don't load or subscribe to a store more than once
+      return () => {
+        this.duplicateWatchSet.set(store, this.duplicateWatchSet.get(store) - 1);
+      };
     }
 
-    return {
-      loading: Promise.allSettled(preloading),
-      cancelLoading: () => limitRequests.clearQueue(),
-    };
-  }
+    let childController = new WrappedAbortController(parent);
+    const unsubscribe = disposer();
 
-  subscribeStores(stores: KubeObjectStore<KubeObject>[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
-    const { preload = true, waitUntilLoaded = true, loadOnce = false } = opts;
-    const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
-    const unsubscribeList: Function[] = [];
-    let isUnsubscribed = false;
-
-    const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
-    let preloading = preload && load();
-    let cancelReloading: Disposer = noop;
-
-    const subscribe = () => {
-      if (isUnsubscribed) return;
-
-      stores.forEach((store) => {
-        unsubscribeList.push(store.subscribe());
-      });
-    };
-
-    if (preloading) {
-      if (waitUntilLoaded) {
-        preloading.loading.then(subscribe, error => {
-          this.log({
-            message: new Error("Loading stores has failed"),
-            meta: { stores, error, options: opts },
+    const loadThenSubscribe = async (namespaces: string[]) => {
+      try {
+        await store.loadAll({ namespaces, reqInit: { signal: childController.signal }});
+        unsubscribe.push(store.subscribe(childController));
+      } catch (error) {
+        if (!(error instanceof DOMException)) {
+          this.log(Object.assign(new Error("Loading stores has failed"), { cause: error }), {
+            meta: { store, namespaces },
           });
-        });
-      } else {
-        subscribe();
+        }
       }
+    };
 
-      // reload stores only for context namespaces change
-      cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
-        preloading?.cancelLoading();
-        unsubscribeList.forEach(unsubscribe => unsubscribe());
-        unsubscribeList.length = 0;
-        preloading = load(namespaces);
-        preloading.loading.then(subscribe);
+    loadThenSubscribe(namespaces);
+
+    const cancelReloading = watchChanges
+      ? noop // don't watch namespaces if namespaces were provided
+      : reaction(() => this.context.contextNamespaces, namespaces => {
+        childController.abort();
+        unsubscribe();
+        childController = new WrappedAbortController(parent);
+        loadThenSubscribe(namespaces);
       }, {
         equals: comparer.shallow,
       });
-    }
 
-    // unsubscribe
     return () => {
-      if (isUnsubscribed) return;
-      isUnsubscribed = true;
-      cancelReloading();
-      preloading?.cancelLoading();
-      unsubscribeList.forEach(unsubscribe => unsubscribe());
-      unsubscribeList.length = 0;
+      const newCount = this.duplicateWatchSet.get(store) - 1;
+
+      this.duplicateWatchSet.set(store, newCount);
+
+      if (newCount === 0) {
+        cancelReloading();
+        childController.abort();
+        unsubscribe();
+      }
     };
   }
 
-  protected log({ message, cssStyle = "", meta = {}}: IKubeWatchLog) {
-    if (isProduction && !isDebugging) {
+  subscribeStores(stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions = {}): Disposer {
+    const parent = new AbortController();
+    const unsubscribe = disposer(
+      ...stores.map(store => this.subscribeStore(
+        store,
+        parent,
+        !options.namespaces,
+        options.namespaces ?? this.context?.contextNamespaces ?? [],
+      )),
+    );
+
+    // unsubscribe
+    return once(() => {
+      parent.abort();
+      unsubscribe();
+    });
+  }
+
+  protected log(message: any, meta: any) {
+    if (isProduction) {
       return;
     }
 
-    const logInfo = [`%c[KUBE-WATCH-API]:`, `font-weight: bold; ${cssStyle}`, message].flat().map(String);
-    const logMeta = {
+    const log = message instanceof Error
+      ? console.error
+      : console.debug;
+
+    log("[KUBE-WATCH-API]:", message, {
       time: new Date().toLocaleString(),
       ...meta,
-    };
-
-    if (message instanceof Error) {
-      console.error(...logInfo, logMeta);
-    } else {
-      console.info(...logInfo, logMeta);
-    }
+    });
   }
 }
 

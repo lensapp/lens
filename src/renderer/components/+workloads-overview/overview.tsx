@@ -33,7 +33,6 @@ import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
-import { clusterContext } from "../context";
 import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 
@@ -45,12 +44,15 @@ export class WorkloadsOverview extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([
-        podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
-        jobStore, cronJobStore, eventStore,
-      ], {
-        preload: true,
-        namespaces: clusterContext.contextNamespaces,
-      }),
+        cronJobStore,
+        daemonSetStore,
+        deploymentStore,
+        eventStore,
+        jobStore,
+        podsStore,
+        replicaSetStore,
+        statefulSetStore,
+      ]),
     ]);
   }
 

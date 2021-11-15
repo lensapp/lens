@@ -28,7 +28,6 @@ import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-li
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
-import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
@@ -63,10 +62,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
 
     if (subscribeStores) {
       disposeOnUnmount(this, [
-        kubeWatchApi.subscribeStores(stores, {
-          preload: true,
-          namespaces: clusterContext.contextNamespaces,
-        }),
+        kubeWatchApi.subscribeStores(stores),
       ]);
     }
   }

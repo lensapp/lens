@@ -33,9 +33,14 @@ import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
 import type { Patch } from "rfc6902";
 
-export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
+export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
-  api?: KubeApi<K>;
+  reqInit?: RequestInit;
+}
+
+export interface KubeObjectStoreLoadAllParams {
+  namespaces?: string[];
+  merge?: boolean;
   reqInit?: RequestInit;
 }
 
@@ -141,10 +146,10 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     }
   }
 
-  protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams<T>): Promise<T[]> {
-    if (this.context?.cluster.isAllowedResource(api.kind)) {
-      if (!api.isNamespaced) {
-        return api.list({ reqInit }, this.query);
+  protected async loadItems({ namespaces, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
+    if (this.context?.cluster.isAllowedResource(this.api.kind)) {
+      if (!this.api.isNamespaced) {
+        return this.api.list({ reqInit }, this.query);
       }
 
       const isLoadingAll = this.context.allNamespaces?.length > 1
@@ -154,12 +159,12 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
       if (isLoadingAll) {
         this.loadedNamespaces = [];
 
-        return api.list({ reqInit }, this.query);
+        return this.api.list({ reqInit }, this.query);
       } else {
         this.loadedNamespaces = namespaces;
 
         return Promise // load resources per namespace
-          .all(namespaces.map(namespace => api.list({ namespace, reqInit }, this.query)))
+          .all(namespaces.map(namespace => this.api.list({ namespace, reqInit }, this.query)))
           .then(items => items.flat().filter(Boolean));
       }
     }
@@ -172,24 +177,14 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async loadAll(options: { namespaces?: string[], merge?: boolean, reqInit?: RequestInit } = {}): Promise<void | T[]> {
+  async loadAll({ namespaces = this.context.contextNamespaces, merge = true, reqInit }: KubeObjectStoreLoadAllParams = {}): Promise<void | T[]> {
     await this.contextReady;
     this.isLoading = true;
 
     try {
-      const {
-        namespaces = this.context.allNamespaces, // load all namespaces by default
-        merge = true, // merge loaded items or return as result
-        reqInit,
-      } = options;
+      const items = await this.loadItems({ namespaces, reqInit });
 
-      const items = await this.loadItems({ namespaces, api: this.api, reqInit });
-
-      if (merge) {
-        this.mergeItems(items, { replace: false });
-      } else {
-        this.mergeItems(items, { replace: true });
-      }
+      this.mergeItems(items, { merge });
 
       this.isLoaded = true;
       this.failedLoading = false;
@@ -216,11 +211,11 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  protected mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
+  protected mergeItems(partialItems: T[], { merge = true, updateStore = true, sort = true, filter = true } = {}): T[] {
     let items = partialItems;
 
     // update existing items
-    if (!replace) {
+    if (merge) {
       const namespaces = partialItems.map(item => item.getNs());
 
       items = [
@@ -297,7 +292,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   async patch(item: T, patch: Patch): Promise<T> {
     return this.postUpdate(
       await this.api.patch(
-        { 
+        {
           name: item.getName(), namespace: item.getNs(),
         },
         patch,
@@ -309,7 +304,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   async update(item: T, data: Partial<T>): Promise<T> {
     return this.postUpdate(
       await this.api.update(
-        { 
+        {
           name: item.getName(), namespace: item.getNs(),
         },
         data,
@@ -335,9 +330,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     });
   }
 
-  subscribe() {
-    const abortController = new AbortController();
-
+  subscribe(abortController = new AbortController()) {
     if (this.api.isNamespaced) {
       Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
         .then(() => {
