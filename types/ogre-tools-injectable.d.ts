@@ -64,6 +64,7 @@ declare module "@ogre-tools/injectable" {
     scopedTransient,
   }
 
+  // eslint-disable-next-line unused-imports/no-unused-vars-ts
   export const createContainer = (...getRequireContexts: any[]) =>
     IConfigurableDependencyInjectionContainer;
 }
