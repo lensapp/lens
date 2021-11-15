@@ -42,6 +42,6 @@ ${themeCssVars.join("\n")}
 `;
 
 // Run
-console.info(`"Saving css-variables for Lens theme to "${outputCssFile}""`);
+console.info(`"Saving default Lens theme css-variables to "${outputCssFile}""`);
 fs.ensureFileSync(outputCssFile);
 fs.writeFile(outputCssFile, content);

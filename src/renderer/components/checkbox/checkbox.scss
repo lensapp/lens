@@ -23,7 +23,7 @@
 .Checkbox {
   --checkbox-color: var(--textColorPrimary); // tick color [√]
   --checkbox-color-active: var(--contentColor);
-  --checkbox-bgc-active: var(--lensBlue);
+  --checkbox-bgc-active: var(--blue);
 
   flex-shrink: 0;
 
@@ -32,7 +32,7 @@
       // default
     }
     &-light {
-      --checkbox-color-active: var(--lensBlue);
+      --checkbox-color-active: var(--blue);
       --checkbox-bgc-active: none;
     }
   }

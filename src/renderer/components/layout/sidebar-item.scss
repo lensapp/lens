@@ -42,7 +42,7 @@
     }
 
     &.active, &:hover {
-      background: var(--lensBlue);
+      background: var(--blue);
       color: var(--sidebarActiveColor);
     }
 
@@ -56,7 +56,7 @@
     border-left: $borderSize solid transparent;
 
     &.active {
-      border-left-color: var(--lensBlue);
+      border-left-color: var(--blue);
     }
 
     > .SidebarItem {
