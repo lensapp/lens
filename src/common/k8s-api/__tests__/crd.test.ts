@@ -51,7 +51,7 @@ describe("Crds", () => {
       expect(() => crd.getVersion()).toThrowError("Failed to find a version for CustomResourceDefinition foo");
     });
 
-    it("should should get the version that is both served and stored", () => {
+    it("should get the version that is both served and stored", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "apiextensions.k8s.io/v1",
         kind: "CustomResourceDefinition",
@@ -79,7 +79,35 @@ describe("Crds", () => {
       expect(crd.getVersion()).toBe("123");
     });
 
-    it("should should get the version that is both served and stored even with version field", () => {
+    it("should get the version that is only stored", () => {
+      const crd = new CustomResourceDefinition({
+        apiVersion: "apiextensions.k8s.io/v1",
+        kind: "CustomResourceDefinition",
+        metadata: {
+          name: "foo",
+          resourceVersion: "12345",
+          uid: "12345",
+        },
+        spec: {
+          versions: [
+            {
+              name: "123",
+              served: false,
+              storage: true,
+            },
+            {
+              name: "1234",
+              served: false,
+              storage: false,
+            },
+          ],
+        },
+      });
+
+      expect(crd.getVersion()).toBe("123");
+    });
+
+    it("should get the version that is both served and stored even with version field", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "apiextensions.k8s.io/v1",
         kind: "CustomResourceDefinition",
