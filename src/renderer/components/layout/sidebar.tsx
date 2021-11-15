@@ -54,7 +54,9 @@ export class Sidebar extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([crdStore]),
+      kubeWatchApi.subscribeStores([
+        crdStore,
+      ]),
     ]);
   }
 

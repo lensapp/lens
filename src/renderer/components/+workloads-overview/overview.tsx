@@ -56,8 +56,14 @@ export class WorkloadsOverview extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([
-        podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
-        jobStore, cronJobStore, eventStore,
+        cronJobStore,
+        daemonSetStore,
+        deploymentStore,
+        eventStore,
+        jobStore,
+        podsStore,
+        replicaSetStore,
+        statefulSetStore,
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
       }),

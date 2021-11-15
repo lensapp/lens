@@ -30,12 +30,12 @@ import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-li
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
-import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
+import { clusterContext } from "../context";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -76,8 +76,6 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
     if (subscribeStores) {
       reactions.push(
         kubeWatchApi.subscribeStores(stores, {
-          preload: true,
-          namespaces: clusterContext.contextNamespaces,
           onLoadFailure: error => this.loadErrors.push(String(error)),
         }),
       );

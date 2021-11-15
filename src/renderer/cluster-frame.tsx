@@ -127,9 +127,9 @@ export class ClusterFrame extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([namespaceStore], {
-        preload: true,
-      }),
+      kubeWatchApi.subscribeStores([
+        namespaceStore,
+      ]),
 
       watchHistoryState(),
     ]);
