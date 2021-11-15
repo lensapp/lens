@@ -66,7 +66,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
     const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
     const reactions: Disposer[] = [
-      reaction(() => clusterContext.contextNamespaces, () => {
+      reaction(() => clusterContext.contextNamespaces.length, () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),
@@ -77,6 +77,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
         kubeWatchApi.subscribeStores(stores, {
           preload: true,
           namespaces: clusterContext.contextNamespaces,
+          onLoadFailure: error => this.loadErrors.push(error),
         }),
       );
     }

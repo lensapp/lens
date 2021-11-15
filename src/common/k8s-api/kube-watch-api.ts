@@ -60,7 +60,7 @@ interface KubeWatchPreloadOptions {
 
 export interface KubeWatchSubscribeStoreOptions extends KubeWatchPreloadOptions {
   /**
-   * Whether to subsribe only after loading all stores
+   * Whether to subscribe only after loading all stores
    * @default true
    */
   waitUntilLoaded?: boolean;
