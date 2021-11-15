@@ -15,7 +15,7 @@ categories:
       - 'area/tests'
       - 'dependencies'
       - 'area/documentation'
-
+change-template: '* #$NUMBER @$AUTHOR'
 template: |
   ## Changes since $PREVIOUS_TAG
 
