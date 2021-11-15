@@ -78,6 +78,17 @@ export class CrdResources extends React.Component<Props> {
       sortingCallbacks[column.name] = item => jsonPath.value(item, parseJsonPath(column.jsonPath.slice(1)));
     });
 
+    const version = crd.getPreferedVersion();
+    const loadFailedPrefix = <p>Failed to load {crd.getPluralName()}</p>;
+    const failedToLoadMessage = version.served
+      ? loadFailedPrefix
+      : (
+        <>
+          {loadFailedPrefix}
+          <p>Prefered version ({crd.getGroup()}/{version.name}) is not served</p>
+        </>
+      );
+
     return (
       <KubeObjectListLayout
         isConfigurable
@@ -129,15 +140,7 @@ export class CrdResources extends React.Component<Props> {
           }),
           crdInstance.getAge(),
         ]}
-        renderFailedToLoadDetails={() => {
-          if (!crd.getPreferedVersion().served) {
-            return (
-              <p>Prefered version is not served.</p>
-            );
-          }
-
-          return undefined;
-        }}
+        failedToLoadMessage={failedToLoadMessage}
       />
     );
   }
