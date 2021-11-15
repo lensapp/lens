@@ -35,7 +35,7 @@
     }
 
     .var-name {
-      color: $textColorPrimary
+      color: var(--textColorPrimary)
     }
   }
 }

@@ -4,12 +4,12 @@
     grid-template-columns: min-content auto;
     gap: $margin;
 
-    border: 1px solid $borderColor;
+    border: 1px solid var(--borderColor);
     border-radius: $radius;
     padding: $padding * 1.5;
 
     > .name {
-      color: $textColorSecondary;
+      color: var(--textColorSecondary);
       text-align: right;
       white-space: nowrap;
     }

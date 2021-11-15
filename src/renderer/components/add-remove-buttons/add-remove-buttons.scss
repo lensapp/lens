@@ -29,8 +29,8 @@
 
   .Button {
     &.remove-button {
-      background-color: $borderFaintColor;
-      color: $textColorPrimary;
+      background-color: var(--borderFaintColor);
+      color: var(--textColorPrimary);
     }
   }
 }

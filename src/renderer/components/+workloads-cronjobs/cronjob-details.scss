@@ -27,7 +27,7 @@
       margin-bottom: $margin;
 
       a {
-        color: $colorInfo;
+        color: var(--colorInfo);
       }
     }
   }

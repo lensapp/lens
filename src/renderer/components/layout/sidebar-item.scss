@@ -42,8 +42,8 @@
     }
 
     &.active, &:hover {
-      background: $lensBlue;
-      color: $sidebarActiveColor;
+      background: var(--blue);
+      color: var(--sidebarActiveColor);
     }
 
     .expand-icon {
@@ -56,11 +56,11 @@
     border-left: $borderSize solid transparent;
 
     &.active {
-      border-left-color: $lensBlue;
+      border-left-color: var(--blue);
     }
 
     > .SidebarItem {
-      color: $textColorPrimary;
+      color: var(--textColorPrimary);
       padding-left: 30px + $borderSize;
       line-height: 22px;
 
@@ -74,7 +74,7 @@
         }
 
         &.active, &:hover {
-          color: $sidebarSubmenuActiveColor;
+          color: var(--sidebarSubmenuActiveColor);
           background: none;
         }
       }

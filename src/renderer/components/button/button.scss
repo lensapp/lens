@@ -29,7 +29,7 @@
   text-decoration: none;
   cursor: pointer;
   border-radius: $radius;
-  background: $buttonDefaultBackground;
+  background: var(--buttonDefaultBackground);
   padding: round($padding * .9) $padding * 1.5;
   flex-shrink: 0;
   line-height: 1;
@@ -41,15 +41,15 @@
   }
 
   &.primary {
-    background: $buttonPrimaryBackground;
+    background: var(--buttonPrimaryBackground);
   }
 
   &.accent {
-    background: $buttonAccentBackground;
+    background: var(--buttonAccentBackground);
   }
 
   &.light {
-    background-color: $buttonLightBackground;
+    background-color: var(--buttonLightBackground);
     color: #505050;
   }
 
@@ -65,7 +65,7 @@
 
     &.active,
     &:focus:not(:active) {
-      color: $buttonPrimaryBackground;
+      color: var(--buttonPrimaryBackground);
       box-shadow: 0 0 0 1px inset;
     }
   }

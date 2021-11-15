@@ -53,7 +53,7 @@
     right: 0;
     bottom: 0;
     display: flex;
-    background-color: $mainBackground;
+    background-color: var(--mainBackground);
 
     iframe {
       flex: 1;

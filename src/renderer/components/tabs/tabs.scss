@@ -26,7 +26,7 @@
   -moz-user-select: none; /* firefox */
 
   &.withBorder {
-    border-bottom: 1px solid $borderFaintColor;
+    border-bottom: 1px solid var(--borderFaintColor);
   }
 
   &.wrap {
@@ -49,8 +49,8 @@
 }
 
 .Tab {
-  --color-active: #{$layoutTabsActiveColor};
-  --line-color-active: #{$primary};
+  --color-active: var(--layoutTabsActiveColor);
+  --line-color-active: var(--primary);
   --line-color-focus: currentColor;
 
   position: relative;
@@ -74,7 +74,7 @@
       height: $unit * 0.5;
       transition: width 150ms;
       background: currentColor;
-      color: $halfGray
+      color: var(--halfGray)
     }
 
     &:focus {

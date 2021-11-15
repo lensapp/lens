@@ -20,8 +20,8 @@
  */
 
 .NodeDetails {
-  --status-ready-bg: #{$colorOk};
-  --status-default-bg: #{$colorError};
+  --status-ready-bg: var(--colorOk);
+  --status-default-bg: var(--colorError);
 
   .conditions {
     @include node-status-bgs;

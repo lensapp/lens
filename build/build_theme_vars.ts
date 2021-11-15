@@ -19,31 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-$node-status-color-list: (
-  out-of-disk: #ce3933,
-  network-unavailable: #812727,
-  memory-pressure: #901995,
-  disk-pressure: #CC8D00,
-  pid-pressure: #068DBF,
-  ready: #4caf50,
-  scheduling-disabled: #ff9800,
-  invalid-license: #ce3933,
-  cordoned: var(--colorWarning)
-);
+import fs from "fs-extra";
+import path from "path";
+import defaultBaseLensTheme from "../src/renderer/themes/lens-dark.json";
 
-@mixin node-status-bgs {
-  @each $status, $color in $node-status-color-list {
-    .#{$status} {
-      background: $color;
-      color: white;
-    }
-  }
-}
+const outputCssFile = path.resolve("src/renderer/themes/theme-vars.css");
 
-@mixin node-status-colors {
-  @each $status, $color in $node-status-color-list {
-    &.#{$status} {
-      color: $color;
-    }
-  }
+const banner = `/* 
+    Generated Lens theme CSS-variables, don't edit manually.
+    To refresh file run $: yarn run ts-node build/${path.basename(__filename)}
+*/`;
+
+const themeCssVars = Object.entries(defaultBaseLensTheme.colors)
+  .map(([varName, value]) => `--${varName}: ${value};`);
+
+const content = `
+${banner}
+
+:root {
+${themeCssVars.join("\n")}
 }
+`;
+
+// Run
+console.info(`"Saving default Lens theme css-variables to "${outputCssFile}""`);
+fs.ensureFileSync(outputCssFile);
+fs.writeFile(outputCssFile, content);

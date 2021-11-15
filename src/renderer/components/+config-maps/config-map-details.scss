@@ -24,7 +24,7 @@
     margin-bottom: $margin * 2;
 
     .name {
-      color: $textColorSecondary;
+      color: var(--textColorSecondary);
       font-weight: $font-weight-bold;
       padding-bottom: $padding * 0.5;
     }

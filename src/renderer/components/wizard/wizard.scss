@@ -25,10 +25,10 @@
   --wizard-content-height: auto;
   --wizard-content-max-height: #{40 * $unit};
   --wizard-spacing: #{$padding * 3};
-  --wizard-step-bgc: #{$dialogBackground};
+  --wizard-step-bgc: var(--dialogBackground);
 
   width: var(--wizard-width);
-  color: $dialogTextColor;
+  color: var(--dialogTextColor);
 
   &.small {
     --wizard-width: #{45 * $unit};
@@ -45,7 +45,7 @@
   > .header {
     text-align: center;
     color: white;
-    background: $dialogHeaderBackground;
+    background: var(--dialogHeaderBackground);
     padding: var(--wizard-spacing);
     border-top-left-radius: $radius;
     border-top-right-radius: $radius;
@@ -95,7 +95,7 @@
     // buttons
     > :last-child {
       padding: var(--wizard-spacing);
-      background: $dialogFooterBackground;
+      background: var(--dialogFooterBackground);
       border-bottom-left-radius: $radius;
       border-bottom-right-radius: $radius;
 

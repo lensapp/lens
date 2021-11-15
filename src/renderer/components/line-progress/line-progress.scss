@@ -23,7 +23,7 @@
 .LineProgress {
   position: relative;
   border-radius: 2px;
-  background: $lineProgressBackground;
+  background: var(--lineProgressBackground);
   height: 3px;
 
   // line indicator

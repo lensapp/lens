@@ -22,9 +22,9 @@
 
 @mixin namespaceStatus {
   &.active {
-    color: $colorOk;
+    color: var(--colorOk);
   }
   &.terminating {
-    color: $colorError;
+    color: var(--colorError);
   }
 }

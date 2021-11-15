@@ -35,6 +35,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
+    "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",

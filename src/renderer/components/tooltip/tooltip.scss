@@ -21,10 +21,10 @@
 
 
 .Tooltip {
-  --bgc: #{$mainBackground};
+  --bgc: var(--mainBackground);
   --radius: #{$radius};
-  --color: #{$textColorAccent};
-  --border: 1px solid #{$borderColor};
+  --color: var(--textColorAccent);
+  --border: 1px solid var(--borderColor);
 
   // use positioning relative to viewport (window)
   // https://developer.mozilla.org/en-US/docs/Web/CSS/position
@@ -74,7 +74,7 @@
     }
 
     &.warning {
-      color: $colorError;
+      color: var(--colorError);
     }
 
     &.tableView {
@@ -85,12 +85,12 @@
       }
 
       .title {
-        color: $textColorAccent;
+        color: var(--textColorAccent);
         text-align: center;
       }
 
       .name {
-        color: $textColorAccent;
+        color: var(--textColorAccent);
         text-align: right;
         flex: 0 0 35%;
       }

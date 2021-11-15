@@ -37,7 +37,7 @@
       align-self: center;
 
       .LineProgress {
-        color: $lensBlue;
+        color: var(--blue);
       }
     }
 
@@ -46,7 +46,7 @@
       align-self: center;
 
       .LineProgress {
-        color: $lensMagenta;
+        color: var(--magenta);
       }
     }
 
@@ -55,7 +55,7 @@
       align-self: center;
 
       .LineProgress {
-        color: $golden;
+        color: var(--golden);
       }
     }
 

@@ -20,15 +20,15 @@
  */
 
 // PersistentVolumes
-$pv-bound: $colorOk;
-$pv-available: $colorSuccess;
-$pv-released: $colorWarning;
-$pv-failed: $colorError;
+$pv-bound: var(--colorOk);
+$pv-available: var(--colorSuccess);
+$pv-released: var(--colorWarning);
+$pv-failed: var(--colorError);
 
 // PersistentVolumeClaims
-$pvc-bound: $colorOk;
-$pvc-pending: $colorWarning;
-$pvc-lost: $colorError;
+$pvc-bound: var(--colorOk);
+$pvc-pending: var(--colorWarning);
+$pvc-lost: var(--colorError);
 
 // PersistentVolume Statuses
 $pv-status-color-list: (

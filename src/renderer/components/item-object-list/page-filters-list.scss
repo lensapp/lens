@@ -20,12 +20,12 @@
  */
 
 .PageFiltersList {
-  $bgc: $filterAreaBackground;
+  $bgc: var(--filterAreaBackground);
   $spacing: $padding * 1.5;
 
   position: relative;
   top: 1px;
-  border-top: 1px solid $borderFaintColor;
+  border-top: 1px solid var(--borderFaintColor);
   background: $bgc;
   padding: $spacing $padding * 2;
   font-size: $font-size-small;
@@ -36,7 +36,7 @@
   }
 
   &:not(:empty) {
-    border-bottom: 1px solid $borderFaintColor;
+    border-bottom: 1px solid var(--borderFaintColor);
   }
 
   > .header {

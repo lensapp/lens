@@ -21,8 +21,8 @@
 
 
 .Stepper {
-  --stepper-color: $contentColor;
-  --stepper-color-text: $textColorPrimary;
+  --stepper-color: var(--contentColor);
+  --stepper-color-text: var(--textColorPrimary);
   --stepper-color-active: var(--color-primary);
   --stepper-color-point: var(--stepper-color);
 
@@ -34,13 +34,13 @@
     text-align: center;
     &.active, &.done {
       .point {
-        color: $textColorAccent;
+        color: var(--textColorAccent);
         background: var(--stepper-color-active);
       }
     }
     &.active {
       .step-title {
-        color: $textColorAccent;
+        color: var(--textColorAccent);
       }
     }
     &.done > .line {

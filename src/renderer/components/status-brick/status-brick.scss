@@ -26,7 +26,7 @@
   width: $brickSize;
   height: $brickSize;
   margin-right: $margin;
-  background: $colorOk;
+  background: var(--colorOk);
   border-radius: 2px;
 
   &:last-child {

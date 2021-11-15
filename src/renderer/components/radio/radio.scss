@@ -30,7 +30,7 @@
 
     .Radio {
       display: inline-block;
-      border: 1px solid $borderFaintColor;
+      border: 1px solid var(--borderFaintColor);
       border-radius: $radius;
       text-align: center;
       padding: round($padding * .7) $padding;
@@ -41,21 +41,21 @@
         cursor: pointer;
         &:not(:active):focus {
           position: relative;
-          border-color: $primary;
-          box-shadow: inset 0 0 0 1px $primary;
+          border-color: var(--primary);
+          box-shadow: inset 0 0 0 1px var(--primary);
         }
       }
 
       &.checked {
-        background-color: $radioActiveBackground;
-        color: $textColorAccent;
+        background-color: var(--radioActiveBackground);
+        color: var(--textColorAccent);
         * {
           cursor: default;
         }
       }
 
       &:hover {
-        color: $textColorAccent
+        color: var(--textColorAccent)
       }
 
       + .Radio {
@@ -76,9 +76,9 @@
 .Radio {
   $tickSize: round(1.8 * $unit);
   $tickColor: currentColor;
-  $tickColorActive: $colorInfo;
-  $tickColorFocus: $colorInfo;
-  $labelColorActive: $textColorAccent;
+  $tickColorActive: var(--colorInfo);
+  $tickColorFocus: var(--colorInfo);
+  $labelColorActive: var(--textColorAccent);
 
   input[type="radio"] {
     display: none;

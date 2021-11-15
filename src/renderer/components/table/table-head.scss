@@ -20,13 +20,13 @@
  */
 
 .TableHead {
-  $border: 1px solid $layoutBackground;
+  $border: 1px solid var(--layoutBackground);
 
-  background-color: $tableHeaderBackground;
-  border-bottom-width: $tableHeaderBorderWidth;
+  background-color: var(--tableHeaderBackground);
+  border-bottom-width: var(--tableHeaderBorderWidth);
   border-bottom-style: solid;
-  border-bottom-color: $tableHeaderBorderColor;
-  color: $tableHeaderColor;
+  border-bottom-color: var(--tableHeaderBorderColor);
+  color: var(--tableHeaderColor);
   display: flex;
   flex-shrink: 0;
 

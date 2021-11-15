@@ -20,14 +20,14 @@
  */
 
 .Menu {
-  --bgc: #{$layoutBackground};
+  --bgc: var(--layoutBackground);
 
   position: absolute;
   display: flex;
   flex-direction: column;
   background: var(--bgc);
   list-style: none;
-  border: 1px solid $borderColor;
+  border: 1px solid var(--borderColor);
   z-index: 101;
   box-shadow: rgba(0,0,0,0.24) 0px 8px 16px 0px;
   border-radius: 4px;
@@ -63,9 +63,9 @@
 }
 
 .MenuItem {
-  --color: #{$textColorPrimary};
-  --color-active: #{$textColorAccent};
-  --bgc-active: #{$menuActiveBackground};
+  --color: var(--textColorPrimary);
+  --color-active: var(--textColorAccent);
+  --bgc-active: var(--menuActiveBackground);
   --spacing: #{$padding};
 
   position: relative;
@@ -85,7 +85,7 @@
   }
 
   &:focus {
-    outline: 2px solid $colorInfo;
+    outline: 2px solid var(--colorInfo);
   }
 
   &.active {
@@ -103,7 +103,7 @@
     padding: 0;
     height: 0;
     overflow: hidden;
-    border-top: 1px solid $contentColor;
+    border-top: 1px solid var(--contentColor);
     pointer-events: none;
   }
 
