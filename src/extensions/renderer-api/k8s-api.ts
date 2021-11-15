@@ -24,7 +24,7 @@ export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
 export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 export { KubeApi, forCluster, forRemoteCluster } from "../../common/k8s-api/kube-api";
-export { KubeObject } from "../../common/k8s-api/kube-object";
+export { KubeObject, KubeStatus } from "../../common/k8s-api/kube-object";
 export { Pod, podsApi, PodsApi } from "../../common/k8s-api/endpoints";
 export { Node, nodesApi, NodesApi } from "../../common/k8s-api/endpoints";
 export { Deployment, deploymentApi, DeploymentApi } from "../../common/k8s-api/endpoints";
