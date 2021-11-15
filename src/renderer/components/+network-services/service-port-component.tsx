@@ -164,7 +164,7 @@ export class ServicePortComponent extends React.Component<Props> {
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {port.toString()}
         </span>
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
+        <Button primary onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
         {this.waiting && (
           <Spinner />
         )}

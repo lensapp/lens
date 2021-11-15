@@ -170,7 +170,7 @@ export class PodContainerPort extends React.Component<Props> {
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
         </span>
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
+        <Button primary onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
         {this.waiting && (
           <Spinner />
         )}
