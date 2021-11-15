@@ -22,7 +22,7 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { action, computed, makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import type { DockTab } from "./dock.store";
@@ -64,26 +64,19 @@ export class EditResource extends React.Component<Props> {
       return ""; // wait until tab's data and kube-object resource are loaded
     }
 
-    const { draft } = editResourceStore.getData(this.tabId);
+    const editData = editResourceStore.getData(this.tabId);
 
-    if (typeof draft === "string") {
-      return draft;
+    if (typeof editData.draft === "string") {
+      return editData.draft;
     }
 
-    return yaml.dump(this.resource.toPlainObject()); // dump resource first time
+    const firstDraft = yaml.dump(this.resource.toPlainObject()); // dump resource first time
+
+    return editData.firstDraft = firstDraft;
   }
 
-  @action
-  saveDraft(draft: string | object) {
-    if (typeof draft === "object") {
-      draft = draft ? yaml.dump(draft) : undefined;
-    }
-
-    editResourceStore.setData(this.tabId, {
-      firstDraft: draft, // this must be before the next line
-      ...editResourceStore.getData(this.tabId),
-      draft,
-    });
+  saveDraft(draft: string) {
+    editResourceStore.getData(this.tabId).draft = draft;
   }
 
   onChange = (draft: string) => {
