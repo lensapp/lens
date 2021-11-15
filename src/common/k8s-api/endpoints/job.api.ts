@@ -121,14 +121,6 @@ export class Job extends WorkloadKubeObject {
 
     return [...containers].map(container => container.image);
   }
-
-  delete() {
-    const params: JsonApiParams = {
-      query: { propagationPolicy: "Background" },
-    };
-
-    return super.delete(params);
-  }
 }
 
 export class JobApi extends KubeApi<Job> {
