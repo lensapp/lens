@@ -55,16 +55,6 @@ describe("kube-object-menu", () => {
 
     render = renderFor(di);
 
-    // TODO: Remove illegal global overwrites for what should be a dependency somewhere.
-    // TODO: Remove usage of experimental browser API.
-    window.requestIdleCallback = (callback: IdleRequestCallback): number => {
-      callback(undefined);
-
-      return undefined;
-    };
-
-    window.cancelIdleCallback = () => {};
-
     di.override(clusterInjectable, {
       name: "Some name",
     });
