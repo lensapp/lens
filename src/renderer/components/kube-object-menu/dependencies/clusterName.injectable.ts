@@ -20,18 +20,15 @@
  */
 
 import { lifecycleEnum } from "@ogre-tools/injectable";
-import type { ICluster } from "../../../../main/cluster";
+import type { IHasClusterName } from "../../../../main/cluster";
 import type { IInjectable } from "@ogre-tools/injectable";
 import clusterInjectable from "./cluster.injectable";
 
 interface IDependencies {
-  cluster: ICluster;
+  cluster: IHasClusterName;
 }
 
-const clusterNameInjectable: IInjectable<
-  string | undefined,
-  IDependencies
-> = {
+const clusterNameInjectable: IInjectable<string | undefined, IDependencies> = {
   getDependencies: di => ({
     cluster: di.inject(clusterInjectable),
   }),
