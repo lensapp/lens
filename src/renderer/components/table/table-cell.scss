@@ -25,6 +25,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
+  &.menu {
+    @include table-cell-action;
+  }
+
+  &.scrollable {
+    @include hidden-scrollbar;
+    display: flex;
+    align-items: center;
+
+    :not(:last-of-type) {
+      margin-right: 0.5em;
+    }
+  }
+
   &.checkbox {
     display: flex;
     flex: 0 0 32px !important;

@@ -87,7 +87,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           { title: "Max Pods", className: "max-pods", sortBy: columnId.maxPods, id: columnId.maxPods },
           { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
-          { title: "Status", className: "status", id: columnId.status },
+          { title: "Status", className: "status scrollable", id: columnId.status },
         ]}
         renderTableContents={hpa => [
           hpa.getName(),
@@ -108,6 +108,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames(type.toLowerCase())}
                 expandable={false}
+                scrollable={true}
               />
             );
           }),

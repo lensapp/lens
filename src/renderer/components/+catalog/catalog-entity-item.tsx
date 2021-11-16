@@ -76,6 +76,7 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
     return this.labels
       .map(label => (
         <Badge
+          scrollable
           className={styles.badge}
           key={label}
           label={label}

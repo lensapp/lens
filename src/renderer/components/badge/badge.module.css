@@ -25,6 +25,18 @@
   max-width: 100%;
 }
 
+// might be used in a scrollable area with {overflow: auto}
+.badge.scrollable {
+  max-width: unset;
+
+  &:not(.isExpanded) {
+    white-space: unset;
+    overflow: unset;
+    text-overflow: unset;
+  }
+}
+
+
 .badge.interactive:hover {
   background-color: var(--mainBackground);
   cursor: pointer;

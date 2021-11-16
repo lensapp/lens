@@ -49,12 +49,6 @@
     position: relative;
     min-height: 200px;
   }
-
-  .TableCell {
-    &.menu {
-      @include table-cell-action;
-    }
-  }
 }
 
 .ItemListLayoutVisibilityMenu {
