@@ -19,10 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import "./kube-object-list-layout.scss";
+
 import React from "react";
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames, Disposer } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
@@ -32,6 +34,8 @@ import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
+import { Icon } from "../icon";
+import { TooltipPosition } from "../tooltip";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -53,6 +57,8 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
     makeObservable(this);
   }
 
+  @observable loadErrors: string[] = [];
+
   @computed get selectedItem() {
     return this.props.store.getByPath(kubeSelectedUrlParam.get());
   }
@@ -60,15 +66,45 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
   componentDidMount() {
     const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
+    const reactions: Disposer[] = [
+      reaction(() => clusterContext.contextNamespaces.length, () => {
+        // clear load errors
+        this.loadErrors.length = 0;
+      }),
+    ];
 
     if (subscribeStores) {
-      disposeOnUnmount(this, [
+      reactions.push(
         kubeWatchApi.subscribeStores(stores, {
           preload: true,
           namespaces: clusterContext.contextNamespaces,
+          onLoadFailure: error => this.loadErrors.push(String(error)),
         }),
-      ]);
+      );
     }
+
+    disposeOnUnmount(this, reactions);
+  }
+
+  renderLoadErrors() {
+    if (this.loadErrors.length === 0) {
+      return null;
+    }
+
+    return (
+      <Icon
+        material="warning"
+        className="load-error"
+        tooltip={{
+          children: (
+            <>
+              {this.loadErrors.map((error, index) => <p key={index}>{error}</p>)}
+            </>
+          ),
+          preferredPositions: TooltipPosition.BOTTOM,
+        }}
+      />
+    );
   }
 
   render() {
@@ -84,7 +120,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
         customizeHeader={[
-          ({ filters, searchProps, ...headerPlaceHolders }) => ({
+          ({ filters, searchProps, info, ...headerPlaceHolders }) => ({
             filters: (
               <>
                 {filters}
@@ -95,6 +131,12 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
               ...searchProps,
               placeholder: `Search ${placeholderString}...`,
             },
+            info: (
+              <>
+                {info}
+                {this.renderLoadErrors()}
+              </>
+            ),
             ...headerPlaceHolders,
           }),
           ...[customizeHeader].flat(),

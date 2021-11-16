@@ -27,7 +27,7 @@ import type { ClusterContext } from "./cluster-context";
 
 import plimit from "p-limit";
 import { comparer, observable, reaction, makeObservable } from "mobx";
-import { autoBind, Disposer, noop } from "../utils";
+import { autoBind, disposer, Disposer, noop } from "../utils";
 import type { KubeApi } from "./kube-api";
 import type { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../vars";
@@ -38,11 +38,38 @@ export interface IKubeWatchEvent<T extends KubeJsonApiData> {
   object?: T;
 }
 
-export interface IKubeWatchSubscribeStoreOptions {
-  namespaces?: string[]; // default: all accessible namespaces
-  preload?: boolean; // preload store items, default: true
-  waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
-  loadOnce?: boolean; // check store.isLoaded to skip loading if done already, default: false
+interface KubeWatchPreloadOptions {
+  /**
+   * The namespaces to watch
+   * @default all-accessible
+   */
+  namespaces?: string[];
+
+  /**
+   * Whether to skip loading if the store is already loaded
+   * @default false
+   */
+  loadOnce?: boolean;
+
+  /**
+   * A function that is called when listing fails. If set then blocks errors
+   * being rejected with
+   */
+  onLoadFailure?: (err: any) => void;
+}
+
+export interface KubeWatchSubscribeStoreOptions extends KubeWatchPreloadOptions {
+  /**
+   * Whether to subscribe only after loading all stores
+   * @default true
+   */
+  waitUntilLoaded?: boolean;
+
+  /**
+   * Whether to preload the stores before watching
+   * @default true
+   */
+  preload?: boolean;
 }
 
 export interface IKubeWatchLog {
@@ -63,15 +90,15 @@ export class KubeWatchApi {
     return Boolean(this.context?.cluster.isAllowedResource(api.kind));
   }
 
-  preloadStores(stores: KubeObjectStore<KubeObject>[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
+  preloadStores(stores: KubeObjectStore<KubeObject>[], { loadOnce, namespaces, onLoadFailure }: KubeWatchPreloadOptions = {}) {
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
 
     for (const store of stores) {
       preloading.push(limitRequests(async () => {
-        if (store.isLoaded && opts.loadOnce) return; // skip
+        if (store.isLoaded && loadOnce) return; // skip
 
-        return store.loadAll({ namespaces: opts.namespaces });
+        return store.loadAll({ namespaces, onLoadFailure });
       }));
     }
 
@@ -81,22 +108,22 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores(stores: KubeObjectStore<KubeObject>[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
-    const { preload = true, waitUntilLoaded = true, loadOnce = false } = opts;
+  subscribeStores(stores: KubeObjectStore<KubeObject>[], opts: KubeWatchSubscribeStoreOptions = {}): Disposer {
+    const { preload = true, waitUntilLoaded = true, loadOnce = false, onLoadFailure } = opts;
     const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
-    const unsubscribeList: Function[] = [];
+    const unsubscribeStores = disposer();
     let isUnsubscribed = false;
 
-    const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
+    const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce, onLoadFailure });
     let preloading = preload && load();
     let cancelReloading: Disposer = noop;
 
     const subscribe = () => {
-      if (isUnsubscribed) return;
+      if (isUnsubscribed) {
+        return;
+      }
 
-      stores.forEach((store) => {
-        unsubscribeList.push(store.subscribe());
-      });
+      unsubscribeStores.push(...stores.map(store => store.subscribe({ onLoadFailure })));
     };
 
     if (preloading) {
@@ -114,8 +141,7 @@ export class KubeWatchApi {
       // reload stores only for context namespaces change
       cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
         preloading?.cancelLoading();
-        unsubscribeList.forEach(unsubscribe => unsubscribe());
-        unsubscribeList.length = 0;
+        unsubscribeStores();
         preloading = load(namespaces);
         preloading.loading.then(subscribe);
       }, {
@@ -129,8 +155,7 @@ export class KubeWatchApi {
       isUnsubscribed = true;
       cancelReloading();
       preloading?.cancelLoading();
-      unsubscribeList.forEach(unsubscribe => unsubscribe());
-      unsubscribeList.length = 0;
+      unsubscribeStores();
     };
   }
 
