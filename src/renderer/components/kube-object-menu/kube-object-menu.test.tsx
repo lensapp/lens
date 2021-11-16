@@ -292,7 +292,7 @@ const addDynamicMenuItem = ({
   apiVersions,
   kind,
 }: {
-  di: any;
+  di: IConfigurableDependencyInjectionContainer;
   apiVersions: string[];
   kind: string;
 }) => {
@@ -304,7 +304,7 @@ const addDynamicMenuItem = ({
     components: { MenuItem: MenuItemComponent },
   };
 
-  const kubeObjectMenuRegistry: KubeObjectMenuRegistry = di.inject(
+  const kubeObjectMenuRegistry = di.inject(
     kubeObjectMenuRegistryInjectable,
   );
 

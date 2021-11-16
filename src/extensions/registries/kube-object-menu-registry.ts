@@ -20,7 +20,7 @@
  */
 
 import type React from "react";
-import { BaseRegistry } from "./base-registry";
+import { BaseRegistry, IBaseRegistry } from "./base-registry";
 
 export interface KubeObjectMenuComponents {
   MenuItem: React.ComponentType<any>;
@@ -32,7 +32,7 @@ export interface KubeObjectMenuRegistration {
   components: KubeObjectMenuComponents;
 }
 
-export interface IKubeObjectMenuRegistry {
+export interface IKubeObjectMenuRegistry extends IBaseRegistry<KubeObjectMenuRegistration> {
   getItemsForKind(kind: string, apiVersion: string): any;
 }
 
