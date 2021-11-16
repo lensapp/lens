@@ -245,17 +245,40 @@ describe("KubeApi", () => {
       });
     });
 
-    it("sends correct request", async () => {
+    it("sends correct request with empty namespace", async () => {
       expect.hasAssertions();
       (fetch as any).mockResponse(async (request: Request) => {
-        console.log(request.url);
+        expect(request.method).toEqual("DELETE");
+        expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/pods/foo?propagationPolicy=Background");
+
+        return {};
+      });
+
+      await api.delete({ name: "foo", namespace: "" });
+    });
+
+    it("sends correct request without namespace", async () => {
+      expect.hasAssertions();
+      (fetch as any).mockResponse(async (request: Request) => {
         expect(request.method).toEqual("DELETE");
         expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background");
 
         return {};
       });
 
-      await api.delete({ name: "foo", namespace: "default" });
+      await api.delete({ name: "foo" });
+    });
+
+    it("sends correct request with namespace", async () => {
+      expect.hasAssertions();
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("DELETE");
+        expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods/foo?propagationPolicy=Background");
+
+        return {};
+      });
+
+      await api.delete({ name: "foo", namespace: "kube-system" });
     });
 
     it("allows to change propagationPolicy", async () => {

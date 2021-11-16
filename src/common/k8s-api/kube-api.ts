@@ -504,7 +504,7 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async delete({ name = "", namespace = "default", propagationPolicy = "Background" }: { name: string, namespace: string, propagationPolicy?: PropagationPolicy }) {
+  async delete({ name = "", namespace = "default", propagationPolicy = "Background" }: { name: string, namespace?: string, propagationPolicy?: PropagationPolicy }) {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
     const reqInit = {
