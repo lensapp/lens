@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction } from "mobx";
+import { action, comparer, computed, IReactionDisposer, makeObservable, reaction } from "mobx";
 import { autoBind, createStorage, noop, ToggleSet } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { Namespace, namespacesApi } from "../../../common/k8s-api/endpoints/namespaces.api";
@@ -45,10 +45,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.autoLoadAllowedNamespaces();
   }
 
-  public onContextChange(callback: (namespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
+  public onContextChange(callback: (namespaces: string[]) => void, opts: { fireImmediately?: boolean } = {}): IReactionDisposer {
     return reaction(() => Array.from(this.contextNamespaces), callback, {
+      fireImmediately: opts.fireImmediately,
       equals: comparer.shallow,
-      ...opts,
     });
   }
 
@@ -205,7 +205,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
    * explicitly deselected.
    * @param namespace The name of a namespace
    */
-  toggleSingle(namespace: string){
+  toggleSingle(namespace: string) {
     const nextState = new ToggleSet(this.contextNamespaces);
 
     nextState.toggle(namespace);

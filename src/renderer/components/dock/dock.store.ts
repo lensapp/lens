@@ -20,7 +20,7 @@
  */
 
 import * as uuid from "uuid";
-import { action, comparer, computed, IReactionOptions, makeObservable, observable, reaction, runInAction } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, runInAction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
@@ -94,7 +94,11 @@ export interface DockTabChangeEvent {
   prevTab?: DockTab;
 }
 
-export interface DockTabChangeEventOptions extends IReactionOptions {
+export interface DockTabChangeEventOptions {
+  /**
+   * apply a callback right after initialization
+   */
+  fireImmediately?: boolean;
   /**
    * filter: by dockStore.selectedTab.kind == tabKind
    */
@@ -195,11 +199,13 @@ export class DockStore implements DockStorageState {
     if (this.height > this.maxHeight) this.height = this.maxHeight;
   }
 
-  onResize(callback: () => void, options?: IReactionOptions) {
-    return reaction(() => [this.height, this.fullSize], callback, options);
+  onResize(callback: () => void, opts: { fireImmediately?: boolean } = {}) {
+    return reaction(() => [this.height, this.fullSize], callback, {
+      fireImmediately: opts.fireImmediately,
+    });
   }
 
-  onTabClose(callback: (evt: DockTabCloseEvent) => void, options: IReactionOptions = {}) {
+  onTabClose(callback: (evt: DockTabCloseEvent) => void, opts: { fireImmediately?: boolean } = {}) {
     return reaction(() => dockStore.tabs.map(tab => tab.id), (tabs: TabId[], prevTabs?: TabId[]) => {
       if (!Array.isArray(prevTabs)) {
         return; // tabs not yet modified
@@ -214,7 +220,7 @@ export class DockStore implements DockStorageState {
       }
     }, {
       equals: comparer.structural,
-      ...options,
+      fireImmediately: opts.fireImmediately,
     });
   }
 

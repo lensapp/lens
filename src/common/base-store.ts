@@ -23,7 +23,7 @@ import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { ipcMain, ipcRenderer } from "electron";
-import { IReactionOptions, makeObservable, reaction, runInAction } from "mobx";
+import { IEqualsComparer, makeObservable, reaction, runInAction } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
@@ -33,7 +33,10 @@ import { kebabCase } from "lodash";
 import { AppPaths } from "./app-paths";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
-  syncOptions?: IReactionOptions;
+  syncOptions?: {
+    fireImmediately?: boolean;
+    equals?: IEqualsComparer<T>;
+  };
 }
 
 /**
