@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { when, computed, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry, CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { ItemStore } from "../../../common/item.store";
@@ -66,5 +66,36 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
     }
 
     return this.loadItems(() => this.entities);
+  }
+
+  /**
+   * Override ItemStore::loadItems, the only difference is that
+   * if isLoading is true, we await for it to be false and then continue
+   * loading.
+   * This avoids a bug where if there were two or more concurrent loadItems() calls,
+   * only the first one would complete.
+   */
+  protected async loadItems(
+    request: (() => Promise<CatalogEntityItem<CatalogEntity>[] | any>) | (() => CatalogEntityItem<CatalogEntity>[] | any),
+    sortItems = true,
+  ) {
+    if (this.isLoading) {
+      await when(() => !this.isLoading);
+    }
+
+    this.isLoading = true;
+
+    try {
+      let items = await request();
+
+      if (sortItems) {
+        items = this.sortItems(items);
+      }
+      this.items.replace(items);
+
+      this.isLoaded = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 }

@@ -171,7 +171,7 @@ export class CatalogEntityRegistry {
    * @param fn The function that should return a truthy value if that entity should be sent currently "active"
    * @returns A function to remove that filter
    */
-  addCatalogFilter(fn: EntityFilter): Disposer {
+  @action addCatalogFilter(fn: EntityFilter): Disposer {
     this.filters.add(fn);
 
     return once(() => void this.filters.delete(fn));
@@ -182,9 +182,7 @@ export class CatalogEntityRegistry {
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    logger.debug(`[CATALOG-ENTITY-REGISTRY]: adding onBeforeRun hook`);
-
+  @action addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
     this.onBeforeRunHooks.add(onBeforeRun);
 
     return once(() => void this.onBeforeRunHooks.delete(onBeforeRun));
