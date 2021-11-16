@@ -112,26 +112,21 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @boundMethod
   refreshPosition() {
-    const { preferredPositions } = this.props;
+    const { preferredPositions = [] } = this.props;
     const { elem, targetElem } = this;
 
-    let positions = new Set<TooltipPosition>([
-      TooltipPosition.RIGHT,
-      TooltipPosition.BOTTOM,
-      TooltipPosition.TOP,
-      TooltipPosition.LEFT,
-      TooltipPosition.TOP_RIGHT,
-      TooltipPosition.TOP_LEFT,
-      TooltipPosition.BOTTOM_RIGHT,
-      TooltipPosition.BOTTOM_LEFT,
-    ]);
+    // Start with the preferred positions
+    const positions = new Set([preferredPositions].flat());
 
-    if (preferredPositions) {
-      positions = new Set([
-        ...[preferredPositions].flat(),
-        ...positions,
-      ]);
-    }
+    // Then add the default ordering, these won't override the above
+    positions.add(TooltipPosition.RIGHT);
+    positions.add(TooltipPosition.BOTTOM);
+    positions.add(TooltipPosition.TOP);
+    positions.add(TooltipPosition.LEFT);
+    positions.add(TooltipPosition.TOP_RIGHT);
+    positions.add(TooltipPosition.TOP_LEFT);
+    positions.add(TooltipPosition.BOTTOM_RIGHT);
+    positions.add(TooltipPosition.BOTTOM_LEFT);
 
     // reset position first and get all possible client-rect area for tooltip element
     this.setPosition({ left: 0, top: 0 });
@@ -178,35 +173,35 @@ export class Tooltip extends React.Component<TooltipProps> {
     const bottomCenter = targetBounds.bottom + offset;
 
     switch (position) {
-      case "top":
+      case TooltipPosition.TOP:
         left = horizontalCenter;
         top = topCenter;
         break;
-      case "bottom":
+      case TooltipPosition.BOTTOM:
         left = horizontalCenter;
         top = bottomCenter;
         break;
-      case "left":
+      case TooltipPosition.LEFT:
         top = verticalCenter;
         left = targetBounds.left - tooltipBounds.width - offset;
         break;
-      case "right":
+      case TooltipPosition.RIGHT:
         top = verticalCenter;
         left = targetBounds.right + offset;
         break;
-      case "top_left":
+      case TooltipPosition.TOP_LEFT:
         left = targetBounds.left;
         top = topCenter;
         break;
-      case "top_right":
+      case TooltipPosition.TOP_RIGHT:
         left = targetBounds.right - tooltipBounds.width;
         top = topCenter;
         break;
-      case "bottom_left":
+      case TooltipPosition.BOTTOM_LEFT:
         top = bottomCenter;
         left = targetBounds.left;
         break;
-      case "bottom_right":
+      case TooltipPosition.BOTTOM_RIGHT:
         top = bottomCenter;
         left = targetBounds.right - tooltipBounds.width;
         break;

@@ -184,7 +184,17 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
       const res = api.list({ reqInit }, this.query);
 
       if (onLoadFailure) {
-        return res.catch(error => (onLoadFailure(error.message), []));
+        try {
+          return await res;
+        } catch (error) {
+          onLoadFailure(error?.message || error?.toString() || "Unknown error");
+
+          // reset the store because we are loading all, so that nothing is displayed
+          this.items.clear();
+          this.selectedItemsIds.clear();
+
+          return [];
+        }
       }
 
       return res;
@@ -346,7 +356,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   async patch(item: T, patch: Patch): Promise<T> {
     return this.postUpdate(
       await this.api.patch(
-        { 
+        {
           name: item.getName(), namespace: item.getNs(),
         },
         patch,
@@ -358,7 +368,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   async update(item: T, data: Partial<T>): Promise<T> {
     return this.postUpdate(
       await this.api.update(
-        { 
+        {
           name: item.getName(), namespace: item.getNs(),
         },
         data,

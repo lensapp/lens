@@ -35,6 +35,7 @@ import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
+import { TooltipPosition } from "../tooltip";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -77,7 +78,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
         kubeWatchApi.subscribeStores(stores, {
           preload: true,
           namespaces: clusterContext.contextNamespaces,
-          onLoadFailure: error => this.loadErrors.push(error),
+          onLoadFailure: error => this.loadErrors.push(String(error)),
         }),
       );
     }
@@ -90,13 +91,20 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
       return null;
     }
 
-    const tooltip = (
-      <>
-        {this.loadErrors.map((error, index) => <p key={index}>{error}</p>)}
-      </>
+    return (
+      <Icon
+        material="warning"
+        className="load-error"
+        tooltip={{
+          children: (
+            <>
+              {this.loadErrors.map((error, index) => <p key={index}>{error}</p>)}
+            </>
+          ),
+          preferredPositions: TooltipPosition.BOTTOM,
+        }}
+      />
     );
-
-    return <Icon material="warning" className="load-error" tooltip={tooltip}/>;
   }
 
   render() {
