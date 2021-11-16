@@ -27,6 +27,9 @@ import * as Util from "./utils";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
 import logger from "../../common/logger";
+import { KubeObject } from "../../common/k8s-api/kube-object";
+
+const K8sApi = { KubeObject };
 
 export {
   App,
@@ -35,5 +38,6 @@ export {
   Store,
   Types,
   Util,
+  K8sApi,
   logger,
 };
