@@ -29,7 +29,7 @@
   list-style: none;
   border: 1px solid var(--borderColor);
   z-index: 101;
-  box-shadow: rgba(0,0,0,0.24) 0px 8px 16px 0px;
+  box-shadow: rgb(0 0 0 / 17%) 0px 6px 9px 0px;
   border-radius: 4px;
 
   &.portal {
@@ -64,19 +64,28 @@
 
 .MenuItem {
   --color: var(--textColorPrimary);
-  --color-active: var(--textColorAccent);
+  --color-active: white;
   --bgc-active: var(--menuActiveBackground);
-  --spacing: #{$padding};
 
   position: relative;
   display: flex;
   align-items: center;
   color: var(--color);
-  padding: var(--spacing);
+  padding: 6px var(--padding);
+  margin-bottom: -3px;
   white-space: nowrap;
-  transition: 250ms background;
   text-decoration: none;
   text-overflow: ellipsis;
+  border-radius: 6px;
+  border: 3px solid var(--bgc);
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &:not(.disabled) {
+    cursor: pointer;
+  }
 
   &:hover:not(.disabled) {
     color: var(--color-active);
@@ -84,14 +93,9 @@
     cursor: pointer;
   }
 
-  &:focus {
-    outline: 2px solid var(--colorInfo);
-  }
-
-  &.active {
+  &.active, &:focus {
     color: var(--color-active);
     background-color: var(--bgc-active);
-    cursor: default;
   }
 
   &.disabled {
@@ -112,5 +116,11 @@
       margin-left: 0;
       margin-right: $padding;
     }
+  }
+}
+
+.theme-light {
+  .Menu {
+    border: 1px solid var(--borderColor);
   }
 }
