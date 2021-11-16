@@ -200,7 +200,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   /**
    * These must be RFC6902 compliant paths
    */
-  private static readonly nonEditiablePathPrefixes = [
+  private static readonly nonEditablePathPrefixes = [
     "/metadata/managedFields",
     "/status",
   ];
@@ -211,7 +211,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     "/metadata/selfLink",
     "/metadata/resourceVersion",
     "/metadata/uid",
-    ...KubeObject.nonEditiablePathPrefixes,
+    ...KubeObject.nonEditablePathPrefixes,
   ]);
 
   constructor(data: KubeJsonApiData) {
@@ -315,7 +315,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
         throw new Error(`Failed to update ${this.kind}: JSON pointer ${op.path} has been modified`);
       }
 
-      for (const pathPrefix of KubeObject.nonEditiablePathPrefixes) {
+      for (const pathPrefix of KubeObject.nonEditablePathPrefixes) {
         if (op.path.startsWith(`${pathPrefix}/`)) {
           throw new Error(`Failed to update ${this.kind}: Child JSON pointer of ${op.path} has been modified`);
         }
