@@ -136,13 +136,9 @@
       width: 100%;
       max-width: 740px;
       min-width: 460px;
-      padding: 60px 40px 80px;
-
-      > section {
-        &:last-of-type {
-          margin-bottom: 80px;
-        }
-      }
+      padding: 60px 40px 0;
+      height: max-content;
+      margin-bottom: 60px;
     }
 
     > .toolsRegion {
