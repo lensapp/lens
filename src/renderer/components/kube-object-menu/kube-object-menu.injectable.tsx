@@ -19,18 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObjectMenu, KubeObjectMenuDependencies } from "./kube-object-menu";
+import React from "react";
+
+import {
+  KubeObjectMenu,
+  KubeObjectMenuDependencies,
+  KubeObjectMenuProps,
+} from "./kube-object-menu";
+
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { IComponentInjectable } from "@ogre-tools/injectable";
+import type { IInjectable } from "@ogre-tools/injectable";
 import apiManagerInjectable from "./dependencies/apiManager.injectable";
-import clusterNameInjectable  from "./dependencies/clusterName.injectable";
+import clusterNameInjectable from "./dependencies/clusterName.injectable";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
 import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
 import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
 
-const KubeObjectMenuInjectable: IComponentInjectable<
-  typeof KubeObjectMenu,
-  KubeObjectMenuDependencies<KubeObject>
+const KubeObjectMenuInjectable: IInjectable<
+  JSX.Element,
+  KubeObjectMenuDependencies<KubeObject>,
+  KubeObjectMenuProps<KubeObject>
 > = {
   getDependencies: di => ({
     clusterName: di.inject(clusterNameInjectable),
@@ -40,7 +48,9 @@ const KubeObjectMenuInjectable: IComponentInjectable<
     hideDetails: di.inject(hideDetailsInjectable),
   }),
 
-  instantiate: KubeObjectMenu,
+  instantiate: (dependencies, props) => (
+    <KubeObjectMenu<KubeObject> {...dependencies} {...props} />
+  ),
 };
 
 export default KubeObjectMenuInjectable;
