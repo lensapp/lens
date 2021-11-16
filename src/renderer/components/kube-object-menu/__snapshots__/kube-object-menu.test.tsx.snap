@@ -31,7 +31,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
           <span
             class="title"
           >
-            Remove
+            Delete
           </span>
         </li>
       </ul>
@@ -79,7 +79,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
           <span
             class="title"
           >
-            Remove
+            Delete
           </span>
         </li>
       </ul>
@@ -180,7 +180,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
           <span
             class="title"
           >
-            Remove
+            Delete
           </span>
         </li>
       </ul>
@@ -281,7 +281,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           <span
             class="title"
           >
-            Remove
+            Delete
           </span>
         </li>
       </ul>
