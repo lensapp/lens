@@ -1943,19 +1943,7 @@
 <tbody>
 <tr>
 <td align="left"><code>options</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>options.merge?</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-<tr>
-<td align="left"><code>options.namespaces?</code></td>
-<td align="left"><code>string</code>[]</td>
-</tr>
-<tr>
-<td align="left"><code>options.reqInit?</code></td>
-<td align="left"><code>RequestInit</code></td>
+<td align="left"><code>KubeObjectStoreLoadAllParams</code></td>
 </tr>
 </tbody>
 </table>
@@ -2312,7 +2300,22 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#sortitems">sortItems</a></p>
 <hr />
 <h3 id="subscribe">subscribe<a class="headerlink" href="#subscribe" title="Permanent link">#</a></h3>
-<p>▸ <strong>subscribe</strong>(): () =&gt; <code>void</code></p>
+<p>▸ <strong>subscribe</strong>(<code>opts?</code>): () =&gt; <code>void</code></p>
+<h4 id="parameters_32">Parameters<a class="headerlink" href="#parameters_32" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>opts</code></td>
+<td align="left"><code>KubeObjectStoreSubscribeParams</code></td>
+</tr>
+</tbody>
+</table>
 <h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
 <p><code>fn</code></p>
 <p>▸ (): <code>void</code></p>
@@ -2323,7 +2326,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="toggleselection">toggleSelection<a class="headerlink" href="#toggleselection" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleSelection</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_32">Parameters<a class="headerlink" href="#parameters_32" title="Permanent link">#</a></h4>
+<h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2345,7 +2348,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="toggleselectionall">toggleSelectionAll<a class="headerlink" href="#toggleselectionall" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleSelectionAll</strong>(<code>visibleItems?</code>): <code>void</code></p>
-<h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
+<h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2367,7 +2370,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="unselect">unselect<a class="headerlink" href="#unselect" title="Permanent link">#</a></h3>
 <p>▸ <strong>unselect</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
+<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2389,7 +2392,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
+<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2422,7 +2425,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="updateitem">updateItem<a class="headerlink" href="#updateitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
+<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
