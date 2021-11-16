@@ -26,7 +26,7 @@
   }
 
   :global(.TableRow):hover .pinIcon {
-    display: block;
+    opacity: 1;
   }
 }
 
@@ -61,10 +61,9 @@
   }
 
   .pinIcon {
-    position: absolute;
-    right: 0;
     transition: none;
-    display: none;
+    opacity: 0;
+    margin-left: var(--padding);
 
     &:hover {
       /* Drop styles defined for <Icon/>  */
