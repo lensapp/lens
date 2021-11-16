@@ -63,8 +63,9 @@ import { ensureDir } from "fs-extra";
 import { Router } from "./router";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
-import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
+import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
+import { ShellSession } from "./shell-session/shell-session";
 
 injectSystemCAs();
 
@@ -122,7 +123,7 @@ app.on("second-instance", (event, argv) => {
   WindowManager.getInstance(false)?.ensureMainWindow();
 });
 
-app.on("ready", async () => {  
+app.on("ready", async () => {
   logger.info(`🚀 Starting ${productName} from "${AppPaths.get("exe")}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
@@ -134,6 +135,7 @@ app.on("ready", async () => {
   registerFileProtocol("static", __static);
 
   PrometheusProviderRegistry.createInstance();
+  ShellRequestAuthenticator.createInstance().init();
   initializers.initPrometheusProviderRegistry();
 
   /**
@@ -227,6 +229,7 @@ app.on("ready", async () => {
   onQuitCleanup.push(
     initMenu(windowManager),
     initTray(windowManager),
+    () => ShellSession.cleanup(),
   );
 
   installDeveloperTools();

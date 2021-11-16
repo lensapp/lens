@@ -39,16 +39,16 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $tableBgcSelected !important;
+        background-color: var(--tableBgcSelected) !important;
       }
 
       &.selected {
-        background-color: $tableBgcSelected;
-        color: $tableSelectedRowColor;
+        background-color: var(--tableBgcSelected);
+        color: var(--tableSelectedRowColor);
 
         &:before {
           content: "";
-          background: $primary;
+          background: var(--primary);
           position: absolute;
           left: 0;
           top: 0;
@@ -62,7 +62,7 @@
   &.striped {
     .TableRow {
       &:nth-child(odd) {
-        background-color: $tableBgcStripe;
+        background-color: var(--tableBgcStripe);
       }
     }
   }

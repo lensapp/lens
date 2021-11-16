@@ -331,6 +331,14 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await cleanup();
   }, 10*60*1000);
 
+  it("shows cluster context menu in sidebar", async () => {
+    await frame.click(`[data-testid="sidebar-cluster-dropdown"]`);
+    await frame.waitForSelector(`.Menu >> text="Add to Hotbar"`);
+    await frame.waitForSelector(`.Menu >> text="Settings"`);
+    await frame.waitForSelector(`.Menu >> text="Disconnect"`);
+    await frame.waitForSelector(`.Menu >> text="Delete"`);
+  });
+
   it("should navigate around common cluster pages", async () => {
     for (const test of commonPageTests) {
       if (isTopPageTest(test)) {
@@ -361,6 +369,8 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await frame.waitForSelector(mainPageSelector, { state: "hidden" });
     }
   }, 10*60*1000);
+
+  
 
   it("show logs and highlight the log search entries", async () => {
     await frame.click(`a[href="/workloads"]`);

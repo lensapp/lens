@@ -22,10 +22,8 @@
 import { shellEnv } from "./utils/shell-env";
 import os from "os";
 import { app } from "electron";
-
-interface Env {
-  [key: string]: string;
-}
+import logger from "./logger";
+import { isSnap } from "../common/vars";
 
 /**
  * shellSync loads what would have been the environment if this application was
@@ -33,12 +31,7 @@ interface Env {
  * useful on macos where this always needs to be done.
  */
 export async function shellSync() {
-  const { shell } = os.userInfo();
-  let envVars = {};
-
-  envVars = await shellEnv(shell);
-
-  const env: Env = JSON.parse(JSON.stringify(envVars));
+  const env = await shellEnv(os.userInfo().shell);
 
   if (!env.LANG) {
     // the LANG env var expects an underscore instead of electron's dash
@@ -47,9 +40,8 @@ export async function shellSync() {
     env.LANG += ".UTF-8";
   }
 
-  // Overwrite PATH on darwin
-  if (process.env.NODE_ENV === "production" && process.platform === "darwin") {
-    process.env["PATH"] = env.PATH;
+  if (!isSnap) {
+    process.env.PATH = env.PATH;
   }
 
   // The spread operator allows joining of objects. The precedence is last to first.
@@ -57,4 +49,6 @@ export async function shellSync() {
     ...env,
     ...process.env,
   };
+
+  logger.debug(`[SHELL-SYNC]: Synced shell env, and updating`, env, process.env);
 }

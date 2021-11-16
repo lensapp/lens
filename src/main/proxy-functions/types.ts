@@ -21,9 +21,11 @@
 
 import type http from "http";
 import type net from "net";
+import type { Cluster } from "../cluster";
 
 export interface ProxyApiRequestArgs {
   req: http.IncomingMessage,
   socket: net.Socket,
   head: Buffer,
+  cluster: Cluster,
 }

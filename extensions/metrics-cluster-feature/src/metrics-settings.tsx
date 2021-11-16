@@ -61,14 +61,14 @@ export class MetricsSettings extends React.Component<Props> {
     persistence: {
       enabled: false,
       storageClass: null,
-      size: "20G",
+      size: "20GiB",
     },
     nodeExporter: {
       enabled: false,
     },
     retention: {
       time: "2d",
-      size: "5GB",
+      size: "5GiB",
     },
     kubeStateMetrics: {
       enabled: false,

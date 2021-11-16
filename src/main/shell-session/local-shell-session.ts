@@ -40,7 +40,7 @@ export class LocalShellSession extends ShellSession {
     const shell = env.PTYSHELL;
     const args = await this.getShellArgs(shell);
 
-    super.open(env.PTYSHELL, args, env);
+    await this.openShellProcess(env.PTYSHELL, args, env);
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {

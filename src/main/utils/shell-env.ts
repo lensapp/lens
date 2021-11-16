@@ -22,9 +22,7 @@
 import shellEnvironment from "shell-env";
 import logger from "../logger";
 
-export interface EnvironmentVariables {
-  readonly [key: string]: string;
-}
+export type EnvironmentVariables = Record<string, string>;
 
 let shellSyncFailed = false;
 
@@ -40,17 +38,15 @@ let shellSyncFailed = false;
  * returned if the call fails.
  */
 export async function shellEnv(shell?: string, forceRetry = false) : Promise<EnvironmentVariables> {
-  let envVars = {};
-
   if (forceRetry) {
     shellSyncFailed = false;
   }
 
   if (!shellSyncFailed) {
     try {
-      envVars = await Promise.race([
+      return await Promise.race([
         shellEnvironment(shell),
-        new Promise((_resolve, reject) => setTimeout(() => {
+        new Promise<EnvironmentVariables>((_resolve, reject) => setTimeout(() => {
           reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
         }, 30_000)),
       ]);
@@ -62,5 +58,5 @@ export async function shellEnv(shell?: string, forceRetry = false) : Promise<Env
     logger.error("shellSync(): Resolving shell environment took too long. Please review your shell configuration.");
   }
 
-  return envVars;
+  return {};
 }

@@ -24,7 +24,7 @@
 
   position: relative;
   text-align: center;
-  background: $clusterMenuBackground;
+  background: var(--clusterMenuBackground);
   padding-top: 1px;
   width: var(--hotbar-width);
   overflow: hidden;

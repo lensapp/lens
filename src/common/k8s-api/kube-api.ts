@@ -37,6 +37,7 @@ import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
+import type { Patch } from "rfc6902";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -97,6 +98,8 @@ export interface ILocalKubeApiConfig {
   }
 }
 
+export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
+
 /**
  * @deprecated
  */
@@ -115,7 +118,7 @@ export interface IRemoteKubeApiConfig {
   }
 }
 
-export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+export function forCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): KubeApi<T> {
   const url = new URL(apiBase.config.serverAddress);
   const request = new KubeJsonApi({
     serverAddress: apiBase.config.serverAddress,
@@ -127,15 +130,18 @@ export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, k
     },
   });
 
-  return new KubeApi({
+  if (!apiClass) {
+    apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y;
+  }
+
+  return new apiClass({
     objectConstructor: kubeClass,
     request,
   });
 }
 
-export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+export function forRemoteCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): Y {
   const reqInit: RequestInit = {};
-
   const agentOptions: AgentOptions = {};
 
   if (config.cluster.skipTLSVerify === true) {
@@ -172,8 +178,12 @@ export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiCon
     } : {}),
   }, reqInit);
 
-  return new KubeApi({
-    objectConstructor: kubeClass,
+  if (!apiClass) {
+    apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y;
+  }
+
+  return new apiClass({
+    objectConstructor: kubeClass as KubeObjectConstructor<T>,
     request,
   });
 }
@@ -200,6 +210,14 @@ export type KubeApiWatchOptions = {
   retry?: boolean;
 };
 
+export type KubeApiPatchType = "merge" | "json" | "strategic";
+
+const patchTypeHeaders: Record<KubeApiPatchType, string> = {
+  "merge": "application/merge-patch+json",
+  "json": "application/json-patch+json",
+  "strategic": "application/strategic-merge-patch+json",
+};
+
 export class KubeApi<T extends KubeObject> {
   readonly kind: string;
   readonly apiBase: string;
@@ -224,10 +242,7 @@ export class KubeApi<T extends KubeObject> {
       isNamespaced = options.objectConstructor?.namespaced,
     } = options || {};
 
-    if (!options.apiBase) {
-      options.apiBase = objectConstructor.apiBase;
-    }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase);
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase || objectConstructor.apiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
@@ -471,11 +486,34 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async delete({ name = "", namespace = "default" }) {
+  async patch({ name = "", namespace = "default" } = {}, data?: Partial<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
 
-    return this.request.del(apiUrl);
+    const res = await this.request.patch(apiUrl, { data }, {
+      headers: {
+        "content-type": patchTypeHeaders[strategy],
+      },
+    });
+    const parsed = this.parseResponse(res);
+
+    if (Array.isArray(parsed)) {
+      throw new Error(`PATCH request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
+    }
+
+    return parsed;
+  }
+
+  async delete({ name = "", namespace = "default", propagationPolicy = "Background" }: { name: string, namespace?: string, propagationPolicy?: PropagationPolicy }) {
+    await this.checkPreferredVersion();
+    const apiUrl = this.getUrl({ namespace, name });
+    const reqInit = {
+      query: {
+        propagationPolicy,
+      },
+    };
+
+    return this.request.del(apiUrl, reqInit);
   }
 
   getWatchUrl(namespace = "", query: IKubeApiQueryParams = {}) {

@@ -21,7 +21,7 @@
 
 .KubeObjectStatusIcon {
   &.warning {
-    color: $golden;
+    color: var(--golden);
   }
 }
 
@@ -32,7 +32,7 @@
     padding: 4px;
 
     &:not(:only-child):not(:last-child) {
-      border-bottom: 1px solid $borderFaintColor;
+      border-bottom: 1px solid var(--borderFaintColor);
     }
 
     .title {
@@ -47,7 +47,7 @@
     }
 
     .age {
-      color: $halfGray;
+      color: var(--halfGray);
     }
   }
 }

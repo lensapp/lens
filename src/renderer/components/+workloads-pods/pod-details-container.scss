@@ -30,8 +30,8 @@
     display: block;
     font-family: $font-monospace;
     font-size: 90%;
-    background: $colorVague;
-    color: $textColorSecondary;
+    background: var(--colorVague);
+    color: var(--textColorSecondary);
     border-radius: $radius;
     padding: .2em .4em;
     margin-top: $margin;
@@ -42,7 +42,7 @@
     margin-bottom: $margin;
 
     .StatusBrick {
-      background: $colorTerminated;
+      background: var(--colorTerminated);
       margin-right: $margin;
 
       @include pod-status-bgs;
@@ -54,7 +54,7 @@
   }
 
   .status {
-    color: $colorTerminated;
+    color: var(--colorTerminated);
 
     @include pod-status-colors;
   }

@@ -21,18 +21,18 @@
 
 .Slider {
   .track {
-    background: $lensBlue;
+    background: var(--blue);
   }
 
   .thumb {
-    background: $lensBlue;
+    background: var(--blue);
 
     &.activated, &.jumped, &.focused {
-      box-shadow: 0 0 0 $unit * 2 rgba($lensBlue, 0.16)!important;
+      box-shadow: 0 0 0 #{$unit * 2} var(--blue) !important;
     }
 
     &:hover{
-      box-shadow: 0 0 0 $unit rgba($lensBlue, 0.16);
+      box-shadow: 0 0 0 $unit var(--blue);
     }
   }
 }

@@ -28,7 +28,7 @@
     cursor: pointer;
 
     .param-link-text {
-      color: $lensBlue;
+      color: var(--blue);
       text-decoration: underline;
     }
   }

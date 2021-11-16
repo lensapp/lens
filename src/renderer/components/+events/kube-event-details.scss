@@ -34,7 +34,7 @@
       word-break: break-word;
 
       &.warning {
-        color: $colorError;
+        color: var(--colorError);
       }
     }
   }

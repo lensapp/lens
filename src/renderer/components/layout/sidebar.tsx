@@ -23,7 +23,7 @@ import styles from "./sidebar.module.css";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Workloads } from "../+workloads";
@@ -32,7 +32,7 @@ import { Storage } from "../+storage";
 import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CustomResources } from "../+custom-resources/custom-resources";
-import { isActiveRoute, navigate } from "../../navigation";
+import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
@@ -41,12 +41,8 @@ import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { HotbarIcon } from "../hotbar/hotbar-icon";
-import { makeObservable, observable } from "mobx";
-import type { CatalogEntityContextMenuContext } from "../../../common/catalog";
-import { HotbarStore } from "../../../common/hotbar-store";
-import { broadcastMessage } from "../../../common/ipc";
-import { IpcRendererNavigationEvents } from "../../navigation/events";
+import { SidebarCluster } from "./sidebar-cluster";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props {
   className?: string;
@@ -55,24 +51,11 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
-  @observable private contextMenu: CatalogEntityContextMenuContext = {
-    menuItems: [],
-    navigate: (url: string, forceMainFrame = true) => {
-      if (forceMainFrame) {
-        broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
-      } else {
-        navigate(url);
-      }
-    },
-  };
 
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
-
-  async componentDidMount() {
-    crdStore.reloadAll();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([crdStore]),
+    ]);
   }
 
   renderCustomResources() {
@@ -198,44 +181,6 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
-  renderCluster() {
-    if (!this.clusterEntity) {
-      return null;
-    }
-
-    const { metadata, spec } = this.clusterEntity;
-
-    return (
-      <div className={styles.cluster}>
-        <HotbarIcon
-          uid={metadata.uid}
-          title={metadata.name}
-          source={metadata.source}
-          src={spec.icon?.src}
-          className="mr-5"
-          onClick={() => navigate("/")}
-          menuItems={this.contextMenu.menuItems}
-          onMenuOpen={() => {
-            const hotbarStore = HotbarStore.getInstance();
-            const isAddedToActive = HotbarStore.getInstance().isAddedToActive(this.clusterEntity);
-            const title = isAddedToActive
-              ? "Remove from Hotbar"
-              : "Add to Hotbar";
-            const onClick = isAddedToActive
-              ? () => hotbarStore.removeFromHotbar(metadata.uid)
-              : () => hotbarStore.addToHotbar(this.clusterEntity);
-
-            this.contextMenu.menuItems = [{ title, onClick }];
-            this.clusterEntity.onContextMenuOpen(this.contextMenu);
-          }}
-        />
-        <div className={styles.clusterName}>
-          {metadata.name}
-        </div>
-      </div>
-    );
-  }
-
   get clusterEntity() {
     return catalogEntityRegistry.activeEntity;
   }
@@ -245,7 +190,7 @@ export class Sidebar extends React.Component<Props> {
 
     return (
       <div className={cssNames("flex flex-col", className)} data-testid="cluster-sidebar">
-        {this.renderCluster()}
+        <SidebarCluster clusterEntity={this.clusterEntity}/>
         <div className={styles.sidebarNav}>
           <SidebarItem
             id="cluster"

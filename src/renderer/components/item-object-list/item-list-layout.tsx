@@ -98,6 +98,13 @@ export interface ItemListLayoutProps<I extends ItemObject> {
   customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
   renderFooter?: (parent: ItemListLayout<I>) => React.ReactNode;
 
+  /**
+   * Message to display when a store failed to load
+   *
+   * @default "Failed to load items"
+   */
+  failedToLoadMessage?: React.ReactNode;
+
   filterCallbacks?: ItemsFilters<I>;
 }
 
@@ -114,7 +121,8 @@ const defaultProps: Partial<ItemListLayoutProps<ItemObject>> = {
   hasDetailsView: true,
   onDetails: noop,
   virtual: true,
-  customizeTableRowProps: () => ({} as TableRowProps),
+  customizeTableRowProps: () => ({}),
+  failedToLoadMessage: "Failed to load items",
 };
 
 @observer
@@ -322,7 +330,7 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
 
   renderNoItems() {
     if (this.failedToLoad) {
-      return <NoItems>Failed to load items.</NoItems>;
+      return <NoItems>{this.props.failedToLoadMessage}</NoItems>;
     }
 
     if (!this.isReady) {

@@ -306,6 +306,9 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     return JSON.parse(JSON.stringify(this));
   }
 
+  /**
+   * @deprecated use KubeApi.patch instead
+   */
   async patch(patch: Patch): Promise<KubeJsonApiData | null> {
     for (const op of patch) {
       if (KubeObject.nonEditablePaths.has(op.path)) {
@@ -328,6 +331,8 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
    * Note: this is brittle if `data` is not actually partial (but instead whole).
    * As fields such as `resourceVersion` will probably out of date. This is a 
    * common race condition.
+   * 
+   * @deprecated use KubeApi.update instead
    */
   async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
     // use unified resource-applier api for updating all k8s objects
@@ -337,6 +342,9 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     });
   }
 
+  /**
+   * @deprecated use KubeApi.delete instead
+   */
   delete(params?: JsonApiParams) {
     return apiKube.del(this.selfLink, params);
   }

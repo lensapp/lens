@@ -23,14 +23,14 @@
   position: relative;
   width: 100%;
   min-width: $unit * 75;
-  background: $contentColor;
+  background: var(--contentColor);
 
   > .header {
     position: relative;
     padding: $padding * 2;
 
     h5 {
-      color: $textColorPrimary;
+      color: var(--textColorPrimary);
     }
   }
 
@@ -49,7 +49,7 @@
         text-align: center;
 
         a {
-          color: $colorInfo;
+          color: var(--colorInfo);
         }
       }
     }

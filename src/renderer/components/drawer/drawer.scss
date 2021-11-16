@@ -27,8 +27,8 @@
   --icon-focus-color: white;
 
   position: absolute;
-  background: $contentColor;
-  box-shadow: 0 0 $unit * 2 $boxShadow;
+  background: var(--contentColor);
+  box-shadow: 0 0 $unit * 2 var(--boxShadow);
   z-index: $zIndex-drawer;
   height: 100%;
 
@@ -67,8 +67,8 @@
   }
 
   .drawer-title {
-    background: $lensBlue;
-    color: $drawerTitleText;
+    background: var(--blue);
+    color: var(--drawerTitleText);
     padding: $padding $padding * 2.5;
     word-break: break-all;
     position: relative;
@@ -92,7 +92,7 @@
     }
 
     .MenuActions.toolbar .Icon {
-      color: $drawerTitleText;
+      color: var(--drawerTitleText);
     }
 
     .Menu {
@@ -105,7 +105,7 @@
     padding: var(--spacing);
 
     .Table .TableHead {
-      border-bottom: 1px solid $borderFaintColor;
+      border-bottom: 1px solid var(--borderFaintColor);
     }
   }
 

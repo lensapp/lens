@@ -25,7 +25,7 @@
   .el-contents {
     display: flex;
     background-color: var(--colorVague);
-    color: $textColorSecondary;
+    color: var(--textColorSecondary);
     border-radius: $radius;
     flex-direction: column;
 

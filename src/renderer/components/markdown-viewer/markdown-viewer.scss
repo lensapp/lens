@@ -377,15 +377,15 @@
     height: 0.25em;
     padding: 0;
     margin: 24px 0;
-    background-color: $helmDescriptionHr;
+    background-color: var(--helmDescriptionHr);
     border: 0;
   }
 
   blockquote {
     padding: 8px 1em;
-    color: $helmDescriptionBlockquoteColor;
-    border-left: 0.25em solid $helmDescriptionBlockquoteBorder;
-    background: $helmDescriptionBlockquoteBackground;
+    color: var(--helmDescriptionBlockquoteColor);
+    border-left: 0.25em solid var(--helmDescriptionBlockquoteBorder);
+    background: var(--helmDescriptionBlockquoteBackground);
   }
 
   blockquote > :first-child {
@@ -455,20 +455,20 @@
     padding-bottom: 0.3em;
     font-size: 1.8em;
     font-weight: normal;
-    border-bottom: 1px solid $borderFaintColor;
+    border-bottom: 1px solid var(--borderFaintColor);
   }
 
   h2 {
     padding-bottom: 0.3em;
     font-size: 1.3em;
     font-weight: normal;
-    border-bottom: 1px solid $borderFaintColor;
+    border-bottom: 1px solid var(--borderFaintColor);
   }
 
   h3 {
     font-size: 1.1em;
     font-weight: normal;
-    border-bottom: 1px solid $borderFaintColor;
+    border-bottom: 1px solid var(--borderFaintColor);
     padding-bottom: 0.4em;
   }
 
@@ -482,7 +482,7 @@
 
   h6 {
     font-size: 0.85em;
-    color: $helmDescriptionH6;
+    color: var(--helmDescriptionH6);
   }
 
   ul,
@@ -542,7 +542,7 @@
 
   th, td {
     padding: 6px 13px;
-    border: 1px solid $helmDescriptionTdBorder;
+    border: 1px solid var(--helmDescriptionTdBorder);
     text-align: left;
     word-break: break-all;
     hyphens: auto;
@@ -553,29 +553,29 @@
   }
 
   table tr {
-    background-color: $tableBgcStripe;
+    background-color: var(--tableBgcStripe);
   }
 
   table tr:nth-child(2n) {
-    background-color: $tableBgcSelected;
+    background-color: var(--tableBgcSelected);
   }
 
   img {
     max-width: 100%;
     box-sizing: content-box;
-    background-color: $mainBackground;
+    background-color: var(--mainBackground);
   }
 
   code {
     padding: .15em .35em;
     margin: 0;
     font-size: 85%;
-    background-color: $helmDescriptionCodeBackground;
+    background-color: var(--helmDescriptionCodeBackground);
     border-radius: 3px;
     white-space: normal;
     display: inline-block;
     vertical-align: middle;
-    color: $helmDescriptionPreColor;
+    color: var(--helmDescriptionPreColor);
   }
 
   pre > code {
@@ -602,7 +602,7 @@
     padding: 16px;
     font-size: 85%;
     line-height: 1.45;
-    background-color: $helmDescriptionPreBackground;
+    background-color: var(--helmDescriptionPreBackground);
     border-radius: 3px;
     overflow: auto;
   }
@@ -617,7 +617,7 @@
     word-wrap: normal;
     background-color: transparent;
     border: 0;
-    color: $helmDescriptionPreColor;
+    color: var(--helmDescriptionPreColor);
   }
 
   pre code::before,

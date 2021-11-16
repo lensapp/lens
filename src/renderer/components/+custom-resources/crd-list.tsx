@@ -92,6 +92,8 @@ export class CrdList extends React.Component {
         tableId="crd"
         className="CrdList"
         store={crdStore}
+        // Don't subscribe the `crdStore` because <Sidebar> already has and is always mounted
+        subscribeStores={false}
         items={items}
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}

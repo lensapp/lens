@@ -23,18 +23,11 @@ import { chunk } from "lodash";
 import net from "net";
 import url from "url";
 import { apiKubePrefix } from "../../common/vars";
-import { ClusterManager } from "../cluster-manager";
 import type { ProxyApiRequestArgs } from "./types";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 
-export async function kubeApiRequest({ req, socket, head }: ProxyApiRequestArgs) {
-  const cluster = ClusterManager.getInstance().getClusterForRequest(req);
-
-  if (!cluster) {
-    return;
-  }
-
+export async function kubeApiRequest({ req, socket, head, cluster }: ProxyApiRequestArgs) {
   const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
   const apiUrl = url.parse(cluster.apiUrl);
   const pUrl = url.parse(proxyUrl);

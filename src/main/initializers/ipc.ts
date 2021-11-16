@@ -20,13 +20,12 @@
  */
 
 import { BrowserWindow, dialog, IpcMainInvokeEvent } from "electron";
-import { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../common/cluster-ipc";
 import type { ClusterId } from "../../common/cluster-types";
 import { ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
-import { dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
+import { dialogShowOpenDialogHandler, ipcMainHandle, ipcMainOn } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
 import { pushCatalogToRenderer } from "../catalog-pusher";
 import { ClusterManager } from "../cluster-manager";
@@ -54,16 +53,8 @@ export function initIpcMainHandlers() {
     }
   });
 
-  ipcMainHandle(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
-    const entity = catalogEntityRegistry.getById(clusterId);
-
-    for (const kubeEntity of catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster)) {
-      kubeEntity.status.active = false;
-    }
-
-    if (entity) {
-      entity.status.active = visible;
-    }
+  ipcMainOn(clusterVisibilityHandler, (event, clusterId?: ClusterId) => {
+    ClusterManager.getInstance().visibleCluster = clusterId;
   });
 
   ipcMainHandle(clusterRefreshHandler, (event, clusterId: ClusterId) => {

@@ -69,7 +69,7 @@ export class Pods extends React.Component<Props> {
               formatters: {
                 tableView: true,
               },
-              children: Object.keys(state).map(status => (
+              children: Object.keys(state).map((status: keyof typeof state) => (
                 <Fragment key={status}>
                   <div className="title">
                     {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>

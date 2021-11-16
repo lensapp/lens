@@ -20,9 +20,9 @@
  */
 
 $hpa-status-colors: (
-  abletoscale: $colorOk,
-  scalingactive: $colorInfo,
-  scalinglimited: $colorSoftError,
+  abletoscale: var(--colorOk),
+  scalingactive: var(--colorInfo),
+  scalinglimited: var(--colorSoftError),
 );
 
 @mixin hpa-status-bgc {
