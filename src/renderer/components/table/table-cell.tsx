@@ -33,6 +33,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   id?: string; // used for configuration visibility of columns
   className?: string;
   title?: ReactNode;
+  scrollable?: boolean; // content inside could be scrolled
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
@@ -88,9 +89,11 @@ export class TableCell extends React.Component<TableCellProps> {
   }
 
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, scrollable, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+
     const classNames = cssNames("TableCell", className, {
       checkbox,
+      scrollable,
       nowrap: _nowrap,
       sorting: this.isSortable,
     });

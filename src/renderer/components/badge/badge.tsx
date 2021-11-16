@@ -34,6 +34,7 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
   label?: React.ReactNode;
   expandable?: boolean;
   disabled?: boolean;
+  scrollable?: boolean;
 }
 
 // Common handler for all Badge instances
@@ -81,7 +82,7 @@ export class Badge extends React.Component<BadgeProps> {
   }
 
   render() {
-    const { className, label, disabled, small, children, flat, expandable, ...elemProps } = this.props;
+    const { className, label, disabled, scrollable, small, children, flat, expandable, ...elemProps } = this.props;
     const clickable = Boolean(this.props.onClick) || this.isExpandable;
     const classNames = cssNames(styles.badge, className, {
       [styles.small]: small,
@@ -90,6 +91,7 @@ export class Badge extends React.Component<BadgeProps> {
       [styles.interactive]: this.isExpandable,
       [styles.isExpanded]: this.isExpanded,
       [styles.disabled]: disabled,
+      [styles.scrollable]: scrollable,
     });
 
     return (

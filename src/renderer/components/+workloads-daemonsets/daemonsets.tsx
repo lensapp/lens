@@ -50,12 +50,6 @@ export class DaemonSets extends React.Component<Props> {
     return daemonSetStore.getChildPods(daemonSet).length;
   }
 
-  renderNodeSelector(daemonSet: DaemonSet) {
-    return daemonSet.getNodeSelectors().map(selector => (
-      <Badge key={selector} label={selector}/>
-    ));
-  }
-
   render() {
     return (
       <KubeObjectListLayout
@@ -79,7 +73,7 @@ export class DaemonSets extends React.Component<Props> {
           { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
           { title: "Pods", className: "pods", sortBy: columnId.pods, id: columnId.pods },
           { className: "warning", showWithColumn: columnId.pods },
-          { title: "Node Selector", className: "labels", id: columnId.labels },
+          { title: "Node Selector", className: "labels scrollable", id: columnId.labels },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={daemonSet => [
@@ -87,7 +81,9 @@ export class DaemonSets extends React.Component<Props> {
           daemonSet.getNs(),
           this.getPodsLength(daemonSet),
           <KubeObjectStatusIcon key="icon" object={daemonSet}/>,
-          this.renderNodeSelector(daemonSet),
+          daemonSet.getNodeSelectors().map(selector => (
+            <Badge key={selector} label={selector} scrollable/>
+          )),
           daemonSet.getAge(),
         ]}
       />

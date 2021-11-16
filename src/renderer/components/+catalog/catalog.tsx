@@ -264,7 +264,7 @@ export class Catalog extends React.Component<Props> {
           { title: "Name", className: styles.entityName, sortBy: sortBy.name, id: "name" },
           !activeCategory && { title: "Kind", sortBy: sortBy.kind, id: "kind" },
           { title: "Source", className: styles.sourceCell, sortBy: sortBy.source, id: "source" },
-          { title: "Labels", className: styles.labelsCell, id: "labels" },
+          { title: "Labels", className: `${styles.labelsCell} scrollable`, id: "labels" },
           { title: "Status", className: styles.statusCell, sortBy: sortBy.status, id: "status" },
         ].filter(Boolean)}
         customizeTableRowProps={item => ({
