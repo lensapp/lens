@@ -78,6 +78,8 @@ export class TerminalStore extends Singleton {
 
     this.connections.set(tabId, api);
     this.terminals.set(tabId, terminal);
+
+    api.connect();
   }
 
   disconnect(tabId: TabId) {
