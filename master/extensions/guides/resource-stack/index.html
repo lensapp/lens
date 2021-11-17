@@ -742,8 +742,8 @@ It could be applied automatically to a cluster by the extension, or the end-user
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">K8sApi</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">ResourceStack</span><span class="p">,</span> 
-    <span class="nx">forCluster</span><span class="p">,</span> 
+    <span class="nx">ResourceStack</span><span class="p">,</span>
+    <span class="nx">forCluster</span><span class="p">,</span>
     <span class="nx">Pod</span><span class="p">,</span>
   <span class="p">}</span>
 <span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
@@ -792,11 +792,11 @@ It could be applied automatically to a cluster by the extension, or the end-user
 <span class="p">}</span>
 </code></pre></div>
 <p>The <code>ExampleClusterFeature</code> class constructor takes a <code>Common.Catalog.KubernetesCluster</code> argument.
-This is the cluster that the resource stack will be applied to, and the constructor instantiates a <code>Renderer.K8sApi.ResourceStack</code> as such. 
+This is the cluster that the resource stack will be applied to, and the constructor instantiates a <code>Renderer.K8sApi.ResourceStack</code> as such.
 <code>ExampleClusterFeature</code> implements an <code>install()</code> method which simply invokes the <code>kubectlApplyFolder()</code> method of the <code>Renderer.K8sApi.ResourceStack</code> class.
-<code>kubectlApplyFolder()</code> applies to the cluster all kubernetes resources found in the folder passed to it, in this case <code>../resources</code>. 
+<code>kubectlApplyFolder()</code> applies to the cluster all kubernetes resources found in the folder passed to it, in this case <code>../resources</code>.
 Similarly, <code>ExampleClusterFeature</code> implements an <code>uninstall()</code> method which simply invokes the <code>kubectlDeleteFolder()</code> method of the <code>Renderer.K8sApi.ResourceStack</code> class.
-<code>kubectlDeleteFolder()</code> tries to delete from the cluster all kubernetes resources found in the folder passed to it, again in this case <code>../resources</code>. </p>
+<code>kubectlDeleteFolder()</code> tries to delete from the cluster all kubernetes resources found in the folder passed to it, again in this case <code>../resources</code>.</p>
 <p><code>ExampleClusterFeature</code> also implements an <code>isInstalled()</code> method, which demonstrates how you can utilize the kubernetes api to inspect the resource stack status.
 <code>isInstalled()</code> simply tries to find a pod named <code>example-pod</code>, as a way to determine if the pod is already installed.
 This method can be useful in creating a context-sensitive UI for installing/uninstalling the feature, as demonstrated in the next sample code.</p>
@@ -906,11 +906,9 @@ The <code>ExampleExtension</code> would look like this:</p>
       <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Cluster Feature&quot;</span><span class="p">,</span>
       <span class="nx">priority</span>: <span class="kt">5</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">View</span><span class="o">:</span> <span class="p">({</span> <span class="nx">entity</span> <span class="o">=</span> <span class="kc">null</span> <span class="p">}</span><span class="o">:</span> <span class="p">{</span> <span class="nx">entity</span>: <span class="kt">Common.Catalog.KubernetesCluster</span><span class="p">})</span> <span class="p">=&gt;</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="p">(</span>
-            <span class="o">&lt;</span><span class="nx">ExampleClusterFeatureSettings</span> <span class="nx">cluster</span><span class="o">=</span><span class="p">{</span><span class="nx">entity</span><span class="p">}</span> <span class="o">/&gt;</span>
-          <span class="p">);</span>
-        <span class="p">}</span>
+        <span class="nx">View</span><span class="o">:</span> <span class="p">({</span> <span class="nx">entity</span> <span class="o">=</span> <span class="kc">null</span> <span class="p">}</span><span class="o">:</span> <span class="p">{</span> <span class="nx">entity</span>: <span class="kt">Common.Catalog.KubernetesCluster</span><span class="p">})</span> <span class="p">=&gt;</span> <span class="p">(</span>
+           <span class="o">&lt;</span><span class="nx">ExampleClusterFeatureSettings</span> <span class="nx">cluster</span><span class="o">=</span><span class="p">{</span><span class="nx">entity</span><span class="p">}</span> <span class="o">/&gt;</span>
+        <span class="p">)</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">];</span>

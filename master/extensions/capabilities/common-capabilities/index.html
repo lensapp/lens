@@ -1146,7 +1146,7 @@ These pages are visible in a cluster menu when a cluster is opened.</p>
   <span class="nx">topBarItems</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Item</span><span class="o">:</span> <span class="p">(</span>
+        <span class="nx">Item</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">(</span>
           <span class="o">&lt;</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;favorite&quot;</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;/example-page&quot;</span> <span class="o">/&gt;</span>
         <span class="p">)</span>
       <span class="p">}</span>
@@ -1169,7 +1169,7 @@ These pages are visible in a cluster menu when a cluster is opened.</p>
   <span class="nx">statusBarItems</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Item</span><span class="o">:</span> <span class="p">(</span>
+        <span class="nx">Item</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">(</span>
           <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps hover-highlight&quot;</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;/example-page&quot;</span><span class="p">)}</span> <span class="o">&gt;</span>
             <span class="o">&lt;</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;favorite&quot;</span> <span class="o">/&gt;</span>
           <span class="o">&lt;</span><span class="err">/div&gt;</span>
@@ -1188,7 +1188,7 @@ These pages are visible in a cluster menu when a cluster is opened.</p>
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">kubeWorkloadsOverviewItems</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">components</span> <span class="o">:</span> <span class="p">{</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Details</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">CustomWorkloadsOverviewItem</span> <span class="o">/&gt;</span>
       <span class="p">}</span>
     <span class="p">}</span>
