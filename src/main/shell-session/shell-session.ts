@@ -191,14 +191,18 @@ export abstract class ShellSession {
     this.running = true;
     shellProcess.onData(data => this.send({ type: TerminalChannels.STDOUT, data }));
     shellProcess.onExit(({ exitCode }) => {
-      logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with code=${exitCode}`);
-      this.running = false;
+      logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with exitcode=${exitCode}`);
 
-      if (exitCode > 0) {
-        this.send({ type: TerminalChannels.STDOUT, data: "Terminal will auto-close in 15 seconds ..." });
-        setTimeout(() => this.exit(), 15 * 1000);
-      } else {
-        this.exit();
+      // This might already be false because of the kill() within the websocket.on("close") handler
+      if (this.running) {
+        this.running = false;
+
+        if (exitCode > 0) {
+          this.send({ type: TerminalChannels.STDOUT, data: "Terminal will auto-close in 15 seconds ..." });
+          setTimeout(() => this.exit(), 15 * 1000);
+        } else {
+          this.exit();
+        }
       }
     });
 
@@ -231,25 +235,27 @@ export abstract class ShellSession {
         }
       })
       .on("close", code => {
-        logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${code}`);
+        logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
 
         const stopShellSession = this.running
-          && !(
-            code === WebSocketCloseEvent.AbnormalClosure
-            || (
-              code === WebSocketCloseEvent.GoingAway
-              && !this.cluster.disconnected
+          && (
+            (
+              code !== WebSocketCloseEvent.AbnormalClosure
+              && code !== WebSocketCloseEvent.GoingAway
             )
+            || this.cluster.disconnected
           );
 
         if (stopShellSession) {
-          try {
-            logger.info(`[SHELL-SESSION]: Killing shell process for ${this.terminalId}`);
-            process.kill(shellProcess.pid);
-            ShellSession.processes.delete(this.terminalId);
-          } catch {}
-
           this.running = false;
+
+          try {
+            logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
+            shellProcess.kill();
+            ShellSession.processes.delete(this.terminalId);
+          } catch (error) {
+            logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
+          }
         }
       });
 
