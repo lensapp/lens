@@ -48,14 +48,15 @@ declare module "@ogre-tools/injectable" {
     lifecycle?: lifecycleEnum;
   }
 
-  export interface IInjectable<TInstance, TDependencies = {}>
-    extends ICommonInjectable<TDependencies> {
-    instantiate: (dependencies: TDependencies) => TInstance;
-  }
-
-  export interface IComponentInjectable<TInstance, TDependencies = {}>
-    extends ICommonInjectable<TDependencies> {
-    instantiate: TInstance;
+  export interface IInjectable<
+    TInstance,
+    TDependencies extends object = {},
+    TInstantiationParameter extends object = {},
+  > extends ICommonInjectable<TDependencies> {
+    instantiate: (
+      dependencies: TDependencies,
+      instantiationParameter: TInstantiationParameter,
+    ) => TInstance;
   }
 
   export enum lifecycleEnum {
