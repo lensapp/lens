@@ -68,19 +68,4 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
     // concurrency is true to fix bug if catalog filter is removed and added at the same time
     return this.loadItems(() => this.entities, undefined, true);
   }
-
-  /**
-   * Override ItemStore::loadItems, the only difference is that
-   * if isLoading is true, we await for it to be false and then continue
-   * loading.
-   * This avoids a bug where if there were two or more concurrent loadItems() calls,
-   * only the first one would complete.
-   */
-  protected loadItems(
-    request: (() => Promise<CatalogEntityItem<CatalogEntity>[] | any>) | (() => CatalogEntityItem<CatalogEntity>[] | any),
-    sortItems = true,
-    concurrency = false,
-  ) {
-    return super.loadItems(request, sortItems, concurrency);
-  }
 }
