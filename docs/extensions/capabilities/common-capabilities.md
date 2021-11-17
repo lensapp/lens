@@ -207,7 +207,7 @@ export default class ExampleExtension extends Renderer.LensExtension {
   topBarItems = [
     {
       components: {
-        Item: (
+        Item: () => (
           <Icon material="favorite" onClick={() => this.navigate("/example-page" />
         )
       }
@@ -235,7 +235,7 @@ export default class ExampleExtension extends Renderer.LensExtension {
   statusBarItems = [
     {
       components: {
-        Item: (
+        Item: () => (
           <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate("/example-page")} >
             <Icon material="favorite" />
           </div>
@@ -259,7 +259,7 @@ import { CustomWorkloadsOverviewItem } from "./src/custom-workloads-overview-ite
 export default class ExampleExtension extends Renderer.LensExtension {
   kubeWorkloadsOverviewItems = [
     {
-      components : {
+      components: {
         Details: () => <CustomWorkloadsOverviewItem />
       }
     }
