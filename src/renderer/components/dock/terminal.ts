@@ -24,11 +24,11 @@ import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
-import type { TerminalApi } from "../../api/terminal-api";
+import { TerminalApi, TerminalChannels } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
 import { boundMethod, disposer } from "../../utils";
 import { isMac } from "../../../common/vars";
-import { camelCase } from "lodash";
+import { camelCase, once } from "lodash";
 import { UserStore } from "../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../common/logger";
@@ -119,11 +119,13 @@ export class Terminal {
 
     // bind events
     const onDataHandler = this.xterm.onData(this.onData);
+    const clearOnce = once(this.onClear);
 
     this.viewport.addEventListener("scroll", this.onScroll);
     this.elem.addEventListener("contextmenu", this.onContextMenu);
-    this.api.onReady.addListener(this.onClear, { once: true }); // clear status logs (connecting..)
-    this.api.onData.addListener(this.onApiData);
+    this.api.once("ready", clearOnce);
+    this.api.once("connected", clearOnce);
+    this.api.on("data", this.onApiData);
     window.addEventListener("resize", this.onResize);
 
     this.disposer.push(
@@ -176,7 +178,10 @@ export class Terminal {
 
   onData = (data: string) => {
     if (!this.api.isReady) return;
-    this.api.sendCommand(data);
+    this.api.sendMessage({
+      type: TerminalChannels.STDIN,
+      data,
+    });
   };
 
   onScroll = () => {

@@ -22,7 +22,7 @@
 import { autorun, observable, when } from "mobx";
 import { autoBind, noop, Singleton } from "../../utils";
 import { Terminal } from "./terminal";
-import { TerminalApi } from "../../api/terminal-api";
+import { TerminalApi, TerminalChannels } from "../../api/terminal-api";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
 import { Notifications } from "../notifications";
@@ -78,6 +78,8 @@ export class TerminalStore extends Singleton {
 
     this.connections.set(tabId, api);
     this.terminals.set(tabId, terminal);
+
+    api.connect();
   }
 
   disconnect(tabId: TabId) {
@@ -135,7 +137,14 @@ export class TerminalStore extends Singleton {
     const terminalApi = this.connections.get(dockStore.selectedTabId);
 
     if (terminalApi) {
-      terminalApi.sendCommand(command + (enter ? "\r" : ""));
+      if (enter) {
+        command += "\r";
+      }
+
+      terminalApi.sendMessage({
+        type: TerminalChannels.STDIN,
+        data: command,
+      });
     } else {
       console.warn("The selected tab is does not have a connection. Cannot send command.", { tabId: dockStore.selectedTabId, command });
     }
