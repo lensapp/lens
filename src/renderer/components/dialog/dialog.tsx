@@ -70,8 +70,8 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     isOpen: this.props.isOpen,
   };
 
-  get elem() {
-    return this.ref.current as HTMLElement;
+  get elem(): HTMLElement {
+    return this.ref.current;
   }
 
   get isOpen() {
