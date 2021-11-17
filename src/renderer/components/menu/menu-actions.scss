@@ -21,7 +21,7 @@
 
 .MenuActions {
   &.toolbar {
-    --flex-gap: #{$padding * 0.5};
+    --flex-gap: var(--padding);
 
     position: static;
     padding: 0;
@@ -31,8 +31,8 @@
     margin-right: var(--flex-gap) !important;
 
     .Icon {
-      color: var(--textColorAccent);
-      padding-right: 0;
+      width: 21px;
+      height: 21px;
     }
 
     .title, .arrow {
@@ -42,6 +42,10 @@
     > .MenuItem {
       background: none !important;
       padding: 0;
+      margin-bottom: 0;
+      border: none;
+      width: 21px;
+      height: 21px;
 
       > .SubMenu {
         $offset: $margin;
