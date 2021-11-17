@@ -65,6 +65,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
       }
     }
 
-    return this.loadItems(() => this.entities);
+    // concurrency is true to fix bug if catalog filter is removed and added at the same time
+    return this.loadItems(() => this.entities, undefined, true);
   }
 }
