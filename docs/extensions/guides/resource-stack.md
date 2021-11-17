@@ -33,8 +33,8 @@ import * as path from "path";
 
 const {
   K8sApi: {
-    ResourceStack, 
-    forCluster, 
+    ResourceStack,
+    forCluster,
     Pod,
   }
 } = Renderer;
@@ -63,7 +63,7 @@ export class ExampleClusterFeature {
     try {
       const podApi = forCluster(this.cluster, Pod);
       const examplePod = await podApi.get({name: "example-pod", namespace: "default"});
-      
+
       if (examplePod?.kind) {
         console.log("found example-pod");
         return true;
@@ -72,7 +72,7 @@ export class ExampleClusterFeature {
       console.log("Error getting example-pod:", e);
     }
     console.log("didn't find example-pod");
-    
+
     return false;
   }
 
@@ -84,11 +84,11 @@ export class ExampleClusterFeature {
 ```
 
 The `ExampleClusterFeature` class constructor takes a `Common.Catalog.KubernetesCluster` argument.
-This is the cluster that the resource stack will be applied to, and the constructor instantiates a `Renderer.K8sApi.ResourceStack` as such. 
+This is the cluster that the resource stack will be applied to, and the constructor instantiates a `Renderer.K8sApi.ResourceStack` as such.
 `ExampleClusterFeature` implements an `install()` method which simply invokes the `kubectlApplyFolder()` method of the `Renderer.K8sApi.ResourceStack` class.
-`kubectlApplyFolder()` applies to the cluster all kubernetes resources found in the folder passed to it, in this case `../resources`. 
+`kubectlApplyFolder()` applies to the cluster all kubernetes resources found in the folder passed to it, in this case `../resources`.
 Similarly, `ExampleClusterFeature` implements an `uninstall()` method which simply invokes the `kubectlDeleteFolder()` method of the `Renderer.K8sApi.ResourceStack` class.
-`kubectlDeleteFolder()` tries to delete from the cluster all kubernetes resources found in the folder passed to it, again in this case `../resources`. 
+`kubectlDeleteFolder()` tries to delete from the cluster all kubernetes resources found in the folder passed to it, again in this case `../resources`.
 
 `ExampleClusterFeature` also implements an `isInstalled()` method, which demonstrates how you can utilize the kubernetes api to inspect the resource stack status.
 `isInstalled()` simply tries to find a pod named `example-pod`, as a way to determine if the pod is already installed.
@@ -102,17 +102,17 @@ To allow the end-user to control the life cycle of this cluster feature the foll
  import { observer } from "mobx-react";
  import { computed, observable, makeObservable } from "mobx";
  import { ExampleClusterFeature } from "./example-cluster-feature";
- 
+
  const {
    Component: {
      SubTitle, Button,
    }
  } = Renderer;
- 
+
  interface Props {
    cluster: Common.Catalog.KubernetesCluster;
  }
- 
+
  @observer
  export class ExampleClusterFeatureSettings extends React.Component<Props> {
   constructor(props: Props) {
@@ -130,14 +130,14 @@ To allow the end-user to control the life cycle of this cluster feature the foll
 
     await this.updateFeatureState();
   }
- 
+
   async updateFeatureState() {
     this.installed = await this.feature.isInstalled();
   }
- 
+
    async save() {
     this.inProgress = true;
- 
+
     try {
       if (this.installed) {
         await this.feature.uninstall();
@@ -150,18 +150,18 @@ To allow the end-user to control the life cycle of this cluster feature the foll
       await this.updateFeatureState();
     }
   }
- 
+
   @computed get buttonLabel() {
     if (this.inProgress && this.installed) return "Uninstalling ...";
     if (this.inProgress) return "Applying ...";
-    
+
     if (this.installed) {
       return "Uninstall";
     }
 
     return "Apply";
   }
- 
+
   render() {
     return (
       <>
@@ -208,11 +208,9 @@ export default class ExampleExtension extends Renderer.LensExtension {
       title: "Example Cluster Feature",
       priority: 5,
       components: {
-        View: ({ entity = null }: { entity: Common.Catalog.KubernetesCluster}) => {
-          return (
-            <ExampleClusterFeatureSettings cluster={entity} />
-          );
-        }
+        View: ({ entity = null }: { entity: Common.Catalog.KubernetesCluster}) => (
+           <ExampleClusterFeatureSettings cluster={entity} />
+        )
       }
     }
   ];

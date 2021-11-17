@@ -478,7 +478,7 @@ export default class HelpExtension extends Renderer.LensExtension {
   statusBarItems = [
     {
       components: {
-        Item: (
+        Item: () => (
           <div
             className="flex align-center gaps"
             onClick={() => this.navigate("help")}
@@ -741,7 +741,7 @@ export class PodsDetailsList extends React.Component<Props> {
 
   render() {
     const { pods } = this.props
-    
+
     if (!pods?.length) {
       return null;
     }
