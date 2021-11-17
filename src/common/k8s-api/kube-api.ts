@@ -208,6 +208,7 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
   watchId?: string;
   retry?: boolean;
+  timeout?: number;
 };
 
 export type KubeApiPatchType = "merge" | "json" | "strategic";
@@ -527,7 +528,7 @@ export class KubeApi<T extends KubeObject> {
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop, retry } = opts;
+    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop, retry, timeout } = opts;
     const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
 
     signal.addEventListener("abort", () => {
@@ -535,8 +536,9 @@ export class KubeApi<T extends KubeObject> {
       clearTimeout(timedRetry);
     });
 
+    const requestParams = timeout ? { query: { timeoutSeconds: timeout }}: {};
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, null, { signal, timeout: 600_000 });
+    const responsePromise = this.request.getResponse(watchUrl, requestParams, { signal, timeout: 600_000 });
 
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
