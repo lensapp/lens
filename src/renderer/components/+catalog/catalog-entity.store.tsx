@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { when, computed, makeObservable, observable, reaction } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry, CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { ItemStore } from "../../../common/item.store";
@@ -65,7 +65,8 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
       }
     }
 
-    return this.loadItems(() => this.entities);
+    // concurrency is true to fix bug if catalog filter is removed and added at the same time
+    return this.loadItems(() => this.entities, undefined, true);
   }
 
   /**
@@ -75,27 +76,11 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntit
    * This avoids a bug where if there were two or more concurrent loadItems() calls,
    * only the first one would complete.
    */
-  protected async loadItems(
+  protected loadItems(
     request: (() => Promise<CatalogEntityItem<CatalogEntity>[] | any>) | (() => CatalogEntityItem<CatalogEntity>[] | any),
     sortItems = true,
+    concurrency = false,
   ) {
-    if (this.isLoading) {
-      await when(() => !this.isLoading);
-    }
-
-    this.isLoading = true;
-
-    try {
-      let items = await request();
-
-      if (sortItems) {
-        items = this.sortItems(items);
-      }
-      this.items.replace(items);
-
-      this.isLoaded = true;
-    } finally {
-      this.isLoading = false;
-    }
+    return super.loadItems(request, sortItems, concurrency);
   }
 }

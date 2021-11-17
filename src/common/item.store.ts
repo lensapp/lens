@@ -97,12 +97,22 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   protected async loadItems(...args: any[]): Promise<any>;
+  /**
+   * Load items to this.items
+   * @param request Function to return the items to be loaded.
+   * @param sortItems If true, items will be sorted.
+   * @param concurrency If true, concurrent loadItems() calls will all be executed. If false, only the first.
+   * @returns
+   */
   @action
-  protected async loadItems(request: () => Promise<Item[] | any>, sortItems = true) {
+  protected async loadItems(request: () => Promise<Item[] | any>, sortItems = true, concurrency = false) {
     if (this.isLoading) {
       await when(() => !this.isLoading);
 
-      return;
+      // If concurrency for loading is disabled, return instead of loading
+      if (!concurrency) {
+        return;
+      }
     }
     this.isLoading = true;
 
