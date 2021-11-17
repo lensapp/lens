@@ -293,4 +293,37 @@ describe("KubeApi", () => {
       await api.delete({ name: "foo", namespace: "default", propagationPolicy: "Orphan" });
     });
   });
+
+  describe("watch", () => {
+    let api: TestKubeApi;
+
+    beforeEach(() => {
+      api = new TestKubeApi({
+        request,
+        objectConstructor: TestKubeObject,
+      });
+    });
+
+    it("sends a valid watch request", () => {
+      const spy = jest.spyOn(request, "getResponse");
+
+      (fetch as any).mockResponse(async () => {
+        return {};
+      });
+      
+      api.watch({ namespace: "kube-system" });
+      expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", expect.anything(), expect.anything());
+    });
+
+    it("sends timeout as a query parameter", async () => {
+      const spy = jest.spyOn(request, "getResponse");
+
+      (fetch as any).mockResponse(async () => {
+        return {};
+      });
+      
+      api.watch({ namespace: "kube-system", timeout: 60 });
+      expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
+    });
+  });
 });
