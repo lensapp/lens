@@ -147,9 +147,9 @@ export class Drawer extends React.Component<DrawerProps> {
   };
 
   copyTitle = (title: string) => {
-    const k8sObjName = title.split(":")[1] || title; // copy whole if no :
+    const itemName = title.split(":").splice(1).join(":") || title; // copy whole if no :
 
-    clipboard.writeText(k8sObjName.trim());
+    clipboard.writeText(itemName.trim());
     this.setState({ isCopied: true });
     setTimeout(() => {
       this.setState({ isCopied: false });
