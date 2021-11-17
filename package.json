@@ -72,7 +72,12 @@
     "setupFiles": [
       "<rootDir>/src/jest.setup.ts",
       "jest-canvas-mock"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    }
   },
   "build": {
     "generateUpdatesFilesForAllChannels": true,
