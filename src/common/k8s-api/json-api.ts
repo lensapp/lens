@@ -56,6 +56,10 @@ export interface JsonApiConfig {
   debug?: boolean;
   getRequestOptions?: () => Promise<RequestInit>;
 }
+
+const httpAgent = new HttpAgent({ keepAlive: true });
+const httpsAgent = new HttpsAgent({ keepAlive: true });
+
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
@@ -98,9 +102,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     }
 
     if (!reqInit.agent) {
-      const agentOpts = { keepAlive: true };
-
-      reqInit.agent = reqUrl.startsWith("https:") ? new HttpsAgent(agentOpts) : new HttpAgent(agentOpts);
+      reqInit.agent = reqUrl.startsWith("https:") ? httpsAgent : httpAgent;
     }
 
     if (query) {
