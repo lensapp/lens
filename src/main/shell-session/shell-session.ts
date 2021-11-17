@@ -191,6 +191,7 @@ export abstract class ShellSession {
     this.running = true;
     shellProcess.onData(data => this.send({ type: TerminalChannels.STDOUT, data }));
     shellProcess.onExit(({ exitCode }) => {
+      logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with code=${exitCode}`);
       this.running = false;
 
       if (exitCode > 0) {
@@ -204,7 +205,7 @@ export abstract class ShellSession {
     this.websocket
       .on("message", (data: string | Uint8Array) => {
         if (!this.running) {
-          return;
+          return void logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
         }
 
         if (typeof data === "string") {
@@ -230,15 +231,24 @@ export abstract class ShellSession {
         }
       })
       .on("close", code => {
-        logger.debug(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${code}`);
+        logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${code}`);
 
-        if (this.running && code !== WebSocketCloseEvent.AbnormalClosure && code !== WebSocketCloseEvent.GoingAway) {
+        const stopShellSession = this.running
+          && !(
+            code === WebSocketCloseEvent.AbnormalClosure
+            || (
+              code === WebSocketCloseEvent.GoingAway
+              && !this.cluster.disconnected
+            )
+          );
+
+        if (stopShellSession) {
           try {
             logger.info(`[SHELL-SESSION]: Killing shell process for ${this.terminalId}`);
             process.kill(shellProcess.pid);
             ShellSession.processes.delete(this.terminalId);
-          } catch (e) {
-          }
+          } catch {}
+
           this.running = false;
         }
       });

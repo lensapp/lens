@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { boundMethod, getHostedClusterId } from "../utils";
+import { getHostedClusterId } from "../utils";
 import { WebSocketApi, WebSocketEvents } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import url from "url";
@@ -27,6 +27,7 @@ import { makeObservable, observable } from "mobx";
 import { ipcRenderer } from "electron";
 import logger from "../../common/logger";
 import { deserialize, serialize } from "v8";
+import { once } from "lodash";
 
 export enum TerminalChannels {
   STDIN = "stdin",
@@ -119,7 +120,26 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       slashes: true,
     });
 
-    this.prependListener("data", this._onReady);
+    const onReady = once((data?: string) => {
+      this.isReady = true;
+      this.emit("ready");
+      this.removeListener("data", onReady);
+      this.removeListener("connected", onReady);
+      this.flush();
+
+      // data is undefined if the event that was handled is "connected"
+      if (data === undefined) {
+        /**
+         * Output the last line, the makes sure that the terminal isn't completely
+         * empty when the user refreshes.
+         */
+        this.emit("data", window.localStorage.getItem(`${this.query.id}:last-data`));
+      }
+    });
+
+    this.prependListener("data", onReady);
+    this.prependListener("connected", onReady);
+
     super.connect(socketUrl);
     this.socket.binaryType = "arraybuffer";
   }
@@ -130,14 +150,6 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
 
     this.sendMessage({ type: TerminalChannels.STDIN, data: controlCode });
     setTimeout(() => super.destroy(), 2000);
-  }
-
-  @boundMethod
-  protected _onReady() {
-    this.isReady = true;
-    this.emit("ready");
-    this.removeListener("data", this._onReady);
-    this.flush();
   }
 
   reconnect() {
@@ -166,6 +178,11 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
 
       switch (message.type) {
         case TerminalChannels.STDOUT:
+          /**
+           * save the last data for reconnections. User localStorage because we
+           * don't want this data to survive if the app is closed
+           */
+          window.localStorage.setItem(`${this.query.id}:last-data`, message.data);
           super._onMessage({ data: message.data, ...evt });
           break;
         case TerminalChannels.CONNECTED:
