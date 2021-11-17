@@ -50,14 +50,15 @@ export interface IKubeWatchEvent<T extends KubeJsonApiData> {
 
 export interface KubeWatchSubscribeStoreOptions {
   /**
-   * The namespaces to watch
+   * The namespaces to subscribe to. If not specified then will also watch the
+   * changes to set of selected namespaces from `<NamespaceSelectFilter />`
    * @default all selected namespaces
    */
   namespaces?: string[];
 
   /**
    * A function that is called when listing fails. If set then blocks errors
-   * being rejected with
+   * from rejecting promises
    */
   onLoadFailure?: (err: any) => void;
 }
@@ -116,7 +117,11 @@ export class KubeWatchApi {
   #watch = new WatchCount();
 
   private subscribeStore({ store, parent, watchChanges, namespaces, onLoadFailure }: SubscribeStoreParams): Disposer {
-    if (this.#watch.inc(store) > 1) {
+    const isNamespaceFilterWatch = !namespaces;
+
+    namespaces ??= KubeWatchApi.context?.contextNamespaces ?? [];
+
+    if (isNamespaceFilterWatch && this.#watch.inc(store) > 1) {
       // don't load or subscribe to a store more than once
       return () => this.#watch.dec(store);
     }
@@ -167,7 +172,7 @@ export class KubeWatchApi {
       : noop; // don't watch namespaces if namespaces were provided
 
     return () => {
-      if (this.#watch.dec(store) === 0) {
+      if (!isNamespaceFilterWatch || this.#watch.dec(store) === 0) {
         // only stop the subcribe if this is the last one
         cancelReloading();
         childController.abort();
@@ -183,7 +188,7 @@ export class KubeWatchApi {
         store,
         parent,
         watchChanges: !namespaces && store.api.isNamespaced,
-        namespaces: namespaces ?? KubeWatchApi.context?.contextNamespaces ?? [],
+        namespaces,
         onLoadFailure,
       })),
     );

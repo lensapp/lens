@@ -19,17 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.LogSearch {
-  .SearchInput {
-    min-width: 150px;
-    width: 240px;
-
-    .find-count {
-      margin-left: 2px;
-    }
-
-    label {
-      padding-bottom: 7px;
-    }
+.PodLogs {
+  .pod-not-found {
+    margin: auto;
+    color: var(--terminalBrightWhite);
   }
 }

@@ -21,96 +21,104 @@
 
 import "./log-resource-selector.scss";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../common/k8s-api/endpoints";
+import type { Pod } from "../../../common/k8s-api/endpoints";
 import { Badge } from "../badge";
-import { Select, SelectOption } from "../select";
+import { GroupSelectOption, Select, SelectOption } from "../select";
 import { LogTabData, logTabStore } from "./log-tab.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { TabId } from "./dock.store";
 
-interface Props {
-  tabId: TabId
-  tabData: LogTabData
-  save: (data: Partial<LogTabData>) => void
-  reload: () => void
+export interface LogResourceSelectorStore {
+  changeSelectedPod(tabId: TabId, newSelectedPod: Pod): void;
+  mergeData(tabId: TabId, data: Partial<LogTabData>): void;
 }
 
-export const LogResourceSelector = observer((props: Props) => {
-  const { tabData, save, reload, tabId } = props;
-  const { selectedPod, selectedContainer, pods } = tabData;
-  const pod = new Pod(selectedPod);
+export interface LogResourceSelectorProps {
+  tabId: TabId;
+  pod: Pod;
+
+  /**
+   * The list of possible pods to switch between. If not specifed then it won't be displayed
+   */
+  pods?: Pod[];
+  selectedContainer: string;
+  store?: LogResourceSelectorStore;
+}
+
+export const LogResourceSelector = observer(({ tabId, pod, pods, selectedContainer, store = logTabStore }: LogResourceSelectorProps) => {
   const containers = pod.getContainers();
   const initContainers = pod.getInitContainers();
 
-  const onContainerChange = (option: SelectOption) => {
-    save({
-      selectedContainer: containers
-        .concat(initContainers)
-        .find(container => container.name === option.value),
-    });
-    reload();
-  };
-
-  const onPodChange = (option: SelectOption) => {
-    const selectedPod = podsStore.getByName(option.value, pod.getNs());
-
-    save({ selectedPod });
-    logTabStore.renameTab(tabId);
-  };
-
-  const getSelectOptions = (items: string[]) => {
-    return items.map(item => {
-      return {
-        value: item,
-        label: item,
-      };
-    });
-  };
-
-  const containerSelectOptions = [
+  const containerSelectOptions: GroupSelectOption<SelectOption<string>>[] = [
     {
       label: `Containers`,
-      options: getSelectOptions(containers.map(container => container.name)),
+      options: containers.map(container => ({
+        value: container.name,
+        label: container.name,
+      })),
     },
     {
       label: `Init Containers`,
-      options: getSelectOptions(initContainers.map(container => container.name)),
+      options: initContainers.map(container => ({
+        value: container.name,
+        label: container.name,
+      })),
     },
   ];
 
-  const podSelectOptions = [
-    {
-      label: pod.getOwnerRefs()[0]?.name,
-      options: getSelectOptions(pods.map(pod => pod.metadata.name)),
-    },
-  ];
-
-  useEffect(() => {
-    reload();
-  }, [selectedPod]);
+  const manyOptions = (containers.length + initContainers.length) > 1;
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
-      <span>Namespace</span> <Badge data-testid="namespace-badge" label={pod.getNs()}/>
-      <span>Pod</span>
-      <Select
-        options={podSelectOptions}
-        value={{ label: pod.getName(), value: pod.getName() }}
-        onChange={onPodChange}
-        autoConvertOptions={false}
-        className="pod-selector"
-      />
+      <span>Namespace</span>
+      <Badge data-testid="namespace-badge" label={pod.getNs()}/>
+      {
+        pods && (
+          <>
+            <span>Pod</span>
+            {
+              pods.length === 1
+                ? (
+                  <Badge data-testid="pod-badge" label={pod.getName()}/>
+                )
+                : (
+                  <Select
+                    options={[{
+                      label: pod.getOwnerRefs()[0].name,
+                      options: pods.map(pod => ({
+                        label: pod.getName(),
+                        value: pod,
+                      })),
+                    }]}
+                    value={{ label: pod.getName(), value: pod }}
+                    onChange={({ value }) => store.changeSelectedPod(tabId, value)}
+                    autoConvertOptions={false}
+                    className="pod-selector"
+                  />
+                )
+            }
+          </>
+        )
+      }
+
       <span>Container</span>
-      <Select
-        options={containerSelectOptions}
-        value={{ label: selectedContainer.name, value: selectedContainer.name }}
-        onChange={onContainerChange}
-        autoConvertOptions={false}
-        className="container-selector"
-      />
+      {
+        manyOptions
+          ? (
+            <Select
+              options={containerSelectOptions}
+              value={{ value: selectedContainer, label: selectedContainer }}
+              onChange={({ value }) => store.mergeData(tabId, { selectedContainer: value })}
+              autoConvertOptions={false}
+              className="container-selector"
+            />
+          )
+          : (
+            <Badge data-testid="container-badge" label={selectedContainer}/>
+          )
+      }
     </div>
   );
 });

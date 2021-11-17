@@ -18,18 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { IReactionPublic, IReactionOptions, IReactionDisposer } from "mobx";
+import { reaction } from "mobx";
+import type { Disposer } from "./disposer";
 
-.LogSearch {
-  .SearchInput {
-    min-width: 150px;
-    width: 240px;
+/**
+ * Similar to mobx's builtin `reaction` function but supports returning a
+ * disposer from `effect` that will be cancelled everytime a new reaction is
+ * fired and when the reaction is disposed.
+ */
+export function disposingReaction<T, FireImmediately extends boolean = false>(expression: (r: IReactionPublic) => T, effect: (arg: T, prev: FireImmediately extends true ? T | undefined : T, r: IReactionPublic) => Disposer, opts?: IReactionOptions<T, FireImmediately>): IReactionDisposer {
+  let prevDisposer: Disposer;
 
-    .find-count {
-      margin-left: 2px;
-    }
+  const reactionDisposer = reaction<T, FireImmediately>(expression, (arg: T, prev: T, r: IReactionPublic) => {
+    prevDisposer?.();
+    prevDisposer = effect(arg, prev, r);
+  }, opts);
 
-    label {
-      padding-bottom: 7px;
-    }
-  }
+  return Object.assign(() => {
+    reactionDisposer();
+    prevDisposer?.();
+  }, reactionDisposer);
 }

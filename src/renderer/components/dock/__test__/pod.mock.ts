@@ -19,9 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const dockerPod = {
+import type { IPodContainer } from "../../../../common/k8s-api/endpoints";
+
+export const noOwnersPod = {
   apiVersion: "v1",
-  kind: "dummy",
+  kind: "Pod",
   metadata: {
     uid: "dockerExporter",
     name: "dockerExporter",
@@ -30,7 +32,48 @@ export const dockerPod = {
     namespace: "default",
   },
   spec: {
-    initContainers: [] as any,
+    initContainers: [] as IPodContainer[],
+    containers: [
+      {
+        name: "docker-exporter",
+        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
+        imagePullPolicy: "pull",
+      },
+    ],
+    serviceAccountName: "dummy",
+    serviceAccount: "dummy",
+  },
+  status: {
+    phase: "Running",
+    conditions: [{
+      type: "Running",
+      status: "Running",
+      lastProbeTime: 1,
+      lastTransitionTime: "Some time",
+    }],
+    hostIP: "dummy",
+    podIP: "dummy",
+    startTime: "dummy",
+  },
+};
+
+export const dockerPod = {
+  apiVersion: "v1",
+  kind: "Pod",
+  metadata: {
+    uid: "dockerExporter",
+    name: "dockerExporter",
+    creationTimestamp: "dummy",
+    resourceVersion: "dummy",
+    namespace: "default",
+    ownerReferences: [
+      {
+        uid: "dockerExporterOwner",
+      },
+    ],
+  },
+  spec: {
+    initContainers: [] as IPodContainer[],
     containers: [
       {
         name: "docker-exporter",

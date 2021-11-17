@@ -62,7 +62,7 @@ export abstract class BaseStore<T> extends Singleton {
    */
   load() {
     if (!isTestEnv) {
-      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
+      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING store with key ${this.params.configName} ...`);
     }
 
     this.storeConfig = new Config({

@@ -19,17 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.LogSearch {
-  .SearchInput {
-    min-width: 150px;
-    width: 240px;
+/**
+ * The functions of this module should be used so that typescript doesn't
+ * assume the types of a `reaction` or `autorun` is `any`
+ */
 
-    .find-count {
-      margin-left: 2px;
-    }
+import { comparer as _comparer } from "mobx";
 
-    label {
-      padding-bottom: 7px;
-    }
-  }
+function identity<T>(a: T, b: T): boolean {
+  return _comparer.identity(a, b);
 }
+
+function defaultComparer<T>(a: T, b: T): boolean {
+  return _comparer.default(a, b);
+}
+
+function structural<T>(a: T, b: T): boolean {
+  return _comparer.structural(a, b);
+}
+
+function shallow<T>(a: T, b: T): boolean {
+  return _comparer.shallow(a, b);
+}
+
+export const comparer = {
+  identity,
+  default: defaultComparer,
+  structural,
+  shallow,
+};

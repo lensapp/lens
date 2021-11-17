@@ -102,13 +102,13 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @computed get contextItems(): T[] {
-    const namespaces = this.context?.contextNamespaces ?? [];
+    if (!this.api.isNamespaced) {
+      return this.items;
+    }
 
-    return this.items.filter(item => {
-      const itemNamespace = item.getNs();
+    const namespaces = new Set(this.context?.contextNamespaces ?? []);
 
-      return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
-    });
+    return this.items.filter(item => namespaces.has(item.getNs()));
   }
 
   getTotalCount(): number {
@@ -275,12 +275,18 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   protected mergeItems(partialItems: T[], { merge = true, updateStore = true, sort = true, filter = true } = {}): T[] {
     let items = partialItems;
 
-    // update existing items
     if (merge) {
-      const namespaces = partialItems.map(item => item.getNs());
+      /**
+       * Replace older KubeObjects (by UID) with the new ones.
+       *
+       * This is done by UID and not by namespace (as was previous) because
+       * the store might be loaded (and watching) two different sets of
+       * namespaces at the same time.
+       */
+      const uids = new Set(partialItems.map(item => item.getId()));
 
       items = [
-        ...this.items.filter(existingItem => !namespaces.includes(existingItem.getNs())),
+        ...this.items.filter(existingItem => !uids.has(existingItem.getId())),
         ...partialItems,
       ];
     }

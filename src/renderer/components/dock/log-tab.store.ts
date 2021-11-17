@@ -19,131 +19,172 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import Joi from "joi";
 import uniqueId from "lodash/uniqueId";
-import { reaction } from "mobx";
-import { podsStore } from "../+workloads-pods/pods.store";
-
-import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
-import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
-import logger from "../../../common/logger";
-import { DockTabStore } from "./dock-tab.store";
-import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
+import { action } from "mobx";
+import type { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
+import { DockTabStore, DockTabStoreOptions } from "./dock-tab.store";
+import { dockStore, DockTab, DockTabCreate, TabId, TabKind } from "./dock.store";
 
 export interface LogTabData {
-  pods: Pod[];
-  selectedPod: Pod;
-  selectedContainer: IPodContainer
-  showTimestamps?: boolean
-  previous?: boolean
+  /**
+   * The pod owner ID.
+   */
+  podsOwner?: string;
+
+  /**
+   * The ID of the pod from the list of pods owned by `.podsOwner`
+   */
+  selectedPod: string;
+
+  /**
+   * The namespace of the pods so that the pods can be retrieved.
+   */
+  namespace: string;
+
+  /**
+   * The name of the container within the selected pod.
+   *
+   * Note: container names are guaranteed unique
+   */
+  selectedContainer?: string;
+
+  /**
+   * Whether to show timestamps inline with the logs
+   */
+  showTimestamps: boolean;
+
+  /**
+   * Query for getting logs of the previous container restart
+   */
+  previous: boolean;
 }
 
-interface PodLogsTabData {
+const logTabDataValidator = Joi.object({
+  podsOwner: Joi
+    .string()
+    .optional(),
+  selectedPod: Joi
+    .string()
+    .required(),
+  namespace: Joi
+    .string()
+    .required(),
+  selectedContainer: Joi
+    .string()
+    .optional(),
+  showTimestamps: Joi
+    .boolean()
+    .required(),
+  previous: Joi
+    .boolean()
+    .required(),
+});
+
+/**
+ * Data for creating a pod logs tab based on a specific pod
+ */
+export interface PodLogsTabData {
   selectedPod: Pod
   selectedContainer: IPodContainer
 }
 
-interface WorkloadLogsTabData {
-  workload: WorkloadKubeObject
+export interface DockManager {
+  renameTab(tabId: TabId, name: string): void;
+  createTab(rawTabDesc: DockTabCreate, addNumber?: boolean): DockTab;
+  closeTab(tabId: TabId): void;
 }
 
 export class LogTabStore extends DockTabStore<LogTabData> {
-  constructor() {
+  constructor(params: Pick<DockTabStoreOptions<LogTabData>, "autoInit"> = {}, protected dockManager: DockManager = dockStore) {
     super({
+      ...params,
       storageKey: "pod_logs",
-    });
+      validator: value => {
+        const { error } = logTabDataValidator.validate(value);
 
-    reaction(() => podsStore.items.length, () => this.updateTabsData());
-  }
-
-  createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): string {
-    const podOwner = selectedPod.getOwnerRefs()[0];
-    const pods = podsStore.getPodsByOwnerId(podOwner?.uid);
-    const title = `Pod ${selectedPod.getName()}`;
-
-    return this.createLogsTab(title, {
-      pods: pods.length ? pods : [selectedPod],
-      selectedPod,
-      selectedContainer,
+        if (error) {
+          throw error;
+        }
+      },
     });
   }
 
-  createWorkloadTab({ workload }: WorkloadLogsTabData): void {
-    const pods = podsStore.getPodsByOwnerId(workload.getId());
+  createPodTab(tabData: PodLogsTabData): string {
+    if (!tabData || typeof tabData !== "object") {
+      throw new TypeError("tabData is not an object");
+    }
 
-    if (!pods.length) return;
+    const { selectedPod, selectedContainer } = tabData;
 
-    const selectedPod = pods[0];
-    const selectedContainer = selectedPod.getAllContainers()[0];
-    const title = `${workload.kind} ${selectedPod.getName()}`;
+    if (!selectedPod || typeof selectedPod !== "object") {
+      throw new TypeError("selectedPod is not an object");
+    }
 
-    this.createLogsTab(title, {
-      pods,
-      selectedPod,
-      selectedContainer,
+    if (!selectedContainer || typeof selectedContainer !== "object") {
+      throw new TypeError("selectedContainer is not an object");
+    }
+
+    return this.createLogsTab(this.getTabName(selectedPod), {
+      podsOwner: selectedPod.getOwnerRefs()[0]?.uid,
+      namespace: selectedPod.getNs(),
+      selectedPod: selectedPod.getId(),
+      selectedContainer: selectedContainer.name,
+      showTimestamps: false,
+      previous: false,
     });
   }
 
-  renameTab(tabId: string) {
-    const { selectedPod } = this.getData(tabId);
-
-    dockStore.renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
+  private getTabName(pod: Pod): string {
+    return `Pod Logs: ${pod.getName()}`;
   }
 
-  private createDockTab(tabParams: DockTabCreateSpecific) {
-    dockStore.createTab({
-      ...tabParams,
-      kind: TabKind.POD_LOGS,
-    }, false);
-  } 
+  @action
+  changeSelectedPod(tabId: string, pod: Pod): void {
+    const oldSelectedPod = this.getData(tabId).selectedPod;
+
+    if (pod.getId() === oldSelectedPod) {
+      // Do nothing
+      return;
+    }
+
+    this.mergeData(tabId, {
+      selectedPod: pod.getId(),
+      selectedContainer: pod.getContainers()[0]?.name,
+    });
+    this.dockManager.renameTab(tabId, this.getTabName(pod));
+  }
 
   private createLogsTab(title: string, data: LogTabData): string {
     const id = uniqueId("log-tab-");
 
-    this.createDockTab({ id, title });
-    this.setData(id, {
-      ...data,
-      showTimestamps: false,
-      previous: false,
-    });
+    this.dockManager.createTab({
+      id,
+      title,
+      kind: TabKind.POD_LOGS,
+    }, false);
+    this.setData(id, data);
 
     return id;
   }
 
-  private updateTabsData() {
-    for (const [tabId, tabData] of this.data) {
-      try {
-        if (!tabData.selectedPod) {
-          tabData.selectedPod = tabData.pods[0];
-        }
-
-        const pod = new Pod(tabData.selectedPod);
-        const pods = podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
-        const isSelectedPodInList = pods.find(item => item.getId() == pod.getId());
-        const selectedPod = isSelectedPodInList ? pod : pods[0];
-        const selectedContainer = isSelectedPodInList ? tabData.selectedContainer : pod.getAllContainers()[0];
-  
-        if (pods.length > 0) {
-          this.setData(tabId, {
-            ...tabData,
-            selectedPod,
-            selectedContainer,
-            pods,
-          });
-  
-          this.renameTab(tabId);
-        } else {
-          this.closeTab(tabId);
-        }
-      } catch (error) {
-        logger.error(`[LOG-TAB-STORE]: failed to set data for tabId=${tabId} deleting`, error);
-        this.data.delete(tabId);
-      }
-    }
+  @action
+  public closeTab(tabId: string) {
+    this.clearData(tabId);
+    this.dockManager.closeTab(tabId);
   }
 
-  private closeTab(tabId: string) {
-    this.clearData(tabId);
-    dockStore.closeTab(tabId);
+  /**
+   * Get a set of namespaces which pod tabs care about
+   */
+  public getNamespaces(): string[] {
+    const namespaces = new Set<string>();
+
+    for (const { namespace } of this.data.values()) {
+      namespaces.add(namespace);
+    }
+
+    return [...namespaces];
   }
 }
 

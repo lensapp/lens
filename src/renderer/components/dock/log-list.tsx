@@ -25,25 +25,20 @@ import React from "react";
 import AnsiUp from "ansi_up";
 import DOMPurify from "dompurify";
 import debounce from "lodash/debounce";
-import { action, computed, observable, makeObservable, reaction } from "mobx";
+import { action, observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
 
 import { SearchStore, searchStore } from "../../../common/search-store";
-import { UserStore } from "../../../common/user-store";
 import { array, boundMethod, cssNames } from "../../utils";
-import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { logStore } from "./log.store";
-import { logTabStore } from "./log-tab.store";
 import { ToBottom } from "./to-bottom";
 
 interface Props {
   logs: string[]
   isLoading: boolean
   load: () => void
-  id: string
+  selectedContainer: string
 }
 
 const colorConverter = new AnsiUp();
@@ -64,9 +59,11 @@ export class LogList extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.logs, this.onLogsInitialLoad),
-      reaction(() => this.props.logs, this.onLogsUpdate),
-      reaction(() => this.props.logs, this.onUserScrolledUp),
+      reaction(() => this.props.logs, (logs, prevLogs) => {
+        this.onLogsInitialLoad(logs, prevLogs);
+        this.onLogsUpdate();
+        this.onUserScrolledUp(logs, prevLogs);
+      }),
     ]);
   }
 
@@ -88,10 +85,14 @@ export class LogList extends React.Component<Props> {
 
   @boundMethod
   onUserScrolledUp(logs: string[], prevLogs: string[]) {
-    if (!this.virtualListDiv.current) return;
+    const { current } = this.virtualListDiv;
+
+    if (!current) {
+      return;
+    }
 
     const newLogsAdded = prevLogs.length < logs.length;
-    const scrolledToBeginning = this.virtualListDiv.current.scrollTop === 0;
+    const scrolledToBeginning = current.scrollTop === 0;
 
     if (newLogsAdded && scrolledToBeginning) {
       const firstLineContents = prevLogs[0];
@@ -101,22 +102,6 @@ export class LogList extends React.Component<Props> {
         this.scrollToItem(lineToScroll, "start");
       }
     }
-  }
-
-  /**
-   * Returns logs with or without timestamps regarding to showTimestamps prop
-   */
-  @computed
-  get logs() {
-    const showTimestamps = logTabStore.getData(this.props.id)?.showTimestamps;
-
-    if (!showTimestamps) {
-      return logStore.logsWithoutTimestamps;
-    }
-
-    return this.props.logs
-      .map(log => logStore.splitOutTimestamp(log))
-      .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
   }
 
   /**
@@ -142,7 +127,13 @@ export class LogList extends React.Component<Props> {
    */
   @action
   setLastLineVisibility = (props: ListOnScrollProps) => {
-    const { scrollHeight, clientHeight } = this.virtualListDiv.current;
+    const { current } = this.virtualListDiv;
+
+    if (!current) {
+      return;
+    }
+
+    const { scrollHeight, clientHeight } = current;
     const { scrollOffset } = props;
 
     this.isLastLineVisible = (clientHeight + scrollOffset) === scrollHeight;
@@ -152,34 +143,38 @@ export class LogList extends React.Component<Props> {
    * Check if user scrolled to top and new logs should be loaded
    * @param props Scrolling props from virtual list core
    */
-  checkLoadIntent = (props: ListOnScrollProps) => {
-    const { scrollOffset } = props;
-
+  checkLoadIntent = ({ scrollOffset }: ListOnScrollProps) => {
     if (scrollOffset === 0) {
       this.props.load();
     }
   };
 
-  scrollToBottom = () => {
-    if (!this.virtualListDiv.current) return;
-    this.virtualListDiv.current.scrollTop = this.virtualListDiv.current.scrollHeight;
+  scrollToItem = (index: number, align: Align) => {
+    this.virtualListRef.current?.scrollToItem(index, align);
   };
 
-  scrollToItem = (index: number, align: Align) => {
-    this.virtualListRef.current.scrollToItem(index, align);
+  scrollToBottom = () => {
+    const { current } = this.virtualListDiv;
+
+    if (!current) {
+      return;
+    }
+
+    current.scrollTop = current.scrollHeight;
   };
 
   onScroll = (props: ListOnScrollProps) => {
     this.isLastLineVisible = false;
+    this.setButtonVisibility(props);
+    this.setLastLineVisibility(props);
     this.onScrollDebounced(props);
   };
 
   onScrollDebounced = debounce((props: ListOnScrollProps) => {
-    if (!this.virtualListDiv.current) return;
-    this.setButtonVisibility(props);
-    this.setLastLineVisibility(props);
     this.checkLoadIntent(props);
-  }, 700); // Increasing performance and giving some time for virtual list to settle down
+  }, 700, {
+    leading: true,
+  }); // Increasing performance and giving some time for virtual list to settle down
 
   /**
    * A function is called by VirtualList for rendering each of the row
@@ -188,7 +183,7 @@ export class LogList extends React.Component<Props> {
    */
   getLogRow = (rowIndex: number) => {
     const { searchQuery, isActiveOverlay } = searchStore;
-    const item = this.logs[rowIndex];
+    const item = this.props.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
 
@@ -232,31 +227,26 @@ export class LogList extends React.Component<Props> {
   };
 
   render() {
-    const { isLoading } = this.props;
-    const isInitLoading = isLoading && !this.logs.length;
-    const rowHeights = array.filled(this.logs.length, this.lineHeight);
+    const { logs, isLoading, selectedContainer } = this.props;
 
-    if (isInitLoading) {
-      return (
-        <div className="LogList flex box grow align-center justify-center">
-          <Spinner center/>
-        </div>
-      );
+    if (isLoading) {
+      // Don't show a spinner since `Logs` will instead.
+      return null;
     }
 
-    if (!this.logs.length) {
+    if (!logs.length) {
       return (
         <div className="LogList flex box grow align-center justify-center">
-          There are no logs available for container
+          There are no logs available for container {selectedContainer}
         </div>
       );
     }
 
     return (
-      <div className={cssNames("LogList flex", { isLoading })}>
+      <div className={cssNames("LogList flex")}>
         <VirtualList
-          items={this.logs}
-          rowHeights={rowHeights}
+          items={logs}
+          rowHeights={array.filled(logs.length, this.lineHeight)}
           getRow={this.getLogRow}
           onScroll={this.onScroll}
           outerRef={this.virtualListDiv}

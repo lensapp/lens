@@ -19,55 +19,80 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, observable, reaction } from "mobx";
-import { autoBind, createStorage, StorageHelper, toJS } from "../../utils";
+import { action, autorun, observable, reaction } from "mobx";
+import logger from "../../../common/logger";
+import { autoBind, createStorage, noop, StorageHelper, toJS } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
-export interface DockTabStoreOptions {
-  autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
-  storageKey?: string; // save data to persistent storage under the key
+export interface DockTabStoreOptions<T> {
+  /**
+   * load data from storage when `storageKey` is provided and bind events
+   *
+   * @default true
+   */
+  autoInit?: boolean;
+
+  /**
+   * save data to persistent storage under the key
+   */
+  storageKey?: string;
+
+  /**
+   * A function to call for validating values. It should `throw` if an error is present
+   */
+  validator?: (value: T) => void;
 }
 
-export type DockTabStorageState<T> = Record<TabId, T>;
+type PartialObject<T> = T extends object ? Partial<T> : never;
 
 export class DockTabStore<T> {
-  protected storage?: StorageHelper<DockTabStorageState<T>>;
+  protected storage?: StorageHelper<Record<TabId, T>>;
   protected data = observable.map<TabId, T>();
+  protected validator: (value: T) => void;
 
-  constructor(protected options: DockTabStoreOptions = {}) {
+  constructor({ autoInit = true, storageKey, validator = noop }: DockTabStoreOptions<T> = {}) {
     autoBind(this);
 
-    this.options = {
-      autoInit: true,
-      ...this.options,
-    };
+    this.validator = validator;
 
-    if (this.options.autoInit) {
-      this.init();
+    if (autoInit) {
+      this.init(storageKey);
     }
   }
 
-  protected init() {
-    const { storageKey } = this.options;
-
+  protected init(storageKey: string | undefined) {
     // auto-save to local-storage
     if (storageKey) {
       this.storage = createStorage(storageKey, {});
-      this.storage.whenReady.then(() => {
-        this.data.replace(this.storage.get());
-        reaction(() => this.toJSON(), data => this.storage.set(data));
-      });
+      this.storage.whenReady.then(action(() => {
+        for (const [tabId, value] of Object.entries(this.storage.get())) {
+          try {
+            this.setData(tabId, value);
+          } catch (error) {
+            logger.warn(`[DOCK-TAB-STORE-${storageKey}]: data for ${tabId} was invalid, skipping`, error);
+            dockStore.closeTab(tabId);
+          }
+        }
+        reaction(
+          () => this.toJSON(),
+          data => this.storage.set(data),
+          {
+            // fireImmediately so that invalid data is removed from the store
+            fireImmediately: true,
+          },
+        );
+      }));
     }
 
     // clear data for closed tabs
     autorun(() => {
-      const currentTabs = dockStore.tabs.map(tab => tab.id);
+      const currentTabs = new Set(dockStore.tabs.map(tab => tab.id));
 
-      Array.from(this.data.keys()).forEach(tabId => {
-        if (!currentTabs.includes(tabId)) {
+      for (const tabId in this.data) {
+        if (!currentTabs.has(tabId)) {
           this.clearData(tabId);
         }
-      });
+      }
     });
   }
 
@@ -75,7 +100,7 @@ export class DockTabStore<T> {
     return data;
   }
 
-  protected toJSON(): DockTabStorageState<T> {
+  protected toJSON(): Record<TabId, T> {
     const deepCopy = toJS(this.data);
 
     deepCopy.forEach((tabData, key) => {
@@ -94,7 +119,19 @@ export class DockTabStore<T> {
   }
 
   setData(tabId: TabId, data: T) {
+    this.validator(data);
     this.data.set(tabId, data);
+  }
+
+  /**
+   * Do a partial update for the dock tab data.
+   *
+   * NOTE: only supported for object types
+   * @param tabId The ID of the tab to merge data with
+   * @param data The partial value of the data
+   */
+  mergeData(tabId: TabId, data: PartialObject<T>) {
+    this.setData(tabId, { ...this.getData(tabId), ...data });
   }
 
   clearData(tabId: TabId) {

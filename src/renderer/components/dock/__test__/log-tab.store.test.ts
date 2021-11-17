@@ -19,146 +19,137 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { podsStore } from "../../+workloads-pods/pods.store";
-import { UserStore } from "../../../../common/user-store";
 import { Pod } from "../../../../common/k8s-api/endpoints";
-import { ThemeStore } from "../../../theme.store";
-import { dockStore } from "../dock.store";
-import { logTabStore } from "../log-tab.store";
-import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
-import fse from "fs-extra";
-import { mockWindow } from "../../../../../__mocks__/windowMock";
-import { AppPaths } from "../../../../common/app-paths";
+import type { TabId } from "../dock.store";
+import { DockManager, LogTabStore } from "../log-tab.store";
+import { deploymentPod1, dockerPod, noOwnersPod } from "./pod.mock";
 
-mockWindow();
+function getMockDockManager(): jest.Mocked<DockManager> {
+  return {
+    renameTab: jest.fn(),
+    createTab: jest.fn(),
+    closeTab: jest.fn(),
+  };
+}
 
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
+describe("LogTabStore", () => {
+  describe("createPodTab()", () => {
+    it("throws if data is not an object", () => {
+      const dockManager = getMockDockManager();
+      const logTabStore = new LogTabStore({ autoInit: false }, dockManager);
 
-AppPaths.init();
-
-podsStore.items.push(new Pod(dockerPod));
-podsStore.items.push(new Pod(deploymentPod1));
-podsStore.items.push(new Pod(deploymentPod2));
-
-describe("log tab store", () => {
-  beforeEach(() => {
-    UserStore.createInstance();
-    ThemeStore.createInstance();
-  });
-
-  afterEach(() => {
-    logTabStore.reset();
-    dockStore.reset();
-    UserStore.resetInstance();
-    ThemeStore.resetInstance();
-    fse.remove("tmp");
-  });
-
-  it("creates log tab without sibling pods", () => {
-    const selectedPod = new Pod(dockerPod);
-    const selectedContainer = selectedPod.getAllContainers()[0];
-
-    logTabStore.createPodTab({
-      selectedPod,
-      selectedContainer,
+      expect(() => logTabStore.createPodTab(0 as any)).toThrow(/is not an object/);
     });
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
-      pods: [selectedPod],
-      selectedPod,
-      selectedContainer,
-      showTimestamps: false,
-      previous: false,
+    it("throws if data.selectedPod is not an object", () => {
+      const dockManager = getMockDockManager();
+      const logTabStore = new LogTabStore({ autoInit: false }, dockManager);
+
+      expect(() => logTabStore.createPodTab({ selectedPod: 1 as any, selectedContainer: {} as any })).toThrow(/is not an object/);
+    });
+
+    it("throws if data.selectedContainer is not an object", () => {
+      const dockManager = getMockDockManager();
+      const logTabStore = new LogTabStore({ autoInit: false }, dockManager);
+
+      expect(() => logTabStore.createPodTab({ selectedContainer: 1 as any, selectedPod: {} as any })).toThrow(/is not an object/);
+    });
+
+    it("does not throw if selectedPod has no owner refs", () => {
+      const dockManager = getMockDockManager();
+      const logTabStore = new LogTabStore({ autoInit: false }, dockManager);
+      const pod = new Pod(noOwnersPod);
+
+      expect(() => logTabStore.createPodTab({ selectedContainer: {} as any, selectedPod: pod })).not.toThrow();
+    });
+
+    it("should return a TabId if created sucessfully", () => {
+      const dockManager = getMockDockManager();
+      const logTabStore = new LogTabStore({ autoInit: false }, dockManager);
+      const pod = new Pod(dockerPod);
+
+      expect(typeof logTabStore.createPodTab({ selectedContainer: { name: "docker-exporter" } as any, selectedPod: pod })).toBe("string");
     });
   });
 
-  it("creates log tab with sibling pods", () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const siblingPod = new Pod(deploymentPod2);
-    const selectedContainer = selectedPod.getInitContainers()[0];
+  describe("changeSelectedPod()", () => {
+    let dockManager: jest.Mocked<DockManager>;
+    let logTabStore: LogTabStore;
+    let tabId: TabId;
+    const pod = new Pod(dockerPod);
 
-    logTabStore.createPodTab({
-      selectedPod,
-      selectedContainer,
+    beforeEach(() => {
+      dockManager = getMockDockManager();
+      logTabStore = new LogTabStore({ autoInit: false }, dockManager);
+      tabId = logTabStore.createPodTab({ selectedContainer: { name: "docker-exporter" } as any, selectedPod: pod });
     });
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
-      pods: [selectedPod, siblingPod],
-      selectedPod,
-      selectedContainer,
-      showTimestamps: false,
-      previous: false,
-    });
-  });
+    it("should work as expected", () => {
+      const newPod = new Pod(deploymentPod1);
 
-  it("removes item from pods list if pod deleted from store", () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const selectedContainer = selectedPod.getInitContainers()[0];
+      logTabStore.changeSelectedPod(tabId, newPod);
 
-    logTabStore.createPodTab({
-      selectedPod,
-      selectedContainer,
+      expect(logTabStore.getData(tabId)).toMatchObject({
+        selectedPod: newPod.getId(),
+        selectedContainer: newPod.getContainers()[0].name,
+      });
     });
 
-    podsStore.items.pop();
+    it("should rename the tab", () => {
+      const newPod = new Pod(deploymentPod1);
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
-      pods: [selectedPod],
-      selectedPod,
-      selectedContainer,
-      showTimestamps: false,
-      previous: false,
+      logTabStore.changeSelectedPod(tabId, newPod);
+      expect(dockManager.renameTab).toBeCalledWith(tabId, "Pod Logs: deploymentPod1");
     });
   });
 
-  it("adds item into pods list if new sibling pod added to store", () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const selectedContainer = selectedPod.getInitContainers()[0];
+  describe("getData()", () => {
+    let dockManager: jest.Mocked<DockManager>;
+    let logTabStore: LogTabStore;
+    let tabId: TabId;
+    const pod = new Pod(dockerPod);
 
-    logTabStore.createPodTab({
-      selectedPod,
-      selectedContainer,
+    beforeEach(() => {
+      dockManager = getMockDockManager();
+      logTabStore = new LogTabStore({ autoInit: false }, dockManager);
+      tabId = logTabStore.createPodTab({ selectedContainer: { name: "docker-exporter" } as any, selectedPod: pod });
     });
 
-    podsStore.items.push(new Pod(deploymentPod3));
+    it("should return data if created", () => {
+      expect(logTabStore.getData(tabId)).toMatchObject({
+        selectedPod: pod.getId(),
+        selectedContainer: "docker-exporter",
+      });
+    });
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
-      pods: [selectedPod, deploymentPod3],
-      selectedPod,
-      selectedContainer,
-      showTimestamps: false,
-      previous: false,
+    it("should return undefined for unknown tab ID", () => {
+      expect(logTabStore.getData("foo")).toBeUndefined();
     });
   });
 
-  // FIXME: this is failed when it's not .only == depends on something above
-  it.only("closes tab if no pods left in store", async () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const selectedContainer = selectedPod.getInitContainers()[0];
+  describe("setData()", () => {
+    let dockManager: jest.Mocked<DockManager>;
+    let logTabStore: LogTabStore;
 
-    const id = logTabStore.createPodTab({
-      selectedPod,
-      selectedContainer,
+    beforeEach(() => {
+      dockManager = getMockDockManager();
+      logTabStore = new LogTabStore({ autoInit: false }, dockManager);
     });
 
-    podsStore.items.clear();
+    it("should throw an error on invalid data", () => {
+      expect(() => logTabStore.setData("foo", 7 as any)).toThrowError();
+    });
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toBeUndefined();
-    expect(logTabStore.getData(id)).toBeUndefined();
-    expect(dockStore.getTabById(id)).toBeUndefined();
+    it("should not throw an error on valid data", () => {
+      expect(() => logTabStore.setData("foo", {
+        namespace: "foobar",
+        previous: false,
+        selectedPod: "blat",
+        showTimestamps:  false,
+        podsOwner: "bar",
+        selectedContainer: "bat",
+      })).not.toThrowError();
+      expect(logTabStore.getData("foo")).toBeDefined();
+    });
   });
 });

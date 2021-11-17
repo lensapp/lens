@@ -205,7 +205,7 @@ export class ClusterManager extends Singleton {
           if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
             logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
           } else {
-            logger.error(`${logPrefix} failed to add cluster: ${error}`, model);
+            logger.error(`${logPrefix} failed to add cluster: ${error}`, { model, source: entity.metadata.source });
           }
         }
       } else {

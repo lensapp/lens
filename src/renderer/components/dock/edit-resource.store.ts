@@ -43,8 +43,8 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     autoBind(this);
   }
 
-  protected async init() {
-    super.init();
+  protected async init(storageKey: string | undefined) {
+    super.init(storageKey);
     await this.storage.whenReady;
 
     autorun(() => {

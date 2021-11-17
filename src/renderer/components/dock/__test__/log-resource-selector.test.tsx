@@ -25,8 +25,7 @@ import { render } from "@testing-library/react";
 import * as selectEvent from "react-select-event";
 
 import { Pod } from "../../../../common/k8s-api/endpoints";
-import { LogResourceSelector } from "../log-resource-selector";
-import type { LogTabData } from "../log-tab.store";
+import { LogResourceSelector, LogResourceSelectorProps } from "../log-resource-selector";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
@@ -51,35 +50,26 @@ jest.mock("electron", () => ({
 
 AppPaths.init();
 
-const getComponent = (tabData: LogTabData) => {
-  return (
-    <LogResourceSelector
-      tabId="tabId"
-      tabData={tabData}
-      save={jest.fn()}
-      reload={jest.fn()}
-    />
-  );
-};
-
-const getOnePodTabData = (): LogTabData => {
+const getOnePodTabProps = (): LogResourceSelectorProps => {
   const selectedPod = new Pod(dockerPod);
 
   return {
-    pods: [] as Pod[],
-    selectedPod,
-    selectedContainer: selectedPod.getContainers()[0],
+    pod: selectedPod,
+    pods: [selectedPod],
+    tabId: "tabId",
+    selectedContainer: selectedPod.getContainers()[0].name,
   };
 };
 
-const getFewPodsTabData = (): LogTabData => {
+const getFewPodsTabProps = (): LogResourceSelectorProps => {
   const selectedPod = new Pod(deploymentPod1);
   const anotherPod = new Pod(dockerPod);
 
   return {
-    pods: [anotherPod],
-    selectedPod,
-    selectedContainer: selectedPod.getContainers()[0],
+    pod: selectedPod,
+    pods: [selectedPod, anotherPod],
+    tabId: "tabId",
+    selectedContainer: selectedPod.getContainers()[0].name,
   };
 };
 
@@ -99,42 +89,46 @@ describe("<LogResourceSelector />", () => {
   });
 
   it("renders w/o errors", () => {
-    const tabData = getOnePodTabData();
-    const { container } = render(getComponent(tabData));
+    const props = getOnePodTabProps();
+    const { container } = render(<LogResourceSelector {...props} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("renders proper namespace", () => {
-    const tabData = getOnePodTabData();
-    const { getByTestId } = render(getComponent(tabData));
+    const props = getOnePodTabProps();
+    const { getByTestId } = render(<LogResourceSelector {...props} />);
     const ns = getByTestId("namespace-badge");
 
     expect(ns).toHaveTextContent("default");
   });
 
   it("renders proper selected items within dropdowns", () => {
-    const tabData = getOnePodTabData();
-    const { getByText } = render(getComponent(tabData));
+    const props = getOnePodTabProps();
+    const { getByText } = render(<LogResourceSelector {...props} />);
 
     expect(getByText("dockerExporter")).toBeInTheDocument();
     expect(getByText("docker-exporter")).toBeInTheDocument();
   });
 
   it("renders sibling pods in dropdown", () => {
-    const tabData = getFewPodsTabData();
-    const { container, getByText } = render(getComponent(tabData));
+    const props = getFewPodsTabProps();
+    const { container, getByText } = render(<LogResourceSelector {...props} />);
     const podSelector: HTMLElement = container.querySelector(".pod-selector");
 
     selectEvent.openMenu(podSelector);
 
-    expect(getByText("dockerExporter")).toBeInTheDocument();
-    expect(getByText("deploymentPod1")).toBeInTheDocument();
+    expect(getByText("dockerExporter", {
+      selector: ".Select__option",
+    })).toBeInTheDocument();
+    expect(getByText("deploymentPod1", {
+      selector: ".Select__option",
+    })).toBeInTheDocument();
   });
 
   it("renders sibling containers in dropdown", () => {
-    const tabData = getFewPodsTabData();
-    const { getByText, container } = render(getComponent(tabData));
+    const props = getFewPodsTabProps();
+    const { getByText, container } = render(<LogResourceSelector {...props} />);
     const containerSelector: HTMLElement = container.querySelector(".container-selector");
 
     selectEvent.openMenu(containerSelector);
@@ -145,8 +139,8 @@ describe("<LogResourceSelector />", () => {
   });
 
   it("renders pod owner as dropdown title", () => {
-    const tabData = getFewPodsTabData();
-    const { getByText, container } = render(getComponent(tabData));
+    const props = getFewPodsTabProps();
+    const { getByText, container } = render(<LogResourceSelector {...props} />);
     const podSelector: HTMLElement = container.querySelector(".pod-selector");
 
     selectEvent.openMenu(podSelector);

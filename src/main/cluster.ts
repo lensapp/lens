@@ -20,7 +20,7 @@
  */
 
 import { ipcMain } from "electron";
-import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
@@ -34,7 +34,7 @@ import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../common/cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
-import { disposer, storedKubeConfigFolder, toJS } from "../common/utils";
+import { disposer, storedKubeConfigFolder, toJS, comparer } from "../common/utils";
 import type { Response } from "request";
 
 /**

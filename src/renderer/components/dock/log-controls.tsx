@@ -24,45 +24,37 @@ import "./log-controls.scss";
 import React from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../common/k8s-api/endpoints";
+import type { Pod } from "../../../common/k8s-api/endpoints";
 import { cssNames, saveFileDialog } from "../../utils";
 import { logStore } from "./log.store";
 import { Checkbox } from "../checkbox";
 import { Icon } from "../icon";
-import type { LogTabData } from "./log-tab.store";
+import type { TabId } from "./dock.store";
+import { logTabStore } from "./log-tab.store";
 
 interface Props {
-  tabData?: LogTabData
-  logs: string[]
-  save: (data: Partial<LogTabData>) => void
-  reload: () => void
+  pod: Pod;
+  tabId: TabId;
+  preferences: {
+    showTimestamps: boolean;
+    previous: boolean;
+  };
+  logs: string[];
 }
 
-export const LogControls = observer((props: Props) => {
-  const { tabData, save, reload, logs } = props;
-
-  if (!tabData) {
-    return null;
-  }
-
-  const { showTimestamps, previous } = tabData;
-  const since = logs.length ? logStore.getTimestamps(logs[0]) : null;
-  const pod = new Pod(tabData.selectedPod);
+export const LogControls = observer(({ pod, tabId, preferences, logs }: Props) => {
+  const since = logStore.getFirstTime(tabId);
 
   const toggleTimestamps = () => {
-    save({ showTimestamps: !showTimestamps });
+    logTabStore.mergeData(tabId, { showTimestamps: !preferences.showTimestamps });
   };
 
   const togglePrevious = () => {
-    save({ previous: !previous });
-    reload();
+    logTabStore.mergeData(tabId, { previous: !preferences.previous });
   };
 
   const downloadLogs = () => {
-    const fileName = pod.getName();
-    const logsToDownload = showTimestamps ? logs : logStore.logsWithoutTimestamps;
-
-    saveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
+    saveFileDialog(`${pod.getName()}.log`, logs.join("\n"), "text/plain");
   };
 
   return (
@@ -70,21 +62,20 @@ export const LogControls = observer((props: Props) => {
       <div className="time-range">
         {since && (
           <span>
-            Logs from{" "}
-            <b>{new Date(since[0]).toLocaleString()}</b>
+            Logs from <b>{since}</b>
           </span>
         )}
       </div>
       <div className="flex gaps align-center">
         <Checkbox
           label="Show timestamps"
-          value={showTimestamps}
+          value={preferences.showTimestamps}
           onChange={toggleTimestamps}
           className="show-timestamps"
         />
         <Checkbox
           label="Show previous terminated container"
-          value={previous}
+          value={preferences.previous}
           onChange={togglePrevious}
           className="show-previous"
         />

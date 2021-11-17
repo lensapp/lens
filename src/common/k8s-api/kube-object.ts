@@ -37,6 +37,15 @@ export type KubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonAp
   apiBase?: string;
 };
 
+export interface KubeOwnerReference {
+  apiVersion: string;
+  kind: string;
+  name: string;
+  uid: string;
+  controller: boolean;
+  blockOwnerDeletion: boolean;
+}
+
 export interface KubeObjectMetadata {
   uid: string;
   name: string;
@@ -53,14 +62,7 @@ export interface KubeObjectMetadata {
   annotations?: {
     [annotation: string]: string;
   };
-  ownerReferences?: {
-    apiVersion: string;
-    kind: string;
-    name: string;
-    uid: string;
-    controller: boolean;
-    blockOwnerDeletion: boolean;
-  }[];
+  ownerReferences?: KubeOwnerReference[];
 }
 
 export interface KubeStatusData {

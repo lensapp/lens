@@ -27,6 +27,7 @@ import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
 import logger from "../../main/logger";
 import { isTestEnv } from "../../common/vars";
+import AwaitLock from "await-lock";
 
 const storage = observable({
   initialized: false,
@@ -50,8 +51,11 @@ export function createStorage<T>(key: string, defaultValue: T) {
 
       try {
         storage.data = await fse.readJson(filePath);
-      } catch {
-        // ignore error
+      } catch (error) {
+        // ignore file not found errors for logging
+        if (error?.code !== "ENOENT") {
+          logger.warn(`${logPrefix} failed to read JSON from ${filePath}`, error);
+        }
       } finally {
         if (!isTestEnv) {
           logger.info(`${logPrefix} loading finished for ${filePath}`);
@@ -60,22 +64,29 @@ export function createStorage<T>(key: string, defaultValue: T) {
         storage.loaded = true;
       }
 
+      const lock = new AwaitLock();
+
       // bind auto-saving data changes to %storage-file.json
       reaction(() => toJS(storage.data), saveFile, {
-        delay: 250, // lazy, avoid excessive writes to fs
+        delay: 1000, // lazy, avoid excessive writes to fs
         equals: comparer.structural, // save only when something really changed
       });
 
       async function saveFile(state: Record<string, any> = {}) {
-        logger.info(`${logPrefix} saving ${filePath}`);
-
         try {
+          await lock.acquireAsync();
+          logger.info(`${logPrefix} saving ${filePath}`);
           await fse.ensureDir(path.dirname(filePath), { mode: 0o755 });
           await fse.writeJson(filePath, state, { spaces: 2 });
         } catch (error) {
-          logger.error(`${logPrefix} saving failed: ${error}`, {
-            json: state, jsonFilePath: filePath,
-          });
+          const meta = {
+            json: state,
+            jsonFilePath: filePath,
+          };
+
+          logger.error(`${logPrefix} saving failed: ${error}`, meta);
+        } finally {
+          lock.release();
         }
       }
     })()
