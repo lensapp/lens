@@ -40,7 +40,6 @@ import { Wizard, WizardStep } from "../../wizard";
 import { roleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { Input } from "../../input";
-import { getRoleRefSelectOption, ServiceAccountOption } from "../select-options";
 import { ObservableHashSet, nFircate } from "../../../utils";
 
 interface Props extends Partial<DialogProps> {
@@ -112,9 +111,9 @@ export class RoleBindingDialog extends React.Component<Props> {
   @computed get roleRefOptions(): SelectOption<Role | ClusterRole>[] {
     const roles = rolesStore.items
       .filter(role => role.getNs() === this.bindingNamespace)
-      .map(getRoleRefSelectOption);
+      .map(value => ({ value, label: value.getName() }));
     const clusterRoles = clusterRolesStore.items
-      .map(getRoleRefSelectOption);
+      .map(value => ({ value, label: value.getName() }));
 
     return [
       ...roles,
@@ -122,21 +121,15 @@ export class RoleBindingDialog extends React.Component<Props> {
     ];
   }
 
-  @computed get serviceAccountOptions(): ServiceAccountOption[] {
-    return serviceAccountsStore.items.map(account => {
-      const name = account.getName();
-      const namespace = account.getNs();
-
-      return {
-        value: `${account.getName()}%${account.getNs()}`,
-        account,
-        label: <><Icon small material="account_box" /> {name} ({namespace})</>,
-      };
-    });
+  @computed get serviceAccountOptions(): SelectOption<ServiceAccount>[] {
+    return serviceAccountsStore.items.map(account => ({
+      value: account,
+      label: `${account.getName()} (${account.getNs()})`,
+    }));
   }
 
-  @computed get selectedServiceAccountOptions(): ServiceAccountOption[] {
-    return this.serviceAccountOptions.filter(({ account }) => this.selectedAccounts.has(account));
+  @computed get selectedServiceAccountOptions(): SelectOption<ServiceAccount>[] {
+    return this.serviceAccountOptions.filter(({ value }) => this.selectedAccounts.has(value));
   }
 
   @action
@@ -204,6 +197,7 @@ export class RoleBindingDialog extends React.Component<Props> {
           themeName="light"
           isDisabled={this.isEditing}
           value={this.bindingNamespace}
+          autoFocus={!this.isEditing}
           onChange={({ value }) => this.bindingNamespace = value}
         />
 
@@ -256,9 +250,12 @@ export class RoleBindingDialog extends React.Component<Props> {
           autoConvertOptions={false}
           options={this.serviceAccountOptions}
           value={this.selectedServiceAccountOptions}
-          onChange={(selected: ServiceAccountOption[] | null) => {
+          formatOptionLabel={({ value }: SelectOption<ServiceAccount>) => (
+            <><Icon small material="account_box" /> {value.getName()} ({value.getNs()})</>
+          )}
+          onChange={(selected: SelectOption<ServiceAccount>[] | null) => {
             if (selected) {
-              this.selectedAccounts.replace(selected.map(opt => opt.account));
+              this.selectedAccounts.replace(selected.map(opt => opt.value));
             } else {
               this.selectedAccounts.clear();
             }

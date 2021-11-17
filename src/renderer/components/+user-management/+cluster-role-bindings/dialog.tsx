@@ -37,9 +37,9 @@ import { Select, SelectOption } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
 import { clusterRoleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
-import { getRoleRefSelectOption, ServiceAccountOption } from "../select-options";
 import { ObservableHashSet, nFircate } from "../../../utils";
 import { Input } from "../../input";
+import { TooltipPosition } from "../../tooltip";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -114,24 +114,21 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
   }
 
   @computed get clusterRoleRefoptions(): SelectOption<ClusterRole>[] {
-    return clusterRolesStore.items.map(getRoleRefSelectOption);
+    return clusterRolesStore.items.map(value => ({
+      value,
+      label: value.getName(),
+    }));
   }
 
-  @computed get serviceAccountOptions(): ServiceAccountOption[] {
-    return serviceAccountsStore.items.map(account => {
-      const name = account.getName();
-      const namespace = account.getNs();
-
-      return {
-        value: `${account.getName()}%${account.getNs()}`,
-        account,
-        label: <><Icon small material="account_box" /> {name} ({namespace})</>,
-      };
-    });
+  @computed get serviceAccountOptions(): SelectOption<ServiceAccount>[] {
+    return serviceAccountsStore.items.map(account => ({
+      value: account,
+      label: `${account.getName()} (${account.getNs()})`,
+    }));
   }
 
-  @computed get selectedServiceAccountOptions(): ServiceAccountOption[] {
-    return this.serviceAccountOptions.filter(({ account }) => this.selectedAccounts.has(account));
+  @computed get selectedServiceAccountOptions(): SelectOption<ServiceAccount>[] {
+    return this.serviceAccountOptions.filter(({ value }) => this.selectedAccounts.has(value));
   }
 
   @action
@@ -198,6 +195,21 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
           isDisabled={this.isEditing}
           options={this.clusterRoleRefoptions}
           value={this.selectedRoleRef}
+          autoFocus={!this.isEditing}
+          formatOptionLabel={({ value }: SelectOption<ClusterRole>) => (
+            <>
+              <Icon
+                small
+                material={value.kind === "Role" ? "person" : "people"}
+                tooltip={{
+                  preferredPositions: TooltipPosition.LEFT,
+                  children: value.kind,
+                }}
+              />
+              {" "}
+              {value.getName()}
+            </>
+          )}
           onChange={({ value }: SelectOption<ClusterRole> ) => {
             if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
               this.bindingName = value.getName();
@@ -241,9 +253,12 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
           autoConvertOptions={false}
           options={this.serviceAccountOptions}
           value={this.selectedServiceAccountOptions}
-          onChange={(selected: ServiceAccountOption[] | null) => {
+          formatOptionLabel={({ value }: SelectOption<ServiceAccount>) => (
+            <><Icon small material="account_box" /> {value.getName()} ({value.getNs()})</>
+          )}
+          onChange={(selected: SelectOption<ServiceAccount>[] | null) => {
             if (selected) {
-              this.selectedAccounts.replace(selected.map(opt => opt.account));
+              this.selectedAccounts.replace(selected.map(opt => opt.value));
             } else {
               this.selectedAccounts.clear();
             }
