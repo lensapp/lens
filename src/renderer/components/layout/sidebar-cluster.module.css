@@ -25,13 +25,20 @@
   padding: 1.25rem;
   cursor: pointer;
 
-  &:focus-visible {
-    background: var(--blue);
-    color: white;
-  }
-
   &:hover {
     background: var(--sidebarLogoBackground);
+  }
+
+  &:focus-visible {
+    .dropdown {
+      box-shadow: 0 0 0 2px var(--focus-color);
+      color: white;
+    }
+  }
+
+  .dropdown {
+    border-radius: 3px;
+    margin-left: var(--margin);
   }
 }
 
@@ -47,8 +54,9 @@
 }
 
 .menu {
-  width: 185px;
-  margin-top: -10px;
+  width: 200px;
+  margin-top: -1.25rem;
+  margin-left: 1.25rem;
 }
 
 .avatar {

@@ -116,7 +116,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
       <div className={styles.clusterName}>
         {metadata.name}
       </div>
-      <Icon material="arrow_drop_down"/>
+      <Icon material="arrow_drop_down" className={styles.dropdown}/>
       <Menu
         usePortal
         htmlFor={id}
