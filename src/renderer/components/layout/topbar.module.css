@@ -34,7 +34,7 @@
   padding-left: var(--hotbar-width);
 }
 
-.history {
+.tools {
   @apply flex items-center;
 }
 
