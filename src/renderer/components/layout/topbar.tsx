@@ -24,7 +24,7 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";
 import { Icon } from "../icon";
-import { webContents } from "@electron/remote";
+import { webContents, getCurrentWindow } from "@electron/remote";
 import { observable } from "mobx";
 import { ipcRendererOn } from "../../../common/ipc";
 import { watchHistoryState } from "../../remote-helpers/history-updater";
@@ -82,6 +82,16 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
     webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goForward();
   };
 
+  const windowSizeToggle = () => {
+    const window = getCurrentWindow();
+
+    if (window.isMaximized()) {
+      window.unmaximize();
+    } else {
+      window.maximize();
+    }
+  };
+
   useEffect(() => {
     const disposer = watchHistoryState();
 
@@ -90,7 +100,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
 
   return (
     <div className={styles.topBar} {...rest}>
-      <div className={styles.history}>
+      <div className={styles.tools} onDoubleClick={windowSizeToggle}>
         <Icon
           data-testid="home-button"
           material="home"
