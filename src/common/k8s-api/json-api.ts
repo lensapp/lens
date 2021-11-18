@@ -21,6 +21,8 @@
 
 // Base http-service / json-api class
 
+import { Agent as HttpAgent } from "http";
+import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
 import fetch, { Response, RequestInit } from "node-fetch";
 import { stringify } from "querystring";
@@ -54,6 +56,10 @@ export interface JsonApiConfig {
   debug?: boolean;
   getRequestOptions?: () => Promise<RequestInit>;
 }
+
+const httpAgent = new HttpAgent({ keepAlive: true });
+const httpsAgent = new HttpsAgent({ keepAlive: true });
+
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
@@ -93,6 +99,10 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
     if (!reqInit.method) {
       reqInit.method = "get";
+    }
+
+    if (!reqInit.agent) {
+      reqInit.agent = reqUrl.startsWith("https:") ? httpsAgent : httpAgent;
     }
 
     if (query) {
