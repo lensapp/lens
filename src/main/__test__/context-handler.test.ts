@@ -110,7 +110,7 @@ describe("ContextHandler", () => {
       [0, 1],
       [0, 2],
       [0, 3],
-    ])("should return undefined from %d success(es) after %d failure(s)", async (successes, failures) => {
+    ])("should throw from %d success(es) after %d failure(s)", async (successes, failures) => {
       const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 
@@ -124,9 +124,7 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
-      const service = await (getHandler() as any).getPrometheusService();
-
-      expect(service).toBeUndefined();
+      expect(() => (getHandler() as any).getPrometheusService()).rejects.toBeDefined();
     });
 
     it.each([
