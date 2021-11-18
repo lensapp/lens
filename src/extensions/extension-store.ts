@@ -24,6 +24,7 @@ import * as path from "path";
 import type { LensExtension } from "./lens-extension";
 
 export abstract class ExtensionStore<T> extends BaseStore<T> {
+  readonly displayName = "ExtensionStore<T>";
   protected extension: LensExtension;
 
   loadExtension(extension: LensExtension) {

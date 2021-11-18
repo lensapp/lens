@@ -37,6 +37,7 @@ export interface ClusterStoreModel {
 const initialStates = "cluster:states";
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  readonly displayName = "ClusterStore";
   clusters = observable.map<ClusterId, Cluster>();
 
   protected disposer = disposer();

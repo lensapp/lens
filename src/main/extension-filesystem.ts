@@ -34,6 +34,7 @@ interface FSProvisionModel {
 }
 
 export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
+  readonly displayName = "FilesystemProvisionerStore";
   registeredExtensions = observable.map<LensExtensionId, string>();
 
   constructor() {

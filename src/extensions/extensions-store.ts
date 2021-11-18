@@ -34,6 +34,7 @@ export interface LensExtensionState {
 }
 
 export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
+  readonly displayName = "ExtensionsStore";
   constructor() {
     super({
       configName: "lens-extensions",
