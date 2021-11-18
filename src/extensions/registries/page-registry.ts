@@ -26,6 +26,7 @@ import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, LensExtensionId, sanitizeExtensionName } from "../lens-extension";
 import { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
+import { computed, observable } from "mobx";
 
 export interface PageRegistration {
   /**
@@ -92,12 +93,16 @@ export function getExtensionPageUrl(target: PageTarget): string {
 }
 
 class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
+  protected knownUrls = observable.set<string>();
+
   protected getRegisteredItem(page: PageRegistration, ext: LensExtension): RegisteredPage {
     const { id: pageId } = page;
     const extensionId = ext.name;
     const params = this.normalizeParams(extensionId, page.params);
     const components = this.normalizeComponents(page.components, params);
     const url = getExtensionPageUrl({ extensionId, pageId });
+
+    this.knownUrls.add(url);
 
     return {
       id: pageId, extensionId, params, components, url,
@@ -135,10 +140,7 @@ class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
         );
 
         if (notAStringValue && !(parse || stringify)) {
-          throw new Error(
-            `PageRegistry: param's "${paramName}" initialization has failed: 
-              paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`,
-          );
+          throw new Error(`PageRegistry: param's "${paramName}" initialization has failed: paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`);
         }
 
         paramInit.defaultValue = value;
@@ -150,6 +152,13 @@ class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
     });
 
     return normalizedParams;
+  }
+
+  /**
+   * Get the list of all known URLS that have been registered with this registry.
+   */
+  @computed get redirectEntries() {
+    return [...this.knownUrls];
   }
 
   getByPageTarget(target: PageTarget): RegisteredPage | null {

@@ -211,6 +211,12 @@ export class ClusterFrame extends React.Component {
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
               <Redirect exact from="/" to={this.startUrl}/>
+              {
+                ClusterPageRegistry
+                  .getInstance()
+                  .redirectEntries
+                  .map(url => <Redirect key={url} from={url} to={this.startUrl} />)
+              }
               <Route component={NotFound}/>
             </Switch>
           </MainLayout>
