@@ -42,17 +42,19 @@ declare module "@ogre-tools/injectable" {
     ) => void;
   }
 
-  interface ICommonInjectable<TDependencies> {
-    id?: string;
-    getDependencies: (di?: IDependencyInjectionContainer) => TDependencies;
-    lifecycle?: lifecycleEnum;
-  }
-
   export interface IInjectable<
     TInstance,
     TDependencies extends object = {},
     TInstantiationParameter extends object = {},
-  > extends ICommonInjectable<TDependencies> {
+  > {
+    id?: string;
+
+    getDependencies: (
+      di?: IDependencyInjectionContainer,
+    ) => TDependencies | Promise<TDependencies>;
+
+    lifecycle?: lifecycleEnum;
+
     instantiate: (
       dependencies: TDependencies,
       instantiationParameter: TInstantiationParameter,

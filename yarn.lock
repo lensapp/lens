@@ -953,10 +953,10 @@
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-1.1.0.tgz#32757e250b5701c9b467331e99baf9702984106a"
-  integrity sha512-qsC1Igi55SSiH0/oVuH1QcMFhUouEjhfZG5924PG+hqk2Hzsgi3gN1cnPMTpH8vXJiskNQ0tSrgklPb4w5J8KA==
+"@ogre-tools/injectable-react@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-1.2.0.tgz#1634f702bf017f934d06e4332505c2c4aa0d87d6"
+  integrity sha512-T4GEuK0HBIHgE5B2WoibDaeQvhn1jgwwsR1K6fy5sYkNnU5Qa4LlciCuxHU7j7dKy6cDVwNWQVg/OXocb0h0lA==
   dependencies:
     "@ogre-tools/fp" "^1.0.2"
     "@ogre-tools/injectable" "^1.1.0"
