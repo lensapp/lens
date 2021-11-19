@@ -61,14 +61,14 @@ export class MetricsSettings extends React.Component<Props> {
     persistence: {
       enabled: false,
       storageClass: null,
-      size: "20GiB",
+      size: "20Gi", // kubernetes yaml value (no B suffix)
     },
     nodeExporter: {
       enabled: false,
     },
     retention: {
       time: "2d",
-      size: "5GiB",
+      size: "5GiB", // argument for prometheus (requires B suffix)
     },
     kubeStateMetrics: {
       enabled: false,
