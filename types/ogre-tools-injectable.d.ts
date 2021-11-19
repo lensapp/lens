@@ -38,7 +38,12 @@ declare module "@ogre-tools/injectable" {
 
     override: <TInjectable extends IInjectable<TInstance, any>, TInstance>(
       injectable: TInjectable,
-      overrider: ReturnType<TInjectable["instantiate"]>,
+      overrider:
+        | ReturnType<TInjectable["instantiate"]>
+        | jest.MockInstance<
+            ReturnType<TInjectable["instantiate"]>,
+            ReturnType<TInjectable["getDependencies"]>
+          >,
     ) => void;
   }
 
