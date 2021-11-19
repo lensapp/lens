@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./setting-layout.scss";
+import styles from "./settings-layout.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -29,16 +29,13 @@ import { Icon } from "../icon";
 
 export interface SettingLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
-  contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
-  contentGaps?: boolean;
   navigation?: React.ReactNode;
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
 const defaultProps: Partial<SettingLayoutProps> = {
   provideBackButtonNavigation: true,
-  contentGaps: true,
   back: () => navigation.goBack(),
 };
 
@@ -76,32 +73,32 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
 
   render() {
     const {
-      contentClass, provideBackButtonNavigation,
-      contentGaps, navigation, children, back, ...elemProps
+      provideBackButtonNavigation,
+      navigation, children, back, ...elemProps
     } = this.props;
-    const className = cssNames("SettingLayout", { showNavigation: navigation }, this.props.className);
+    const className = cssNames(styles.Settings, { [styles.showNavigation]: navigation }, this.props.className);
 
     return (
       <div {...elemProps} className={className}>
         { navigation && (
-          <nav className="sidebarRegion">
-            <div className="sidebar">
+          <nav className={styles.sidebarRegion}>
+            <div className={styles.sidebar}>
               {navigation}
             </div>
           </nav>
         )}
-        <div className="contentRegion" id="ScrollSpyRoot">
-          <div className={cssNames("content", contentClass, contentGaps && "flex column gaps")}>
+        <div className={styles.contentRegion}>
+          <div className={styles.content}>
             {children}
           </div>
-          <div className="toolsRegion">
+          <div className={styles.toolsRegion}>
             {
               this.props.provideBackButtonNavigation && (
-                <div className="fixedTools">
-                  <div className="closeBtn" role="button" aria-label="Close" onClick={back}>
+                <div className={styles.tools}>
+                  <div className={styles.closeBtn} role="button" aria-label="Close" onClick={back}>
                     <Icon material="close" />
                   </div>
-                  <div className="esc" aria-hidden="true">
+                  <div className={styles.esc} aria-hidden="true">
                     ESC
                   </div>
                 </div>
