@@ -169,6 +169,8 @@
     "nsis": {
       "include": "build/installer.nsh",
       "oneClick": false,
+      "allowElevation": true,
+      "createStartMenuShortcut": true,
       "allowToChangeInstallationDirectory": true
     },
     "protocols": {
