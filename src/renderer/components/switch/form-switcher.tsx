@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   root: {
     margin: 0,
     "& .MuiTypography-root": {
-      fontSize: 14,
+      fontSize: 16,
       fontWeight: 500,
       flex: 1,
       color: "var(--textColorAccent)",
