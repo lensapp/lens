@@ -30,13 +30,14 @@ import { Notifications } from "../../notifications";
 import { resolveTilde } from "../../../utils";
 import { Icon } from "../../icon";
 import { PathPicker } from "../../path-picker";
+import { isWindows } from "../../../../common/vars";
 
 interface Props {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterHomeDirSetting extends React.Component<Props> {
+export class ClusterLocalTerminalSetting extends React.Component<Props> {
   @observable directory = "";
   @observable defaultNamespace = "";
 
@@ -140,7 +141,7 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
             value={this.directory}
             onChange={this.onChangeTerminalCWD}
             onBlur={this.saveCWD}
-            placeholder="$HOME"
+            placeholder={isWindows ? "$USERPROFILE" : "$HOME"}
             iconRight={
               <>
                 {

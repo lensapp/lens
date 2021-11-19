@@ -79,7 +79,7 @@ export function TerminalSettings({ entity }: EntitySettingViewProps) {
 
   return (
     <section>
-      <components.ClusterHomeDirSetting cluster={cluster} />
+      <components.ClusterLocalTerminalSetting cluster={cluster} />
     </section>
   );
 }

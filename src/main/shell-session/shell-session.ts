@@ -189,7 +189,9 @@ export abstract class ShellSession {
       } catch {}
     }
 
-    return env.HOME;
+    return isWindows
+      ? env.USERPROFILE
+      : env.HOME;
   }
 
   protected async openShellProcess(shell: string, args: string[], env: Record<string, string>) {
