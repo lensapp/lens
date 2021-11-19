@@ -51,8 +51,6 @@ export class PathPicker extends React.Component<PathPickerProps> {
       ...dialogOptions,
     });
 
-    console.log(filePaths);
-
     if (canceled) {
       await onCancel?.();
     } else {
