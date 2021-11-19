@@ -50,6 +50,16 @@ const onceSystemResume = () =>
     electron.powerMonitor.on("resume", handler);
   });
 
+const onceSystemSuspend = () => 
+  new Promise(resolve => {
+    const handler = () => {
+      electron.powerMonitor.removeListener("suspend", handler);
+      resolve(true);
+    };
+
+    electron.powerMonitor.on("suspend", handler);
+  });
+
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
    * base api-path for listing all resources, e.g. "/api/v1/pods"
@@ -575,11 +585,23 @@ export class KubeApi<T extends KubeObject> {
 
     onceSystemResume().then(() => {
       clearTimeout(timedRetry);
+      logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
       timedRetry = setTimeout(() => {
         this.watch({ ...opts, namespace, callback, watchId, retry: true });
         // 3000 is a non-evident random value, we assume that after 3 seconds the system is ready
         // to start watching again. (Network interface/DNS is ready etc.)
       }, 3000);
+    }).catch((error) => {
+      logger.warn(`[KUBE-API] resume watching of ${watchUrl} error`, error);
+    });
+
+    onceSystemSuspend().then((suspended) => {
+      if (suspended) {
+        logger.info(`[KUBE-API] system suspended, abort watching ${watchUrl}...`);
+        abort?.();
+      }
+    }).catch((error) => {
+      logger.warn(`[KUBE-API] abort watching of ${watchUrl} error`, error);
     });
 
     responsePromise
