@@ -131,7 +131,10 @@ describe("KubeApi", () => {
       checkPreferredVersion: true,
     });
 
-    await kubeApi.get();
+    await kubeApi.get({
+      name: "foo",
+      namespace: "default",
+    });
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("networking.k8s.io");
   });
@@ -171,7 +174,10 @@ describe("KubeApi", () => {
       checkPreferredVersion: true,
     });
 
-    await kubeApi.get();
+    await kubeApi.get({
+      name: "foo",
+      namespace: "default",
+    });
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("extensions");
   });
@@ -310,7 +316,7 @@ describe("KubeApi", () => {
       (fetch as any).mockResponse(async () => {
         return {};
       });
-      
+
       api.watch({ namespace: "kube-system" });
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", expect.anything(), expect.anything());
     });
@@ -321,7 +327,7 @@ describe("KubeApi", () => {
       (fetch as any).mockResponse(async () => {
         return {};
       });
-      
+
       api.watch({ namespace: "kube-system", timeout: 60 });
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
     });
