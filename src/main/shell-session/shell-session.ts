@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import fse from "fs-extra";
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
 import type WebSocket from "ws";
@@ -34,6 +33,7 @@ import { appEventBus } from "../../common/event-bus";
 import logger from "../logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
+import { stat } from "fs/promises";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -178,10 +178,22 @@ export abstract class ShellSession {
     this.websocket.send(serialize(message));
   }
 
-  protected async openShellProcess(shell: string, args: string[], env: Record<string, any>) {
-    const cwd = (this.cwd && await fse.pathExists(this.cwd))
-    	? this.cwd
-    	: env.HOME;
+  protected async getCwd(env: Record<string, string>): Promise<string> {
+    if (this.cwd) {
+      try {
+        const stats = await stat(this.cwd);
+
+        if (stats.isDirectory()) {
+          return this.cwd;
+        }
+      } catch {}
+    }
+
+    return env.HOME;
+  }
+
+  protected async openShellProcess(shell: string, args: string[], env: Record<string, string>) {
+    const cwd = await this.getCwd(env);
     const { shellProcess, resume } = this.ensureShellProcess(shell, args, env, cwd);
 
     if (resume) {

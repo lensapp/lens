@@ -25,6 +25,11 @@ import { observer, disposeOnUnmount } from "mobx-react";
 import type { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
+import { stat } from "fs/promises";
+import { Notifications } from "../../notifications";
+import { resolveTilde } from "../../../utils";
+import { Icon } from "../../icon";
+import { PathPicker } from "../../path-picker";
 
 interface Props {
   cluster: Cluster;
@@ -53,8 +58,45 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
     );
   }
 
-  saveCWD = () => {
-    this.props.cluster.preferences.terminalCWD = this.directory;
+  saveCWD = async () => {
+    if (!this.directory) {
+      this.props.cluster.preferences.terminalCWD = undefined;
+
+      return;
+    }
+
+    try {
+      const dir = resolveTilde(this.directory);
+      const stats = await stat(dir);
+
+      if (stats.isDirectory()) {
+        this.props.cluster.preferences.terminalCWD = dir;
+      } else {
+        Notifications.error(
+          <>
+            <b>Shell Working Directory</b>
+            <p>Provided path is not a directory, your changes were not saved.</p>
+          </>,
+        );
+      }
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        Notifications.error(
+          <>
+            <b>Shell Working Directory</b>
+            <p>Provided path does not exist, your changes were not saved.</p>
+          </>,
+        );
+      } else {
+        Notifications.error(
+          <>
+            <b>Shell Working Directory</b>
+            <p>Your changes were not saved due to the error bellow</p>
+            <p>{String(error)}</p>
+          </>,
+        );
+      }
+    }
   };
 
   onChangeTerminalCWD = (value: string) => {
@@ -73,6 +115,21 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
     this.defaultNamespace = value;
   };
 
+  openFilePicker = () => {
+    PathPicker.pick({
+      label: "Choose Working Directory",
+      buttonLabel: "Pick",
+      properties: ["openDirectory", "showHiddenFiles"],
+      onPick: ([directory]) => {
+        this.props.cluster.preferences.terminalCWD = directory;
+      },
+    });
+  };
+
+  onClearCWD = () => {
+    this.props.cluster.preferences.terminalCWD = undefined;
+  };
+
   render() {
     return (
       <>
@@ -84,6 +141,24 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
             onChange={this.onChangeTerminalCWD}
             onBlur={this.saveCWD}
             placeholder="$HOME"
+            iconRight={
+              <>
+                {
+                  this.directory && (
+                    <Icon
+                      material="close"
+                      title="Clear"
+                      onClick={this.onClearCWD}
+                    />
+                  )
+                }
+                <Icon
+                  material="folder"
+                  title="Pick from filesystem"
+                  onClick={this.openFilePicker}
+                />
+              </>
+            }
           />
           <small className="hint">
             An explicit start path where the terminal will be launched,{" "}
