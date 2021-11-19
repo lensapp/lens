@@ -61,7 +61,7 @@ export class WorkloadsOverview extends React.Component<Props> {
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
       }),
-      reaction(() => clusterContext.contextNamespaces.length, () => {
+      reaction(() => clusterContext.contextNamespaces.slice(), () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),
@@ -90,11 +90,12 @@ export class WorkloadsOverview extends React.Component<Props> {
   }
 
   render() {
-    const items = WorkloadsOverviewDetailRegistry.getInstance().getItems().map((item, index) => {
-      return (
-        <item.components.Details key={`workload-overview-${index}`}/>
-      );
-    });
+    const items = WorkloadsOverviewDetailRegistry
+      .getInstance()
+      .getItems()
+      .map(({ components: { Details }}, index) => (
+        <Details key={`workload-overview-${index}`}/>
+      ));
 
     return (
       <div className="WorkloadsOverview flex column gaps">
