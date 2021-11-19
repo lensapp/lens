@@ -54,7 +54,7 @@ export const Application = observer(() => {
   return (
     <section id="application">
       <h2 data-testid="application-header">Application</h2>
-      <section id="appearance">
+      <section id="appearance" className="mb-12">
         <SubTitle title="Theme"/>
         <Select
           options={ThemeStore.getInstance().themeOptions}
@@ -64,9 +64,9 @@ export const Application = observer(() => {
         />
       </section>
 
-      <hr/>
+      <hr className="mb-12"/>
 
-      <section id="shell">
+      <section id="shell" className="mb-12">
         <SubTitle title="Terminal Shell Path"/>
         <Input
           theme="round-black"
@@ -77,7 +77,9 @@ export const Application = observer(() => {
         />
       </section>
 
-      <section id="terminalSelection">
+      <hr className="mb-12"/>
+
+      <section id="terminalSelection" className="mb-12">
         <SubTitle title="Terminal copy & paste" />
         <FormSwitch
           label="Copy on select and paste on right-click"
@@ -91,9 +93,9 @@ export const Application = observer(() => {
         />
       </section>
 
-      <hr/>
+      <hr className="mb-12"/>
 
-      <section id="other">
+      <section id="startup" className="mb-12">
         <SubTitle title="Start-up"/>
         <FormSwitch
           control={
@@ -107,9 +109,9 @@ export const Application = observer(() => {
         />
       </section>
 
-      <hr />
+      <hr className="mb-12"/>
 
-      <section id="update-channel">
+      <section id="update-channel" className="mb-12">
         <SubTitle title="Update Channel"/>
         <Select
           options={updateChannelOptions}
@@ -119,7 +121,7 @@ export const Application = observer(() => {
         />
       </section>
 
-      <hr />
+      <hr className="mb-12"/>
 
       <section id="locale">
         <SubTitle title="Locale Timezone" />
