@@ -31,7 +31,7 @@ export const LensProxy = observer(() => {
 
   return (
     <section id="proxy">
-      <section>
+      <section className="mb-12">
         <h2 data-testid="proxy-header">Proxy</h2>
         <SubTitle title="HTTP Proxy"/>
         <Input
@@ -41,14 +41,14 @@ export const LensProxy = observer(() => {
           onChange={v => setProxy(v)}
           onBlur={() => UserStore.getInstance().httpsProxy = proxy}
         />
-        <small className="hint">
+        <p className="pt-4">
           Proxy is used only for non-cluster communication.
-        </small>
+        </p>
       </section>
 
-      <hr className="small"/>
+      <hr className="mb-12"/>
 
-      <section className="small">
+      <section>
         <SubTitle title="Certificate Trust"/>
         <FormSwitch
           control={
@@ -60,11 +60,11 @@ export const LensProxy = observer(() => {
           }
           label="Allow untrusted Certificate Authorities"
         />
-        <small className="hint">
+        <p className="pt-4 leading-snug">
           This will make Lens to trust ANY certificate authority without any validations.{" "}
           Needed with some corporate proxies that do certificate re-writing.{" "}
           Does not affect cluster communications!
-        </small>
+        </p>
       </section>
     </section>
   );
