@@ -24,11 +24,11 @@ import { memoize } from "lodash/fp";
 
 import {
   createContainer,
-  IConfigurableDependencyInjectionContainer,
+  ConfigurableDependencyInjectionContainer,
 } from "@ogre-tools/injectable";
 
 export const getDiForUnitTesting = () => {
-  const di: IConfigurableDependencyInjectionContainer = createContainer();
+  const di: ConfigurableDependencyInjectionContainer = createContainer();
 
   getInjectableFilePaths()
     .map(key => {

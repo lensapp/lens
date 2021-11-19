@@ -19,24 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 declare module "@ogre-tools/injectable" {
-  export interface IDependencyInjectionContainer {
+  type Awaited<TMaybePromise> = TMaybePromise extends PromiseLike<infer TValue>
+    ? TValue
+    : TMaybePromise;
+
+  export interface DependencyInjectionContainer {
     inject: <
-      TInjectable extends IInjectable<TInstance, TDependencies>,
+      TInjectable extends Injectable<TInstance, TDependencies>,
       TInstance,
       TDependencies,
+      TMaybePromiseInstance = ReturnType<TInjectable["instantiate"]>,
     >(
       injectableKey: TInjectable,
-    ) => ReturnType<TInjectable["instantiate"]>;
+    ) => TMaybePromiseInstance extends PromiseLike<any>
+      ? Awaited<TMaybePromiseInstance>
+      : TMaybePromiseInstance;
   }
 
-  export interface IConfigurableDependencyInjectionContainer
-    extends IDependencyInjectionContainer {
-    register: (
-      injectable: IInjectable<any> | IComponentInjectable<any>,
-    ) => void;
+  export interface ConfigurableDependencyInjectionContainer
+    extends DependencyInjectionContainer {
+    register: (injectable: Injectable<any>) => void;
     preventSideEffects: () => void;
 
-    override: <TInjectable extends IInjectable<TInstance, any>, TInstance>(
+    override: <TInjectable extends Injectable<TInstance, any>, TInstance>(
       injectable: TInjectable,
       overrider:
         | ReturnType<TInjectable["instantiate"]>
@@ -47,7 +52,7 @@ declare module "@ogre-tools/injectable" {
     ) => void;
   }
 
-  export interface IInjectable<
+  export interface Injectable<
     TInstance,
     TDependencies extends object = {},
     TInstantiationParameter extends object = {},
@@ -55,7 +60,7 @@ declare module "@ogre-tools/injectable" {
     id?: string;
 
     getDependencies: (
-      di?: IDependencyInjectionContainer,
+      di?: DependencyInjectionContainer,
     ) => TDependencies | Promise<TDependencies>;
 
     lifecycle?: lifecycleEnum;
@@ -63,7 +68,9 @@ declare module "@ogre-tools/injectable" {
     instantiate: (
       dependencies: TDependencies,
       instantiationParameter: TInstantiationParameter,
-    ) => TInstance;
+    ) => Promise<TInstance> | TInstance;
+
+    causesSideEffects?: boolean;
   }
 
   export enum lifecycleEnum {
@@ -74,5 +81,5 @@ declare module "@ogre-tools/injectable" {
 
   // eslint-disable-next-line unused-imports/no-unused-vars-ts
   export const createContainer = (...getRequireContexts: any[]) =>
-    IConfigurableDependencyInjectionContainer;
+    ConfigurableDependencyInjectionContainer;
 }

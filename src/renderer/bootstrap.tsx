@@ -52,7 +52,7 @@ import { AppPaths } from "../common/app-paths";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./components/getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
-import type { IDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -76,7 +76,7 @@ type AppComponent = React.ComponentType & {
   init(rootElem: HTMLElement): Promise<void>;
 };
 
-export async function bootstrap(comp: () => Promise<AppComponent>, di: IDependencyInjectionContainer) {
+export async function bootstrap(comp: () => Promise<AppComponent>, di: DependencyInjectionContainer) {
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 

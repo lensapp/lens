@@ -20,16 +20,16 @@
  */
 /// <reference types="react" />
 declare module "@ogre-tools/injectable-react" {
-  import type { IDependencyInjectionContainer, IInjectable } from "@ogre-tools/injectable";
+  import type { DependencyInjectionContainer, Injectable } from "@ogre-tools/injectable";
 
-  interface IDependencyInjectionContainerProviderProps {
-    di: IDependencyInjectionContainer;
+  interface DependencyInjectionContainerProviderProps {
+    di: DependencyInjectionContainer;
   }
 
-  export const DiContextProvider: React.Provider<IDependencyInjectionContainerProviderProps>;
+  export const DiContextProvider: React.Provider<DependencyInjectionContainerProviderProps>;
 
   export const Inject: <
-    TComponentInjectable extends IInjectable<any>,
+    TComponentInjectable extends Injectable<any>,
   >({
     Component,
     injectableKey,
