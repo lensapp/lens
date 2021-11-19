@@ -512,7 +512,7 @@ export class Extensions extends React.Component<Props> {
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>
-        <SettingLayout className="Extensions" contentGaps={false}>
+        <SettingLayout className="Extensions">
           <section>
             <h1>Extensions</h1>
 

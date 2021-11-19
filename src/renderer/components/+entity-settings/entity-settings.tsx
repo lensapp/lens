@@ -139,7 +139,6 @@ export class EntitySettings extends React.Component<Props> {
     return (
       <SettingLayout
         navigation={this.renderNavigation()}
-        contentGaps={false}
       >
         {
           activeSetting && (

@@ -90,7 +90,6 @@ export class Preferences extends React.Component {
       <SettingLayout
         navigation={this.renderNavigation()}
         className="Preferences"
-        contentGaps={false}
       >
         <Switch>
           <Route path={appURL()} component={Application}/>
