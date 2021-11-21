@@ -77,7 +77,7 @@ export function NodeMenu(props: NodeMenuProps) {
   };
 
   const drain = () => {
-    const command = `${kubectlPath} drain ${nodeName} --delete-local-data --ignore-daemonsets --force`;
+    const command = `${kubectlPath} drain ${nodeName} --delete-emptydir-data --ignore-daemonsets --force`;
 
     ConfirmDialog.open({
       ok: () => sendToTerminal(command),
