@@ -39,6 +39,7 @@ import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
 import electron from "electron";
+import { ipcMainOn } from "../ipc";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -236,7 +237,9 @@ export class KubeApi<T extends KubeObject> {
   protected watchDisposer: () => void;
   private watchId = 1;
   private watchingSystemStatus = false; // If true, we are watching system status ('suspend'/'resume')
+  private watchingNetworkStatus = false;
   private systemSuspended = false;
+  private networkOnline = true; // default is true as we assume the network is online when the KubeApi is initialized
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
@@ -540,6 +543,18 @@ export class KubeApi<T extends KubeObject> {
     this.watchingSystemStatus = true;
   }
 
+  private watchNetworkStatus() {
+    ipcMainOn("network:online", () => {
+      this.networkOnline = true;
+    });
+
+    ipcMainOn("network:offline", () => {
+      this.networkOnline = false;
+    });
+
+    this.watchingNetworkStatus = true;
+  }
+
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
@@ -561,6 +576,10 @@ export class KubeApi<T extends KubeObject> {
       this.watchSystemStatus();
     }
 
+    if (!this.watchingNetworkStatus) {
+      this.watchNetworkStatus();
+    }
+
     electron.powerMonitor.once("suspend", () => {
       logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
 
@@ -573,9 +592,15 @@ export class KubeApi<T extends KubeObject> {
         clearTimeout(timedRetry);
         logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
         timedRetry = setTimeout(() => {
-          this.watch({ ...opts, namespace, callback, watchId, retry: true });
-          // 3000 is a naive value, we assume that after 3 seconds the system is ready
-          // to start watching again. (Network interface/DNS is ready etc.)
+          if (this.networkOnline) {
+            this.watch({ ...opts, namespace, callback, watchId, retry: true });    
+          } else {
+            electron.ipcMain.once("network:online", () => {
+              this.watch({ ...opts, namespace, callback, watchId, retry: true });
+            });
+          }
+        // 3000 is a naive value, we assume that after 3 seconds the system is ready
+        // to start watching again. (Network interface/DNS is ready etc.)  
         }, 3000);
       });
     });
