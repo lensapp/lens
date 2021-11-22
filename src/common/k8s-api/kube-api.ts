@@ -42,22 +42,16 @@ import electron from "electron";
 
 const onceSystemResume = () => 
   new Promise(resolve => {
-    const handler = () => {
-      electron.powerMonitor.removeListener("resume", handler);
+    electron.powerMonitor.once("resume", () => {
       resolve(true);
-    };
-
-    electron.powerMonitor.on("resume", handler);
+    });
   });
 
 const onceSystemSuspend = () => 
   new Promise(resolve => {
-    const handler = () => {
-      electron.powerMonitor.removeListener("suspend", handler);
+    electron.powerMonitor.once("suspend", () => {
       resolve(true);
-    };
-
-    electron.powerMonitor.on("suspend", handler);
+    });
   });
 
 export interface IKubeApiOptions<T extends KubeObject> {
