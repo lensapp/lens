@@ -32,5 +32,6 @@ export default {
   },
   powerMonitor: {
     once: jest.fn(),
+    on: jest.fn(),
   },
 };
