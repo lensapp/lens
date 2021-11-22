@@ -20,6 +20,7 @@
  */
 
 import styles from "./entity-settings.module.css";
+import tabStyles from "../layout/settings-layout.module.css";
 
 import React from "react";
 import { observable, makeObservable } from "mobx";
@@ -35,6 +36,7 @@ import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import logger from "../../../common/logger";
+import { cssNames } from "../../utils";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -106,11 +108,11 @@ export class EntitySettings extends React.Component<Props> {
             {this.entity.metadata.name}
           </div>
         </div>
-        <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+        <Tabs className={cssNames(tabStyles.Tabs, "flex column")} scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
           { groups.map((group, groupIndex) => (
             <React.Fragment key={`group-${groupIndex}`}>
               <hr/>
-              <div className="header">{group[0]}</div>
+              <div className={tabStyles.header}>{group[0]}</div>
               { group[1].map((setting, index) => (
                 <Tab
                   key={index}
@@ -137,9 +139,7 @@ export class EntitySettings extends React.Component<Props> {
 
 
     return (
-      <SettingLayout
-        navigation={this.renderNavigation()}
-      >
+      <SettingLayout navigation={this.renderNavigation()}>
         {
           activeSetting && (
             <section>

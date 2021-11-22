@@ -38,6 +38,14 @@
   }
 
   section {
+    &:not(:first-of-type) {
+      margin-top: 40px;
+
+      &:global(.small) {
+        margin-top: 20px;
+      }
+    }
+
     h2 {
       font-size: 20px;
       line-height: 20px;
@@ -51,9 +59,21 @@
     }
 
     hr {
+      margin-top: 40px;
       height: 1px;
       border-top: thin solid var(--hrColor);
+
+      &:global(.small) {
+        margin-top: 20px;
+      }
     }
+  }
+
+  :global(.hint) {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    display: block;
   }
 }
 
@@ -173,8 +193,8 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 
-    &::after {
-      content: none;
+    &:global::after {
+      content: none!important;
     }
 
     &:hover {

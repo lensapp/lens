@@ -88,10 +88,7 @@ export class Preferences extends React.Component {
 
   render() {
     return (
-      <SettingLayout
-        navigation={this.renderNavigation()}
-        className="Preferences"
-      >
+      <SettingLayout navigation={this.renderNavigation()}>
         <Switch>
           <Route path={appURL()} component={Application}/>
           <Route path={proxyURL()} component={LensProxy}/>
