@@ -27,7 +27,6 @@ import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
 import { workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import type { KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
 import { boundMethod } from "../../utils";
@@ -73,10 +72,6 @@ export class OverviewStatuses extends React.Component {
 
     return (
       <div className="OverviewStatuses">
-        <div className="header flex gaps align-center">
-          <h5 className="box grow">Overview</h5>
-          <NamespaceSelectFilter />
-        </div>
         <div className="workloads">
           {workloads}
         </div>

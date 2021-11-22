@@ -25,15 +25,6 @@
   min-width: $unit * 75;
   background: var(--contentColor);
 
-  > .header {
-    position: relative;
-    padding: $padding * 2;
-
-    h5 {
-      color: var(--textColorPrimary);
-    }
-  }
-
   .workloads {
     display: grid;
     grid-template-columns: repeat(auto-fit, 180px);

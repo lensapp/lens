@@ -33,36 +33,77 @@ import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
-import { clusterContext } from "../context";
 import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
+import { makeObservable, observable, reaction } from "mobx";
+import { clusterContext } from "../context";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { Icon } from "../icon";
+import { TooltipPosition } from "../tooltip";
 
 interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
+  @observable loadErrors: string[] = [];
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([
         podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
         jobStore, cronJobStore, eventStore,
       ], {
-        preload: true,
-        namespaces: clusterContext.contextNamespaces,
+        onLoadFailure: error => this.loadErrors.push(String(error)),
+      }),
+      reaction(() => clusterContext.contextNamespaces.slice(), () => {
+        // clear load errors
+        this.loadErrors.length = 0;
       }),
     ]);
   }
 
+  renderLoadErrors() {
+    if (this.loadErrors.length === 0) {
+      return null;
+    }
+
+    return (
+      <Icon
+        material="warning"
+        className="load-error"
+        tooltip={{
+          children: (
+            <>
+              {this.loadErrors.map((error, index) => <p key={index}>{error}</p>)}
+            </>
+          ),
+          preferredPositions: TooltipPosition.BOTTOM,
+        }}
+      />
+    );
+  }
+
   render() {
-    const items = WorkloadsOverviewDetailRegistry.getInstance().getItems().map((item, index) => {
-      return (
-        <item.components.Details key={`workload-overview-${index}`}/>
-      );
-    });
+    const items = WorkloadsOverviewDetailRegistry
+      .getInstance()
+      .getItems()
+      .map(({ components: { Details }}, index) => (
+        <Details key={`workload-overview-${index}`}/>
+      ));
 
     return (
       <div className="WorkloadsOverview flex column gaps">
+        <div className="header flex gaps align-center">
+          <h5 className="box grow">Overview</h5>
+          {this.renderLoadErrors()}
+          <NamespaceSelectFilter />
+        </div>
         {items}
       </div>
     );

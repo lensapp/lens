@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { orderBy } from "lodash";
 import type React from "react";
 import { BaseRegistry } from "./base-registry";
 
 export interface WorkloadsOverviewDetailComponents {
-  Details: React.ComponentType<any>;
+  Details: React.ComponentType<{}>;
 }
 
 export interface WorkloadsOverviewDetailRegistration {
@@ -31,10 +32,16 @@ export interface WorkloadsOverviewDetailRegistration {
   priority?: number;
 }
 
-export class WorkloadsOverviewDetailRegistry extends BaseRegistry<WorkloadsOverviewDetailRegistration> {
-  getItems() {
-    const items = super.getItems();
+type RegisteredWorkloadsOverviewDetail = Required<WorkloadsOverviewDetailRegistration>;
 
-    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
+export class WorkloadsOverviewDetailRegistry extends BaseRegistry<WorkloadsOverviewDetailRegistration, RegisteredWorkloadsOverviewDetail> {
+  getItems() {
+    return orderBy(super.getItems(), "priority", "desc");
+  }
+
+  protected getRegisteredItem(item: WorkloadsOverviewDetailRegistration): RegisteredWorkloadsOverviewDetail {
+    const { priority = 50, ...rest } = item;
+
+    return { priority, ...rest };
   }
 }

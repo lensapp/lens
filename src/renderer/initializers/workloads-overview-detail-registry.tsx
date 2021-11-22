@@ -30,7 +30,7 @@ export function initWorkloadsOverviewDetailRegistry() {
     .add([
       {
         components: {
-          Details: (props: any) => <OverviewStatuses {...props} />,
+          Details: OverviewStatuses,
         },
       },
       {

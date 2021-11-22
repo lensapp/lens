@@ -67,7 +67,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
     const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
     const reactions: Disposer[] = [
-      reaction(() => clusterContext.contextNamespaces.length, () => {
+      reaction(() => clusterContext.contextNamespaces.slice(), () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),
