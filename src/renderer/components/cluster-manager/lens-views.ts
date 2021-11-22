@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, IReactionDisposer, makeObservable, observable, reaction, when } from "mobx";
+import { action, IReactionDisposer, makeObservable, observable, when } from "mobx";
 import logger from "../../../main/logger";
 import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
 import { ClusterStore } from "../../../common/cluster-store";
@@ -34,12 +34,10 @@ export interface LensView {
 
 export class ClusterFrameHandler extends Singleton {
   private views = observable.map<string, LensView>();
-  @observable private visibleCluster: string | null = null;
 
   constructor() {
     super();
     makeObservable(this);
-    reaction(() => this.visibleCluster, this.handleVisibleClusterChange);
   }
 
   public hasLoadedView(clusterId: string): boolean {
@@ -97,39 +95,34 @@ export class ClusterFrameHandler extends Singleton {
     );
   }
 
-  public setVisibleCluster(clusterId: ClusterId) {
-    this.visibleCluster = clusterId;
-  }
-
-  public clearVisibleCluster() {
-    this.visibleCluster = null;
-  }
-
   private prevVisibleClusterChange?: IReactionDisposer;
 
-  private handleVisibleClusterChange = (clusterId: ClusterId | undefined) => {
+  public setVisibleCluster(clusterId: ClusterId | null) {
+    // Clear the previous when ASAP
+    this.prevVisibleClusterChange?.();
+
     logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${clusterId}`);
-
     ipcRenderer.send(clusterVisibilityHandler);
-
-    const cluster = ClusterStore.getInstance().getById(clusterId);
 
     for (const { frame: view } of this.views.values()) {
       view.style.display = "none";
     }
 
-    if (cluster) {
-      const lensView = this.views.get(clusterId);
+    const cluster = ClusterStore.getInstance().getById(clusterId);
 
-      this.prevVisibleClusterChange?.();
+    if (cluster) {
       this.prevVisibleClusterChange = when(
-        () => cluster.available && cluster.ready && lensView.isLoaded,
+        () => cluster.available && cluster.ready && this.views.get(clusterId)?.isLoaded,
         () => {
           logger.info(`[LENS-VIEW]: cluster id=${clusterId} should now be visible`);
-          lensView.frame.style.display = "flex";
+          this.views.get(clusterId).frame.style.display = "flex";
           ipcRenderer.send(clusterVisibilityHandler, clusterId);
         },
       );
     }
-  };
+  }
+
+  public clearVisibleCluster() {
+    this.setVisibleCluster(null);
+  }
 }
