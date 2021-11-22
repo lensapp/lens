@@ -557,8 +557,8 @@ export class KubeApi<T extends KubeObject> {
     this.watchingNetworkStatus = true;
   }
 
-  private whenCanResolveDomainName(url = "https://k8slens.dev/", retryOptions: Parameters<typeof retry>[1]) {
-    return retry(() => dns.resolve(url), retryOptions);
+  private whenCanResolveDomainName(url = "k8slens.dev", retryOptions: Parameters<typeof retry>[1]) {
+    return retry(() => dns.lookup(url), retryOptions);
   }
 
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
@@ -588,38 +588,25 @@ export class KubeApi<T extends KubeObject> {
 
     electron.powerMonitor.once("suspend", () => {
       logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
-
-      try {
-        if (opts.abortController) {
-          opts.abortController.abort?.();
-        } else {
-          abort?.();
-        }
-      } catch (error) {
-        logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
-      }
       electron.powerMonitor.once("resume", () => {
-        clearTimeout(timedRetry);
-        timedRetry = setTimeout(() => {
-          const url = "https://k8slens.dev/"; // url to check if domain names are resolvable.
+        const url = "k8slens.dev"; // url to check if domain names are resolvable.
 
-          this.whenCanResolveDomainName(url, { retries: 10 }).then(() => {
-            if (this.networkOnline) {
-              logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
-              this.watch({ ...opts, namespace, callback, watchId, retry: true }); 
-            } else {
-              logger.info(`[KUBE-API] system resumed but network appears to be offline, resume watching when online.`);
-              electron.ipcMain.once("network:online", () => {
-                logger.info(`[KUBE-API] network on line, resume watching of ${watchUrl}...`);
-                this.watch({ ...opts, namespace, callback, watchId, retry: true });
-              });
-            }
-          }).catch((error) => {
-            logger.error(`[KUBE-API] error resolving domain name ${url}`, error);
-          });
-        // 3000 is a naive value, we assume that after 3 seconds the system is ready
-        // to start watching again. (Network interface/DNS is ready etc.)  
-        }, 3000);
+        this.whenCanResolveDomainName(url, { retries: 50, maxTimeout: 3000 }).then(() => {
+          logger.info(`[KUBE-API] domain name can be resolved, checking networkOnline:${this.networkOnline.toString?.()}`);
+
+          if (this.networkOnline) {
+            logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
+            this.watch({ ...opts, namespace, callback, watchId, retry: true }); 
+          } else {
+            logger.info(`[KUBE-API] system resumed but network appears to be offline, resume watching when online.`);
+            electron.ipcMain.once("network:online", () => {
+              logger.info(`[KUBE-API] network on line, resume watching of ${watchUrl}...`);
+              this.watch({ ...opts, namespace, callback, watchId, retry: true });
+            });
+          }
+        }).catch((error) => {
+          logger.warn(`[KUBE-API] error resolving domain name ${url}`, error);
+        });
       });
     });
 
