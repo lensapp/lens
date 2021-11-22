@@ -55,7 +55,7 @@ export const Install = observer((props: Props) => {
   const { installPath, supportedFormats, onChange, installFromInput, installFromSelectFileDialog } = props;
 
   return (
-    <section className="mt-2">
+    <section className="mt-2 mb-12">
       <SubTitle title={`Name or file path or URL to an extension package (${supportedFormats.join(", ")})`}/>
       <div className="flex">
         <div className="flex-1">

@@ -512,9 +512,9 @@ export class Extensions extends React.Component<Props> {
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>
-        <SettingLayout className="Extensions">
+        <SettingLayout>
           <section>
-            <h1>Extensions</h1>
+            <h2>Extensions</h2>
 
             <Notice className="mb-14 mt-3">
               <p>
@@ -532,7 +532,7 @@ export class Extensions extends React.Component<Props> {
               installPath={this.installPath}
             />
 
-            {extensions.length > 0 && <hr/>}
+            {extensions.length > 0 && <hr className="mb-12"/>}
 
             <InstalledExtensions
               extensions={extensions}

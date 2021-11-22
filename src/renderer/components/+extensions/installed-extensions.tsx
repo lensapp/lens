@@ -167,7 +167,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
   return (
     <section data-testid="extensions-table">
       <List
-        title={<h2 className={styles.title}>Installed extensions</h2>}
+        title={<h2 className={styles.title}>Installed</h2>}
         columns={columns}
         data={data}
         items={extensions}
