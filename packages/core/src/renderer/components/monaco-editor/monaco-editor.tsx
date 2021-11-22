@@ -246,12 +246,10 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
 
     this.dispose.push(
       reaction(() => this.model, this.onModelChange),
-      reaction(() => this.theme, theme => {
-        if (theme) {
-          editor.setTheme(theme);
-        }
+      reaction(() => this.theme, editor.setTheme),
+      reaction(() => this.props.value, value => this.setValue(value), {
+        fireImmediately: true,
       }),
-      reaction(() => this.props.value, value => this.setValue(value)),
       reaction(() => this.options, opts => this.editor.updateOptions(opts)),
 
       () => onDidLayoutChangeDisposer.dispose(),

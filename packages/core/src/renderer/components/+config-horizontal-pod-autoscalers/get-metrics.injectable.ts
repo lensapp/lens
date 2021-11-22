@@ -5,9 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HorizontalPodAutoscaler, HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricStatus } from "../../../common/k8s-api/endpoints";
 import { HpaMetricType } from "../../../common/k8s-api/endpoints";
-import { getMetricName } from "./get-hpa-metric-name";
-import { HorizontalPodAutoscalerV1MetricParser } from "./hpa-v1-metric-parser";
-import { HorizontalPodAutoscalerV2MetricParser } from "./hpa-v2-metric-parser";
+import { getMetricName } from "./get-metric-name";
+import { HorizontalPodAutoscalerV1MetricParser } from "./metric-parser-v1";
+import { HorizontalPodAutoscalerV2MetricParser } from "./metric-parser-v2";
 
 type Parser = HorizontalPodAutoscalerV1MetricParser | HorizontalPodAutoscalerV2MetricParser;
 

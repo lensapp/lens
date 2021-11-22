@@ -13,7 +13,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import { HpaDetails } from "./hpa-details";
+import { HorizontalPodAutoscalerDetails } from "./details";
 
 jest.mock("react-router-dom", () => ({
   Link: ({ children }: { children: React.ReactNode }) => children,
@@ -62,7 +62,7 @@ describe("<HpaDetails/>", () => {
     const hpa = new HorizontalPodAutoscaler(hpaV2);
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.baseElement).toMatchSnapshot();
@@ -72,7 +72,7 @@ describe("<HpaDetails/>", () => {
     const hpa = new HorizontalPodAutoscaler(hpaV2);
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.queryByTestId("hpa-metrics")).toBeNull();
@@ -101,7 +101,7 @@ describe("<HpaDetails/>", () => {
     });
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("CPU Utilization percentage")).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("Resource cpu on Pods")).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("Resource cpu on Pods")).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("packets-per-second on Pods")).toBeInTheDocument();
@@ -216,7 +216,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("packets-per-second on Pods")).toBeInTheDocument();
@@ -252,7 +252,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText(/requests-per-second/)).toHaveTextContent("requests-per-second onService/nginx");
@@ -277,7 +277,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("requests-per-second")).toBeInTheDocument();
@@ -311,7 +311,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("queue_messages_ready on {\"matchLabels\":{\"queue\":\"worker_tasks\"}}")).toBeInTheDocument();
@@ -339,7 +339,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.getByText("queue_messages_ready on {\"matchLabels\":{\"queue\":\"worker_tasks\"}}")).toBeInTheDocument();
@@ -368,7 +368,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.baseElement).toMatchSnapshot();
@@ -398,7 +398,7 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />,
+      <HorizontalPodAutoscalerDetails object={hpa} />,
     );
 
     expect(result.baseElement).toMatchSnapshot();

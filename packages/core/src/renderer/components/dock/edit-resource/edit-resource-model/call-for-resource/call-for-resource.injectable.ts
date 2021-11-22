@@ -3,44 +3,35 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { KubeObject } from "../../../../../../common/k8s-api/kube-object";
+import { KubeObject } from "../../../../../../common/k8s-api/kube-object";
 import { parseKubeApi } from "../../../../../../common/k8s-api/kube-api-parse";
 import type { AsyncResult } from "@k8slens/utilities";
 import { getErrorMessage } from "../../../../../../common/utils/get-error-message";
-import apiManagerInjectable from "../../../../../../common/k8s-api/api-manager/manager.injectable";
-import { waitUntilDefined } from "@k8slens/utilities";
+import apiKubeInjectable from "../../../../../k8s/api-kube.injectable";
 
-export type CallForResource = (
-  selfLink: string
-) => AsyncResult<KubeObject | undefined>;
+export type CallForResource = (selfLink: string) => AsyncResult<KubeObject | undefined>;
 
 const callForResourceInjectable = getInjectable({
   id: "call-for-resource",
 
   instantiate: (di): CallForResource => {
-    const apiManager = di.inject(apiManagerInjectable);
+    const apiKube = di.inject(apiKubeInjectable);
 
     return async (apiPath: string) => {
-      const api = await waitUntilDefined(() => apiManager.getApi(apiPath));
-
       const parsed = parseKubeApi(apiPath);
 
-      if (!api || !parsed.name) {
+      if (!parsed.name) {
         return { callWasSuccessful: false, error: "Invalid API path" };
       }
 
-      let resource: KubeObject | null;
-
       try {
-        resource = await api.get({
-          name: parsed.name,
-          namespace: parsed.namespace,
-        });
+        return {
+          callWasSuccessful: true,
+          response: new KubeObject(await apiKube.get(apiPath)),
+        };
       } catch (e) {
         return { callWasSuccessful: false, error: getErrorMessage(e) };
       }
-
-      return { callWasSuccessful: true, response: resource || undefined };
     };
   },
 

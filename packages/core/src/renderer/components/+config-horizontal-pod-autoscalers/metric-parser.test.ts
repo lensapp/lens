@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
+import getHorizontalPodAutoscalerMetrics from "./get-metrics.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints";
 
@@ -658,10 +658,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ],
         },
       });
-  
+
       expect(getMetrics(hpa)[0]).toEqual("10% / 50%");
     });
-  
+
     it("should return correct resource metrics with current value", () => {
       const hpa = new HorizontalPodAutoscaler({
         ...hpaV2Beta1,
@@ -691,7 +691,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ],
         },
       });
-  
+
       expect(getMetrics(hpa)[0]).toEqual("500m / 100m");
     });
 
@@ -787,7 +787,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Pods,
                 pods: {
                   metricName: "packets-per-second",
-                  
+
                   targetAverageValue: "1k",
                 },
               },
@@ -1038,7 +1038,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ],
         },
       });
-  
+
       expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
     });
   });

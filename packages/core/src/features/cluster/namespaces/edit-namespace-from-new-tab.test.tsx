@@ -12,8 +12,6 @@ import createEditResourceTabInjectable from "../../../renderer/components/dock/e
 import getRandomIdForEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/get-random-id-for-edit-resource-tab.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
-import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
 import type { CallForPatchResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-patch-resource/call-for-patch-resource.injectable";
 import callForPatchResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-patch-resource/call-for-patch-resource.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
@@ -23,6 +21,8 @@ import showErrorNotificationInjectable from "../../../renderer/components/notifi
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
+import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
+import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;
@@ -225,10 +225,16 @@ metadata:
                 expect(rendered.baseElement).toMatchSnapshot();
               });
 
-              it("calls for save with empty values", () => {
+              it("calls for save with just the adding version label", () => {
                 expect(callForPatchResourceMock).toHaveBeenCalledWith(
                   someNamespace,
-                  [],
+                  [{
+                    op: "add",
+                    path: "/metadata/labels",
+                    value: {
+                      "k8slens-edit-resource-version": "some-api-version",
+                    },
+                  }],
                 );
               });
 
@@ -533,6 +539,13 @@ metadata:
                         value: "some-new-value",
                       },
                       {
+                        op: "add",
+                        path: "/metadata/labels",
+                        value: {
+                          "k8slens-edit-resource-version": "some-api-version",
+                        },
+                      },
+                      {
                         op: "replace",
                         path: "/metadata/somePropertyToBeChanged",
                         value: "some-changed-value",
@@ -759,7 +772,7 @@ metadata:
 `);
                 });
 
-                it("when selecting to save, calls for save of second namespace", () => {
+                it("when selecting to save, calls for save of second namespace with just the add edit version label", () => {
                   callForPatchResourceMock.mockClear();
 
                   const saveButton = rendered.getByTestId(
@@ -770,7 +783,13 @@ metadata:
 
                   expect(callForPatchResourceMock).toHaveBeenCalledWith(
                     someOtherNamespace,
-                    [],
+                    [{
+                      op: "add",
+                      path: "/metadata/labels",
+                      value: {
+                        "k8slens-edit-resource-version": "some-api-version",
+                      },
+                    }],
                   );
                 });
 
@@ -826,7 +845,7 @@ metadata:
 `);
                   });
 
-                  it("when selecting to save, calls for save of first namespace", () => {
+                  it("when selecting to save, calls for save of first namespace with just the new edit version label", () => {
                     callForPatchResourceMock.mockClear();
 
                     const saveButton = rendered.getByTestId(
@@ -837,7 +856,13 @@ metadata:
 
                     expect(callForPatchResourceMock).toHaveBeenCalledWith(
                       someNamespace,
-                      [],
+                      [ {
+                        op: "add",
+                        path: "/metadata/labels",
+                        value: {
+                          "k8slens-edit-resource-version": "some-api-version",
+                        },
+                      }],
                     );
                   });
                 });

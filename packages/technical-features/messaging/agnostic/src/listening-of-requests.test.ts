@@ -121,9 +121,7 @@ describe("listening-of-requests", () => {
             runInAction(() => {
               di.register(someConflictingListenerInjectable);
             });
-          }).toThrow(
-            'Tried to add listener for channel "some-channel-id" but listener already exists.',
-          );
+          }).toThrow('Tried to add listener for channel "some-channel-id" but listener already exists.');
         });
 
         describe("when another listener gets registered", () => {

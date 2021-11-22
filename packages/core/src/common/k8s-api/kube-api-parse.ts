@@ -109,7 +109,25 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   };
 }
 
-export function createKubeApiURL({ apiPrefix = "/apis", resource, apiVersion, name, namespace }: IKubeApiLinkRef): string {
+function isIKubeApiParsed(refOrParsed: IKubeApiLinkRef | IKubeApiParsed): refOrParsed is IKubeApiParsed {
+  return "apiGroup" in refOrParsed;
+}
+
+export function createKubeApiURL(linkRef: IKubeApiLinkRef): string;
+export function createKubeApiURL(linkParsed: IKubeApiParsed): string;
+
+export function createKubeApiURL(ref: IKubeApiLinkRef | IKubeApiParsed): string {
+  if (isIKubeApiParsed(ref)) {
+    return createKubeApiURL({
+      apiPrefix: ref.apiPrefix,
+      resource: ref.resource,
+      name: ref.name,
+      namespace: ref.namespace,
+      apiVersion: `${ref.apiGroup}/${ref.apiVersion}`,
+    });
+  }
+
+  const { apiPrefix = "/apis", resource, apiVersion, name, namespace } = ref;
   const parts = [apiPrefix, apiVersion];
 
   if (namespace) {

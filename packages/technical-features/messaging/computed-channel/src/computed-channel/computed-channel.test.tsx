@@ -3,23 +3,13 @@ import { act } from "@testing-library/react";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import { getMessageBridgeFake, MessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 import { startApplicationInjectionToken } from "@k8slens/application";
-import {
-  computed,
-  IComputedValue,
-  IObservableValue,
-  observable,
-  reaction,
-  runInAction,
-} from "mobx";
+import { computed, IComputedValue, IObservableValue, observable, reaction, runInAction } from "mobx";
 import type { MessageChannel } from "@k8slens/messaging";
 import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { testUtils } from "@k8slens/messaging";
-import {
-  computedChannelInjectionToken,
-  computedChannelObserverInjectionToken,
-} from "./computed-channel.injectable";
+import { computedChannelInjectionToken, computedChannelObserverInjectionToken } from "./computed-channel.injectable";
 import { runWithThrownMobxReactions, renderFor } from "@k8slens/test-utils";
 import { observer } from "mobx-react";
 import {
@@ -36,9 +26,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
 ));
 
 [{ scenarioIsAsync: true }, { scenarioIsAsync: false }].forEach(({ scenarioIsAsync }) =>
-  describe(`computed-channel, given running message bridge fake as ${
-    scenarioIsAsync ? "async" : "sync"
-  }`, () => {
+  describe(`computed-channel, given running message bridge fake as ${scenarioIsAsync ? "async" : "sync"}`, () => {
     describe("given multiple dis and a message channel and a channel observer and application has started", () => {
       let di1: DiContainer;
       let di2: DiContainer;
@@ -87,10 +75,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
         messageBridgeFake.setAsync(scenarioIsAsync);
         messageBridgeFake.involve(di1, di2);
 
-        await Promise.all([
-          di1.inject(startApplicationInjectionToken)(),
-          di2.inject(startApplicationInjectionToken)(),
-        ]);
+        await Promise.all([di1.inject(startApplicationInjectionToken)(), di2.inject(startApplicationInjectionToken)()]);
       });
 
       describe("given a channel observer and matching computed channel for the channel in di-2", () => {
@@ -175,9 +160,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
               expect(observedValue).toBe("some-pending-value");
             });
 
-          const scenarioName = scenarioIsAsync
-            ? "when admin messages are propagated"
-            : "immediately";
+          const scenarioName = scenarioIsAsync ? "when admin messages are propagated" : "immediately";
 
           // eslint-disable-next-line jest/valid-title
           describe(scenarioName, () => {
@@ -196,9 +179,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
               });
             });
 
-            const scenarioName = scenarioIsAsync
-              ? "when returning value-messages propagate"
-              : "immediately";
+            const scenarioName = scenarioIsAsync ? "when returning value-messages propagate" : "immediately";
 
             // eslint-disable-next-line jest/valid-title
             describe(scenarioName, () => {
@@ -227,9 +208,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   });
                 });
 
-                const scenarioName = scenarioIsAsync
-                  ? "when value-messages propagate"
-                  : "immediately";
+                const scenarioName = scenarioIsAsync ? "when value-messages propagate" : "immediately";
 
                 // eslint-disable-next-line jest/valid-title
                 describe(scenarioName, () => {
@@ -258,9 +237,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   stopObserving();
                 });
 
-                const scenarioName = scenarioIsAsync
-                  ? "when admin-messages propagate"
-                  : "immediately";
+                const scenarioName = scenarioIsAsync ? "when admin-messages propagate" : "immediately";
 
                 // eslint-disable-next-line jest/valid-title
                 describe(scenarioName, () => {
@@ -317,9 +294,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                           expect(observedValue).toBe("some-pending-value");
                         });
 
-                      const scenarioName = scenarioIsAsync
-                        ? "when admin messages propagate"
-                        : "immediately";
+                      const scenarioName = scenarioIsAsync ? "when admin messages propagate" : "immediately";
 
                       // eslint-disable-next-line jest/valid-title
                       describe(scenarioName, () => {
@@ -345,9 +320,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                             expect(observedValue).toBe("some-pending-value");
                           });
 
-                        const scenarioTitle = scenarioIsAsync
-                          ? "when value-messages propagate back"
-                          : "immediately";
+                        const scenarioTitle = scenarioIsAsync ? "when value-messages propagate back" : "immediately";
 
                         // eslint-disable-next-line jest/valid-title
                         describe(scenarioTitle, () => {
@@ -466,9 +439,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   expect(nonReactiveValue).toBe("some-initial-value");
                 });
 
-                const scenarioName = scenarioIsAsync
-                  ? "when messages would be propagated"
-                  : "immediately";
+                const scenarioName = scenarioIsAsync ? "when messages would be propagated" : "immediately";
 
                 // eslint-disable-next-line jest/valid-title
                 describe(scenarioName, () => {

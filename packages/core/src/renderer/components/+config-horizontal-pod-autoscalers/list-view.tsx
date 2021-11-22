@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./hpa.scss";
+import "./list-view.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -17,7 +17,7 @@ import { KubeObjectAge } from "../kube-object/age";
 import type { HorizontalPodAutoscalerStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import horizontalPodAutoscalerStoreInjectable from "./store.injectable";
-import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
+import getHorizontalPodAutoscalerMetrics from "./get-metrics.injectable";
 import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {

@@ -32,9 +32,7 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
 };
 
 [{ scenarioIsAsync: true }, { scenarioIsAsync: false }].forEach(({ scenarioIsAsync }) =>
-  describe(`get-message-bridge-fake, given running as ${
-    scenarioIsAsync ? "async" : "sync"
-  }`, () => {
+  describe(`get-message-bridge-fake, given running as ${scenarioIsAsync ? "async" : "sync"}`, () => {
     let messageBridgeFake: any;
 
     beforeEach(() => {
@@ -135,9 +133,7 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
 
           describe("given a message is sent in di-1", () => {
             beforeEach(() => {
-              const sendMessageToChannelFromDi1 = someDi1.inject(
-                sendMessageToChannelInjectionToken,
-              );
+              const sendMessageToChannelFromDi1 = someDi1.inject(sendMessageToChannelInjectionToken);
 
               sendMessageToChannelFromDi1(someMessageChannel, "some-message");
             });
@@ -161,13 +157,10 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
               });
 
               it("the response gets handled in di-1", () => {
-                expect(someHandler1MockInDi1).toHaveBeenCalledWith(
-                  "some-response-to: some-message",
-                  {
-                    frameId: 42,
-                    processId: 42,
-                  },
-                );
+                expect(someHandler1MockInDi1).toHaveBeenCalledWith("some-response-to: some-message", {
+                  frameId: 42,
+                  processId: 42,
+                });
               });
 
               scenarioIsAsync &&
@@ -191,13 +184,10 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
               });
 
               it("the response gets handled in di-1", () => {
-                expect(someHandler1MockInDi1).toHaveBeenCalledWith(
-                  "some-response-to: some-message",
-                  {
-                    frameId: 42,
-                    processId: 42,
-                  },
-                );
+                expect(someHandler1MockInDi1).toHaveBeenCalledWith("some-response-to: some-message", {
+                  frameId: 42,
+                  processId: 42,
+                });
               });
             });
           });
@@ -375,9 +365,7 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
 
           const requestFromChannelFromDi2 = someDi2.inject(requestFromChannelInjectionToken);
 
-          return expect(() =>
-            requestFromChannelFromDi2(someRequestChannel, "irrelevant"),
-          ).rejects.toThrow(
+          return expect(() => requestFromChannelFromDi2(someRequestChannel, "irrelevant")).rejects.toThrow(
             'Tried to make a request but multiple listeners were discovered for channel "some-request-channel" in multiple DIs.',
           );
         });
@@ -385,9 +373,7 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
         it("when requesting from channel without listener, throws", () => {
           const requestFromChannel = someDi1.inject(requestFromChannelInjectionToken);
 
-          return expect(() =>
-            requestFromChannel(someRequestChannelWithoutListeners, "irrelevant"),
-          ).rejects.toThrow(
+          return expect(() => requestFromChannel(someRequestChannelWithoutListeners, "irrelevant")).rejects.toThrow(
             'Tried to make a request but no listeners for channel "some-request-channel-without-listeners" was discovered in any DIs',
           );
         });
