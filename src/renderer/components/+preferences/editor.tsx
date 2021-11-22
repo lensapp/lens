@@ -42,7 +42,7 @@ export const Editor = observer(() => {
       <h2 data-testid="editor-configuration-header">Editor configuration</h2>
 
       <SubTitle title="Minimap"/>
-      <section>
+      <section className="mb-12">
         <div className="flex gaps justify-space-between">
           <div className="flex gaps align-center">
             <FormSwitch
@@ -67,7 +67,9 @@ export const Editor = observer(() => {
         </div>
       </section>
 
-      <section>
+      <hr className="mb-12"/>
+
+      <section className="mb-12">
         <SubTitle title="Line numbers"/>
         <Select
           options={Object.entries(EditorLineNumbersStyles).map(([value, label]) => ({ label, value }))}
@@ -76,6 +78,8 @@ export const Editor = observer(() => {
           themeName="lens"
         />
       </section>
+
+      <hr className="mb-12"/>
 
       <section>
         <SubTitle title="Tab size"/>
@@ -91,4 +95,3 @@ export const Editor = observer(() => {
     </section>
   );
 });
-    

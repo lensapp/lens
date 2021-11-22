@@ -109,14 +109,14 @@ export class Preferences extends React.Component {
 export function ExtensionSettings({ title, id, components: { Hint, Input }}: RegisteredAppPreference) {
   return (
     <React.Fragment>
-      <section id={id} className="small">
+      <section id={id} className="mb-12">
         <SubTitle title={title}/>
         <Input/>
-        <div className="hint">
+        <div className="pt-4">
           <Hint/>
         </div>
       </section>
-      <hr className="small"/>
+      <hr className="mb-12"/>
     </React.Fragment>
   );
 }
