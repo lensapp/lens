@@ -587,20 +587,37 @@ export class KubeApi<T extends KubeObject> {
     }
 
     electron.powerMonitor.once("suspend", () => {
+      logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
+
+      try {
+        if (opts.abortController) {
+          opts.abortController.abort?.();
+        } else {
+          abort?.();
+        }
+      } catch (error) {
+        logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
+      }
       electron.powerMonitor.once("resume", () => {
         const url = "k8slens.dev"; // url to check if domain names are resolvable.
 
         this.whenCanResolveDomainName(url, { retries: 50, maxTimeout: 3000 }).then(() => {
           logger.info(`[KUBE-API] domain name can be resolved, checking networkOnline:${this.networkOnline.toString?.()}`);
 
+          let abortController = opts.abortController;
+
+          if (opts.abortController.signal.aborted) {
+            abortController = new AbortController();
+          }
+
           if (this.networkOnline) {
             logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
-            this.watch({ ...opts, namespace, callback, watchId, retry: true }); 
+            this.watch({ ...opts, abortController, namespace, callback, watchId, retry: true }); 
           } else {
             logger.info(`[KUBE-API] system resumed but network appears to be offline, resume watching when online.`);
             electron.ipcMain.once("network:online", () => {
               logger.info(`[KUBE-API] network on line, resume watching of ${watchUrl}...`);
-              this.watch({ ...opts, namespace, callback, watchId, retry: true });
+              this.watch({ ...opts, abortController, namespace, callback, watchId, retry: true });
             });
           }
         }).catch((error) => {
