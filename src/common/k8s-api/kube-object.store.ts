@@ -30,7 +30,7 @@ import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { KubeJsonApiData } from "./kube-json-api";
 import type { RequestInit } from "node-fetch";
-import AbortController from "abort-controller";
+import { AbortController } from "node-abort-controller";
 import type { Patch } from "rfc6902";
 
 export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
