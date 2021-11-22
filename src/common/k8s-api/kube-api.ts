@@ -594,12 +594,14 @@ export class KubeApi<T extends KubeObject> {
       }
       electron.powerMonitor.once("resume", () => {
         clearTimeout(timedRetry);
-        logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
         timedRetry = setTimeout(() => {
           if (this.networkOnline) {
+            logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
             this.watch({ ...opts, namespace, callback, watchId, retry: true });    
           } else {
+            logger.info(`[KUBE-API] system resumed but network appears to be offline, resume watching when online.`);
             electron.ipcMain.once("network:online", () => {
+              logger.info(`[KUBE-API] network on line, resume watching of ${watchUrl}...`);
               this.watch({ ...opts, namespace, callback, watchId, retry: true });
             });
           }
