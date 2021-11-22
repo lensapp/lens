@@ -587,7 +587,6 @@ export class KubeApi<T extends KubeObject> {
     }
 
     electron.powerMonitor.once("suspend", () => {
-      logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
       electron.powerMonitor.once("resume", () => {
         const url = "k8slens.dev"; // url to check if domain names are resolvable.
 
