@@ -145,3 +145,50 @@
   color: var(--textColorDimmed);
   pointer-events: none;
 }
+
+.Tabs {
+  .header {
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: var(--textColorPrimary);
+
+    &:first-child {
+      padding-top: 0;
+    }
+  }
+
+  :global(.Tab) {
+    padding: 6px 10px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 15px;
+    line-height: 20px;
+    cursor: pointer;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &::after {
+      content: none;
+    }
+
+    &:hover {
+      background-color: var(--navSelectedBackground);
+      color: var(--navHoverColor);
+    }
+
+    &:global(.active) {
+      background-color: var(--navSelectedBackground);
+    }
+
+    > :global(.label) {
+      width: 100%;
+      font-weight: 500;
+    }
+  }
+}

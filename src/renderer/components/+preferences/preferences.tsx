@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import "./preferences.scss";
+import tabStyles from "../layout/settings-layout.module.css";
 
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -52,6 +53,7 @@ import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
 import { Extensions } from "./extensions";
 import { sentryDsn } from "../../../common/vars";
+import { cssNames } from "../../utils";
 
 @observer
 export class Preferences extends React.Component {
@@ -69,8 +71,8 @@ export class Preferences extends React.Component {
     const isActive = (route: RouteProps) => !!matchPath(currentLocation, { path: route.path, exact: route.exact });
 
     return (
-      <Tabs className="flex column" scrollable={false} onChange={(url) => navigateWithoutHistoryChange({ pathname: url })}>
-        <div className="header">Preferences</div>
+      <Tabs className={cssNames(tabStyles.Tabs, "flex column")} scrollable={false} onChange={(url) => navigateWithoutHistoryChange({ pathname: url })}>
+        <div className={tabStyles.header}>Preferences</div>
         <Tab value={appURL()} label="Application" data-testid="application-tab" active={isActive(appRoute)}/>
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
         <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kubernetes-tab" active={isActive(kubernetesRoute)}/>
