@@ -35,24 +35,10 @@ import type { IKubeWatchEvent } from "./kube-watch-api";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";
-import AbortController from "abort-controller";
+import { AbortController } from "node-abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
 import electron from "electron";
-
-const onceSystemResume = () => 
-  new Promise(resolve => {
-    electron.powerMonitor.once("resume", () => {
-      resolve(true);
-    });
-  });
-
-const onceSystemSuspend = () => 
-  new Promise(resolve => {
-    electron.powerMonitor.once("suspend", () => {
-      resolve(true);
-    });
-  });
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -575,27 +561,23 @@ export class KubeApi<T extends KubeObject> {
       this.watchSystemStatus();
     }
 
-    onceSystemSuspend().then(async (suspended) => {
-      if (suspended) {
-        logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
+    electron.powerMonitor.once("suspend", () => {
+      logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
 
-        try {
-          abort();
-        } catch (error) {
-          logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
-        }
-        const resumed = await onceSystemResume();
-
-        if (resumed) {
-          clearTimeout(timedRetry);
-          logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
-          timedRetry = setTimeout(() => {
-            this.watch({ ...opts, namespace, callback, watchId, retry: true });
-            // 3000 is a naive value, we assume that after 3 seconds the system is ready
-            // to start watching again. (Network interface/DNS is ready etc.)
-          }, 3000);
-        } 
+      try {
+        abort();
+      } catch (error) {
+        logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
       }
+      electron.powerMonitor.once("resume", () => {
+        clearTimeout(timedRetry);
+        logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
+        timedRetry = setTimeout(() => {
+          this.watch({ ...opts, namespace, callback, watchId, retry: true });
+          // 3000 is a naive value, we assume that after 3 seconds the system is ready
+          // to start watching again. (Network interface/DNS is ready etc.)
+        }, 3000);
+      });
     });
 
     responsePromise
@@ -613,7 +595,7 @@ export class KubeApi<T extends KubeObject> {
 
             if (this.systemSuspended) {
               // don't retry if got "end", "close", "error" and system is suspended
-              // instead, wait for system resume and resume watch using onceSystemResume();
+              // instead, wait for system resume and resume watch using electron.powerMonitor.once;
               return;
             }
 
