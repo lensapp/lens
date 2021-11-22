@@ -30,4 +30,7 @@ export default {
   ipcRenderer: {
     on: jest.fn(),
   },
+  powerMonitor: {
+    on: jest.fn(),
+  },
 };
