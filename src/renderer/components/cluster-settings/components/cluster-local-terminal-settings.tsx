@@ -19,9 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { observable, autorun, makeObservable } from "mobx";
-import { observer, disposeOnUnmount } from "mobx-react";
+import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react";
 import type { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
@@ -31,155 +30,185 @@ import { resolveTilde } from "../../../utils";
 import { Icon } from "../../icon";
 import { PathPicker } from "../../path-picker";
 import { isWindows } from "../../../../common/vars";
+import type { Stats } from "fs";
+import logger from "../../../../common/logger";
+import { lowerFirst } from "lodash";
 
 interface Props {
   cluster: Cluster;
 }
 
-@observer
-export class ClusterLocalTerminalSetting extends React.Component<Props> {
-  @observable directory = "";
-  @observable defaultNamespace = "";
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
+function getUserReadableFileType(stats: Stats): string {
+  if (stats.isFile()) {
+    return "a file";
   }
 
-  async componentDidMount() {
-    const kubeconfig = await this.props.cluster.getKubeconfig();
-
-    const defaultNamespace = this.props.cluster.preferences?.defaultNamespace || kubeconfig.getContextObject(this.props.cluster.contextName).namespace;
-
-    disposeOnUnmount(this,
-      autorun(() => {
-        this.directory = this.props.cluster.preferences.terminalCWD || "";
-        this.defaultNamespace = defaultNamespace || "";
-      }),
-    );
+  if (stats.isFIFO()) {
+    return "a pipe";
   }
 
-  saveCWD = async () => {
-    if (!this.directory) {
-      this.props.cluster.preferences.terminalCWD = undefined;
+  if (stats.isSocket()) {
+    return "a socket";
+  }
 
-      return;
+  if (stats.isBlockDevice()) {
+    return "a block device";
+  }
+
+  if (stats.isCharacterDevice()) {
+    return "a character device";
+  }
+
+  return "an unknown file type";
+}
+
+/**
+ * Validate that `dir` currently points to a directory. If so return `false`.
+ * Otherwise, return a user readable error message string for displaying.
+ * @param dir The path to be validated
+ */
+async function validateDirectory(dir: string): Promise<string | false> {
+  try {
+    const stats = await stat(dir);
+
+    if (stats.isDirectory()) {
+      return false;
     }
 
-    try {
-      const dir = resolveTilde(this.directory);
-      const stats = await stat(dir);
+    return `the provided path is ${getUserReadableFileType(stats)} and not a directory.`;
+  } catch (error) {
+    switch (error?.code) {
+      case "ENOENT":
+        return `the provided path does not exist.`;
+      case "EACCES":
+        return `search permissions is denied for one of the directories in the prefix of the provided path.`;
+      case "ELOOP":
+        return `the provided path is a sym-link which points to a chain of sym-links that is too long to resolve. Perhaps it is cyclic.`;
+      case "ENAMETOOLONG":
+        return `the pathname is too long to be used.`;
+      case "ENOTDIR":
+        return `a prefix of the provided path is not a directory.`;
+      default:
+        logger.warn(`[CLUSTER-LOCAL-TERMINAL-SETTINGS]: unexpected error in validateDirectory for resolved path=${dir}`, error);
 
-      if (stats.isDirectory()) {
-        this.props.cluster.preferences.terminalCWD = dir;
-      } else {
-        Notifications.error(
-          <>
-            <b>Shell Working Directory</b>
-            <p>Provided path is not a directory, your changes were not saved.</p>
-          </>,
-        );
-      }
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        Notifications.error(
-          <>
-            <b>Shell Working Directory</b>
-            <p>Provided path does not exist, your changes were not saved.</p>
-          </>,
-        );
-      } else {
-        Notifications.error(
-          <>
-            <b>Shell Working Directory</b>
-            <p>Your changes were not saved due to the error bellow</p>
-            <p>{String(error)}</p>
-          </>,
-        );
-      }
+        return error ? lowerFirst(String(error)) : "of an unknown error, please try again.";
     }
-  };
+  }
+}
 
-  onChangeTerminalCWD = (value: string) => {
-    this.directory = value;
-  };
+export const ClusterLocalTerminalSetting = observer(({ cluster }: Props) => {
+  if (!cluster) {
+    return null;
+  }
 
-  saveDefaultNamespace = () => {
-    if (this.defaultNamespace) {
-      this.props.cluster.preferences.defaultNamespace = this.defaultNamespace;
+  const [directory, setDirectory] = useState<string>(cluster.preferences?.terminalCWD || "");
+  const [defaultNamespace, setDefaultNamespaces] = useState<string>(cluster.preferences?.defaultNamespace || "");
+  const [placeholderDefaultNamespace, setPlaceholderDefaultNamespace] = useState("default");
+
+  useEffect(() => {
+    (async () => {
+      const kubeconfig = await cluster.getKubeconfig();
+      const { namespace } = kubeconfig.getContextObject(cluster.contextName);
+
+      if (namespace) {
+        setPlaceholderDefaultNamespace(namespace);
+      }
+    })();
+    setDirectory(cluster.preferences?.terminalCWD || "");
+    setDefaultNamespaces(cluster.preferences?.defaultNamespace || "");
+  }, [cluster]);
+
+  const commitDirectory = async (directory: string) => {
+    cluster.preferences ??= {};
+
+    if (!directory) {
+      cluster.preferences.terminalCWD = undefined;
     } else {
-      this.props.cluster.preferences.defaultNamespace = undefined;
+      const dir = resolveTilde(directory);
+      const errorMessage = await validateDirectory(dir);
+
+      if (errorMessage) {
+        Notifications.error(
+          <>
+            <b>Terminal Working Directory</b>
+            <p>Your changes were not saved because {errorMessage}</p>
+          </>,
+        );
+      } else {
+        cluster.preferences.terminalCWD = dir;
+        setDirectory(dir);
+      }
     }
   };
 
-  onChangeDefaultNamespace = (value: string) => {
-    this.defaultNamespace = value;
+  const commitDefaultNamespace = () => {
+    cluster.preferences ??= {};
+    cluster.preferences.defaultNamespace = defaultNamespace || undefined;
   };
 
-  openFilePicker = () => {
+  const setAndCommitDirectory = (newPath: string) => {
+    setDirectory(newPath);
+    commitDirectory(newPath);
+  };
+
+  const openFilePicker = () => {
     PathPicker.pick({
       label: "Choose Working Directory",
       buttonLabel: "Pick",
       properties: ["openDirectory", "showHiddenFiles"],
-      onPick: ([directory]) => {
-        this.props.cluster.preferences.terminalCWD = directory;
-      },
+      onPick: ([directory]) => setAndCommitDirectory(directory),
     });
   };
 
-  onClearCWD = () => {
-    this.props.cluster.preferences.terminalCWD = undefined;
-  };
-
-  render() {
-    return (
-      <>
-        <section>
-          <SubTitle title="Working Directory"/>
-          <Input
-            theme="round-black"
-            value={this.directory}
-            onChange={this.onChangeTerminalCWD}
-            onBlur={this.saveCWD}
-            placeholder={isWindows ? "$USERPROFILE" : "$HOME"}
-            iconRight={
-              <>
-                {
-                  this.directory && (
-                    <Icon
-                      material="close"
-                      title="Clear"
-                      onClick={this.onClearCWD}
-                    />
-                  )
-                }
-                <Icon
-                  material="folder"
-                  title="Pick from filesystem"
-                  onClick={this.openFilePicker}
-                />
-              </>
-            }
-          />
-          <small className="hint">
-            An explicit start path where the terminal will be launched,{" "}
-            this is used as the current working directory (cwd) for the shell process.
-          </small>
-        </section>
-        <section>
-          <SubTitle title="Default Namespace"/>
-          <Input
-            theme="round-black"
-            value={this.defaultNamespace}
-            onChange={this.onChangeDefaultNamespace}
-            onBlur={this.saveDefaultNamespace}
-            placeholder={this.defaultNamespace}
-          />
-          <small className="hint">
-            Default namespace used for kubectl.
-          </small>
-        </section>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <section className="working-directory">
+        <SubTitle title="Working Directory"/>
+        <Input
+          theme="round-black"
+          value={directory}
+          data-testid="working-directory"
+          onChange={setDirectory}
+          onBlur={() => commitDirectory(directory)}
+          placeholder={isWindows ? "$USERPROFILE" : "$HOME"}
+          iconRight={
+            <>
+              {
+                directory && (
+                  <Icon
+                    material="close"
+                    title="Clear"
+                    onClick={() => setAndCommitDirectory("")}
+                  />
+                )
+              }
+              <Icon
+                material="folder"
+                title="Pick from filesystem"
+                onClick={openFilePicker}
+              />
+            </>
+          }
+        />
+        <small className="hint">
+          An explicit start path where the terminal will be launched,{" "}
+          this is used as the current working directory (cwd) for the shell process.
+        </small>
+      </section>
+      <section className="default-namespace">
+        <SubTitle title="Default Namespace"/>
+        <Input
+          theme="round-black"
+          data-testid="default-namespace"
+          value={defaultNamespace}
+          onChange={setDefaultNamespaces}
+          onBlur={commitDefaultNamespace}
+          placeholder={placeholderDefaultNamespace}
+        />
+        <small className="hint">
+          Default namespace used for kubectl.
+        </small>
+      </section>
+    </>
+  );
+});

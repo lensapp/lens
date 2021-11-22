@@ -26,7 +26,8 @@ import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
-import { isWindows } from "../../common/vars";
+import os from "os";
+import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/event-bus";
@@ -179,19 +180,42 @@ export abstract class ShellSession {
   }
 
   protected async getCwd(env: Record<string, string>): Promise<string> {
-    if (this.cwd) {
+    const cwdOptions = [this.cwd];
+
+    if (isWindows) {
+      cwdOptions.push(
+        env.USERPROFILE,
+        os.homedir(),
+        "C:\\",
+      );
+    } else {
+      cwdOptions.push(
+        env.HOME,
+        os.homedir(),
+      );
+
+      if (isMac) {
+        cwdOptions.push("/Users");
+      } else {
+        cwdOptions.push("/home");
+      }
+    }
+
+    for (const potentialCwd of cwdOptions) {
+      if (!potentialCwd) {
+        continue;
+      }
+
       try {
-        const stats = await stat(this.cwd);
+        const stats = await stat(potentialCwd);
 
         if (stats.isDirectory()) {
-          return this.cwd;
+          return potentialCwd;
         }
       } catch {}
     }
 
-    return isWindows
-      ? env.USERPROFILE
-      : env.HOME;
+    return "."; // Always valid
   }
 
   protected async openShellProcess(shell: string, args: string[], env: Record<string, string>) {

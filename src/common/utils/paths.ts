@@ -23,8 +23,12 @@ import path from "path";
 import os from "os";
 
 export function resolveTilde(filePath: string) {
-  if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
-    return filePath.replace("~", os.homedir());
+  if (filePath === "~") {
+    return os.homedir();
+  }
+
+  if (filePath.startsWith("~/")) {
+    return `${os.homedir()}${filePath.slice(1)}`;
   }
 
   return filePath;
