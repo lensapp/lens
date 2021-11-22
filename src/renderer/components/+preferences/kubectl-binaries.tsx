@@ -46,7 +46,7 @@ export const KubectlBinaries = observer(() => {
 
   return (
     <>
-      <section>
+      <section className="mb-12">
         <SubTitle title="Kubectl binary download"/>
         <FormSwitch
           control={
@@ -60,7 +60,7 @@ export const KubectlBinaries = observer(() => {
         />
       </section>
 
-      <section>
+      <section className="mb-12">
         <SubTitle title="Download mirror" />
         <Select
           placeholder="Download mirror for kubectl"
@@ -73,7 +73,7 @@ export const KubectlBinaries = observer(() => {
         />
       </section>
 
-      <section>
+      <section className="mb-12">
         <SubTitle title="Directory for binaries" />
         <Input
           theme="round-black"
@@ -84,7 +84,7 @@ export const KubectlBinaries = observer(() => {
           onBlur={save}
           disabled={!userStore.downloadKubectlBinaries}
         />
-        <div className="hint">
+        <div className="pt-4">
           The directory to download binaries into.
         </div>
       </section>

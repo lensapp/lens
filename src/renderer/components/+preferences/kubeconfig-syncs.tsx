@@ -143,7 +143,7 @@ export class KubeconfigSyncs extends React.Component {
 
     if (!entries) {
       return (
-        <div className="loading-spinner">
+        <div className="m-auto">
           <Spinner />
         </div>
       );

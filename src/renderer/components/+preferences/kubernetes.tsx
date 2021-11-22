@@ -28,16 +28,16 @@ import { KubectlBinaries } from "./kubectl-binaries";
 export const Kubernetes = observer(() => {
   return (
     <section id="kubernetes">
-      <section id="kubectl">
+      <section id="kubectl" className="mb-12">
         <h2 data-testid="kubernetes-header">Kubernetes</h2>
         <KubectlBinaries />
       </section>
-      <hr/>
-      <section id="kube-sync">
+      <hr className="mb-12"/>
+      <section id="kube-sync" className="mb-12">
         <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
         <KubeconfigSyncs />
       </section>
-      <hr/>
+      <hr className="mb-12"/>
       <section id="helm">
         <h2>Helm Charts</h2>
         <HelmCharts/>
