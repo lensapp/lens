@@ -20,7 +20,7 @@
  */
 
 import { watch } from "chokidar";
-import { dialog, ipcRenderer } from "electron";
+import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fse from "fs-extra";
 import { observable, reaction, when, makeObservable } from "mobx";
@@ -396,10 +396,10 @@ export class ExtensionDiscovery extends Singleton {
         try {
           await this.installPackage(extension.absolutePath);
         } catch (error) {
-          const message = error.message || error?.toString() || "unknown error";
+          const message = error.message || error || "unknown error";
           const { name, version } = extension.manifest;
 
-          dialog.showErrorBox("Lens Extension Install Failure", `Failed to install user extension ${name}@${version}: ${message}`);
+          logger.error(`${logModule}: failed to install user extension ${name}@${version}`, message);
         }
       }
     }
