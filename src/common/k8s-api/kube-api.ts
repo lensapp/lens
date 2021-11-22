@@ -548,14 +548,12 @@ export class KubeApi<T extends KubeObject> {
     });
   }
 
-  private watchSystemStatus(forUrl: string) {
+  private watchSystemStatus() {
     electron.powerMonitor.on("suspend", () => {
-      logger.info(`[KUBE-API] system suspended... ${forUrl}`);
       this.systemSuspended = true;
     });
 
     electron.powerMonitor.on("resume", () => {
-      logger.info(`[KUBE-API] system resumed! ${forUrl}`);
       this.systemSuspended = false;
     });
 
@@ -580,28 +578,30 @@ export class KubeApi<T extends KubeObject> {
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     if (!this.watchingSystemStatus) {
-      this.watchSystemStatus(watchUrl);
+      this.watchSystemStatus();
     }
 
-    onceSystemResume().then(() => {
-      clearTimeout(timedRetry);
-      logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
-      timedRetry = setTimeout(() => {
-        this.watch({ ...opts, namespace, callback, watchId, retry: true });
-        // 3000 is a non-evident random value, we assume that after 3 seconds the system is ready
-        // to start watching again. (Network interface/DNS is ready etc.)
-      }, 3000);
-    }).catch((error) => {
-      logger.warn(`[KUBE-API] resume watching of ${watchUrl} error`, error);
-    });
-
-    onceSystemSuspend().then((suspended) => {
+    onceSystemSuspend().then(async (suspended) => {
       if (suspended) {
-        logger.info(`[KUBE-API] system suspended, abort watching ${watchUrl}...`);
-        abort?.();
+        logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
+
+        try {
+          abort();
+        } catch (error) {
+          logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
+        }
+        const resumed = await onceSystemResume();
+
+        if (resumed) {
+          clearTimeout(timedRetry);
+          logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
+          timedRetry = setTimeout(() => {
+            this.watch({ ...opts, namespace, callback, watchId, retry: true });
+            // 3000 is a naive value, we assume that after 3 seconds the system is ready
+            // to start watching again. (Network interface/DNS is ready etc.)
+          }, 3000);
+        } 
       }
-    }).catch((error) => {
-      logger.warn(`[KUBE-API] abort watching of ${watchUrl} error`, error);
     });
 
     responsePromise
@@ -623,7 +623,7 @@ export class KubeApi<T extends KubeObject> {
               return;
             }
 
-            logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
+            logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}, signal.aborted: ${signal.aborted}`);
 
             clearTimeout(timedRetry);
             timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
