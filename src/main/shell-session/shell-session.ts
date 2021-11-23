@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import fse from "fs-extra";
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
 import type WebSocket from "ws";
@@ -27,13 +26,15 @@ import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
-import { isWindows } from "../../common/vars";
+import os from "os";
+import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/event-bus";
 import logger from "../logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
+import { stat } from "fs/promises";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -178,10 +179,47 @@ export abstract class ShellSession {
     this.websocket.send(serialize(message));
   }
 
-  protected async openShellProcess(shell: string, args: string[], env: Record<string, any>) {
-    const cwd = (this.cwd && await fse.pathExists(this.cwd))
-    	? this.cwd
-    	: env.HOME;
+  protected async getCwd(env: Record<string, string>): Promise<string> {
+    const cwdOptions = [this.cwd];
+
+    if (isWindows) {
+      cwdOptions.push(
+        env.USERPROFILE,
+        os.homedir(),
+        "C:\\",
+      );
+    } else {
+      cwdOptions.push(
+        env.HOME,
+        os.homedir(),
+      );
+
+      if (isMac) {
+        cwdOptions.push("/Users");
+      } else {
+        cwdOptions.push("/home");
+      }
+    }
+
+    for (const potentialCwd of cwdOptions) {
+      if (!potentialCwd) {
+        continue;
+      }
+
+      try {
+        const stats = await stat(potentialCwd);
+
+        if (stats.isDirectory()) {
+          return potentialCwd;
+        }
+      } catch {}
+    }
+
+    return "."; // Always valid
+  }
+
+  protected async openShellProcess(shell: string, args: string[], env: Record<string, string>) {
+    const cwd = await this.getCwd(env);
     const { shellProcess, resume } = this.ensureShellProcess(shell, args, env, cwd);
 
     if (resume) {

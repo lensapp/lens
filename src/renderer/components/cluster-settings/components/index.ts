@@ -20,7 +20,7 @@
  */
 
 export * from "./cluster-accessible-namespaces";
-export * from "./cluster-home-dir-setting";
+export * from "./cluster-local-terminal-settings";
 export * from "./cluster-kubeconfig";
 export * from "./cluster-metrics-setting";
 export * from "./cluster-name-setting";
