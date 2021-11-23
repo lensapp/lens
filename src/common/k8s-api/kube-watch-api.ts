@@ -28,7 +28,6 @@ import type { ClusterContext } from "./cluster-context";
 import { comparer, observable, reaction, makeObservable } from "mobx";
 import { autoBind, disposer, Disposer, noop } from "../utils";
 import type { KubeJsonApiData } from "./kube-json-api";
-import { isProduction } from "../vars";
 import type { KubeObject } from "./kube-object";
 import AbortController from "abort-controller";
 import { once } from "lodash";
@@ -143,7 +142,11 @@ export class KubeWatchApi {
       }
     };
 
-    loadThenSubscribe(namespaces);
+    /**
+     * We don't want to wait because we want to start reacting to namespace
+     * selection changes ASAP
+     */
+    loadThenSubscribe(namespaces).catch(noop);
 
     const cancelReloading = watchChanges
       ? reaction(
@@ -154,7 +157,7 @@ export class KubeWatchApi {
           childController.abort();
           unsubscribe();
           childController = new WrappedAbortController(parent);
-          loadThenSubscribe(namespaces);
+          loadThenSubscribe(namespaces).catch(noop);
         },
         {
           equals: comparer.shallow,
@@ -192,10 +195,6 @@ export class KubeWatchApi {
   }
 
   protected log(message: any, meta: any) {
-    if (isProduction) {
-      return;
-    }
-
     const log = message instanceof Error
       ? console.error
       : console.debug;
