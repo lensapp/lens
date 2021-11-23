@@ -168,7 +168,7 @@ export abstract class BaseStore<T> extends Singleton {
 
   protected async onModelChange(model: T) {
     if (ipcMain) {
-      this.saveToFile(model); // save config file
+      await this.saveToFile(model); // save config file
       broadcastMessage(this.syncRendererChannel, model);
     } else {
       broadcastMessage(this.syncMainChannel, model);
