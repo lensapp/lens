@@ -39,7 +39,6 @@ import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
 import electron from "electron";
-import { ipcMainOn } from "../ipc";
 import { promises as dns } from "dns";
 import retry from "async-retry";
 
@@ -239,10 +238,7 @@ export class KubeApi<T extends KubeObject> {
   protected watchDisposer: () => void;
   private watchId = 1;
   private watchingSystemStatus = false; // If true, we are watching system status ('suspend'/'resume')
-  private watchingNetworkStatus = false;
   private systemSuspended = false;
-  private networkOnline = true; // default is true as we assume the network is online when the KubeApi is initialized
-
   constructor(protected options: IKubeApiOptions<T>) {
     const {
       objectConstructor,
@@ -545,18 +541,6 @@ export class KubeApi<T extends KubeObject> {
     this.watchingSystemStatus = true;
   }
 
-  private watchNetworkStatus() {
-    ipcMainOn("network:online", () => {
-      this.networkOnline = true;
-    });
-
-    ipcMainOn("network:offline", () => {
-      this.networkOnline = false;
-    });
-
-    this.watchingNetworkStatus = true;
-  }
-
   private whenCanResolveDomainName(url = "k8slens.dev", retryOptions: Parameters<typeof retry>[1]) {
     return retry(() => dns.lookup(url), retryOptions);
   }
@@ -582,10 +566,6 @@ export class KubeApi<T extends KubeObject> {
       this.watchSystemStatus();
     }
 
-    if (!this.watchingNetworkStatus) {
-      this.watchNetworkStatus();
-    }
-
     electron.powerMonitor.once("suspend", () => {
       logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
 
@@ -602,7 +582,7 @@ export class KubeApi<T extends KubeObject> {
         const url = "k8slens.dev"; // url to check if domain names are resolvable.
 
         this.whenCanResolveDomainName(url, { retries: 50, maxTimeout: 3000 }).then(() => {
-          logger.info(`[KUBE-API] domain name can be resolved, checking networkOnline:${this.networkOnline.toString?.()}`);
+          logger.info(`[KUBE-API] domain name can be resolved.`);
 
           let abortController = opts.abortController;
 
@@ -610,16 +590,8 @@ export class KubeApi<T extends KubeObject> {
             abortController = new AbortController();
           }
 
-          if (this.networkOnline) {
-            logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
-            this.watch({ ...opts, abortController, namespace, callback, watchId, retry: true }); 
-          } else {
-            logger.info(`[KUBE-API] system resumed but network appears to be offline, resume watching when online.`);
-            electron.ipcMain.once("network:online", () => {
-              logger.info(`[KUBE-API] network on line, resume watching of ${watchUrl}...`);
-              this.watch({ ...opts, abortController, namespace, callback, watchId, retry: true });
-            });
-          }
+          logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
+          this.watch({ ...opts, abortController, namespace, callback, watchId, retry: true });
         }).catch((error) => {
           logger.warn(`[KUBE-API] error resolving domain name ${url}`, error);
         });
