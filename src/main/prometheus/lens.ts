@@ -21,7 +21,6 @@
 
 import { PrometheusProvider, PrometheusService } from "./provider-registry";
 import type { CoreV1Api } from "@kubernetes/client-node";
-import logger from "../logger";
 import { inspect } from "util";
 
 export class PrometheusLens extends PrometheusProvider {
@@ -30,22 +29,8 @@ export class PrometheusLens extends PrometheusProvider {
   readonly rateAccuracy: string = "1m";
   readonly isConfigurable: boolean = false;
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
-    try {
-      const resp = await client.readNamespacedService("prometheus", "lens-metrics");
-      const service = resp.body;
-
-      return {
-        id: this.id,
-        namespace: service.metadata.namespace,
-        service: service.metadata.name,
-        port: service.spec.ports[0].port,
-      };
-    } catch(error) {
-      logger.warn(`PrometheusLens: failed to list services: ${error.response.body.message}`);
-
-      return undefined;
-    }
+  public getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+    return this.getNamespacedService(client, "prometheus", "lens-metrics");
   }
 
   public getQuery(opts: Record<string, string>, queryName: string): string {

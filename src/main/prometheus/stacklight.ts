@@ -21,7 +21,6 @@
 
 import { PrometheusProvider, PrometheusService } from "./provider-registry";
 import type { CoreV1Api } from "@kubernetes/client-node";
-import logger from "../logger";
 import { inspect } from "util";
 
 export class PrometheusStacklight extends PrometheusProvider {
@@ -30,22 +29,8 @@ export class PrometheusStacklight extends PrometheusProvider {
   readonly rateAccuracy: string = "1m";
   readonly isConfigurable: boolean = true;
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
-    try {
-      const resp = await client.readNamespacedService("prometheus-server", "stacklight");
-      const service = resp.body;
-
-      return {
-        id: this.id,
-        namespace: service.metadata.namespace,
-        service: service.metadata.name,
-        port: service.spec.ports[0].port,
-      };
-    } catch(error) {
-      logger.warn(`PrometheusLens: failed to list services: ${error.response.body.message}`);
-
-      return undefined;
-    }
+  public getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+    return this.getNamespacedService(client, "prometheus-server", "stacklight");
   }
 
   public getQuery(opts: Record<string, string>, queryName: string): string {
