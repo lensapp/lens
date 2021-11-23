@@ -393,7 +393,14 @@ export class ExtensionDiscovery extends Singleton {
 
     for (const extension of userExtensions) {
       if ((await fse.pathExists(extension.manifestPath)) === false) {
-        await this.installPackage(extension.absolutePath);
+        try {
+          await this.installPackage(extension.absolutePath);
+        } catch (error) {
+          const message = error.message || error || "unknown error";
+          const { name, version } = extension.manifest;
+
+          logger.error(`${logModule}: failed to install user extension ${name}@${version}`, message);
+        }
       }
     }
 
