@@ -549,10 +549,10 @@ export class KubeApi<T extends KubeObject> {
     logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
 
     try {
-      if (opts.abortController) {
-        opts.abortController.abort?.();
-      } else {
-        abort?.();
+      if (typeof opts.abortController?.abort === "function") {
+        opts.abortController.abort();
+      } else if (typeof abort === "function") {
+        abort();
       }
     } catch (error) {
       logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
