@@ -102,7 +102,7 @@ export abstract class BaseStore<T> extends Singleton {
     return AppPaths.get("userData");
   }
 
-  protected async saveToFile(model: T) {
+  protected saveToFile(model: T) {
     logger.info(`[STORE]: SAVING ${this.path}`);
 
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
@@ -166,7 +166,7 @@ export abstract class BaseStore<T> extends Singleton {
     }
   }
 
-  protected async onModelChange(model: T) {
+  protected onModelChange(model: T) {
     if (ipcMain) {
       this.saveToFile(model); // save config file
       broadcastMessage(this.syncRendererChannel, model);
