@@ -545,6 +545,38 @@ export class KubeApi<T extends KubeObject> {
     return retry(() => dns.lookup(url), retryOptions);
   }
 
+  private suspendListener(opts: KubeApiWatchOptions, abort: AbortController["abort"], watchId: string, watchUrl: string) {
+    logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
+
+    try {
+      if (opts.abortController) {
+        opts.abortController.abort?.();
+      } else {
+        abort?.();
+      }
+    } catch (error) {
+      logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
+    }
+    electron.powerMonitor.once("resume", () => {
+      const url = "k8slens.dev"; // url to check if domain names are resolvable.
+
+      this.whenCanResolveDomainName(url, { retries: 50, maxTimeout: 3000 }).then(() => {
+        logger.info(`[KUBE-API] domain name can be resolved.`);
+
+        let abortController = opts.abortController;
+
+        if (opts.abortController.signal.aborted) {
+          abortController = new AbortController();
+        }
+
+        logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
+        this.watch({ ...opts, abortController });
+      }).catch((error) => {
+        logger.warn(`[KUBE-API] error resolving domain name ${url}`, error);
+      });
+    });
+  }
+
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
@@ -566,37 +598,10 @@ export class KubeApi<T extends KubeObject> {
       this.watchSystemStatus();
     }
 
-    electron.powerMonitor.once("suspend", () => {
-      logger.info(`[KUBE-API] system suspended, abort watching of ${watchUrl}...`);
-
-      try {
-        if (opts.abortController) {
-          opts.abortController.abort?.();
-        } else {
-          abort?.();
-        }
-      } catch (error) {
-        logger.error(`[KUBE-API] error aborting watch (${watchId})`, error);
-      }
-      electron.powerMonitor.once("resume", () => {
-        const url = "k8slens.dev"; // url to check if domain names are resolvable.
-
-        this.whenCanResolveDomainName(url, { retries: 50, maxTimeout: 3000 }).then(() => {
-          logger.info(`[KUBE-API] domain name can be resolved.`);
-
-          let abortController = opts.abortController;
-
-          if (opts.abortController.signal.aborted) {
-            abortController = new AbortController();
-          }
-
-          logger.info(`[KUBE-API] system resumed, resume watching of ${watchUrl}...`);
-          this.watch({ ...opts, abortController, namespace, callback, watchId, retry: true });
-        }).catch((error) => {
-          logger.warn(`[KUBE-API] error resolving domain name ${url}`, error);
-        });
-      });
-    });
+    electron.powerMonitor.removeListener("suspend", this.suspendListener);
+    electron.powerMonitor.addListener("suspend", this.suspendListener.bind(
+      { ...opts, namespace, callback, watchId, retry: true }, abort, watchId, watchUrl),
+    );
 
     responsePromise
       .then(response => {
