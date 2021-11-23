@@ -136,22 +136,22 @@ describe("BaseStore", () => {
     });
   
     it("persists transaction only once", () => {
-      const jsonSpy = jest.spyOn(store, "saveToFile");
+      const fileSpy = jest.spyOn(store, "saveToFile");
   
       store.updateAll({
         a: "foo", b: "bar", c: "hello",
       });
   
-      expect(jsonSpy).toHaveBeenCalledTimes(1);
+      expect(fileSpy).toHaveBeenCalledTimes(1);
     });
   
     it("persists changes one-by-one without transaction", () => {
-      const jsonSpy = jest.spyOn(store, "saveToFile");
+      const fileSpy = jest.spyOn(store, "saveToFile");
   
       store.a = "a";
       store.b = "b";
   
-      expect(jsonSpy).toHaveBeenCalledTimes(2);
+      expect(fileSpy).toHaveBeenCalledTimes(2);
 
       const data = JSON.parse(readFileSync("tmp/test-store.json").toString());
   
@@ -159,13 +159,13 @@ describe("BaseStore", () => {
     });
 
     it("persists changes coming via onSync (sync from different process)", () => {
-      const jsonSpy = jest.spyOn(store, "saveToFile");
+      const fileSpy = jest.spyOn(store, "saveToFile");
 
       store.onSync({ a: "foo", b: "", c: "bar" });
 
       expect(store.toJSON()).toEqual({ a: "foo", b: "", c: "bar" });
 
-      expect(jsonSpy).toHaveBeenCalledTimes(1);
+      expect(fileSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
