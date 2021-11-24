@@ -559,8 +559,8 @@ export class KubeApi<T extends KubeObject> {
 
     responsePromise
       .then(response => {
-        // True if the watch was retried
-        let retried = false;
+        // True if the current watch request was retried
+        let requestRetried = false;
 
         if (!response.ok) {
           logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
@@ -573,7 +573,7 @@ export class KubeApi<T extends KubeObject> {
         if (timeout) {
           setTimeout(() => {
             // We only retry if we haven't retried, haven't aborted and haven't received k8s error
-            if (retried || abortController.signal.aborted || errorReceived) {
+            if (requestRetried || abortController.signal.aborted || errorReceived) {
               return;
             }
 
@@ -582,7 +582,7 @@ export class KubeApi<T extends KubeObject> {
 
             logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
 
-            retried = true;
+            requestRetried = true;
 
             // Clearing out any possible timeout, although we don't expect this to be set
             clearTimeout(timedRetry);
@@ -595,13 +595,13 @@ export class KubeApi<T extends KubeObject> {
           response.body.on(eventName, () => {
             // We only retry if we haven't retried, haven't aborted and haven't received k8s error
             // kubernetes errors (=errorReceived set) should be handled in a callback
-            if (retried || abortController.signal.aborted || errorReceived) {
+            if (requestRetried || abortController.signal.aborted || errorReceived) {
               return;
             }
 
             logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
 
-            retried = true;
+            requestRetried = true;
 
             clearTimeout(timedRetry);
             timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
