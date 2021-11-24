@@ -72,12 +72,7 @@ export async function start() {
       ...process.env,
     },
     timeout: 100_000,
-  });
-
-  const cleanup = async () => {
-    await app.close();
-    await remove(CICD).catch(noop);
-  };
+  } as Parameters<typeof electron["launch"]>[0]);
 
   try {
     const window = await getMainWindow(app);
@@ -85,10 +80,14 @@ export async function start() {
     return {
       app,
       window,
-      cleanup,
+      cleanup: async () => {
+        await app.close();
+        await remove(CICD).catch(noop);
+      },
     };
   } catch (error) {
-    await cleanup();
+    await app.close();
+    await remove(CICD).catch(noop);
     throw error;
   }
 }
