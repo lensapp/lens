@@ -21,7 +21,7 @@
 
 // Animations
 
-@mixin animate-opacity($enterDuration: 100ms, $leaveDuration: 150ms) {
+@mixin animate-opacity($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
   opacity: 0;
 
   &.enter {
@@ -37,7 +37,7 @@
   }
 }
 
-@mixin animate-slide-right($enterDuration: 100ms, $leaveDuration: 150ms) {
+@mixin animate-slide-right($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
   transform: translateX(100%);
   will-change: transform;
 
@@ -53,7 +53,7 @@
   }
 }
 
-@mixin animate-opacity-scale($enterDuration: 250ms, $leaveDuration: 150ms) {
+@mixin animate-opacity-scale($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
   opacity: 0;
 
   &.enter {
@@ -84,6 +84,6 @@
   }
 
   &.opacity-scale {
-    @include animate-opacity-scale(100ms);
+    @include animate-opacity-scale;
   }
 }
