@@ -208,6 +208,8 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
   watchId?: string;
   retry?: boolean;
+
+  // timeout in seconds
   timeout?: number;
 };
 
@@ -528,34 +530,78 @@ export class KubeApi<T extends KubeObject> {
   watch(opts: KubeApiWatchOptions = { namespace: "", retry: false }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop, retry, timeout } = opts;
+    const { namespace, callback = noop, retry, timeout } = opts;
     const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
 
-    signal.addEventListener("abort", () => {
+    // Create AbortController for this request
+    const abortController = new AbortController();
+
+    // If caller aborts, abort using request's abortController
+    if (opts.abortController) {
+      opts.abortController.signal.addEventListener("abort", () => {
+        abortController.abort();
+      });
+    }
+
+    abortController.signal.addEventListener("abort", () => {
       logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
       clearTimeout(timedRetry);
     });
 
     const requestParams = timeout ? { query: { timeoutSeconds: timeout }}: {};
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, requestParams, { signal, timeout: 600_000 });
+    const responsePromise = this.request.getResponse(watchUrl, requestParams, {
+      signal: abortController.signal,
+      timeout: 600_000,
+    });
 
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     responsePromise
       .then(response => {
+        // True if the current watch request was retried
+        let requestRetried = false;
+
         if (!response.ok) {
           logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
 
           return callback(null, response);
         }
 
+        // Add mechanism to retry in case timeoutSeconds is set but the watch wasn't timed out.
+        // This can happen if e.g. network is offline and AWS NLB is used.
+        if (timeout) {
+          setTimeout(() => {
+            // We only retry if we haven't retried, haven't aborted and haven't received k8s error
+            if (requestRetried || abortController.signal.aborted || errorReceived) {
+              return;
+            }
+
+            // Close current request
+            abortController.abort();
+
+            logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
+
+            requestRetried = true;
+
+            // Clearing out any possible timeout, although we don't expect this to be set
+            clearTimeout(timedRetry);
+            this.watch({ ...opts, namespace, callback, watchId, retry: true });
+            // We wait longer than the timeout, as we expect the request to be retried with timeoutSeconds
+          }, timeout * 1000 * 1.1);
+        }
+
         ["end", "close", "error"].forEach((eventName) => {
           response.body.on(eventName, () => {
-            if (errorReceived) return; // kubernetes errors should be handled in a callback
-            if (signal.aborted) return;
+            // We only retry if we haven't retried, haven't aborted and haven't received k8s error
+            // kubernetes errors (=errorReceived set) should be handled in a callback
+            if (requestRetried || abortController.signal.aborted || errorReceived) {
+              return;
+            }
 
             logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
+
+            requestRetried = true;
 
             clearTimeout(timedRetry);
             timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
@@ -587,7 +633,7 @@ export class KubeApi<T extends KubeObject> {
         callback(null, error);
       });
 
-    return abort;
+    return abortController.abort;
   }
 
   protected modifyWatchEvent(event: IKubeWatchEvent<KubeJsonApiData>) {
