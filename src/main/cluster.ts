@@ -34,7 +34,7 @@ import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../common/cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
-import { disposer, storedKubeConfigFolder, toJS } from "../common/utils";
+import { storedKubeConfigFolder, toJS } from "../common/utils";
 import type { Response } from "request";
 
 /**
@@ -53,7 +53,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
-  protected eventDisposers = disposer();
+  protected eventDisposers: Function[] = [];
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
@@ -325,6 +325,15 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   /**
+   * internal
+   */
+  protected unbindEvents() {
+    logger.info(`[CLUSTER]: unbind events`, this.getMeta());
+    this.eventDisposers.forEach(dispose => dispose());
+    this.eventDisposers.length = 0;
+  }
+
+  /**
    * @param force force activation
    * @internal
    */
@@ -386,13 +395,8 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   @action disconnect() {
-    logger.info(`[CLUSTER]: disconnecting cluster`, { id: this.id });
-
-    ipcMain.once(`cluster:${this.id}:frame-removed`, () => {
-      this.contextHandler?.stopServer();
-    });
-
-    this.eventDisposers();
+    this.unbindEvents();
+    this.contextHandler?.stopServer();
     this.disconnected = true;
     this.online = false;
     this.accessible = false;
@@ -401,6 +405,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.allowedNamespaces = [];
     this.resourceAccessStatuses.clear();
     this.pushState();
+    logger.info(`[CLUSTER]: disconnect`, this.getMeta());
   }
 
   /**

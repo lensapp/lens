@@ -370,7 +370,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     }
   }, 10*60*1000);
 
-
+  
 
   it("show logs and highlight the log search entries", async () => {
     await frame.click(`a[href="/workloads"]`);

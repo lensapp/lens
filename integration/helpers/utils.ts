@@ -72,7 +72,7 @@ export async function start() {
       ...process.env,
     },
     timeout: 100_000,
-  });
+  } as Parameters<typeof electron["launch"]>[0]);
 
   try {
     const window = await getMainWindow(app);
