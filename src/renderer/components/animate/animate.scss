@@ -21,43 +21,43 @@
 
 // Animations
 
-@mixin animate-opacity() {
+@mixin animate-opacity($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
   opacity: 0;
 
   &.enter {
     transition-property: opacity;
-    transition-duration: var(--enter-duration);
+    transition-duration: $enterDuration;
     opacity: 1;
   }
 
   &.leave {
-    transition-duration: var(--leave-duration);
+    transition-duration: $leaveDuration;
     transition-timing-function: ease-out;
     opacity: 0;
   }
 }
 
-@mixin animate-slide-right() {
+@mixin animate-slide-right($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
   transform: translateX(100%);
   will-change: transform;
 
   &.enter {
     transform: translateX(0);
-    transition: transform var(--enter-duration);
+    transition: transform $enterDuration;
     transition-timing-function: ease-in-out;
   }
 
   &.leave {
     transform: translateX(100%);
-    transition: transform var(--leave-duration);
+    transition: transform $leaveDuration;
   }
 }
 
-@mixin animate-opacity-scale() {
+@mixin animate-opacity-scale($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
   opacity: 0;
 
   &.enter {
-    transition: opacity var(--enter-duration);
+    transition: opacity $enterDuration;
     opacity: 1;
   }
 
@@ -65,7 +65,7 @@
     will-change: opacity, transform;
     opacity: 0;
     transform: scale(1.25);
-    transition: transform var(--leave-duration) ease-in, opacity var(--leave-duration) ease-out;
+    transition: transform $leaveDuration ease-in, opacity $leaveDuration ease-out;
   }
 }
 

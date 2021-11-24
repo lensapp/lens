@@ -167,7 +167,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
     if (animated) {
       dialog = (
-        <Animate enter={this.isOpen} name="opacity-scale" enterDuration={200} leaveDuration={200}>
+        <Animate enter={this.isOpen} name="opacity-scale">
           {dialog}
         </Animate>
       );
