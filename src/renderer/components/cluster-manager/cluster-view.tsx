@@ -5,7 +5,7 @@
 
 import "./cluster-view.scss";
 import React from "react";
-import { computed, makeObservable, reaction } from "mobx";
+import { computed, makeObservable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { ClusterStatus } from "./cluster-status";
@@ -55,17 +55,27 @@ export class ClusterView extends React.Component<Props> {
   bindEvents() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
-        ClusterFrameHandler.getInstance().setVisibleCluster(clusterId);
-        ClusterFrameHandler.getInstance().initView(clusterId);
-        requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
+        console.log(`[CLUSTER-VIEW]: clusterId=${clusterId} is now matched`, this.cluster?.getMeta());
+
+        const frameHandler = ClusterFrameHandler.getInstance();
+
+        frameHandler.setVisibleCluster(clusterId);
+        frameHandler.initView(clusterId);
+        requestClusterActivation(clusterId, !this.cluster.disconnected); // activate and fetch cluster's state from main
         catalogEntityRegistry.activeEntity = clusterId;
       }, {
         fireImmediately: true,
       }),
 
-      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], ([, disconnected]) => {
-        if (ClusterFrameHandler.getInstance().hasLoadedView(this.clusterId) && disconnected) {
-          navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
+      reaction(() => this.cluster?.disconnected, disconnected => {
+        if (!disconnected) {
+          const cluster = this.cluster; // save a reference for the when so that changes in `clusterId` do
+
+          when(() => cluster?.disconnected, () => {
+            if (cluster.id === this.clusterId) {
+              navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
+            }
+          });
         }
       }),
     ]);

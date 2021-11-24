@@ -63,11 +63,7 @@ export class ClusterFrameHandler extends Singleton {
       () => !cluster.disconnected,
       () => {
         when(
-          () => {
-            const cluster = ClusterStore.getInstance().getById(clusterId);
-
-            return !cluster || (cluster.disconnected && this.views.get(clusterId)?.isLoaded);
-          },
+          () => !cluster || (cluster.disconnected && this.views.get(clusterId)?.isLoaded),
           () => {
             logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
             this.views.delete(clusterId);
