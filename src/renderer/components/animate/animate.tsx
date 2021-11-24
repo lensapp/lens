@@ -23,7 +23,7 @@ import "./animate.scss";
 import React from "react";
 import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { boundMethod, cssNames, noop } from "../../utils";
+import { cssNames, noop } from "../../utils";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 
@@ -32,17 +32,19 @@ export interface AnimateProps {
   enter?: boolean;
   onEnter?: () => void;
   onLeave?: () => void;
+  enterDuration?: number;
+  leaveDuration?: number;
 }
 
 @observer
 export class Animate extends React.Component<AnimateProps> {
-  static VISIBILITY_DELAY_MS = 0;
-
   static defaultProps: AnimateProps = {
     name: "opacity",
     enter: true,
     onEnter: noop,
     onLeave: noop,
+    enterDuration: 100,
+    leaveDuration: 100,
   };
 
   @observable isVisible = !!this.props.enter;
@@ -66,7 +68,6 @@ export class Animate extends React.Component<AnimateProps> {
         if (enter) this.enter();
         else this.leave();
       }, {
-        delay: Animate.VISIBILITY_DELAY_MS,
         fireImmediately: true,
       }),
     ]);
@@ -84,6 +85,11 @@ export class Animate extends React.Component<AnimateProps> {
     if (!this.isVisible) return;
     this.statusClassName.leave = true;
     this.props.onLeave();
+    this.resetAfterLeaveDuration();
+  }
+
+  resetAfterLeaveDuration() {
+    setTimeout(() => this.reset(), this.props.leaveDuration);
   }
 
   reset() {
@@ -92,27 +98,21 @@ export class Animate extends React.Component<AnimateProps> {
     this.statusClassName.leave = false;
   }
 
-  @boundMethod
-  onTransitionEnd(evt: React.TransitionEvent) {
-    const { enter, leave } = this.statusClassName;
-    const { onTransitionEnd } = this.contentElem.props;
-
-    if (onTransitionEnd) onTransitionEnd(evt);
-
-    // todo: check evt.propertyName and make sure all animating props has finished their transition
-    if (enter && leave) {
-      this.reset();
-    }
-  }
-
   render() {
-    const { name } = this.props;
+    const { name, enterDuration, leaveDuration } = this.props;
     const contentElem = this.contentElem;
+    const durations = {
+      "--enter-duration": `${enterDuration}ms`,
+      "--leave-duration": `${leaveDuration}ms`,
+    } as React.CSSProperties;
 
     return React.cloneElement(contentElem, {
       className: cssNames("Animate", name, contentElem.props.className, this.statusClassName),
       children: this.isVisible ? contentElem.props.children : null,
-      onTransitionEnd: this.onTransitionEnd,
+      style: {
+        ...contentElem.props.style,
+        ...durations,
+      },
     });
   }
 }
