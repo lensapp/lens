@@ -74,21 +74,20 @@ export async function start() {
     timeout: 100_000,
   });
 
-  const cleanup = async () => {
-    await app.close();
-    await remove(CICD).catch(noop);
-  };
-
   try {
     const window = await getMainWindow(app);
 
     return {
       app,
       window,
-      cleanup,
+      cleanup: async () => {
+        await app.close();
+        await remove(CICD).catch(noop);
+      },
     };
   } catch (error) {
-    await cleanup();
+    await app.close();
+    await remove(CICD).catch(noop);
     throw error;
   }
 }
