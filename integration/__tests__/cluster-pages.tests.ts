@@ -331,7 +331,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await cleanup();
   }, 10*60*1000);
 
-  it("shows cluster context menu in sidebar", async () => {
+  it.skip("shows cluster context menu in sidebar", async () => {
     await frame.click(`[data-testid="sidebar-cluster-dropdown"]`);
     await frame.waitForSelector(`.Menu >> text="Add to Hotbar"`);
     await frame.waitForSelector(`.Menu >> text="Settings"`);
