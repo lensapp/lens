@@ -23,6 +23,8 @@ import type { Request } from "node-fetch";
 import { forRemoteCluster, KubeApi } from "../kube-api";
 import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
+import AbortController from "abort-controller";
+import { delay } from "../../utils/delay";
 
 class TestKubeObject extends KubeObject {
   static kind = "Pod";
@@ -324,6 +326,127 @@ describe("KubeApi", () => {
       
       api.watch({ namespace: "kube-system", timeout: 60 });
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
+    });
+
+    it("aborts watch using abortController", async (done) => {
+      const spy = jest.spyOn(request, "getResponse");
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        (request as any).signal.addEventListener("abort", () => {
+          done();
+        });
+
+        return {};
+      });
+
+      const abortController = new AbortController();
+      
+      api.watch({
+        namespace: "kube-system",
+        timeout: 60,
+        abortController,
+      });
+
+      expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
+
+      await delay(100);
+
+      abortController.abort();
+    });
+
+    describe("retries", () => {
+      it("if request ended", (done) => {
+        const spy = jest.spyOn(request, "getResponse");
+
+        // we need to mock using jest as jest-fetch-mock doesn't support mocking the body completely
+        jest.spyOn(global, "fetch").mockImplementation(async () => {
+          return {
+            ok: true,
+            body: {
+              on: (eventName: string, callback: Function) => {
+                // End the request in 100ms.
+                if (eventName === "end") {
+                  setTimeout(() => {
+                    callback();
+                  }, 100);
+                }
+              },
+            },
+          } as any;
+        });
+      
+        api.watch({
+          namespace: "kube-system",
+        });
+
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        setTimeout(() => {  
+          expect(spy).toHaveBeenCalledTimes(2);
+          done();
+        }, 2000);
+      });
+
+      it("if request not closed after timeout", (done) => {
+        const spy = jest.spyOn(request, "getResponse");
+
+        (fetch as any).mockResponse(async () => {
+          return {};
+        });
+
+        const timeoutSeconds = 1;
+      
+        api.watch({
+          namespace: "kube-system",
+          timeout: timeoutSeconds,
+        });
+
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        setTimeout(() => {  
+          expect(spy).toHaveBeenCalledTimes(2);
+          done();
+        }, timeoutSeconds * 1000 * 1.2);
+      });
+
+      it("retries only once if request ends and timeout is set", (done) => {
+        const spy = jest.spyOn(request, "getResponse");
+
+        // we need to mock using jest as jest-fetch-mock doesn't support mocking the body completely
+        jest.spyOn(global, "fetch").mockImplementation(async () => {
+          return {
+            ok: true,
+            body: {
+              on: (eventName: string, callback: Function) => {
+                // End the request in 100ms
+                if (eventName === "end") {
+                  setTimeout(() => {
+                    callback();
+                  }, 100);
+                }
+              },
+            },
+          } as any;
+        });
+      
+        const timeoutSeconds = 0.5;
+      
+        api.watch({
+          namespace: "kube-system",
+          timeout: timeoutSeconds,
+        });
+
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        setTimeout(() => {  
+          expect(spy).toHaveBeenCalledTimes(2);
+          done();
+        }, 2000);
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
     });
   });
 });

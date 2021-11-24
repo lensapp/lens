@@ -208,6 +208,8 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
   watchId?: string;
   retry?: boolean;
+
+  // timeout in seconds
   timeout?: number;
 };
 
@@ -529,8 +531,17 @@ export class KubeApi<T extends KubeObject> {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
     const { namespace, callback = noop, retry, timeout } = opts;
-    const abortController = opts.abortController ?? new AbortController();
     const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
+
+    // Create AbortController for this request
+    const abortController = new AbortController();
+
+    // If caller aborts, abort using request's abortController
+    if (opts.abortController) {
+      opts.abortController.signal.addEventListener("abort", () => {
+        abortController.abort();
+      });
+    }
 
     abortController.signal.addEventListener("abort", () => {
       logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
@@ -563,16 +574,11 @@ export class KubeApi<T extends KubeObject> {
           setTimeout(() => {
             // We only retry if we haven't retried, haven't aborted and haven't received k8s error
             if (retried || abortController.signal.aborted || errorReceived) {
-              // TODO: Reduce logging here
-              logger.info(`[KUBE-API] Watch timeout set, returning due to retried: ${retried} aborted: ${abortController.signal.aborted} errorReceived: ${errorReceived}`);
-
               return;
             }
 
-            // Close current request, how?
-            // If we call abortController.abort();, that will abort the next request too,
-            // as abortController is passed down
-            // abortController.abort();
+            // Close current request
+            abortController.abort();
 
             logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
 
@@ -590,9 +596,6 @@ export class KubeApi<T extends KubeObject> {
             // We only retry if we haven't retried, haven't aborted and haven't received k8s error
             // kubernetes errors (=errorReceived set) should be handled in a callback
             if (retried || abortController.signal.aborted || errorReceived) {
-              // TODO: Reduce logging here
-              logger.info(`[KUBE-API] response event ${eventName} returning due to retried: ${retried} signal.aborted: ${abortController.signal.aborted} errorReceived: ${errorReceived}`);
-
               return;
             }
 
