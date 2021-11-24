@@ -25,8 +25,8 @@
 import type { KubeObjectStore } from "./kube-object.store";
 import type { ClusterContext } from "./cluster-context";
 
-import { comparer, observable, reaction, makeObservable } from "mobx";
-import { autoBind, disposer, Disposer, noop } from "../utils";
+import { comparer, reaction } from "mobx";
+import { disposer, Disposer, noop } from "../utils";
 import type { KubeJsonApiData } from "./kube-json-api";
 import type { KubeObject } from "./kube-object";
 import AbortController from "abort-controller";
@@ -111,14 +111,9 @@ class WatchCount {
 }
 
 export class KubeWatchApi {
-  @observable context: ClusterContext = null;
+  static context: ClusterContext = null;
 
   #watch = new WatchCount();
-
-  constructor() {
-    makeObservable(this);
-    autoBind(this);
-  }
 
   private subscribeStore({ store, parent, watchChanges, namespaces, onLoadFailure }: SubscribeStoreParams): Disposer {
     if (this.#watch.inc(store) > 1) {
@@ -151,9 +146,15 @@ export class KubeWatchApi {
     const cancelReloading = watchChanges
       ? reaction(
         // Note: must slice because reaction won't fire if it isn't there
-        () => this.context.contextNamespaces.slice(),
-        namespaces => {
-          console.log(`changing watch ${store.api.apiBase}`, namespaces);
+        () => [KubeWatchApi.context.contextNamespaces.slice(), KubeWatchApi.context.hasSelectedAll] as const,
+        ([namespaces, curSelectedAll], [, prevSelectedAll]) => {
+          if (curSelectedAll && prevSelectedAll) {
+            console.log(`[KUBE-WATCH-API]: Not changing watch for ${store.api.apiBase} because a new namespace was created but all namespaces are selected`);
+
+            return;
+          }
+
+          console.log(`[KUBE-WATCH-API]: changing watch ${store.api.apiBase}`, namespaces);
           childController.abort();
           unsubscribe();
           childController = new WrappedAbortController(parent);
@@ -181,8 +182,8 @@ export class KubeWatchApi {
       ...stores.map(store => this.subscribeStore({
         store,
         parent,
-        watchChanges: !namespaces,
-        namespaces: namespaces ?? this.context?.contextNamespaces ?? [],
+        watchChanges: !namespaces && store.api.isNamespaced,
+        namespaces: namespaces ?? KubeWatchApi.context?.contextNamespaces ?? [],
         onLoadFailure,
       })),
     );

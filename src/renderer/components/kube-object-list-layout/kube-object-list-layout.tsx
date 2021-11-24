@@ -35,7 +35,7 @@ import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
-import { clusterContext } from "../context";
+import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -51,6 +51,7 @@ const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
 @observer
 export class KubeObjectListLayout<K extends KubeObject> extends React.Component<KubeObjectListLayoutProps<K>> {
   static defaultProps = defaultProps as object;
+  static clusterContext: ClusterContext;
 
   constructor(props: KubeObjectListLayoutProps<K>) {
     super(props);
@@ -67,7 +68,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
     const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
     const reactions: Disposer[] = [
-      reaction(() => clusterContext.contextNamespaces.slice(), () => {
+      reaction(() => KubeObjectListLayout.clusterContext.contextNamespaces.slice(), () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),

@@ -36,16 +36,18 @@ import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 import { makeObservable, observable, reaction } from "mobx";
-import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
+import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
 
 interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
+  static clusterContext: ClusterContext;
+
   @observable loadErrors: string[] = [];
 
   constructor(props: Props) {
@@ -67,7 +69,7 @@ export class WorkloadsOverview extends React.Component<Props> {
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
       }),
-      reaction(() => clusterContext.contextNamespaces.slice(), () => {
+      reaction(() => WorkloadsOverview.clusterContext.contextNamespaces.slice(), () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),
