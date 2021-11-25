@@ -25,7 +25,6 @@ import { computed, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
-import { ClusterStore } from "../../../common/cluster-store";
 import { ipcRendererOn, requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
@@ -34,11 +33,12 @@ import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
-import type { ClusterId, KubeAuthUpdate } from "../../../common/cluster-types";
+import type { KubeAuthUpdate } from "../../../common/cluster-types";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 interface Props {
   className?: IClassName;
-  clusterId: ClusterId;
+  cluster: Cluster;
 }
 
 @observer
@@ -52,7 +52,11 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   get cluster(): Cluster {
-    return ClusterStore.getInstance().getById(this.props.clusterId);
+    return this.props.cluster;
+  }
+
+  @computed get entity() {
+    return catalogEntityRegistry.getById(this.cluster.id);
   }
 
   @computed get hasErrors(): boolean {
@@ -72,7 +76,7 @@ export class ClusterStatus extends React.Component<Props> {
     this.isReconnecting = true;
 
     try {
-      await requestMain(clusterActivateHandler, this.props.clusterId, true);
+      await requestMain(clusterActivateHandler, this.cluster.id, true);
     } catch (error) {
       this.authOutput.push({
         message: error.toString(),
@@ -86,7 +90,7 @@ export class ClusterStatus extends React.Component<Props> {
   manageProxySettings = () => {
     navigate(entitySettingsURL({
       params: {
-        entityId: this.props.clusterId,
+        entityId: this.cluster.id,
       },
       fragment: "proxy",
     }));
@@ -149,7 +153,7 @@ export class ClusterStatus extends React.Component<Props> {
     return (
       <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
         <div className="flex items-center column gaps">
-          <h2>{this.cluster.preferences.clusterName}</h2>
+          <h2>{this.entity.getName()}</h2>
           {this.renderStatusIcon()}
           {this.renderAuthenticationOutput()}
           {this.renderReconnectionHelp()}
