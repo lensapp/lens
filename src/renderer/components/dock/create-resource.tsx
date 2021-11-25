@@ -35,6 +35,11 @@ import { InfoPanel } from "./info-panel";
 import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../notifications";
 import logger from "../../../common/logger";
+import type { KubeJsonApiData, KubeJsonApiError } from "../../../common/k8s-api/kube-json-api";
+import { getDetailsUrl } from "../kube-detail-params";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { prevDefault } from "../../utils";
+import { navigate } from "../../navigation";
 
 interface Props {
   tab: DockTab;
@@ -103,28 +108,35 @@ export class CreateResource extends React.Component<Props> {
 
     // skip empty documents
     const resources = yaml.loadAll(this.data).filter(Boolean);
-    const createdResources: string[] = [];
 
     if (resources.length === 0) {
       return void logger.info("Nothing to create");
     }
 
-    for (const result of await Promise.allSettled(resources.map(resourceApplierApi.update))) {
-      if (result.status === "fulfilled") {
-        createdResources.push(result.value.metadata.name);
-      } else {
-        Notifications.error(result.reason.toString());
-      }
-    }
+    const creatingResources = resources.map(async (resource: string) => {
+      try {
+        const data: KubeJsonApiData = await resourceApplierApi.update(resource);
+        const { kind, apiVersion, metadata: { name, namespace }} = data;
+        const resourceLink = apiManager.lookupApiLink({ kind, apiVersion, name, namespace });
 
-    if (createdResources.length > 0) {
-      Notifications.ok((
-        <p>
-          {createdResources.length === 1 ? "Resource" : "Resources"}{" "}
-          <b>{createdResources.join(", ")}</b> successfully created
-        </p>
-      ));
-    }
+        const showDetails = () => {
+          navigate(getDetailsUrl(resourceLink));
+          close();
+        };
+
+        const close = Notifications.ok(
+          <p>
+            {kind} <a onClick={prevDefault(showDetails)}>{name}</a> successfully created.
+          </p>,
+        );
+      } catch (error) {
+        const failureReason = (error as KubeJsonApiError).reason.toString();
+
+        Notifications.error(failureReason);
+      }
+    });
+
+    await Promise.allSettled(creatingResources);
 
     return undefined;
   };

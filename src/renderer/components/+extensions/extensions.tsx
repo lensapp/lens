@@ -370,7 +370,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
   if (curState !== ExtensionInstallationState.IDLE) {
     dispose();
 
-    return Notifications.error(
+    return void Notifications.error(
       <div className="flex column gaps">
         <b>Extension Install Collision:</b>
         <p>The <em>{name}</em> extension is currently {curState.toLowerCase()}.</p>
