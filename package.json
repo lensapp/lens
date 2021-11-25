@@ -316,7 +316,7 @@
     "ansi_up": "^5.1.0",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
-    "color": "^3.1.2",
+    "color": "^3.2.1",
     "concurrently": "^5.3.0",
     "css-loader": "^5.2.7",
     "deepdash": "^5.3.9",
