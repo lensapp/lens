@@ -19,18 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { when } from "mobx";
-import { catalogCategoryRegistry } from "../../../common/catalog";
-import { catalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
-import { isActiveRoute } from "../../../renderer/navigation";
+import { createContainer } from "@ogre-tools/injectable";
 
-export async function setEntityOnRouteMatch() {
-  await when(() => catalogEntityRegistry.entities.size > 0);
+export const getDi = () =>
+  createContainer(
+    getRequireContextForRendererCode,
+    getRequireContextForCommonCode,
+    getRequireContextForCommonExtensionCode,
+  );
 
-  const entities = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
-  const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
+const getRequireContextForRendererCode = () =>
+  require.context("./", true, /\.injectable\.(ts|tsx)$/);
 
-  if (activeEntity) {
-    catalogEntityRegistry.activeEntity = activeEntity;
-  }
-}
+const getRequireContextForCommonCode = () =>
+  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonExtensionCode = () =>
+  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);

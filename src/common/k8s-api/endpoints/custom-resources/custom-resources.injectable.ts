@@ -19,16 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createContainer } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import { crdStore } from "../../../../renderer/components/+custom-resources/crd.store";
 
-export const getDi = () =>
-  createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-  );
+const customResourceDefinitionsInjectable = getInjectable({
+  instantiate: () => computed(() => [...crdStore.items]),
 
-const getRequireContextForRendererCode = () =>
-  require.context("../", true, /\.injectable\.(ts|tsx)$/);
+  lifecycle: lifecycleEnum.singleton,
+});
 
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);
+export default customResourceDefinitionsInjectable;

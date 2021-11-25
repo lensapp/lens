@@ -32,6 +32,7 @@ import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
 import { CatalogIpcEvents } from "../../common/ipc/catalog";
 import { navigate } from "../navigation";
+import { isMainFrame } from "process";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
@@ -85,6 +86,16 @@ export class CatalogEntityRegistry {
 
     // Make sure that we get items ASAP and not the next time one of them changes
     ipcRenderer.send(CatalogIpcEvents.INIT);
+
+    if (isMainFrame) {
+      ipcRendererOn("catalog-entity:run", (event, id: string) => {
+        const entity = this.getById(id);
+
+        if (entity) {
+          this.onRun(entity);
+        }
+      });
+    }
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {

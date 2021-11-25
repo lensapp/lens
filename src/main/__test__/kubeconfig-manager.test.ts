@@ -81,7 +81,7 @@ describe("kubeconfig manager tests", () => {
   let contextHandler: ContextHandler;
 
   beforeEach(() => {
-    const mockOpts = {
+    mockFs({
       "minikube-config.yml": JSON.stringify({
         apiVersion: "v1",
         clusters: [{
@@ -103,9 +103,7 @@ describe("kubeconfig manager tests", () => {
         kind: "Config",
         preferences: {},
       }),
-    };
-
-    mockFs(mockOpts);
+    });
 
     cluster = new Cluster({
       id: "foo",

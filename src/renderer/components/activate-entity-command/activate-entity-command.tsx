@@ -22,6 +22,7 @@
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
+import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CommandOverlay } from "../command-palette";
@@ -37,7 +38,7 @@ export class ActivateEntityCommand extends React.Component {
   }
 
   onSelect(entity: CatalogEntity): void {
-    catalogEntityRegistry.onRun(entity);
+    broadcastMessage("catalog-entity:run", entity.getId());
     CommandOverlay.close();
   }
 

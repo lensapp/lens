@@ -49,7 +49,7 @@ import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import { AppPaths } from "../common/app-paths";
 import { registerCustomThemes } from "./components/monaco-editor";
-import { getDi } from "./components/getDi";
+import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
@@ -101,9 +101,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 
   logger.info(`${logPrefix} initializing Registries`);
   initializers.initRegistries();
-
-  logger.info(`${logPrefix} initializing CommandRegistry`);
-  initializers.initCommandRegistry();
 
   logger.info(`${logPrefix} initializing EntitySettingsRegistry`);
   initializers.initEntitySettingsRegistry();

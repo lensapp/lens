@@ -19,34 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Extensions API -> Commands
+import { when } from "mobx";
+import { catalogCategoryRegistry } from "../../../common/catalog";
+import { catalogEntityRegistry } from "../catalog-entity-registry";
+import { isActiveRoute } from "../../navigation";
+import type { GeneralEntity } from "../../../common/catalog-entities";
 
-import { BaseRegistry } from "./base-registry";
-import type { LensExtension } from "../lens-extension";
-import type { CatalogEntity } from "../../common/catalog";
+export async function setEntityOnRouteMatch() {
+  await when(() => catalogEntityRegistry.entities.size > 0);
 
-export interface CommandContext {
-  entity?: CatalogEntity;
-}
+  const entities: GeneralEntity[] = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
+  const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
 
-export interface CommandRegistration {
-  id: string;
-  title: string;
-  scope: "entity" | "global";
-  action: (context: CommandContext) => void;
-  isActive?: (context: CommandContext) => boolean;
-}
-
-export class CommandRegistry extends BaseRegistry<CommandRegistration> {
-  add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {
-    const itemArray = [items].flat();
-
-    const newIds = itemArray.map((item) => item.id);
-    const currentIds = this.getItems().map((item) => item.id);
-
-    const filteredIds = newIds.filter((id) => !currentIds.includes(id));
-    const filteredItems = itemArray.filter((item) => filteredIds.includes(item.id));
-
-    return super.add(filteredItems, extension);
+  if (activeEntity) {
+    catalogEntityRegistry.activeEntity = activeEntity;
   }
 }

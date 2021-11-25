@@ -21,61 +21,31 @@
 
 
 import { Select } from "../select";
-import { computed, makeObservable, observable } from "mobx";
+import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
-import { CommandRegistry } from "../../../extensions/registries/command-registry";
+import React, { useState } from "react";
 import { CommandOverlay } from "./command-overlay";
-import { broadcastMessage } from "../../../common/ipc";
-import { navigate } from "../../navigation";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../../common/catalog";
-import { clusterViewURL } from "../../../common/routes";
+import { navigate } from "../../navigation";
+import { broadcastMessage } from "../../../common/ipc";
+import { IpcRendererNavigationEvents } from "../../navigation/events";
+import type { RegisteredCommand } from "./registered-commands/commands";
+import { iter } from "../../utils";
+import { orderBy } from "lodash";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import registeredCommandsInjectable from "./registered-commands/registered-commands.injectable";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
-@observer
-export class CommandDialog extends React.Component {
-  @observable menuIsOpen = true;
-  @observable searchValue: any = undefined;
+interface Dependencies {
+  commands: IComputedValue<Map<string, RegisteredCommand>>;
+  activeEntity?: CatalogEntity;
+}
 
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
-  }
+const NonInjectedCommandDialog = observer(({ commands, activeEntity }: Dependencies) => {
+  const [searchValue, setSearchValue] = useState("");
 
-  @computed get activeEntity(): CatalogEntity | undefined {
-    return catalogEntityRegistry.activeEntity;
-  }
-
-  @computed get options() {
-    const registry = CommandRegistry.getInstance();
-
-    const context = {
-      entity: this.activeEntity,
-    };
-
-    return registry.getItems().filter((command) => {
-      if (command.scope === "entity" && !this.activeEntity) {
-        return false;
-      }
-
-      try {
-        return command.isActive?.(context) ?? true;
-      } catch(e) {
-        console.error(e);
-      }
-
-      return false;
-    })
-      .map((command) => ({
-        value: command.id,
-        label: command.title,
-      }))
-      .sort((a, b) => a.label > b.label ? 1 : -1);
-  }
-
-  private onChange(value: string) {
-    const registry = CommandRegistry.getInstance();
-    const command = registry.getItems().find((cmd) => cmd.id === value);
+  const executeAction = (commandId: string) => {
+    const command = commands.get().get(commandId);
 
     if (!command) {
       return;
@@ -83,46 +53,73 @@ export class CommandDialog extends React.Component {
 
     try {
       CommandOverlay.close();
+      command.action({
+        entity: activeEntity,
+        navigate: (url, opts = {}) => {
+          const { forceRootFrame = false } = opts;
 
-      if (command.scope === "global") {
-        command.action({
-          entity: this.activeEntity,
-        });
-      } else if(this.activeEntity) {
-        navigate(clusterViewURL({
-          params: {
-            clusterId: this.activeEntity.metadata.uid,
-          },
-        }));
-        broadcastMessage(`command-palette:run-action:${this.activeEntity.metadata.uid}`, command.id);
-      }
-    } catch(error) {
+          if (forceRootFrame) {
+            broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
+          } else {
+            navigate(url);
+          }
+        },
+      });
+    } catch (error) {
       console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
     }
-  }
+  };
 
-  render() {
-    return (
-      <Select
-        menuPortalTarget={null}
-        onChange={v => this.onChange(v.value)}
-        components={{
-          DropdownIndicator: null,
-          IndicatorSeparator: null,
-        }}
-        menuIsOpen={this.menuIsOpen}
-        options={this.options}
-        autoFocus={true}
-        escapeClearsValue={false}
-        data-test-id="command-palette-search"
-        placeholder="Type a command or search&hellip;"
-        onInputChange={(newValue, { action }) => {
-          if (action === "input-change") {
-            this.searchValue = newValue;
-          }
-        }}
-        inputValue={this.searchValue}
-      />
-    );
-  }
-}
+  const context = {
+    entity: activeEntity,
+  };
+  const activeCommands = iter.filter(commands.get().values(), command => {
+    try {
+      return command.isActive(context);
+    } catch (error) {
+      console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
+    }
+
+    return false;
+  });
+  const options = Array.from(activeCommands, ({ id, title }) => ({
+    value: id,
+    label: typeof title === "function"
+      ? title(context)
+      : title,
+  }));
+
+  // Make sure the options are in the correct order
+  orderBy(options, "label", "asc");
+
+  return (
+    <Select
+      menuPortalTarget={null}
+      onChange={v => executeAction(v.value)}
+      components={{
+        DropdownIndicator: null,
+        IndicatorSeparator: null,
+      }}
+      menuIsOpen
+      options={options}
+      autoFocus={true}
+      escapeClearsValue={false}
+      data-test-id="command-palette-search"
+      placeholder="Type a command or search&hellip;"
+      onInputChange={(newValue, { action }) => {
+        if (action === "input-change") {
+          setSearchValue(newValue);
+        }
+      }}
+      inputValue={searchValue}
+    />
+  );
+});
+
+export const CommandDialog = withInjectables<Dependencies>(NonInjectedCommandDialog, {
+  getProps: di => ({
+    commands: di.inject(registeredCommandsInjectable),
+    // TODO: replace with injection
+    activeEntity: catalogEntityRegistry.activeEntity,
+  }),
+});

@@ -216,8 +216,14 @@ export function getAppMenu(
         label: "Command Palette...",
         accelerator: "Shift+CmdOrCtrl+P",
         id: "command-palette",
-        click() {
-          broadcastMessage("command-palette:open");
+        click(_m, _b, event) {
+          /**
+           * Don't broadcast unless it was triggered by menu iteration so that
+           * there aren't double events in renderer
+           */
+          if (!event?.triggeredByAccelerator) {
+            broadcastMessage("command-palette:open");
+          }
         },
       },
       { type: "separator" },

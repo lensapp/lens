@@ -280,5 +280,5 @@ const addDynamicMenuItem = ({
 
   const kubeObjectMenuRegistry = di.inject(kubeObjectMenuRegistryInjectable);
 
-  kubeObjectMenuRegistry.add(dynamicMenuItemStub);
+  kubeObjectMenuRegistry.add([dynamicMenuItemStub]);
 };
