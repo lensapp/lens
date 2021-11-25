@@ -37,6 +37,7 @@ import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
+import type { PartialDeep } from "type-fest";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -526,7 +527,7 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async patch(desc: ResourceDescriptor, data?: Partial<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
+  async patch(desc: ResourceDescriptor, data?: PartialDeep<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl(desc);
 
