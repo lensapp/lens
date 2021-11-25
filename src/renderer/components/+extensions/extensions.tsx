@@ -356,7 +356,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
   return attemptInstall({ fileName, dataP }, disposer);
 }
 
-async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void | (() => void)> {
+async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void> {
   const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
   const validatedRequest = await createTempFilesAndValidate(request);
 
@@ -370,7 +370,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
   if (curState !== ExtensionInstallationState.IDLE) {
     dispose();
 
-    return Notifications.error(
+    return void Notifications.error(
       <div className="flex column gaps">
         <b>Extension Install Collision:</b>
         <p>The <em>{name}</em> extension is currently {curState.toLowerCase()}.</p>
@@ -416,7 +416,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
 }
 
 async function attemptInstalls(filePaths: string[]): Promise<void> {
-  const promises: Promise<any>[] = [];
+  const promises: Promise<void>[] = [];
 
   for (const filePath of filePaths) {
     promises.push(attemptInstall({
