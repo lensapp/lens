@@ -35,7 +35,7 @@ export class Notifications extends React.Component {
   public elem: HTMLElement;
 
   static ok(message: NotificationMessage) {
-    notificationsStore.add({
+    return notificationsStore.add({
       message,
       timeout: 2_500,
       status: NotificationStatus.OK,

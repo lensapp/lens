@@ -95,10 +95,10 @@ export class ApiManager {
     return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 
-  lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
+  lookupApiLink(ref: IKubeObjectRef, parentObject?: KubeObject): string {
     const {
       kind, apiVersion, name,
-      namespace = parentObject.getNs(),
+      namespace = parentObject?.getNs(),
     } = ref;
 
     if (!kind) return "";
