@@ -187,7 +187,7 @@
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.15.1",
     "@sentry/electron": "^2.5.4",
-    "@sentry/integrations": "^6.13.3",
+    "@sentry/integrations": "^6.15.0",
     "abort-controller": "^3.0.0",
     "auto-bind": "^4.0.0",
     "autobind-decorator": "^2.4.0",
