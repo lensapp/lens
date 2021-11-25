@@ -43,7 +43,7 @@ export class Notifications extends React.Component {
   }
 
   static error(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
-    notificationsStore.add({
+    return notificationsStore.add({
       message,
       timeout: 10_000,
       status: NotificationStatus.ERROR,
@@ -52,7 +52,7 @@ export class Notifications extends React.Component {
   }
 
   static shortInfo(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
-    this.info(message, {
+    return this.info(message, {
       timeout: 5_000,
       ...customOpts,
     });

@@ -116,13 +116,8 @@ export class CreateResource extends React.Component<Props> {
     const creatingResources = resources.map(async (resource: string) => {
       try {
         const data: KubeJsonApiData = await resourceApplierApi.update(resource);
-        const resourceName = data.metadata.name;
-        const resourceLink = apiManager.lookupApiLink({
-          kind: data.kind,
-          apiVersion: data.apiVersion,
-          name: resourceName,
-          namespace: data.metadata.namespace,
-        });
+        const { kind, apiVersion, metadata: { name, namespace }} = data;
+        const resourceLink = apiManager.lookupApiLink({ kind, apiVersion, name, namespace });
 
         const showDetails = () => {
           navigate(getDetailsUrl(resourceLink));
@@ -131,7 +126,7 @@ export class CreateResource extends React.Component<Props> {
 
         const close = Notifications.ok(
           <p>
-            Resource <a onClick={prevDefault(showDetails)}>{resourceName}</a> successfully created.
+            {kind} <a onClick={prevDefault(showDetails)}>{name}</a> successfully created.
           </p>,
         );
       } catch (error) {

@@ -356,7 +356,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
   return attemptInstall({ fileName, dataP }, disposer);
 }
 
-async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void> {
+async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void | (() => void)> {
   const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
   const validatedRequest = await createTempFilesAndValidate(request);
 
@@ -416,7 +416,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
 }
 
 async function attemptInstalls(filePaths: string[]): Promise<void> {
-  const promises: Promise<void>[] = [];
+  const promises: Promise<any>[] = [];
 
   for (const filePath of filePaths) {
     promises.push(attemptInstall({
