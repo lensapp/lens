@@ -373,7 +373,7 @@
     "typedoc": "0.22.7",
     "typedoc-plugin-markdown": "^3.11.3",
     "typeface-roboto": "^1.1.13",
-    "typescript": "^4.4.4",
+    "typescript": "^4.5.2",
     "typescript-plugin-css-modules": "^3.4.0",
     "url-loader": "^4.1.1",
     "webpack": "^4.46.0",
