@@ -65,6 +65,8 @@ export interface IResourceMetrics<T extends IMetrics> {
   cpuUsage: T;
   memoryUsage: T;
   fsUsage: T;
+  fsWrites: T;
+  fsReads: T;
   networkReceive: T;
   networkTransmit: T;
 }

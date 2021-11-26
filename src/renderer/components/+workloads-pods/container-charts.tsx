@@ -46,6 +46,8 @@ export const ContainerCharts = observer(() => {
     memoryRequests,
     memoryLimits,
     fsUsage,
+    fsWrites,
+    fsReads
   } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
 
   const datasets = [
@@ -105,6 +107,20 @@ export const ContainerCharts = observer(() => {
         tooltip: `Bytes consumed on this filesystem`,
         borderColor: "#ffc63d",
         data: fsUsage.map(([x, y]) => ({ x, y })),
+      },
+      {
+        id: "fsWrites",
+        label: `Writes`,
+        tooltip: `Bytes written on this filesystem`,
+        borderColor: "#ff963d",
+        data: fsWrites.map(([x, y]) => ({ x, y })),
+      },
+      {
+        id: "fsReads",
+        label: `Reads`,
+        tooltip: `Bytes read on this filesystem`,
+        borderColor: "#fff73d",
+        data: fsReads.map(([x, y]) => ({ x, y })),
       },
     ],
   ];

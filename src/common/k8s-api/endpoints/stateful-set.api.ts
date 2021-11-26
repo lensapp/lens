@@ -62,6 +62,8 @@ export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace
     cpuUsage: opts,
     memoryUsage: opts,
     fsUsage: opts,
+    fsWrites: opts,
+    fsReads: opts,
     networkReceive: opts,
     networkTransmit: opts,
   }, {

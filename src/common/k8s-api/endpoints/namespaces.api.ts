@@ -63,6 +63,8 @@ export function getMetricsForNamespace(namespace: string, selector = ""): Promis
     cpuUsage: opts,
     memoryUsage: opts,
     fsUsage: opts,
+    fsWrites: opts,
+    fsReads: opts,
     networkReceive: opts,
     networkTransmit: opts,
   }, {
