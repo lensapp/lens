@@ -27,6 +27,7 @@ import { ForwardedPort, PortForwardItem } from "./port-forward-item";
 import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
 import logger from "../../common/logger";
+import { Notifications } from "../components/notifications";
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   private storage = createStorage<ForwardedPort[] | undefined>("port_forwards", undefined);
@@ -48,13 +49,21 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
     if (Array.isArray(savedPortForwards)) {
       logger.info("[PORT-FORWARD-STORE] starting saved port-forwards");
-      await Promise.all(savedPortForwards.map(addPortForward));
+      const results = await Promise.allSettled(savedPortForwards.map(addPortForward));
+
+      for (const result of results) {
+        if (result.status === "rejected") {
+          Notifications.info("One or more port-forwards could not be started");
+          
+          return;
+        }
+      }
     }
   }
 
   watch() {
     return disposer(
-      reaction(() => this.portForwards, () => this.loadAll()),
+      reaction(() => this.portForwards.slice(), () => this.loadAll()),
     );
   }
 
@@ -64,15 +73,11 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
       this.storage.set(portForwards);
 
-      this.reset();
+      this.portForwards = [];
       portForwards.map(pf => this.portForwards.push(new PortForwardItem(pf)));
 
       return this.portForwards;
     });
-  }
-
-  reset() {
-    this.portForwards = [];
   }
 
   async removeSelectedItems() {
@@ -102,20 +107,28 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   const { port, forwardPort } = portForward;
   let response: PortForwardResult;
 
+  if (!portForward.status) {
+    portForward.status = "Active";
+  }
+
   try {
-    const protocol = portForward.protocol ?? "http";
+    if (portForward.status === "Active") {
+      const protocol = portForward.protocol ?? "http";
 
-    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
+      response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
 
-    // expecting the received port to be the specified port, unless the specified port is 0, which indicates any available port is suitable
-    if (portForward.forwardPort && response?.port && response.port != +portForward.forwardPort) {
-      logger.warn(`[PORT-FORWARD-STORE] specified ${portForward.forwardPort} got ${response.port}`);
+      // expecting the received port to be the specified port, unless the specified port is 0, which indicates any available port is suitable
+      if (portForward.forwardPort && response?.port && response.port != +portForward.forwardPort) {
+        logger.warn(`[PORT-FORWARD-STORE] specified ${portForward.forwardPort} got ${response.port}`);
+      }
     }
   } catch (error) {
-    logger.warn("[PORT-FORWARD-STORE] Error adding port-forward:", error, portForward);
-    throw (error);
+    logger.warn("[PORT-FORWARD-STORE] Error starting port-forward:", error, portForward);
+    portForward.status = "Disabled";
+    throw(error);
+  } finally {
+    portForwardStore.portForwards.push(new PortForwardItem(portForward));
   }
-  portForwardStore.reset();
 
   return response?.port;
 }
@@ -141,8 +154,6 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
   portForward.forwardPort = desiredPort;
   port = await addPortForward(portForward);
 
-  portForwardStore.reset();
-
   return port;
 }
 
@@ -157,7 +168,6 @@ export async function removePortForward(portForward: ForwardedPort) {
     logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
     throw (error);
   }
-  portForwardStore.reset();
 }
 
 export async function getPortForwards(clusterId?: string): Promise<ForwardedPort[]> {
