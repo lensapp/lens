@@ -60,10 +60,8 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
   loadAll() {
     return this.loadItems(async () => {
-      let portForwards = await getPortForwards();
+      const portForwards = await getPortForwards(getHostedClusterId());
 
-      // filter out any not for this cluster
-      portForwards = portForwards.filter(pf => pf.clusterId == getHostedClusterId());
       this.storage.set(portForwards);
 
       this.reset();
@@ -166,9 +164,10 @@ export async function removePortForward(portForward: ForwardedPort) {
   portForwardStore.reset();
 }
 
-export async function getPortForwards(): Promise<ForwardedPort[]> {
+export async function getPortForwards(clusterId?: string): Promise<ForwardedPort[]> {
   try {
-    const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards`);
+    const query = clusterId ? `?clusterId=${clusterId}` : "";
+    const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards${query}`);
 
     return response.portForwards;
   } catch (error) {
