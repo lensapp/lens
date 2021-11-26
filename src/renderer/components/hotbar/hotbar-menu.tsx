@@ -33,6 +33,7 @@ import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
+import { makeObservable, observable } from "mobx";
 
 interface Props {
   className?: IClassName;
@@ -40,6 +41,13 @@ interface Props {
 
 @observer
 export class HotbarMenu extends React.Component<Props> {
+  @observable draggingOver = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   get hotbar() {
     return HotbarStore.getInstance().getActive();
   }
@@ -54,8 +62,14 @@ export class HotbarMenu extends React.Component<Props> {
     return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
   }
 
+  onDragStart() {
+    this.draggingOver = true;
+  }
+
   onDragEnd(result: DropResult) {
     const { source, destination } = result;
+
+    this.draggingOver = false;
 
     if (!destination) {  // Dropped outside of the list
       return;
@@ -165,9 +179,9 @@ export class HotbarMenu extends React.Component<Props> {
     const hotbar = hotbarStore.getActive();
 
     return (
-      <div className={cssNames("HotbarMenu flex column", className)}>
+      <div className={cssNames("HotbarMenu flex column", { draggingOver: this.draggingOver }, className)}>
         <div className="HotbarItems flex column gaps">
-          <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
+          <DragDropContext onDragStart={this.onDragStart.bind(this)} onDragEnd={this.onDragEnd.bind(this)}>
             {this.renderGrid()}
           </DragDropContext>
         </div>
