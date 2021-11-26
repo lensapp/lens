@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { hideDetails } from "../../kube-detail-params";
-import type { IInjectable } from "@ogre-tools/injectable";
+import type { Injectable } from "@ogre-tools/injectable";
 
-export const hideDetailsInjectable: IInjectable<typeof hideDetails> = {
+export const hideDetailsInjectable: Injectable<typeof hideDetails> = {
   getDependencies: () => ({}),
   instantiate: () => hideDetails,
 };

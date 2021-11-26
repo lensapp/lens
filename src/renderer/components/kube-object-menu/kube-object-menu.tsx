@@ -25,12 +25,12 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { MenuActions, MenuActionsProps } from "../menu";
 import identity from "lodash/identity";
 
-import type { IKubeObjectMenuRegistry } from "../../../extensions/registries";
-import type { IApiManager } from "../../../common/k8s-api/api-manager";
+import type { KubeObjectMenuRegistry } from "../../../extensions/registries";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 
 export interface KubeObjectMenuDependencies<TKubeObject> {
-  apiManager: IApiManager;
-  kubeObjectMenuRegistry: IKubeObjectMenuRegistry;
+  apiManager: ApiManager;
+  kubeObjectMenuRegistry: KubeObjectMenuRegistry;
   clusterName: string;
   hideDetails: () => void;
   editResourceTab: (kubeObject: TKubeObject) => void;

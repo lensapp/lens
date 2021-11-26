@@ -6,6 +6,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
     <div>
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
           Some menu item
@@ -39,6 +40,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
   </div>
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   />
   <div
     class="Tooltip narrow invisible formatter"
@@ -54,6 +56,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     <div>
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
           Some menu item
@@ -88,6 +91,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -155,6 +159,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
     <div>
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
           Some menu item
@@ -189,6 +194,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -256,6 +262,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
     <div>
       <ul
         class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
           Some menu item
@@ -290,6 +297,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -356,6 +364,7 @@ exports[`kube-object-menu given no kube object, renders 1`] = `
   <div>
     <ul
       class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      style="--enter-duration: 100ms; --leave-duration: 100ms;"
     />
   </div>
 </body>

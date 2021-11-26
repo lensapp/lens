@@ -20,11 +20,11 @@
  */
 import { getActiveClusterEntity } from "../../../api/catalog-entity-registry";
 
-import type { IInjectable } from "@ogre-tools/injectable";
+import type { Injectable } from "@ogre-tools/injectable";
 import { lifecycleEnum } from "@ogre-tools/injectable";
-import type { ICluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../main/cluster";
 
-const clusterInjectable: IInjectable<ICluster | null> = {
+const clusterInjectable: Injectable<Cluster | null> = {
   getDependencies: () => ({}),
   instantiate: () => getActiveClusterEntity(),
   lifecycle: lifecycleEnum.transient,

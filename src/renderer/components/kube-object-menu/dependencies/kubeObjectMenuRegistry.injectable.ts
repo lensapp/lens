@@ -18,10 +18,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { IKubeObjectMenuRegistry, KubeObjectMenuRegistry } from "../../../../extensions/registries";
-import type { IInjectable } from "@ogre-tools/injectable";
+import { KubeObjectMenuRegistry } from "../../../../extensions/registries";
+import type { Injectable } from "@ogre-tools/injectable";
 
-const kubeObjectMenuRegistryInjectable: IInjectable<IKubeObjectMenuRegistry> = {
+const kubeObjectMenuRegistryInjectable: Injectable<KubeObjectMenuRegistry> = {
   getDependencies: () => ({}),
   instantiate: () => KubeObjectMenuRegistry.getInstance(),
 };

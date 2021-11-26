@@ -37,18 +37,12 @@ import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../com
 import { disposer, storedKubeConfigFolder, toJS } from "../common/utils";
 import type { Response } from "request";
 
-export interface IHasClusterName {
-  name: string;
-}
-
-export interface ICluster extends IHasClusterName {}
-
 /**
  * Cluster
  *
  * @beta
  */
-export class Cluster implements ClusterModel, ClusterState, ICluster {
+export class Cluster implements ClusterModel, ClusterState {
   /** Unique id for a cluster */
   public readonly id: ClusterId;
   private kubeCtl: Kubectl;

@@ -19,16 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type { Injectable } from "@ogre-tools/injectable";
 import { lifecycleEnum } from "@ogre-tools/injectable";
-import type { IHasClusterName } from "../../../../main/cluster";
-import type { IInjectable } from "@ogre-tools/injectable";
+import type { Cluster } from "../../../../main/cluster";
 import clusterInjectable from "./cluster.injectable";
 
-interface IDependencies {
-  cluster: IHasClusterName;
+interface Dependencies {
+  cluster: Cluster;
 }
 
-const clusterNameInjectable: IInjectable<string | undefined, IDependencies> = {
+const clusterNameInjectable: Injectable<string | undefined, Dependencies> = {
   getDependencies: di => ({
     cluster: di.inject(clusterInjectable),
   }),

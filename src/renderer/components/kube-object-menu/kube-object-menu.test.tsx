@@ -24,7 +24,7 @@ import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
-import type { IConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import type { KubeObjectMenuRegistration } from "../../../extensions/registries";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -33,18 +33,20 @@ import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
 import { Inject } from "@ogre-tools/injectable-react";
 import clusterInjectable from "./dependencies/cluster.injectable";
-import apiManagerInjectable from "./dependencies/apiManager.injectable";
 import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
 import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
 import { TabKind } from "../dock/dock.store";
 import KubeObjectMenuInjectable from "./kube-object-menu.injectable";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
-import { renderFor, IDiRender } from "../test-utils/renderFor";
+import { renderFor, DiRender } from "../test-utils/renderFor";
+import type { Cluster } from "../../../main/cluster";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
+import apiManagerInjectable from "./dependencies/apiManager.injectable";
 
 describe("kube-object-menu", () => {
   let objectStub: KubeObject | null;
-  let di: IConfigurableDependencyInjectionContainer;
-  let render: IDiRender;
+  let di: ConfigurableDependencyInjectionContainer;
+  let render: DiRender;
 
   beforeEach(() => {
     di = getDiForUnitTesting();
@@ -57,11 +59,12 @@ describe("kube-object-menu", () => {
 
     di.override(clusterInjectable, {
       name: "Some name",
-    });
+    } as Cluster);
 
     di.override(apiManagerInjectable, {
-      getStore: () => undefined,
-    });
+      // eslint-disable-next-line unused-imports/no-unused-vars-ts
+      getStore: (api) => undefined,
+    } as ApiManager);
 
     di.override(hideDetailsInjectable, () => {});
 
@@ -282,7 +285,7 @@ const addDynamicMenuItem = ({
   apiVersions,
   kind,
 }: {
-  di: IConfigurableDependencyInjectionContainer;
+  di: ConfigurableDependencyInjectionContainer;
   apiVersions: string[];
   kind: string;
 }) => {

@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { editResourceTab } from "../../dock/edit-resource.store";
-import type { IInjectable } from "@ogre-tools/injectable";
+import type { Injectable } from "@ogre-tools/injectable";
 
-const editResourceTabInjectable: IInjectable<typeof editResourceTab> = {
+const editResourceTabInjectable: Injectable<typeof editResourceTab> = {
   getDependencies: () => ({}),
   instantiate: () => editResourceTab,
 };

@@ -28,14 +28,14 @@ import {
 } from "./kube-object-menu";
 
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { IInjectable } from "@ogre-tools/injectable";
+import type { Injectable } from "@ogre-tools/injectable";
 import apiManagerInjectable from "./dependencies/apiManager.injectable";
 import clusterNameInjectable from "./dependencies/clusterName.injectable";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
 import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
 import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
 
-const KubeObjectMenuInjectable: IInjectable<
+const KubeObjectMenuInjectable: Injectable<
   JSX.Element,
   KubeObjectMenuDependencies<KubeObject>,
   KubeObjectMenuProps<KubeObject>
