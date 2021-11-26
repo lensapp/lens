@@ -114,7 +114,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push({
         title: "Settings",
-        icon: "edit",
+        icon: "settings",
         onClick: () => broadcastMessage(
           IpcRendererNavigationEvents.NAVIGATE_IN_APP,
           `/entity/${this.metadata.uid}/settings`,
