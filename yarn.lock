@@ -798,10 +798,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@kubernetes/client-node@^0.15.1":
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/@kubernetes/client-node/-/client-node-0.15.1.tgz#617357873d20de348a99227f3b699c2adb765152"
-  integrity sha512-j3o5K4TWkdrX2yDndbEZcDxhgea6O2JKnesWoYCJ64WtMn2GbQXGBOnkn2i0WT2MugGbLR+qCm8Y3oHWBApaTA==
+"@kubernetes/client-node@^0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@kubernetes/client-node/-/client-node-0.16.1.tgz#c78ef667579777c1a532983922807e228dbc9b90"
+  integrity sha512-/Ah+3gFSjXFeqDMGGTyYBKug44Eu2D2qowKLdiZqxCkHdSNgy+CNk6FU1Vy80WrTvGkF/CZr4az6O5AopAiJEw==
   dependencies:
     "@types/js-yaml" "^4.0.1"
     "@types/node" "^10.12.0"
