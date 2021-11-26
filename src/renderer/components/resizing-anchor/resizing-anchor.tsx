@@ -24,6 +24,7 @@ import React from "react";
 import { action, observable, makeObservable } from "mobx";
 import _ from "lodash";
 import { cssNames, noop } from "../../utils";
+import { observer } from "mobx-react";
 
 export enum ResizeDirection {
   HORIZONTAL = "horizontal",
@@ -162,9 +163,12 @@ function directionDelta(P1: number, P2: number, M: number): number | false {
   return false;
 }
 
+@observer
 export class ResizingAnchor extends React.PureComponent<Props> {
   @observable lastMouseEvent?: MouseEvent;
-  @observable.ref ref?: React.RefObject<HTMLDivElement>;
+  ref = React.createRef<HTMLDivElement>();
+  @observable isDragging = false;
+  @observable wasDragging = false;
 
   static defaultProps = {
     onStart: noop,
@@ -192,7 +196,13 @@ export class ResizingAnchor extends React.PureComponent<Props> {
       throw new Error("maxExtent must be >= minExtent");
     }
 
-    this.ref = React.createRef<HTMLDivElement>();
+    const cur = props.getCurrentExtent();
+
+    if (cur > props.maxExtent) {
+      props.onDrag(props.maxExtent);
+    } else if (cur < props.minExtent) {
+      props.onDrag(props.minExtent);
+    }
   }
 
   componentWillUnmount() {
@@ -211,6 +221,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     document.addEventListener("mousemove", this.onDrag);
     document.addEventListener("mouseup", this.onDragEnd);
     document.body.classList.add(ResizingAnchor.IS_RESIZING);
+    this.isDragging = true;
 
     this.lastMouseEvent = undefined;
     onStart();
@@ -296,6 +307,10 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onDragEnd);
     document.body.classList.remove(ResizingAnchor.IS_RESIZING);
+    this.isDragging = false;
+    this.wasDragging = true;
+
+    setTimeout(() => this.wasDragging = false, 200);
   };
 
   render() {
@@ -303,7 +318,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     return <div
       ref={this.ref}
-      className={cssNames("ResizingAnchor", direction, placement, { disabled })}
+      className={cssNames("ResizingAnchor", direction, placement, { disabled, resizing: this.isDragging, wasDragging: this.wasDragging })}
       onMouseDown={this.onDragInit}
       onDoubleClick={onDoubleClick}
     />;

@@ -41,10 +41,17 @@ body.resizing {
     transition: background 0.2s 0s;
   }
 
-  &:hover {
+  &:hover, &.resizing {
     &::after {
       background: var(--blue);
       transition: background 0.2s 0.5s;
+    }
+  }
+
+  &:hover.wasDragging {
+    &::after {
+      background: transparent;
+      transition: background 0.2s 0s;
     }
   }
 
@@ -64,16 +71,6 @@ body.resizing {
       margin-left: 0;
     }
 
-    .resizing & {
-      $expandedHeight: 200px;
-      height: $expandedHeight;
-      margin-top: -$expandedHeight * 0.5;
-
-      &::after {
-        margin-top: $expandedHeight * 0.5;
-      }
-    }
-
     &.trailing {
       bottom: -$dimension * 0.5;
     }
@@ -84,17 +81,6 @@ body.resizing {
     bottom: 0;
     cursor: col-resize;
     width: $dimension;
-
-    // Expand hoverable area while resizing to keep highlighting resizer.
-    // Otherwise, cursor can move far away dropping hover indicator.
-    .resizing & {
-      $expandedWidth: 200px;
-      width: $expandedWidth;
-
-      &.trailing {
-        right: -$expandedWidth * 0.5;
-      }
-    }
 
     &.leading {
       left: -$dimension * 0.5;

@@ -24,19 +24,28 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import { cssNames, noop } from "../../utils";
+import { createStorage, cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
 import { history } from "../../navigation";
+import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
+
+export type DrawerPosition = "top" | "left" | "right" | "bottom";
 
 export interface DrawerProps {
   open: boolean;
   title: React.ReactNode;
+
+  /**
+   * The width or heigh (depending on `position`) of the Drawer.
+   *
+   * If not set then the Drawer will be resizable.
+   */
   size?: string; // e.g. 50%, 500px, etc.
   usePortal?: boolean;
   className?: string | object;
   contentClass?: string | object;
-  position?: "top" | "left" | "right" | "bottom";
+  position?: DrawerPosition;
   animation?: AnimateName;
   onClose?: () => void;
   toolbar?: React.ReactNode;
@@ -51,10 +60,22 @@ const defaultProps: Partial<DrawerProps> = {
 
 interface State {
   isCopied: boolean;
+  width: number;
 }
 
-export class Drawer extends React.Component<DrawerProps> {
+const resizingAnchorProps = new Map<DrawerPosition, [ResizeDirection, ResizeSide, ResizeGrowthDirection]>();
 
+resizingAnchorProps.set("right", [ResizeDirection.HORIZONTAL, ResizeSide.LEADING, ResizeGrowthDirection.RIGHT_TO_LEFT]);
+resizingAnchorProps.set("left", [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING, ResizeGrowthDirection.LEFT_TO_RIGHT]);
+resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM]);
+resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
+
+const defaultDrawerWidth = 725;
+const drawerStorage = createStorage("drawer", {
+  width: defaultDrawerWidth,
+});
+
+export class Drawer extends React.Component<DrawerProps, State> {
   static defaultProps = defaultProps as object;
 
   private mouseDownTarget: HTMLElement;
@@ -66,8 +87,9 @@ export class Drawer extends React.Component<DrawerProps> {
     this.restoreScrollPos();
   });
 
-  public state: State = {
+  public state = {
     isCopied: false,
+    width: drawerStorage.get().width,
   };
 
   componentDidMount() {
@@ -85,6 +107,11 @@ export class Drawer extends React.Component<DrawerProps> {
     window.removeEventListener("click", this.fixUpTripleClick);
     window.removeEventListener("keydown", this.onEscapeKey);
   }
+
+  resizeWidth = (width: number) => {
+    this.setState({ width });
+    drawerStorage.merge({ width });
+  };
 
   fixUpTripleClick = (ev: MouseEvent) => {
     // detail: A count of consecutive clicks that happened in a short amount of time
@@ -157,33 +184,54 @@ export class Drawer extends React.Component<DrawerProps> {
   };
 
   render() {
-    const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
-    let { className, contentClass } = this.props;
-    const { isCopied } = this.state;
-    const copyTooltip = isCopied? "Copied!" : "Copy";
-    const copyIcon = isCopied? "done" : "content_copy";
+    const { className, contentClass, animation, open, position, title, children, toolbar, size, usePortal } = this.props;
+    const { isCopied, width } = this.state;
+    const copyTooltip = isCopied ? "Copied!" : "Copy";
+    const copyIcon = isCopied ? "done" : "content_copy";
+    const canCopyTitle = typeof title === "string" && title.length > 0;
+    const [direction, placement, growthDirection] = resizingAnchorProps.get(position);
+    const drawerSize = size || `${width}px`;
 
-    className = cssNames("Drawer", className, position);
-    contentClass = cssNames("drawer-content flex column box grow", contentClass);
-    const style = size ? { "--size": size } as React.CSSProperties : undefined;
     const drawer = (
       <Animate name={animation} enter={open}>
-        <div className={className} style={style} ref={e => this.contentElem = e}>
+        <div
+          className={cssNames("Drawer", className, position)}
+          style={{ "--size": drawerSize } as React.CSSProperties}
+          ref={e => this.contentElem = e}
+        >
           <div className="drawer-wrapper flex column">
             <div className="drawer-title flex align-center">
               <div className="drawer-title-text flex gaps align-center">
                 {title}
-                {title && typeof title == "string" && (
+                {canCopyTitle && (
                   <Icon material={copyIcon} tooltip={copyTooltip} onClick={() => this.copyTitle(title)}/>
                 )}
               </div>
               {toolbar}
               <Icon material="close" onClick={this.close}/>
             </div>
-            <div className={contentClass} onScroll={this.saveScrollPos} ref={e => this.scrollElem = e}>
+            <div
+              className={cssNames("drawer-content flex column box grow", contentClass)}
+              onScroll={this.saveScrollPos}
+              ref={e => this.scrollElem = e}
+            >
               {children}
             </div>
           </div>
+          {
+            !size && (
+              <ResizingAnchor
+                direction={direction}
+                placement={placement}
+                growthDirection={growthDirection}
+                getCurrentExtent={() => width}
+                onDrag={this.resizeWidth}
+                onDoubleClick={() => this.resizeWidth(defaultDrawerWidth)}
+                minExtent={300}
+                maxExtent={window.innerWidth * 0.9}
+              />
+            )
+          }
         </div>
       </Animate>
     );
