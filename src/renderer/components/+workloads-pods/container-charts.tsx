@@ -47,7 +47,7 @@ export const ContainerCharts = observer(() => {
     memoryLimits,
     fsUsage,
     fsWrites,
-    fsReads
+    fsReads,
   } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
 
   const datasets = [
