@@ -99,12 +99,13 @@ interface PortForwardsResult {
 }
 
 export async function addPortForward(portForward: ForwardedPort): Promise<number> {
+  const { port, forwardPort } = portForward;
   let response: PortForwardResult;
 
   try {
     const protocol = portForward.protocol ?? "http";
 
-    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}&protocol=${protocol}`);
+    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
 
     // expecting the received port to be the specified port, unless the specified port is 0, which indicates any available port is suitable
     if (portForward.forwardPort && response?.port && response.port != +portForward.forwardPort) {
@@ -119,19 +120,12 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   return response?.port;
 }
 
-function getProtocolQuery(protocol: string) {
-  if (protocol) {
-    return `&protocol=${protocol}`;
-  }
-
-  return "";
-}
-
 export async function getPortForward(portForward: ForwardedPort): Promise<number> {
+  const { port, forwardPort, protocol } = portForward;
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
+    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
     throw (error);
@@ -154,9 +148,11 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
 
 
 export async function removePortForward(portForward: ForwardedPort) {
+  const { port, forwardPort } = portForward;
+
   try {
-    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
-    await waitUntilFree(+portForward.forwardPort, 200, 1000);
+    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort }});
+    await waitUntilFree(+forwardPort, 200, 1000);
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
     throw (error);
