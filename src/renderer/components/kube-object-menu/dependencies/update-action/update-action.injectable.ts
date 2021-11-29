@@ -18,27 +18,32 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
-import kubeObjectMenuRegistryInjectable from "./kube-object-menu-registry.injectable";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import apiManagerStoreInjectable from "../remove-action/api-manager-store/api-manager-store.injectable";
+import hideDetailsInjectable from "../hide-details.injectable";
+import editResourceTabInjectable from "./edit-resource-tab.injectable";
 
 import {
-  InstantiationParameter,
   Dependencies,
-  getKubeObjectMenuItems,
-} from "./get-kube-object-menu-items";
+  InstantiationParameter,
+  updateAction,
+} from "./update-action";
 
-const kubeObjectMenuItemsInjectable: Injectable<
-  ReturnType<typeof getKubeObjectMenuItems>,
+const updateActionInjectable: Injectable<
+  ReturnType<typeof updateAction>,
   Dependencies,
   InstantiationParameter
 > = {
-  getDependencies: di => ({
-    kubeObjectMenuRegistry: di.inject(kubeObjectMenuRegistryInjectable),
+  getDependencies: (di, { kubeObject }) => ({
+    apiManagerStore: di.inject(apiManagerStoreInjectable, { kubeObject }),
+    hideDetails: di.inject(hideDetailsInjectable),
+    editResourceTab: di.inject(editResourceTabInjectable),
   }),
 
-  instantiate: getKubeObjectMenuItems,
+  instantiate: updateAction,
 
   lifecycle: lifecycleEnum.transient,
 };
 
-export default kubeObjectMenuItemsInjectable;
+export default updateActionInjectable;

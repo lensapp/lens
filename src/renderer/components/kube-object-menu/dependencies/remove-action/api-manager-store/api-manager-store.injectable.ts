@@ -18,13 +18,34 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { apiManager } from "../../../../common/k8s-api/api-manager";
-import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import apiManagerInjectable from "./api-manager.injectable";
+import type { ApiManager } from "../../../../../../common/k8s-api/api-manager";
+import type { KubeObject } from "../../../../../../common/k8s-api/kube-object";
+import type { KubeObjectStore } from "../../../../../../common/k8s-api/kube-object.store";
 
-const apiManagerInjectable: Injectable<ApiManager> = {
-  getDependencies: () => ({}),
-  instantiate: () => apiManager,
+interface Dependencies {
+  apiManager: ApiManager;
+}
+
+interface InstantiationParameter {
+  kubeObject: KubeObject | null;
+}
+
+const apiManagerStoreInjectable: Injectable<
+  KubeObjectStore<KubeObject> | null,
+  Dependencies,
+  InstantiationParameter
+> = {
+  getDependencies: di => ({
+    apiManager: di.inject(apiManagerInjectable),
+  }),
+
+  instantiate: ({ apiManager }, { kubeObject }) =>
+    kubeObject ? apiManager.getStore(kubeObject.selfLink) : null,
+
+  lifecycle: lifecycleEnum.transient,
 };
 
-export default apiManagerInjectable;
+export default apiManagerStoreInjectable;

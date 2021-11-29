@@ -18,12 +18,28 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { KubeObjectMenuRegistry } from "../../../../extensions/registries";
-import type { Injectable } from "@ogre-tools/injectable";
+import type { KubeObjectStore } from "../../../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
+import type { hideDetails as hideDetailsType } from "../../../kube-detail-params";
+import type { editResourceTab } from "../../../dock/edit-resource.store";
 
-const kubeObjectMenuRegistryInjectable: Injectable<KubeObjectMenuRegistry> = {
-  getDependencies: () => ({}),
-  instantiate: () => KubeObjectMenuRegistry.getInstance(),
-};
+export interface Dependencies {
+  apiManagerStore: KubeObjectStore<KubeObject> | null;
+  hideDetails: typeof hideDetailsType;
+  editResourceTab: typeof editResourceTab
+}
 
-export default kubeObjectMenuRegistryInjectable;
+export interface InstantiationParameter {
+  kubeObject?: KubeObject;
+}
+
+export const updateAction =
+  (
+    { editResourceTab, hideDetails }: Dependencies,
+    { kubeObject }: InstantiationParameter,
+  ) =>
+    () => {
+      hideDetails();
+
+      editResourceTab(kubeObject);
+    };

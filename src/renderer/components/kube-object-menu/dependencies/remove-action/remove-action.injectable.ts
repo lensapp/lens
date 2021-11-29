@@ -18,27 +18,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
-import kubeObjectMenuRegistryInjectable from "./kube-object-menu-registry.injectable";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import apiManagerStoreInjectable from "./api-manager-store/api-manager-store.injectable";
+import type { InstantiationParameter } from "./remove-action";
+import type { Dependencies } from "./remove-action";
+import { removeAction } from "./remove-action";
+import hideDetailsInjectable from "../hide-details.injectable";
 
-import {
-  InstantiationParameter,
-  Dependencies,
-  getKubeObjectMenuItems,
-} from "./get-kube-object-menu-items";
-
-const kubeObjectMenuItemsInjectable: Injectable<
-  ReturnType<typeof getKubeObjectMenuItems>,
+const removeActionInjectable: Injectable<
+  ReturnType<typeof removeAction>,
   Dependencies,
   InstantiationParameter
 > = {
-  getDependencies: di => ({
-    kubeObjectMenuRegistry: di.inject(kubeObjectMenuRegistryInjectable),
+  getDependencies: (di, { kubeObject }) => ({
+    apiManagerStore: di.inject(apiManagerStoreInjectable, { kubeObject }),
+    hideDetails: di.inject(hideDetailsInjectable),
   }),
 
-  instantiate: getKubeObjectMenuItems,
-
+  instantiate: removeAction,
   lifecycle: lifecycleEnum.transient,
 };
 
-export default kubeObjectMenuItemsInjectable;
+export default removeActionInjectable;

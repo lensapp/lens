@@ -28,22 +28,27 @@ import {
 
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { lifecycleEnum, Injectable } from "@ogre-tools/injectable";
-import apiManagerInjectable from "./dependencies/apiManager.injectable";
-import clusterNameInjectable from "./dependencies/clusterName.injectable";
-import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
-import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
+import clusterNameInjectable from "./dependencies/cluster-name.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
+import removeActionInjectable from "./dependencies/remove-action/remove-action.injectable";
+import updateActionInjectable from "./dependencies/update-action/update-action.injectable";
 
 const KubeObjectMenuInjectable: Injectable<
   JSX.Element,
-  KubeObjectMenuDependencies<KubeObject>,
+  KubeObjectMenuDependencies,
   KubeObjectMenuProps<KubeObject>
 > = {
   getDependencies: (di, props) => ({
     clusterName: di.inject(clusterNameInjectable),
-    apiManager: di.inject(apiManagerInjectable),
-    editResourceTab: di.inject(editResourceTabInjectable),
-    hideDetails: di.inject(hideDetailsInjectable),
+
+    removeObject: di.inject(removeActionInjectable, {
+      customAction: props.removeAction,
+      kubeObject: props.object,
+    }),
+
+    updateObject: di.inject(updateActionInjectable, {
+      kubeObject: props.object,
+    }),
 
     kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
       kubeObject: props.object,

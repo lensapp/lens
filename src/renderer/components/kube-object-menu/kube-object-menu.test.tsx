@@ -33,15 +33,15 @@ import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
 import { Inject } from "@ogre-tools/injectable-react";
 import clusterInjectable from "./dependencies/cluster.injectable";
-import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
-import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
+import hideDetailsInjectable from "./dependencies/hide-details.injectable";
+import editResourceTabInjectable from "./dependencies/update-action/edit-resource-tab.injectable";
 import { TabKind } from "../dock/dock.store";
 import KubeObjectMenuInjectable from "./kube-object-menu.injectable";
-import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
+import kubeObjectMenuRegistryInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-registry.injectable";
 import { renderFor, DiRender } from "../test-utils/renderFor";
 import type { Cluster } from "../../../main/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import apiManagerInjectable from "./dependencies/apiManager.injectable";
+import apiManagerInjectable from "./dependencies/remove-action/api-manager-store/api-manager.injectable";
 
 describe("kube-object-menu", () => {
   let objectStub: KubeObject | null;

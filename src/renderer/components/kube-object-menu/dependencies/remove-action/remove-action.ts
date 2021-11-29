@@ -18,12 +18,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { editResourceTab } from "../../dock/edit-resource.store";
-import type { Injectable } from "@ogre-tools/injectable";
+import type { KubeObjectStore } from "../../../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
+import type { hideDetails as hideDetailsType } from "../../../kube-detail-params";
 
-const editResourceTabInjectable: Injectable<typeof editResourceTab> = {
-  getDependencies: () => ({}),
-  instantiate: () => editResourceTab,
-};
+export interface Dependencies {
+  apiManagerStore: KubeObjectStore<KubeObject> | null;
+  hideDetails: typeof hideDetailsType;
+}
 
-export default editResourceTabInjectable;
+export interface InstantiationParameter {
+  kubeObject?: KubeObject;
+  customAction?: (kubeObject: KubeObject) => Promise<void>;
+}
+
+export const removeAction =
+  (
+    { apiManagerStore, hideDetails }: Dependencies,
+    { customAction, kubeObject }: InstantiationParameter,
+  ) =>
+    async () => {
+      hideDetails();
+
+      const action = customAction || apiManagerStore.remove;
+
+      await action(kubeObject);
+    };

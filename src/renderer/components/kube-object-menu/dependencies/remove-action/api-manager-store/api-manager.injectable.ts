@@ -18,27 +18,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
-import kubeObjectMenuRegistryInjectable from "./kube-object-menu-registry.injectable";
+import { apiManager } from "../../../../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../../../../common/k8s-api/api-manager";
+import type { Injectable } from "@ogre-tools/injectable";
 
-import {
-  InstantiationParameter,
-  Dependencies,
-  getKubeObjectMenuItems,
-} from "./get-kube-object-menu-items";
-
-const kubeObjectMenuItemsInjectable: Injectable<
-  ReturnType<typeof getKubeObjectMenuItems>,
-  Dependencies,
-  InstantiationParameter
-> = {
-  getDependencies: di => ({
-    kubeObjectMenuRegistry: di.inject(kubeObjectMenuRegistryInjectable),
-  }),
-
-  instantiate: getKubeObjectMenuItems,
-
-  lifecycle: lifecycleEnum.transient,
+const apiManagerInjectable: Injectable<ApiManager> = {
+  getDependencies: () => ({}),
+  instantiate: () => apiManager,
 };
 
-export default kubeObjectMenuItemsInjectable;
+export default apiManagerInjectable;
