@@ -33,7 +33,7 @@ import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
-import { makeObservable, observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 
 interface Props {
   className?: IClassName;
@@ -62,10 +62,12 @@ export class HotbarMenu extends React.Component<Props> {
     return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
   }
 
+  @action
   onDragStart() {
     this.draggingOver = true;
   }
 
+  @action
   onDragEnd(result: DropResult) {
     const { source, destination } = result;
 
@@ -181,7 +183,7 @@ export class HotbarMenu extends React.Component<Props> {
     return (
       <div className={cssNames("HotbarMenu flex column", { draggingOver: this.draggingOver }, className)}>
         <div className="HotbarItems flex column gaps">
-          <DragDropContext onDragStart={this.onDragStart.bind(this)} onDragEnd={this.onDragEnd.bind(this)}>
+          <DragDropContext onDragStart={() => this.onDragStart()} onDragEnd={(result) => this.onDragEnd(result)}>
             {this.renderGrid()}
           </DragDropContext>
         </div>
