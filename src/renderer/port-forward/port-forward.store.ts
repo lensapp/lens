@@ -60,10 +60,8 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
   loadAll() {
     return this.loadItems(async () => {
-      let portForwards = await getPortForwards();
+      const portForwards = await getPortForwards(getHostedClusterId());
 
-      // filter out any not for this cluster
-      portForwards = portForwards.filter(pf => pf.clusterId == getHostedClusterId());
       this.storage.set(portForwards);
 
       this.reset();
@@ -101,12 +99,13 @@ interface PortForwardsResult {
 }
 
 export async function addPortForward(portForward: ForwardedPort): Promise<number> {
+  const { port, forwardPort } = portForward;
   let response: PortForwardResult;
 
   try {
     const protocol = portForward.protocol ?? "http";
 
-    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}&protocol=${protocol}`);
+    response = await apiBase.post<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
 
     // expecting the received port to be the specified port, unless the specified port is 0, which indicates any available port is suitable
     if (portForward.forwardPort && response?.port && response.port != +portForward.forwardPort) {
@@ -114,29 +113,22 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
     }
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error adding port-forward:", error, portForward);
-    throw(error);
+    throw (error);
   }
   portForwardStore.reset();
 
   return response?.port;
 }
 
-function getProtocolQuery(protocol: string) {
-  if (protocol) {
-    return `&protocol=${protocol}`;
-  }
-
-  return "";
-}
-
 export async function getPortForward(portForward: ForwardedPort): Promise<number> {
+  const { port, forwardPort, protocol } = portForward;
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
+    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
-    throw(error);
+    throw (error);
   }
 
   return response?.port;
@@ -144,7 +136,7 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
 
 export async function modifyPortForward(portForward: ForwardedPort, desiredPort: number): Promise<number> {
   let port = 0;
-  
+
   await removePortForward(portForward);
   portForward.forwardPort = desiredPort;
   port = await addPortForward(portForward);
@@ -156,24 +148,26 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
 
 
 export async function removePortForward(portForward: ForwardedPort) {
+  const { port, forwardPort } = portForward;
+
   try {
-    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}`);
-    await waitUntilFree(+portForward.forwardPort, 200, 1000);
+    await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort }});
+    await waitUntilFree(+forwardPort, 200, 1000);
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
-    throw(error);
+    throw (error);
   }
   portForwardStore.reset();
 }
 
-export async function getPortForwards(): Promise<ForwardedPort[]> {
+export async function getPortForwards(clusterId?: string): Promise<ForwardedPort[]> {
   try {
-    const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards`);
+    const response = await apiBase.get<PortForwardsResult>("/pods/port-forwards", { query: { clusterId }});
 
     return response.portForwards;
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error getting all port-forwards:", error);
-    
+
     return [];
   }
 }
