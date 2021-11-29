@@ -21,20 +21,20 @@
 
 import styles from "./avatar.module.css";
 
-import React, { DOMAttributes } from "react";
+import React, { HTMLAttributes, ImgHTMLAttributes } from "react";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
 import { cssNames, iter } from "../../utils";
 
-interface Props extends DOMAttributes<any> {
+export interface AvatarProps extends HTMLAttributes<HTMLElement> {
   title: string;
   colorHash?: string;
   size?: number;
   src?: string;
-  className?: string;
   background?: string;
   variant?: "circle" | "rounded" | "square";
-  imgProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+  imgProps?: ImgHTMLAttributes<HTMLImageElement>;
+  disabled?: boolean;
 }
 
 function getNameParts(name: string): string[] {
@@ -71,8 +71,8 @@ function getLabelFromTitle(title: string) {
   ].filter(Boolean).join("");
 }
 
-export function Avatar(props: Props) {
-  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, ...rest } = props;
+export function Avatar(props: AvatarProps) {
+  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, ...rest } = props;
 
   const getBackgroundColor = () => {
     return background || randomColor({ seed: colorHash, luminosity: "dark" });
@@ -91,6 +91,7 @@ export function Avatar(props: Props) {
       className={cssNames(styles.Avatar, {
         [styles.circle]: variant == "circle",
         [styles.rounded]: variant == "rounded",
+        [styles.disabled]: disabled,
       }, className)}
       style={{ width: `${size}px`, height: `${size}px`, backgroundColor: getBackgroundColor() }}
       {...rest}

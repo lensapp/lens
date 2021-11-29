@@ -97,7 +97,7 @@
         }
 
         &:not(:empty) {
-          .HotbarIcon {
+          > div {
             animation: click .1s;
           }
         }

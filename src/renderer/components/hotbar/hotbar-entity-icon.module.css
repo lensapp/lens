@@ -19,33 +19,38 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Avatar {
-  background-color: hsl(0deg, 0%, 45%);
-  text-transform: uppercase;
-  color: white;
-  font-size: 1.6ch;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
+.led {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  background-color: var(--layoutBackground);
+  border: 1px solid var(--clusterMenuBackground);
+  border-radius: 50%;
+  padding: 0px;
+  width: 8px;
+  height: 8px;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  &.online {
+    background-color: var(--primary);
+    box-shadow: 0 0 5px var(--clusterMenuBackground), 0 0 5px var(--primary);
   }
 }
 
-.circle {
+.badge {
+  position: absolute;
+  right: -2px;
+  bottom: -3px;
+  margin: -8px;
+  font-size: var(--font-size-small);
+  background: var(--clusterMenuBackground);
+  color: var(--textColorAccent);
+  padding: 0px;
   border-radius: 50%;
-}
+  border: 2px solid var(--clusterMenuBackground);
+  width: 15px;
+  height: 15px;
 
-.rounded {
-  border-radius: var(--border-radius);
-}
-
-.disabled {
-  opacity: 0.5;
-  filter: grayscale(0.7);
+  svg {
+    width: 13px;
+  }
 }

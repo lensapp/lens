@@ -19,16 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.HotbarMenu {
-  .HotbarIconMenu {
-    left: 30px;
-    min-width: 250px;
+// .HotbarMenu {
+//   .HotbarIconMenu {
+//     left: 30px;
+//     min-width: 250px;
 
-    li.MenuItem {
-      font-size: 0.9em;
-    }
-  }
-}
+//     li.MenuItem {
+//       font-size: 0.9em;
+//     }
+//   }
+// }
 
 .HotbarIcon {
   --iconActiveShadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);

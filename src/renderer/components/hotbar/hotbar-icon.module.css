@@ -19,33 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Avatar {
-  background-color: hsl(0deg, 0%, 45%);
-  text-transform: uppercase;
-  color: white;
-  font-size: 1.6ch;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
+.HotbarIcon {
+  --iconActiveShadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
+  --iconHoverShadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  display: flex;
+  cursor: pointer;
+  transition: none;
+  position: relative;
+  border-radius: var(--border-radius);
+
+  &:not(.active):hover {
+    box-shadow: var(--iconHoverShadow);
   }
 }
 
-.circle {
-  border-radius: 50%;
+.contextMenuAvailable {
+  cursor: context-menu;
 }
 
-.rounded {
-  border-radius: var(--border-radius);
-}
-
-.disabled {
-  opacity: 0.5;
-  filter: grayscale(0.7);
+.active {
+  box-shadow: var(--iconActiveShadow);
 }
