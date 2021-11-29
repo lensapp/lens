@@ -19,24 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ClusterStore } from "../../common/cluster-store";
 import type { Cluster } from "../../main/cluster";
-import { getHostedClusterId } from "../utils";
 import { namespaceStore } from "./+namespaces/namespace.store";
 import type { ClusterContext } from "../../common/k8s-api/cluster-context";
+import { computed, makeObservable } from "mobx";
 
-export const clusterContext: ClusterContext = {
-  get cluster(): Cluster | null {
-    return ClusterStore.getInstance().getById(getHostedClusterId());
-  },
+export class FrameContext implements ClusterContext {
+  constructor(public cluster: Cluster) {
+    makeObservable(this);
+  }
 
-  get allNamespaces(): string[] {
-    if (!this.cluster) {
-      return [];
-    }
-
+  @computed get allNamespaces(): string[] {
     // user given list of namespaces
-    if (this.cluster?.accessibleNamespaces.length) {
+    if (this.cluster.accessibleNamespaces.length) {
       return this.cluster.accessibleNamespaces;
     }
 
@@ -47,9 +42,17 @@ export const clusterContext: ClusterContext = {
       // fallback to cluster resolved namespaces because we could not load list
       return this.cluster.allowedNamespaces || [];
     }
-  },
+  }
 
-  get contextNamespaces(): string[] {
-    return namespaceStore.contextNamespaces ?? [];
-  },
-};
+  @computed get contextNamespaces(): string[] {
+    return namespaceStore.contextNamespaces;
+  }
+
+  @computed get hasSelectedAll(): boolean {
+    const namespaces = new Set(this.contextNamespaces);
+
+    return this.allNamespaces?.length > 1
+      && this.cluster.accessibleNamespaces.length === 0
+      && this.allNamespaces.every(ns => namespaces.has(ns));
+  }
+}

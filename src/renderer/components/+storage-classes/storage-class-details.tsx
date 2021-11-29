@@ -25,7 +25,7 @@ import React from "react";
 import startCase from "lodash/startCase";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { StorageClass } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
@@ -33,14 +33,19 @@ import { storageClassStore } from "./storage-class.store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import { volumesStore } from "../+storage-volumes/volumes.store";
 import logger from "../../../common/logger";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<StorageClass> {
 }
 
 @observer
 export class StorageClassDetails extends React.Component<Props> {
-  async componentDidMount() {
-    volumesStore.reloadAll();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([
+        volumesStore,
+      ]),
+    ]);
   }
 
   render() {

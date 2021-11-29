@@ -133,7 +133,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return super.subscribe();
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams<Namespace>): Promise<Namespace[]> {
+  protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<Namespace[]> {
     const { allowedNamespaces } = this;
 
     let namespaces = await super.loadItems(params).catch(() => []);

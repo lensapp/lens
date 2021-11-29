@@ -22,13 +22,14 @@
 import "./kube-event-details.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
 import { LocaleDate } from "../locale-date";
 import { eventStore } from "./event.store";
 import logger from "../../../common/logger";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -36,8 +37,12 @@ export interface KubeEventDetailsProps {
 
 @observer
 export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
-  async componentDidMount() {
-    eventStore.reloadAll();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([
+        eventStore,
+      ]),
+    ]);
   }
 
   render() {
