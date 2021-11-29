@@ -25,9 +25,9 @@
 
   display: flex;
   cursor: pointer;
-  transition: none;
   position: relative;
   border-radius: var(--border-radius);
+  transition: box-shadow 0.1s ease-in-out;
 
   &:not(.active):hover {
     box-shadow: var(--iconHoverShadow);
