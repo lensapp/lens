@@ -147,11 +147,11 @@ export class KubeWatchApi {
       ? reaction(
         // Note: must slice because reaction won't fire if it isn't there
         () => [KubeWatchApi.context.contextNamespaces.slice(), KubeWatchApi.context.hasSelectedAll] as const,
-        ([namespaces, curSelectedAll], [, prevSelectedAll]) => {
+        ([namespaces, curSelectedAll], [prevNamespaces, prevSelectedAll]) => {
           if (curSelectedAll && prevSelectedAll) {
-            console.log(`[KUBE-WATCH-API]: Not changing watch for ${store.api.apiBase} because a new namespace was created but all namespaces are selected`);
+            const action = namespaces.length > prevNamespaces.length ? "created" : "deleted";
 
-            return;
+            return console.debug(`[KUBE-WATCH-API]: Not changing watch for ${store.api.apiBase} because a new namespace was ${action} but all namespaces are selected`);
           }
 
           console.log(`[KUBE-WATCH-API]: changing watch ${store.api.apiBase}`, namespaces);
