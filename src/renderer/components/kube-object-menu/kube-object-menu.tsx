@@ -24,13 +24,11 @@ import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { MenuActions, MenuActionsProps } from "../menu";
 import identity from "lodash/identity";
-
-import type { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 
 export interface KubeObjectMenuDependencies<TKubeObject> {
   apiManager: ApiManager;
-  kubeObjectMenuRegistry: KubeObjectMenuRegistry;
+  kubeObjectMenuItems: React.ElementType[];
   clusterName: string;
   hideDetails: () => void;
   editResourceTab: (kubeObject: TKubeObject) => void;
@@ -103,27 +101,14 @@ export class KubeObjectMenu<
   getMenuItems(): React.ReactChild[] {
     const { object, toolbar } = this.props;
 
-    if (!object) {
-      return [];
-    }
-
-    return this.props.kubeObjectMenuRegistry
-      .getItemsForKind(object.kind, object.apiVersion)
-      .map(
-        (
-          {
-            components: { MenuItem },
-          }: { components: { MenuItem: React.ReactType<any> }},
-          index: number,
-        ) => (
-          <MenuItem
-            object={object}
-            toolbar={toolbar}
-            // TODO: Fix misuse of index in key
-            key={`menu-item-${index}`}
-          />
-        ),
-      );
+    return this.props.kubeObjectMenuItems.map((MenuItem, index) => (
+      <MenuItem
+        object={object}
+        toolbar={toolbar}
+        // TODO: Fix misuse of index in key
+        key={`menu-item-${index}`}
+      />
+    ));
   }
 
   render() {

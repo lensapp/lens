@@ -18,7 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 import React from "react";
 
 import {
@@ -31,21 +30,24 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { lifecycleEnum, Injectable } from "@ogre-tools/injectable";
 import apiManagerInjectable from "./dependencies/apiManager.injectable";
 import clusterNameInjectable from "./dependencies/clusterName.injectable";
-import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
 import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
 import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
+import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
 
 const KubeObjectMenuInjectable: Injectable<
   JSX.Element,
   KubeObjectMenuDependencies<KubeObject>,
   KubeObjectMenuProps<KubeObject>
 > = {
-  getDependencies: di => ({
+  getDependencies: (di, props) => ({
     clusterName: di.inject(clusterNameInjectable),
     apiManager: di.inject(apiManagerInjectable),
-    kubeObjectMenuRegistry: di.inject(kubeObjectMenuRegistryInjectable),
     editResourceTab: di.inject(editResourceTabInjectable),
     hideDetails: di.inject(hideDetailsInjectable),
+
+    kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
+      kubeObject: props.object,
+    }),
   }),
 
   instantiate: (dependencies, props) => (
