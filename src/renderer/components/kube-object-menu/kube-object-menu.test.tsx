@@ -110,6 +110,36 @@ describe("kube-object-menu", () => {
     }).not.toThrow();
   });
 
+  it("given rendered multiple times, renders separate instances", () => {
+    di.override(clusterInjectable, null);
+
+    const { baseElement } = render(
+      <>
+        <Inject
+          injectableKey={KubeObjectMenuInjectable}
+          toolbar={true}
+          object={null} />
+
+        <Inject
+          injectableKey={KubeObjectMenuInjectable}
+          toolbar={true}
+          object={KubeObject.create({
+            apiVersion: "some-api-version",
+            kind: "some-kind",
+            metadata: {
+              uid: "some-uid",
+              name: "some-other-name",
+              resourceVersion: "some-resource-version",
+              namespace: "some-namespace",
+            },
+          })}
+        />,
+      </>,
+    );
+
+    expect(baseElement).toMatchSnapshot();
+  });
+
   it("given no kube object, renders", () => {
     objectStub = null;
 

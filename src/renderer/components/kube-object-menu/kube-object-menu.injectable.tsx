@@ -28,7 +28,7 @@ import {
 } from "./kube-object-menu";
 
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum, Injectable } from "@ogre-tools/injectable";
 import apiManagerInjectable from "./dependencies/apiManager.injectable";
 import clusterNameInjectable from "./dependencies/clusterName.injectable";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kubeObjectMenuRegistry.injectable";
@@ -49,8 +49,10 @@ const KubeObjectMenuInjectable: Injectable<
   }),
 
   instantiate: (dependencies, props) => (
-    <KubeObjectMenu<KubeObject> {...dependencies} {...props} />
+    <KubeObjectMenu {...dependencies} {...props} />
   ),
+
+  lifecycle: lifecycleEnum.transient,
 };
 
 export default KubeObjectMenuInjectable;
