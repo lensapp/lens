@@ -72,7 +72,7 @@ function getLabelFromTitle(title: string) {
 }
 
 export function Avatar(props: Props) {
-  const { title, variant = "rounded", size, colorHash, children, background, imgProps, src, className, ...rest } = props;
+  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, ...rest } = props;
 
   const getBackgroundColor = () => {
     return background || randomColor({ seed: colorHash, luminosity: "dark" });

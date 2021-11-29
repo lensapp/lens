@@ -28,3 +28,7 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+
+.settingsAvatar {
+  margin: 0 10px;
+}

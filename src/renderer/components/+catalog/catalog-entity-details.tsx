@@ -69,7 +69,9 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                 background={item.entity.spec.icon?.background}
                 onClick={() => item.onRun()}
                 className={styles.avatar}
-              />
+              >
+                {item.entity.spec.icon?.material && <Icon material={item.entity.spec.icon?.material}/>}
+              </Avatar>
               {item?.enabled && (
                 <div className={styles.hint}>
                   Click to open
