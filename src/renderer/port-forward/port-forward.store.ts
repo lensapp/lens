@@ -112,7 +112,7 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
     }
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error adding port-forward:", error, portForward);
-    throw(error);
+    throw (error);
   }
   portForwardStore.reset();
 
@@ -134,7 +134,7 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
     response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}?port=${portForward.port}&forwardPort=${portForward.forwardPort}${getProtocolQuery(portForward.protocol)}`);
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
-    throw(error);
+    throw (error);
   }
 
   return response?.port;
@@ -142,7 +142,7 @@ export async function getPortForward(portForward: ForwardedPort): Promise<number
 
 export async function modifyPortForward(portForward: ForwardedPort, desiredPort: number): Promise<number> {
   let port = 0;
-  
+
   await removePortForward(portForward);
   portForward.forwardPort = desiredPort;
   port = await addPortForward(portForward);
@@ -159,20 +159,19 @@ export async function removePortForward(portForward: ForwardedPort) {
     await waitUntilFree(+portForward.forwardPort, 200, 1000);
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
-    throw(error);
+    throw (error);
   }
   portForwardStore.reset();
 }
 
 export async function getPortForwards(clusterId?: string): Promise<ForwardedPort[]> {
   try {
-    const query = clusterId ? `?clusterId=${clusterId}` : "";
-    const response = await apiBase.get<PortForwardsResult>(`/pods/port-forwards${query}`);
+    const response = await apiBase.get<PortForwardsResult>("/pods/port-forwards", { query: { clusterId }});
 
     return response.portForwards;
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error getting all port-forwards:", error);
-    
+
     return [];
   }
 }
