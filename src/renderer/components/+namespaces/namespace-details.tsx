@@ -39,6 +39,7 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
@@ -52,14 +53,16 @@ export class NamespaceDetails extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @disposeOnUnmount
-  clean = reaction(() => this.props.object, () => {
-    this.metrics = null;
-  });
-
   componentDidMount() {
-    resourceQuotaStore.reloadAll();
-    limitRangeStore.reloadAll();
+    disposeOnUnmount(this, [
+      reaction(() => this.props.object, () => {
+        this.metrics = null;
+      }),
+      kubeWatchApi.subscribeStores([
+        resourceQuotaStore,
+        limitRangeStore,
+      ]),
+    ]);
   }
 
   @computed get quotas() {

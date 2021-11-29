@@ -23,12 +23,11 @@ import "./namespace-select.scss";
 
 import React from "react";
 import { computed, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -50,14 +49,7 @@ export class NamespaceSelect extends React.Component<Props> {
     makeObservable(this);
   }
 
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([namespaceStore], {
-        preload: true,
-        loadOnce: true, // skip reloading namespaces on every render / page visit
-      }),
-    ]);
-  }
+  // No subscribe here because the subscribe is in <App /> (the cluster frame root component)
 
   @computed.struct get options(): SelectOption[] {
     const { customizeOptions, showAllNamespacesOption, sort } = this.props;

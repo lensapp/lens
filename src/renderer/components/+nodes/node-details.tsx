@@ -41,6 +41,7 @@ import { NodeDetailsResources } from "./node-details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -54,13 +55,15 @@ export class NodeDetails extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @disposeOnUnmount
-  clean = reaction(() => this.props.object.getName(), () => {
-    this.metrics = null;
-  });
-
-  async componentDidMount() {
-    podsStore.reloadAll();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.props.object.getName(), () => {
+        this.metrics = null;
+      }),
+      kubeWatchApi.subscribeStores([
+        podsStore,
+      ]),
+    ]);
   }
 
   @boundMethod

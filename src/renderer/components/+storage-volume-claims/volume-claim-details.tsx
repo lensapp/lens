@@ -51,10 +51,13 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @disposeOnUnmount
-  clean = reaction(() => this.props.object, () => {
-    this.metrics = null;
-  });
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.props.object, () => {
+        this.metrics = null;
+      }),
+    ]);
+  }
 
   @boundMethod
   async loadMetrics() {

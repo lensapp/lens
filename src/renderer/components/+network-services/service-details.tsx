@@ -44,8 +44,9 @@ export class ServiceDetails extends React.Component<Props> {
     const { object: service } = this.props;
 
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([endpointStore], {
-        preload: true,
+      kubeWatchApi.subscribeStores([
+        endpointStore,
+      ], {
         namespaces: [service.getNs()],
       }),
       portForwardStore.watch(),
