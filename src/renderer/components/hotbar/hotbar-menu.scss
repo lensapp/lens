@@ -29,6 +29,14 @@
   width: var(--hotbar-width);
   overflow: hidden;
 
+  &.draggingOver::after {
+    content: " ";
+    position: fixed;
+    left: var(--hotbar-width);
+    width: 100%;
+    height: 100%;
+  }
+
   .HotbarItems {
     --cellWidth: 40px;
     --cellHeight: 40px;
