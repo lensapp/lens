@@ -19,13 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import styles from "./avatar.module.css";
+
 import React, { DOMAttributes } from "react";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
-import { Avatar as MaterialAvatar, AvatarTypeMap } from "@material-ui/core";
-import { iter } from "../../utils";
+import { cssNames, iter } from "../../utils";
 
-interface Props extends DOMAttributes<HTMLElement>, Partial<AvatarTypeMap> {
+interface Props extends DOMAttributes<any> {
   title: string;
   colorHash?: string;
   width?: number;
@@ -33,6 +34,8 @@ interface Props extends DOMAttributes<HTMLElement>, Partial<AvatarTypeMap> {
   src?: string;
   className?: string;
   background?: string;
+  variant?: "circle" | "rounded" | "square";
+  imgProps?: React.ImgHTMLAttributes<HTMLImageElement>;
 }
 
 function getNameParts(name: string): string[] {
@@ -51,7 +54,7 @@ function getNameParts(name: string): string[] {
   return name.split(/@+/);
 }
 
-function getIconString(title: string) {
+function getLabelFromTitle(title: string) {
   if (!title) {
     return "??";
   }
@@ -70,36 +73,30 @@ function getIconString(title: string) {
 }
 
 export function Avatar(props: Props) {
-  const { title, width = 32, height = 32, colorHash, children, background, ...settings } = props;
+  const { title, width = 32, height = 32, variant = "rounded", colorHash, children, background, imgProps, src, className, ...rest } = props;
 
   const getBackgroundColor = () => {
-    if (background) {
-      return background;
-    }
-
-    if (settings.src) {
-      return "transparent";
-    }
-
-    return randomColor({ seed: colorHash, luminosity: "dark" });
+    return background || randomColor({ seed: colorHash, luminosity: "dark" });
   };
 
-  const generateAvatarStyle = (): React.CSSProperties => {
-    return {
-      backgroundColor: getBackgroundColor(),
-      width,
-      height,
-      textTransform: "uppercase",
-    };
+  const renderContents = () => {
+    if (src) {
+      return <img src={src} {...imgProps} alt={title}/>;
+    }
+
+    return children || getLabelFromTitle(title);
   };
 
   return (
-    <MaterialAvatar
-      variant="rounded"
-      style={generateAvatarStyle()}
-      {...settings}
+    <div
+      className={cssNames(styles.Avatar, {
+        [styles.circle]: variant == "circle",
+        [styles.rounded]: variant == "rounded",
+      }, className)}
+      style={{ width: `${width}px`, height: `${height}px`, backgroundColor: getBackgroundColor() }}
+      {...rest}
     >
-      {children || getIconString(title)}
-    </MaterialAvatar>
+      {renderContents()}
+    </div>
   );
 }
