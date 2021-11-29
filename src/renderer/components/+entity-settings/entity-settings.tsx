@@ -101,6 +101,7 @@ export class EntitySettings extends React.Component<Props> {
             colorHash={`${this.entity.metadata.name}-${this.entity.metadata.source}`}
             src={this.entity.spec.icon?.src}
             className={styles.settingsAvatar}
+            size={40}
           />
           <div className={styles.entityName}>
             {this.entity.metadata.name}
