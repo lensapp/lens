@@ -29,8 +29,7 @@ import { cssNames, iter } from "../../utils";
 interface Props extends DOMAttributes<any> {
   title: string;
   colorHash?: string;
-  width?: number;
-  height?: number;
+  size?: number;
   src?: string;
   className?: string;
   background?: string;
@@ -73,7 +72,7 @@ function getLabelFromTitle(title: string) {
 }
 
 export function Avatar(props: Props) {
-  const { title, width = 32, height = 32, variant = "rounded", colorHash, children, background, imgProps, src, className, ...rest } = props;
+  const { title, variant = "rounded", size, colorHash, children, background, imgProps, src, className, ...rest } = props;
 
   const getBackgroundColor = () => {
     return background || randomColor({ seed: colorHash, luminosity: "dark" });
@@ -93,7 +92,7 @@ export function Avatar(props: Props) {
         [styles.circle]: variant == "circle",
         [styles.rounded]: variant == "rounded",
       }, className)}
-      style={{ width: `${width}px`, height: `${height}px`, backgroundColor: getBackgroundColor() }}
+      style={{ width: `${size}px`, height: `${size}px`, backgroundColor: getBackgroundColor() }}
       {...rest}
     >
       {renderContents()}

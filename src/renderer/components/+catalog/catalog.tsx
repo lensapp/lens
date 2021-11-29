@@ -219,8 +219,7 @@ export class Catalog extends React.Component<Props> {
           src={item.entity.spec.icon?.src}
           background={item.entity.spec.icon?.background}
           className={styles.catalogAvatar}
-          width={24}
-          height={24}
+          size={24}
         >
           {item.entity.spec.icon?.material && <Icon material={item.entity.spec.icon?.material}/>}
         </Avatar>

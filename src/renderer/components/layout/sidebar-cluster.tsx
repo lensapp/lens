@@ -108,8 +108,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
       <Avatar
         title={metadata.name}
         colorHash={`${metadata.name}-${metadata.source}`}
-        width={40}
-        height={40}
+        size={40}
         src={spec.icon?.src}
         className={styles.avatar}
       />

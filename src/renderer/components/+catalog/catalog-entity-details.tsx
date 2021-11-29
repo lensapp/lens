@@ -27,10 +27,10 @@ import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
 import { Icon } from "../icon";
 import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
-import { HotbarIcon } from "../hotbar/hotbar-icon";
 import type { CatalogEntityItem } from "./catalog-entity-item";
 import { isDevelopment } from "../../../common/vars";
 import { cssNames } from "../../utils";
+import { Avatar } from "../avatar/avatar";
 
 interface Props<T extends CatalogEntity> {
   item: CatalogEntityItem<T> | null | undefined;
@@ -60,17 +60,14 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
         {showDetails && (
           <div className="flex">
             <div className={styles.entityIcon}>
-              <HotbarIcon
-                uid={item.id}
+              <Avatar
                 title={item.name}
-                source={item.source}
-                src={item.entity.spec.icon?.src}
-                material={item.entity.spec.icon?.material}
-                background={item.entity.spec.icon?.background}
-                disabled={!item?.enabled}
-                onClick={() => item.onRun()}
+                colorHash={`${item.name}-${item.source}`}
                 size={128}
+                src={item.entity.spec.icon?.src}
                 data-testid="detail-panel-hot-bar-icon"
+                background={item.entity.spec.icon?.background}
+                onClick={() => item.onRun()}
                 className={styles.avatar}
               />
               {item?.enabled && (

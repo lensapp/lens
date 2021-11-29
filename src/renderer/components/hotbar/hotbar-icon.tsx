@@ -90,8 +90,7 @@ export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...pro
           title={title}
           colorHash={`${title}-${source}`}
           className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
-          width={size}
-          height={size}
+          size={size}
           src={src}
         >
           {material && <Icon className="materialIcon" material={material} />}
