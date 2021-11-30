@@ -32,30 +32,21 @@ import { makeObservable, observable, when } from "mobx";
 const startingServeRegex = /^starting to serve on (?<address>.+)/i;
 
 export class KubeAuthProxy {
-  public readonly apiPrefix: string;
+  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}`;
 
   public get port(): number {
     return this._port;
   }
 
-  protected _port?: number;
-  protected cluster: Cluster;
-  protected env: NodeJS.ProcessEnv = null;
-  protected proxyProcess: ChildProcess;
-  protected kubectl: Kubectl;
-  @observable protected ready: boolean;
+  protected _port: number;
+  protected proxyProcess?: ChildProcess;
+  protected readonly acceptHosts: string;
+  @observable protected ready = false;
 
-  constructor(cluster: Cluster, env: NodeJS.ProcessEnv) {
+  constructor(protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
-    this.ready = false;
-    this.env = env;
-    this.cluster = cluster;
-    this.kubectl = Kubectl.bundled();
-    this.apiPrefix = `/${randomBytes(8).toString("hex")}`;
-  }
 
-  get acceptHosts() {
-    return url.parse(this.cluster.apiUrl).hostname;
+    this.acceptHosts = url.parse(this.cluster.apiUrl).hostname;
   }
 
   get whenReady() {
@@ -67,7 +58,7 @@ export class KubeAuthProxy {
       return this.whenReady;
     }
 
-    const proxyBin = await this.kubectl.getPath();
+    const proxyBin = await Kubectl.bundled().getPath();
     const args = [
       "proxy",
       "-p", "0",
