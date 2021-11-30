@@ -37,6 +37,7 @@ function getBuildChannel(): string {
     case "rc":
       return preRelease;
     case undefined:
+    case "latest":
       return "latest"; // needed because electron-updater does not take build information into account when resolving if update is available
     default:
       throw new Error(`invalid pre-release ${preRelease}`);

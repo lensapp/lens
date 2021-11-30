@@ -21,7 +21,7 @@
 
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs, HotbarTooManyItems } from "../../common/ipc";
+import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs, HotbarTooManyItems, ipcRendererOn, AutoUpdateChecking, AutoUpdateNoUpdateAvailable } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
@@ -152,5 +152,11 @@ export function registerIpcListeners() {
     channel: HotbarTooManyItems,
     listener: HotbarTooManyItemsHandler,
     verifier: (args: unknown[]): args is [] => args.length === 0,
+  });
+  ipcRendererOn(AutoUpdateChecking, () => {
+    Notifications.shortInfo("Checking for updates");
+  });
+  ipcRendererOn(AutoUpdateNoUpdateAvailable, () => {
+    Notifications.shortInfo("No update is currently available");
   });
 }

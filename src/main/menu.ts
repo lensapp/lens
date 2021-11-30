@@ -29,6 +29,7 @@ import { exitApp } from "./exit-app";
 import { broadcastMessage } from "../common/ipc";
 import * as packageJson from "../../package.json";
 import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../common/routes";
+import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
@@ -61,16 +62,18 @@ export function showAbout(browserWindow: BrowserWindow) {
 }
 
 export function buildMenu(windowManager: WindowManager) {
-  function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
-    if (isMac) return [];
-
-    return menuItems;
+  function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
+    return check ? [] : menuItems;
   }
 
   async function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
     await windowManager.navigate(url);
   }
+
+  const autoUpdateDisabled = !isAutoUpdateEnabled();
+
+  logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
 
   const macAppMenu: MenuItemsOpts = {
     label: app.getName(),
@@ -83,6 +86,13 @@ export function buildMenu(windowManager: WindowManager) {
           showAbout(browserWindow);
         },
       },
+      ...ignoreIf(autoUpdateDisabled, [{
+        label: "Check for updates",
+        click() {
+          checkForUpdates()
+            .then(() => windowManager.ensureMainWindow());
+        },
+      }]),
       { type: "separator" },
       {
         label: "Preferences",
@@ -129,7 +139,7 @@ export function buildMenu(windowManager: WindowManager) {
           navigate(addClusterURL());
         },
       },
-      ...ignoreOnMac([
+      ...ignoreIf(isMac, [
         { type: "separator" },
         {
           label: "Preferences",
@@ -158,7 +168,7 @@ export function buildMenu(windowManager: WindowManager) {
         },
       ] as MenuItemConstructorOptions[] : []),
 
-      ...ignoreOnMac([
+      ...ignoreIf(isMac, [
         {
           label: "Exit",
           accelerator: "Alt+F4",
@@ -264,7 +274,7 @@ export function buildMenu(windowManager: WindowManager) {
           shell.openExternal(supportUrl);
         },
       },
-      ...ignoreOnMac([
+      ...ignoreIf(isMac, [
         {
           label: `About ${productName}`,
           id: "about",
@@ -272,6 +282,13 @@ export function buildMenu(windowManager: WindowManager) {
             showAbout(browserWindow);
           },
         },
+        ...ignoreIf(autoUpdateDisabled, [{
+          label: "Check for updates",
+          click() {
+            checkForUpdates()
+              .then(() => windowManager.ensureMainWindow());
+          },
+        }]),
       ]),
     ],
   };

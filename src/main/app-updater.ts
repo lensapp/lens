@@ -21,9 +21,9 @@
 
 import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
-import { isDevelopment, isLinux, isMac, isPublishConfigured, isTestEnv } from "../common/vars";
+import { isLinux, isMac, isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
-import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
+import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
 import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
@@ -68,23 +68,24 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
   }
 }
 
+autoUpdater.logger = {
+  info: message => logger.info(`[AUTO-UPDATE]: electron-updater:`, message),
+  warn: message => logger.warn(`[AUTO-UPDATE]: electron-updater:`, message),
+  error: message => logger.error(`[AUTO-UPDATE]: electron-updater:`, message),
+  debug: message => logger.debug(`[AUTO-UPDATE]: electron-updater:`, message),
+};
+
 /**
  * starts the automatic update checking
  * @param interval milliseconds between interval to check on, defaults to 24h
  */
 export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24): void {
-  if (isDevelopment || isTestEnv) {
+  if (!isAutoUpdateEnabled() || isTestEnv) {
     return;
   }
 
   const userStore = UserStore.getInstance();
 
-  autoUpdater.logger = {
-    info: message => logger.info(`[AUTO-UPDATE]: electron-updater: ${message}`),
-    warn: message => logger.warn(`[AUTO-UPDATE]: electron-updater: ${message}`),
-    error: message => logger.error(`[AUTO-UPDATE]: electron-updater: ${message}`),
-    debug: message =>  logger.debug(`[AUTO-UPDATE]: electron-updater: ${message}`),
-  };
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.channel = userStore.updateChannel;
@@ -136,7 +137,13 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
 
       logger.info(`${AutoUpdateLogPrefix}: update not available from ${autoUpdater.channel}, will check ${nextChannel} channel next`);
 
-      autoUpdater.channel = nextChannel;
+      if (nextChannel !== autoUpdater.channel) {
+        autoUpdater.channel = nextChannel;
+        autoUpdater.checkForUpdates()
+          .catch(error => logger.error(`${AutoUpdateLogPrefix}: failed with an error`, error));
+      } else {
+        broadcastMessage(AutoUpdateNoUpdateAvailable);
+      }
     });
 
   async function helper() {
@@ -157,8 +164,9 @@ export async function checkForUpdates(): Promise<void> {
 
     autoUpdater.channel = userStore.updateChannel;
     autoUpdater.allowDowngrade = userStore.isAllowedToDowngrade;
+    broadcastMessage(AutoUpdateChecking);
     await autoUpdater.checkForUpdates();
   } catch (error) {
-    logger.error(`${AutoUpdateLogPrefix}: failed with an error`, { error: String(error) });
+    logger.error(`${AutoUpdateLogPrefix}: failed with an error`, error);
   }
 }
