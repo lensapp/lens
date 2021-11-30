@@ -50,6 +50,7 @@
       white-space: pre-line;
       padding-left: $padding;
       padding-right: $padding * 2;
+      align-self: center;
 
       a {
         color: inherit;
@@ -62,10 +63,6 @@
         color: $color-white;
         box-shadow: 0 0 20px var(--boxShadow);
       }
-    }
-
-    .close {
-      margin-top: -2px;
     }
   }
 }
