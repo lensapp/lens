@@ -295,14 +295,18 @@ export class KubeApi<T extends KubeObject> {
    */
   private async getLatestApiPrefixGroup() {
     // Note that this.options.apiBase is the "full" url, whereas this.apiBase is parsed
-    const apiBases = [this.options.apiBase, ...this.options.fallbackApiBases];
+    const apiBases = [this.options.apiBase, this.objectConstructor.apiBase, ...this.options.fallbackApiBases];
 
     for (const apiUrl of apiBases) {
-      // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
-      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
+      if (!apiUrl) {
+        continue;
+      }
 
-      // Request available resources
       try {
+        // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
+        const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
+
+        // Request available resources
         const response = await this.request.get<IKubeResourceList>(`${apiPrefix}/${apiVersionWithGroup}`);
 
         // If the resource is found in the group, use this apiUrl
@@ -326,7 +330,7 @@ export class KubeApi<T extends KubeObject> {
         return await this.getLatestApiPrefixGroup();
       } catch (error) {
         // If valid API wasn't found, log the error and return defaults below
-        logger.error(error);
+        logger.error(`[KUBE-API]: ${error}`);
       }
     }
 
