@@ -1,0 +1,4270 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Lens Extension Development and API.">
+      
+      
+      
+        <meta name="author" content="Mirantis, Inc.">
+      
+      
+        <link rel="canonical" href="https://api-docs.k8slens.dev/v5.3.1/extensions/api/interfaces/Renderer.Component.DrawerItemProps/">
+      
+      
+        
+      
+      <link rel="icon" href="../../../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.1.8+insiders-2.9.2">
+    
+    
+      
+        <title>Interface: DrawerItemProps - Lens Extension Development</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.92048cb8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.73e53a79.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    
+      
+
+  
+
+
+  
+
+  
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-159377374-2","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __scope(t,e="../../../.."){return new URL(e,location).pathname+"."+t}function __get(t,e=localStorage,n){return JSON.parse(e.getItem(__scope(t,n)))}function __set(t,e,n=localStorage,o){try{n.setItem(__scope(t,o),JSON.stringify(e))}catch(t){}}</script>
+    
+      <script>var palette=__get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#interface-draweritemprops" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Lens Extension Development" class="md-header__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Lens Extension Development
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Interface: DrawerItemProps
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m10-3a5 5 0 0 1 5 5 5 5 0 0 1-5 5H7a5 5 0 0 1-5-5 5 5 0 0 1 5-5h10M7 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3h10a3 3 0 0 0 3-3 3 3 0 0 0-3-3H7z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    Lens Extension Development
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/your-first-extension/" class="md-nav__link">
+        Your First Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/anatomy/" class="md-nav__link">
+        Extension Anatomy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/wrapping-up/" class="md-nav__link">
+        Wrapping Up
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Extension Capabilities
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Capabilities
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/common-capabilities/" class="md-nav__link">
+        Common Capabilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/styling/" class="md-nav__link">
+        Styling
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Extension Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/generator/" class="md-nav__link">
+        Generator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/main-extension/" class="md-nav__link">
+        Main Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/renderer-extension/" class="md-nav__link">
+        Renderer Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/catalog/" class="md-nav__link">
+        Catalog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/resource-stack/" class="md-nav__link">
+        Resource Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/stores/" class="md-nav__link">
+        Stores
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/working-with-mobx/" class="md-nav__link">
+        Working with MobX
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/protocol-handlers/" class="md-nav__link">
+        Protocol Handlers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/ipc/" class="md-nav__link">
+        IPC
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Testing and Publishing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Testing and Publishing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/testing/" class="md-nav__link">
+        Testing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/publishing/" class="md-nav__link">
+        Publishing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of contents
+  </a>
+  
+    <nav class="md-nav" aria-label="Table of contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    about
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accesskey" class="md-nav__link">
+    accessKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-activedescendant" class="md-nav__link">
+    aria-activedescendant
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-atomic" class="md-nav__link">
+    aria-atomic
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-autocomplete" class="md-nav__link">
+    aria-autocomplete
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-busy" class="md-nav__link">
+    aria-busy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-checked" class="md-nav__link">
+    aria-checked
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-colcount" class="md-nav__link">
+    aria-colcount
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-colindex" class="md-nav__link">
+    aria-colindex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-colspan" class="md-nav__link">
+    aria-colspan
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-controls" class="md-nav__link">
+    aria-controls
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-current" class="md-nav__link">
+    aria-current
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-describedby" class="md-nav__link">
+    aria-describedby
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-details" class="md-nav__link">
+    aria-details
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-disabled" class="md-nav__link">
+    aria-disabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-dropeffect" class="md-nav__link">
+    aria-dropeffect
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-errormessage" class="md-nav__link">
+    aria-errormessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-expanded" class="md-nav__link">
+    aria-expanded
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-flowto" class="md-nav__link">
+    aria-flowto
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-grabbed" class="md-nav__link">
+    aria-grabbed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-haspopup" class="md-nav__link">
+    aria-haspopup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-hidden" class="md-nav__link">
+    aria-hidden
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-invalid" class="md-nav__link">
+    aria-invalid
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-keyshortcuts" class="md-nav__link">
+    aria-keyshortcuts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-label" class="md-nav__link">
+    aria-label
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-labelledby" class="md-nav__link">
+    aria-labelledby
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-level" class="md-nav__link">
+    aria-level
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-live" class="md-nav__link">
+    aria-live
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-modal" class="md-nav__link">
+    aria-modal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-multiline" class="md-nav__link">
+    aria-multiline
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-multiselectable" class="md-nav__link">
+    aria-multiselectable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-orientation" class="md-nav__link">
+    aria-orientation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-owns" class="md-nav__link">
+    aria-owns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-placeholder" class="md-nav__link">
+    aria-placeholder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-posinset" class="md-nav__link">
+    aria-posinset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-pressed" class="md-nav__link">
+    aria-pressed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-readonly" class="md-nav__link">
+    aria-readonly
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-relevant" class="md-nav__link">
+    aria-relevant
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-required" class="md-nav__link">
+    aria-required
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-roledescription" class="md-nav__link">
+    aria-roledescription
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-rowcount" class="md-nav__link">
+    aria-rowcount
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-rowindex" class="md-nav__link">
+    aria-rowindex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-rowspan" class="md-nav__link">
+    aria-rowspan
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-selected" class="md-nav__link">
+    aria-selected
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-setsize" class="md-nav__link">
+    aria-setsize
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-sort" class="md-nav__link">
+    aria-sort
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-valuemax" class="md-nav__link">
+    aria-valuemax
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-valuemin" class="md-nav__link">
+    aria-valuemin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-valuenow" class="md-nav__link">
+    aria-valuenow
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aria-valuetext" class="md-nav__link">
+    aria-valuetext
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autocapitalize" class="md-nav__link">
+    autoCapitalize
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autocorrect" class="md-nav__link">
+    autoCorrect
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autosave" class="md-nav__link">
+    autoSave
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#children" class="md-nav__link">
+    children
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classname" class="md-nav__link">
+    className
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color" class="md-nav__link">
+    color
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contenteditable" class="md-nav__link">
+    contentEditable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contextmenu" class="md-nav__link">
+    contextMenu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dangerouslysetinnerhtml" class="md-nav__link">
+    dangerouslySetInnerHTML
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datatype" class="md-nav__link">
+    datatype
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultchecked" class="md-nav__link">
+    defaultChecked
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultvalue" class="md-nav__link">
+    defaultValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dir" class="md-nav__link">
+    dir
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#draggable" class="md-nav__link">
+    draggable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hidden" class="md-nav__link">
+    hidden
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#id" class="md-nav__link">
+    id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inlist" class="md-nav__link">
+    inlist
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inputmode" class="md-nav__link">
+    inputMode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is" class="md-nav__link">
+    is
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#itemid" class="md-nav__link">
+    itemID
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#itemprop" class="md-nav__link">
+    itemProp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#itemref" class="md-nav__link">
+    itemRef
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#itemscope" class="md-nav__link">
+    itemScope
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#itemtype" class="md-nav__link">
+    itemType
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labelsonly" class="md-nav__link">
+    labelsOnly
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lang" class="md-nav__link">
+    lang
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onabort" class="md-nav__link">
+    onAbort
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onabortcapture" class="md-nav__link">
+    onAbortCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onanimationend" class="md-nav__link">
+    onAnimationEnd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onanimationendcapture" class="md-nav__link">
+    onAnimationEndCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onanimationiteration" class="md-nav__link">
+    onAnimationIteration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onanimationiterationcapture" class="md-nav__link">
+    onAnimationIterationCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onanimationstart" class="md-nav__link">
+    onAnimationStart
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onanimationstartcapture" class="md-nav__link">
+    onAnimationStartCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onauxclick" class="md-nav__link">
+    onAuxClick
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onauxclickcapture" class="md-nav__link">
+    onAuxClickCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onbeforeinput" class="md-nav__link">
+    onBeforeInput
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onbeforeinputcapture" class="md-nav__link">
+    onBeforeInputCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onblur" class="md-nav__link">
+    onBlur
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onblurcapture" class="md-nav__link">
+    onBlurCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncanplay" class="md-nav__link">
+    onCanPlay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncanplaycapture" class="md-nav__link">
+    onCanPlayCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncanplaythrough" class="md-nav__link">
+    onCanPlayThrough
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncanplaythroughcapture" class="md-nav__link">
+    onCanPlayThroughCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onchange" class="md-nav__link">
+    onChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onchangecapture" class="md-nav__link">
+    onChangeCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onclick" class="md-nav__link">
+    onClick
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onclickcapture" class="md-nav__link">
+    onClickCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncompositionend" class="md-nav__link">
+    onCompositionEnd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncompositionendcapture" class="md-nav__link">
+    onCompositionEndCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncompositionstart" class="md-nav__link">
+    onCompositionStart
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncompositionstartcapture" class="md-nav__link">
+    onCompositionStartCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncompositionupdate" class="md-nav__link">
+    onCompositionUpdate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncompositionupdatecapture" class="md-nav__link">
+    onCompositionUpdateCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncontextmenu" class="md-nav__link">
+    onContextMenu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncontextmenucapture" class="md-nav__link">
+    onContextMenuCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncopy" class="md-nav__link">
+    onCopy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncopycapture" class="md-nav__link">
+    onCopyCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncut" class="md-nav__link">
+    onCut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oncutcapture" class="md-nav__link">
+    onCutCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondoubleclick" class="md-nav__link">
+    onDoubleClick
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondoubleclickcapture" class="md-nav__link">
+    onDoubleClickCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondrag" class="md-nav__link">
+    onDrag
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragcapture" class="md-nav__link">
+    onDragCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragend" class="md-nav__link">
+    onDragEnd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragendcapture" class="md-nav__link">
+    onDragEndCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragenter" class="md-nav__link">
+    onDragEnter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragentercapture" class="md-nav__link">
+    onDragEnterCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragexit" class="md-nav__link">
+    onDragExit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragexitcapture" class="md-nav__link">
+    onDragExitCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragleave" class="md-nav__link">
+    onDragLeave
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragleavecapture" class="md-nav__link">
+    onDragLeaveCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragover" class="md-nav__link">
+    onDragOver
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragovercapture" class="md-nav__link">
+    onDragOverCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragstart" class="md-nav__link">
+    onDragStart
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondragstartcapture" class="md-nav__link">
+    onDragStartCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondrop" class="md-nav__link">
+    onDrop
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondropcapture" class="md-nav__link">
+    onDropCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondurationchange" class="md-nav__link">
+    onDurationChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ondurationchangecapture" class="md-nav__link">
+    onDurationChangeCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onemptied" class="md-nav__link">
+    onEmptied
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onemptiedcapture" class="md-nav__link">
+    onEmptiedCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onencrypted" class="md-nav__link">
+    onEncrypted
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onencryptedcapture" class="md-nav__link">
+    onEncryptedCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onended" class="md-nav__link">
+    onEnded
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onendedcapture" class="md-nav__link">
+    onEndedCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onerror" class="md-nav__link">
+    onError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onerrorcapture" class="md-nav__link">
+    onErrorCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onfocus" class="md-nav__link">
+    onFocus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onfocuscapture" class="md-nav__link">
+    onFocusCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ongotpointercapture" class="md-nav__link">
+    onGotPointerCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ongotpointercapturecapture" class="md-nav__link">
+    onGotPointerCaptureCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oninput" class="md-nav__link">
+    onInput
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oninputcapture" class="md-nav__link">
+    onInputCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oninvalid" class="md-nav__link">
+    onInvalid
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oninvalidcapture" class="md-nav__link">
+    onInvalidCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeydown" class="md-nav__link">
+    onKeyDown
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeydowncapture" class="md-nav__link">
+    onKeyDownCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeypress" class="md-nav__link">
+    onKeyPress
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeypresscapture" class="md-nav__link">
+    onKeyPressCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeyup" class="md-nav__link">
+    onKeyUp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeyupcapture" class="md-nav__link">
+    onKeyUpCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onload" class="md-nav__link">
+    onLoad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadcapture" class="md-nav__link">
+    onLoadCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadstart" class="md-nav__link">
+    onLoadStart
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadstartcapture" class="md-nav__link">
+    onLoadStartCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadeddata" class="md-nav__link">
+    onLoadedData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadeddatacapture" class="md-nav__link">
+    onLoadedDataCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadedmetadata" class="md-nav__link">
+    onLoadedMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onloadedmetadatacapture" class="md-nav__link">
+    onLoadedMetadataCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onlostpointercapture" class="md-nav__link">
+    onLostPointerCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onlostpointercapturecapture" class="md-nav__link">
+    onLostPointerCaptureCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmousedown" class="md-nav__link">
+    onMouseDown
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmousedowncapture" class="md-nav__link">
+    onMouseDownCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseenter" class="md-nav__link">
+    onMouseEnter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseleave" class="md-nav__link">
+    onMouseLeave
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmousemove" class="md-nav__link">
+    onMouseMove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmousemovecapture" class="md-nav__link">
+    onMouseMoveCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseout" class="md-nav__link">
+    onMouseOut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseoutcapture" class="md-nav__link">
+    onMouseOutCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseover" class="md-nav__link">
+    onMouseOver
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseovercapture" class="md-nav__link">
+    onMouseOverCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseup" class="md-nav__link">
+    onMouseUp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmouseupcapture" class="md-nav__link">
+    onMouseUpCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpaste" class="md-nav__link">
+    onPaste
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpastecapture" class="md-nav__link">
+    onPasteCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpause" class="md-nav__link">
+    onPause
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpausecapture" class="md-nav__link">
+    onPauseCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onplay" class="md-nav__link">
+    onPlay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onplaycapture" class="md-nav__link">
+    onPlayCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onplaying" class="md-nav__link">
+    onPlaying
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onplayingcapture" class="md-nav__link">
+    onPlayingCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointercancel" class="md-nav__link">
+    onPointerCancel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointercancelcapture" class="md-nav__link">
+    onPointerCancelCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerdown" class="md-nav__link">
+    onPointerDown
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerdowncapture" class="md-nav__link">
+    onPointerDownCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerenter" class="md-nav__link">
+    onPointerEnter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerentercapture" class="md-nav__link">
+    onPointerEnterCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerleave" class="md-nav__link">
+    onPointerLeave
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerleavecapture" class="md-nav__link">
+    onPointerLeaveCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointermove" class="md-nav__link">
+    onPointerMove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointermovecapture" class="md-nav__link">
+    onPointerMoveCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerout" class="md-nav__link">
+    onPointerOut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointeroutcapture" class="md-nav__link">
+    onPointerOutCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerover" class="md-nav__link">
+    onPointerOver
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerovercapture" class="md-nav__link">
+    onPointerOverCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerup" class="md-nav__link">
+    onPointerUp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onpointerupcapture" class="md-nav__link">
+    onPointerUpCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onprogress" class="md-nav__link">
+    onProgress
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onprogresscapture" class="md-nav__link">
+    onProgressCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onratechange" class="md-nav__link">
+    onRateChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onratechangecapture" class="md-nav__link">
+    onRateChangeCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onreset" class="md-nav__link">
+    onReset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onresetcapture" class="md-nav__link">
+    onResetCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onscroll" class="md-nav__link">
+    onScroll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onscrollcapture" class="md-nav__link">
+    onScrollCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onseeked" class="md-nav__link">
+    onSeeked
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onseekedcapture" class="md-nav__link">
+    onSeekedCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onseeking" class="md-nav__link">
+    onSeeking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onseekingcapture" class="md-nav__link">
+    onSeekingCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onselect" class="md-nav__link">
+    onSelect
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onselectcapture" class="md-nav__link">
+    onSelectCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onstalled" class="md-nav__link">
+    onStalled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onstalledcapture" class="md-nav__link">
+    onStalledCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onsubmit" class="md-nav__link">
+    onSubmit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onsubmitcapture" class="md-nav__link">
+    onSubmitCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onsuspend" class="md-nav__link">
+    onSuspend
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onsuspendcapture" class="md-nav__link">
+    onSuspendCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontimeupdate" class="md-nav__link">
+    onTimeUpdate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontimeupdatecapture" class="md-nav__link">
+    onTimeUpdateCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchcancel" class="md-nav__link">
+    onTouchCancel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchcancelcapture" class="md-nav__link">
+    onTouchCancelCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchend" class="md-nav__link">
+    onTouchEnd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchendcapture" class="md-nav__link">
+    onTouchEndCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchmove" class="md-nav__link">
+    onTouchMove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchmovecapture" class="md-nav__link">
+    onTouchMoveCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchstart" class="md-nav__link">
+    onTouchStart
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontouchstartcapture" class="md-nav__link">
+    onTouchStartCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontransitionend" class="md-nav__link">
+    onTransitionEnd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontransitionendcapture" class="md-nav__link">
+    onTransitionEndCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onvolumechange" class="md-nav__link">
+    onVolumeChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onvolumechangecapture" class="md-nav__link">
+    onVolumeChangeCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onwaiting" class="md-nav__link">
+    onWaiting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onwaitingcapture" class="md-nav__link">
+    onWaitingCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onwheel" class="md-nav__link">
+    onWheel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onwheelcapture" class="md-nav__link">
+    onWheelCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#placeholder" class="md-nav__link">
+    placeholder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefix" class="md-nav__link">
+    prefix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property" class="md-nav__link">
+    property
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radiogroup" class="md-nav__link">
+    radioGroup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderboolean" class="md-nav__link">
+    renderBoolean
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource" class="md-nav__link">
+    resource
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role" class="md-nav__link">
+    role
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    security
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slot" class="md-nav__link">
+    slot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spellcheck" class="md-nav__link">
+    spellCheck
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style" class="md-nav__link">
+    style
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suppresscontenteditablewarning" class="md-nav__link">
+    suppressContentEditableWarning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suppresshydrationwarning" class="md-nav__link">
+    suppressHydrationWarning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabindex" class="md-nav__link">
+    tabIndex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#title" class="md-nav__link">
+    title
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translate" class="md-nav__link">
+    translate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typeof" class="md-nav__link">
+    typeof
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unselectable" class="md-nav__link">
+    unselectable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vocab" class="md-nav__link">
+    vocab
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                
+                <h1 id="interface-draweritemprops">Interface: DrawerItemProps<a class="headerlink" href="#interface-draweritemprops" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.DrawerItemProps</p>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><code>HTMLAttributes</code>&lt;<code>any</code>></li>
+</ul>
+<p>↳ <strong><code>DrawerItemProps</code></strong></p>
+<p>↳↳ <a href="../Renderer.Component.DrawerItemLabelsProps/"><code>DrawerItemLabelsProps</code></a></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#about">about</a></li>
+<li><a href="./#accesskey">accessKey</a></li>
+<li><a href="./#aria-activedescendant">aria-activedescendant</a></li>
+<li><a href="./#aria-atomic">aria-atomic</a></li>
+<li><a href="./#aria-autocomplete">aria-autocomplete</a></li>
+<li><a href="./#aria-busy">aria-busy</a></li>
+<li><a href="./#aria-checked">aria-checked</a></li>
+<li><a href="./#aria-colcount">aria-colcount</a></li>
+<li><a href="./#aria-colindex">aria-colindex</a></li>
+<li><a href="./#aria-colspan">aria-colspan</a></li>
+<li><a href="./#aria-controls">aria-controls</a></li>
+<li><a href="./#aria-current">aria-current</a></li>
+<li><a href="./#aria-describedby">aria-describedby</a></li>
+<li><a href="./#aria-details">aria-details</a></li>
+<li><a href="./#aria-disabled">aria-disabled</a></li>
+<li><a href="./#aria-dropeffect">aria-dropeffect</a></li>
+<li><a href="./#aria-errormessage">aria-errormessage</a></li>
+<li><a href="./#aria-expanded">aria-expanded</a></li>
+<li><a href="./#aria-flowto">aria-flowto</a></li>
+<li><a href="./#aria-grabbed">aria-grabbed</a></li>
+<li><a href="./#aria-haspopup">aria-haspopup</a></li>
+<li><a href="./#aria-hidden">aria-hidden</a></li>
+<li><a href="./#aria-invalid">aria-invalid</a></li>
+<li><a href="./#aria-keyshortcuts">aria-keyshortcuts</a></li>
+<li><a href="./#aria-label">aria-label</a></li>
+<li><a href="./#aria-labelledby">aria-labelledby</a></li>
+<li><a href="./#aria-level">aria-level</a></li>
+<li><a href="./#aria-live">aria-live</a></li>
+<li><a href="./#aria-modal">aria-modal</a></li>
+<li><a href="./#aria-multiline">aria-multiline</a></li>
+<li><a href="./#aria-multiselectable">aria-multiselectable</a></li>
+<li><a href="./#aria-orientation">aria-orientation</a></li>
+<li><a href="./#aria-owns">aria-owns</a></li>
+<li><a href="./#aria-placeholder">aria-placeholder</a></li>
+<li><a href="./#aria-posinset">aria-posinset</a></li>
+<li><a href="./#aria-pressed">aria-pressed</a></li>
+<li><a href="./#aria-readonly">aria-readonly</a></li>
+<li><a href="./#aria-relevant">aria-relevant</a></li>
+<li><a href="./#aria-required">aria-required</a></li>
+<li><a href="./#aria-roledescription">aria-roledescription</a></li>
+<li><a href="./#aria-rowcount">aria-rowcount</a></li>
+<li><a href="./#aria-rowindex">aria-rowindex</a></li>
+<li><a href="./#aria-rowspan">aria-rowspan</a></li>
+<li><a href="./#aria-selected">aria-selected</a></li>
+<li><a href="./#aria-setsize">aria-setsize</a></li>
+<li><a href="./#aria-sort">aria-sort</a></li>
+<li><a href="./#aria-valuemax">aria-valuemax</a></li>
+<li><a href="./#aria-valuemin">aria-valuemin</a></li>
+<li><a href="./#aria-valuenow">aria-valuenow</a></li>
+<li><a href="./#aria-valuetext">aria-valuetext</a></li>
+<li><a href="./#autocapitalize">autoCapitalize</a></li>
+<li><a href="./#autocorrect">autoCorrect</a></li>
+<li><a href="./#autosave">autoSave</a></li>
+<li><a href="./#children">children</a></li>
+<li><a href="./#classname">className</a></li>
+<li><a href="./#color">color</a></li>
+<li><a href="./#contenteditable">contentEditable</a></li>
+<li><a href="./#contextmenu">contextMenu</a></li>
+<li><a href="./#dangerouslysetinnerhtml">dangerouslySetInnerHTML</a></li>
+<li><a href="./#datatype">datatype</a></li>
+<li><a href="./#defaultchecked">defaultChecked</a></li>
+<li><a href="./#defaultvalue">defaultValue</a></li>
+<li><a href="./#dir">dir</a></li>
+<li><a href="./#draggable">draggable</a></li>
+<li><a href="./#hidden">hidden</a></li>
+<li><a href="./#id">id</a></li>
+<li><a href="./#inlist">inlist</a></li>
+<li><a href="./#inputmode">inputMode</a></li>
+<li><a href="./#is">is</a></li>
+<li><a href="./#itemid">itemID</a></li>
+<li><a href="./#itemprop">itemProp</a></li>
+<li><a href="./#itemref">itemRef</a></li>
+<li><a href="./#itemscope">itemScope</a></li>
+<li><a href="./#itemtype">itemType</a></li>
+<li><a href="./#labelsonly">labelsOnly</a></li>
+<li><a href="./#lang">lang</a></li>
+<li><a href="./#name">name</a></li>
+<li><a href="./#onabort">onAbort</a></li>
+<li><a href="./#onabortcapture">onAbortCapture</a></li>
+<li><a href="./#onanimationend">onAnimationEnd</a></li>
+<li><a href="./#onanimationendcapture">onAnimationEndCapture</a></li>
+<li><a href="./#onanimationiteration">onAnimationIteration</a></li>
+<li><a href="./#onanimationiterationcapture">onAnimationIterationCapture</a></li>
+<li><a href="./#onanimationstart">onAnimationStart</a></li>
+<li><a href="./#onanimationstartcapture">onAnimationStartCapture</a></li>
+<li><a href="./#onauxclick">onAuxClick</a></li>
+<li><a href="./#onauxclickcapture">onAuxClickCapture</a></li>
+<li><a href="./#onbeforeinput">onBeforeInput</a></li>
+<li><a href="./#onbeforeinputcapture">onBeforeInputCapture</a></li>
+<li><a href="./#onblur">onBlur</a></li>
+<li><a href="./#onblurcapture">onBlurCapture</a></li>
+<li><a href="./#oncanplay">onCanPlay</a></li>
+<li><a href="./#oncanplaycapture">onCanPlayCapture</a></li>
+<li><a href="./#oncanplaythrough">onCanPlayThrough</a></li>
+<li><a href="./#oncanplaythroughcapture">onCanPlayThroughCapture</a></li>
+<li><a href="./#onchange">onChange</a></li>
+<li><a href="./#onchangecapture">onChangeCapture</a></li>
+<li><a href="./#onclick">onClick</a></li>
+<li><a href="./#onclickcapture">onClickCapture</a></li>
+<li><a href="./#oncompositionend">onCompositionEnd</a></li>
+<li><a href="./#oncompositionendcapture">onCompositionEndCapture</a></li>
+<li><a href="./#oncompositionstart">onCompositionStart</a></li>
+<li><a href="./#oncompositionstartcapture">onCompositionStartCapture</a></li>
+<li><a href="./#oncompositionupdate">onCompositionUpdate</a></li>
+<li><a href="./#oncompositionupdatecapture">onCompositionUpdateCapture</a></li>
+<li><a href="./#oncontextmenu">onContextMenu</a></li>
+<li><a href="./#oncontextmenucapture">onContextMenuCapture</a></li>
+<li><a href="./#oncopy">onCopy</a></li>
+<li><a href="./#oncopycapture">onCopyCapture</a></li>
+<li><a href="./#oncut">onCut</a></li>
+<li><a href="./#oncutcapture">onCutCapture</a></li>
+<li><a href="./#ondoubleclick">onDoubleClick</a></li>
+<li><a href="./#ondoubleclickcapture">onDoubleClickCapture</a></li>
+<li><a href="./#ondrag">onDrag</a></li>
+<li><a href="./#ondragcapture">onDragCapture</a></li>
+<li><a href="./#ondragend">onDragEnd</a></li>
+<li><a href="./#ondragendcapture">onDragEndCapture</a></li>
+<li><a href="./#ondragenter">onDragEnter</a></li>
+<li><a href="./#ondragentercapture">onDragEnterCapture</a></li>
+<li><a href="./#ondragexit">onDragExit</a></li>
+<li><a href="./#ondragexitcapture">onDragExitCapture</a></li>
+<li><a href="./#ondragleave">onDragLeave</a></li>
+<li><a href="./#ondragleavecapture">onDragLeaveCapture</a></li>
+<li><a href="./#ondragover">onDragOver</a></li>
+<li><a href="./#ondragovercapture">onDragOverCapture</a></li>
+<li><a href="./#ondragstart">onDragStart</a></li>
+<li><a href="./#ondragstartcapture">onDragStartCapture</a></li>
+<li><a href="./#ondrop">onDrop</a></li>
+<li><a href="./#ondropcapture">onDropCapture</a></li>
+<li><a href="./#ondurationchange">onDurationChange</a></li>
+<li><a href="./#ondurationchangecapture">onDurationChangeCapture</a></li>
+<li><a href="./#onemptied">onEmptied</a></li>
+<li><a href="./#onemptiedcapture">onEmptiedCapture</a></li>
+<li><a href="./#onencrypted">onEncrypted</a></li>
+<li><a href="./#onencryptedcapture">onEncryptedCapture</a></li>
+<li><a href="./#onended">onEnded</a></li>
+<li><a href="./#onendedcapture">onEndedCapture</a></li>
+<li><a href="./#onerror">onError</a></li>
+<li><a href="./#onerrorcapture">onErrorCapture</a></li>
+<li><a href="./#onfocus">onFocus</a></li>
+<li><a href="./#onfocuscapture">onFocusCapture</a></li>
+<li><a href="./#ongotpointercapture">onGotPointerCapture</a></li>
+<li><a href="./#ongotpointercapturecapture">onGotPointerCaptureCapture</a></li>
+<li><a href="./#oninput">onInput</a></li>
+<li><a href="./#oninputcapture">onInputCapture</a></li>
+<li><a href="./#oninvalid">onInvalid</a></li>
+<li><a href="./#oninvalidcapture">onInvalidCapture</a></li>
+<li><a href="./#onkeydown">onKeyDown</a></li>
+<li><a href="./#onkeydowncapture">onKeyDownCapture</a></li>
+<li><a href="./#onkeypress">onKeyPress</a></li>
+<li><a href="./#onkeypresscapture">onKeyPressCapture</a></li>
+<li><a href="./#onkeyup">onKeyUp</a></li>
+<li><a href="./#onkeyupcapture">onKeyUpCapture</a></li>
+<li><a href="./#onload">onLoad</a></li>
+<li><a href="./#onloadcapture">onLoadCapture</a></li>
+<li><a href="./#onloadstart">onLoadStart</a></li>
+<li><a href="./#onloadstartcapture">onLoadStartCapture</a></li>
+<li><a href="./#onloadeddata">onLoadedData</a></li>
+<li><a href="./#onloadeddatacapture">onLoadedDataCapture</a></li>
+<li><a href="./#onloadedmetadata">onLoadedMetadata</a></li>
+<li><a href="./#onloadedmetadatacapture">onLoadedMetadataCapture</a></li>
+<li><a href="./#onlostpointercapture">onLostPointerCapture</a></li>
+<li><a href="./#onlostpointercapturecapture">onLostPointerCaptureCapture</a></li>
+<li><a href="./#onmousedown">onMouseDown</a></li>
+<li><a href="./#onmousedowncapture">onMouseDownCapture</a></li>
+<li><a href="./#onmouseenter">onMouseEnter</a></li>
+<li><a href="./#onmouseleave">onMouseLeave</a></li>
+<li><a href="./#onmousemove">onMouseMove</a></li>
+<li><a href="./#onmousemovecapture">onMouseMoveCapture</a></li>
+<li><a href="./#onmouseout">onMouseOut</a></li>
+<li><a href="./#onmouseoutcapture">onMouseOutCapture</a></li>
+<li><a href="./#onmouseover">onMouseOver</a></li>
+<li><a href="./#onmouseovercapture">onMouseOverCapture</a></li>
+<li><a href="./#onmouseup">onMouseUp</a></li>
+<li><a href="./#onmouseupcapture">onMouseUpCapture</a></li>
+<li><a href="./#onpaste">onPaste</a></li>
+<li><a href="./#onpastecapture">onPasteCapture</a></li>
+<li><a href="./#onpause">onPause</a></li>
+<li><a href="./#onpausecapture">onPauseCapture</a></li>
+<li><a href="./#onplay">onPlay</a></li>
+<li><a href="./#onplaycapture">onPlayCapture</a></li>
+<li><a href="./#onplaying">onPlaying</a></li>
+<li><a href="./#onplayingcapture">onPlayingCapture</a></li>
+<li><a href="./#onpointercancel">onPointerCancel</a></li>
+<li><a href="./#onpointercancelcapture">onPointerCancelCapture</a></li>
+<li><a href="./#onpointerdown">onPointerDown</a></li>
+<li><a href="./#onpointerdowncapture">onPointerDownCapture</a></li>
+<li><a href="./#onpointerenter">onPointerEnter</a></li>
+<li><a href="./#onpointerentercapture">onPointerEnterCapture</a></li>
+<li><a href="./#onpointerleave">onPointerLeave</a></li>
+<li><a href="./#onpointerleavecapture">onPointerLeaveCapture</a></li>
+<li><a href="./#onpointermove">onPointerMove</a></li>
+<li><a href="./#onpointermovecapture">onPointerMoveCapture</a></li>
+<li><a href="./#onpointerout">onPointerOut</a></li>
+<li><a href="./#onpointeroutcapture">onPointerOutCapture</a></li>
+<li><a href="./#onpointerover">onPointerOver</a></li>
+<li><a href="./#onpointerovercapture">onPointerOverCapture</a></li>
+<li><a href="./#onpointerup">onPointerUp</a></li>
+<li><a href="./#onpointerupcapture">onPointerUpCapture</a></li>
+<li><a href="./#onprogress">onProgress</a></li>
+<li><a href="./#onprogresscapture">onProgressCapture</a></li>
+<li><a href="./#onratechange">onRateChange</a></li>
+<li><a href="./#onratechangecapture">onRateChangeCapture</a></li>
+<li><a href="./#onreset">onReset</a></li>
+<li><a href="./#onresetcapture">onResetCapture</a></li>
+<li><a href="./#onscroll">onScroll</a></li>
+<li><a href="./#onscrollcapture">onScrollCapture</a></li>
+<li><a href="./#onseeked">onSeeked</a></li>
+<li><a href="./#onseekedcapture">onSeekedCapture</a></li>
+<li><a href="./#onseeking">onSeeking</a></li>
+<li><a href="./#onseekingcapture">onSeekingCapture</a></li>
+<li><a href="./#onselect">onSelect</a></li>
+<li><a href="./#onselectcapture">onSelectCapture</a></li>
+<li><a href="./#onstalled">onStalled</a></li>
+<li><a href="./#onstalledcapture">onStalledCapture</a></li>
+<li><a href="./#onsubmit">onSubmit</a></li>
+<li><a href="./#onsubmitcapture">onSubmitCapture</a></li>
+<li><a href="./#onsuspend">onSuspend</a></li>
+<li><a href="./#onsuspendcapture">onSuspendCapture</a></li>
+<li><a href="./#ontimeupdate">onTimeUpdate</a></li>
+<li><a href="./#ontimeupdatecapture">onTimeUpdateCapture</a></li>
+<li><a href="./#ontouchcancel">onTouchCancel</a></li>
+<li><a href="./#ontouchcancelcapture">onTouchCancelCapture</a></li>
+<li><a href="./#ontouchend">onTouchEnd</a></li>
+<li><a href="./#ontouchendcapture">onTouchEndCapture</a></li>
+<li><a href="./#ontouchmove">onTouchMove</a></li>
+<li><a href="./#ontouchmovecapture">onTouchMoveCapture</a></li>
+<li><a href="./#ontouchstart">onTouchStart</a></li>
+<li><a href="./#ontouchstartcapture">onTouchStartCapture</a></li>
+<li><a href="./#ontransitionend">onTransitionEnd</a></li>
+<li><a href="./#ontransitionendcapture">onTransitionEndCapture</a></li>
+<li><a href="./#onvolumechange">onVolumeChange</a></li>
+<li><a href="./#onvolumechangecapture">onVolumeChangeCapture</a></li>
+<li><a href="./#onwaiting">onWaiting</a></li>
+<li><a href="./#onwaitingcapture">onWaitingCapture</a></li>
+<li><a href="./#onwheel">onWheel</a></li>
+<li><a href="./#onwheelcapture">onWheelCapture</a></li>
+<li><a href="./#placeholder">placeholder</a></li>
+<li><a href="./#prefix">prefix</a></li>
+<li><a href="./#property">property</a></li>
+<li><a href="./#radiogroup">radioGroup</a></li>
+<li><a href="./#renderboolean">renderBoolean</a></li>
+<li><a href="./#resource">resource</a></li>
+<li><a href="./#results">results</a></li>
+<li><a href="./#role">role</a></li>
+<li><a href="./#security">security</a></li>
+<li><a href="./#slot">slot</a></li>
+<li><a href="./#spellcheck">spellCheck</a></li>
+<li><a href="./#style">style</a></li>
+<li><a href="./#suppresscontenteditablewarning">suppressContentEditableWarning</a></li>
+<li><a href="./#suppresshydrationwarning">suppressHydrationWarning</a></li>
+<li><a href="./#tabindex">tabIndex</a></li>
+<li><a href="./#title">title</a></li>
+<li><a href="./#translate">translate</a></li>
+<li><a href="./#typeof">typeof</a></li>
+<li><a href="./#unselectable">unselectable</a></li>
+<li><a href="./#vocab">vocab</a></li>
+</ul>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="about">about<a class="headerlink" href="#about" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>about</strong>: <code>string</code></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.about</p>
+<hr />
+<h3 id="accesskey">accessKey<a class="headerlink" href="#accesskey" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>accessKey</strong>: <code>string</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.accessKey</p>
+<hr />
+<h3 id="aria-activedescendant">aria-activedescendant<a class="headerlink" href="#aria-activedescendant" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-activedescendant</strong>: <code>string</code></p>
+<p>Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application.</p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-activedescendant</p>
+<hr />
+<h3 id="aria-atomic">aria-atomic<a class="headerlink" href="#aria-atomic" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-atomic</strong>: <code>Booleanish</code></p>
+<p>Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute.</p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-atomic</p>
+<hr />
+<h3 id="aria-autocomplete">aria-autocomplete<a class="headerlink" href="#aria-autocomplete" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-autocomplete</strong>: <code>"list"</code> | <code>"none"</code> | <code>"inline"</code> | <code>"both"</code></p>
+<p>Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be
+presented if they are made.</p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-autocomplete</p>
+<hr />
+<h3 id="aria-busy">aria-busy<a class="headerlink" href="#aria-busy" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-busy</strong>: <code>Booleanish</code></p>
+<p>Indicates an element is being modified and that assistive technologies MAY want to wait until the modifications are complete before exposing them to the user.</p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-busy</p>
+<hr />
+<h3 id="aria-checked">aria-checked<a class="headerlink" href="#aria-checked" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-checked</strong>: <code>boolean</code> | <code>"true"</code> | <code>"false"</code> | <code>"mixed"</code></p>
+<p>Indicates the current "checked" state of checkboxes, radio buttons, and other widgets.</p>
+<p><strong><code>see</code></strong> aria-pressed @see aria-selected.</p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-checked</p>
+<hr />
+<h3 id="aria-colcount">aria-colcount<a class="headerlink" href="#aria-colcount" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-colcount</strong>: <code>number</code></p>
+<p>Defines the total number of columns in a table, grid, or treegrid.</p>
+<p><strong><code>see</code></strong> aria-colindex.</p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-colcount</p>
+<hr />
+<h3 id="aria-colindex">aria-colindex<a class="headerlink" href="#aria-colindex" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-colindex</strong>: <code>number</code></p>
+<p>Defines an element's column index or position with respect to the total number of columns within a table, grid, or treegrid.</p>
+<p><strong><code>see</code></strong> aria-colcount @see aria-colspan.</p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-colindex</p>
+<hr />
+<h3 id="aria-colspan">aria-colspan<a class="headerlink" href="#aria-colspan" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-colspan</strong>: <code>number</code></p>
+<p>Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid.</p>
+<p><strong><code>see</code></strong> aria-colindex @see aria-rowspan.</p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-colspan</p>
+<hr />
+<h3 id="aria-controls">aria-controls<a class="headerlink" href="#aria-controls" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-controls</strong>: <code>string</code></p>
+<p>Identifies the element (or elements) whose contents or presence are controlled by the current element.</p>
+<p><strong><code>see</code></strong> aria-owns.</p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-controls</p>
+<hr />
+<h3 id="aria-current">aria-current<a class="headerlink" href="#aria-current" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-current</strong>: <code>boolean</code> | <code>"true"</code> | <code>"false"</code> | <code>"page"</code> | <code>"step"</code> | <code>"location"</code> | <code>"date"</code> | <code>"time"</code></p>
+<p>Indicates the element that represents the current item within a container or set of related elements.</p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-current</p>
+<hr />
+<h3 id="aria-describedby">aria-describedby<a class="headerlink" href="#aria-describedby" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-describedby</strong>: <code>string</code></p>
+<p>Identifies the element (or elements) that describes the object.</p>
+<p><strong><code>see</code></strong> aria-labelledby</p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-describedby</p>
+<hr />
+<h3 id="aria-details">aria-details<a class="headerlink" href="#aria-details" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-details</strong>: <code>string</code></p>
+<p>Identifies the element that provides a detailed, extended description for the object.</p>
+<p><strong><code>see</code></strong> aria-describedby.</p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-details</p>
+<hr />
+<h3 id="aria-disabled">aria-disabled<a class="headerlink" href="#aria-disabled" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-disabled</strong>: <code>Booleanish</code></p>
+<p>Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable.</p>
+<p><strong><code>see</code></strong> aria-hidden @see aria-readonly.</p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-disabled</p>
+<hr />
+<h3 id="aria-dropeffect">aria-dropeffect<a class="headerlink" href="#aria-dropeffect" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-dropeffect</strong>: <code>"link"</code> | <code>"none"</code> | <code>"copy"</code> | <code>"execute"</code> | <code>"move"</code> | <code>"popup"</code></p>
+<p>Indicates what functions can be performed when a dragged object is released on the drop target.</p>
+<p><strong><code>deprecated</code></strong> in ARIA 1.1</p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-dropeffect</p>
+<hr />
+<h3 id="aria-errormessage">aria-errormessage<a class="headerlink" href="#aria-errormessage" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-errormessage</strong>: <code>string</code></p>
+<p>Identifies the element that provides an error message for the object.</p>
+<p><strong><code>see</code></strong> aria-invalid @see aria-describedby.</p>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-errormessage</p>
+<hr />
+<h3 id="aria-expanded">aria-expanded<a class="headerlink" href="#aria-expanded" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-expanded</strong>: <code>Booleanish</code></p>
+<p>Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed.</p>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-expanded</p>
+<hr />
+<h3 id="aria-flowto">aria-flowto<a class="headerlink" href="#aria-flowto" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-flowto</strong>: <code>string</code></p>
+<p>Identifies the next element (or elements) in an alternate reading order of content which, at the user's discretion,
+allows assistive technology to override the general default of reading in document source order.</p>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-flowto</p>
+<hr />
+<h3 id="aria-grabbed">aria-grabbed<a class="headerlink" href="#aria-grabbed" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-grabbed</strong>: <code>Booleanish</code></p>
+<p>Indicates an element's "grabbed" state in a drag-and-drop operation.</p>
+<p><strong><code>deprecated</code></strong> in ARIA 1.1</p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-grabbed</p>
+<hr />
+<h3 id="aria-haspopup">aria-haspopup<a class="headerlink" href="#aria-haspopup" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-haspopup</strong>: <code>boolean</code> | <code>"true"</code> | <code>"false"</code> | <code>"dialog"</code> | <code>"grid"</code> | <code>"listbox"</code> | <code>"menu"</code> | <code>"tree"</code></p>
+<p>Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element.</p>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-haspopup</p>
+<hr />
+<h3 id="aria-hidden">aria-hidden<a class="headerlink" href="#aria-hidden" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-hidden</strong>: <code>Booleanish</code></p>
+<p>Indicates whether the element is exposed to an accessibility API.</p>
+<p><strong><code>see</code></strong> aria-disabled.</p>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-hidden</p>
+<hr />
+<h3 id="aria-invalid">aria-invalid<a class="headerlink" href="#aria-invalid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-invalid</strong>: <code>boolean</code> | <code>"true"</code> | <code>"false"</code> | <code>"grammar"</code> | <code>"spelling"</code></p>
+<p>Indicates the entered value does not conform to the format expected by the application.</p>
+<p><strong><code>see</code></strong> aria-errormessage.</p>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-invalid</p>
+<hr />
+<h3 id="aria-keyshortcuts">aria-keyshortcuts<a class="headerlink" href="#aria-keyshortcuts" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-keyshortcuts</strong>: <code>string</code></p>
+<p>Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element.</p>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-keyshortcuts</p>
+<hr />
+<h3 id="aria-label">aria-label<a class="headerlink" href="#aria-label" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-label</strong>: <code>string</code></p>
+<p>Defines a string value that labels the current element.</p>
+<p><strong><code>see</code></strong> aria-labelledby.</p>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-label</p>
+<hr />
+<h3 id="aria-labelledby">aria-labelledby<a class="headerlink" href="#aria-labelledby" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-labelledby</strong>: <code>string</code></p>
+<p>Identifies the element (or elements) that labels the current element.</p>
+<p><strong><code>see</code></strong> aria-describedby.</p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-labelledby</p>
+<hr />
+<h3 id="aria-level">aria-level<a class="headerlink" href="#aria-level" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-level</strong>: <code>number</code></p>
+<p>Defines the hierarchical level of an element within a structure.</p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-level</p>
+<hr />
+<h3 id="aria-live">aria-live<a class="headerlink" href="#aria-live" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-live</strong>: <code>"off"</code> | <code>"assertive"</code> | <code>"polite"</code></p>
+<p>Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region.</p>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-live</p>
+<hr />
+<h3 id="aria-modal">aria-modal<a class="headerlink" href="#aria-modal" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-modal</strong>: <code>Booleanish</code></p>
+<p>Indicates whether an element is modal when displayed.</p>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-modal</p>
+<hr />
+<h3 id="aria-multiline">aria-multiline<a class="headerlink" href="#aria-multiline" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-multiline</strong>: <code>Booleanish</code></p>
+<p>Indicates whether a text box accepts multiple lines of input or only a single line.</p>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-multiline</p>
+<hr />
+<h3 id="aria-multiselectable">aria-multiselectable<a class="headerlink" href="#aria-multiselectable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-multiselectable</strong>: <code>Booleanish</code></p>
+<p>Indicates that the user may select more than one item from the current selectable descendants.</p>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-multiselectable</p>
+<hr />
+<h3 id="aria-orientation">aria-orientation<a class="headerlink" href="#aria-orientation" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-orientation</strong>: <code>"horizontal"</code> | <code>"vertical"</code></p>
+<p>Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous.</p>
+<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-orientation</p>
+<hr />
+<h3 id="aria-owns">aria-owns<a class="headerlink" href="#aria-owns" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-owns</strong>: <code>string</code></p>
+<p>Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship
+between DOM elements where the DOM hierarchy cannot be used to represent the relationship.</p>
+<p><strong><code>see</code></strong> aria-controls.</p>
+<h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-owns</p>
+<hr />
+<h3 id="aria-placeholder">aria-placeholder<a class="headerlink" href="#aria-placeholder" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-placeholder</strong>: <code>string</code></p>
+<p>Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value.
+A hint could be a sample value or a brief description of the expected format.</p>
+<h4 id="inherited-from_33">Inherited from<a class="headerlink" href="#inherited-from_33" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-placeholder</p>
+<hr />
+<h3 id="aria-posinset">aria-posinset<a class="headerlink" href="#aria-posinset" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-posinset</strong>: <code>number</code></p>
+<p>Defines an element's number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.</p>
+<p><strong><code>see</code></strong> aria-setsize.</p>
+<h4 id="inherited-from_34">Inherited from<a class="headerlink" href="#inherited-from_34" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-posinset</p>
+<hr />
+<h3 id="aria-pressed">aria-pressed<a class="headerlink" href="#aria-pressed" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-pressed</strong>: <code>boolean</code> | <code>"true"</code> | <code>"false"</code> | <code>"mixed"</code></p>
+<p>Indicates the current "pressed" state of toggle buttons.</p>
+<p><strong><code>see</code></strong> aria-checked @see aria-selected.</p>
+<h4 id="inherited-from_35">Inherited from<a class="headerlink" href="#inherited-from_35" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-pressed</p>
+<hr />
+<h3 id="aria-readonly">aria-readonly<a class="headerlink" href="#aria-readonly" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-readonly</strong>: <code>Booleanish</code></p>
+<p>Indicates that the element is not editable, but is otherwise operable.</p>
+<p><strong><code>see</code></strong> aria-disabled.</p>
+<h4 id="inherited-from_36">Inherited from<a class="headerlink" href="#inherited-from_36" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-readonly</p>
+<hr />
+<h3 id="aria-relevant">aria-relevant<a class="headerlink" href="#aria-relevant" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-relevant</strong>: <code>"text"</code> | <code>"additions"</code> | <code>"additions removals"</code> | <code>"additions text"</code> | <code>"all"</code> | <code>"removals"</code> | <code>"removals additions"</code> | <code>"removals text"</code> | <code>"text additions"</code> | <code>"text removals"</code></p>
+<p>Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified.</p>
+<p><strong><code>see</code></strong> aria-atomic.</p>
+<h4 id="inherited-from_37">Inherited from<a class="headerlink" href="#inherited-from_37" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-relevant</p>
+<hr />
+<h3 id="aria-required">aria-required<a class="headerlink" href="#aria-required" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-required</strong>: <code>Booleanish</code></p>
+<p>Indicates that user input is required on the element before a form may be submitted.</p>
+<h4 id="inherited-from_38">Inherited from<a class="headerlink" href="#inherited-from_38" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-required</p>
+<hr />
+<h3 id="aria-roledescription">aria-roledescription<a class="headerlink" href="#aria-roledescription" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-roledescription</strong>: <code>string</code></p>
+<p>Defines a human-readable, author-localized description for the role of an element.</p>
+<h4 id="inherited-from_39">Inherited from<a class="headerlink" href="#inherited-from_39" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-roledescription</p>
+<hr />
+<h3 id="aria-rowcount">aria-rowcount<a class="headerlink" href="#aria-rowcount" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-rowcount</strong>: <code>number</code></p>
+<p>Defines the total number of rows in a table, grid, or treegrid.</p>
+<p><strong><code>see</code></strong> aria-rowindex.</p>
+<h4 id="inherited-from_40">Inherited from<a class="headerlink" href="#inherited-from_40" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-rowcount</p>
+<hr />
+<h3 id="aria-rowindex">aria-rowindex<a class="headerlink" href="#aria-rowindex" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-rowindex</strong>: <code>number</code></p>
+<p>Defines an element's row index or position with respect to the total number of rows within a table, grid, or treegrid.</p>
+<p><strong><code>see</code></strong> aria-rowcount @see aria-rowspan.</p>
+<h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-rowindex</p>
+<hr />
+<h3 id="aria-rowspan">aria-rowspan<a class="headerlink" href="#aria-rowspan" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-rowspan</strong>: <code>number</code></p>
+<p>Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid.</p>
+<p><strong><code>see</code></strong> aria-rowindex @see aria-colspan.</p>
+<h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-rowspan</p>
+<hr />
+<h3 id="aria-selected">aria-selected<a class="headerlink" href="#aria-selected" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-selected</strong>: <code>Booleanish</code></p>
+<p>Indicates the current "selected" state of various widgets.</p>
+<p><strong><code>see</code></strong> aria-checked @see aria-pressed.</p>
+<h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-selected</p>
+<hr />
+<h3 id="aria-setsize">aria-setsize<a class="headerlink" href="#aria-setsize" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-setsize</strong>: <code>number</code></p>
+<p>Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.</p>
+<p><strong><code>see</code></strong> aria-posinset.</p>
+<h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-setsize</p>
+<hr />
+<h3 id="aria-sort">aria-sort<a class="headerlink" href="#aria-sort" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-sort</strong>: <code>"none"</code> | <code>"ascending"</code> | <code>"descending"</code> | <code>"other"</code></p>
+<p>Indicates if items in a table or grid are sorted in ascending or descending order.</p>
+<h4 id="inherited-from_45">Inherited from<a class="headerlink" href="#inherited-from_45" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-sort</p>
+<hr />
+<h3 id="aria-valuemax">aria-valuemax<a class="headerlink" href="#aria-valuemax" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-valuemax</strong>: <code>number</code></p>
+<p>Defines the maximum allowed value for a range widget.</p>
+<h4 id="inherited-from_46">Inherited from<a class="headerlink" href="#inherited-from_46" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-valuemax</p>
+<hr />
+<h3 id="aria-valuemin">aria-valuemin<a class="headerlink" href="#aria-valuemin" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-valuemin</strong>: <code>number</code></p>
+<p>Defines the minimum allowed value for a range widget.</p>
+<h4 id="inherited-from_47">Inherited from<a class="headerlink" href="#inherited-from_47" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-valuemin</p>
+<hr />
+<h3 id="aria-valuenow">aria-valuenow<a class="headerlink" href="#aria-valuenow" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-valuenow</strong>: <code>number</code></p>
+<p>Defines the current value for a range widget.</p>
+<p><strong><code>see</code></strong> aria-valuetext.</p>
+<h4 id="inherited-from_48">Inherited from<a class="headerlink" href="#inherited-from_48" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-valuenow</p>
+<hr />
+<h3 id="aria-valuetext">aria-valuetext<a class="headerlink" href="#aria-valuetext" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>aria-valuetext</strong>: <code>string</code></p>
+<p>Defines the human readable text alternative of aria-valuenow for a range widget.</p>
+<h4 id="inherited-from_49">Inherited from<a class="headerlink" href="#inherited-from_49" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.aria-valuetext</p>
+<hr />
+<h3 id="autocapitalize">autoCapitalize<a class="headerlink" href="#autocapitalize" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>autoCapitalize</strong>: <code>string</code></p>
+<h4 id="inherited-from_50">Inherited from<a class="headerlink" href="#inherited-from_50" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.autoCapitalize</p>
+<hr />
+<h3 id="autocorrect">autoCorrect<a class="headerlink" href="#autocorrect" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>autoCorrect</strong>: <code>string</code></p>
+<h4 id="inherited-from_51">Inherited from<a class="headerlink" href="#inherited-from_51" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.autoCorrect</p>
+<hr />
+<h3 id="autosave">autoSave<a class="headerlink" href="#autosave" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>autoSave</strong>: <code>string</code></p>
+<h4 id="inherited-from_52">Inherited from<a class="headerlink" href="#inherited-from_52" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.autoSave</p>
+<hr />
+<h3 id="children">children<a class="headerlink" href="#children" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>children</strong>: <code>ReactNode</code></p>
+<h4 id="inherited-from_53">Inherited from<a class="headerlink" href="#inherited-from_53" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.children</p>
+<hr />
+<h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.className</p>
+<hr />
+<h3 id="color">color<a class="headerlink" href="#color" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>color</strong>: <code>string</code></p>
+<h4 id="inherited-from_54">Inherited from<a class="headerlink" href="#inherited-from_54" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.color</p>
+<hr />
+<h3 id="contenteditable">contentEditable<a class="headerlink" href="#contenteditable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>contentEditable</strong>: <code>Booleanish</code> | <code>"inherit"</code></p>
+<h4 id="inherited-from_55">Inherited from<a class="headerlink" href="#inherited-from_55" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.contentEditable</p>
+<hr />
+<h3 id="contextmenu">contextMenu<a class="headerlink" href="#contextmenu" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>contextMenu</strong>: <code>string</code></p>
+<h4 id="inherited-from_56">Inherited from<a class="headerlink" href="#inherited-from_56" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.contextMenu</p>
+<hr />
+<h3 id="dangerouslysetinnerhtml">dangerouslySetInnerHTML<a class="headerlink" href="#dangerouslysetinnerhtml" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>dangerouslySetInnerHTML</strong>: <code>Object</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>__html</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="inherited-from_57">Inherited from<a class="headerlink" href="#inherited-from_57" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.dangerouslySetInnerHTML</p>
+<hr />
+<h3 id="datatype">datatype<a class="headerlink" href="#datatype" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>datatype</strong>: <code>string</code></p>
+<h4 id="inherited-from_58">Inherited from<a class="headerlink" href="#inherited-from_58" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.datatype</p>
+<hr />
+<h3 id="defaultchecked">defaultChecked<a class="headerlink" href="#defaultchecked" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>defaultChecked</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_59">Inherited from<a class="headerlink" href="#inherited-from_59" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.defaultChecked</p>
+<hr />
+<h3 id="defaultvalue">defaultValue<a class="headerlink" href="#defaultvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>defaultValue</strong>: <code>string</code> | <code>number</code> | readonly <code>string</code>[]</p>
+<h4 id="inherited-from_60">Inherited from<a class="headerlink" href="#inherited-from_60" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.defaultValue</p>
+<hr />
+<h3 id="dir">dir<a class="headerlink" href="#dir" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>dir</strong>: <code>string</code></p>
+<h4 id="inherited-from_61">Inherited from<a class="headerlink" href="#inherited-from_61" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.dir</p>
+<hr />
+<h3 id="draggable">draggable<a class="headerlink" href="#draggable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>draggable</strong>: <code>Booleanish</code></p>
+<h4 id="inherited-from_62">Inherited from<a class="headerlink" href="#inherited-from_62" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.draggable</p>
+<hr />
+<h3 id="hidden">hidden<a class="headerlink" href="#hidden" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>hidden</strong>: <code>boolean</code></p>
+<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.hidden</p>
+<hr />
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>id</strong>: <code>string</code></p>
+<h4 id="inherited-from_63">Inherited from<a class="headerlink" href="#inherited-from_63" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.id</p>
+<hr />
+<h3 id="inlist">inlist<a class="headerlink" href="#inlist" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>inlist</strong>: <code>any</code></p>
+<h4 id="inherited-from_64">Inherited from<a class="headerlink" href="#inherited-from_64" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.inlist</p>
+<hr />
+<h3 id="inputmode">inputMode<a class="headerlink" href="#inputmode" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>inputMode</strong>: <code>"none"</code> | <code>"search"</code> | <code>"text"</code> | <code>"tel"</code> | <code>"url"</code> | <code>"email"</code> | <code>"numeric"</code> | <code>"decimal"</code></p>
+<p>Hints at the type of data that might be entered by the user while editing the element or its contents</p>
+<p><strong><code>see</code></strong> https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute</p>
+<h4 id="inherited-from_65">Inherited from<a class="headerlink" href="#inherited-from_65" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.inputMode</p>
+<hr />
+<h3 id="is">is<a class="headerlink" href="#is" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>is</strong>: <code>string</code></p>
+<p>Specify that a standard HTML element should behave like a defined custom built-in element</p>
+<p><strong><code>see</code></strong> https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is</p>
+<h4 id="inherited-from_66">Inherited from<a class="headerlink" href="#inherited-from_66" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.is</p>
+<hr />
+<h3 id="itemid">itemID<a class="headerlink" href="#itemid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>itemID</strong>: <code>string</code></p>
+<h4 id="inherited-from_67">Inherited from<a class="headerlink" href="#inherited-from_67" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.itemID</p>
+<hr />
+<h3 id="itemprop">itemProp<a class="headerlink" href="#itemprop" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>itemProp</strong>: <code>string</code></p>
+<h4 id="inherited-from_68">Inherited from<a class="headerlink" href="#inherited-from_68" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.itemProp</p>
+<hr />
+<h3 id="itemref">itemRef<a class="headerlink" href="#itemref" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>itemRef</strong>: <code>string</code></p>
+<h4 id="inherited-from_69">Inherited from<a class="headerlink" href="#inherited-from_69" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.itemRef</p>
+<hr />
+<h3 id="itemscope">itemScope<a class="headerlink" href="#itemscope" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>itemScope</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_70">Inherited from<a class="headerlink" href="#inherited-from_70" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.itemScope</p>
+<hr />
+<h3 id="itemtype">itemType<a class="headerlink" href="#itemtype" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>itemType</strong>: <code>string</code></p>
+<h4 id="inherited-from_71">Inherited from<a class="headerlink" href="#inherited-from_71" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.itemType</p>
+<hr />
+<h3 id="labelsonly">labelsOnly<a class="headerlink" href="#labelsonly" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>labelsOnly</strong>: <code>boolean</code></p>
+<hr />
+<h3 id="lang">lang<a class="headerlink" href="#lang" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>lang</strong>: <code>string</code></p>
+<h4 id="inherited-from_72">Inherited from<a class="headerlink" href="#inherited-from_72" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.lang</p>
+<hr />
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <strong>name</strong>: <code>ReactNode</code></p>
+<hr />
+<h3 id="onabort">onAbort<a class="headerlink" href="#onabort" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAbort</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_73">Inherited from<a class="headerlink" href="#inherited-from_73" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAbort</p>
+<hr />
+<h3 id="onabortcapture">onAbortCapture<a class="headerlink" href="#onabortcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAbortCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_74">Inherited from<a class="headerlink" href="#inherited-from_74" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAbortCapture</p>
+<hr />
+<h3 id="onanimationend">onAnimationEnd<a class="headerlink" href="#onanimationend" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAnimationEnd</strong>: <code>AnimationEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_75">Inherited from<a class="headerlink" href="#inherited-from_75" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAnimationEnd</p>
+<hr />
+<h3 id="onanimationendcapture">onAnimationEndCapture<a class="headerlink" href="#onanimationendcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAnimationEndCapture</strong>: <code>AnimationEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_76">Inherited from<a class="headerlink" href="#inherited-from_76" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAnimationEndCapture</p>
+<hr />
+<h3 id="onanimationiteration">onAnimationIteration<a class="headerlink" href="#onanimationiteration" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAnimationIteration</strong>: <code>AnimationEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_77">Inherited from<a class="headerlink" href="#inherited-from_77" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAnimationIteration</p>
+<hr />
+<h3 id="onanimationiterationcapture">onAnimationIterationCapture<a class="headerlink" href="#onanimationiterationcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAnimationIterationCapture</strong>: <code>AnimationEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_78">Inherited from<a class="headerlink" href="#inherited-from_78" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAnimationIterationCapture</p>
+<hr />
+<h3 id="onanimationstart">onAnimationStart<a class="headerlink" href="#onanimationstart" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAnimationStart</strong>: <code>AnimationEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_79">Inherited from<a class="headerlink" href="#inherited-from_79" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAnimationStart</p>
+<hr />
+<h3 id="onanimationstartcapture">onAnimationStartCapture<a class="headerlink" href="#onanimationstartcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAnimationStartCapture</strong>: <code>AnimationEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_80">Inherited from<a class="headerlink" href="#inherited-from_80" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAnimationStartCapture</p>
+<hr />
+<h3 id="onauxclick">onAuxClick<a class="headerlink" href="#onauxclick" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAuxClick</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_81">Inherited from<a class="headerlink" href="#inherited-from_81" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAuxClick</p>
+<hr />
+<h3 id="onauxclickcapture">onAuxClickCapture<a class="headerlink" href="#onauxclickcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onAuxClickCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_82">Inherited from<a class="headerlink" href="#inherited-from_82" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onAuxClickCapture</p>
+<hr />
+<h3 id="onbeforeinput">onBeforeInput<a class="headerlink" href="#onbeforeinput" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onBeforeInput</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_83">Inherited from<a class="headerlink" href="#inherited-from_83" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onBeforeInput</p>
+<hr />
+<h3 id="onbeforeinputcapture">onBeforeInputCapture<a class="headerlink" href="#onbeforeinputcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onBeforeInputCapture</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_84">Inherited from<a class="headerlink" href="#inherited-from_84" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onBeforeInputCapture</p>
+<hr />
+<h3 id="onblur">onBlur<a class="headerlink" href="#onblur" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onBlur</strong>: <code>FocusEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_85">Inherited from<a class="headerlink" href="#inherited-from_85" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onBlur</p>
+<hr />
+<h3 id="onblurcapture">onBlurCapture<a class="headerlink" href="#onblurcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onBlurCapture</strong>: <code>FocusEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_86">Inherited from<a class="headerlink" href="#inherited-from_86" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onBlurCapture</p>
+<hr />
+<h3 id="oncanplay">onCanPlay<a class="headerlink" href="#oncanplay" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCanPlay</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_87">Inherited from<a class="headerlink" href="#inherited-from_87" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCanPlay</p>
+<hr />
+<h3 id="oncanplaycapture">onCanPlayCapture<a class="headerlink" href="#oncanplaycapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCanPlayCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_88">Inherited from<a class="headerlink" href="#inherited-from_88" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCanPlayCapture</p>
+<hr />
+<h3 id="oncanplaythrough">onCanPlayThrough<a class="headerlink" href="#oncanplaythrough" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCanPlayThrough</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_89">Inherited from<a class="headerlink" href="#inherited-from_89" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCanPlayThrough</p>
+<hr />
+<h3 id="oncanplaythroughcapture">onCanPlayThroughCapture<a class="headerlink" href="#oncanplaythroughcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCanPlayThroughCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_90">Inherited from<a class="headerlink" href="#inherited-from_90" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCanPlayThroughCapture</p>
+<hr />
+<h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onChange</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_91">Inherited from<a class="headerlink" href="#inherited-from_91" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onChange</p>
+<hr />
+<h3 id="onchangecapture">onChangeCapture<a class="headerlink" href="#onchangecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onChangeCapture</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_92">Inherited from<a class="headerlink" href="#inherited-from_92" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onChangeCapture</p>
+<hr />
+<h3 id="onclick">onClick<a class="headerlink" href="#onclick" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onClick</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_93">Inherited from<a class="headerlink" href="#inherited-from_93" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onClick</p>
+<hr />
+<h3 id="onclickcapture">onClickCapture<a class="headerlink" href="#onclickcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onClickCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_94">Inherited from<a class="headerlink" href="#inherited-from_94" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onClickCapture</p>
+<hr />
+<h3 id="oncompositionend">onCompositionEnd<a class="headerlink" href="#oncompositionend" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCompositionEnd</strong>: <code>CompositionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_95">Inherited from<a class="headerlink" href="#inherited-from_95" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCompositionEnd</p>
+<hr />
+<h3 id="oncompositionendcapture">onCompositionEndCapture<a class="headerlink" href="#oncompositionendcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCompositionEndCapture</strong>: <code>CompositionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_96">Inherited from<a class="headerlink" href="#inherited-from_96" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCompositionEndCapture</p>
+<hr />
+<h3 id="oncompositionstart">onCompositionStart<a class="headerlink" href="#oncompositionstart" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCompositionStart</strong>: <code>CompositionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_97">Inherited from<a class="headerlink" href="#inherited-from_97" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCompositionStart</p>
+<hr />
+<h3 id="oncompositionstartcapture">onCompositionStartCapture<a class="headerlink" href="#oncompositionstartcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCompositionStartCapture</strong>: <code>CompositionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_98">Inherited from<a class="headerlink" href="#inherited-from_98" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCompositionStartCapture</p>
+<hr />
+<h3 id="oncompositionupdate">onCompositionUpdate<a class="headerlink" href="#oncompositionupdate" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCompositionUpdate</strong>: <code>CompositionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_99">Inherited from<a class="headerlink" href="#inherited-from_99" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCompositionUpdate</p>
+<hr />
+<h3 id="oncompositionupdatecapture">onCompositionUpdateCapture<a class="headerlink" href="#oncompositionupdatecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCompositionUpdateCapture</strong>: <code>CompositionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_100">Inherited from<a class="headerlink" href="#inherited-from_100" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCompositionUpdateCapture</p>
+<hr />
+<h3 id="oncontextmenu">onContextMenu<a class="headerlink" href="#oncontextmenu" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onContextMenu</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_101">Inherited from<a class="headerlink" href="#inherited-from_101" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onContextMenu</p>
+<hr />
+<h3 id="oncontextmenucapture">onContextMenuCapture<a class="headerlink" href="#oncontextmenucapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onContextMenuCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_102">Inherited from<a class="headerlink" href="#inherited-from_102" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onContextMenuCapture</p>
+<hr />
+<h3 id="oncopy">onCopy<a class="headerlink" href="#oncopy" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCopy</strong>: <code>ClipboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_103">Inherited from<a class="headerlink" href="#inherited-from_103" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCopy</p>
+<hr />
+<h3 id="oncopycapture">onCopyCapture<a class="headerlink" href="#oncopycapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCopyCapture</strong>: <code>ClipboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_104">Inherited from<a class="headerlink" href="#inherited-from_104" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCopyCapture</p>
+<hr />
+<h3 id="oncut">onCut<a class="headerlink" href="#oncut" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCut</strong>: <code>ClipboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_105">Inherited from<a class="headerlink" href="#inherited-from_105" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCut</p>
+<hr />
+<h3 id="oncutcapture">onCutCapture<a class="headerlink" href="#oncutcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onCutCapture</strong>: <code>ClipboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_106">Inherited from<a class="headerlink" href="#inherited-from_106" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onCutCapture</p>
+<hr />
+<h3 id="ondoubleclick">onDoubleClick<a class="headerlink" href="#ondoubleclick" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDoubleClick</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_107">Inherited from<a class="headerlink" href="#inherited-from_107" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDoubleClick</p>
+<hr />
+<h3 id="ondoubleclickcapture">onDoubleClickCapture<a class="headerlink" href="#ondoubleclickcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDoubleClickCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_108">Inherited from<a class="headerlink" href="#inherited-from_108" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDoubleClickCapture</p>
+<hr />
+<h3 id="ondrag">onDrag<a class="headerlink" href="#ondrag" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDrag</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_109">Inherited from<a class="headerlink" href="#inherited-from_109" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDrag</p>
+<hr />
+<h3 id="ondragcapture">onDragCapture<a class="headerlink" href="#ondragcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_110">Inherited from<a class="headerlink" href="#inherited-from_110" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragCapture</p>
+<hr />
+<h3 id="ondragend">onDragEnd<a class="headerlink" href="#ondragend" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragEnd</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_111">Inherited from<a class="headerlink" href="#inherited-from_111" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragEnd</p>
+<hr />
+<h3 id="ondragendcapture">onDragEndCapture<a class="headerlink" href="#ondragendcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragEndCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_112">Inherited from<a class="headerlink" href="#inherited-from_112" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragEndCapture</p>
+<hr />
+<h3 id="ondragenter">onDragEnter<a class="headerlink" href="#ondragenter" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragEnter</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_113">Inherited from<a class="headerlink" href="#inherited-from_113" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragEnter</p>
+<hr />
+<h3 id="ondragentercapture">onDragEnterCapture<a class="headerlink" href="#ondragentercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragEnterCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_114">Inherited from<a class="headerlink" href="#inherited-from_114" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragEnterCapture</p>
+<hr />
+<h3 id="ondragexit">onDragExit<a class="headerlink" href="#ondragexit" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragExit</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_115">Inherited from<a class="headerlink" href="#inherited-from_115" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragExit</p>
+<hr />
+<h3 id="ondragexitcapture">onDragExitCapture<a class="headerlink" href="#ondragexitcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragExitCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_116">Inherited from<a class="headerlink" href="#inherited-from_116" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragExitCapture</p>
+<hr />
+<h3 id="ondragleave">onDragLeave<a class="headerlink" href="#ondragleave" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragLeave</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_117">Inherited from<a class="headerlink" href="#inherited-from_117" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragLeave</p>
+<hr />
+<h3 id="ondragleavecapture">onDragLeaveCapture<a class="headerlink" href="#ondragleavecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragLeaveCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_118">Inherited from<a class="headerlink" href="#inherited-from_118" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragLeaveCapture</p>
+<hr />
+<h3 id="ondragover">onDragOver<a class="headerlink" href="#ondragover" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragOver</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_119">Inherited from<a class="headerlink" href="#inherited-from_119" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragOver</p>
+<hr />
+<h3 id="ondragovercapture">onDragOverCapture<a class="headerlink" href="#ondragovercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragOverCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_120">Inherited from<a class="headerlink" href="#inherited-from_120" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragOverCapture</p>
+<hr />
+<h3 id="ondragstart">onDragStart<a class="headerlink" href="#ondragstart" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragStart</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_121">Inherited from<a class="headerlink" href="#inherited-from_121" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragStart</p>
+<hr />
+<h3 id="ondragstartcapture">onDragStartCapture<a class="headerlink" href="#ondragstartcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDragStartCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_122">Inherited from<a class="headerlink" href="#inherited-from_122" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDragStartCapture</p>
+<hr />
+<h3 id="ondrop">onDrop<a class="headerlink" href="#ondrop" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDrop</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_123">Inherited from<a class="headerlink" href="#inherited-from_123" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDrop</p>
+<hr />
+<h3 id="ondropcapture">onDropCapture<a class="headerlink" href="#ondropcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDropCapture</strong>: <code>DragEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_124">Inherited from<a class="headerlink" href="#inherited-from_124" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDropCapture</p>
+<hr />
+<h3 id="ondurationchange">onDurationChange<a class="headerlink" href="#ondurationchange" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDurationChange</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_125">Inherited from<a class="headerlink" href="#inherited-from_125" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDurationChange</p>
+<hr />
+<h3 id="ondurationchangecapture">onDurationChangeCapture<a class="headerlink" href="#ondurationchangecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onDurationChangeCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_126">Inherited from<a class="headerlink" href="#inherited-from_126" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onDurationChangeCapture</p>
+<hr />
+<h3 id="onemptied">onEmptied<a class="headerlink" href="#onemptied" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onEmptied</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_127">Inherited from<a class="headerlink" href="#inherited-from_127" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onEmptied</p>
+<hr />
+<h3 id="onemptiedcapture">onEmptiedCapture<a class="headerlink" href="#onemptiedcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onEmptiedCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_128">Inherited from<a class="headerlink" href="#inherited-from_128" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onEmptiedCapture</p>
+<hr />
+<h3 id="onencrypted">onEncrypted<a class="headerlink" href="#onencrypted" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onEncrypted</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_129">Inherited from<a class="headerlink" href="#inherited-from_129" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onEncrypted</p>
+<hr />
+<h3 id="onencryptedcapture">onEncryptedCapture<a class="headerlink" href="#onencryptedcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onEncryptedCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_130">Inherited from<a class="headerlink" href="#inherited-from_130" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onEncryptedCapture</p>
+<hr />
+<h3 id="onended">onEnded<a class="headerlink" href="#onended" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onEnded</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_131">Inherited from<a class="headerlink" href="#inherited-from_131" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onEnded</p>
+<hr />
+<h3 id="onendedcapture">onEndedCapture<a class="headerlink" href="#onendedcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onEndedCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_132">Inherited from<a class="headerlink" href="#inherited-from_132" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onEndedCapture</p>
+<hr />
+<h3 id="onerror">onError<a class="headerlink" href="#onerror" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onError</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_133">Inherited from<a class="headerlink" href="#inherited-from_133" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onError</p>
+<hr />
+<h3 id="onerrorcapture">onErrorCapture<a class="headerlink" href="#onerrorcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onErrorCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_134">Inherited from<a class="headerlink" href="#inherited-from_134" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onErrorCapture</p>
+<hr />
+<h3 id="onfocus">onFocus<a class="headerlink" href="#onfocus" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onFocus</strong>: <code>FocusEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_135">Inherited from<a class="headerlink" href="#inherited-from_135" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onFocus</p>
+<hr />
+<h3 id="onfocuscapture">onFocusCapture<a class="headerlink" href="#onfocuscapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onFocusCapture</strong>: <code>FocusEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_136">Inherited from<a class="headerlink" href="#inherited-from_136" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onFocusCapture</p>
+<hr />
+<h3 id="ongotpointercapture">onGotPointerCapture<a class="headerlink" href="#ongotpointercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onGotPointerCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_137">Inherited from<a class="headerlink" href="#inherited-from_137" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onGotPointerCapture</p>
+<hr />
+<h3 id="ongotpointercapturecapture">onGotPointerCaptureCapture<a class="headerlink" href="#ongotpointercapturecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onGotPointerCaptureCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_138">Inherited from<a class="headerlink" href="#inherited-from_138" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onGotPointerCaptureCapture</p>
+<hr />
+<h3 id="oninput">onInput<a class="headerlink" href="#oninput" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onInput</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_139">Inherited from<a class="headerlink" href="#inherited-from_139" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onInput</p>
+<hr />
+<h3 id="oninputcapture">onInputCapture<a class="headerlink" href="#oninputcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onInputCapture</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_140">Inherited from<a class="headerlink" href="#inherited-from_140" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onInputCapture</p>
+<hr />
+<h3 id="oninvalid">onInvalid<a class="headerlink" href="#oninvalid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onInvalid</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_141">Inherited from<a class="headerlink" href="#inherited-from_141" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onInvalid</p>
+<hr />
+<h3 id="oninvalidcapture">onInvalidCapture<a class="headerlink" href="#oninvalidcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onInvalidCapture</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_142">Inherited from<a class="headerlink" href="#inherited-from_142" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onInvalidCapture</p>
+<hr />
+<h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyDown</strong>: <code>KeyboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_143">Inherited from<a class="headerlink" href="#inherited-from_143" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onKeyDown</p>
+<hr />
+<h3 id="onkeydowncapture">onKeyDownCapture<a class="headerlink" href="#onkeydowncapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyDownCapture</strong>: <code>KeyboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_144">Inherited from<a class="headerlink" href="#inherited-from_144" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onKeyDownCapture</p>
+<hr />
+<h3 id="onkeypress">onKeyPress<a class="headerlink" href="#onkeypress" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyPress</strong>: <code>KeyboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_145">Inherited from<a class="headerlink" href="#inherited-from_145" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onKeyPress</p>
+<hr />
+<h3 id="onkeypresscapture">onKeyPressCapture<a class="headerlink" href="#onkeypresscapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyPressCapture</strong>: <code>KeyboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_146">Inherited from<a class="headerlink" href="#inherited-from_146" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onKeyPressCapture</p>
+<hr />
+<h3 id="onkeyup">onKeyUp<a class="headerlink" href="#onkeyup" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyUp</strong>: <code>KeyboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_147">Inherited from<a class="headerlink" href="#inherited-from_147" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onKeyUp</p>
+<hr />
+<h3 id="onkeyupcapture">onKeyUpCapture<a class="headerlink" href="#onkeyupcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyUpCapture</strong>: <code>KeyboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_148">Inherited from<a class="headerlink" href="#inherited-from_148" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onKeyUpCapture</p>
+<hr />
+<h3 id="onload">onLoad<a class="headerlink" href="#onload" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoad</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_149">Inherited from<a class="headerlink" href="#inherited-from_149" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoad</p>
+<hr />
+<h3 id="onloadcapture">onLoadCapture<a class="headerlink" href="#onloadcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_150">Inherited from<a class="headerlink" href="#inherited-from_150" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadCapture</p>
+<hr />
+<h3 id="onloadstart">onLoadStart<a class="headerlink" href="#onloadstart" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadStart</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_151">Inherited from<a class="headerlink" href="#inherited-from_151" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadStart</p>
+<hr />
+<h3 id="onloadstartcapture">onLoadStartCapture<a class="headerlink" href="#onloadstartcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadStartCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_152">Inherited from<a class="headerlink" href="#inherited-from_152" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadStartCapture</p>
+<hr />
+<h3 id="onloadeddata">onLoadedData<a class="headerlink" href="#onloadeddata" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadedData</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_153">Inherited from<a class="headerlink" href="#inherited-from_153" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadedData</p>
+<hr />
+<h3 id="onloadeddatacapture">onLoadedDataCapture<a class="headerlink" href="#onloadeddatacapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadedDataCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_154">Inherited from<a class="headerlink" href="#inherited-from_154" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadedDataCapture</p>
+<hr />
+<h3 id="onloadedmetadata">onLoadedMetadata<a class="headerlink" href="#onloadedmetadata" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadedMetadata</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_155">Inherited from<a class="headerlink" href="#inherited-from_155" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadedMetadata</p>
+<hr />
+<h3 id="onloadedmetadatacapture">onLoadedMetadataCapture<a class="headerlink" href="#onloadedmetadatacapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLoadedMetadataCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_156">Inherited from<a class="headerlink" href="#inherited-from_156" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLoadedMetadataCapture</p>
+<hr />
+<h3 id="onlostpointercapture">onLostPointerCapture<a class="headerlink" href="#onlostpointercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLostPointerCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_157">Inherited from<a class="headerlink" href="#inherited-from_157" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLostPointerCapture</p>
+<hr />
+<h3 id="onlostpointercapturecapture">onLostPointerCaptureCapture<a class="headerlink" href="#onlostpointercapturecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onLostPointerCaptureCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_158">Inherited from<a class="headerlink" href="#inherited-from_158" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onLostPointerCaptureCapture</p>
+<hr />
+<h3 id="onmousedown">onMouseDown<a class="headerlink" href="#onmousedown" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseDown</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_159">Inherited from<a class="headerlink" href="#inherited-from_159" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseDown</p>
+<hr />
+<h3 id="onmousedowncapture">onMouseDownCapture<a class="headerlink" href="#onmousedowncapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseDownCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_160">Inherited from<a class="headerlink" href="#inherited-from_160" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseDownCapture</p>
+<hr />
+<h3 id="onmouseenter">onMouseEnter<a class="headerlink" href="#onmouseenter" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseEnter</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_161">Inherited from<a class="headerlink" href="#inherited-from_161" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseEnter</p>
+<hr />
+<h3 id="onmouseleave">onMouseLeave<a class="headerlink" href="#onmouseleave" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseLeave</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_162">Inherited from<a class="headerlink" href="#inherited-from_162" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseLeave</p>
+<hr />
+<h3 id="onmousemove">onMouseMove<a class="headerlink" href="#onmousemove" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseMove</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_163">Inherited from<a class="headerlink" href="#inherited-from_163" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseMove</p>
+<hr />
+<h3 id="onmousemovecapture">onMouseMoveCapture<a class="headerlink" href="#onmousemovecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseMoveCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_164">Inherited from<a class="headerlink" href="#inherited-from_164" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseMoveCapture</p>
+<hr />
+<h3 id="onmouseout">onMouseOut<a class="headerlink" href="#onmouseout" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseOut</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_165">Inherited from<a class="headerlink" href="#inherited-from_165" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseOut</p>
+<hr />
+<h3 id="onmouseoutcapture">onMouseOutCapture<a class="headerlink" href="#onmouseoutcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseOutCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_166">Inherited from<a class="headerlink" href="#inherited-from_166" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseOutCapture</p>
+<hr />
+<h3 id="onmouseover">onMouseOver<a class="headerlink" href="#onmouseover" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseOver</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_167">Inherited from<a class="headerlink" href="#inherited-from_167" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseOver</p>
+<hr />
+<h3 id="onmouseovercapture">onMouseOverCapture<a class="headerlink" href="#onmouseovercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseOverCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_168">Inherited from<a class="headerlink" href="#inherited-from_168" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseOverCapture</p>
+<hr />
+<h3 id="onmouseup">onMouseUp<a class="headerlink" href="#onmouseup" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseUp</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_169">Inherited from<a class="headerlink" href="#inherited-from_169" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseUp</p>
+<hr />
+<h3 id="onmouseupcapture">onMouseUpCapture<a class="headerlink" href="#onmouseupcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMouseUpCapture</strong>: <code>MouseEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_170">Inherited from<a class="headerlink" href="#inherited-from_170" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onMouseUpCapture</p>
+<hr />
+<h3 id="onpaste">onPaste<a class="headerlink" href="#onpaste" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPaste</strong>: <code>ClipboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_171">Inherited from<a class="headerlink" href="#inherited-from_171" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPaste</p>
+<hr />
+<h3 id="onpastecapture">onPasteCapture<a class="headerlink" href="#onpastecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPasteCapture</strong>: <code>ClipboardEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_172">Inherited from<a class="headerlink" href="#inherited-from_172" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPasteCapture</p>
+<hr />
+<h3 id="onpause">onPause<a class="headerlink" href="#onpause" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPause</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_173">Inherited from<a class="headerlink" href="#inherited-from_173" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPause</p>
+<hr />
+<h3 id="onpausecapture">onPauseCapture<a class="headerlink" href="#onpausecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPauseCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_174">Inherited from<a class="headerlink" href="#inherited-from_174" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPauseCapture</p>
+<hr />
+<h3 id="onplay">onPlay<a class="headerlink" href="#onplay" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPlay</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_175">Inherited from<a class="headerlink" href="#inherited-from_175" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPlay</p>
+<hr />
+<h3 id="onplaycapture">onPlayCapture<a class="headerlink" href="#onplaycapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPlayCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_176">Inherited from<a class="headerlink" href="#inherited-from_176" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPlayCapture</p>
+<hr />
+<h3 id="onplaying">onPlaying<a class="headerlink" href="#onplaying" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPlaying</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_177">Inherited from<a class="headerlink" href="#inherited-from_177" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPlaying</p>
+<hr />
+<h3 id="onplayingcapture">onPlayingCapture<a class="headerlink" href="#onplayingcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPlayingCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_178">Inherited from<a class="headerlink" href="#inherited-from_178" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPlayingCapture</p>
+<hr />
+<h3 id="onpointercancel">onPointerCancel<a class="headerlink" href="#onpointercancel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerCancel</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_179">Inherited from<a class="headerlink" href="#inherited-from_179" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerCancel</p>
+<hr />
+<h3 id="onpointercancelcapture">onPointerCancelCapture<a class="headerlink" href="#onpointercancelcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerCancelCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_180">Inherited from<a class="headerlink" href="#inherited-from_180" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerCancelCapture</p>
+<hr />
+<h3 id="onpointerdown">onPointerDown<a class="headerlink" href="#onpointerdown" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerDown</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_181">Inherited from<a class="headerlink" href="#inherited-from_181" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerDown</p>
+<hr />
+<h3 id="onpointerdowncapture">onPointerDownCapture<a class="headerlink" href="#onpointerdowncapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerDownCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_182">Inherited from<a class="headerlink" href="#inherited-from_182" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerDownCapture</p>
+<hr />
+<h3 id="onpointerenter">onPointerEnter<a class="headerlink" href="#onpointerenter" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerEnter</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_183">Inherited from<a class="headerlink" href="#inherited-from_183" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerEnter</p>
+<hr />
+<h3 id="onpointerentercapture">onPointerEnterCapture<a class="headerlink" href="#onpointerentercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerEnterCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_184">Inherited from<a class="headerlink" href="#inherited-from_184" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerEnterCapture</p>
+<hr />
+<h3 id="onpointerleave">onPointerLeave<a class="headerlink" href="#onpointerleave" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerLeave</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_185">Inherited from<a class="headerlink" href="#inherited-from_185" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerLeave</p>
+<hr />
+<h3 id="onpointerleavecapture">onPointerLeaveCapture<a class="headerlink" href="#onpointerleavecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerLeaveCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_186">Inherited from<a class="headerlink" href="#inherited-from_186" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerLeaveCapture</p>
+<hr />
+<h3 id="onpointermove">onPointerMove<a class="headerlink" href="#onpointermove" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerMove</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_187">Inherited from<a class="headerlink" href="#inherited-from_187" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerMove</p>
+<hr />
+<h3 id="onpointermovecapture">onPointerMoveCapture<a class="headerlink" href="#onpointermovecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerMoveCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_188">Inherited from<a class="headerlink" href="#inherited-from_188" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerMoveCapture</p>
+<hr />
+<h3 id="onpointerout">onPointerOut<a class="headerlink" href="#onpointerout" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerOut</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_189">Inherited from<a class="headerlink" href="#inherited-from_189" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerOut</p>
+<hr />
+<h3 id="onpointeroutcapture">onPointerOutCapture<a class="headerlink" href="#onpointeroutcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerOutCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_190">Inherited from<a class="headerlink" href="#inherited-from_190" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerOutCapture</p>
+<hr />
+<h3 id="onpointerover">onPointerOver<a class="headerlink" href="#onpointerover" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerOver</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_191">Inherited from<a class="headerlink" href="#inherited-from_191" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerOver</p>
+<hr />
+<h3 id="onpointerovercapture">onPointerOverCapture<a class="headerlink" href="#onpointerovercapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerOverCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_192">Inherited from<a class="headerlink" href="#inherited-from_192" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerOverCapture</p>
+<hr />
+<h3 id="onpointerup">onPointerUp<a class="headerlink" href="#onpointerup" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerUp</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_193">Inherited from<a class="headerlink" href="#inherited-from_193" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerUp</p>
+<hr />
+<h3 id="onpointerupcapture">onPointerUpCapture<a class="headerlink" href="#onpointerupcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onPointerUpCapture</strong>: <code>PointerEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_194">Inherited from<a class="headerlink" href="#inherited-from_194" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onPointerUpCapture</p>
+<hr />
+<h3 id="onprogress">onProgress<a class="headerlink" href="#onprogress" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onProgress</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_195">Inherited from<a class="headerlink" href="#inherited-from_195" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onProgress</p>
+<hr />
+<h3 id="onprogresscapture">onProgressCapture<a class="headerlink" href="#onprogresscapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onProgressCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_196">Inherited from<a class="headerlink" href="#inherited-from_196" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onProgressCapture</p>
+<hr />
+<h3 id="onratechange">onRateChange<a class="headerlink" href="#onratechange" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onRateChange</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_197">Inherited from<a class="headerlink" href="#inherited-from_197" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onRateChange</p>
+<hr />
+<h3 id="onratechangecapture">onRateChangeCapture<a class="headerlink" href="#onratechangecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onRateChangeCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_198">Inherited from<a class="headerlink" href="#inherited-from_198" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onRateChangeCapture</p>
+<hr />
+<h3 id="onreset">onReset<a class="headerlink" href="#onreset" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onReset</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_199">Inherited from<a class="headerlink" href="#inherited-from_199" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onReset</p>
+<hr />
+<h3 id="onresetcapture">onResetCapture<a class="headerlink" href="#onresetcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onResetCapture</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_200">Inherited from<a class="headerlink" href="#inherited-from_200" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onResetCapture</p>
+<hr />
+<h3 id="onscroll">onScroll<a class="headerlink" href="#onscroll" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onScroll</strong>: <code>UIEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_201">Inherited from<a class="headerlink" href="#inherited-from_201" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onScroll</p>
+<hr />
+<h3 id="onscrollcapture">onScrollCapture<a class="headerlink" href="#onscrollcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onScrollCapture</strong>: <code>UIEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_202">Inherited from<a class="headerlink" href="#inherited-from_202" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onScrollCapture</p>
+<hr />
+<h3 id="onseeked">onSeeked<a class="headerlink" href="#onseeked" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSeeked</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_203">Inherited from<a class="headerlink" href="#inherited-from_203" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSeeked</p>
+<hr />
+<h3 id="onseekedcapture">onSeekedCapture<a class="headerlink" href="#onseekedcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSeekedCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_204">Inherited from<a class="headerlink" href="#inherited-from_204" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSeekedCapture</p>
+<hr />
+<h3 id="onseeking">onSeeking<a class="headerlink" href="#onseeking" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSeeking</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_205">Inherited from<a class="headerlink" href="#inherited-from_205" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSeeking</p>
+<hr />
+<h3 id="onseekingcapture">onSeekingCapture<a class="headerlink" href="#onseekingcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSeekingCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_206">Inherited from<a class="headerlink" href="#inherited-from_206" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSeekingCapture</p>
+<hr />
+<h3 id="onselect">onSelect<a class="headerlink" href="#onselect" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSelect</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_207">Inherited from<a class="headerlink" href="#inherited-from_207" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSelect</p>
+<hr />
+<h3 id="onselectcapture">onSelectCapture<a class="headerlink" href="#onselectcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSelectCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_208">Inherited from<a class="headerlink" href="#inherited-from_208" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSelectCapture</p>
+<hr />
+<h3 id="onstalled">onStalled<a class="headerlink" href="#onstalled" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onStalled</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_209">Inherited from<a class="headerlink" href="#inherited-from_209" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onStalled</p>
+<hr />
+<h3 id="onstalledcapture">onStalledCapture<a class="headerlink" href="#onstalledcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onStalledCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_210">Inherited from<a class="headerlink" href="#inherited-from_210" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onStalledCapture</p>
+<hr />
+<h3 id="onsubmit">onSubmit<a class="headerlink" href="#onsubmit" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSubmit</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_211">Inherited from<a class="headerlink" href="#inherited-from_211" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSubmit</p>
+<hr />
+<h3 id="onsubmitcapture">onSubmitCapture<a class="headerlink" href="#onsubmitcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSubmitCapture</strong>: <code>FormEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_212">Inherited from<a class="headerlink" href="#inherited-from_212" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSubmitCapture</p>
+<hr />
+<h3 id="onsuspend">onSuspend<a class="headerlink" href="#onsuspend" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSuspend</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_213">Inherited from<a class="headerlink" href="#inherited-from_213" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSuspend</p>
+<hr />
+<h3 id="onsuspendcapture">onSuspendCapture<a class="headerlink" href="#onsuspendcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSuspendCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_214">Inherited from<a class="headerlink" href="#inherited-from_214" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onSuspendCapture</p>
+<hr />
+<h3 id="ontimeupdate">onTimeUpdate<a class="headerlink" href="#ontimeupdate" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTimeUpdate</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_215">Inherited from<a class="headerlink" href="#inherited-from_215" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTimeUpdate</p>
+<hr />
+<h3 id="ontimeupdatecapture">onTimeUpdateCapture<a class="headerlink" href="#ontimeupdatecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTimeUpdateCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_216">Inherited from<a class="headerlink" href="#inherited-from_216" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTimeUpdateCapture</p>
+<hr />
+<h3 id="ontouchcancel">onTouchCancel<a class="headerlink" href="#ontouchcancel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchCancel</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_217">Inherited from<a class="headerlink" href="#inherited-from_217" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchCancel</p>
+<hr />
+<h3 id="ontouchcancelcapture">onTouchCancelCapture<a class="headerlink" href="#ontouchcancelcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchCancelCapture</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_218">Inherited from<a class="headerlink" href="#inherited-from_218" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchCancelCapture</p>
+<hr />
+<h3 id="ontouchend">onTouchEnd<a class="headerlink" href="#ontouchend" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchEnd</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_219">Inherited from<a class="headerlink" href="#inherited-from_219" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchEnd</p>
+<hr />
+<h3 id="ontouchendcapture">onTouchEndCapture<a class="headerlink" href="#ontouchendcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchEndCapture</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_220">Inherited from<a class="headerlink" href="#inherited-from_220" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchEndCapture</p>
+<hr />
+<h3 id="ontouchmove">onTouchMove<a class="headerlink" href="#ontouchmove" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchMove</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_221">Inherited from<a class="headerlink" href="#inherited-from_221" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchMove</p>
+<hr />
+<h3 id="ontouchmovecapture">onTouchMoveCapture<a class="headerlink" href="#ontouchmovecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchMoveCapture</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_222">Inherited from<a class="headerlink" href="#inherited-from_222" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchMoveCapture</p>
+<hr />
+<h3 id="ontouchstart">onTouchStart<a class="headerlink" href="#ontouchstart" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchStart</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_223">Inherited from<a class="headerlink" href="#inherited-from_223" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchStart</p>
+<hr />
+<h3 id="ontouchstartcapture">onTouchStartCapture<a class="headerlink" href="#ontouchstartcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTouchStartCapture</strong>: <code>TouchEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_224">Inherited from<a class="headerlink" href="#inherited-from_224" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTouchStartCapture</p>
+<hr />
+<h3 id="ontransitionend">onTransitionEnd<a class="headerlink" href="#ontransitionend" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTransitionEnd</strong>: <code>TransitionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_225">Inherited from<a class="headerlink" href="#inherited-from_225" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTransitionEnd</p>
+<hr />
+<h3 id="ontransitionendcapture">onTransitionEndCapture<a class="headerlink" href="#ontransitionendcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onTransitionEndCapture</strong>: <code>TransitionEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_226">Inherited from<a class="headerlink" href="#inherited-from_226" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onTransitionEndCapture</p>
+<hr />
+<h3 id="onvolumechange">onVolumeChange<a class="headerlink" href="#onvolumechange" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onVolumeChange</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_227">Inherited from<a class="headerlink" href="#inherited-from_227" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onVolumeChange</p>
+<hr />
+<h3 id="onvolumechangecapture">onVolumeChangeCapture<a class="headerlink" href="#onvolumechangecapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onVolumeChangeCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_228">Inherited from<a class="headerlink" href="#inherited-from_228" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onVolumeChangeCapture</p>
+<hr />
+<h3 id="onwaiting">onWaiting<a class="headerlink" href="#onwaiting" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onWaiting</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_229">Inherited from<a class="headerlink" href="#inherited-from_229" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onWaiting</p>
+<hr />
+<h3 id="onwaitingcapture">onWaitingCapture<a class="headerlink" href="#onwaitingcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onWaitingCapture</strong>: <code>ReactEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_230">Inherited from<a class="headerlink" href="#inherited-from_230" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onWaitingCapture</p>
+<hr />
+<h3 id="onwheel">onWheel<a class="headerlink" href="#onwheel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onWheel</strong>: <code>WheelEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_231">Inherited from<a class="headerlink" href="#inherited-from_231" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onWheel</p>
+<hr />
+<h3 id="onwheelcapture">onWheelCapture<a class="headerlink" href="#onwheelcapture" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onWheelCapture</strong>: <code>WheelEventHandler</code>&lt;<code>any</code>></p>
+<h4 id="inherited-from_232">Inherited from<a class="headerlink" href="#inherited-from_232" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.onWheelCapture</p>
+<hr />
+<h3 id="placeholder">placeholder<a class="headerlink" href="#placeholder" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>placeholder</strong>: <code>string</code></p>
+<h4 id="inherited-from_233">Inherited from<a class="headerlink" href="#inherited-from_233" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.placeholder</p>
+<hr />
+<h3 id="prefix">prefix<a class="headerlink" href="#prefix" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>prefix</strong>: <code>string</code></p>
+<h4 id="inherited-from_234">Inherited from<a class="headerlink" href="#inherited-from_234" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.prefix</p>
+<hr />
+<h3 id="property">property<a class="headerlink" href="#property" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>property</strong>: <code>string</code></p>
+<h4 id="inherited-from_235">Inherited from<a class="headerlink" href="#inherited-from_235" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.property</p>
+<hr />
+<h3 id="radiogroup">radioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>radioGroup</strong>: <code>string</code></p>
+<h4 id="inherited-from_236">Inherited from<a class="headerlink" href="#inherited-from_236" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.radioGroup</p>
+<hr />
+<h3 id="renderboolean">renderBoolean<a class="headerlink" href="#renderboolean" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>renderBoolean</strong>: <code>boolean</code></p>
+<hr />
+<h3 id="resource">resource<a class="headerlink" href="#resource" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>resource</strong>: <code>string</code></p>
+<h4 id="inherited-from_237">Inherited from<a class="headerlink" href="#inherited-from_237" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.resource</p>
+<hr />
+<h3 id="results">results<a class="headerlink" href="#results" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>results</strong>: <code>number</code></p>
+<h4 id="inherited-from_238">Inherited from<a class="headerlink" href="#inherited-from_238" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.results</p>
+<hr />
+<h3 id="role">role<a class="headerlink" href="#role" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>role</strong>: <code>AriaRole</code></p>
+<h4 id="inherited-from_239">Inherited from<a class="headerlink" href="#inherited-from_239" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.role</p>
+<hr />
+<h3 id="security">security<a class="headerlink" href="#security" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>security</strong>: <code>string</code></p>
+<h4 id="inherited-from_240">Inherited from<a class="headerlink" href="#inherited-from_240" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.security</p>
+<hr />
+<h3 id="slot">slot<a class="headerlink" href="#slot" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>slot</strong>: <code>string</code></p>
+<h4 id="inherited-from_241">Inherited from<a class="headerlink" href="#inherited-from_241" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.slot</p>
+<hr />
+<h3 id="spellcheck">spellCheck<a class="headerlink" href="#spellcheck" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>spellCheck</strong>: <code>Booleanish</code></p>
+<h4 id="inherited-from_242">Inherited from<a class="headerlink" href="#inherited-from_242" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.spellCheck</p>
+<hr />
+<h3 id="style">style<a class="headerlink" href="#style" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>style</strong>: <code>CSSProperties</code></p>
+<h4 id="inherited-from_243">Inherited from<a class="headerlink" href="#inherited-from_243" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.style</p>
+<hr />
+<h3 id="suppresscontenteditablewarning">suppressContentEditableWarning<a class="headerlink" href="#suppresscontenteditablewarning" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>suppressContentEditableWarning</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_244">Inherited from<a class="headerlink" href="#inherited-from_244" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.suppressContentEditableWarning</p>
+<hr />
+<h3 id="suppresshydrationwarning">suppressHydrationWarning<a class="headerlink" href="#suppresshydrationwarning" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>suppressHydrationWarning</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_245">Inherited from<a class="headerlink" href="#inherited-from_245" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.suppressHydrationWarning</p>
+<hr />
+<h3 id="tabindex">tabIndex<a class="headerlink" href="#tabindex" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>tabIndex</strong>: <code>number</code></p>
+<h4 id="inherited-from_246">Inherited from<a class="headerlink" href="#inherited-from_246" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.tabIndex</p>
+<hr />
+<h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>title</strong>: <code>string</code></p>
+<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.title</p>
+<hr />
+<h3 id="translate">translate<a class="headerlink" href="#translate" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>translate</strong>: <code>"yes"</code> | <code>"no"</code></p>
+<h4 id="inherited-from_247">Inherited from<a class="headerlink" href="#inherited-from_247" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.translate</p>
+<hr />
+<h3 id="typeof">typeof<a class="headerlink" href="#typeof" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>typeof</strong>: <code>string</code></p>
+<h4 id="inherited-from_248">Inherited from<a class="headerlink" href="#inherited-from_248" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.typeof</p>
+<hr />
+<h3 id="unselectable">unselectable<a class="headerlink" href="#unselectable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>unselectable</strong>: <code>"on"</code> | <code>"off"</code></p>
+<h4 id="inherited-from_249">Inherited from<a class="headerlink" href="#inherited-from_249" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.unselectable</p>
+<hr />
+<h3 id="vocab">vocab<a class="headerlink" href="#vocab" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>vocab</strong>: <code>string</code></p>
+<h4 id="inherited-from_250">Inherited from<a class="headerlink" href="#inherited-from_250" title="Permanent link">#</a></h4>
+<p>React.HTMLAttributes.vocab</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
+          </div>
+        
+        
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/lensapp/lens" target="_blank" rel="noopener" title="Lens on GitHub" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://twitter.com/k8slens" target="_blank" rel="noopener" title="Lens on Twitter" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+      <a href="http://k8slens.slack.com/" target="_blank" rel="noopener" title="Lens on Slack" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://k8slens.dev/" target="_blank" rel="noopener" title="Lens Website" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.df8cae7d.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.82217815.min.js"></script>
+      
+    
+  </body>
+</html>
