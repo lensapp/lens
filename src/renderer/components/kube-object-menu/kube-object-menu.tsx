@@ -24,13 +24,14 @@ import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { MenuActions, MenuActionsProps } from "../menu";
 import identity from "lodash/identity";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 
-export interface KubeObjectMenuDependencies {
+export interface KubeObjectMenuDependencies<TKubeObject> {
+  apiManager: ApiManager;
   kubeObjectMenuItems: React.ElementType[];
   clusterName: string;
-
-  removeObject: () => Promise<void>
-  updateObject: () => void
+  hideDetails: () => void;
+  editResourceTab: (kubeObject: TKubeObject) => void;
 }
 
 export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
@@ -41,17 +42,41 @@ export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
 
 export interface KubeObjectMenuPropsAndDependencies<TKubeObject>
   extends KubeObjectMenuProps<TKubeObject>,
-    KubeObjectMenuDependencies {}
+    KubeObjectMenuDependencies<TKubeObject> {}
 
 export class KubeObjectMenu<
   TKubeObject extends KubeObject,
 > extends React.Component<KubeObjectMenuPropsAndDependencies<TKubeObject>> {
+  get store() {
+    const { object } = this.props;
+
+    if (!object) return null;
+
+    return this.props.apiManager.getStore(object.selfLink);
+  }
+
   get isEditable() {
-    return this.props.editable; // ?? Boolean(this.store?.patch);
+    return this.props.editable ?? Boolean(this.store?.patch);
   }
 
   get isRemovable() {
-    return this.props.removable; // ?? Boolean(this.store?.remove);
+    return this.props.removable ?? Boolean(this.store?.remove);
+  }
+
+  @boundMethod
+  async update() {
+    this.props.hideDetails();
+    this.props.editResourceTab(this.props.object);
+  }
+
+  @boundMethod
+  async remove() {
+    this.props.hideDetails();
+    const { object, removeAction } = this.props;
+
+    // TODO: currently only branch for removeAction() is unit tested, and store.remove() is not.
+    if (removeAction) await removeAction();
+    else await this.store.remove(object);
   }
 
   @boundMethod
@@ -87,16 +112,14 @@ export class KubeObjectMenu<
   }
 
   render() {
-    const { getRemoveMessage, isEditable, isRemovable } = this;
-    const { className, editable, updateObject, removable, removeObject, ...menuProps } = this.props;
+    const { remove, update, getRemoveMessage, isEditable, isRemovable } = this;
+    const { className, editable, removable, ...menuProps } = this.props;
 
     return (
       <MenuActions
         className={cssNames("KubeObjectMenu", className)}
-
-        {...(isEditable ? { updateAction: updateObject } : {})}
-        {...(isRemovable ? { removeAction: removeObject } : {})}
-
+        updateAction={isEditable ? update : undefined}
+        removeAction={isRemovable ? remove : undefined}
         removeConfirmationMessage={getRemoveMessage}
         {...menuProps}
       >

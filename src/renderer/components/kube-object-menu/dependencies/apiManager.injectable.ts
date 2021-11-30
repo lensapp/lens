@@ -18,28 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { KubeObjectStore } from "../../../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
-import type { hideDetails as hideDetailsType } from "../../../kube-detail-params";
-import type { editResourceTab } from "../../../dock/edit-resource.store";
+import type { ApiManager } from "../../../../common/k8s-api/api-manager";
+import { apiManager } from "../../../../common/k8s-api/api-manager";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
 
-export interface Dependencies {
-  apiManagerStore: KubeObjectStore<KubeObject> | null;
-  hideDetails: typeof hideDetailsType;
-  editResourceTab: typeof editResourceTab
-}
+const apiManagerInjectable: Injectable<ApiManager> = {
+  getDependencies: () => ({}),
+  instantiate: () => apiManager,
+  lifecycle: lifecycleEnum.singleton,
+};
 
-export interface InstantiationParameter {
-  kubeObject?: KubeObject;
-}
-
-export const updateAction =
-  (
-    { editResourceTab, hideDetails }: Dependencies,
-    { kubeObject }: InstantiationParameter,
-  ) =>
-    () => {
-      hideDetails();
-
-      editResourceTab(kubeObject);
-    };
+export default apiManagerInjectable;
