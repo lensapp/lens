@@ -35,8 +35,7 @@ import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
-import { Inject } from "@ogre-tools/injectable-react";
-import KubeObjectMenuInjectable from "../kube-object-menu/kube-object-menu.injectable";
+import { KubeObjectMenu } from "../kube-object-menu";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -141,7 +140,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
           }),
           ...[customizeHeader].flat(),
         ]}
-        renderItemMenu={item => <Inject injectableKey={KubeObjectMenuInjectable} object={item} />}
+        renderItemMenu={item => <KubeObjectMenu object={item} />}
       />
     );
   }

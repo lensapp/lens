@@ -29,7 +29,7 @@ export interface Dependencies {
 
 export interface InstantiationParameter {
   kubeObject?: KubeObject;
-  customAction?: (kubeObject: KubeObject) => Promise<void>;
+  customAction?: (kubeObject: KubeObject) => void;
 }
 
 export const removeAction =

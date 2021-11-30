@@ -20,10 +20,12 @@
  */
 import { hideDetails } from "../../kube-detail-params";
 import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
 
 export const hideDetailsInjectable: Injectable<typeof hideDetails> = {
   getDependencies: () => ({}),
   instantiate: () => hideDetails,
+  lifecycle: lifecycleEnum.singleton,
 };
 
 export default hideDetailsInjectable;

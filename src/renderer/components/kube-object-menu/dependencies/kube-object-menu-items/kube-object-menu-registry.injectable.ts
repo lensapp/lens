@@ -20,10 +20,12 @@
  */
 import { KubeObjectMenuRegistry } from "../../../../../extensions/registries";
 import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
 
 const kubeObjectMenuRegistryInjectable: Injectable<KubeObjectMenuRegistry> = {
   getDependencies: () => ({}),
   instantiate: () => KubeObjectMenuRegistry.getInstance(),
+  lifecycle: lifecycleEnum.singleton,
 };
 
 export default kubeObjectMenuRegistryInjectable;
