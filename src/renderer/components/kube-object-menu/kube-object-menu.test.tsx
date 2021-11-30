@@ -28,7 +28,7 @@ import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injec
 import type { KubeObjectMenuRegistration } from "../../../extensions/registries";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import { ConfirmDialog } from "../confirm-dialog";
-import asyncFn from "@async-fn/jest";
+import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
 import { Inject } from "@ogre-tools/injectable-react";
@@ -156,7 +156,7 @@ describe("kube-object-menu", () => {
 
   describe("given kube object", () => {
     let baseElement: Element;
-    let removeActionMock: ReturnType<typeof asyncFn>;
+    let removeActionMock: AsyncFnMock<Function>;
 
     beforeEach(async () => {
       objectStub = KubeObject.create({
