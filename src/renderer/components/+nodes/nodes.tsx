@@ -56,6 +56,15 @@ enum columnId {
 interface Props extends RouteComponentProps<NodesRouteParams> {
 }
 
+type MetricsTooltipFormatter = (metrics: [number, number]) => string;
+
+interface UsageArgs {
+  node: Node;
+  title: string;
+  metricNames: [string, string];
+  formatters: MetricsTooltipFormatter[];
+}
+
 @observer
 export class Nodes extends React.Component<Props> {
   @observable.ref metrics: Partial<INodeMetrics> = {};
@@ -78,18 +87,17 @@ export class Nodes extends React.Component<Props> {
     if (isEmpty(this.metrics)) {
       return [];
     }
+
     const nodeName = node.getName();
 
     return metricNames.map(metricName => {
       try {
         const metric = this.metrics[metricName];
-        const result = metric.data.result.find(result => {
-          return [
-            result.metric.node,
-            result.metric.instance,
-            result.metric.kubernetes_node,
-          ].includes(nodeName);
-        });
+        const result = metric.data.result.find(({ metric: { node, instance, kubernetes_node }}) => (
+          nodeName === node
+          || nodeName === instance
+          || nodeName === kubernetes_node
+        ));
 
         return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
       } catch (e) {
@@ -98,74 +106,69 @@ export class Nodes extends React.Component<Props> {
     });
   }
 
-  renderCpuUsage(node: Node) {
-    const metrics = this.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
+  private renderUsage({ node, title, metricNames, formatters }: UsageArgs) {
+    const metrics = this.getLastMetricValues(node, metricNames);
 
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
-    const usage = metrics[0];
-    const cores = metrics[1];
-    const cpuUsagePercent = Math.ceil(usage * 100) / cores;
-    const cpuUsagePercentLabel: String = cpuUsagePercent % 1 === 0
-      ? cpuUsagePercent.toString()
-      : cpuUsagePercent.toFixed(2);
+    if (!metrics || metrics.length < 2) {
+      return <LineProgress value={0}/>;
+    }
+
+    const [usage, capacity] = metrics;
 
     return (
       <LineProgress
-        max={cores}
+        max={capacity}
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `CPU: ${cpuUsagePercentLabel}\%, cores: ${cores}`,
+          children: `${title}: ${formatters.map(formatter => formatter([usage, capacity])).join(", ")}`,
         }}
       />
     );
+  }
+
+  renderCpuUsage(node: Node) {
+    return this.renderUsage({
+      node,
+      title: "CPU",
+      metricNames: ["cpuUsage", "cpuCapacity"],
+      formatters: [
+        ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
+        ([, cap]) => `cores: ${cap}`,
+      ],
+    });
   }
 
   renderMemoryUsage(node: Node) {
-    const metrics = this.getLastMetricValues(node, ["workloadMemoryUsage", "memoryAllocatableCapacity"]);
-
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
-    const usage = metrics[0];
-    const capacity = metrics[1];
-
-    return (
-      <LineProgress
-        max={capacity}
-        value={usage}
-        tooltip={{
-          preferredPositions: TooltipPosition.BOTTOM,
-          children: `Memory: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`,
-        }}
-      />
-    );
+    return this.renderUsage({
+      node,
+      title: "Memory",
+      metricNames: ["workloadMemoryUsage", "memoryAllocatableCapacity"],
+      formatters: [
+        ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
+        ([usage]) => bytesToUnits(usage, 3),
+      ],
+    });
   }
 
-  renderDiskUsage(node: Node): any {
-    const metrics = this.getLastMetricValues(node, ["fsUsage", "fsSize"]);
-
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
-    const usage = metrics[0];
-    const capacity = metrics[1];
-
-    return (
-      <LineProgress
-        max={capacity}
-        value={usage}
-        tooltip={{
-          preferredPositions: TooltipPosition.BOTTOM,
-          children: `Disk: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`,
-        }}
-      />
-    );
+  renderDiskUsage(node: Node) {
+    return this.renderUsage({
+      node,
+      title: "Disk",
+      metricNames: ["fsUsage", "fsSize"],
+      formatters: [
+        ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
+        ([usage]) => bytesToUnits(usage, 3),
+      ],
+    });
   }
 
   renderConditions(node: Node) {
     if (!node.status.conditions) {
       return null;
     }
-    const conditions = node.getActiveConditions();
 
-    return conditions.map(condition => {
+    return node.getActiveConditions().map(condition => {
       const { type } = condition;
       const tooltipId = `node-${node.getName()}-condition-${type}`;
 
@@ -180,7 +183,8 @@ export class Nodes extends React.Component<Props> {
               </div>,
             )}
           </Tooltip>
-        </div>);
+        </div>
+      );
     });
   }
 

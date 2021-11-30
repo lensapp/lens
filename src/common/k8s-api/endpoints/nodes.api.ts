@@ -95,17 +95,17 @@ export interface Node {
   status: {
     capacity?: {
       cpu: string;
-      ["ephemeral-storage"]: string;
-      ["hugepages-1Gi"]: string;
-      ["hugepages-2Mi"]: string;
+      "ephemeral-storage": string;
+      "hugepages-1Gi": string;
+      "hugepages-2Mi": string;
       memory: string;
       pods: string;
     };
     allocatable?: {
       cpu: string;
-      ["ephemeral-storage"]: string;
-      ["hugepages-1Gi"]: string;
-      ["hugepages-2Mi"]: string;
+      "ephemeral-storage": string;
+      "hugepages-1Gi": string;
+      "hugepages-2Mi": string;
       memory: string;
       pods: string;
     };
