@@ -28,10 +28,10 @@ import {
 
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { lifecycleEnum, Injectable } from "@ogre-tools/injectable";
-import apiManagerInjectable from "./dependencies/apiManager.injectable";
-import clusterNameInjectable from "./dependencies/clusterName.injectable";
-import editResourceTabInjectable from "./dependencies/editResourceTab.injectable";
-import hideDetailsInjectable from "./dependencies/hideDetails.injectable";
+import apiManagerInjectable from "./dependencies/api-manager.injectable";
+import clusterNameInjectable from "./dependencies/cluster-name.injectable";
+import editResourceTabInjectable from "./dependencies/edit-resource-tab.injectable";
+import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
 
 const KubeObjectMenuInjectable: Injectable<
