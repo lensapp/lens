@@ -26,6 +26,7 @@ import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { LabelSelector } from "../kube-object";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -84,11 +85,7 @@ export class StatefulSet extends WorkloadKubeObject {
   declare spec: {
     serviceName: string;
     replicas: number;
-    selector: {
-      matchLabels: {
-        [key: string]: string;
-      };
-    };
+    selector: LabelSelector;
     template: {
       metadata: {
         labels: {

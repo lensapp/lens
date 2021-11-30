@@ -20,7 +20,13 @@
  */
 
 .NetworkPolicyDetails {
-  .SubTitle {
+  .networkPolicyPeerTitle {
     text-transform: none
+  }
+
+  .networkPolicyPeer {
+    &:not(:last-of-type) {
+      padding-bottom: 16px;
+    }
   }
 }
