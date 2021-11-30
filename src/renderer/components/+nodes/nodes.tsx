@@ -56,11 +56,13 @@ enum columnId {
 interface Props extends RouteComponentProps<NodesRouteParams> {
 }
 
+type MetricsTooltipFormatter = (metrics: [number, number]) => string;
+
 interface UsageArgs {
   node: Node;
   title: string;
   metricNames: [string, string];
-  secondFormater: (metrics: [number, number]) => string;
+  formatters: MetricsTooltipFormatter[];
 }
 
 @observer
@@ -85,18 +87,17 @@ export class Nodes extends React.Component<Props> {
     if (isEmpty(this.metrics)) {
       return [];
     }
+
     const nodeName = node.getName();
 
     return metricNames.map(metricName => {
       try {
         const metric = this.metrics[metricName];
-        const result = metric.data.result.find(result => {
-          return [
-            result.metric.node,
-            result.metric.instance,
-            result.metric.kubernetes_node,
-          ].includes(nodeName);
-        });
+        const result = metric.data.result.find(({ metric: { node, instance, kubernetes_node }}) => (
+          nodeName === node
+          || nodeName === instance
+          || nodeName === kubernetes_node
+        ));
 
         return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
       } catch (e) {
@@ -105,7 +106,7 @@ export class Nodes extends React.Component<Props> {
     });
   }
 
-  private renderUsage({ node, title, metricNames, secondFormater }: UsageArgs) {
+  private renderUsage({ node, title, metricNames, formatters }: UsageArgs) {
     const metrics = this.getLastMetricValues(node, metricNames);
 
     if (!metrics || metrics.length < 2) {
@@ -120,7 +121,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `${title}: ${(usage * 100 / capacity).toFixed(2)}%, ${secondFormater([usage, capacity])}`,
+          children: `${title}: ${formatters.map(formatter => formatter([usage, capacity])).join(", ")}`,
         }}
       />
     );
@@ -131,7 +132,10 @@ export class Nodes extends React.Component<Props> {
       node,
       title: "CPU",
       metricNames: ["cpuUsage", "cpuCapacity"],
-      secondFormater: ([, cap]) => `cores: ${cap}`,
+      formatters: [
+        ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
+        ([, cap]) => `cores: ${cap}`,
+      ],
     });
   }
 
@@ -140,16 +144,22 @@ export class Nodes extends React.Component<Props> {
       node,
       title: "Memory",
       metricNames: ["workloadMemoryUsage", "memoryAllocatableCapacity"],
-      secondFormater: ([usage]) => bytesToUnits(usage, 3),
+      formatters: [
+        ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
+        ([usage]) => bytesToUnits(usage, 3),
+      ],
     });
   }
 
-  renderDiskUsage(node: Node): any {
+  renderDiskUsage(node: Node) {
     return this.renderUsage({
       node,
       title: "Disk",
       metricNames: ["fsUsage", "fsSize"],
-      secondFormater: ([usage]) => bytesToUnits(usage, 3),
+      formatters: [
+        ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
+        ([usage]) => bytesToUnits(usage, 3),
+      ],
     });
   }
 
