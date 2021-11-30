@@ -34,7 +34,7 @@ import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../common/cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
-import { storedKubeConfigFolder, toJS } from "../common/utils";
+import { disposer, storedKubeConfigFolder, toJS } from "../common/utils";
 import type { Response } from "request";
 
 /**
@@ -52,8 +52,8 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   public contextHandler: ContextHandler;
-  protected kubeconfigManager: KubeconfigManager;
-  protected eventDisposers: Function[] = [];
+  protected proxyKubeconfigManager: KubeconfigManager;
+  protected eventsDisposer = disposer();
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
@@ -218,9 +218,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   @computed get defaultNamespace(): string {
-    const { defaultNamespace } = this.preferences;
-
-    return defaultNamespace;
+    return this.preferences.defaultNamespace;
   }
 
   constructor(model: ClusterModel) {
@@ -240,7 +238,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (ipcMain) {
       // for the time being, until renderer gets its own cluster type
       this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
+      this.proxyKubeconfigManager = new KubeconfigManager(this, this.contextHandler);
 
       logger.debug(`[CLUSTER]: Cluster init success`, {
         id: this.id,
@@ -297,40 +295,31 @@ export class Cluster implements ClusterModel, ClusterState {
     const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
     const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000); // every 15 minutes
 
-    if (ipcMain) {
-      this.eventDisposers.push(
-        reaction(() => this.getState(), () => this.pushState()),
-        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler.setupPrometheus(prefs), { equals: comparer.structural }),
-        () => {
-          clearInterval(refreshTimer);
-          clearInterval(refreshMetadataTimer);
-        },
-        reaction(() => this.defaultNamespace, () => this.recreateProxyKubeconfig()),
-      );
-    }
+    this.eventsDisposer.push(
+      reaction(() => this.getState(), state => this.pushState(state)),
+      reaction(
+        () => this.prometheusPreferences,
+        prefs => this.contextHandler.setupPrometheus(prefs),
+        { equals: comparer.structural },
+      ),
+      () => clearInterval(refreshTimer),
+      () => clearInterval(refreshMetadataTimer),
+      reaction(() => this.defaultNamespace, () => this.recreateProxyKubeconfig()),
+    );
   }
 
   /**
    * @internal
    */
-  async recreateProxyKubeconfig() {
-    logger.info("Recreate proxy kubeconfig");
+  protected async recreateProxyKubeconfig() {
+    logger.info("[CLUSTER]: Recreating proxy kubeconfig");
 
     try {
-      this.kubeconfigManager.clear();
-    } catch {
-      // do nothing
+      await this.proxyKubeconfigManager.clear();
+      await this.getProxyKubeconfig();
+    } catch (error) {
+      logger.error(`[CLUSTER]: failed to recreate proxy kubeconfig`, error);
     }
-    this.getProxyKubeconfig();
-  }
-
-  /**
-   * internal
-   */
-  protected unbindEvents() {
-    logger.info(`[CLUSTER]: unbind events`, this.getMeta());
-    this.eventDisposers.forEach(dispose => dispose());
-    this.eventDisposers.length = 0;
   }
 
   /**
@@ -345,7 +334,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
     logger.info(`[CLUSTER]: activate`, this.getMeta());
 
-    if (!this.eventDisposers.length) {
+    if (!this.eventsDisposer.length) {
       this.bindEvents();
     }
 
@@ -395,7 +384,8 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   @action disconnect() {
-    this.unbindEvents();
+    logger.info(`[CLUSTER]: disconnecting`, { id: this.id });
+    this.eventsDisposer();
     this.contextHandler?.stopServer();
     this.disconnected = true;
     this.online = false;
@@ -405,7 +395,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.allowedNamespaces = [];
     this.resourceAccessStatuses.clear();
     this.pushState();
-    logger.info(`[CLUSTER]: disconnect`, this.getMeta());
+    logger.info(`[CLUSTER]: disconnected`, { id: this.id });
   }
 
   /**
@@ -481,7 +471,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   async getProxyKubeconfigPath(): Promise<string> {
-    return this.kubeconfigManager.getPath();
+    return this.proxyKubeconfigManager.getPath();
   }
 
   protected async getConnectionStatus(): Promise<ClusterStatus> {
