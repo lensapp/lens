@@ -219,7 +219,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
         case "rejected":
           if (onLoadFailure) {
-            onLoadFailure(result.reason.message);
+            onLoadFailure(result.reason.message || result.reason);
           } else {
             // if onLoadFailure is not provided then preserve old behaviour
             throw result.reason;
