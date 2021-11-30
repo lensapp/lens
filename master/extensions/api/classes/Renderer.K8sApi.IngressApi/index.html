@@ -1184,7 +1184,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#checkpreferredversion">checkPreferredVersion</a></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <strong>create</strong>(<code>__namedParameters?</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
+<p>▸ <strong>create</strong>(<code>__namedParameters</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1196,15 +1196,7 @@
 <tbody>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.namespace</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
 </tr>
 <tr>
 <td align="left"><code>data?</code></td>
@@ -1230,19 +1222,7 @@
 <tbody>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.namespace?</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.propagationPolicy?</code></td>
-<td align="left"><code>PropagationPolicy</code></td>
+<td align="left"><code>DeleteResourceDescriptor</code></td>
 </tr>
 </tbody>
 </table>
@@ -1252,7 +1232,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#delete">delete</a></p>
 <hr />
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
-<p>▸ <strong>get</strong>(<code>__namedParameters?</code>, <code>query?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
+<p>▸ <strong>get</strong>(<code>desc</code>, <code>query?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1263,16 +1243,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.namespace</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>desc</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
 </tr>
 <tr>
 <td align="left"><code>query?</code></td>
@@ -1322,15 +1294,7 @@
 <tbody>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.namespace</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
 </tr>
 <tr>
 <td align="left"><code>query?</code></td>
@@ -1469,7 +1433,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#parseresponse">parseResponse</a></p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>(<code>__namedParameters?</code>, <code>data?</code>, <code>strategy?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
+<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data?</code>, <code>strategy?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
 <h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1481,18 +1445,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
-<td align="left"><code>{}</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.name</code></td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>undefined</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.namespace</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>desc</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
 <td align="left"><code>undefined</code></td>
 </tr>
 <tr>
@@ -1564,7 +1518,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#setresourceversion">setResourceVersion</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>(<code>__namedParameters?</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
+<p>▸ <strong>update</strong>(<code>__namedParameters</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></p>
 <h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1576,18 +1530,10 @@
 <tbody>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
 </tr>
 <tr>
-<td align="left"><code>__namedParameters.name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.namespace</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>data?</code></td>
+<td align="left"><code>data</code></td>
 <td align="left"><code>Partial</code>&lt;<a href="../Renderer.K8sApi.Ingress/"><code>Ingress</code></a>></td>
 </tr>
 </tbody>

@@ -955,6 +955,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#resizewidth" class="md-nav__link">
+    resizeWidth
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#restorescrollpos" class="md-nav__link">
     restoreScrollPos
   </a>
@@ -1005,7 +1012,7 @@
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.Drawer</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>Component</code>&lt;<a href="../../interfaces/Renderer.Component.DrawerProps/"><code>DrawerProps</code></a>></li>
+<li><code>Component</code>&lt;<a href="../../interfaces/Renderer.Component.DrawerProps/"><code>DrawerProps</code></a>, <code>State</code>></li>
 </ul>
 <p>↳ <strong><code>Drawer</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -1043,6 +1050,7 @@
 <li><a href="./#onescapekey">onEscapeKey</a></li>
 <li><a href="./#onmousedown">onMouseDown</a></li>
 <li><a href="./#render">render</a></li>
+<li><a href="./#resizewidth">resizeWidth</a></li>
 <li><a href="./#restorescrollpos">restoreScrollPos</a></li>
 <li><a href="./#savescrollpos">saveScrollPos</a></li>
 <li><a href="./#setstate">setState</a></li>
@@ -1067,7 +1075,7 @@
 </tbody>
 </table>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>React.Component&lt;DrawerProps>.constructor</p>
+<p>React.Component&lt;DrawerProps, State>.constructor</p>
 <p>• <strong>new Drawer</strong>(<code>props</code>, <code>context</code>)</p>
 <p><strong><code>deprecated</code></strong></p>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/legacy-context.html</p>
@@ -1091,7 +1099,7 @@
 </tbody>
 </table>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>React.Component&lt;DrawerProps>.constructor</p>
+<p>React.Component&lt;DrawerProps, State>.constructor</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
 <p>• <strong>context</strong>: <code>any</code></p>
@@ -1123,7 +1131,26 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>React.Component.refs</p>
 <hr />
 <h3 id="state">state<a class="headerlink" href="#state" title="Permanent link">#</a></h3>
-<p>• <strong>state</strong>: <code>State</code></p>
+<p>• <strong>state</strong>: <code>Object</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>isCopied</code></td>
+<td align="left"><code>boolean</code></td>
+</tr>
+<tr>
+<td align="left"><code>width</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+</tbody>
+</table>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>React.Component.state</p>
 <hr />
@@ -1225,7 +1252,7 @@ prevents this from being invoked.</p>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;<code>State</code>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1297,7 +1324,7 @@ the entire component tree to unmount.</p>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;<code>State</code>></td>
 </tr>
 <tr>
 <td align="left"><code>snapshot?</code></td>
@@ -1390,7 +1417,7 @@ prevents this from being invoked.</p>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;<code>State</code>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1487,7 +1514,7 @@ lifecycle events from running.</p>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;<code>State</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1563,14 +1590,34 @@ lifecycle events from running.</p>
 <h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p>React.Component.render</p>
 <hr />
+<h3 id="resizewidth">resizeWidth<a class="headerlink" href="#resizewidth" title="Permanent link">#</a></h3>
+<p>▸ <strong>resizeWidth</strong>(<code>width</code>): <code>void</code></p>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>width</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
 <h3 id="restorescrollpos">restoreScrollPos<a class="headerlink" href="#restorescrollpos" title="Permanent link">#</a></h3>
 <p>▸ <strong>restoreScrollPos</strong>(): <code>void</code></p>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="savescrollpos">saveScrollPos<a class="headerlink" href="#savescrollpos" title="Permanent link">#</a></h3>
 <p>▸ <strong>saveScrollPos</strong>(): <code>void</code></p>
-<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
@@ -1586,11 +1633,11 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>K</code></td>
-<td align="left">extends <code>never</code></td>
+<td align="left">extends keyof <code>State</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1601,7 +1648,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;<code>Object</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.DrawerProps/"><code>DrawerProps</code></a>>) =&gt; {} | <code>Pick</code>&lt;<code>Object</code>, <code>K</code>> | <code>Pick</code>&lt;<code>Object</code>, <code>K</code>></td>
+<td align="left"><code>State</code> | (<code>prevState</code>: <code>Readonly</code>&lt;<code>State</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.DrawerProps/"><code>DrawerProps</code></a>>) =&gt; <code>State</code> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>
@@ -1609,7 +1656,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>React.Component.setState</p>
@@ -1622,7 +1669,7 @@ lifecycle events from running.</p>
 props or states have changed.</p>
 <p>If false is returned, <code>Component#render</code>, <code>componentWillUpdate</code>
 and <code>componentDidUpdate</code> will not be called.</p>
-<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1637,7 +1684,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;<code>State</code>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1645,7 +1692,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>
