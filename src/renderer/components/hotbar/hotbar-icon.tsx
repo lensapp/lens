@@ -28,7 +28,7 @@ import { cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { observer } from "mobx-react";
-import { Avatar, AvatarProps } from "../avatar/avatar";
+import { Avatar, AvatarProps } from "../avatar";
 import { Icon } from "../icon";
 import { Tooltip } from "../tooltip";
 

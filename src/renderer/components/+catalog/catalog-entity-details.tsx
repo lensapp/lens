@@ -30,7 +30,7 @@ import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityItem } from "./catalog-entity-item";
 import { isDevelopment } from "../../../common/vars";
 import { cssNames } from "../../utils";
-import { Avatar } from "../avatar/avatar";
+import { Avatar } from "../avatar";
 
 interface Props<T extends CatalogEntity> {
   item: CatalogEntityItem<T> | null | undefined;

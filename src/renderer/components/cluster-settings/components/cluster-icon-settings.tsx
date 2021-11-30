@@ -27,7 +27,7 @@ import { observer } from "mobx-react";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
 import { MenuActions, MenuItem } from "../../menu";
-import { Avatar } from "../../avatar/avatar";
+import { Avatar } from "../../avatar";
 
 enum GeneralInputStatus {
   CLEAN = "clean",

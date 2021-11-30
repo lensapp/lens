@@ -44,7 +44,7 @@ import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
-import { Avatar } from "../avatar/avatar";
+import { Avatar } from "../avatar";
 
 export const previousActiveTab = createStorage("catalog-previous-active-tab", browseCatalogTab);
 

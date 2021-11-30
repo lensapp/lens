@@ -34,7 +34,7 @@ import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
 import logger from "../../../common/logger";
-import { Avatar } from "../avatar/avatar";
+import { Avatar } from "../avatar";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }

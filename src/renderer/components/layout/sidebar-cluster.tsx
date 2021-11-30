@@ -26,7 +26,7 @@ import { HotbarStore } from "../../../common/hotbar-store";
 import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
-import { Avatar } from "../avatar/avatar";
+import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 import { navigate } from "../../navigation";
 import { Menu, MenuItem } from "../menu";
