@@ -363,7 +363,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return this.postUpdate(
       await this.api.update(
         {
-          name: item.getName(), namespace: item.getNs(),
+          name: item.getName(),
+          namespace: item.getNs(),
         },
         data,
       ),
