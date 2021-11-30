@@ -50,6 +50,7 @@
   &.right {
     top: 0;
     width: var(--size);
+    max-width: 95vw; /* Prevent drawer to be bigger than viewport */
   }
 
   &.top,
