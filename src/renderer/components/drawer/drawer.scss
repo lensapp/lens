@@ -21,8 +21,6 @@
 
 
 .Drawer {
-  --size: 50%;
-  --full-size: 75%;
   --spacing: #{$padding * 3};
   --icon-focus-color: white;
 
@@ -52,6 +50,7 @@
   &.right {
     top: 0;
     width: var(--size);
+    max-width: 95vw; /* Prevent drawer to be bigger than viewport */
   }
 
   &.top,
@@ -85,7 +84,7 @@
       font-weight: normal;
       margin-left: 8px;
     }
-     
+
     .drawer-title-text:hover .Icon {
       opacity: 1;
       transition: opacity 250ms;
@@ -106,12 +105,6 @@
 
     .Table .TableHead {
       border-bottom: 1px solid var(--borderFaintColor);
-    }
-  }
-
-  @include media("<=900px") {
-    &.left, &.right {
-      width: var(--full-size)
     }
   }
 }
