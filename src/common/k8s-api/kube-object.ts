@@ -105,8 +105,9 @@ export class KubeCreationError extends Error {
 }
 
 export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
-  static readonly kind: string;
-  static readonly namespaced: boolean;
+  static readonly kind?: string;
+  static readonly namespaced?: boolean;
+  static readonly apiBase?: string;
 
   apiVersion: string;
   kind: string;
@@ -215,7 +216,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   ]);
 
   constructor(data: KubeJsonApiData) {
-    if (typeof data !== "object") { 
+    if (typeof data !== "object") {
       throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
     }
 
@@ -329,9 +330,9 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
    * Perform a full update (or more specifically a replace)
    *
    * Note: this is brittle if `data` is not actually partial (but instead whole).
-   * As fields such as `resourceVersion` will probably out of date. This is a 
+   * As fields such as `resourceVersion` will probably out of date. This is a
    * common race condition.
-   * 
+   *
    * @deprecated use KubeApi.update instead
    */
   async update(data: Partial<this>): Promise<KubeJsonApiData | null> {

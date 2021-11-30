@@ -9535,10 +9535,10 @@ mkdirp@^0.5.1, mkdirp@^0.5.3, mkdirp@^0.5.4, mkdirp@^0.5.5, mkdirp@~0.5.0:
   dependencies:
     minimist "^1.2.5"
 
-mobx-observable-history@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/mobx-observable-history/-/mobx-observable-history-2.0.1.tgz#bb39f19346e094c3608bbfba4b2b0aca985a562f"
-  integrity sha512-ijNuz2iBl5SYRdvVIqK3yeRJEGxWS7Oqq14ideNUDAvNZUBk/iCOmzWMgR6vfwp3bYieX/6tANS8N6RjVTKwGg==
+mobx-observable-history@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/mobx-observable-history/-/mobx-observable-history-2.0.3.tgz#07dd551e9d2a5666ca1d759ad108173fab47125e"
+  integrity sha512-cWMG3GcT1l2Y880mfffNh9m6WldQyOtlLUvcdVUjIj++sNOQbRxKBaBUe/TPDiJ80EN6g8FGiVuFlzzyRJPykQ==
   dependencies:
     "@types/history" "^4.7.8"
     history "^4.10.1"
@@ -9560,6 +9560,11 @@ mobx@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.0.tgz#a8fb693c3047bdfcb1eaff9aa48e36a7eb084f96"
   integrity sha512-Aa1+VXsg4WxqJMTQfWoYuJi5UD10VZhiobSmcs5kcmI3BIT0aVtn7DysvCeDADCzl7dnbX+0BTHUj/v7gLlZpQ==
+
+mobx@^6.3.7:
+  version "6.3.7"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.7.tgz#9ed85561e86da45141134c8fa20cf5f9c7246c3d"
+  integrity sha512-X7yU7eOEyxIBk4gjIi2UIilwdw48gXh0kcZ5ex3Rc+COJsJmJ4SNpf42uYea3aUqb1hedTv5xzJrq5Q55p0P5g==
 
 mock-fs@^4.14.0:
   version "4.14.0"

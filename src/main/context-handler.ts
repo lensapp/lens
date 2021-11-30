@@ -34,12 +34,19 @@ export interface PrometheusDetails {
   provider: PrometheusProvider;
 }
 
+interface PrometheusServicePreferences {
+  namespace: string;
+  service: string;
+  port: number;
+  prefix: string;
+}
+
 export class ContextHandler {
   public clusterUrl: UrlWithStringQuery;
   protected kubeAuthProxy?: KubeAuthProxy;
   protected apiTarget?: httpProxy.ServerOptions;
   protected prometheusProvider?: string;
-  protected prometheusPath: string | null;
+  protected prometheus?: PrometheusServicePreferences;
 
   constructor(protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
@@ -48,13 +55,7 @@ export class ContextHandler {
 
   public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
     this.prometheusProvider = preferences.prometheusProvider?.type;
-    this.prometheusPath = null;
-
-    if (preferences.prometheus) {
-      const { namespace, service, port } = preferences.prometheus;
-
-      this.prometheusPath = `${namespace}/services/${service}:${port}`;
-    }
+    this.prometheus = preferences.prometheus || null;
   }
 
   public async getPrometheusDetails(): Promise<PrometheusDetails> {
@@ -66,7 +67,7 @@ export class ContextHandler {
   }
 
   protected ensurePrometheusPath({ service, namespace, port }: PrometheusService): string {
-    return this.prometheusPath ||= `${namespace}/services/${service}:${port}`;
+    return `${namespace}/services/${service}:${port}`;
   }
 
   protected ensurePrometheusProvider(service: PrometheusService): PrometheusProvider {
@@ -90,6 +91,15 @@ export class ContextHandler {
   }
 
   protected async getPrometheusService(): Promise<PrometheusService> {
+    if (this.prometheus !== null && this.prometheusProvider !== null) {
+      return {
+        id: this.prometheusProvider,
+        namespace: this.prometheus.namespace,
+        service: this.prometheus.service,
+        port: this.prometheus.port,
+      };
+    }
+
     const providers = this.listPotentialProviders();
     const proxyConfig = await this.cluster.getProxyKubeconfig();
     const apiClient = proxyConfig.makeApiClient(CoreV1Api);

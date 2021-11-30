@@ -42,11 +42,11 @@ import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../common/cluster-ipc";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../extensions/registries";
 import { StatefulSetScaleDialog } from "./components/+workloads-statefulsets/statefulset-scale-dialog";
-import { kubeWatchApi } from "../common/k8s-api/kube-watch-api";
+import { KubeWatchApi, kubeWatchApi } from "../common/k8s-api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./components/+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./components/command-palette/command-container";
 import { KubeObjectStore } from "../common/k8s-api/kube-object.store";
-import { clusterContext } from "./components/context";
+import { FrameContext } from "./components/context";
 import * as routes from "../common/routes";
 import { TabLayout, TabLayoutRoute } from "./components/layout/tab-layout";
 import { ErrorBoundary } from "./components/error-boundary";
@@ -73,6 +73,8 @@ import { watchHistoryState } from "./remote-helpers/history-updater";
 import { unmountComponentAtNode } from "react-dom";
 import { PortForwardDialog } from "./port-forward";
 import { DeleteClusterDialog } from "./components/delete-cluster-dialog";
+import { WorkloadsOverview } from "./components/+workloads-overview/overview";
+import { KubeObjectListLayout } from "./components/kube-object-list-layout";
 
 @observer
 export class ClusterFrame extends React.Component {
@@ -91,10 +93,12 @@ export class ClusterFrame extends React.Component {
 
     ClusterFrame.clusterId = getHostedClusterId();
 
+    const cluster = ClusterStore.getInstance().getById(ClusterFrame.clusterId);
+
     logger.info(`${ClusterFrame.logPrefix} Init dashboard, clusterId=${ClusterFrame.clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
     await requestMain(clusterSetFrameIdHandler, ClusterFrame.clusterId);
-    await ClusterStore.getInstance().getById(ClusterFrame.clusterId).whenReady; // cluster.activate() is done at this point
+    await cluster.whenReady; // cluster.activate() is done at this point
 
     catalogEntityRegistry.activeEntity = ClusterFrame.clusterId;
 
@@ -120,16 +124,21 @@ export class ClusterFrame extends React.Component {
 
     whatInput.ask(); // Start to monitor user input device
 
+    const clusterContext = new FrameContext(cluster);
+
     // Setup hosted cluster context
     KubeObjectStore.defaultContext.set(clusterContext);
-    kubeWatchApi.context = clusterContext;
+    WorkloadsOverview.clusterContext
+      = KubeObjectListLayout.clusterContext
+      = KubeWatchApi.context
+      = clusterContext;
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([namespaceStore], {
-        preload: true,
-      }),
+      kubeWatchApi.subscribeStores([
+        namespaceStore,
+      ]),
 
       watchHistoryState(),
     ]);

@@ -25,6 +25,7 @@ import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
 import AbortController from "abort-controller";
 import { delay } from "../../utils/delay";
+import { PassThrough } from "stream";
 
 class TestKubeObject extends KubeObject {
   static kind = "Pod";
@@ -133,7 +134,10 @@ describe("KubeApi", () => {
       checkPreferredVersion: true,
     });
 
-    await kubeApi.get();
+    await kubeApi.get({
+      name: "foo",
+      namespace: "default",
+    });
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("networking.k8s.io");
   });
@@ -167,13 +171,15 @@ describe("KubeApi", () => {
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
     const kubeApi = new KubeApi({
       request,
-      objectConstructor: KubeObject,
-      apiBase,
+      objectConstructor: Object.assign(KubeObject, { apiBase }),
       fallbackApiBases: [fallbackApiBase],
       checkPreferredVersion: true,
     });
 
-    await kubeApi.get();
+    await kubeApi.get({
+      name: "foo",
+      namespace: "default",
+    });
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("extensions");
   });
@@ -298,21 +304,30 @@ describe("KubeApi", () => {
 
   describe("watch", () => {
     let api: TestKubeApi;
+    let stream: PassThrough;
 
     beforeEach(() => {
       api = new TestKubeApi({
         request,
         objectConstructor: TestKubeObject,
       });
+      stream = new PassThrough();
+    });
+
+    afterEach(() => {
+      stream.end();
+      stream.destroy();
     });
 
     it("sends a valid watch request", () => {
       const spy = jest.spyOn(request, "getResponse");
 
       (fetch as any).mockResponse(async () => {
-        return {};
+        return {
+          body: stream,
+        };
       });
-      
+
       api.watch({ namespace: "kube-system" });
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", expect.anything(), expect.anything());
     });
@@ -321,9 +336,11 @@ describe("KubeApi", () => {
       const spy = jest.spyOn(request, "getResponse");
 
       (fetch as any).mockResponse(async () => {
-        return {};
+        return {
+          body: stream,
+        };
       });
-      
+
       api.watch({ namespace: "kube-system", timeout: 60 });
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
     });
@@ -336,11 +353,13 @@ describe("KubeApi", () => {
           done();
         });
 
-        return {};
+        return {
+          body: stream,
+        };
       });
 
       const abortController = new AbortController();
-      
+
       api.watch({
         namespace: "kube-system",
         timeout: 60,
@@ -358,30 +377,32 @@ describe("KubeApi", () => {
       it("if request ended", (done) => {
         const spy = jest.spyOn(request, "getResponse");
 
+        jest.spyOn(stream, "on").mockImplementation((eventName: string, callback: Function) => {
+          // End the request in 100ms.
+          if (eventName === "end") {
+            setTimeout(() => {
+              callback();
+            }, 100);
+          }
+
+          return stream;
+        });
+
         // we need to mock using jest as jest-fetch-mock doesn't support mocking the body completely
         jest.spyOn(global, "fetch").mockImplementation(async () => {
           return {
             ok: true,
-            body: {
-              on: (eventName: string, callback: Function) => {
-                // End the request in 100ms.
-                if (eventName === "end") {
-                  setTimeout(() => {
-                    callback();
-                  }, 100);
-                }
-              },
-            },
+            body: stream,
           } as any;
         });
-      
+
         api.watch({
           namespace: "kube-system",
         });
 
         expect(spy).toHaveBeenCalledTimes(1);
 
-        setTimeout(() => {  
+        setTimeout(() => {
           expect(spy).toHaveBeenCalledTimes(2);
           done();
         }, 2000);
@@ -391,11 +412,13 @@ describe("KubeApi", () => {
         const spy = jest.spyOn(request, "getResponse");
 
         (fetch as any).mockResponse(async () => {
-          return {};
+          return {
+            body: stream,
+          };
         });
 
         const timeoutSeconds = 1;
-      
+
         api.watch({
           namespace: "kube-system",
           timeout: timeoutSeconds,
@@ -403,7 +426,7 @@ describe("KubeApi", () => {
 
         expect(spy).toHaveBeenCalledTimes(1);
 
-        setTimeout(() => {  
+        setTimeout(() => {
           expect(spy).toHaveBeenCalledTimes(2);
           done();
         }, timeoutSeconds * 1000 * 1.2);
@@ -412,25 +435,27 @@ describe("KubeApi", () => {
       it("retries only once if request ends and timeout is set", (done) => {
         const spy = jest.spyOn(request, "getResponse");
 
+        jest.spyOn(stream, "on").mockImplementation((eventName: string, callback: Function) => {
+          // End the request in 100ms.
+          if (eventName === "end") {
+            setTimeout(() => {
+              callback();
+            }, 100);
+          }
+
+          return stream;
+        });
+
         // we need to mock using jest as jest-fetch-mock doesn't support mocking the body completely
         jest.spyOn(global, "fetch").mockImplementation(async () => {
           return {
             ok: true,
-            body: {
-              on: (eventName: string, callback: Function) => {
-                // End the request in 100ms
-                if (eventName === "end") {
-                  setTimeout(() => {
-                    callback();
-                  }, 100);
-                }
-              },
-            },
+            body: stream,
           } as any;
         });
-      
+
         const timeoutSeconds = 0.5;
-      
+
         api.watch({
           namespace: "kube-system",
           timeout: timeoutSeconds,
@@ -438,7 +463,7 @@ describe("KubeApi", () => {
 
         expect(spy).toHaveBeenCalledTimes(1);
 
-        setTimeout(() => {  
+        setTimeout(() => {
           expect(spy).toHaveBeenCalledTimes(2);
           done();
         }, 2000);

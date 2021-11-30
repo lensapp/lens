@@ -21,7 +21,6 @@
 
 // Base class for building all kubernetes apis
 
-import merge from "lodash/merge";
 import { isFunction } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
@@ -221,6 +220,29 @@ const patchTypeHeaders: Record<KubeApiPatchType, string> = {
   "strategic": "application/strategic-merge-patch+json",
 };
 
+export interface ResourceDescriptor {
+  /**
+   * The name of the kubernetes resource
+   */
+  name: string;
+
+  /**
+   * The namespace that the resource lives in (if the resource is namespaced)
+   *
+   * Note: if not provided and the resource kind is namespaced, then this defaults to `"default"`
+   */
+  namespace?: string;
+}
+
+export interface DeleteResourceDescriptor extends ResourceDescriptor {
+  /**
+   * This determinines how child resources should be handled by kubernetes
+   *
+   * @default "Background"
+   */
+  propagationPolicy?: PropagationPolicy;
+}
+
 export class KubeApi<T extends KubeObject> {
   readonly kind: string;
   readonly apiBase: string;
@@ -273,14 +295,18 @@ export class KubeApi<T extends KubeObject> {
    */
   private async getLatestApiPrefixGroup() {
     // Note that this.options.apiBase is the "full" url, whereas this.apiBase is parsed
-    const apiBases = [this.options.apiBase, ...this.options.fallbackApiBases];
+    const apiBases = [this.options.apiBase, this.objectConstructor.apiBase, ...this.options.fallbackApiBases];
 
     for (const apiUrl of apiBases) {
-      // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
-      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
+      if (!apiUrl) {
+        continue;
+      }
 
-      // Request available resources
       try {
+        // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
+        const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
+
+        // Request available resources
         const response = await this.request.get<IKubeResourceList>(`${apiPrefix}/${apiVersionWithGroup}`);
 
         // If the resource is found in the group, use this apiUrl
@@ -304,7 +330,7 @@ export class KubeApi<T extends KubeObject> {
         return await this.getLatestApiPrefixGroup();
       } catch (error) {
         // If valid API wasn't found, log the error and return defaults below
-        logger.error(error);
+        logger.error(`[KUBE-API]: ${error}`);
       }
     }
 
@@ -355,12 +381,12 @@ export class KubeApi<T extends KubeObject> {
     return this.list(params, { limit: 1 });
   }
 
-  getUrl({ name = "", namespace = "" } = {}, query?: Partial<IKubeApiQueryParams>) {
+  getUrl({ name, namespace = "default" }: Partial<ResourceDescriptor> = {}, query?: Partial<IKubeApiQueryParams>) {
     const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
-      namespace: this.isNamespaced ? namespace : undefined,
+      namespace: this.isNamespaced ? namespace ?? "default" : undefined,
       name,
     });
 
@@ -438,10 +464,10 @@ export class KubeApi<T extends KubeObject> {
     throw new Error(`GET multiple request to ${url} returned not an array: ${JSON.stringify(parsed)}`);
   }
 
-  async get({ name = "", namespace = "default" } = {}, query?: IKubeApiQueryParams): Promise<T | null> {
+  async get(desc: ResourceDescriptor, query?: IKubeApiQueryParams): Promise<T | null> {
     await this.checkPreferredVersion();
 
-    const url = this.getUrl({ namespace, name });
+    const url = this.getUrl(desc);
     const res = await this.request.get(url, { query });
     const parsed = this.parseResponse(res);
 
@@ -452,19 +478,18 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async create({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T | null> {
+  async create({ name, namespace }: Partial<ResourceDescriptor>, data?: Partial<T>): Promise<T | null> {
     await this.checkPreferredVersion();
 
     const apiUrl = this.getUrl({ namespace });
     const res = await this.request.post(apiUrl, {
-      data: merge({
-        kind: this.kind,
-        apiVersion: this.apiVersionWithGroup,
+      data: {
+        ...data,
         metadata: {
           name,
           namespace,
         },
-      }, data),
+      },
     });
     const parsed = this.parseResponse(res);
 
@@ -475,11 +500,19 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async update({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T | null> {
+  async update({ name, namespace }: ResourceDescriptor, data: Partial<T>): Promise<T | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
 
-    const res = await this.request.put(apiUrl, { data });
+    const res = await this.request.put(apiUrl, {
+      data: {
+        ...data,
+        metadata: {
+          name,
+          namespace,
+        },
+      },
+    });
     const parsed = this.parseResponse(res);
 
     if (Array.isArray(parsed)) {
@@ -489,9 +522,9 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async patch({ name = "", namespace = "default" } = {}, data?: Partial<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
+  async patch(desc: ResourceDescriptor, data?: Partial<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl({ namespace, name });
+    const apiUrl = this.getUrl(desc);
 
     const res = await this.request.patch(apiUrl, { data }, {
       headers: {
@@ -507,16 +540,15 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async delete({ name = "", namespace = "default", propagationPolicy = "Background" }: { name: string, namespace?: string, propagationPolicy?: PropagationPolicy }) {
+  async delete({ propagationPolicy = "Background", ...desc }: DeleteResourceDescriptor) {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl({ namespace, name });
-    const reqInit = {
+    const apiUrl = this.getUrl(desc);
+
+    return this.request.del(apiUrl, {
       query: {
         propagationPolicy,
       },
-    };
-
-    return this.request.del(apiUrl, reqInit);
+    });
   }
 
   getWatchUrl(namespace = "", query: IKubeApiQueryParams = {}) {

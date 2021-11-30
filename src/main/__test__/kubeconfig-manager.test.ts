@@ -142,9 +142,9 @@ describe("kubeconfig manager tests", () => {
     const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);
-    await kubeConfManager.unlink();
+    await kubeConfManager.clear();
     expect(await fse.pathExists(configPath)).toBe(false);
-    await kubeConfManager.unlink(); // doesn't throw
+    await kubeConfManager.clear(); // doesn't throw
     expect(async () => {
       await kubeConfManager.getPath();
     }).rejects.toThrow("already unlinked");

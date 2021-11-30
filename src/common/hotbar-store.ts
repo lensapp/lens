@@ -230,6 +230,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return index;
   }
 
+  @action
   restackItems(from: number, to: number): void {
     const { items } = this.getActive();
     const source = items[from];

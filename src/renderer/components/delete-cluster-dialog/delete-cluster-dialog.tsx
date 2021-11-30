@@ -52,15 +52,12 @@ type Props = {};
 
 @observer
 export class DeleteClusterDialog extends React.Component {
-  showContextSwitch = false;
-  newCurrentContext = "";
+  @observable showContextSwitch = false;
+  @observable newCurrentContext = "";
 
   constructor(props: Props) {
     super(props);
-    makeObservable(this, {
-      showContextSwitch: observable,
-      newCurrentContext: observable,
-    });
+    makeObservable(this);
   }
 
   static open({ config, cluster }: Partial<DialogState>) {
