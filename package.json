@@ -382,7 +382,6 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2",
     "webpack-node-externals": "^1.7.2",
-    "what-input": "^5.2.10",
     "xterm": "^4.14.1",
     "xterm-addon-fit": "^0.5.0"
   }
