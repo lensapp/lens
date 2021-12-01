@@ -24,10 +24,10 @@ import type { Cluster } from "../../../../main/cluster";
 import { boundMethod } from "../../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { HotbarIcon } from "../../hotbar/hotbar-icon";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
 import { MenuActions, MenuItem } from "../../menu";
+import { Avatar } from "../../avatar";
 
 enum GeneralInputStatus {
   CLEAN = "clean",
@@ -86,10 +86,9 @@ export class ClusterIconSetting extends React.Component<Props> {
             <FilePicker
               accept="image/*"
               label={
-                <HotbarIcon
-                  uid={entity.metadata.uid}
+                <Avatar
+                  colorHash={`${entity.metadata.name}-${entity.metadata.source}`}
                   title={entity.metadata.name}
-                  source={entity.metadata.source}
                   src={entity.spec.icon?.src}
                   size={53}
                 />

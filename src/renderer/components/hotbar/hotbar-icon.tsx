@@ -19,32 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./hotbar-icon.scss";
+import styles from "./hotbar-icon.module.css";
 
-import React, { DOMAttributes, useState } from "react";
+import React, { useState } from "react";
 
 import type { CatalogEntityContextMenu } from "../../../common/catalog";
-import { cssNames, IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { observer } from "mobx-react";
-import { Avatar } from "../avatar/avatar";
+import { Avatar, AvatarProps } from "../avatar";
 import { Icon } from "../icon";
 import { Tooltip } from "../tooltip";
 
-export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
+export interface Props extends AvatarProps {
   uid: string;
-  title: string;
   source: string;
-  src?: string;
   material?: string;
   onMenuOpen?: () => void;
-  className?: IClassName;
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
-  size?: number;
-  background?: string;
   tooltip?: string;
 }
 
@@ -65,7 +60,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...props }: HotbarIconProps) => {
+export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...props }: Props) => {
   const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -75,33 +70,25 @@ export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...pro
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
+    <div className={cssNames(styles.HotbarIcon, className, { [styles.contextMenuAvailable]: menuItems.length > 0 })}>
       {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
-      <div
+      <Avatar
+        {...rest}
         id={id}
-        onClick={(event) => {
-          if (!disabled) {
-            onClick?.(event);
-          }
-        }}
+        title={title}
+        colorHash={`${title}-${source}`}
+        className={cssNames(styles.avatar, { [styles.active]: active })}
+        disabled={disabled}
+        size={size}
+        src={src}
+        onClick={(event) => !disabled && onClick?.(event)}
       >
-        <Avatar
-          {...rest}
-          title={title}
-          colorHash={`${title}-${source}`}
-          className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
-          width={size}
-          height={size}
-          src={src}
-        >
-          {material && <Icon className="materialIcon" material={material} />}
-        </Avatar>
-        {children}
-      </div>
+        {material && <Icon material={material} />}
+      </Avatar>
+      {children}
       <Menu
         usePortal
         htmlFor={id}
-        className="HotbarIconMenu"
         isOpen={menuOpen}
         toggleEvent="contextmenu"
         position={{ right: true, bottom: true }} // FIXME: position does not work

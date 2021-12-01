@@ -41,10 +41,10 @@ import { createStorage, prevDefault } from "../../utils";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
-import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
+import { Avatar } from "../avatar";
 
 export const previousActiveTab = createStorage("catalog-previous-active-tab", browseCatalogTab);
 
@@ -213,15 +213,16 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <>
-        <HotbarIcon
-          uid={`catalog-icon-${item.getId()}`}
+        <Avatar
           title={item.getName()}
-          source={item.source}
+          colorHash={`${item.getName()}-${item.source}`}
           src={item.entity.spec.icon?.src}
-          material={item.entity.spec.icon?.material}
           background={item.entity.spec.icon?.background}
+          className={styles.catalogAvatar}
           size={24}
-        />
+        >
+          {item.entity.spec.icon?.material && <Icon material={item.entity.spec.icon?.material} small/>}
+        </Avatar>
         <span>{item.name}</span>
         <Icon
           small
