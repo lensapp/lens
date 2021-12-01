@@ -182,22 +182,24 @@ export class ClusterManager extends Singleton {
       const cluster = this.store.getById(entity.metadata.uid);
 
       if (!cluster) {
+        const model = {
+          id: entity.metadata.uid,
+          kubeConfigPath: entity.spec.kubeconfigPath,
+          contextName: entity.spec.kubeconfigContext,
+          accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
+        };
+
         try {
           /**
            * Add the bare minimum of data to ClusterStore. And especially no
            * preferences, as those might be configured by the entity's source
            */
-          this.store.addCluster({
-            id: entity.metadata.uid,
-            kubeConfigPath: entity.spec.kubeconfigPath,
-            contextName: entity.spec.kubeconfigContext,
-            accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
-          });
+          this.store.addCluster(model);
         } catch (error) {
           if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
-            logger.warn(`${logPrefix} kubeconfig file disappeared`, { path: entity.spec.kubeconfigPath });
+            logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
           } else {
-            logger.error(`${logPrefix} failed to add cluster: ${error}`);
+            logger.error(`${logPrefix} failed to add cluster: ${error}`, model);
           }
         }
       } else {
