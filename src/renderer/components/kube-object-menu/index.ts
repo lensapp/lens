@@ -20,4 +20,4 @@
  */
 
 export type { KubeObjectMenuProps } from "./kube-object-menu";
-export * from "./kube-object-menu-container";
+export { KubeObjectMenu } from "./kube-object-menu-container";
