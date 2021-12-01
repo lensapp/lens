@@ -19,40 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.HotbarSelector {
-  height: 26px;
-  background-color: var(--layoutBackground);
-  position: relative;
+ .BottomBar {
+  @apply flex px-2 text-white;
 
-  &:before {
-    content: " ";
-    position: absolute;
-    width: 100%;
-    height: 20px;
-    background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
-    top: -20px;
+  grid-area: bottom-bar;
+  background-color: var(--blue);
+  height: var(--bottom-bar-height);
+  font-size: var(--font-size-small);
+}
+
+.item {
+  @apply flex items-center mr-2 h-full px-2 last:mr-0;
+
+  &:hover {
+    @apply cursor-pointer;
+
+    background-color: #ffffff33;
   }
+}
 
-  .SelectorIndex {
-    cursor: pointer;
-    background: var(--secondaryBackground);
-    width: 100%;
-    color: var(--settingsColor);
-    padding-top: 3px;
-  }
-
-  .Icon {
-    --size: 16px;
-    padding: 0 4px 0 0px;
-    margin: 0px 4px;
-
-    &:hover {
-      box-shadow: none;
-      background-color: transparent;
-    }
-
-    &.previous {
-      transform: rotateY(180deg);
-    }
-  }
+.extensions {
+  @apply flex flex-1 justify-end;
 }
