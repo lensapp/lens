@@ -1221,19 +1221,7 @@
 </tr>
 <tr>
 <td align="left"><code>selector</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>selector.matchExpressions</code></td>
-<td align="left">{ <code>key</code>: <code>string</code> ; <code>operator</code>: <code>string</code> ; <code>values</code>: <code>string</code>[]  }[]</td>
-</tr>
-<tr>
-<td align="left"><code>selector.matchLabels</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>selector.matchLabels.release</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>LabelSelector</code></td>
 </tr>
 <tr>
 <td align="left"><code>storageClassName</code></td>
@@ -1387,9 +1375,9 @@
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getlabels">getLabels</a></p>
 <hr />
 <h3 id="getmatchexpressions">getMatchExpressions<a class="headerlink" href="#getmatchexpressions" title="Permanent link">#</a></h3>
-<p>▸ <strong>getMatchExpressions</strong>(): { <code>key</code>: <code>string</code> ; <code>operator</code>: <code>string</code> ; <code>values</code>: <code>string</code>[]  }[]</p>
+<p>▸ <strong>getMatchExpressions</strong>(): <code>LabelMatchExpression</code>[]</p>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p>{ <code>key</code>: <code>string</code> ; <code>operator</code>: <code>string</code> ; <code>values</code>: <code>string</code>[]  }[]</p>
+<p><code>LabelMatchExpression</code>[]</p>
 <hr />
 <h3 id="getmatchlabels">getMatchLabels<a class="headerlink" href="#getmatchlabels" title="Permanent link">#</a></h3>
 <p>▸ <strong>getMatchLabels</strong>(): <code>string</code>[]</p>
