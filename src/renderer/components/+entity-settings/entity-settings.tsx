@@ -33,8 +33,8 @@ import { EntitySettingRegistry } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
-import { HotbarIcon } from "../hotbar/hotbar-icon";
 import logger from "../../../common/logger";
+import { Avatar } from "../avatar";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -96,11 +96,12 @@ export class EntitySettings extends React.Component<Props> {
     return (
       <>
         <div className="flex items-center pb-8">
-          <HotbarIcon
-            uid={this.entity.metadata.uid}
+          <Avatar
             title={this.entity.metadata.name}
-            source={this.entity.metadata.source}
+            colorHash={`${this.entity.metadata.name}-${this.entity.metadata.source}`}
             src={this.entity.spec.icon?.src}
+            className={styles.settingsAvatar}
+            size={40}
           />
           <div className={styles.entityName}>
             {this.entity.metadata.name}

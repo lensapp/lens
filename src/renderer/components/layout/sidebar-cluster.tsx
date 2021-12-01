@@ -26,7 +26,7 @@ import { HotbarStore } from "../../../common/hotbar-store";
 import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
-import { Avatar } from "../avatar/avatar";
+import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 import { navigate } from "../../navigation";
 import { Menu, MenuItem } from "../menu";
@@ -108,8 +108,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
       <Avatar
         title={metadata.name}
         colorHash={`${metadata.name}-${metadata.source}`}
-        width={40}
-        height={40}
+        size={40}
         src={spec.icon?.src}
         className={styles.avatar}
       />

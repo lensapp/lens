@@ -33,9 +33,8 @@
   margin-right: calc(var(--margin) * 3);
 
   .avatar {
-    :global(.MuiAvatar-root) {
-      font-size: 3ch;
-    }
+    font-size: 3ch;
+    cursor: pointer;
   }
 
   .hint {

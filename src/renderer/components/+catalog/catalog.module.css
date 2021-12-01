@@ -140,3 +140,7 @@
   background-color: var(--blue);
   --color-active: white;
 }
+
+.catalogAvatar {
+  font-size: 1.2ch;
+}
