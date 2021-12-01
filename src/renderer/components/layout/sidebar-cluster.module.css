@@ -32,7 +32,6 @@
   &:focus-visible {
     .dropdown {
       box-shadow: 0 0 0 2px var(--focus-color);
-      color: white;
     }
   }
 
