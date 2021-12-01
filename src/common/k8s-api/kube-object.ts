@@ -104,6 +104,34 @@ export class KubeCreationError extends Error {
   }
 }
 
+export type LabelMatchExpression = {
+  /**
+   * The label key that the selector applies to.
+   */
+  key: string;
+} & (
+  {
+    /**
+     * This represents the key's relationship to a set of values.
+     */
+    operator: "Exists" | "DoesNotExist";
+    values?: undefined;
+  }
+  |
+  {
+    operator: "In" | "NotIn";
+    /**
+     * The set of values for to match according to the operator for the label.
+     */
+    values: string[];
+  }
+);
+
+export interface LabelSelector {
+  matchLabels?: Record<string, string | undefined>;
+  matchExpressions?: LabelMatchExpression[];
+}
+
 export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind?: string;
   static readonly namespaced?: boolean;

@@ -19,12 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./network-policy-details.scss";
+import styles from "./network-policy-details.module.css";
 
-import get from "lodash/get";
-import React, { Fragment } from "react";
+import React from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
+import { IPolicyIpBlock, IPolicySelector, NetworkPolicy, NetworkPolicyPeer, NetworkPolicyPort } from "../../../common/k8s-api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
@@ -37,78 +36,84 @@ interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 
 @observer
 export class NetworkPolicyDetails extends React.Component<Props> {
-  renderIngressFrom(ingress: IPolicyIngress) {
-    const { from } = ingress;
+  renderIPolicyIpBlock(ipBlock: IPolicyIpBlock | undefined) {
+    if (!ipBlock) {
+      return null;
+    }
 
-    if (!from) return null;
+    const { cidr, except = [] } = ipBlock;
+
+    if (!cidr) {
+      return null;
+    }
+
+    const items = [`cidr: ${cidr}`];
+
+    if (except.length > 0) {
+      items.push(`except: ${except.join(", ")}`);
+    }
+
+    return (
+      <DrawerItem name="ipBlock">
+        {items.join(", ")}
+      </DrawerItem>
+    );
+  }
+
+  renderIPolicySelector(name: string, selector: IPolicySelector | undefined) {
+    if (!selector) {
+      return null;
+    }
+
+    return (
+      <DrawerItem name={name}>
+        {
+          Object
+            .entries(selector.matchLabels)
+            .map(data => data.join(": "))
+            .join(", ")
+          || "(empty)"
+        }
+      </DrawerItem>
+    );
+  }
+
+  renderNetworkPolicyPeers(name: string, peers: NetworkPolicyPeer[] | undefined) {
+    if (!peers) {
+      return null;
+    }
 
     return (
       <>
-        <SubTitle title="From"/>
-        {from.map(item =>
-          Object.keys(item).map(key => {
-            const data = get(item, key);
-
-            if (key === "ipBlock") {
-              const { cidr, except } = data as IPolicyIpBlock;
-
-              if (!cidr) return null;
-
-              return (
-                <DrawerItem name={key} key={key}>
-                  cidr: {cidr}, {" "}
-                  {except &&
-                  `except: ${except.join(", ")}`
-                  }
-                </DrawerItem>
-              );
-            }
-            const selector: IPolicySelector = data;
-
-            if (selector.matchLabels) {
-              return (
-                <DrawerItem name={key} key={key}>
-                  {
-                    Object
-                      .entries(selector.matchLabels)
-                      .map(data => data.join(": "))
-                      .join(", ")
-                  }
-                </DrawerItem>
-              );
-            }
-            else {
-              return (<DrawerItem name={key} key={key}>(empty)</DrawerItem>);
-            }
-          }),
-        )}
+        <SubTitle className={styles.networkPolicyPeerTitle} title={name}/>
+        {
+          peers.map((peer, index) => (
+            <div key={index} className={styles.networkPolicyPeer}>
+              {this.renderIPolicyIpBlock(peer.ipBlock)}
+              {this.renderIPolicySelector("namespaceSelector", peer.namespaceSelector)}
+              {this.renderIPolicySelector("podSelector", peer.podSelector)}
+            </div>
+          ))
+        }
       </>
     );
   }
 
-  renderEgressTo(egress: IPolicyEgress) {
-    const { to } = egress;
-
-    if (!to) return null;
+  renderNetworkPolicyPorts(ports: NetworkPolicyPort[] | undefined) {
+    if (!ports) {
+      return null;
+    }
 
     return (
-      <>
-        <SubTitle title="To"/>
-        {to.map(item => {
-          const { ipBlock: { cidr, except } = {}} = item;
-
-          if (!cidr) return null;
-
-          return (
-            <DrawerItem name="ipBlock" key={cidr}>
-              cidr: {cidr}, {" "}
-              {except &&
-              `except: ${except.join(", ")}`
-              }
-            </DrawerItem>
-          );
-        })}
-      </>
+      <DrawerItem name="Ports">
+        <ul>
+          {ports.map(({ protocol = "TCP", port = "<all>", endPort }, index) => (
+            <li key={index}>
+              {protocol}:{port}{typeof endPort === "number" && `:${endPort}`}
+            </li>
+          ))}
+        </ul>
+      </DrawerItem>
     );
   }
 
@@ -129,49 +134,38 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     const selector = policy.getMatchLabels();
 
     return (
-      <div className="NetworkPolicyDetails">
+      <div className={styles.NetworkPolicyDetails}>
         <KubeObjectMeta object={policy}/>
 
         <DrawerItem name="Pod Selector" labelsOnly={selector.length > 0}>
-          {selector.length > 0 ?
-            policy.getMatchLabels().map(label => <Badge key={label} label={label}/>) :
-            `(empty) (Allowing the specific traffic to all pods in this namespace)`
+          {
+            selector.length > 0
+              ? policy.getMatchLabels().map(label => <Badge key={label} label={label}/>)
+              : `(empty) (Allowing the specific traffic to all pods in this namespace)`
           }
         </DrawerItem>
 
         {ingress && (
           <>
             <DrawerTitle title="Ingress"/>
-            {ingress.map((ingress, i) => {
-              const { ports } = ingress;
-
-              return (
-                <Fragment key={i}>
-                  <DrawerItem name="Ports">
-                    {ports && ports.map(({ port, protocol }) => `${protocol || ""}:${port || ""}`).join(", ")}
-                  </DrawerItem>
-                  {this.renderIngressFrom(ingress)}
-                </Fragment>
-              );
-            })}
+            {ingress.map((ingress, i) => (
+              <div key={i} data-testid={`ingress-${i}`}>
+                {this.renderNetworkPolicyPorts(ingress.ports)}
+                {this.renderNetworkPolicyPeers("From", ingress.from)}
+              </div>
+            ))}
           </>
         )}
 
         {egress && (
           <>
             <DrawerTitle title="Egress"/>
-            {egress.map((egress, i) => {
-              const { ports } = egress;
-
-              return (
-                <Fragment key={i}>
-                  <DrawerItem name="Ports">
-                    {ports && ports.map(({ port, protocol }) => `${protocol || ""}:${port || ""}`).join(", ")}
-                  </DrawerItem>
-                  {this.renderEgressTo(egress)}
-                </Fragment>
-              );
-            })}
+            {egress.map((egress, i) => (
+              <div key={i} data-testid={`egress-${i}`}>
+                {this.renderNetworkPolicyPorts(egress.ports)}
+                {this.renderNetworkPolicyPeers("To", egress.to)}
+              </div>
+            ))}
           </>
         )}
       </div>

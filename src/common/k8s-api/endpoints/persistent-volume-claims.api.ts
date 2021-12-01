@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObject } from "../kube-object";
+import { KubeObject, LabelSelector } from "../kube-object";
 import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import type { Pod } from "./pods.api";
@@ -51,16 +51,7 @@ export interface PersistentVolumeClaim {
   spec: {
     accessModes: string[];
     storageClassName: string;
-    selector: {
-      matchLabels: {
-        release: string;
-      };
-      matchExpressions: {
-        key: string; // environment,
-        operator: string; // In,
-        values: string[]; // [dev]
-      }[];
-    };
+    selector: LabelSelector;
     resources: {
       requests: {
         storage: string; // 8Gi

@@ -27,6 +27,7 @@ import { metricsApi } from "./metrics.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { LabelSelector } from "../kube-object";
 
 export class Job extends WorkloadKubeObject {
   static kind = "Job";
@@ -42,11 +43,7 @@ export class Job extends WorkloadKubeObject {
     parallelism?: number;
     completions?: number;
     backoffLimit?: number;
-    selector?: {
-      matchLabels: {
-        [name: string]: string;
-      };
-    };
+    selector?: LabelSelector;
     template: {
       metadata: {
         creationTimestamp?: string;
