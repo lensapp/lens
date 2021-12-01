@@ -32,10 +32,10 @@ export interface KubeObjectMenuRegistration {
   components: KubeObjectMenuComponents;
 }
 
-
 export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistration> {
-  getItemsForKind = (kind: string, apiVersion: string) =>
-    this.getItems().filter((item) =>
-      item.kind === kind && item.apiVersions.includes(apiVersion),
-    );
+  getItemsForKind(kind: string, apiVersion: string) {
+    return this.getItems().filter((item) => {
+      return item.kind === kind && item.apiVersions.includes(apiVersion);
+    });
+  }
 }
