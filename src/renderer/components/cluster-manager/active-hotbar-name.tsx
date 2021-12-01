@@ -23,11 +23,17 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { CommandOverlay } from "../command-palette";
+import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 
 export const ActiveHotbarName = observer(() => {
   return (
-    <div className="flex items-center" data-testid="current-hotbar-name">
-      <Icon material="bookmarks" smallest className="mr-2"/>{" "}
+    <div
+      className="flex items-center"
+      data-testid="current-hotbar-name"
+      onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
+    >
+      <Icon material="bookmarks" className="mr-2" style={{ "--size": "14px" } as React.CSSProperties}/>
       {HotbarStore.getInstance().getActive()?.name}
     </div>
   );

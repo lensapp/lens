@@ -21,12 +21,20 @@
 
 import React from "react";
 import mockFs from "mock-fs";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
 import { StatusBarRegistry } from "../../../extensions/registries";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { AppPaths } from "../../../common/app-paths";
+import { CommandOverlay } from "../command-palette";
+import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
+
+jest.mock("../command-palette", () => ({
+  CommandOverlay: {
+    open: jest.fn(),
+  },
+}));
 
 AppPaths.init();
 
@@ -127,5 +135,14 @@ describe("<BottomBar />", () => {
     }, { setActive: true });
 
     expect(getByTestId("current-hotbar-name")).toHaveTextContent("new");
+  });
+
+  it("opens command palette on click", () => {
+    const { getByTestId } = render(<BottomBar />);
+    const activeHotbar = getByTestId("current-hotbar-name");
+
+    fireEvent.click(activeHotbar);
+
+    expect(CommandOverlay.open).toHaveBeenCalledWith(<HotbarSwitchCommand />);
   });
 });
