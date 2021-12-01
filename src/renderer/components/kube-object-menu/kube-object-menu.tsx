@@ -104,7 +104,6 @@ export class KubeObjectMenu<
       <MenuItem
         object={object}
         toolbar={toolbar}
-        // TODO: Fix misuse of index in key
         key={`menu-item-${index}`}
       />
     ));
