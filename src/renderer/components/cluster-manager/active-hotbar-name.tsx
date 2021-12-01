@@ -26,7 +26,7 @@ import { HotbarStore } from "../../../common/hotbar-store";
 
 export const ActiveHotbarName = observer(() => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center" data-testid="current-hotbar-name">
       <Icon material="bookmarks" smallest className="mr-2"/>{" "}
       {HotbarStore.getInstance().getActive()?.name}
     </div>
