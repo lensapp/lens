@@ -61,7 +61,7 @@ export class Wizard extends React.Component<WizardProps, State> {
 
       return React.cloneElement(stepElem, {
         step: i + 1,
-        wizard: this,
+        wizard: this as Wizard,
         next: this.nextStep,
         prev: this.prevStep,
         first: this.firstStep,
