@@ -79,7 +79,7 @@ export class KubeObjectMenu<
   }
 
   @boundMethod
-  getRemoveMessage() {
+  renderRemoveMessage() {
     const { object } = this.props;
 
     if (!object) {
@@ -110,7 +110,7 @@ export class KubeObjectMenu<
   }
 
   render() {
-    const { remove, update, getRemoveMessage, isEditable, isRemovable } = this;
+    const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
     const { className, editable, removable, ...menuProps } = this.props;
 
     return (
@@ -118,7 +118,7 @@ export class KubeObjectMenu<
         className={cssNames("KubeObjectMenu", className)}
         updateAction={isEditable ? update : undefined}
         removeAction={isRemovable ? remove : undefined}
-        removeConfirmationMessage={getRemoveMessage}
+        removeConfirmationMessage={renderRemoveMessage}
         {...menuProps}
       >
         {this.getMenuItems()}
