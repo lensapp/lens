@@ -27,6 +27,7 @@ import { metricsApi } from "./metrics.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { LabelSelector } from "../kube-object";
 
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";
@@ -39,11 +40,7 @@ export class DaemonSet extends WorkloadKubeObject {
   }
 
   declare spec: {
-    selector: {
-      matchLabels: {
-        [name: string]: string;
-      };
-    };
+    selector: LabelSelector;
     template: {
       metadata: {
         creationTimestamp?: string;
