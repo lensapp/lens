@@ -33,7 +33,7 @@ export const ActiveHotbarName = observer(() => {
       data-testid="current-hotbar-name"
       onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
     >
-      <Icon material="bookmarks" className="mr-2" style={{ "--size": "14px" } as React.CSSProperties}/>
+      <Icon material="bookmarks" className="mr-2" size={14}/>
       {HotbarStore.getInstance().getActive()?.name}
     </div>
   );
