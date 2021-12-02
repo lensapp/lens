@@ -131,6 +131,11 @@
         }
       ]
     },
+    "rpm": {
+      "fpm": [
+        "--rpm-rpmbuild-define=%define _build_id_links none"
+      ]
+    },
     "mac": {
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
