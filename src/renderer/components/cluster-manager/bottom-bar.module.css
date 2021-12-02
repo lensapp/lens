@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
- .BottomBar {
+.BottomBar {
   @apply flex px-2 text-white;
 
   grid-area: bottom-bar;
@@ -38,6 +38,8 @@
   }
 }
 
-.extensions {
-  @apply flex flex-1 justify-end;
+.onLeft + .onRight {
+  @apply ml-auto;
 }
+
+.onRight {}

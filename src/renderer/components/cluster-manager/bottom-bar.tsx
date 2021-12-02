@@ -24,7 +24,7 @@ import styles from "./bottom-bar.module.css";
 import React from "react";
 import { observer } from "mobx-react";
 import { StatusBarRegistration, StatusBarRegistry } from "../../../extensions/registries";
-import { ActiveHotbarName } from "./active-hotbar-name";
+import { cssNames } from "../../utils";
 
 @observer
 export class BottomBar extends React.Component {
@@ -45,29 +45,36 @@ export class BottomBar extends React.Component {
       return null;
     }
 
+    items.sort(function sortLeftPositionFirst(a, b) {
+      return a.components?.position?.localeCompare(b.components?.position);
+    });
+
     return (
-      <div className={styles.extensions}>
+      <>
         {items.map((registration, index) => {
           if (!registration?.item && !registration?.components?.Item) {
             return null;
           }
 
           return (
-            <div className={styles.item} key={index}>
+            <div
+              className={cssNames(styles.item, {
+                [styles.onLeft]: registration.components?.position == "left",
+                [styles.onRight]: registration.components?.position != "left",
+              })}
+              key={index}
+            >
               {this.renderRegisteredItem(registration)}
             </div>
           );
         })}
-      </div>
+      </>
     );
   }
 
   render() {
     return (
       <div className={styles.BottomBar}>
-        <div className={styles.item}>
-          <ActiveHotbarName/>
-        </div>
         {this.renderRegisteredItems()}
       </div>
     );

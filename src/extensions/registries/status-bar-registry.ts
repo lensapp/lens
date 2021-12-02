@@ -26,6 +26,7 @@ import { BaseRegistry } from "./base-registry";
 
 interface StatusBarComponents {
   Item?: React.ComponentType;
+  position?: "left" | "right";
 }
 
 interface StatusBarRegistrationV2 {
