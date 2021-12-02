@@ -121,7 +121,7 @@ const helmChartMaintainerValidator = Joi.object<HelmChartMaintainer>({
     .optional(),
 });
 
-const helmChartDependencyValidator = Joi.object<RawHelmChartDependency>({
+const helmChartDependencyValidator = Joi.object<HelmChartDependency, true, RawHelmChartDependency>({
   name: Joi
     .string()
     .required(),
@@ -140,7 +140,7 @@ const helmChartDependencyValidator = Joi.object<RawHelmChartDependency>({
     .default(() => ([])),
 });
 
-const helmChartValidator = Joi.object<RawHelmChart>({
+const helmChartValidator = Joi.object<HelmChart, true, RawHelmChart>({
   apiVersion: Joi
     .string()
     .required(),
