@@ -38,7 +38,6 @@ import { ClusterPageRegistry, getExtensionPageUrl } from "../extensions/registri
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { appEventBus } from "../common/event-bus";
 import { requestMain } from "../common/ipc";
-import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../common/cluster-ipc";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../extensions/registries";
 import { StatefulSetScaleDialog } from "./components/+workloads-statefulsets/statefulset-scale-dialog";
@@ -121,8 +120,6 @@ export class ClusterFrame extends React.Component {
 
       unmountComponentAtNode(rootElem);
     };
-
-    whatInput.ask(); // Start to monitor user input device
 
     const clusterContext = new FrameContext(cluster);
 
