@@ -21,7 +21,7 @@
 
 // Base class for building all kubernetes apis
 
-import { isFunction } from "lodash";
+import { isFunction, merge } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
@@ -102,7 +102,11 @@ export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Backgroun
 /**
  * @deprecated
  */
-export interface IKubeApiCluster extends ILocalKubeApiConfig {}
+export interface IKubeApiCluster extends ILocalKubeApiConfig { }
+
+export type PartialKubeObject<T extends KubeObject> = Partial<Omit<T, "metadata">> & {
+  metadata?: Partial<T["metadata"]>,
+};
 
 export interface IRemoteKubeApiConfig {
   cluster: {
@@ -478,18 +482,19 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async create({ name, namespace }: Partial<ResourceDescriptor>, data?: Partial<T>): Promise<T | null> {
+  async create({ name, namespace }: Partial<ResourceDescriptor>, data?: PartialKubeObject<T>): Promise<T | null> {
     await this.checkPreferredVersion();
 
     const apiUrl = this.getUrl({ namespace });
     const res = await this.request.post(apiUrl, {
-      data: {
-        ...data,
+      data: merge(data, {
+        kind: this.kind,
+        apiVersion: this.apiVersionWithGroup,
         metadata: {
           name,
           namespace,
         },
-      },
+      }),
     });
     const parsed = this.parseResponse(res);
 
@@ -500,18 +505,17 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async update({ name, namespace }: ResourceDescriptor, data: Partial<T>): Promise<T | null> {
+  async update({ name, namespace }: ResourceDescriptor, data: PartialKubeObject<T>): Promise<T | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
 
     const res = await this.request.put(apiUrl, {
-      data: {
-        ...data,
+      data: merge(data, {
         metadata: {
           name,
           namespace,
         },
-      },
+      }),
     });
     const parsed = this.parseResponse(res);
 
@@ -580,7 +584,7 @@ export class KubeApi<T extends KubeObject> {
       clearTimeout(timedRetry);
     });
 
-    const requestParams = timeout ? { query: { timeoutSeconds: timeout }}: {};
+    const requestParams = timeout ? { query: { timeoutSeconds: timeout }} : {};
     const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, requestParams, {
       signal: abortController.signal,

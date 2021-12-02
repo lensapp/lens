@@ -33,7 +33,7 @@ class TestKubeObject extends KubeObject {
   static apiBase = "/api/v1/pods";
 }
 
-class TestKubeApi extends KubeApi<TestKubeObject> {}
+class TestKubeApi extends KubeApi<TestKubeObject> { }
 
 describe("forRemoteCluster", () => {
   it("builds api client for KubeObject", async () => {
@@ -471,6 +471,144 @@ describe("KubeApi", () => {
 
       afterEach(() => {
         jest.clearAllMocks();
+      });
+    });
+  });
+
+  describe("create", () => {
+    let api: TestKubeApi;
+
+    beforeEach(() => {
+      api = new TestKubeApi({
+        request,
+        objectConstructor: TestKubeObject,
+      });
+    });
+
+    it("should add kind and apiVersion", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("POST");
+        expect(JSON.parse(request.body.toString())).toEqual({
+          kind: "Pod",
+          apiVersion: "v1",
+          metadata: {
+            name: "foobar",
+            namespace: "default",
+          },
+          spec: {
+            containers: [
+              {
+                name: "web",
+                image: "nginx",
+                ports: [
+                  {
+                    name: "web",
+                    containerPort: 80,
+                    protocol: "TCP",
+                  },
+                ],
+              },
+            ],
+          },
+        });
+
+        return {};
+      });
+
+      await api.create({
+        name: "foobar",
+        namespace: "default",
+      }, {
+        spec: {
+          containers: [
+            {
+              name: "web",
+              image: "nginx",
+              ports: [
+                {
+                  name: "web",
+                  containerPort: 80,
+                  protocol: "TCP",
+                },
+              ],
+            },
+          ],
+        },
+      });
+    });
+
+    it("doesn't override metadata.labels", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("POST");
+        expect(JSON.parse(request.body.toString())).toEqual({
+          kind: "Pod",
+          apiVersion: "v1",
+          metadata: {
+            name: "foobar",
+            namespace: "default",
+            labels: {
+              foo: "bar",
+            },
+          },
+        });
+
+        return {};
+      });
+
+      await api.create({
+        name: "foobar",
+        namespace: "default",
+      }, {
+        metadata: {
+          labels: {
+            foo: "bar",
+          },
+        },
+      });
+    });
+  });
+
+  describe("update", () => {
+    let api: TestKubeApi;
+
+    beforeEach(() => {
+      api = new TestKubeApi({
+        request,
+        objectConstructor: TestKubeObject,
+      });
+    });
+
+    it("doesn't override metadata.labels", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("PUT");
+        expect(JSON.parse(request.body.toString())).toEqual({
+          metadata: {
+            name: "foobar",
+            namespace: "default",
+            labels: {
+              foo: "bar",
+            },
+          },
+        });
+
+        return {};
+      });
+
+      await api.update({
+        name: "foobar",
+        namespace: "default",
+      }, {
+        metadata: {
+          labels: {
+            foo: "bar",
+          },
+        },
       });
     });
   });
