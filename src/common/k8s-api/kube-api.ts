@@ -526,7 +526,7 @@ export class KubeApi<T extends KubeObject> {
     return parsed;
   }
 
-  async patch(desc: ResourceDescriptor, data?: Partial<T> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<T | null> {
+  async patch(desc: ResourceDescriptor, data?: PartialKubeObject<T> | Patch, strategy: KubeApiPatchType = "strategic") {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl(desc);
 
@@ -541,7 +541,7 @@ export class KubeApi<T extends KubeObject> {
       throw new Error(`PATCH request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
     }
 
-    return parsed;
+    return parsed as T | null;
   }
 
   async delete({ propagationPolicy = "Background", ...desc }: DeleteResourceDescriptor) {
