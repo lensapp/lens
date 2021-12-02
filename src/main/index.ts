@@ -90,18 +90,22 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
-logger.debug("initializeRemote()");
+logger.debug("[APP-MAIN] initializing remote");
 initializeRemote();
-logger.debug("configurePackages()");
+
+logger.debug("[APP-MAIN] configuring packages");
 configurePackages();
+
 mangleProxyEnv();
+
+logger.debug("[APP-MAIN] initializing ipc main handlers");
 initializers.initIpcMainHandlers();
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
 
-logger.debug("lprm stuff");
+logger.debug("[APP-MAIN] Lens protocol routing main");
 
 if (!app.requestSingleInstanceLock()) {
   app.exit();
@@ -354,4 +358,4 @@ export {
   LensExtensions,
 };
 
-logger.debug("waiting for messages");
+logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
