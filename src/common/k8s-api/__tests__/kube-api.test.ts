@@ -106,10 +106,6 @@ describe("KubeApi", () => {
     });
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
   it("uses url from apiBase if apiBase contains the resource", async () => {
     (fetch as any).mockResponse(async (request: any) => {
       if (request.url === "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1") {
