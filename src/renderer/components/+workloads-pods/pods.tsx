@@ -92,7 +92,8 @@ export class Pods extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
-        className="Pods" store={podsStore}
+        className="Pods"
+        store={podsStore}
         dependentStores={[eventStore]} // status icon component uses event store
         tableId = "workloads_pods"
         isConfigurable

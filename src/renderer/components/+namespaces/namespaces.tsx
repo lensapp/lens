@@ -49,7 +49,8 @@ export class Namespaces extends React.Component<Props> {
         <KubeObjectListLayout
           isConfigurable
           tableId="namespaces"
-          className="Namespaces" store={namespaceStore}
+          className="Namespaces"
+          store={namespaceStore}
           sortingCallbacks={{
             [columnId.name]: ns => ns.getName(),
             [columnId.labels]: ns => ns.getLabels(),

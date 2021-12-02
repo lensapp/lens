@@ -241,6 +241,24 @@ describe("KubeApi", () => {
         { op: "replace", path: "/spec/replicas", value: 2 },
       ], "json");
     });
+
+    it("allows deep partial patch", async () => {
+      expect.hasAssertions();
+
+      (fetch as any).mockResponse(async (request: Request) => {
+        expect(request.method).toEqual("PATCH");
+        expect(request.headers.get("content-type")).toMatch("merge-patch");
+        expect(request.body.toString()).toEqual(JSON.stringify({ metadata: { annotations: { provisioned: "true" }}}));
+
+        return {};
+      });
+
+      await api.patch(
+        { name: "test", namespace: "default" },
+        { metadata: { annotations: { provisioned: "true" }}},
+        "merge",
+      );
+    });
   });
 
   describe("delete", () => {
