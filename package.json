@@ -274,7 +274,7 @@
     "@types/crypto-js": "^3.1.47",
     "@types/dompurify": "^2.3.1",
     "@types/electron-devtools-installer": "^2.2.0",
-    "@types/fs-extra": "^9.0.1",
+    "@types/fs-extra": "^9.0.13",
     "@types/glob-to-regexp": "^0.4.1",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.6",
