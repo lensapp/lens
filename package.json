@@ -283,7 +283,7 @@
     "@types/js-yaml": "^4.0.4",
     "@types/jsdom": "^16.2.13",
     "@types/jsonpath": "^0.2.0",
-    "@types/lodash": "^4.14.176",
+    "@types/lodash": "^4.14.177",
     "@types/marked": "^2.0.5",
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^0.9.1",
