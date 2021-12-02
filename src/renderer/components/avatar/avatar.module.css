@@ -29,6 +29,7 @@
   align-items: center;
   justify-content: center;
   user-select: none;
+  flex-shrink: 0;
 
   img {
     width: 100%;
