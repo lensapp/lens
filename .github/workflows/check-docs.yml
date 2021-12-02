@@ -1,6 +1,7 @@
 name: Check Documentation
 on:
-  - pull_request
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
 jobs:
   build:
     name: Check Docs
