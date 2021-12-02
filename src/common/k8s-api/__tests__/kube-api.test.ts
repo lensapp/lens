@@ -248,15 +248,15 @@ describe("KubeApi", () => {
       (fetch as any).mockResponse(async (request: Request) => {
         expect(request.method).toEqual("PATCH");
         expect(request.headers.get("content-type")).toMatch("merge-patch");
-        expect(request.body.toString()).toEqual(JSON.stringify({ metadata: { annotations: { provisioned: "true" } }}));
+        expect(request.body.toString()).toEqual(JSON.stringify({ metadata: { annotations: { provisioned: "true" }}}));
 
         return {};
       });
 
       await api.patch(
         { name: "test", namespace: "default" },
-        { metadata: { annotations: { provisioned: "true" } } },
-        "merge"
+        { metadata: { annotations: { provisioned: "true" }}},
+        "merge",
       );
     });
   });
