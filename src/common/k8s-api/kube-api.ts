@@ -289,9 +289,9 @@ export class KubeApi<T extends KubeObject> {
   protected resourceVersions = new Map<string, string>();
   protected watchDisposer: () => void;
   private watchId = 1;
-  protected options: Pick<IKubeApiOptions<T>, "apiBase" | "checkPreferredVersion" | "fallbackApiBases">;
 
-  constructor({ objectConstructor, request, kind, isNamespaced, ...options }: IKubeApiOptions<T>) {
+  constructor(protected options: IKubeApiOptions<T>) {
+    const { objectConstructor, request, kind, isNamespaced } = options;
     const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase || objectConstructor.apiBase);
 
     this.options = options;

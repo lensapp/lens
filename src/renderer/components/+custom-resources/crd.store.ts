@@ -29,15 +29,14 @@ import { CRDResourceStore } from "./crd-resource.store";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 
 function initStore(crd: CustomResourceDefinition) {
-  const apiBase = crd.getResourceApiBase();
-  const kind = crd.getResourceKind();
-  const isNamespaced = crd.isNamespaced();
-  const api = apiManager.getApi(apiBase) ?? new KubeApi({
-    objectConstructor: KubeObject,
-    apiBase,
-    kind,
-    isNamespaced,
-  });
+  const objectConstructor = class extends KubeObject {
+    readonly kind = crd.getResourceKind();
+    readonly namespaced = crd.isNamespaced();
+    readonly apiBase = crd.getResourceApiBase();
+  };
+
+  const api = apiManager.getApi(objectConstructor.apiBase)
+    ?? new KubeApi({ objectConstructor });
 
   if (!apiManager.getStore(api)) {
     apiManager.registerStore(new CRDResourceStore(api));
