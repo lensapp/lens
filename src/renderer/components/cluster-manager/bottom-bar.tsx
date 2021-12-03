@@ -59,8 +59,8 @@ export class BottomBar extends React.Component {
           return (
             <div
               className={cssNames(styles.item, {
-                [styles.onLeft]: registration.components?.position == "left",
-                [styles.onRight]: registration.components?.position != "left",
+                [styles.onLeft]: registration.components.position == "left",
+                [styles.onRight]: registration.components.position != "left",
               })}
               key={index}
             >
