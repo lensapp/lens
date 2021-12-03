@@ -26,7 +26,7 @@ import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
-import { app, autoUpdater, dialog, powerMonitor } from "electron";
+import { app, autoUpdater, BrowserWindow, dialog, Menu, powerMonitor } from "electron";
 import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -61,7 +61,7 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { Router } from "./router";
-import { initMenu } from "./menu";
+import { getAppMenu, initMenu } from "./menu";
 import { initTray } from "./tray";
 import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
@@ -254,6 +254,12 @@ app.on("ready", async () => {
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
+  });
+
+  ipcMainOn("show-app-context-menu", (event) => {
+    const menu = Menu.buildFromTemplate(getAppMenu(windowManager));
+
+    menu.popup(BrowserWindow.fromWebContents(event.sender) as any);
   });
 
   logger.info("🧩 Initializing extensions");
