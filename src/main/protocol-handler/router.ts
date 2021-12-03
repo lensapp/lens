@@ -39,7 +39,7 @@ export interface FallbackHandler {
  * @returns `true` if it should be routed internally to Lens, `false` if to an extension
  * @throws if `host` is not valid
  */
-function checkHost(url: URLParse): boolean {
+function checkHost<Query>(url: URLParse<Query>): boolean {
   switch (url.host) {
     case "app":
       return true;
@@ -112,7 +112,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return false;
   }
 
-  protected async _findMatchingExtensionByName(url: URLParse): Promise<LensExtension | string> {
+  protected async _findMatchingExtensionByName(url: URLParse<Record<string, string>>): Promise<LensExtension | string> {
     const firstAttempt = await super._findMatchingExtensionByName(url);
 
     if (typeof firstAttempt !== "string") {
@@ -126,7 +126,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return "";
   }
 
-  protected _routeToInternal(url: URLParse): RouteAttempt {
+  protected _routeToInternal(url: URLParse<Record<string, string>>): RouteAttempt {
     const rawUrl = url.toString(); // for sending to renderer
     const attempt = super._routeToInternal(url);
 
@@ -135,7 +135,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return attempt;
   }
 
-  protected async _routeToExtension(url: URLParse): Promise<RouteAttempt> {
+  protected async _routeToExtension(url: URLParse<Record<string, string>>): Promise<RouteAttempt> {
     const rawUrl = url.toString(); // for sending to renderer
 
     /**
