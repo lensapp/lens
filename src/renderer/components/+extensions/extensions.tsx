@@ -69,7 +69,7 @@ class NonInjectedExtensions extends React.Component<Props> {
     super(props);
     makeObservable(this);
   }
-  
+
   get dependencies() {
     return this.props.dependencies;
   }

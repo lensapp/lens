@@ -29,7 +29,9 @@ import { Input } from "../input";
 import { isWindows } from "../../../common/vars";
 import { FormSwitch, Switcher } from "../switch";
 import moment from "moment-timezone";
-import { CONSTANTS } from "../../../common/user-store/preferences-helpers";
+import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
+import { action } from "mobx";
+import { isUrl } from "../input/input_validators";
 import { AppPreferenceRegistry } from "../../../extensions/registries";
 import { ExtensionSettings } from "./extension-settings";
 
@@ -43,6 +45,7 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
 );
 
 export const Application = observer(() => {
+  const userStore = UserStore.getInstance();
   const defaultShell = process.env.SHELL
     || process.env.PTYSHELL
     || (
@@ -51,7 +54,8 @@ export const Application = observer(() => {
         : "System default shell"
     );
 
-  const [shell, setShell] = React.useState(UserStore.getInstance().shell || "");
+  const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
+  const [shell, setShell] = React.useState(userStore.shell || "");
   const extensionSettings = AppPreferenceRegistry.getInstance().getItems().filter((preference) => preference.showInPreferencesTab === "application");
 
   return (
@@ -61,8 +65,8 @@ export const Application = observer(() => {
         <SubTitle title="Theme"/>
         <Select
           options={ThemeStore.getInstance().themeOptions}
-          value={UserStore.getInstance().colorTheme}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().colorTheme = value}
+          value={userStore.colorTheme}
+          onChange={({ value }) => userStore.colorTheme = value}
           themeName="lens"
         />
       </section>
@@ -75,8 +79,8 @@ export const Application = observer(() => {
           theme="round-black"
           placeholder={defaultShell}
           value={shell}
-          onChange={v => setShell(v)}
-          onBlur={() => UserStore.getInstance().shell = shell}
+          onChange={setShell}
+          onBlur={() => userStore.shell = shell}
         />
       </section>
 
@@ -86,11 +90,44 @@ export const Application = observer(() => {
           label="Copy on select and paste on right-click"
           control={
             <Switcher
-              checked={UserStore.getInstance().terminalCopyOnSelect}
-              onChange={v => UserStore.getInstance().terminalCopyOnSelect = v.target.checked}
+              checked={userStore.terminalCopyOnSelect}
+              onChange={v => userStore.terminalCopyOnSelect = v.target.checked}
               name="terminalCopyOnSelect"
             />
           }
+        />
+      </section>
+
+      <hr/>
+
+      <section id="extensionRegistryUrl">
+        <SubTitle title="Extension Install Registry" />
+        <Select
+          options={Object.values(ExtensionRegistryLocation)}
+          value={userStore.extensionRegistryUrl.location}
+          onChange={action(({ value }) => {
+            userStore.extensionRegistryUrl.location = value;
+
+            if (userStore.extensionRegistryUrl.location === ExtensionRegistryLocation.CUSTOM) {
+              userStore.extensionRegistryUrl.customUrl = "";
+            }
+          })}
+          themeName="lens"
+        />
+        <p className="mt-4 mb-5 leading-relaxed">
+          This setting is to change the registry URL for installing extensions by name.{" "}
+          If you are unable to access the default registry ({defaultExtensionRegistryUrl}){" "}
+          you can change it in your <b>.npmrc</b>&nbsp;file or in the input below.
+        </p>
+
+        <Input
+          theme="round-black"
+          validators={isUrl}
+          value={customUrl}
+          onChange={setCustomUrl}
+          onBlur={() => userStore.extensionRegistryUrl.customUrl = customUrl}
+          placeholder="Custom Extension Registry URL..."
+          disabled={userStore.extensionRegistryUrl.location !== ExtensionRegistryLocation.CUSTOM}
         />
       </section>
 
@@ -101,8 +138,8 @@ export const Application = observer(() => {
         <FormSwitch
           control={
             <Switcher
-              checked={UserStore.getInstance().openAtLogin}
-              onChange={v => UserStore.getInstance().openAtLogin = v.target.checked}
+              checked={userStore.openAtLogin}
+              onChange={v => userStore.openAtLogin = v.target.checked}
               name="startup"
             />
           }
@@ -120,8 +157,8 @@ export const Application = observer(() => {
         <SubTitle title="Update Channel"/>
         <Select
           options={updateChannelOptions}
-          value={UserStore.getInstance().updateChannel}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().updateChannel = value}
+          value={userStore.updateChannel}
+          onChange={({ value }) => userStore.updateChannel = value}
           themeName="lens"
         />
       </section>
@@ -132,8 +169,8 @@ export const Application = observer(() => {
         <SubTitle title="Locale Timezone" />
         <Select
           options={timezoneOptions}
-          value={UserStore.getInstance().localeTimezone}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().setLocaleTimezone(value)}
+          value={userStore.localeTimezone}
+          onChange={({ value }) => userStore.setLocaleTimezone(value)}
           themeName="lens"
         />
       </section>

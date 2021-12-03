@@ -48,6 +48,7 @@ export * from "./n-fircate";
 export * from "./objects";
 export * from "./openExternal";
 export * from "./paths";
+export * from "./promise-exec";
 export * from "./reject-promise";
 export * from "./singleton";
 export * from "./sort-compare";

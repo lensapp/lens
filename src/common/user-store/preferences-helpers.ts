@@ -306,6 +306,36 @@ const updateChannel: PreferenceDescription<string> = {
   },
 };
 
+export enum ExtensionRegistryLocation {
+  DEFAULT = "default",
+  NPMRC = "npmrc",
+  CUSTOM = "custom",
+}
+export type ExtensionRegistry = {
+  location: ExtensionRegistryLocation.DEFAULT | ExtensionRegistryLocation.NPMRC;
+  customUrl?: undefined;
+} | {
+  location: ExtensionRegistryLocation.CUSTOM,
+  customUrl: string;
+};
+
+export const defaultExtensionRegistryUrl = "https://registry.npmjs.org";
+
+const extensionRegistryUrl: PreferenceDescription<ExtensionRegistry> = {
+  fromStore(val) {
+    return val ?? {
+      location: ExtensionRegistryLocation.DEFAULT,
+    };
+  },
+  toStore(val) {
+    if (val.location === ExtensionRegistryLocation.DEFAULT) {
+      return undefined;
+    }
+
+    return val;
+  },
+};
+
 type PreferencesModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<infer T, any> ? T : never;
 type UserStoreModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<any, infer T> ? T : never;
 
@@ -335,6 +365,7 @@ export const DESCRIPTORS = {
   editorConfiguration,
   terminalCopyOnSelect,
   updateChannel,
+  extensionRegistryUrl,
 };
 
 export const CONSTANTS = {
