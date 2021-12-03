@@ -269,6 +269,10 @@ export abstract class ShellSession {
               break;
           }
         } catch (error) {
+          if (error?.message === "ioctl(2) failed, EBADF") {
+            return;
+          }
+
           logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
         }
       })

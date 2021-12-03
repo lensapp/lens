@@ -143,11 +143,14 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   destroy() {
-    if (!this.socket) return;
+    if (!this.socket) {
+      return;
+    }
+
+    this.clearAllListeners();
     this.socket.close();
     this.socket = null;
     this.pendingCommands = [];
-    this.clearAllListeners();
     clearTimeout(this.reconnectTimer);
     clearInterval(this.pingTimer);
     this.readyState = WebSocketApiState.PENDING;
@@ -197,7 +200,8 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     if (error) {
       const { reconnectDelay } = this.params;
 
-      if (reconnectDelay) {
+      // Only reconnect if the socket is still present (wasn't a WebSocket.destory() call)
+      if (reconnectDelay && this.socket) {
         const url = this.socket.url;
 
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
