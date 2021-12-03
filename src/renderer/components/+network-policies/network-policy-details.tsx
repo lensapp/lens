@@ -68,7 +68,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     }
 
     return Object.entries(matchLabels)
-      .map(([key, value]) => <li key={key}>{key}:{value}</li>);
+      .map(([key, value]) => <li key={key}>{key}: {value}</li>);
   }
 
   renderMatchExpressions(matchExpressions: LabelMatchExpression[] | undefined) {
@@ -80,7 +80,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
       switch (expr.operator) {
         case "DoesNotExist":
         case "Exists":
-          return <li key={expr.key}>{expr.key}({expr.operator})</li>;
+          return <li key={expr.key}>{expr.key} ({expr.operator})</li>;
         case "In":
         case "NotIn":
           return (
