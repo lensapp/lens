@@ -30,13 +30,13 @@ export enum RoutingErrorType {
   MISSING_EXTENSION = "missing-ext",
 }
 
-export class RoutingError extends Error {
+export class RoutingError<Query> extends Error {
   /**
    * Will be set if the routing error originated in an extension route table
    */
   public extensionName?: string;
 
-  constructor(public type: RoutingErrorType, public url: Url) {
+  constructor(public type: RoutingErrorType, public url: Url<Query>) {
     super("routing error");
   }
 
