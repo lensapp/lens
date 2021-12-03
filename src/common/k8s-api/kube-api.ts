@@ -38,9 +38,14 @@ import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
 
+/**
+ * The options used for creating a `KubeApi`
+ */
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
    * base api-path for listing all resources, e.g. "/api/v1/pods"
+   *
+   * If not specified then will be the one on the `objectConstructor`
    */
   apiBase?: string;
 
@@ -52,11 +57,33 @@ export interface IKubeApiOptions<T extends KubeObject> {
    */
   fallbackApiBases?: string[];
 
-  objectConstructor: KubeObjectConstructor<T>;
-  request?: KubeJsonApi;
-  isNamespaced?: boolean;
-  kind?: string;
+  /**
+   * If `true` then will check all declared apiBases against the kube api server
+   * for the first accepted one.
+   */
   checkPreferredVersion?: boolean;
+
+  /**
+   * The constructor for the kube objects returned from the API
+   */
+  objectConstructor: KubeObjectConstructor<T>;
+
+  /**
+   * The api instance to use for making requests
+   *
+   * @default apiKube
+   */
+  request?: KubeJsonApi;
+
+  /**
+   * @deprecated should be specified by `objectConstructor`
+   */
+  isNamespaced?: boolean;
+
+  /**
+   * @deprecated should be specified by `objectConstructor`
+   */
+  kind?: string;
 }
 
 export interface IKubeApiQueryParams {
@@ -249,11 +276,11 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
 
 export class KubeApi<T extends KubeObject> {
   readonly kind: string;
-  readonly apiBase: string;
-  readonly apiPrefix: string;
-  readonly apiGroup: string;
   readonly apiVersion: string;
-  readonly apiVersionPreferred?: string;
+  apiBase: string;
+  apiPrefix: string;
+  apiGroup: string;
+  apiVersionPreferred?: string;
   readonly apiResource: string;
   readonly isNamespaced: boolean;
 
@@ -264,23 +291,18 @@ export class KubeApi<T extends KubeObject> {
   private watchId = 1;
 
   constructor(protected options: IKubeApiOptions<T>) {
-    const {
-      objectConstructor,
-      request = apiKube,
-      kind = options.objectConstructor?.kind,
-      isNamespaced = options.objectConstructor?.namespaced,
-    } = options || {};
-
+    const { objectConstructor, request, kind, isNamespaced } = options;
     const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase || objectConstructor.apiBase);
 
-    this.kind = kind;
-    this.isNamespaced = isNamespaced;
+    this.options = options;
+    this.kind = kind ?? objectConstructor.kind;
+    this.isNamespaced = isNamespaced ?? objectConstructor.namespaced ?? false;
     this.apiBase = apiBase;
     this.apiPrefix = apiPrefix;
     this.apiGroup = apiGroup;
     this.apiVersion = apiVersion;
     this.apiResource = resource;
-    this.request = request;
+    this.request = request ?? apiKube;
     this.objectConstructor = objectConstructor;
 
     this.parseResponse = this.parseResponse.bind(this);
@@ -353,21 +375,16 @@ export class KubeApi<T extends KubeObject> {
       const { apiPrefix, apiGroup } = await this.getPreferredVersionPrefixGroup();
 
       // The apiPrefix and apiGroup might change due to fallbackApiBases, so we must override them
-      Object.defineProperty(this, "apiPrefix", {
-        value: apiPrefix,
-      });
-      Object.defineProperty(this, "apiGroup", {
-        value: apiGroup,
-      });
+      this.apiPrefix = apiPrefix;
+      this.apiGroup = apiGroup;
 
-      const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
+      const url = [apiPrefix, apiGroup].filter(Boolean).join("/");
+      const res = await this.request.get<IKubePreferredVersion>(url);
 
-      Object.defineProperty(this, "apiVersionPreferred", {
-        value: res?.preferredVersion?.version ?? null,
-      });
+      this.apiVersionPreferred = res?.preferredVersion?.version ?? null;
 
       if (this.apiVersionPreferred) {
-        Object.defineProperty(this, "apiBase", { value: this.getUrl() });
+        this.apiBase = this.computeApiBase();
         apiManager.registerApi(this.apiBase, this);
       }
     }
@@ -385,7 +402,15 @@ export class KubeApi<T extends KubeObject> {
     return this.list(params, { limit: 1 });
   }
 
-  getUrl({ name, namespace = "default" }: Partial<ResourceDescriptor> = {}, query?: Partial<IKubeApiQueryParams>) {
+  private computeApiBase(): string {
+    return createKubeApiURL({
+      apiPrefix: this.apiPrefix,
+      apiVersion: this.apiVersionWithGroup,
+      resource: this.apiResource,
+    });
+  }
+
+  getUrl({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<IKubeApiQueryParams>) {
     const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,

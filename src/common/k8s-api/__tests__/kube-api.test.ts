@@ -26,6 +26,12 @@ import { KubeObject } from "../kube-object";
 import AbortController from "abort-controller";
 import { delay } from "../../utils/delay";
 import { PassThrough } from "stream";
+import { ApiManager, apiManager } from "../api-manager";
+import { Ingress, Pod } from "../endpoints";
+
+jest.mock("../api-manager");
+
+const mockApiManager = apiManager as jest.Mocked<ApiManager>;
 
 class TestKubeObject extends KubeObject {
   static kind = "Pod";
@@ -33,7 +39,11 @@ class TestKubeObject extends KubeObject {
   static apiBase = "/api/v1/pods";
 }
 
-class TestKubeApi extends KubeApi<TestKubeObject> { }
+class TestKubeApi extends KubeApi<TestKubeObject> {
+  public async checkPreferredVersion() {
+    return super.checkPreferredVersion();
+  }
+}
 
 describe("forRemoteCluster", () => {
   it("builds api client for KubeObject", async () => {
@@ -182,6 +192,94 @@ describe("KubeApi", () => {
     });
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("extensions");
+  });
+
+  describe("checkPreferredVersion", () => {
+    it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred", async () => {
+      expect.hasAssertions();
+
+      const api = new TestKubeApi({
+        objectConstructor: Ingress,
+        checkPreferredVersion: true,
+        fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
+        request: {
+          get: jest.fn()
+            .mockImplementationOnce((path: string) => {
+              expect(path).toBe("/apis/networking.k8s.io/v1");
+
+              throw new Error("no");
+            })
+            .mockImplementationOnce((path: string) => {
+              expect(path).toBe("/apis/extensions/v1beta1");
+
+              return {
+                resources: [
+                  {
+                    name: "ingresses",
+                  },
+                ],
+              };
+            })
+            .mockImplementationOnce((path: string) => {
+              expect(path).toBe("/apis/extensions");
+
+              return {
+                preferredVersion: {
+                  version: "v1beta1",
+                },
+              };
+            }),
+        } as any,
+      });
+
+      await api.checkPreferredVersion();
+
+      expect(api.apiVersionPreferred).toBe("v1beta1");
+      expect(mockApiManager.registerApi).toBeCalledWith("/apis/extensions/v1beta1/ingresses", expect.anything());
+    });
+
+    it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred with non-grouped apis", async () => {
+      expect.hasAssertions();
+
+      const api = new TestKubeApi({
+        objectConstructor: Pod,
+        checkPreferredVersion: true,
+        fallbackApiBases: ["/api/v1beta1/pods"],
+        request: {
+          get: jest.fn()
+            .mockImplementationOnce((path: string) => {
+              expect(path).toBe("/api/v1");
+
+              throw new Error("no");
+            })
+            .mockImplementationOnce((path: string) => {
+              expect(path).toBe("/api/v1beta1");
+
+              return {
+                resources: [
+                  {
+                    name: "pods",
+                  },
+                ],
+              };
+            })
+            .mockImplementationOnce((path: string) => {
+              expect(path).toBe("/api");
+
+              return {
+                preferredVersion: {
+                  version: "v1beta1",
+                },
+              };
+            }),
+        } as any,
+      });
+
+      await api.checkPreferredVersion();
+
+      expect(api.apiVersionPreferred).toBe("v1beta1");
+      expect(mockApiManager.registerApi).toBeCalledWith("/api/v1beta1/pods", expect.anything());
+    });
   });
 
   describe("patch", () => {

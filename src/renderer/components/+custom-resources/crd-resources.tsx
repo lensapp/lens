@@ -57,9 +57,7 @@ export class CrdResources extends React.Component<Props> {
   }
 
   @computed get store() {
-    if (!this.crd) return null;
-
-    return apiManager.getStore(this.crd.getResourceApiBase());
+    return apiManager.getStore(this.crd?.getResourceApiBase());
   }
 
   render() {
