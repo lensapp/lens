@@ -36,14 +36,13 @@ import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import editResourceTabInjectable from "./dependencies/edit-resource-tab.injectable";
 import { TabKind } from "../dock/dock.store";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-registry.injectable";
-import { renderFor, DiRender } from "../test-utils/renderFor";
+import { DiRender, renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../main/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
 import { KubeObjectMenu } from "./index";
 
 describe("kube-object-menu", () => {
-  let objectStub: KubeObject | null;
   let di: ConfigurableDependencyInjectionContainer;
   let render: DiRender;
 
@@ -62,7 +61,7 @@ describe("kube-object-menu", () => {
 
     di.override(apiManagerInjectable, {
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      getStore: (api) => undefined,
+      getStore: api => undefined,
     } as ApiManager);
 
     di.override(hideDetailsInjectable, () => {});
@@ -96,26 +95,14 @@ describe("kube-object-menu", () => {
   it("given no cluster, does not crash", () => {
     di.override(clusterInjectable, null);
 
-    objectStub = null;
-
     expect(() => {
-      render(
-        <KubeObjectMenu
-          object={objectStub}
-          toolbar={true}
-        />,
-      );
+      render(<KubeObjectMenu object={null} toolbar={true} />);
     }).not.toThrow();
   });
 
   it("given no kube object, renders", () => {
-    objectStub = null;
-
     const { baseElement } = render(
-      <KubeObjectMenu
-        object={objectStub}
-        toolbar={true}
-      />,
+      <KubeObjectMenu object={null} toolbar={true} />,
     );
 
     expect(baseElement).toMatchSnapshot();
@@ -126,7 +113,7 @@ describe("kube-object-menu", () => {
     let removeActionMock: AsyncFnMock<Function>;
 
     beforeEach(async () => {
-      objectStub = KubeObject.create({
+      const objectStub = KubeObject.create({
         apiVersion: "some-api-version",
         kind: "some-kind",
         metadata: {
@@ -203,7 +190,7 @@ describe("kube-object-menu", () => {
     let baseElement: Element;
 
     beforeEach(async () => {
-      objectStub = KubeObject.create({
+      const objectStub = KubeObject.create({
         apiVersion: "some-api-version",
         kind: "some-kind",
         metadata: {
@@ -240,7 +227,7 @@ describe("kube-object-menu", () => {
     let baseElement: Element;
 
     beforeEach(async () => {
-      objectStub = KubeObject.create({
+      const objectStub = KubeObject.create({
         apiVersion: "some-api-version",
         kind: "some-kind",
         metadata: {
@@ -291,9 +278,7 @@ const addDynamicMenuItem = ({
     components: { MenuItem: MenuItemComponent },
   };
 
-  const kubeObjectMenuRegistry = di.inject(
-    kubeObjectMenuRegistryInjectable,
-  );
+  const kubeObjectMenuRegistry = di.inject(kubeObjectMenuRegistryInjectable);
 
   kubeObjectMenuRegistry.add(dynamicMenuItemStub);
 };
