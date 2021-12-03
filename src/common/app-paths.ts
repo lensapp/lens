@@ -78,7 +78,17 @@ export class AppPaths {
 
     app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
 
-    AppPaths.paths.set(fromEntries(pathNames.map(pathName => [pathName, app.getPath(pathName)])));
+    const getPath = (pathName: PathName) => {
+      try {
+        return app.getPath(pathName);
+      } catch {
+        logger.debug(`[APP-PATHS] No path found for ${pathName}`);
+
+        return "";
+      }
+    };
+
+    AppPaths.paths.set(fromEntries(pathNames.map(pathName => [pathName, getPath(pathName)] as const).filter(([, path]) => path)));
     ipcMain.handle(AppPaths.ipcChannel, () => toJS(AppPaths.paths.get()));
   }
 
