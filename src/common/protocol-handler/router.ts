@@ -91,7 +91,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param url the parsed URL that initiated the `lens://` protocol
    * @returns true if a route has been found
    */
-  protected _routeToInternal(url: Url): RouteAttempt {
+  protected _routeToInternal(url: Url<Record<string, string>>): RouteAttempt {
     return this._route(this.internalRoutes.entries(), url);
   }
 
@@ -101,7 +101,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param routes the array of path schemas, handler pairs to match against
    * @param url the url (in its current state)
    */
-  protected _findMatchingRoute(routes: Iterable<[string, RouteHandler]>, url: Url): null | [match<Record<string, string>>, RouteHandler] {
+  protected _findMatchingRoute(routes: Iterable<[string, RouteHandler]>, url: Url<Record<string, string>>): null | [match<Record<string, string>>, RouteHandler] {
     const matches: [match<Record<string, string>>, RouteHandler][] = [];
 
     for (const [schema, handler] of routes) {
@@ -128,7 +128,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param routes the array of (path schemas, handler) pairs to match against
    * @param url the url (in its current state)
    */
-  protected _route(routes: Iterable<[string, RouteHandler]>, url: Url, extensionName?: string): RouteAttempt {
+  protected _route(routes: Iterable<[string, RouteHandler]>, url: Url<Record<string, string>>, extensionName?: string): RouteAttempt {
     const route = this._findMatchingRoute(routes, url);
 
     if (!route) {
@@ -166,7 +166,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param url the protocol request URI that was "open"-ed
    * @returns either the found name or the instance of `LensExtension`
    */
-  protected async _findMatchingExtensionByName(url: Url): Promise<LensExtension | string> {
+  protected async _findMatchingExtensionByName(url: Url<Record<string, string>>): Promise<LensExtension | string> {
     interface ExtensionUrlMatch {
       [EXTENSION_PUBLISHER_MATCH]: string;
       [EXTENSION_NAME_MATCH]: string;
@@ -222,7 +222,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * Note: this function modifies its argument, do not reuse
    * @param url the protocol request URI that was "open"-ed
    */
-  protected async _routeToExtension(url: Url): Promise<RouteAttempt> {
+  protected async _routeToExtension(url: Url<Record<string, string>>): Promise<RouteAttempt> {
     const extension = await this._findMatchingExtensionByName(url);
 
     if (typeof extension === "string") {
