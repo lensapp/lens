@@ -19,23 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.BottomBar {
-  $spacing: $padding * 0.5;
-  --flex-gap: #{$spacing};
+import React from "react";
+import { observer } from "mobx-react";
+import { Icon } from "../icon";
+import { HotbarStore } from "../../../common/hotbar-store";
+import { CommandOverlay } from "../command-palette";
+import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 
-  background-color: var(--blue);
-  padding: 0 2px;
-  height: var(--bottom-bar-height);
-
-  .extensions {
-    font-size: var(--font-size-small);
-    color: white;
-    .item {
-      padding: $padding * 0.25 $padding * 0.5;
-      &:hover {
-        background-color: #ffffff33;
-        cursor: pointer;
-      }
-    }
-  }
-}
+export const ActiveHotbarName = observer(() => {
+  return (
+    <div
+      className="flex items-center"
+      data-testid="current-hotbar-name"
+      onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
+    >
+      <Icon material="bookmarks" className="mr-2" size={14}/>
+      {HotbarStore.getInstance().getActive()?.name}
+    </div>
+  );
+});

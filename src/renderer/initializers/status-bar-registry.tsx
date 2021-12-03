@@ -19,15 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./catalog-entity-detail-registry";
-export * from "./catalog";
-export * from "./command-registry";
-export * from "./entity-settings-registry";
-export * from "./ipc";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./welcome-menu-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./catalog-category-registry";
-export * from "./status-bar-registry";
+import React from "react";
+import { StatusBarRegistry } from "../../extensions/registries";
+import { ActiveHotbarName } from "../components/cluster-manager/active-hotbar-name";
+
+export function initStatusBarRegistry() {
+  StatusBarRegistry.getInstance().add([
+    {
+      components: {
+        Item: () => <ActiveHotbarName/>,
+        position: "left",
+      },
+    },
+  ]);
+}
