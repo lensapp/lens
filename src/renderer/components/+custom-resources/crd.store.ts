@@ -30,9 +30,9 @@ import { KubeObject } from "../../../common/k8s-api/kube-object";
 
 function initStore(crd: CustomResourceDefinition) {
   const objectConstructor = class extends KubeObject {
-    readonly kind = crd.getResourceKind();
-    readonly namespaced = crd.isNamespaced();
-    readonly apiBase = crd.getResourceApiBase();
+    static readonly kind = crd.getResourceKind();
+    static readonly namespaced = crd.isNamespaced();
+    static readonly apiBase = crd.getResourceApiBase();
   };
 
   const api = apiManager.getApi(objectConstructor.apiBase)
