@@ -20,7 +20,6 @@
  */
 
 import * as util from "util";
-import { exec, execFile } from "child_process";
+import { execFile } from "child_process";
 
-export const promiseExec = util.promisify(exec);
 export const promiseExecFile = util.promisify(execFile);
