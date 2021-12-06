@@ -19,5 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export type { KubeObjectMenuProps } from "./kube-object-menu";
-export { KubeObjectMenu } from "./kube-object-menu-container";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import type { Cluster } from "../../../../main/cluster";
+import clusterInjectable from "./cluster.injectable";
+
+interface Dependencies {
+  cluster: Cluster;
+}
+
+const clusterNameInjectable: Injectable<string | undefined, Dependencies> = {
+  getDependencies: di => ({
+    cluster: di.inject(clusterInjectable),
+  }),
+
+  instantiate: ({ cluster }) => cluster?.name,
+
+  lifecycle: lifecycleEnum.transient,
+};
+
+export default clusterNameInjectable;

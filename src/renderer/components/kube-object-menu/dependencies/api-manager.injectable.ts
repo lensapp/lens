@@ -18,6 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { ApiManager } from "../../../../common/k8s-api/api-manager";
+import { apiManager } from "../../../../common/k8s-api/api-manager";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
 
-export type { KubeObjectMenuProps } from "./kube-object-menu";
-export { KubeObjectMenu } from "./kube-object-menu-container";
+const apiManagerInjectable: Injectable<ApiManager> = {
+  getDependencies: () => ({}),
+  instantiate: () => apiManager,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default apiManagerInjectable;

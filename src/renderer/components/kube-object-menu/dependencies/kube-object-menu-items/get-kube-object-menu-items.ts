@@ -18,6 +18,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { KubeObjectMenuRegistry } from "../../../../../extensions/registries";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 
-export type { KubeObjectMenuProps } from "./kube-object-menu";
-export { KubeObjectMenu } from "./kube-object-menu-container";
+export interface Dependencies {
+  kubeObjectMenuRegistry: KubeObjectMenuRegistry;
+}
+
+export interface InstantiationParameter {
+  kubeObject: KubeObject;
+}
+
+export const getKubeObjectMenuItems = (
+  { kubeObjectMenuRegistry }: Dependencies,
+  { kubeObject }: InstantiationParameter,
+) => {
+  if (!kubeObject) {
+    return [];
+  }
+
+  return kubeObjectMenuRegistry
+    .getItemsForKind(kubeObject.kind, kubeObject.apiVersion)
+    .map(item => item.components.MenuItem);
+};

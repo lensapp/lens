@@ -18,6 +18,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { editResourceTab } from "../../dock/edit-resource.store";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
 
-export type { KubeObjectMenuProps } from "./kube-object-menu";
-export { KubeObjectMenu } from "./kube-object-menu-container";
+const editResourceTabInjectable: Injectable<typeof editResourceTab> = {
+  getDependencies: () => ({}),
+  instantiate: () => editResourceTab,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default editResourceTabInjectable;

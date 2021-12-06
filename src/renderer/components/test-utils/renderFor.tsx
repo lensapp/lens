@@ -18,6 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from "react";
 
-export type { KubeObjectMenuProps } from "./kube-object-menu";
-export { KubeObjectMenu } from "./kube-object-menu-container";
+import {
+  render as testingLibraryRender,
+  RenderResult,
+} from "@testing-library/react";
+
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+
+import { DiContextProvider } from "@ogre-tools/injectable-react";
+
+export type DiRender = (ui: React.ReactElement) => RenderResult;
+
+type DiRenderFor = (
+  di: ConfigurableDependencyInjectionContainer,
+) => DiRender;
+
+export const renderFor: DiRenderFor = di => ui =>
+  testingLibraryRender(
+    <DiContextProvider value={{ di }}>{ui}</DiContextProvider>,
+  );
+
