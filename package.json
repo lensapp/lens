@@ -359,7 +359,7 @@
     "node-gyp": "7.1.2",
     "node-loader": "^1.0.3",
     "nodemon": "^2.0.14",
-    "playwright": "^1.15.2",
+    "playwright": "^1.17.1",
     "postcss": "^8.3.11",
     "postcss-loader": "4.3.0",
     "postinstall-postinstall": "^2.1.0",
