@@ -97,7 +97,7 @@ export class PodContainerPort extends React.Component<Props> {
     this.waiting = true;
 
     try {
-      // determine how many port-forwards are already active
+      // determine how many port-forwards already exist
       const { length } = await getPortForwards();
 
       this.forwardPort = await addPortForward(portForward);

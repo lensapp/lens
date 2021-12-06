@@ -32,7 +32,7 @@ import { Notifications } from "../components/notifications";
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   private storage = createStorage<ForwardedPort[] | undefined>("port_forwards", undefined);
 
-  @observable portForwards: PortForwardItem[];
+  @observable portForwards: PortForwardItem[] = [];
 
   constructor() {
     super();
@@ -103,9 +103,30 @@ interface PortForwardsResult {
   portForwards: ForwardedPort[];
 }
 
+function portForwardsEqual(portForward: ForwardedPort) {
+  return (pf: ForwardedPort) => (
+    pf.clusterId == portForward.clusterId &&
+    pf.kind == portForward.kind &&
+    pf.name == portForward.name &&
+    pf.namespace == portForward.namespace &&
+    pf.port == portForward.port
+  );
+}
+
+function findPortForward(portForward: ForwardedPort) {
+  return (portForwardStore.portForwards.find(portForwardsEqual(portForward)));
+
+}
+
 export async function addPortForward(portForward: ForwardedPort): Promise<number> {
   const { port, forwardPort } = portForward;
   let response: PortForwardResult;
+
+  const pf = findPortForward(portForward);
+
+  if (pf) {
+    return pf.forwardPort;
+  }
 
   if (!portForward.status) {
     portForward.status = "Active";
@@ -121,6 +142,7 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
       if (portForward.forwardPort && response?.port && response.port != +portForward.forwardPort) {
         logger.warn(`[PORT-FORWARD-STORE] specified ${portForward.forwardPort} got ${response.port}`);
       }
+      portForward.forwardPort = response.port;
     }
   } catch (error) {
     logger.warn("[PORT-FORWARD-STORE] Error starting port-forward:", error, portForward);
@@ -133,18 +155,43 @@ export async function addPortForward(portForward: ForwardedPort): Promise<number
   return response?.port;
 }
 
-export async function getPortForward(portForward: ForwardedPort): Promise<number> {
+export async function getActivePortForward(portForward: ForwardedPort): Promise<number> {
   const { port, forwardPort, protocol } = portForward;
   let response: PortForwardResult;
 
   try {
     response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
   } catch (error) {
-    logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
+    logger.warn("[PORT-FORWARD-STORE] Error getting active port-forward:", error, portForward);
     throw (error);
   }
 
   return response?.port;
+}
+
+export async function getPortForward(portForward: ForwardedPort): Promise<number> {
+
+  const pf = findPortForward(portForward);
+  
+  if (!pf) {
+    const error = new Error("port-forward not found");
+
+    logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
+    throw (error);
+  }
+
+  let port = pf.port;
+
+  try {
+    port = await getActivePortForward(portForward);
+    pf.status = "Active";
+    pf.forwardPort = port;
+  } catch (error) {
+    // port is not active
+    pf.status = "Disabled";
+  }
+
+  return port;
 }
 
 export async function modifyPortForward(portForward: ForwardedPort, desiredPort: number): Promise<number> {
@@ -158,19 +205,40 @@ export async function modifyPortForward(portForward: ForwardedPort, desiredPort:
 }
 
 
-export async function removePortForward(portForward: ForwardedPort) {
+export async function removeActivePortForward(portForward: ForwardedPort) {
   const { port, forwardPort } = portForward;
 
   try {
     await apiBase.del(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort }});
     await waitUntilFree(+forwardPort, 200, 1000);
   } catch (error) {
-    logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
+    logger.warn("[PORT-FORWARD-STORE] Error removing active port-forward:", error, portForward);
     throw (error);
   }
 }
 
-export async function getPortForwards(clusterId?: string): Promise<ForwardedPort[]> {
+export async function removePortForward(portForward: ForwardedPort) {
+  const pf = findPortForward(portForward);
+  
+  if (!pf) {
+    const error = new Error("port-forward not found");
+
+    logger.warn("[PORT-FORWARD-STORE] Error getting port-forward:", error, portForward);
+    throw (error);
+  }
+
+  try {
+    await removeActivePortForward(portForward);
+  } catch (error) {
+    if (pf.status === "Active") {
+      logger.warn("[PORT-FORWARD-STORE] Error removing port-forward:", error, portForward);
+    }
+  }
+  portForwardStore.portForwards.filter(item => item !== pf);
+  console.log("portForwards:", portForwardStore.portForwards);
+}
+
+export async function getActivePortForwards(clusterId?: string): Promise<ForwardedPort[]> {
   try {
     const response = await apiBase.get<PortForwardsResult>("/pods/port-forwards", { query: { clusterId }});
 
@@ -180,6 +248,25 @@ export async function getPortForwards(clusterId?: string): Promise<ForwardedPort
 
     return [];
   }
+}
+
+export async function getPortForwards(clusterId?: string): Promise<ForwardedPort[]> {
+  try {
+    // get the active port-forwards to update the status
+    const activePortForwards = await getActivePortForwards(clusterId);
+
+    portForwardStore.portForwards.map((item, index) => {
+      if (activePortForwards.find(portForwardsEqual(item))) {
+        portForwardStore.portForwards[index].status = "Active";
+      } else {
+        portForwardStore.portForwards[index].status = "Disabled";
+      }
+    });
+  } catch (error) {
+    logger.warn("[PORT-FORWARD-STORE] Error getting all active port-forwards:", error);
+  }
+
+  return portForwardStore.portForwards;
 }
 
 export const portForwardStore = new PortForwardStore();

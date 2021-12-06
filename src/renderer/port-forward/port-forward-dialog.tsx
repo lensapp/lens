@@ -96,7 +96,7 @@ export class PortForwardDialog extends Component<Props> {
     const { currentPort, desiredPort, close } = this;
 
     try {
-      // determine how many port-forwards are already active
+      // determine how many port-forwards already exist
       const { length } = await getPortForwards();
 
       let port: number;
