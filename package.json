@@ -286,7 +286,7 @@
     "@types/html-webpack-plugin": "^3.2.6",
     "@types/http-proxy": "^1.17.7",
     "@types/jest": "^26.0.24",
-    "@types/js-yaml": "^4.0.4",
+    "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^16.2.13",
     "@types/jsonpath": "^0.2.0",
     "@types/lodash": "^4.14.177",
