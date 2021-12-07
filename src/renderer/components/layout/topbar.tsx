@@ -105,12 +105,11 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   return (
     <div className={styles.topBar} {...rest}>
       <div className={styles.tools} onDoubleClick={windowSizeToggle}>
-        <Icon
-          data-testid="menu-button"
-          material="menu"
-          className="ml-4"
-          onClick={openContextMenu}
-        />
+        <div className={styles.winMenu}>
+          <div onClick={openContextMenu}>
+            <svg width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="m1 10h10v1h-10z"/><path fill="currentColor" d="m1 5.5h10v1h-10z"/><path fill="currentColor" d="m1 1h10v1h-10z"/></svg>
+          </div>
+        </div>
         <Icon
           data-testid="home-button"
           material="home"
@@ -138,12 +137,12 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
         {children}
         <div className={styles.winButtons}>
           <div className={styles.minimize}>
-            <svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="6"></rect></svg></div>
+            <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="6"></rect></svg></div>
           <div className={styles.maximize}>
-            <svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
           </div>
           <div className={styles.close}>
-            <svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
           </div>
         </div>
       </div>

@@ -30,8 +30,22 @@
   grid-area: topbar;
 }
 
-:global(.is-mac) .topBar {
-  padding-left: var(--hotbar-width);
+.winMenu {
+  width: var(--hotbar-width);
+
+  > div {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+      background-color: var(--borderFaintColor);
+    }
+
+    &:active {
+      background-color: var(--borderColor);
+    }
+  }
 }
 
 .tools {
