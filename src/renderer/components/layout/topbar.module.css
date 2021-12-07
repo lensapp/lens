@@ -45,3 +45,32 @@
   display: flex;
   height: 100%;
 }
+
+.winButtons {
+  display: flex;
+  margin-left: 1.5rem;
+  margin-right: -1.5rem;
+
+  > div {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.minimize, .maximize {
+  &:hover {
+    background-color: var(--borderFaintColor);
+  }
+
+  &:active {
+    background-color: var(--borderColor);
+  }
+}
+
+.close {
+  &:hover {
+    color: white;
+    background-color: #ef4b4e;
+  }
+}
