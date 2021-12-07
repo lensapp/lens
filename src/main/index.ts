@@ -227,7 +227,6 @@ app.on("ready", async () => {
     return app.exit();
   }
 
-  initializers.initRegistries();
   const extensionDiscovery = ExtensionDiscovery.createInstance();
 
   ExtensionLoader.createInstance().init();
