@@ -21,7 +21,7 @@
 
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, removePortForward } from "../../port-forward";
+import { openPortForward, PortForwardItem, removePortForward, startPortForward, stopPortForward } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
@@ -45,6 +45,26 @@ export class PortForwardMenu extends React.Component<Props> {
     }
   }
 
+  renderStartStopMenuItem() {
+    const { portForward, toolbar } = this.props;
+
+    if (portForward.status === "Active") {
+      return (
+        <MenuItem onClick={() => stopPortForward(portForward)}>
+          <Icon material="stop" tooltip="Stop port-forward" interactive={toolbar} />
+          <span className="title">Stop</span>
+        </MenuItem>
+      );
+    }
+
+    return (
+      <MenuItem onClick={() => startPortForward(portForward)}>
+        <Icon material="play_arrow" tooltip="Start port-forward" interactive={toolbar} />
+        <span className="title">Start</span>
+      </MenuItem>
+    );
+  }
+
   renderContent() {
     const { portForward, toolbar } = this.props;
 
@@ -60,6 +80,7 @@ export class PortForwardMenu extends React.Component<Props> {
           <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
           <span className="title">Edit</span>
         </MenuItem>
+        {this.renderStartStopMenuItem()}
       </>
     );
   }

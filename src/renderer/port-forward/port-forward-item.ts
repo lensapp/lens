@@ -25,7 +25,6 @@ import { autoBind } from "../../common/utils";
 
 export type forwardedPortStatus = "Active" | "Disabled";
 export interface ForwardedPort {
-  clusterId?: string;
   kind: string;
   namespace: string;
   name: string;
@@ -36,7 +35,6 @@ export interface ForwardedPort {
 }
   
 export class PortForwardItem implements ItemObject {
-  clusterId: string;
   kind: string;
   namespace: string;
   name: string;
@@ -46,7 +44,6 @@ export class PortForwardItem implements ItemObject {
   status: forwardedPortStatus;
   
   constructor(pf: ForwardedPort) {
-    this.clusterId = pf.clusterId;
     this.kind = pf.kind;
     this.namespace = pf.namespace;
     this.name = pf.name;

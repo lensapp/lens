@@ -55,7 +55,7 @@ export class PodContainerPort extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => [portForwardStore.portForwards, this.props.pod], () => this.checkExistingPortForwarding()),
+      reaction(() => [portForwardStore.portForwards.slice(), this.props.pod], () => this.checkExistingPortForwarding()),
     ]);
   }
 

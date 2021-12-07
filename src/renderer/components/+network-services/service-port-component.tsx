@@ -51,7 +51,7 @@ export class ServicePortComponent extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => [portForwardStore.portForwards, this.props.service], () => this.checkExistingPortForwarding()),
+      reaction(() => [portForwardStore.portForwards.slice(), this.props.service], () => this.checkExistingPortForwarding()),
     ]);
   }
 
