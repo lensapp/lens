@@ -19,25 +19,41 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
+import glob from "glob";
+import { memoize } from "lodash/fp";
 
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
+import {
+  createContainer,
+  ConfigurableDependencyInjectionContainer,
+} from "@ogre-tools/injectable";
 
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
+export const getDiForUnitTesting = () => {
+  const di: ConfigurableDependencyInjectionContainer = createContainer();
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
+  getInjectableFilePaths()
+    .map(key => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const injectable = require(key).default;
 
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
-}
+      if (!injectable) {
+        console.log(key);
+      }
+
+      return {
+        id: key,
+        ...injectable,
+        aliases: [injectable, ...(injectable.aliases || [])],
+      };
+    })
+
+    .forEach(injectable => di.register(injectable));
+
+  di.preventSideEffects();
+
+  return di;
+};
+
+const getInjectableFilePaths = memoize(() => [
+  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+]);

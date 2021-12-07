@@ -18,18 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
-import { autorun } from "mobx";
-import type { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows, docsUrl, supportUrl, productName } from "../common/vars";
-import { MenuRegistry } from "../extensions/registries/menu-registry";
-import logger from "./logger";
-import { exitApp } from "./exit-app";
-import { broadcastMessage } from "../common/ipc";
-import * as packageJson from "../../package.json";
-import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../common/routes";
-import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
+import { autorun, IComputedValue } from "mobx";
+import type { WindowManager } from "../window-manager";
+import { appName, isMac, isWindows, docsUrl, supportUrl, productName } from "../../common/vars";
+import logger from "../logger";
+import { exitApp } from "../exit-app";
+import { broadcastMessage } from "../../common/ipc";
+import * as packageJson from "../../../package.json";
+import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../../common/routes";
+import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
+import type { MenuRegistration } from "./menu-registration";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
@@ -37,8 +36,11 @@ interface MenuItemsOpts extends MenuItemConstructorOptions {
   submenu?: MenuItemConstructorOptions[];
 }
 
-export function initMenu(windowManager: WindowManager) {
-  return autorun(() => buildMenu(windowManager), {
+export function initMenu(
+  windowManager: WindowManager,
+  electronMenuItems: IComputedValue<MenuRegistration[]>,
+) {
+  return autorun(() => buildMenu(windowManager, electronMenuItems.get()), {
     delay: 100,
   });
 }
@@ -61,7 +63,10 @@ export function showAbout(browserWindow: BrowserWindow) {
   });
 }
 
-export function buildMenu(windowManager: WindowManager) {
+export function buildMenu(
+  windowManager: WindowManager,
+  electronMenuItems: MenuRegistration[],
+) {
   function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
     return check ? [] : menuItems;
   }
@@ -302,14 +307,17 @@ export function buildMenu(windowManager: WindowManager) {
   ]);
 
   // Modify menu from extensions-api
-  for (const { parentId, ...menuItem } of MenuRegistry.getInstance().getItems()) {
-    if (!appMenu.has(parentId)) {
-      logger.error(`[MENU]: cannot register menu item for parentId=${parentId}, parent item doesn't exist`, { menuItem });
+  for (const menuItem of electronMenuItems) {
+    if (!appMenu.has(menuItem.parentId)) {
+      logger.error(
+        `[MENU]: cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
+        { menuItem },
+      );
 
       continue;
     }
 
-    appMenu.get(parentId).submenu.push(menuItem);
+    appMenu.get(menuItem.parentId).submenu.push(menuItem);
   }
 
   if (!isMac) {

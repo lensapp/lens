@@ -19,25 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
+import { createContainer } from "@ogre-tools/injectable";
 
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
+export const getDi = () =>
+  createContainer(
+    getRequireContextForMainCode,
+    getRequireContextForCommonExtensionCode,
+  );
 
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
+const getRequireContextForMainCode = () =>
+  require.context("./", true, /\.injectable\.(ts|tsx)$/);
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
-
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
-}
+const getRequireContextForCommonExtensionCode = () =>
+  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);

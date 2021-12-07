@@ -32,7 +32,6 @@ import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { ExtensionsStore } from "./extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension";
-import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
 
@@ -47,7 +46,7 @@ const logModule = "[EXTENSIONS-LOADER]";
  */
 export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
-  protected instances = observable.map<LensExtensionId, LensExtension>();
+  instances = observable.map<LensExtensionId, LensExtension>();
 
   /**
    * This is the set of extensions that don't come with either
@@ -248,25 +247,7 @@ export class ExtensionLoader extends Singleton {
   }
 
   loadOnMain() {
-    registries.MenuRegistry.createInstance();
-
-    logger.debug(`${logModule}: load on main`);
-    this.autoInitExtensions(async (extension: LensMainExtension) => {
-      // Each .add returns a function to remove the item
-      const removeItems = [
-        registries.MenuRegistry.getInstance().add(extension.appMenus),
-      ];
-
-      this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.id === extension.id) {
-          removeItems.forEach(remove => {
-            remove();
-          });
-        }
-      });
-
-      return removeItems;
-    });
+    this.autoInitExtensions(() => Promise.resolve([]));
   }
 
   loadOnClusterManagerRenderer() {

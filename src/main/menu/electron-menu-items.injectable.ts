@@ -18,26 +18,24 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed, IComputedValue } from "mobx";
+import type { LensMainExtension } from "../../extensions/lens-main-extension";
+import extensionsInjectable from "../../extensions/extensions.injectable";
+import type { MenuRegistration } from "./menu-registration";
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
+const electronMenuItemsInjectable: Injectable<
+  IComputedValue<MenuRegistration[]>,
+  { extensions: IComputedValue<LensMainExtension[]> }
+> = {
+  lifecycle: lifecycleEnum.singleton,
 
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
+  getDependencies: di => ({
+    extensions: di.inject(extensionsInjectable),
+  }),
 
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
+  instantiate: ({ extensions }) =>
+    computed(() => extensions.get().flatMap(extension => extension.appMenus)),
+};
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
-
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
-}
+export default electronMenuItemsInjectable;

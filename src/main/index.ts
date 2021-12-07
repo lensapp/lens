@@ -61,11 +61,15 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { Router } from "./router";
-import { initMenu } from "./menu";
+import { initMenu } from "./menu/menu";
 import { initTray } from "./tray";
 import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
 import { ShellSession } from "./shell-session/shell-session";
+import { getDi } from "./getDi";
+import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
+
+const di = getDi();
 
 injectSystemCAs();
 
@@ -236,8 +240,10 @@ app.on("ready", async () => {
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
 
+  const menuItems = di.inject(electronMenuItemsInjectable);
+
   onQuitCleanup.push(
-    initMenu(windowManager),
+    initMenu(windowManager, menuItems),
     initTray(windowManager),
     () => ShellSession.cleanup(),
   );
