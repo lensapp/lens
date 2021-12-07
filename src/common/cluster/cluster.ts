@@ -267,7 +267,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @action updateModel(model: UpdateClusterModel) {
     // Note: do not assign ID as that should never be updated
 
-    const { error } = updateClusterModelChecker.validate(model);
+    const { error } = updateClusterModelChecker.validate(model, { allowUnknown: true });
 
     if (error) {
       throw error;
