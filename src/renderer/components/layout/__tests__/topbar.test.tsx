@@ -134,4 +134,13 @@ describe("<TopBar/>", () => {
 
     expect(await getByTestId(testId)).toHaveTextContent(text);
   });
+
+  it("doesn't show windows title buttons", () => {
+    const { queryByTestId } = render(<TopBar/>);
+
+    expect(queryByTestId("window-menu")).not.toBeInTheDocument();
+    expect(queryByTestId("window-minimize")).not.toBeInTheDocument();
+    expect(queryByTestId("window-maximize")).not.toBeInTheDocument();
+    expect(queryByTestId("window-close")).not.toBeInTheDocument();
+  });
 });
