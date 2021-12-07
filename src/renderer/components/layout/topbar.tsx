@@ -30,6 +30,8 @@ import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
 import { watchHistoryState } from "../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../navigation";
 import { catalogRoute, catalogURL } from "../../../common/routes";
+import { IpcMainWindowEvents } from "../../../main/window-manager";
+import { isLinux, isWindows } from "../../../common/vars";
 
 interface Props extends React.HTMLAttributes<any> {
 }
@@ -71,7 +73,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   };
 
   const openContextMenu = () => {
-    broadcastMessage("show-app-context-menu");
+    broadcastMessage(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
   };
 
   const goHome = () => {
@@ -106,9 +108,11 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
     <div className={styles.topBar} {...rest}>
       <div className={styles.tools} onDoubleClick={windowSizeToggle}>
         <div className={styles.winMenu}>
-          <div onClick={openContextMenu}>
-            <svg width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="m1 10h10v1h-10z"/><path fill="currentColor" d="m1 5.5h10v1h-10z"/><path fill="currentColor" d="m1 1h10v1h-10z"/></svg>
-          </div>
+          {(isWindows || isLinux) && (
+            <div onClick={openContextMenu} data-testid="window-menu">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="m1 10h10v1h-10z"/><path fill="currentColor" d="m1 5.5h10v1h-10z"/><path fill="currentColor" d="m1 1h10v1h-10z"/></svg>
+            </div>
+          )}
         </div>
         <Icon
           data-testid="home-button"
@@ -135,16 +139,18 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
       <div className={styles.controls}>
         {renderRegisteredItems()}
         {children}
-        <div className={styles.winButtons}>
-          <div className={styles.minimize}>
-            <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="6"></rect></svg></div>
-          <div className={styles.maximize}>
-            <svg width="12" height="12" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
+        {isWindows && (
+          <div className={styles.winButtons}>
+            <div className={styles.minimize} data-testid="window-minimize" onClick={() => broadcastMessage(IpcMainWindowEvents.MINIMIZE)}>
+              <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="6"></rect></svg></div>
+            <div className={styles.maximize} data-testid="window-maximize" onClick={() => broadcastMessage(IpcMainWindowEvents.MAXIMIZE)}>
+              <svg width="12" height="12" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
+            </div>
+            <div className={styles.close} data-testid="window-close" onClick={() => broadcastMessage(IpcMainWindowEvents.CLOSE)}>
+              <svg width="12" height="12" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
+            </div>
           </div>
-          <div className={styles.close}>
-            <svg width="12" height="12" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
