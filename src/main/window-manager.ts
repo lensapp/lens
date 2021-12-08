@@ -33,9 +33,6 @@ import { isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 
 export const enum IpcMainWindowEvents {
-  MINIMIZE = "window:minimize",
-  MAXIMIZE = "window:maximize",
-  CLOSE = "window:close",
   OPEN_CONTEXT_MENU = "window:open-context-menu",
 }
 
@@ -175,11 +172,6 @@ export class WindowManager extends Singleton {
     ipcMainOn(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
     });
-
-    // custom window events, needed on windows and linux
-    ipcMainOn(IpcMainWindowEvents.MINIMIZE, () => this.mainWindow.minimize());
-    ipcMainOn(IpcMainWindowEvents.MAXIMIZE, () => this.mainWindow.maximize());
-    ipcMainOn(IpcMainWindowEvents.CLOSE, () => this.mainWindow.close());
   }
 
   async ensureMainWindow(showSplash = true): Promise<BrowserWindow> {
