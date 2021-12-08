@@ -144,18 +144,6 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     this.socket.binaryType = "arraybuffer";
   }
 
-  destroy() {
-    if (!this.socket) return;
-    const controlCode = String.fromCharCode(4); // ctrl+d
-
-    this.sendMessage({ type: TerminalChannels.STDIN, data: controlCode });
-    setTimeout(() => super.destroy(), 2000);
-  }
-
-  reconnect() {
-    super.reconnect();
-  }
-
   sendMessage(message: TerminalMessage) {
     return this.send(serialize(message));
   }
