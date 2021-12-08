@@ -53,6 +53,7 @@
 
 .tools {
   @apply flex items-center;
+  -webkit-app-region: no-drag;
 }
 
 .controls {
@@ -61,13 +62,7 @@
   align-items: center;
   display: flex;
   height: 100%;
-}
-
-.winDraggableArea {
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-  flex-grow: 1;
-  background-color: aliceblue;
+  -webkit-app-region: no-drag;
 }
 
 .winButtons {
