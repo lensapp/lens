@@ -95,6 +95,7 @@ export class WindowManager extends Singleton {
           contextIsolation: false,
         },
       });
+      this.mainWindow.removeMenu();  // Hide menu bar both in Windows and Linux
       this.windowState.manage(this.mainWindow);
 
       // open external links in default browser (target=_blank, window.open)
