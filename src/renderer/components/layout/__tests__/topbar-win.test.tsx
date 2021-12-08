@@ -36,6 +36,23 @@ jest.mock("../../../../common/vars", () => {
   };
 });
 
+const mockMinimize = jest.fn();
+const mockMaximize = jest.fn();
+const mockUnmaximize = jest.fn();
+const mockClose = jest.fn();
+
+jest.mock("@electron/remote", () => {
+  return {
+    getCurrentWindow: () => ({
+      minimize: () => mockMinimize(),
+      maximize: () => mockMaximize(),
+      unmaximize: () => mockUnmaximize(),
+      close: () => mockClose(),
+      isMaximized: () => false,
+    }),
+  };
+});
+
 describe("<Tobar/> in Windows", () => {
   beforeEach(() => {
     TopBarRegistry.createInstance();
@@ -66,12 +83,12 @@ describe("<Tobar/> in Windows", () => {
     expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
 
     fireEvent.click(minimize);
-    expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.MINIMIZE);
+    expect(mockMinimize).toHaveBeenCalled();
 
     fireEvent.click(maximize);
-    expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.MAXIMIZE);
+    expect(mockMaximize).toHaveBeenCalled();
 
     fireEvent.click(close);
-    expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.CLOSE);
+    expect(mockClose).toHaveBeenCalled();
   });
 });

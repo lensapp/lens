@@ -65,6 +65,7 @@ jest.mock("@electron/remote", () => {
         }];
       },
     },
+    getCurrentWindow: () => jest.fn(),
   };
 });
 

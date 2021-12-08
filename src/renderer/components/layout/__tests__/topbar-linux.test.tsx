@@ -32,6 +32,12 @@ jest.mock("../../../../common/vars", () => {
   };
 });
 
+jest.mock("@electron/remote", () => {
+  return {
+    getCurrentWindow: () => jest.fn(),
+  };
+});
+
 describe("<Tobar/> in Linux", () => {
   beforeEach(() => {
     TopBarRegistry.createInstance();
