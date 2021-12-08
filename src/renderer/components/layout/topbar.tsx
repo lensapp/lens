@@ -20,7 +20,7 @@
  */
 
 import styles from "./topbar.module.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";
 import { Icon } from "../icon";
@@ -48,6 +48,8 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
 });
 
 export const TopBar = observer(({ children, ...rest }: Props) => {
+  const elem = useRef<HTMLDivElement>();
+
   const renderRegisteredItems = () => {
     const items = TopBarRegistry.getInstance().getItems();
 
@@ -88,7 +90,12 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
     webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goForward();
   };
 
-  const windowSizeToggle = () => {
+  const windowSizeToggle = (evt: React.MouseEvent) => {
+    if (elem.current != evt.target) {
+      // Skip clicking on child elements
+      return;
+    }
+
     const window = getCurrentWindow();
 
     if (window.isMaximized()) {
@@ -105,12 +112,12 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   }, []);
 
   return (
-    <div className={styles.topBar} {...rest}>
-      <div className={styles.tools} onDoubleClick={windowSizeToggle}>
+    <div className={styles.topBar} onDoubleClick={windowSizeToggle} ref={elem} {...rest}>
+      <div className={styles.tools}>
         <div className={styles.winMenu}>
           {(isWindows || isLinux) && (
             <div onClick={openContextMenu} data-testid="window-menu">
-              <svg width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="m1 10h10v1h-10z"/><path fill="currentColor" d="m1 5.5h10v1h-10z"/><path fill="currentColor" d="m1 1h10v1h-10z"/></svg>
+              <svg width="12" height="12" viewBox="0 0 12 12" shapeRendering="crispEdges"><path fill="currentColor" d="m1 10h10v1h-10z"/><path fill="currentColor" d="m1 5.5h10v1h-10z"/><path fill="currentColor" d="m1 1h10v1h-10z"/></svg>
             </div>
           )}
         </div>

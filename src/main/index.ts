@@ -29,7 +29,7 @@ import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, BrowserWindow, dialog, Menu, powerMonitor } from "electron";
 import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
-import { WindowManager } from "./window-manager";
+import { IpcMainWindowEvents, WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
 import { mangleProxyEnv } from "./proxy-env";
@@ -256,10 +256,10 @@ app.on("ready", async () => {
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });
 
-  ipcMainOn("show-app-context-menu", (event) => {
+  ipcMainOn(IpcMainWindowEvents.OPEN_CONTEXT_MENU, (event) => {
     const menu = Menu.buildFromTemplate(getAppMenu(windowManager));
 
-    menu.popup(BrowserWindow.fromWebContents(event.sender) as any);
+    menu.popup(BrowserWindow.fromWebContents(event.sender) as Electron.PopupOptions);
   });
 
   logger.info("🧩 Initializing extensions");

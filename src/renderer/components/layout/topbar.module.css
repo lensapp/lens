@@ -20,14 +20,12 @@
  */
 
 .topBar {
-  display: grid;
-  grid-template-columns: [title] 1fr [controls] auto;
-  grid-template-rows: var(--main-layout-header);
-  grid-template-areas: "title controls";
+  display: flex;
   background-color: var(--layoutBackground);
   z-index: 2;
   width: 100%;
   grid-area: topbar;
+  justify-content: space-between;
 }
 
 .winMenu {
@@ -58,6 +56,13 @@
   align-items: center;
   display: flex;
   height: 100%;
+}
+
+.winDraggableArea {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  flex-grow: 1;
+  background-color: aliceblue;
 }
 
 .winButtons {
