@@ -20,7 +20,7 @@
  */
 
 import styles from "./topbar.module.css";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";
 import { Icon } from "../icon";
@@ -49,6 +49,7 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
 
 export const TopBar = observer(({ children, ...rest }: Props) => {
   const elem = useRef<HTMLDivElement>();
+  const window = useMemo(() => getCurrentWindow(), []);
 
   const renderRegisteredItems = () => {
     const items = TopBarRegistry.getInstance().getItems();
@@ -96,13 +97,23 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
       return;
     }
 
-    const window = getCurrentWindow();
+    toggleMaximize();
+  };
 
+  const minimizeWindow = () => {
+    window.minimize();
+  };
+
+  const toggleMaximize = () => {
     if (window.isMaximized()) {
       window.unmaximize();
     } else {
       window.maximize();
     }
+  };
+
+  const closeWindow = () => {
+    window.close();
   };
 
   useEffect(() => {
@@ -148,12 +159,12 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
         {children}
         {isWindows && (
           <div className={styles.winButtons}>
-            <div className={styles.minimize} data-testid="window-minimize" onClick={() => broadcastMessage(IpcMainWindowEvents.MINIMIZE)}>
+            <div className={styles.minimize} data-testid="window-minimize" onClick={minimizeWindow}>
               <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="6"></rect></svg></div>
-            <div className={styles.maximize} data-testid="window-maximize" onClick={() => broadcastMessage(IpcMainWindowEvents.MAXIMIZE)}>
+            <div className={styles.maximize} data-testid="window-maximize" onClick={toggleMaximize}>
               <svg width="12" height="12" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
             </div>
-            <div className={styles.close} data-testid="window-close" onClick={() => broadcastMessage(IpcMainWindowEvents.CLOSE)}>
+            <div className={styles.close} data-testid="window-close" onClick={closeWindow}>
               <svg width="12" height="12" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
             </div>
           </div>

@@ -25,7 +25,12 @@
   z-index: 2;
   width: 100%;
   grid-area: topbar;
+  height: var(--main-layout-header);
   justify-content: space-between;
+
+  /* Use topbar as draggable region */
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
 }
 
 .winMenu {
