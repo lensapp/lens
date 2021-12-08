@@ -64,7 +64,7 @@ export class NodeShellSession extends ShellSession {
     const args = ["exec", "-i", "-t", "-n", "kube-system", this.podName, "--"];
     const nodeApi = new NodesApi({
       objectConstructor: Node,
-      request: KubeJsonApi.forCluster(this.cluster),
+      request: KubeJsonApi.forCluster(this.cluster.id),
     });
     const node = await nodeApi.get({ name: this.nodeName });
     const nodeOs = node.getOperatingSystem();
