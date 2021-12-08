@@ -18,18 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import rendererExtensionsInjectable from "../../../../../extensions/renderer-extensions.injectable";
 
-// All registries managed by extensions api
+const topBarItemsInjectable = getInjectable({
+  instantiate: (di) => {
+    const extensions = di.inject(rendererExtensionsInjectable);
 
-export * from "./page-registry";
-export * from "./page-menu-registry";
-export * from "./app-preference-registry";
-export * from "./status-bar-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./kube-object-status-registry";
-export * from "./command-registry";
-export * from "./entity-setting-registry";
-export * from "./catalog-entity-detail-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./protocol-handler";
+    return computed(() =>
+      extensions.get().flatMap((extension) => extension.topBarItems),
+    );
+  },
+
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default topBarItemsInjectable;

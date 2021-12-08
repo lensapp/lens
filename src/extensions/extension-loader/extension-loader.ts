@@ -264,7 +264,6 @@ export class ExtensionLoader {
         registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
         registries.CommandRegistry.getInstance().add(extension.commands),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
-        registries.TopBarRegistry.getInstance().add(extension.topBarItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

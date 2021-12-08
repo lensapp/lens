@@ -19,22 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./topbar.module.scss";
+import styles from "./top-bar.module.scss";
 import React, { useEffect, useMemo, useRef } from "react";
 import { observer } from "mobx-react";
-import { TopBarRegistry } from "../../../extensions/registries";
-import { Icon } from "../icon";
+import type { IComputedValue } from "mobx";
+import { Icon } from "../../icon";
 import { webContents, getCurrentWindow } from "@electron/remote";
 import { observable } from "mobx";
-import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
-import { watchHistoryState } from "../../remote-helpers/history-updater";
-import { isActiveRoute, navigate } from "../../navigation";
-import { catalogRoute, catalogURL } from "../../../common/routes";
-import { IpcMainWindowEvents } from "../../../main/window-manager";
-import { isLinux, isWindows } from "../../../common/vars";
-import { cssNames } from "../../utils";
+import { broadcastMessage, ipcRendererOn } from "../../../../common/ipc";
+import { watchHistoryState } from "../../../remote-helpers/history-updater";
+import { isActiveRoute, navigate } from "../../../navigation";
+import { catalogRoute, catalogURL } from "../../../../common/routes";
+import { IpcMainWindowEvents } from "../../../../main/window-manager";
+import { isLinux, isWindows } from "../../../../common/vars";
+import { cssNames } from "../../../utils";
+import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { TopBarRegistration } from "./top-bar-registration";
 
-interface Props extends React.HTMLAttributes<any> {
+interface Props extends React.HTMLAttributes<any> {}
+
+interface Dependencies {
+  items: IComputedValue<TopBarRegistration[]>;
 }
 
 const prevEnabled = observable.box(false);
@@ -48,33 +54,9 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-export const TopBar = observer(({ children, ...rest }: Props) => {
+const NonInjectedTopBar: React.FC<Props & Dependencies> = (({ items, children, ...rest }) => {
   const elem = useRef<HTMLDivElement>();
   const window = useMemo(() => getCurrentWindow(), []);
-
-  const renderRegisteredItems = () => {
-    const items = TopBarRegistry.getInstance().getItems();
-
-    if (!Array.isArray(items)) {
-      return null;
-    }
-
-    return (
-      <div>
-        {items.map((registration, index) => {
-          if (!registration?.components?.Item) {
-            return null;
-          }
-
-          return (
-            <div key={index}>
-              <registration.components.Item />
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   const openContextMenu = () => {
     broadcastMessage(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
@@ -156,7 +138,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
         />
       </div>
       <div className={styles.controls}>
-        {renderRegisteredItems()}
+        {renderRegisteredItems(items.get())}
         {children}
         {(isWindows || isLinux) && (
           <div className={cssNames(styles.windowButtons, { [styles.linuxButtons]: isLinux })}>
@@ -173,4 +155,30 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
       </div>
     </div>
   );
+});
+
+const renderRegisteredItems = (items: TopBarRegistration[]) => (
+  <div>
+    {items.map((registration, index) => {
+      if (!registration?.components?.Item) {
+        return null;
+      }
+
+      return (
+        <div key={index}>
+          <registration.components.Item />
+        </div>
+      );
+    })}
+  </div>
+);
+
+
+
+export const TopBar = withInjectables(observer(NonInjectedTopBar), {
+  getProps: (di, props) => ({
+    items: di.inject(topBarItemsInjectable),
+
+    ...props,
+  }),
 });
