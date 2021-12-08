@@ -25,6 +25,12 @@ import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "../topbar";
 import { TopBarRegistry } from "../../../../extensions/registries";
 
+jest.mock("../../../../common/vars", () => {
+  return {
+    isMac: true,
+  };
+});
+
 jest.mock(
   "electron",
   () => ({
