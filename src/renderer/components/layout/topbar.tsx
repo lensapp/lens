@@ -128,7 +128,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
         <div className={styles.winMenu}>
           {(isWindows || isLinux) && (
             <div onClick={openContextMenu} data-testid="window-menu">
-              <svg width="12" height="12" viewBox="0 0 12 12" shapeRendering="crispEdges"><path fill="currentColor" d="m1 10h10v1h-10z"/><path fill="currentColor" d="m1 5.5h10v1h-10z"/><path fill="currentColor" d="m1 1h10v1h-10z"/></svg>
+              <svg width="12" height="12" viewBox="0 0 12 12" shapeRendering="crispEdges"><path fill="currentColor" d="M0,8.5h12v1H0V8.5z"/><path fill="currentColor" d="M0,5.5h12v1H0V5.5z"/><path fill="currentColor" d="M0,2.5h12v1H0V2.5z"/></svg>
             </div>
           )}
         </div>
