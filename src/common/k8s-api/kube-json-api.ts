@@ -21,7 +21,6 @@
 
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
 import type { Response } from "node-fetch";
-import type { Cluster } from "../../main/cluster";
 import { LensProxy } from "../../main/lens-proxy";
 import { apiKubePrefix, isDebugging } from "../vars";
 
