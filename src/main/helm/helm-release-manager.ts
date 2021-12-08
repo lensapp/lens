@@ -69,15 +69,19 @@ export async function installChart(chart: string, values: any, name: string | un
 
   await fse.writeFile(valuesFilePath, yaml.dump(values));
 
-  const args = [
-    "install",
-    name,
+  const args = ["install"];
+
+  if (name) {
+    args.push(name);
+  }
+
+  args.push(
     chart,
     "--version", version,
     "--values", valuesFilePath,
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
-  ];
+  );
 
   if (!name) {
     args.push("--generate-name");
@@ -193,7 +197,6 @@ export async function rollback(name: string, namespace: string, revision: number
   return JSON.parse(await execHelm([
     "rollback",
     name,
-    "--output", "json",
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
   ]));
@@ -222,10 +225,6 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
       let stdout = "";
       const kubectl = execFile(kubectlPath, kubectlArgs);
 
-      kubectl.stdout.on("data", output => stdout += output);
-      kubectl.stdin.write(helmOutput);
-      kubectl.stdin.end();
-
       kubectl
         .on("exit", (code, signal) => {
           if (typeof code === "number") {
@@ -239,6 +238,10 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
           }
         })
         .on("error", reject);
+
+      kubectl.stdout.on("data", output => stdout += output);
+      kubectl.stdin.write(helmOutput);
+      kubectl.stdin.end();
     });
   } catch {
     return [];

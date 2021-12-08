@@ -91,20 +91,18 @@ export class HelmRepoManager extends Singleton {
 
   protected static async parseHelmEnv() {
     const output = await execHelm(["env"]);
-    const env = output
-      .split("\n")
-      .map(line => {
-        const match = line.match(/^(?<key>[^=]*)=(?<value>.*)$/);
+    const lines = output.split(/\r?\n/); // split by new line feed
+    const env: HelmEnv = {};
 
-        if (match) {
-          return [match.groups.key, match.groups.value];
-        }
+    lines.forEach((line: string) => {
+      const [key, value] = line.split("=");
 
-        return null;
-      })
-      .filter(Boolean);
+      if (key && value) {
+        env[key] = value.replace(/"/g, ""); // strip quotas
+      }
+    });
 
-    return Object.fromEntries(env);
+    return env;
   }
 
   public async repo(name: string): Promise<HelmRepo> {
