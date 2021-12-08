@@ -35,10 +35,6 @@ export const getDiForUnitTesting = () => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const injectable = require(key).default;
 
-      if (!injectable) {
-        console.log(key);
-      }
-
       return {
         id: key,
         ...injectable,
