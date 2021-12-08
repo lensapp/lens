@@ -57,18 +57,25 @@ describe("<SidebarCluster/>", () => {
   });
 
   it("renders cluster avatar and name", () => {
-    const { getByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
+    const { getByText, getAllByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
 
     expect(getByText("tc")).toBeInTheDocument();
-    expect(getByText("test-cluster")).toBeInTheDocument();
+
+    const v = getAllByText("test-cluster");
+
+    expect(v.length).toBeGreaterThan(0);
+
+    for (const e of v) {
+      expect(e).toBeInTheDocument();
+    }
   });
 
-  it("renders cluster menu", async () => {
+  it("renders cluster menu", () => {
     const { getByTestId, getByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
     const link = getByTestId("sidebar-cluster-dropdown");
 
     fireEvent.click(link);
-    expect(await getByText("Add to Hotbar")).toBeInTheDocument();
+    expect(getByText("Add to Hotbar")).toBeInTheDocument();
   });
 });
 
