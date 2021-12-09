@@ -26,6 +26,7 @@ import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
 import { Icon } from "../icon";
+import { catalogURL } from "../../../common/routes";
 
 export interface SettingLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -39,7 +40,13 @@ export interface SettingLayoutProps extends React.DOMAttributes<any> {
 const defaultProps: Partial<SettingLayoutProps> = {
   provideBackButtonNavigation: true,
   contentGaps: true,
-  back: () => navigation.goBack(),
+  back: () => {
+    if (navigation.length <= 1) {
+      navigation.push(catalogURL());
+    } else {
+      navigation.goBack();
+    }
+  },
 };
 
 /**
