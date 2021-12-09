@@ -153,7 +153,7 @@ export class ClusterStatus extends React.Component<Props> {
     return (
       <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
         <div className="flex items-center column gaps">
-          <h2>{this.entity.getName()}</h2>
+          <h2>{this.entity?.getName() ?? this.cluster.name}</h2>
           {this.renderStatusIcon()}
           {this.renderAuthenticationOutput()}
           {this.renderReconnectionHelp()}
