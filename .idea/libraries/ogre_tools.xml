@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="ogre-tools" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/node_modules/@ogre-tools/injectable-react/ogre-tools-injectable-react.d.ts" />
+        <item url="file://$PROJECT_DIR$/node_modules/@ogre-tools/injectable/ogre-tools-injectable.d.ts" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/node_modules/@ogre-tools/injectable-react/ogre-tools-injectable-react.d.ts" />
+      <root url="file://$PROJECT_DIR$/node_modules/@ogre-tools/injectable/ogre-tools-injectable.d.ts" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

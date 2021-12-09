@@ -19,4 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./kube-object-menu";
+export type { KubeObjectMenuProps } from "./kube-object-menu";
+export { KubeObjectMenu } from "./kube-object-menu-container";

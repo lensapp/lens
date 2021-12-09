@@ -37,7 +37,7 @@ export interface IKubeApiLinkRef {
   apiPrefix?: string;
   apiVersion: string;
   resource: string;
-  name: string;
+  name?: string;
   namespace?: string;
 }
 
@@ -145,15 +145,18 @@ function _parseKubeApi(path: string): IKubeApiParsed {
   };
 }
 
-export function createKubeApiURL(ref: IKubeApiLinkRef): string {
-  const { apiPrefix = "/apis", resource, apiVersion, name } = ref;
-  let { namespace } = ref;
+export function createKubeApiURL({ apiPrefix = "/apis", resource, apiVersion, name, namespace }: IKubeApiLinkRef): string {
+  const parts = [apiPrefix, apiVersion];
 
   if (namespace) {
-    namespace = `namespaces/${namespace}`;
+    parts.push("namespaces", namespace);
   }
 
-  return [apiPrefix, apiVersion, namespace, resource, name]
-    .filter(v => v)
-    .join("/");
+  parts.push(resource);
+
+  if (name) {
+    parts.push(name);
+  }
+
+  return parts.join("/");
 }

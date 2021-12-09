@@ -18,24 +18,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getActiveClusterEntity } from "../../../api/catalog-entity-registry";
 
-.BottomBar {
-  $spacing: $padding * 0.5;
-  --flex-gap: #{$spacing};
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import type { Cluster } from "../../../../main/cluster";
 
-  background-color: var(--blue);
-  padding: 0 2px;
-  height: var(--bottom-bar-height);
+const clusterInjectable: Injectable<Cluster | null> = {
+  getDependencies: () => ({}),
+  instantiate: () => getActiveClusterEntity(),
+  lifecycle: lifecycleEnum.transient,
+};
 
-  .extensions {
-    font-size: var(--font-size-small);
-    color: white;
-    .item {
-      padding: $padding * 0.25 $padding * 0.5;
-      &:hover {
-        background-color: #ffffff33;
-        cursor: pointer;
-      }
-    }
-  }
-}
+export default clusterInjectable;

@@ -22,25 +22,37 @@
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { editResourceTab } from "../dock/edit-resource.store";
-import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { hideDetails } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
-import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { MenuActions, MenuActionsProps } from "../menu";
+import identity from "lodash/identity";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 
-export interface KubeObjectMenuProps<T> extends MenuActionsProps {
-  object: T | null | undefined;
+export interface KubeObjectMenuDependencies<TKubeObject> {
+  apiManager: ApiManager;
+  kubeObjectMenuItems: React.ElementType[];
+  clusterName: string;
+  hideDetails: () => void;
+  editResourceTab: (kubeObject: TKubeObject) => void;
+}
+
+export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
+  object: TKubeObject | null | undefined;
   editable?: boolean;
   removable?: boolean;
 }
 
-export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuProps<T>> {
+export interface KubeObjectMenuPropsAndDependencies<TKubeObject>
+  extends KubeObjectMenuProps<TKubeObject>,
+    KubeObjectMenuDependencies<TKubeObject> {}
+
+export class KubeObjectMenu<
+  TKubeObject extends KubeObject,
+> extends React.Component<KubeObjectMenuPropsAndDependencies<TKubeObject>> {
   get store() {
     const { object } = this.props;
 
     if (!object) return null;
 
-    return apiManager.getStore(object.selfLink);
+    return this.props.apiManager.getStore(object.selfLink);
   }
 
   get isEditable() {
@@ -53,13 +65,13 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
   @boundMethod
   async update() {
-    hideDetails();
-    editResourceTab(this.props.object);
+    this.props.hideDetails();
+    this.props.editResourceTab(this.props.object);
   }
 
   @boundMethod
   async remove() {
-    hideDetails();
+    this.props.hideDetails();
     const { object, removeAction } = this.props;
 
     if (removeAction) await removeAction();
@@ -74,28 +86,27 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
       return null;
     }
 
+    const breadcrumbParts = [object.getNs(), object.getName()];
+
+    const breadcrumb = breadcrumbParts.filter(identity).join("/");
+
     return (
-      <p>Remove {object.kind} <b>{object.getName()}</b>?</p>
+      <p>
+        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.props.clusterName}</b>?
+      </p>
     );
   }
 
   getMenuItems(): React.ReactChild[] {
     const { object, toolbar } = this.props;
 
-    if (!object) {
-      return [];
-    }
-
-    return KubeObjectMenuRegistry
-      .getInstance()
-      .getItemsForKind(object.kind, object.apiVersion)
-      .map(({ components: { MenuItem }}, index) => (
-        <MenuItem
-          object={object}
-          key={`menu-item-${index}`}
-          toolbar={toolbar}
-        />
-      ));
+    return this.props.kubeObjectMenuItems.map((MenuItem, index) => (
+      <MenuItem
+        object={object}
+        toolbar={toolbar}
+        key={`menu-item-${index}`}
+      />
+    ));
   }
 
   render() {

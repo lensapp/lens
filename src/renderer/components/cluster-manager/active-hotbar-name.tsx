@@ -19,41 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type Url from "url-parse";
+import React from "react";
+import { observer } from "mobx-react";
+import { Icon } from "../icon";
+import { HotbarStore } from "../../../common/hotbar-store";
+import { CommandOverlay } from "../command-palette";
+import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 
-export enum RoutingErrorType {
-  INVALID_PROTOCOL = "invalid-protocol",
-  INVALID_HOST = "invalid-host",
-  INVALID_PATHNAME = "invalid-pathname",
-  NO_HANDLER = "no-handler",
-  NO_EXTENSION_ID = "no-ext-id",
-  MISSING_EXTENSION = "missing-ext",
-}
-
-export class RoutingError<Query> extends Error {
-  /**
-   * Will be set if the routing error originated in an extension route table
-   */
-  public extensionName?: string;
-
-  constructor(public type: RoutingErrorType, public url: Url<Query>) {
-    super("routing error");
-  }
-
-  toString(): string {
-    switch (this.type) {
-      case RoutingErrorType.INVALID_HOST:
-        return "invalid host";
-      case RoutingErrorType.INVALID_PROTOCOL:
-        return "invalid protocol";
-      case RoutingErrorType.INVALID_PATHNAME:
-        return "invalid pathname";
-      case RoutingErrorType.NO_EXTENSION_ID:
-        return "no extension ID";
-      case RoutingErrorType.MISSING_EXTENSION:
-        return "extension not found";
-      default:
-        return `unknown error: ${this.type}`;
-    }
-  }
-}
+export const ActiveHotbarName = observer(() => {
+  return (
+    <div
+      className="flex items-center"
+      data-testid="current-hotbar-name"
+      onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
+    >
+      <Icon material="bookmarks" className="mr-2" size={14}/>
+      {HotbarStore.getInstance().getActive()?.name}
+    </div>
+  );
+});
