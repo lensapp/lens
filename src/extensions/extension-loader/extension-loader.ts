@@ -24,16 +24,16 @@ import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
-import { AppPaths } from "../common/app-paths";
-import { ClusterStore } from "../common/cluster-store";
-import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
-import { Disposer, getHostedClusterId, Singleton, toJS } from "../common/utils";
-import logger from "../main/logger";
-import type { InstalledExtension } from "./extension-discovery";
-import { ExtensionsStore } from "./extensions-store";
-import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension";
-import type { LensRendererExtension } from "./lens-renderer-extension";
-import * as registries from "./registries";
+import { AppPaths } from "../../common/app-paths";
+import { ClusterStore } from "../../common/cluster-store";
+import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
+import { Disposer, getHostedClusterId, toJS } from "../../common/utils";
+import logger from "../../main/logger";
+import type { InstalledExtension } from "../extension-discovery";
+import { ExtensionsStore } from "../extensions-store";
+import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
+import type { LensRendererExtension } from "../lens-renderer-extension";
+import * as registries from "../registries";
 
 export function extensionPackagesRoot() {
   return path.join(AppPaths.get("userData"));
@@ -44,7 +44,7 @@ const logModule = "[EXTENSIONS-LOADER]";
 /**
  * Loads installed extensions to the Lens application
  */
-export class ExtensionLoader extends Singleton {
+export class ExtensionLoader {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
 
@@ -76,7 +76,6 @@ export class ExtensionLoader extends Singleton {
   }
 
   constructor() {
-    super();
     makeObservable(this);
     observe(this.instances, change => {
       switch (change.type) {

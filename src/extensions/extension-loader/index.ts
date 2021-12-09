@@ -18,24 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { computed, IComputedValue } from "mobx";
-import type { LensExtension } from "./lens-extension";
-import { ExtensionLoader } from "./extension-loader";
-import type { ExtensionLoader as ExtensionLoaderType } from "./extension-loader/extension-loader";
+import { getLegacySingleton } from "../../common/di-kludge/get-legacy-singleton/get-legacy-singleton";
+import extensionLoaderInjectable from "./extension-loader.injectable";
 
-const extensionsInjectable: Injectable<
-  IComputedValue<LensExtension[]>,
-  { extensionLoader: ExtensionLoaderType }
-> = {
-  getDependencies: () => ({
-    extensionLoader: ExtensionLoader.getInstance(),
-  }),
+export * from "./extension-loader";
 
-  lifecycle: lifecycleEnum.singleton,
-
-  instantiate: ({ extensionLoader }) =>
-    computed(() => extensionLoader.enabledExtensionInstances),
-};
-
-export default extensionsInjectable;
+/**
+ * @deprecated Switch to using di.inject(extensionLoaderInjectable)
+ */
+export const ExtensionLoader = getLegacySingleton(extensionLoaderInjectable);
