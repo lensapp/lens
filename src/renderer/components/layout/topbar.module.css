@@ -33,6 +33,10 @@
   -webkit-app-region: drag;
 }
 
+:global(.is-mac) .topBar {
+  padding-left: var(--hotbar-width);
+}
+
 .winMenu {
   width: var(--hotbar-width);
 

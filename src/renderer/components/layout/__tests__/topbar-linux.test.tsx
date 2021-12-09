@@ -47,13 +47,7 @@ describe("<Tobar/> in Linux", () => {
     TopBarRegistry.resetInstance();
   });
 
-  it("shows menu icon", () => {
-    const { getByTestId } = render(<TopBar/>);
-
-    expect(getByTestId("window-menu")).toBeInTheDocument();
-  });
-
-  it("doesn't show windows title buttons", () => {
+  it("doesn't show custom title buttons used in Windows", () => {
     const { queryByTestId } = render(<TopBar/>);
 
     expect(queryByTestId("window-minimize")).not.toBeInTheDocument();
