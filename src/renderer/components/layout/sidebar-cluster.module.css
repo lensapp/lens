@@ -62,3 +62,50 @@
   font-weight: 500;
   margin-right: 1.25rem;
 }
+
+.loadingAvatar {
+  position: relative;
+  pointer-events: none;
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: transparentize(white, .85);
+    animation: waiting 1.5s infinite linear;
+  }
+}
+
+.loadingClusterName {
+  position: relative;
+  pointer-events: none;
+  width: 80%;
+  height: 16px;
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: transparentize(white, .85);
+    animation: waiting 1.5s infinite linear;
+  }
+}
+
+@keyframes waiting {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 25%;
+    width: 75%;
+  }
+  75% {
+    left: 100%;
+    width: 0;
+  }
+}
