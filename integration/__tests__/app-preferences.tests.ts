@@ -60,9 +60,7 @@ describe("preferences page tests", () => {
   // Skipping, but will turn it on again in the follow up PR
   it.skip("ensures helm repos", async () => {
     await window.click("[data-testid=kubernetes-tab]");
-    await window.waitForSelector("[data-testid=repository-name]", {
-      timeout: 140_000,
-    });
+    await window.waitForSelector("[data-testid=repository-name]");
     await window.click("#HelmRepoSelect");
     await window.waitForSelector("div.Select__option");
   }, 10*60*1000);
