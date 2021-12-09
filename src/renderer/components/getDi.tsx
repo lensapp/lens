@@ -34,7 +34,7 @@ export const getDi = () => {
 };
 
 const getRequireContextForRendererCode = () =>
-  require.context("./", true, /\.injectable\.(ts|tsx)$/);
+  require.context("../", true, /\.injectable\.(ts|tsx)$/);
 
 const getRequireContextForCommonExtensionCode = () =>
   require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);

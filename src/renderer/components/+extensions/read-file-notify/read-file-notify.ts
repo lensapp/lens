@@ -18,13 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import fse from "fs-extra";
+import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
+import logger from "../../../../main/logger";
+import { Notifications } from "../../notifications";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+export const readFileNotify = async (filePath: string, showError = true): Promise<Buffer | null> => {
+  try {
+    return await fse.readFile(filePath);
+  } catch (error) {
+    if (showError) {
+      const message = getMessageFromError(error);
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
-}
+      logger.info(`[EXTENSION-INSTALL]: preloading ${filePath} has failed: ${message}`, { error });
+      Notifications.error(`Error while reading "${filePath}": ${message}`);
+    }
+  }
+
+  return null;
+};

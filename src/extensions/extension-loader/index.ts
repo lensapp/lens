@@ -18,12 +18,5 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getLegacySingleton } from "../../common/di-kludge/get-legacy-singleton/get-legacy-singleton";
-import extensionLoaderInjectable from "./extension-loader.injectable";
 
 export * from "./extension-loader";
-
-/**
- * @deprecated Switch to using di.inject(extensionLoaderInjectable)
- */
-export const ExtensionLoader = getLegacySingleton(extensionLoaderInjectable);

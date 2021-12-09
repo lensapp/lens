@@ -18,13 +18,24 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+export function getMessageFromError(error: any): string {
+  if (!error || typeof error !== "object") {
+    return "an error has occurred";
+  }
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+  if (error.message) {
+    return String(error.message);
+  }
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
+  if (error.err) {
+    return String(error.err);
+  }
+
+  const rawMessage = String(error);
+
+  if (rawMessage === String({})) {
+    return "an error has occurred";
+  }
+
+  return rawMessage;
 }

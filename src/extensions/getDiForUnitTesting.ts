@@ -19,12 +19,39 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+import glob from "glob";
+import { memoize } from "lodash/fp";
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
-}
+import {
+  createContainer,
+  ConfigurableDependencyInjectionContainer,
+} from "@ogre-tools/injectable";
+import { setDiKludge } from "../common/di-kludge/di-kludge";
+
+export const getDiForUnitTesting = () => {
+  const di: ConfigurableDependencyInjectionContainer = createContainer();
+
+  setDiKludge(di);
+
+  getInjectableFilePaths()
+    .map(key => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const injectable = require(key).default;
+
+      return {
+        id: key,
+        ...injectable,
+        aliases: [injectable, ...(injectable.aliases || [])],
+      };
+    })
+
+    .forEach(injectable => di.register(injectable));
+
+  di.preventSideEffects();
+
+  return di;
+};
+
+const getInjectableFilePaths = memoize(() => [
+  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+]);

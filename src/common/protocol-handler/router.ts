@@ -21,13 +21,13 @@
 
 import { match, matchPath } from "react-router";
 import { countBy } from "lodash";
-import { iter, Singleton } from "../utils";
+import { iter } from "../utils";
 import { pathToRegexp } from "path-to-regexp";
 import logger from "../../main/logger";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
 import { ExtensionsStore } from "../../extensions/extensions-store";
-import { ExtensionLoader } from "../../extensions/extension-loader";
+import type { ExtensionLoader as ExtensionLoaderType } from "../../extensions/extension-loader/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
 import { when } from "mobx";
@@ -78,13 +78,19 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
   }
 }
 
-export abstract class LensProtocolRouter extends Singleton {
+interface Dependencies {
+  extensionLoader: ExtensionLoaderType
+}
+
+export abstract class LensProtocolRouter {
   // Map between path schemas and the handlers
   protected internalRoutes = new Map<string, RouteHandler>();
 
   public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
 
   static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
+
+  constructor(protected dependencies: Dependencies) {}
 
   /**
    * Attempts to route the given URL to all internal routes that have been registered
@@ -180,15 +186,20 @@ export abstract class LensProtocolRouter extends Singleton {
 
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = [publisher, partialName].filter(Boolean).join("/");
-    const extensionLoader = ExtensionLoader.getInstance();
+
+    const extensionLoader = this.dependencies.extensionLoader;
 
     try {
       /**
        * Note, if `getInstanceByName` returns `null` that means we won't be getting an instance
        */
-      await when(() => extensionLoader.getInstanceByName(name) !== (void 0), { timeout: 5_000 });
-    } catch(error) {
-      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`);
+      await when(() => extensionLoader.getInstanceByName(name) !== void 0, {
+        timeout: 5_000,
+      });
+    } catch (error) {
+      logger.info(
+        `${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`,
+      );
 
       return name;
     }
@@ -232,7 +243,6 @@ export abstract class LensProtocolRouter extends Singleton {
 
     // remove the extension name from the path name so we don't need to match on it anymore
     url.set("pathname", url.pathname.slice(extension.name.length + 1));
-
 
     try {
       const handlers = iter.map(extension.protocolHandlers, ({ pathSchema, handler }) => [pathSchema, handler] as [string, RouteHandler]);

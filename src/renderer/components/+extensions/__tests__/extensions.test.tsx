@@ -25,13 +25,16 @@ import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
 import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
-import { ExtensionLoader } from "../../../../extensions/extension-loader";
+import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
 import { AppPaths } from "../../../../common/app-paths";
+import extensionLoaderInjectable
+  from "../../../../extensions/extension-loader/extension-loader.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 mockWindow();
 
@@ -73,14 +76,20 @@ jest.mock("electron", () => ({
 AppPaths.init();
 
 describe("Extensions", () => {
+  let extensionLoader: ExtensionLoader;
+
   beforeEach(async () => {
+    const di = getDiForUnitTesting();
+
+    extensionLoader = di.inject(extensionLoaderInjectable);
+
     mockFs({
       "tmp": {},
     });
 
     ExtensionInstallationStateStore.reset();
 
-    ExtensionLoader.createInstance().addExtension({
+    extensionLoader.addExtension({
       id: "extensionId",
       manifest: {
         name: "test",
@@ -92,7 +101,11 @@ describe("Extensions", () => {
       isEnabled: true,
       isCompatible: true,
     });
-    ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
+
+    const extensionDiscovery = ExtensionDiscovery.createInstance(extensionLoader);
+
+    extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
+
     UserStore.createInstance();
   });
 
@@ -100,7 +113,6 @@ describe("Extensions", () => {
     mockFs.restore();
     UserStore.resetInstance();
     ExtensionDiscovery.resetInstance();
-    ExtensionLoader.resetInstance();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {

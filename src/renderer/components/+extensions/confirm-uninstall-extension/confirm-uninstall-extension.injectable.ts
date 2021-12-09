@@ -18,13 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import {
+  confirmUninstallExtension,
+  Dependencies,
+} from "./confirm-uninstall-extension";
+import type { InstalledExtension } from "../../../../extensions/extension-discovery";
+import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+const confirmUninstallExtensionInjectable: Injectable<
+  (extension: InstalledExtension) => Promise<void>,
+  Dependencies
+> = {
+  getDependencies: di => ({
+    uninstallExtension: di.inject(uninstallExtensionInjectable),
+  }),
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
-}
+  instantiate: confirmUninstallExtension,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default confirmUninstallExtensionInjectable;

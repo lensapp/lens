@@ -19,4 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./router";
+export * from "./lens-protocol-router-main/lens-protocol-router-main";

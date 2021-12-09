@@ -18,13 +18,28 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { dialog } from "../../../remote-helpers";
+import { AppPaths } from "../../../../common/app-paths";
+import { supportedExtensionFormats } from "../supported-extension-formats";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
+export interface Dependencies {
+  attemptInstalls: (filePaths: string[]) => Promise<void>
 }
+
+export const installFromSelectFileDialog =
+  ({ attemptInstalls }: Dependencies) =>
+    async () => {
+      const { canceled, filePaths } = await dialog.showOpenDialog({
+        defaultPath: AppPaths.get("downloads"),
+        properties: ["openFile", "multiSelections"],
+        message: `Select extensions to install (formats: ${supportedExtensionFormats.join(
+          ", ",
+        )}), `,
+        buttonLabel: "Use configuration",
+        filters: [{ name: "tarball", extensions: supportedExtensionFormats }],
+      });
+
+      if (!canceled) {
+        await attemptInstalls(filePaths);
+      }
+    };

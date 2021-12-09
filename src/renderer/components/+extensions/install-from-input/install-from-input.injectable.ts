@@ -18,13 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
+import type { Dependencies } from "./install-from-input";
+import { installFromInput } from "./install-from-input";
+import attemptInstallByInfoInjectable
+  from "../attempt-install-by-info/attempt-install-by-info.injectable";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+const installFromInputInjectable: Injectable<
+  (input: string) => Promise<void>,
+  Dependencies
+> = {
+  getDependencies: di => ({
+    attemptInstall: di.inject(attemptInstallInjectable),
+    attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
+  }),
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
-}
+  instantiate: installFromInput,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default installFromInputInjectable;

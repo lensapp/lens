@@ -18,13 +18,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+import type { ExtendableDisposer } from "../../../../common/utils";
+import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
+import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
+import type { Dependencies } from "./attempt-install";
+import { attemptInstall } from "./attempt-install";
+import type { InstallRequest } from "./install-request";
+import unpackExtensionInjectable from "./unpack-extension/unpack-extension.injectable";
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
-}
+const attemptInstallInjectable: Injectable<
+  (request: InstallRequest, d?: ExtendableDisposer) => Promise<void>,
+  Dependencies
+> = {
+  getDependencies: di => ({
+    extensionLoader: di.inject(extensionLoaderInjectable),
+    uninstallExtension: di.inject(uninstallExtensionInjectable),
+    unpackExtension: di.inject(unpackExtensionInjectable),
+  }),
+
+  instantiate: attemptInstall,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default attemptInstallInjectable;

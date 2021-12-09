@@ -21,15 +21,15 @@
 import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
 import type { LensExtension } from "./lens-extension";
-import { ExtensionLoader } from "./extension-loader";
-import type { ExtensionLoader as ExtensionLoaderType } from "./extension-loader/extension-loader";
+import type { ExtensionLoader } from "./extension-loader";
+import extensionLoaderInjectable from "./extension-loader/extension-loader.injectable";
 
 const extensionsInjectable: Injectable<
   IComputedValue<LensExtension[]>,
-  { extensionLoader: ExtensionLoaderType }
+  { extensionLoader: ExtensionLoader }
 > = {
-  getDependencies: () => ({
-    extensionLoader: ExtensionLoader.getInstance(),
+  getDependencies: di => ({
+    extensionLoader: di.inject(extensionLoaderInjectable),
   }),
 
   lifecycle: lifecycleEnum.singleton,

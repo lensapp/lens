@@ -18,13 +18,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import { Dependencies, installOnDrop } from "./install-on-drop";
+import attemptInstallsInjectable from "../attempt-installs/attempt-installs.injectable";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+const installOnDropInjectable: Injectable<
+  (files: File[]) => Promise<void>,
+  Dependencies
+> = {
+  getDependencies: di => ({
+    attemptInstalls: di.inject(attemptInstallsInjectable),
+  }),
 
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
-}
+  instantiate: installOnDrop,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default installOnDropInjectable;

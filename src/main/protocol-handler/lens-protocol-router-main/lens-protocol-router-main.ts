@@ -19,15 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import logger from "../logger";
-import * as proto from "../../common/protocol-handler";
+import logger from "../../logger";
+import * as proto from "../../../common/protocol-handler";
 import URLParse from "url-parse";
-import type { LensExtension } from "../../extensions/lens-extension";
-import { broadcastMessage } from "../../common/ipc";
+import type { LensExtension } from "../../../extensions/lens-extension";
+import { broadcastMessage } from "../../../common/ipc";
 import { observable, when, makeObservable } from "mobx";
-import { ProtocolHandlerInvalid, RouteAttempt } from "../../common/protocol-handler";
-import { disposer, noop } from "../../common/utils";
-import { WindowManager } from "../window-manager";
+import { ProtocolHandlerInvalid, RouteAttempt } from "../../../common/protocol-handler";
+import { disposer, noop } from "../../../common/utils";
+import { WindowManager } from "../../window-manager";
+import type { ExtensionLoader } from "../../../extensions/extension-loader";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -50,6 +51,10 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
   }
 }
 
+export interface Dependencies {
+  extensionLoader: ExtensionLoader
+}
+
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   private missingExtensionHandlers: FallbackHandler[] = [];
 
@@ -57,8 +62,8 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
 
   protected disposers = disposer();
 
-  constructor() {
-    super();
+  constructor(protected dependencies: Dependencies) {
+    super(dependencies);
 
     makeObservable(this);
   }

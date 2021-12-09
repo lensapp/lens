@@ -18,13 +18,27 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { readFileNotify } from "../read-file-notify/read-file-notify";
+import path from "path";
+import type { InstallRequest } from "../attempt-install/install-request";
 
-import { ipcRendererOn } from "../../common/ipc";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-
-export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
-  });
+export interface Dependencies {
+  attemptInstall: (request: InstallRequest) => Promise<void>;
 }
+
+export const attemptInstalls =
+  ({ attemptInstall }: Dependencies) =>
+    async (filePaths: string[]): Promise<void> => {
+      const promises: Promise<void>[] = [];
+
+      for (const filePath of filePaths) {
+        promises.push(
+          attemptInstall({
+            fileName: path.basename(filePath),
+            dataP: readFileNotify(filePath),
+          }),
+        );
+      }
+
+      await Promise.allSettled(promises);
+    };
