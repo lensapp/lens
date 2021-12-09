@@ -178,6 +178,8 @@ export class HelmRepoManager extends Singleton {
     const args = [
       "repo",
       "add",
+      name,
+      url,
     ];
 
     if (insecureSkipTlsVerify) {

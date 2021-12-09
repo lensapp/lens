@@ -121,7 +121,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       <div className="flex gaps align-center">
         <Input
           placeholder={placeholder}
-          validators = {isPath}
+          validators={isPath}
           className="box grow"
           value={this.getFilePath(fileType)}
           onChange={v => this.setFilepath(fileType, v)}
@@ -172,7 +172,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel="Add" next={()=>{this.addCustomRepo();}}>
+          <WizardStep contentClass="flow column" nextLabel="Add" next={() => this.addCustomRepo()}>
             <div className="flex column gaps">
               <Input
                 autoFocus required

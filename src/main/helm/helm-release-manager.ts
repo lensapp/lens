@@ -223,15 +223,16 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
 
     return new Promise((resolve, reject) => {
       let stdout = "";
+      let stderr = "";
       const kubectl = execFile(kubectlPath, kubectlArgs);
 
       kubectl
         .on("exit", (code, signal) => {
           if (typeof code === "number") {
-            if (code) {
-              reject(new Error(`Kubectl exited with code ${code}`));
-            } else {
+            if (code === 0) {
               resolve(JSON.parse(stdout).items);
+            } else {
+              reject(stderr);
             }
           } else {
             reject(new Error(`Kubectl exited with signal ${signal}`));
@@ -239,6 +240,7 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
         })
         .on("error", reject);
 
+      kubectl.stderr.on("data", output => stderr += output);
       kubectl.stdout.on("data", output => stdout += output);
       kubectl.stdin.write(helmOutput);
       kubectl.stdin.end();
