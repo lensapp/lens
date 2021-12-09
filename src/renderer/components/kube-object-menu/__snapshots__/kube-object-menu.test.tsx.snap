@@ -1,0 +1,371 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`kube-object-menu given kube object renders 1`] = `
+<body>
+  <div>
+    <div>
+      <ul
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <li>
+          Some menu item
+        </li>
+        <li
+          class="MenuItem"
+          data-testid="menu-action-remove"
+          tabindex="0"
+        >
+          <i
+            class="Icon material interactive focusable"
+            id="tooltip_target_4"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="delete"
+            >
+              delete
+            </span>
+            <div />
+          </i>
+          <span
+            class="title"
+          >
+            Delete
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+  />
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
+  </div>
+</body>
+`;
+
+exports[`kube-object-menu given kube object when removing kube object renders 1`] = `
+<body>
+  <div>
+    <div>
+      <ul
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <li>
+          Some menu item
+        </li>
+        <li
+          class="MenuItem"
+          data-testid="menu-action-remove"
+          tabindex="0"
+        >
+          <i
+            class="Icon material interactive focusable"
+            id="tooltip_target_8"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="delete"
+            >
+              delete
+            </span>
+            <div />
+          </i>
+          <span
+            class="title"
+          >
+            Delete
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    data-testid="confirmation-dialog"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+  >
+    <div
+      class="box"
+    >
+      <div
+        class="confirm-content"
+      >
+        <i
+          class="Icon material focusable big"
+        >
+          <span
+            class="icon"
+            data-icon-name="warning"
+          >
+            warning
+          </span>
+        </i>
+         
+        <div>
+          <p>
+            Remove 
+            some-kind
+             
+            <b>
+              some-namespace/some-name
+            </b>
+             from 
+            <b>
+              Some name
+            </b>
+            ?
+          </p>
+        </div>
+      </div>
+      <div
+        class="confirm-buttons"
+      >
+        <button
+          class="Button cancel plain"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          class="Button ok primary"
+          data-testid="confirm"
+          type="button"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
+  </div>
+</body>
+`;
+
+exports[`kube-object-menu given kube object with namespace when removing kube object, renders confirmation dialog with namespace 1`] = `
+<body>
+  <div>
+    <div>
+      <ul
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <li>
+          Some menu item
+        </li>
+        <li
+          class="MenuItem"
+          data-testid="menu-action-remove"
+          tabindex="0"
+        >
+          <i
+            class="Icon material interactive focusable"
+            id="tooltip_target_33"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="delete"
+            >
+              delete
+            </span>
+            <div />
+          </i>
+          <span
+            class="title"
+          >
+            Delete
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    data-testid="confirmation-dialog"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+  >
+    <div
+      class="box"
+    >
+      <div
+        class="confirm-content"
+      >
+        <i
+          class="Icon material focusable big"
+        >
+          <span
+            class="icon"
+            data-icon-name="warning"
+          >
+            warning
+          </span>
+        </i>
+         
+        <div>
+          <p>
+            Remove 
+            some-kind
+             
+            <b>
+              some-namespace/some-name
+            </b>
+             from 
+            <b>
+              Some name
+            </b>
+            ?
+          </p>
+        </div>
+      </div>
+      <div
+        class="confirm-buttons"
+      >
+        <button
+          class="Button cancel plain"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          class="Button ok primary"
+          data-testid="confirm"
+          type="button"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
+  </div>
+</body>
+`;
+
+exports[`kube-object-menu given kube object without namespace when removing kube object, renders confirmation dialog without namespace 1`] = `
+<body>
+  <div>
+    <div>
+      <ul
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <li>
+          Some menu item
+        </li>
+        <li
+          class="MenuItem"
+          data-testid="menu-action-remove"
+          tabindex="0"
+        >
+          <i
+            class="Icon material interactive focusable"
+            id="tooltip_target_41"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="delete"
+            >
+              delete
+            </span>
+            <div />
+          </i>
+          <span
+            class="title"
+          >
+            Delete
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    data-testid="confirmation-dialog"
+    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+  >
+    <div
+      class="box"
+    >
+      <div
+        class="confirm-content"
+      >
+        <i
+          class="Icon material focusable big"
+        >
+          <span
+            class="icon"
+            data-icon-name="warning"
+          >
+            warning
+          </span>
+        </i>
+         
+        <div>
+          <p>
+            Remove 
+            some-kind
+             
+            <b>
+              some-name
+            </b>
+             from 
+            <b>
+              Some name
+            </b>
+            ?
+          </p>
+        </div>
+      </div>
+      <div
+        class="confirm-buttons"
+      >
+        <button
+          class="Button cancel plain"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          class="Button ok primary"
+          data-testid="confirm"
+          type="button"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
+  </div>
+</body>
+`;
+
+exports[`kube-object-menu given no kube object, renders 1`] = `
+<body>
+  <div>
+    <ul
+      class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      style="--enter-duration: 100ms; --leave-duration: 100ms;"
+    />
+  </div>
+</body>
+`;

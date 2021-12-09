@@ -104,13 +104,13 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   logger.info(`${logPrefix} initializing WelcomeMenuRegistry`);
   initializers.initWelcomeMenuRegistry();
 
-  logger.info(`${logPrefix} initializing WorkloadsOverviewDetailRegist`);
+  logger.info(`${logPrefix} initializing WorkloadsOverviewDetailRegistry`);
   initializers.initWorkloadsOverviewDetailRegistry();
 
   logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
   initializers.initCatalogEntityDetailRegistry();
 
-  logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntrie`);
+  logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
   initializers.initCatalogCategoryRegistryEntries();
 
   logger.info(`${logPrefix} initializing Catalog`);
@@ -118,6 +118,9 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 
   logger.info(`${logPrefix} initializing IpcRendererListeners`);
   initializers.initIpcRendererListeners();
+
+  logger.info(`${logPrefix} initializing StatusBarRegistry`);
+  initializers.initStatusBarRegistry();
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();

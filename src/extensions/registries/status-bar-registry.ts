@@ -26,6 +26,12 @@ import { BaseRegistry } from "./base-registry";
 
 interface StatusBarComponents {
   Item?: React.ComponentType;
+  /**
+   * The side of the bottom bar to place this component.
+   *
+   * @default "right"
+   */
+  position?: "left" | "right";
 }
 
 interface StatusBarRegistrationV2 {

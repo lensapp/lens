@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./bottom-bar.scss";
+import styles from "./bottom-bar.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
 import { StatusBarRegistration, StatusBarRegistry } from "../../../extensions/registries";
+import { cssNames } from "../../utils";
 
 @observer
 export class BottomBar extends React.Component {
@@ -44,26 +45,36 @@ export class BottomBar extends React.Component {
       return null;
     }
 
+    items.sort(function sortLeftPositionFirst(a, b) {
+      return a.components?.position?.localeCompare(b.components?.position);
+    });
+
     return (
-      <div className="extensions box grow flex gaps justify-flex-end">
+      <>
         {items.map((registration, index) => {
           if (!registration?.item && !registration?.components?.Item) {
             return null;
           }
 
           return (
-            <div className="flex align-center gaps item" key={index}>
+            <div
+              className={cssNames(styles.item, {
+                [styles.onLeft]: registration.components?.position == "left",
+                [styles.onRight]: registration.components?.position != "left",
+              })}
+              key={index}
+            >
               {this.renderRegisteredItem(registration)}
             </div>
           );
         })}
-      </div>
+      </>
     );
   }
 
   render() {
     return (
-      <div className="BottomBar flex gaps">
+      <div className={styles.BottomBar}>
         {this.renderRegisteredItems()}
       </div>
     );

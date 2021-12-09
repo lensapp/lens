@@ -61,11 +61,11 @@ export function initCatalogCategoryRegistryEntries() {
       ctx.menuItems.push(
         {
           icon: "create_new_folder",
-          title: "Sync kubeconfig folders(s)",
+          title: "Sync kubeconfig folder(s)",
           defaultAction: true,
           onClick: async () => {
             await PathPicker.pick({
-              label: "Sync folders(s)",
+              label: "Sync folder(s)",
               buttonLabel: "Sync",
               properties: ["showHiddenFiles", "multiSelections", "openDirectory"],
               onPick: addSyncEntries,

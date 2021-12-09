@@ -18,42 +18,25 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from "react";
 
-import type Url from "url-parse";
+import {
+  render as testingLibraryRender,
+  RenderResult,
+} from "@testing-library/react";
 
-export enum RoutingErrorType {
-  INVALID_PROTOCOL = "invalid-protocol",
-  INVALID_HOST = "invalid-host",
-  INVALID_PATHNAME = "invalid-pathname",
-  NO_HANDLER = "no-handler",
-  NO_EXTENSION_ID = "no-ext-id",
-  MISSING_EXTENSION = "missing-ext",
-}
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 
-export class RoutingError<Query> extends Error {
-  /**
-   * Will be set if the routing error originated in an extension route table
-   */
-  public extensionName?: string;
+import { DiContextProvider } from "@ogre-tools/injectable-react";
 
-  constructor(public type: RoutingErrorType, public url: Url<Query>) {
-    super("routing error");
-  }
+export type DiRender = (ui: React.ReactElement) => RenderResult;
 
-  toString(): string {
-    switch (this.type) {
-      case RoutingErrorType.INVALID_HOST:
-        return "invalid host";
-      case RoutingErrorType.INVALID_PROTOCOL:
-        return "invalid protocol";
-      case RoutingErrorType.INVALID_PATHNAME:
-        return "invalid pathname";
-      case RoutingErrorType.NO_EXTENSION_ID:
-        return "no extension ID";
-      case RoutingErrorType.MISSING_EXTENSION:
-        return "extension not found";
-      default:
-        return `unknown error: ${this.type}`;
-    }
-  }
-}
+type DiRenderFor = (
+  di: ConfigurableDependencyInjectionContainer,
+) => DiRender;
+
+export const renderFor: DiRenderFor = di => ui =>
+  testingLibraryRender(
+    <DiContextProvider value={{ di }}>{ui}</DiContextProvider>,
+  );
+
