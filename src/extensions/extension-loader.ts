@@ -46,7 +46,7 @@ const logModule = "[EXTENSIONS-LOADER]";
  */
 export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
-  instances = observable.map<LensExtensionId, LensExtension>();
+  protected instances = observable.map<LensExtensionId, LensExtension>();
 
   /**
    * This is the set of extensions that don't come with either
@@ -94,6 +94,10 @@ export class ExtensionLoader extends Singleton {
           throw new Error("Extension instances shouldn't be updated");
       }
     });
+  }
+
+  @computed get enabledExtensionInstances() : LensExtension[] {
+    return [...this.instances.values()].filter(extension => extension.isEnabled);
   }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {

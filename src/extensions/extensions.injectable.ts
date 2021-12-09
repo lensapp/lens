@@ -28,15 +28,13 @@ const extensionsInjectable: Injectable<
   { extensionLoader: ExtensionLoader }
 > = {
   getDependencies: () => ({
-    extensionLoader: ExtensionLoader.createInstance(),
+    extensionLoader: ExtensionLoader.getInstance(),
   }),
 
   lifecycle: lifecycleEnum.singleton,
 
   instantiate: ({ extensionLoader }) =>
-    computed(() =>
-      [...extensionLoader.instances.values()],
-    ),
+    computed(() => extensionLoader.enabledExtensionInstances),
 };
 
 export default extensionsInjectable;
