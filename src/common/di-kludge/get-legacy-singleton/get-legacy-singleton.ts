@@ -18,23 +18,46 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { getDiKludge } from "../di-kludge";
 
-import { createContainer } from "@ogre-tools/injectable";
-import { setDiKludge } from "../common/di-kludge/di-kludge";
+type Awaited<TMaybePromise> = TMaybePromise extends PromiseLike<infer TValue>
+  ? TValue
+  : TMaybePromise;
 
-export const getDi = () => {
-  const di = createContainer(
-    getRequireContextForMainCode,
-    getRequireContextForCommonExtensionCode,
-  );
+export const getLegacySingleton = <
+  TInjectable extends Injectable<
+    TInstance,
+    TDependencies,
+    TInstantiationParameter
+  >,
+  TInstance,
+  TDependencies extends object,
+  TInstantiationParameter,
+  TMaybePromiseInstance = ReturnType<TInjectable["instantiate"]>,
+>(
+    injectableKey: TInjectable,
+  ) => ({
+    createInstance: (): TMaybePromiseInstance extends PromiseLike<any>
+    ? Awaited<TMaybePromiseInstance>
+    : TMaybePromiseInstance => {
+      const di = getDiKludge();
 
-  setDiKludge(di);
+      return di.inject(injectableKey);
+    },
 
-  return di;
-};
+    getInstance: (): TMaybePromiseInstance extends PromiseLike<any>
+    ? Awaited<TMaybePromiseInstance>
+    : TMaybePromiseInstance => {
+      const di = getDiKludge();
 
-const getRequireContextForMainCode = () =>
-  require.context("./", true, /\.injectable\.(ts|tsx)$/);
+      return di.inject(injectableKey);
+    },
 
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);
+    resetInstance: () => {
+      const di = getDiKludge();
+
+      // @ts-ignore
+      return di.purge(injectableKey);
+    },
+  });

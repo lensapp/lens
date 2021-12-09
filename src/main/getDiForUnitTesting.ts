@@ -26,9 +26,12 @@ import {
   createContainer,
   ConfigurableDependencyInjectionContainer,
 } from "@ogre-tools/injectable";
+import { setDiKludge } from "../common/di-kludge/di-kludge";
 
 export const getDiForUnitTesting = () => {
   const di: ConfigurableDependencyInjectionContainer = createContainer();
+
+  setDiKludge(di);
 
   getInjectableFilePaths()
     .map(key => {

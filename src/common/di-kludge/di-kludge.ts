@@ -18,23 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 
-import { createContainer } from "@ogre-tools/injectable";
-import { setDiKludge } from "../common/di-kludge/di-kludge";
+let kludgeDi: DependencyInjectionContainer;
 
-export const getDi = () => {
-  const di = createContainer(
-    getRequireContextForMainCode,
-    getRequireContextForCommonExtensionCode,
-  );
-
-  setDiKludge(di);
-
-  return di;
+export const setDiKludge = (di: DependencyInjectionContainer) => {
+  kludgeDi = di;
 };
 
-const getRequireContextForMainCode = () =>
-  require.context("./", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);
+export const getDiKludge = () => kludgeDi;

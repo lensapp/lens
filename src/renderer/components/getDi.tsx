@@ -21,11 +21,14 @@
 
 import { createContainer } from "@ogre-tools/injectable";
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import { setDiKludge } from "../../common/di-kludge/di-kludge";
 
 export const getDi = () => {
   const di: ConfigurableDependencyInjectionContainer = createContainer(
     () => require.context("./", true, /\.injectable\.(ts|tsx)$/),
   );
+
+  setDiKludge(di);
 
   return di;
 };
