@@ -8,5 +8,8 @@ jobs:
   require_milestone:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       # Drafts your next Release notes as Pull Requests are merged into "master"
-      - uses: ./.github/actions/require-milestone
+      - name: Require milestone
+        uses: ./.github/actions/require-milestone
