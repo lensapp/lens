@@ -127,7 +127,7 @@ export default {
        * Finally, make sure that the catalog entity hotbar item is in place.
        * Just in case something else removed it.
        *
-       * if every hotbar has elements that all not the `catalog-entity` item
+       * if every hotbar has elements that all not the `catalog-entity` item
        */
       if (hotbars.every(hotbar => hotbar.items.every(item => item?.entity?.uid !== "catalog-entity"))) {
         // note, we will add a new whole hotbar here called "default" if that was previously removed

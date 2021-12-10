@@ -84,7 +84,7 @@ export class LensBinary {
     }
   }
 
-  public setLogger(logger: Console | winston.Logger) {
+  public setLogger(logger: Console | winston.Logger) {
     this.logger = logger;
   }
 
