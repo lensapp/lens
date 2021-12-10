@@ -48,34 +48,36 @@ export interface CRDVersion {
   additionalPrinterColumns?: AdditionalPrinterColumnsV1[];
 }
 
-export interface CustomResourceDefinition {
-  spec: {
-    group: string;
-    /**
-     * @deprecated for apiextensions.k8s.io/v1 but used previously
-     */
-    version?: string;
-    names: {
-      plural: string;
-      singular: string;
-      kind: string;
-      listKind: string;
-    };
-    scope: "Namespaced" | "Cluster" | string;
-    /**
-     * @deprecated for apiextensions.k8s.io/v1 but used previously
-     */
-    validation?: object;
-    versions?: CRDVersion[];
-    conversion: {
-      strategy?: string;
-      webhook?: any;
-    };
-    /**
-     * @deprecated for apiextensions.k8s.io/v1 but used previously
-     */
-    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
+export interface CustomResourceDefinitionSpec {
+  group: string;
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used in v1beta1
+   */
+  version?: string;
+  names: {
+    plural: string;
+    singular: string;
+    kind: string;
+    listKind: string;
   };
+  scope: "Namespaced" | "Cluster";
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used in v1beta1
+   */
+  validation?: object;
+  versions?: CRDVersion[];
+  conversion: {
+    strategy?: string;
+    webhook?: any;
+  };
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used in v1beta1
+   */
+  additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
+}
+
+export interface CustomResourceDefinition {
+  spec: CustomResourceDefinitionSpec;
   status: {
     conditions: {
       lastTransitionTime: string;
@@ -159,6 +161,7 @@ export class CustomResourceDefinition extends KubeObject {
             return version;
           }
         }
+        break;
       case "apiextensions.k8s.io/v1beta1":
         const { additionalPrinterColumns: apc } = this.spec;
         const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc }) => ({ ...apc, jsonPath: JSONPath }));
@@ -170,9 +173,9 @@ export class CustomResourceDefinition extends KubeObject {
           schema: this.spec.validation,
           additionalPrinterColumns,
         };
-      default:
-        throw new Error(`Unknown apiVersion=${apiVersion}: Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
     }
+
+    throw new Error(`Unknown apiVersion=${apiVersion}: Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
   }
 
   getVersion() {
