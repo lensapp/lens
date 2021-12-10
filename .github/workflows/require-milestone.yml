@@ -2,7 +2,7 @@ name: Require Milestone
 
 on:
   pull_request:
-    types: [opened, edited]
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
 
 jobs:
   require_milestone:
