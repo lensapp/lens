@@ -1,0 +1,12 @@
+name: Require Milestone
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  require_milestone:
+    runs-on: ubuntu-latest
+    steps:
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: ./.github/actions/require-milestone

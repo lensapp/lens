@@ -1,0 +1,14 @@
+{
+  "name": "require-milestone",
+  "version": "1.0.0",
+  "description": "A GitHub action to require that PRs have milestones set before being merged",
+  "main": "entrypoint.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "actions-toolkit": "^6.0.1"
+  }
+}

@@ -1,0 +1,9 @@
+name: 'require-milestone'
+description: 'A GitHub Action to require a milestone is placed on a PR to merge it'
+author: 'Sebastian Malton'
+branding:
+  icon: 'command'
+  color: 'blue'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
