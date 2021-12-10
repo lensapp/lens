@@ -34,7 +34,9 @@ const electronRemote = (() => {
   if (ipcRenderer) {
     try {
       return require("@electron/remote");
-    } catch {}
+    } catch {
+      // ignore temp
+    }
   }
 
   return null;
