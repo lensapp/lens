@@ -20,18 +20,12 @@
  */
 
 import { createContainer } from "@ogre-tools/injectable";
-import { setDiKludge } from "../../common/di-kludge/di-kludge";
 
-export const getDi = () => {
-  const di = createContainer(
+export const getDi = () =>
+  createContainer(
     getRequireContextForRendererCode,
     getRequireContextForCommonExtensionCode,
   );
-
-  setDiKludge(di);
-
-  return di;
-};
 
 const getRequireContextForRendererCode = () =>
   require.context("../", true, /\.injectable\.(ts|tsx)$/);
