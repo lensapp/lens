@@ -25,7 +25,7 @@ import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
-import { copyToClipboard, saveFileDialog } from "../../utils";
+import { saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
@@ -33,6 +33,7 @@ import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
 import { apiBase } from "../../api";
 import { MonacoEditor } from "../monaco-editor";
+import { clipboard } from "electron";
 
 interface IKubeconfigDialogData {
   title?: React.ReactNode;
@@ -49,7 +50,6 @@ const dialogState = observable.object({
 
 @observer
 export class KubeConfigDialog extends React.Component<Props> {
-  @observable.ref configTextArea: HTMLTextAreaElement; // required for coping config text
   @observable config = ""; // parsed kubeconfig in yaml format
 
   constructor(props: Props) {
@@ -89,9 +89,8 @@ export class KubeConfigDialog extends React.Component<Props> {
   }
 
   copyToClipboard = () => {
-    if (this.config && copyToClipboard(this.configTextArea)) {
-      Notifications.ok("Config copied to clipboard");
-    }
+    clipboard.writeText(this.config);
+    Notifications.ok("Config copied to clipboard");
   };
 
   download = () => {
@@ -130,11 +129,6 @@ export class KubeConfigDialog extends React.Component<Props> {
               readOnly
               className={styles.editor}
               value={yamlConfig}
-            />
-            <textarea
-              className={styles.configCopy}
-              readOnly defaultValue={yamlConfig}
-              ref={e => this.configTextArea = e}
             />
           </WizardStep>
         </Wizard>
