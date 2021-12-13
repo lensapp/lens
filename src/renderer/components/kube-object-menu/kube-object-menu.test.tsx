@@ -153,7 +153,7 @@ describe("kube-object-menu", () => {
 
       describe("when removing new kube object", () => {
         beforeEach(async () => {
-          userEvent.click(await screen.findByTestId("menu-action-delete"));
+          await userEvent.click(await screen.findByTestId("menu-action-delete"));
         });
 
         it("renders", async () => {
@@ -165,7 +165,7 @@ describe("kube-object-menu", () => {
 
     describe("when removing kube object", () => {
       beforeEach(async () => {
-        userEvent.click(await screen.findByTestId("menu-action-delete"));
+        await userEvent.click(await screen.findByTestId("menu-action-delete"));
       });
 
       it("renders", async () => {
@@ -177,7 +177,7 @@ describe("kube-object-menu", () => {
         beforeEach(async () => {
           const confirmRemovalButton = await screen.findByTestId("confirm");
 
-          userEvent.click(confirmRemovalButton);
+          await userEvent.click(confirmRemovalButton);
         });
 
         it("calls for removal of the kube object", () => {
@@ -230,7 +230,7 @@ describe("kube-object-menu", () => {
     it("when removing kube object, renders confirmation dialog with namespace", async () => {
       const menuItem = await screen.findByTestId("menu-action-delete");
 
-      userEvent.click(menuItem);
+      await userEvent.click(menuItem);
 
       expect(baseElement).toMatchSnapshot();
     });
@@ -268,7 +268,7 @@ describe("kube-object-menu", () => {
     it("when removing kube object, renders confirmation dialog without namespace", async () => {
       const menuItem = await screen.findByTestId("menu-action-delete");
 
-      userEvent.click(menuItem);
+      await userEvent.click(menuItem);
 
       expect(baseElement).toMatchSnapshot();
     });

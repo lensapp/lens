@@ -6,7 +6,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder, OpenedMenuActions } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
@@ -39,7 +39,11 @@ describe("installing helm chart from new tab", () => {
   let requestCreateHelmReleaseMock: AsyncFnMock<RequestCreateHelmRelease>;
 
   beforeEach(() => {
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        autoAdvance: true,
+      },
+    });
 
     builder.setEnvironmentToClusterFrame();
 
@@ -633,7 +637,7 @@ describe("installing helm chart from new tab", () => {
           });
 
           describe("given changing version to be installed", () => {
-            let menu: { selectOption: (labelText: string) => void };
+            let menu: OpenedMenuActions;
 
             beforeEach(() => {
               requestHelmChartVersionsMock.mockClear();
@@ -652,12 +656,12 @@ describe("installing helm chart from new tab", () => {
             describe("when version is selected", () => {
               let installButton: HTMLButtonElement;
 
-              beforeEach(() => {
+              beforeEach(async () => {
                 installButton = rendered.getByTestId(
                   "install-chart-from-tab-for-some-first-tab-id",
                 ) as HTMLButtonElement;
 
-                menu.selectOption("some-other-version");
+                await menu.selectOption("some-other-version");
               });
 
               it("renders", () => {
@@ -760,8 +764,8 @@ describe("installing helm chart from new tab", () => {
             });
 
             describe("when namespace is selected", () => {
-              beforeEach(() => {
-                menu.selectOption("some-other-namespace");
+              beforeEach(async () => {
+                await menu.selectOption("some-other-namespace");
               });
 
               it("renders", () => {
@@ -844,10 +848,8 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("given change in version, when default configuration resolves, install button is enabled", async () => {
-              builder.select
-                .openMenu(
-                  "install-chart-version-select-for-some-first-tab-id",
-                )
+              await builder.select
+                .openMenu("install-chart-version-select-for-some-first-tab-id")
                 .selectOption("some-other-version");
 
               await requestHelmChartValuesMock.resolve({
@@ -918,10 +920,8 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("given version is changed, when default configuration resolves, defaults back to default configuration", async () => {
-              builder.select
-                .openMenu(
-                  "install-chart-version-select-for-some-first-tab-id",
-                )
+              await builder.select
+                .openMenu("install-chart-version-select-for-some-first-tab-id")
                 .selectOption("some-other-version");
 
               await requestHelmChartValuesMock.resolve({

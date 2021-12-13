@@ -27,7 +27,11 @@ describe("add helm repository from list in preferences", () => {
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
   beforeEach(async () => {
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        autoAdvance: true,
+      },
+    });
 
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
@@ -114,7 +118,7 @@ describe("add helm repository from list in preferences", () => {
           beforeEach(async () => {
             getActiveHelmRepositoriesMock.mockClear();
 
-            builder.select.selectOption(
+            await builder.select.selectOption(
               "selection-of-active-public-helm-repository",
               "Some to be added repository",
             );
@@ -235,11 +239,11 @@ describe("add helm repository from list in preferences", () => {
                 });
 
                 describe("when active repository is selected", () => {
-                  beforeEach(() => {
+                  beforeEach(async () => {
                     execFileMock.mockClear();
                     getActiveHelmRepositoriesMock.mockClear();
 
-                    builder.select.selectOption(
+                    await builder.select.selectOption(
                       "selection-of-active-public-helm-repository",
                       "Some already active repository",
                     );

@@ -98,14 +98,14 @@ describe("<Catalog />", () => {
   describe("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", () => {
     let onBeforeRunMock: AsyncFnMock<CatalogEntityOnBeforeRun>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       onBeforeRunMock = asyncFn();
 
       catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
 
       render(<Catalog />);
 
-      userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+      await userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
     });
 
     it("calls on before run event", () => {
@@ -137,7 +137,7 @@ describe("<Catalog />", () => {
 
     render(<Catalog />);
 
-    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    await userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
 
     await flushPromises();
 
@@ -153,16 +153,14 @@ describe("<Catalog />", () => {
 
     render(<Catalog />);
 
-    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    await userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
 
     await flushPromises();
 
     expect(onRun).toHaveBeenCalled();
   });
 
-  it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
-    onRun.mockImplementation(() => done());
-
+  it("addOnRunHook return a promise and does not prevent run event => onRun()", async () => {
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
         // no op
@@ -171,7 +169,8 @@ describe("<Catalog />", () => {
 
     render(<Catalog />);
 
-    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    await userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    expect(onRun).toBeCalled();
   });
 
   it("addOnRunHook return a promise and prevents event wont be triggered", async () => {
@@ -181,7 +180,7 @@ describe("<Catalog />", () => {
 
     render(<Catalog />);
 
-    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    await userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
 
     onBeforeRunMock.mock.calls[0][0].preventDefault();
 
@@ -197,7 +196,7 @@ describe("<Catalog />", () => {
 
     render(<Catalog />);
 
-    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    await userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
 
     await onBeforeRunMock.reject();
 
@@ -213,10 +212,10 @@ describe("<Catalog />", () => {
     });
   });
 
-  it("emits catalog change AppEvent when changing the category", () => {
+  it("emits catalog change AppEvent when changing the category", async () => {
     render(<Catalog />);
 
-    userEvent.click(screen.getByText("Web Links"));
+    await userEvent.click(screen.getByText("Web Links"));
 
     expect(appEventListener).toHaveBeenCalledWith({
       action: "change-category",

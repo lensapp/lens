@@ -6,6 +6,7 @@ import ipcRendererInjectable from "../ipc-renderer.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcRendererEvent } from "electron";
 import { enlistMessageChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import type { MessageChannel, MessageChannelListener } from "../../../../common/utils/channel/message-channel-listener-injection-token";
 
 const enlistMessageChannelListenerInjectable = getInjectable({
   id: "enlist-message-channel-listener-for-renderer",
@@ -13,8 +14,8 @@ const enlistMessageChannelListenerInjectable = getInjectable({
   instantiate: (di) => {
     const ipcRenderer = di.inject(ipcRendererInjectable);
 
-    return ({ channel, handler }) => {
-      const nativeCallback = (_: IpcRendererEvent, message: unknown) => {
+    return <T>({ channel, handler }: MessageChannelListener<MessageChannel<T>>) => {
+      const nativeCallback = (_: IpcRendererEvent, message: T) => {
         handler(message);
       };
 

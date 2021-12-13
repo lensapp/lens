@@ -6,7 +6,7 @@
 import { computed, observable, reaction } from "mobx";
 import type { WeblinkStore } from "../../common/weblinks-store/weblink-store";
 import { WebLink } from "../../common/catalog-entities";
-import type { CatalogEntityRegistry } from "../catalog";
+import type { CatalogEntityRegistry } from "../catalog/entity-registry";
 import got from "got";
 import type { Disposer } from "../../common/utils";
 import { random } from "lodash";

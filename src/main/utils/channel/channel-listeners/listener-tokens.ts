@@ -5,11 +5,14 @@
 
 import type { DiContainerForInjection } from "@ogre-tools/injectable";
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import type { Asyncify } from "type-fest";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
 
 export type RequestChannelHandler<Channel> = Channel extends RequestChannel<infer Request, infer Response>
   ? (req: Request) => Promise<Response> | Response
   : never;
+
+export type ChannelRequester<Channel> = Asyncify<RequestChannelHandler<Channel>>;
 
 export interface RequestChannelListener<Channel> {
   channel: Channel;

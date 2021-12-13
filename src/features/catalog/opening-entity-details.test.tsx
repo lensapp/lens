@@ -5,12 +5,10 @@
 
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
+import { computed } from "mobx";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
-import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
+import catalogEntityRegistryInjectable from "../../main/catalog/entity-registry.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
 describe("opening catalog entity details panel", () => {
@@ -20,14 +18,11 @@ describe("opening catalog entity details panel", () => {
   let clusterEntity: KubernetesCluster;
   let localClusterEntity: KubernetesCluster;
   let otherEntity: WebLink;
-  let cluster: Cluster;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.afterWindowStart((windowDi) => {
-      const createCluster = windowDi.inject(createClusterInjectable);
-
+    builder.beforeApplicationStart((mainDi) => {
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -70,27 +65,8 @@ describe("opening catalog entity details panel", () => {
           phase: "available",
         },
       });
-      cluster = createCluster({
-        contextName: clusterEntity.spec.kubeconfigContext,
-        id: clusterEntity.getId(),
-        kubeConfigPath: clusterEntity.spec.kubeconfigPath,
-      }, {
-        clusterServerUrl: "https://localhost:9999",
-      });
 
-      // TODO: remove once ClusterStore can be used without overriding it
-      windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
-        if (clusterId === cluster.id) {
-          return cluster;
-        }
-
-        return undefined;
-      });
-
-      // TODO: replace with proper entity source once syncing entities between main and windows is injectable
-      const catalogEntityRegistry = windowDi.inject(catalogEntityRegistryInjectable);
-
-      catalogEntityRegistry.updateItems([clusterEntity, otherEntity, localClusterEntity]);
+      mainDi.inject(catalogEntityRegistryInjectable).addComputedSource("test-id", computed(() => [clusterEntity, otherEntity, localClusterEntity]));
     });
 
     rendered = await builder.render();

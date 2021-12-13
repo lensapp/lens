@@ -31,7 +31,11 @@ describe("opening dock tab for installing helm chart", () => {
   let requestHelmChartValuesMock: jest.Mock;
 
   beforeEach(() => {
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        autoAdvance: true,
+      },
+    });
 
     requestHelmChartsMock = asyncFn();
     requestHelmChartVersionsMock = asyncFn();
@@ -247,13 +251,11 @@ describe("opening dock tab for installing helm chart", () => {
             });
 
             describe("when selecting different version", () => {
-              beforeEach(() => {
+              beforeEach(async () => {
                 requestHelmChartReadmeMock.mockClear();
 
-                builder.select
-                  .openMenu(
-                    "helm-chart-version-selector-some-repository-some-name",
-                  )
+                await builder.select
+                  .openMenu("helm-chart-version-selector-some-repository-some-name")
                   .selectOption("some-other-version");
               });
 

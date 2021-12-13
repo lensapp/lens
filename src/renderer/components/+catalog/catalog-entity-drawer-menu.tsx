@@ -21,8 +21,8 @@ import navigateInjectable from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 
-export interface CatalogEntityDrawerMenuProps<Entity extends CatalogEntity> extends MenuActionsProps {
-  entity: Entity;
+export interface CatalogEntityDrawerMenuProps extends MenuActionsProps {
+  entity: CatalogEntity;
 }
 
 interface Dependencies {
@@ -32,7 +32,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Component<CatalogEntityDrawerMenuProps<T> & Dependencies> {
+class NonInjectedCatalogEntityDrawerMenu extends React.Component<CatalogEntityDrawerMenuProps & Dependencies> {
   private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
   componentDidMount() {
@@ -42,7 +42,7 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
     });
   }
 
-  getMenuItems(entity: T): React.ReactChild[] {
+  getMenuItems(entity: CatalogEntity | null | undefined): React.ReactChild[] {
     if (!entity) {
       return [];
     }
@@ -106,11 +106,11 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
   }
 }
 
-export const CatalogEntityDrawerMenu = withInjectables<Dependencies, CatalogEntityDrawerMenuProps<CatalogEntity>>(NonInjectedCatalogEntityDrawerMenu, {
+export const CatalogEntityDrawerMenu = withInjectables<Dependencies, CatalogEntityDrawerMenuProps>(NonInjectedCatalogEntityDrawerMenu, {
   getProps: (di, props) => ({
     ...props,
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
   }),
-}) as <Entity extends CatalogEntity>(props: CatalogEntityDrawerMenuProps<Entity>) => JSX.Element;
+});

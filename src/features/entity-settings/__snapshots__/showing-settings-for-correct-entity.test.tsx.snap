@@ -163,22 +163,42 @@ exports[`Showing correct entity settings renders 1`] = `
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -373,7 +393,7 @@ exports[`Showing correct entity settings when navigating to local cluster entity
               >
                 <div
                   class="Avatar rounded settingsAvatar"
-                  style="width: 40px; height: 40px; background: rgb(83, 137, 8);"
+                  style="width: 40px; height: 40px; background-color: red;"
                 >
                   slk
                 </div>
@@ -414,6 +434,18 @@ exports[`Showing correct entity settings when navigating to local cluster entity
                     class="label"
                   >
                     Proxy
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="short-name-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Short Name
                   </div>
                 </div>
                 <div
@@ -525,22 +557,42 @@ exports[`Showing correct entity settings when navigating to local cluster entity
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -735,7 +787,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
               >
                 <div
                   class="Avatar rounded settingsAvatar"
-                  style="width: 40px; height: 40px; background: rgb(9, 124, 92);"
+                  style="width: 40px; height: 40px; background-color: red;"
                 >
                   skc
                 </div>
@@ -764,6 +816,18 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
                     class="label"
                   >
                     Proxy
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="short-name-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Short Name
                   </div>
                 </div>
                 <div
@@ -875,22 +939,42 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -1085,7 +1169,7 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
               >
                 <div
                   class="Avatar rounded settingsAvatar"
-                  style="width: 40px; height: 40px; background: rgb(53, 8, 142);"
+                  style="width: 40px; height: 40px; background-color: red;"
                 >
                   sw
                 </div>
@@ -1097,7 +1181,26 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
               </div>
               <div
                 class="Tabs flex column"
-              />
+              >
+                <hr />
+                <div
+                  class="header"
+                >
+                  Settings
+                </div>
+                <div
+                  class="Tab flex gaps align-center active"
+                  data-testid="short-name-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Short Name
+                  </div>
+                </div>
+              </div>
             </div>
           </nav>
           <div
@@ -1107,16 +1210,51 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
             <div
               class="content"
             >
-              <div
-                class="flex items-center"
-                data-preference-page-does-not-exist-test="true"
-              >
-                No settings found for
-                 
-                entity.k8slens.dev/v1alpha1
-                /
-                WebLink
-              </div>
+              <section>
+                <h2
+                  data-testid="short-name-header"
+                >
+                  Short Name
+                </h2>
+                <section>
+                  <section
+                    data-testid="short-name-settings-section"
+                  >
+                    <section>
+                      <div
+                        class="SubTitle"
+                      >
+                        Entity Short Name
+                         
+                      </div>
+                      <div
+                        class="Input theme round black"
+                      >
+                        <label
+                          class="input-area flex gaps align-center"
+                          id=""
+                        >
+                          <input
+                            class="input box grow"
+                            data-testid="short-name-setting-input"
+                            placeholder="sw"
+                            spellcheck="false"
+                            value=""
+                          />
+                        </label>
+                        <div
+                          class="input-info flex gaps"
+                        />
+                      </div>
+                      <small
+                        class="hint"
+                      >
+                        The text for entity icons. By default it is calculated from the entity name.
+                      </small>
+                    </section>
+                  </section>
+                </section>
+              </section>
             </div>
             <div
               class="toolsRegion"
@@ -1160,22 +1298,42 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>

@@ -14,7 +14,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import { advanceFakeTime, testUsingFakeTime } from "../../../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../../../common/test-utils/use-fake-time";
 import quitAndInstallUpdateInjectable from "../../main/quit-and-install-update.injectable";
 import timeAfterUpdateMustBeInstalledInjectable from "./renderer/force-update-modal/time-after-update-must-be-installed.injectable";
 import secondsAfterInstallStartsInjectable from "./renderer/force-update-modal/seconds-after-install-starts.injectable";
@@ -31,9 +31,11 @@ describe("force user to update when too long since update was downloaded", () =>
   let quitAndInstallUpdateMock: jest.Mock;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    applicationBuilder = getApplicationBuilder();
+    applicationBuilder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2015-10-21T07:28:00Z",
+      },
+    });
 
     applicationBuilder.beforeApplicationStart(mainDi => {
       checkForPlatformUpdatesMock = asyncFn();

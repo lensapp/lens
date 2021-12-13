@@ -17,12 +17,12 @@ const routesInjectable = getInjectable({
     const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
     const routes = computedInjectMany(frontEndRouteInjectionToken);
 
-    return computed(() =>
+    return computed(() => (
       routes
         .get()
         .filter(matches({ clusterFrame: currentlyInClusterFrame }))
-        .filter((route) => route.isEnabled.get()),
-    );
+        .filter((route) => route.isEnabled.get())
+    ));
   },
 });
 

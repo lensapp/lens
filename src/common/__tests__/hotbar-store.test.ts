@@ -16,8 +16,8 @@ import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-
 import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
+import hotbarStoreMigrationVersionInjectable from "../hotbars/migration-version.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -260,7 +260,7 @@ describe("HotbarStore", () => {
     });
   });
 
-  describe("given data from 5.0.0-beta.3 and version being 5.0.0-beta.10", () => {
+  describe("given data from 5.0.0-beta.3 and version being 5.6.0-alpha.7", () => {
     beforeEach(() => {
       const writeJsonSync = di.inject(writeJsonSyncInjectable);
 
@@ -322,7 +322,7 @@ describe("HotbarStore", () => {
         ],
       });
 
-      di.override(storeMigrationVersionInjectable, () => "5.0.0-beta.10");
+      di.override(hotbarStoreMigrationVersionInjectable, () => "5.6.0-alpha.7");
 
       hotbarStore = di.inject(hotbarStoreInjectable);
 
@@ -349,6 +349,7 @@ describe("HotbarStore", () => {
           name: "my-aws-cluster",
           source: "local",
           uid: "some-aws-id",
+          shortName: "mac",
         },
       });
     });

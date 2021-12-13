@@ -5,13 +5,13 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
-import { ClusterMetricsSetting } from "../../cluster-settings/metrics-setting";
-import { ClusterPrometheusSetting } from "../../cluster-settings/prometheus-setting";
-import { ShowMetricsSetting } from "../../cluster-settings/show-metrics";
-import type { EntitySettingViewProps } from "../extension-registrator.injectable";
-import { entitySettingInjectionToken } from "../token";
+import type { GetClusterById } from "../../../../../common/cluster-store/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../../../common/cluster-store/get-by-id.injectable";
+import { ClusterMetricsSetting } from "../../../cluster-settings/metrics-setting";
+import { ClusterPrometheusSetting } from "../../../cluster-settings/prometheus-setting";
+import { ShowMetricsSetting } from "../../../cluster-settings/show-metrics";
+import type { EntitySettingViewProps, RegisteredEntitySetting } from "../../extension-registrator.injectable";
+import { entitySettingInjectionToken } from "../../token";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -47,17 +47,23 @@ const MetricsKubernetesClusterSettings = withInjectables<Dependencies, EntitySet
 
 const metricsKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "metrics-kubernetes-cluster-entity-settings",
-  instantiate: () => ({
-    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
-    kind: "KubernetesCluster",
-    title: "Metrics",
-    group: "Settings",
-    id: "metrics",
-    orderNumber: 40,
-    components: {
-      View: MetricsKubernetesClusterSettings,
-    },
-  }),
+  instantiate: (): RegisteredEntitySetting => {
+    const apiVersions = new Set(["entity.k8slens.dev/v1alpha1"]);
+
+    return {
+      isFor: (entity) => (
+        apiVersions.has(entity.apiVersion)
+        && entity.kind === "KubernetesCluster"
+      ),
+      title: "Metrics",
+      group: "Settings",
+      id: "metrics",
+      orderNumber: 40,
+      components: {
+        View: MetricsKubernetesClusterSettings,
+      },
+    };
+  },
   injectionToken: entitySettingInjectionToken,
 });
 

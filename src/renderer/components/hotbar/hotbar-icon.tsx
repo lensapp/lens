@@ -13,7 +13,6 @@ import { Menu, MenuItem } from "../menu";
 import { observer } from "mobx-react";
 import type { AvatarProps } from "../avatar";
 import { Avatar } from "../avatar";
-import { Icon } from "../icon";
 import { Tooltip } from "../tooltip";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -28,6 +27,7 @@ export interface HotbarIconProps extends AvatarProps {
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
   tooltip?: string;
+  avatarChildren?: React.ReactNode;
 }
 
 interface Dependencies {
@@ -35,14 +35,23 @@ interface Dependencies {
 }
 
 const NonInjectedHotbarIcon = observer(({
+  normalizeMenuItem,
   menuItems = [],
   size = 40,
   tooltip,
-  normalizeMenuItem,
-  ...props
+  uid,
+  avatarChildren,
+  material,
+  active,
+  className,
+  source,
+  disabled,
+  onMenuOpen,
+  onClick,
+  children,
+  ...rest
 }: HotbarIconProps & Dependencies) => {
-  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
-  const id = `hotbarIcon-${uid}`;
+  const id = `hotbar-icon-for-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -59,15 +68,13 @@ const NonInjectedHotbarIcon = observer(({
       <Avatar
         {...rest}
         id={id}
-        title={title}
-        colorHash={source ? `${title}-${source}` : title}
-        className={cssNames(styles.avatar, { [styles.active]: active, [styles.hasImage]: !!src })}
+        data-testid={id}
+        className={cssNames(styles.avatar, { [styles.active]: active })}
         disabled={disabled}
         size={size}
-        src={src}
         onClick={(event) => !disabled && onClick?.(event)}
       >
-        {material && <Icon material={material} />}
+        {avatarChildren}
       </Avatar>
       {children}
       <Menu

@@ -1,0 +1,448 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`limit short-name length tests when navigating to entity settings for #short-name renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive focusable"
+              data-testid="home-button"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+        </div>
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="SettingLayout showNavigation"
+          data-testid="entity-settings"
+        >
+          <nav
+            class="sidebarRegion"
+          >
+            <div
+              class="sidebar"
+            >
+              <div
+                class="avatarAndName"
+              >
+                <div
+                  class="Avatar rounded settingsAvatar"
+                  style="width: 40px; height: 40px; background-color: red;"
+                >
+                  skc
+                </div>
+                <div
+                  class="entityName"
+                >
+                  some-kubernetes-cluster
+                </div>
+              </div>
+              <div
+                class="Tabs flex column"
+              >
+                <hr />
+                <div
+                  class="header"
+                >
+                  Settings
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="proxy-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Proxy
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center active"
+                  data-testid="short-name-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Short Name
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="terminal-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Terminal
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="namespace-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Namespace
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="metrics-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Metrics
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="node-shell-tab"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Node Shell
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+          <div
+            class="contentRegion"
+            id="ScrollSpyRoot"
+          >
+            <div
+              class="content"
+            >
+              <section>
+                <h2
+                  data-testid="short-name-header"
+                >
+                  Short Name
+                </h2>
+                <section>
+                  <section
+                    data-testid="short-name-settings-section"
+                  >
+                    <section>
+                      <div
+                        class="SubTitle"
+                      >
+                        Entity Short Name
+                         
+                      </div>
+                      <div
+                        class="Input theme round black"
+                      >
+                        <label
+                          class="input-area flex gaps align-center"
+                          id=""
+                        >
+                          <input
+                            class="input box grow"
+                            data-testid="short-name-setting-input"
+                            placeholder="skc"
+                            spellcheck="false"
+                            value=""
+                          />
+                        </label>
+                        <div
+                          class="input-info flex gaps"
+                        />
+                      </div>
+                      <small
+                        class="hint"
+                      >
+                        The text for entity icons. By default it is calculated from the entity name.
+                      </small>
+                    </section>
+                  </section>
+                </section>
+              </section>
+            </div>
+            <div
+              class="toolsRegion"
+            >
+              <div
+                class="fixed top-[60px]"
+              >
+                <div>
+                  <div
+                    aria-label="Close"
+                    class="closeButton"
+                    role="button"
+                  >
+                    <i
+                      class="Icon icon material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="close"
+                      >
+                        close
+                      </span>
+                    </i>
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="esc"
+                  >
+                    ESC
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        >
+          <div
+            class="HotbarCell animateDown"
+            index="0"
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon"
+              >
+                <div
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
+                >
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
+                </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
+              </div>
+            </div>
+          </div>
+          <div
+            class="HotbarCell animateDown"
+            index="1"
+          >
+            <div
+              style="z-index: 11; position: absolute;"
+            >
+              <div
+                class="HotbarIcon"
+              >
+                <div
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-some-entity-id"
+                  id="hotbar-icon-for-some-entity-id"
+                  style="width: 40px; height: 40px; background-color: red;"
+                >
+                  skc
+                </div>
+                <div
+                  class="led"
+                />
+                <i
+                  class="Icon badge focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name=""
+                  />
+                </i>
+              </div>
+            </div>
+          </div>
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              1
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+        data-testid="status-bar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;

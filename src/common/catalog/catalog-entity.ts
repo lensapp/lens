@@ -321,7 +321,7 @@ export interface CatalogEntityAddMenuContext {
   menuItems: CatalogEntityAddMenu[];
 }
 
-export type CatalogEntitySpec = Record<string, any>;
+export type CatalogEntitySpec = Partial<Record<string, unknown>>;
 
 
 export interface CatalogEntityData<
@@ -359,8 +359,6 @@ export abstract class CatalogEntity<
   @observable spec: Spec;
 
   constructor({ metadata, status, spec }: CatalogEntityData<Metadata, Status, Spec>) {
-    makeObservable(this);
-
     if (!metadata || typeof metadata !== "object") {
       throw new TypeError("CatalogEntity's metadata must be a defined object");
     }
@@ -376,6 +374,8 @@ export abstract class CatalogEntity<
     this.metadata = metadata;
     this.status = status;
     this.spec = spec;
+
+    makeObservable(this);
   }
 
   /**

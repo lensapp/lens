@@ -23,6 +23,8 @@ import type { Navigate } from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
+import { getIconBackground, getIconColourHash } from "../../../common/catalog/helpers";
+import { EntityIcon } from "../entity-icon";
 
 export interface SidebarClusterProps {
   clusterEntity: CatalogEntity | null | undefined;
@@ -38,7 +40,7 @@ interface Dependencies {
 const NonInjectedSidebarCluster = observer(({
   clusterEntity,
   hotbarStore,
-  visitEntityContextMenu: onContextMenuOpen,
+  visitEntityContextMenu,
   navigate,
   normalizeMenuItem,
 }: Dependencies & SidebarClusterProps) => {
@@ -50,11 +52,12 @@ const NonInjectedSidebarCluster = observer(({
     return (
       <div className={styles.SidebarCluster}>
         <Avatar
-          title="??"
           background="var(--halfGray)"
           size={40}
           className={styles.loadingAvatar}
-        />
+        >
+          ??
+        </Avatar>
         <div className={styles.loadingClusterName} />
       </div>
     );
@@ -70,7 +73,7 @@ const NonInjectedSidebarCluster = observer(({
       : () => hotbarStore.addToHotbar(clusterEntity);
 
     menuItems.replace([{ title, onClick }]);
-    onContextMenuOpen(clusterEntity, {
+    visitEntityContextMenu(clusterEntity, {
       menuItems,
       navigate: (url, forceMainFrame = true) => {
         if (forceMainFrame) {
@@ -107,12 +110,13 @@ const NonInjectedSidebarCluster = observer(({
       data-testid="sidebar-cluster-dropdown"
     >
       <Avatar
-        title={clusterEntity.getName()}
-        colorHash={`${clusterEntity.getName()}-${clusterEntity.metadata.source}`}
+        colorHash={getIconColourHash(clusterEntity)}
+        background={getIconBackground(clusterEntity)}
         size={40}
-        src={clusterEntity.spec.icon?.src}
         className={styles.avatar}
-      />
+      >
+        <EntityIcon entity={clusterEntity} />
+      </Avatar>
       <div className={styles.clusterName} id={tooltipId}>
         {clusterEntity.getName()}
       </div>

@@ -10,11 +10,11 @@ import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import releaseChannelInjectable from "../vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
+import userStoreMigrationVersionInjectable from "../user-store/migration-version.injectable";
 
 describe("user store tests", () => {
   let userStore: UserStore;
@@ -88,7 +88,7 @@ describe("user store tests", () => {
 
       writeFileSync("/some/other/path", "is file");
 
-      di.override(storeMigrationVersionInjectable, () => "10.0.0");
+      di.override(userStoreMigrationVersionInjectable, () => "10.0.0");
 
       userStore.load();
     });

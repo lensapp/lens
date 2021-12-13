@@ -18,13 +18,10 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { ShowNotification } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
 import type { StorageLayer } from "../../utils";
-import { prevDefault } from "../../utils";
 import { CatalogEntityDetails } from "./entity-details/view";
 import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";
-import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
-import { Avatar } from "../avatar";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
@@ -234,33 +231,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     );
   };
 
-  renderName(entity: CatalogEntity) {
-    const isItemInHotbar = this.props.hotbarStore.isAddedToActive(entity);
-
-    return (
-      <>
-        <Avatar
-          title={entity.getName()}
-          colorHash={`${entity.getName()}-${entity.getSource()}`}
-          src={entity.spec.icon?.src}
-          background={entity.spec.icon?.background}
-          className={styles.catalogAvatar}
-          size={24}
-        >
-          {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
-        </Avatar>
-        <span>{entity.getName()}</span>
-        <Icon
-          small
-          className={styles.pinIcon}
-          svg={isItemInHotbar ? "push_off" : "push_pin"}
-          tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
-          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(entity) : this.addToHotbar(entity))}
-        />
-      </>
-    );
-  }
-
   renderViews = (activeCategory: CatalogCategory | undefined) => {
     if (!activeCategory) {
       return this.renderList(undefined);
@@ -355,8 +325,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
 }
 
 export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
-  getProps: (di, props) => ({
-    ...props,
+  getProps: (di) => ({
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),

@@ -5,7 +5,6 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-import type { KubernetesCluster } from "../../common/catalog-entities";
 import extensionIsEnabledForClusterInjectable from "../../extensions/extension-loader/extension-is-enabled-for-cluster.injectable";
 import activeKubernetesClusterInjectable from "../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { untracked } from "mobx";
@@ -16,12 +15,6 @@ const extensionShouldBeEnabledForClusterFrameInjectable = getInjectable({
   instantiate: (di, extension: LensRendererExtension) => {
     const activeKubernetesCluster = di.inject(activeKubernetesClusterInjectable);
 
-    const getExtensionIsEnabledForCluster = (
-      extension: LensRendererExtension,
-      cluster: KubernetesCluster,
-    ) =>
-      untracked(() => di.inject(extensionIsEnabledForClusterInjectable, { extension, cluster }));
-
     return asyncComputed({
       getValueFromObservedPromise: async () => {
         const cluster = activeKubernetesCluster.get();
@@ -30,7 +23,10 @@ const extensionShouldBeEnabledForClusterFrameInjectable = getInjectable({
           return false;
         }
 
-        return getExtensionIsEnabledForCluster(extension, cluster);
+        return untracked(() => di.inject(extensionIsEnabledForClusterInjectable, {
+          extension,
+          cluster,
+        }));
       },
 
       valueWhenPending: false,

@@ -5,11 +5,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
-import { ClusterNodeShellSetting } from "../../cluster-settings/node-shell-setting";
-import type { EntitySettingViewProps } from "../extension-registrator.injectable";
-import { entitySettingInjectionToken } from "../token";
+import type { GetClusterById } from "../../../../../common/cluster-store/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../../../common/cluster-store/get-by-id.injectable";
+import { ClusterNodeShellSetting } from "../../../cluster-settings/node-shell-setting";
+import type { EntitySettingViewProps, RegisteredEntitySetting } from "../../extension-registrator.injectable";
+import { entitySettingInjectionToken } from "../../token";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -38,17 +38,23 @@ const NodeShellKubernetesClusterSettings = withInjectables<Dependencies, EntityS
 
 const nodeShellKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "node-shell-kubernetes-cluster-entity-settings",
-  instantiate: () => ({
-    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
-    kind: "KubernetesCluster",
-    title: "Node Shell",
-    group: "Settings",
-    id: "node-shell",
-    orderNumber: 45,
-    components: {
-      View: NodeShellKubernetesClusterSettings,
-    },
-  }),
+  instantiate: (): RegisteredEntitySetting => {
+    const apiVersions = new Set(["entity.k8slens.dev/v1alpha1"]);
+
+    return {
+      isFor: (entity) => (
+        apiVersions.has(entity.apiVersion)
+        && entity.kind === "KubernetesCluster"
+      ),
+      title: "Node Shell",
+      group: "Settings",
+      id: "node-shell",
+      orderNumber: 45,
+      components: {
+        View: NodeShellKubernetesClusterSettings,
+      },
+    };
+  },
   injectionToken: entitySettingInjectionToken,
 });
 

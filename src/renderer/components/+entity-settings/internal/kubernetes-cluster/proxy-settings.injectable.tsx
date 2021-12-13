@@ -5,11 +5,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
-import { ClusterProxySetting } from "../../cluster-settings/proxy-setting";
-import type { EntitySettingViewProps } from "../extension-registrator.injectable";
-import { entitySettingInjectionToken } from "../token";
+import type { GetClusterById } from "../../../../../common/cluster-store/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../../../common/cluster-store/get-by-id.injectable";
+import { ClusterProxySetting } from "../../../cluster-settings/proxy-setting";
+import type { EntitySettingViewProps, RegisteredEntitySetting } from "../../extension-registrator.injectable";
+import { entitySettingInjectionToken } from "../../token";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -38,17 +38,23 @@ const ProxyKubernetesClusterSettings = withInjectables<Dependencies, EntitySetti
 
 const proxyKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "proxy-kubernetes-cluster-entity-settings",
-  instantiate: () => ({
-    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
-    kind: "KubernetesCluster",
-    title: "Proxy",
-    group: "Settings",
-    id: "proxy",
-    orderNumber: 10,
-    components: {
-      View: ProxyKubernetesClusterSettings,
-    },
-  }),
+  instantiate: (): RegisteredEntitySetting => {
+    const apiVersions = new Set(["entity.k8slens.dev/v1alpha1"]);
+
+    return {
+      isFor: (entity) => (
+        apiVersions.has(entity.apiVersion)
+        && entity.kind === "KubernetesCluster"
+      ),
+      title: "Proxy",
+      group: "Settings",
+      id: "proxy",
+      orderNumber: 10,
+      components: {
+        View: ProxyKubernetesClusterSettings,
+      },
+    };
+  },
   injectionToken: entitySettingInjectionToken,
 });
 

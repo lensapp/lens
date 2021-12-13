@@ -11,6 +11,7 @@ import type { RequestAnimationFrame } from "./request-animation-frame.injectable
 import requestAnimationFrameInjectable from "./request-animation-frame.injectable";
 import defaultEnterDurationForAnimatedInjectable from "./default-enter-duration.injectable";
 import defaultLeaveDurationForAnimatedInjectable from "./default-leave-duration.injectable";
+import doAnimationInAnimateComponentInjectable from "./is-enabled.injectable";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 
@@ -28,6 +29,7 @@ interface Dependencies {
   requestAnimationFrame: RequestAnimationFrame;
   defaultEnterDuration: number;
   defaultLeaveDuration: number;
+  doAnimation: boolean;
 }
 
 const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
@@ -35,6 +37,7 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
     requestAnimationFrame,
     defaultEnterDuration,
     defaultLeaveDuration,
+    doAnimation,
     ...props
   } = propsAndDeps;
   const {
@@ -71,14 +74,20 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
       setShowClassNameLeave(true);
       onLeaveHandler();
 
-      // Cleanup after duration
-      const handle = setTimeout(() => {
+      if (doAnimation) {
+        // Cleanup after duration
+        const handle = setTimeout(() => {
+          setIsVisible(false);
+          setShowClassNameEnter(false);
+          setShowClassNameLeave(false);
+        }, leaveDuration);
+
+        return () => clearTimeout(handle);
+      } else {
         setIsVisible(false);
         setShowClassNameEnter(false);
         setShowClassNameLeave(false);
-      }, leaveDuration);
-
-      return () => clearTimeout(handle);
+      }
     }
 
     return noop;
@@ -109,5 +118,6 @@ export const Animate = withInjectables<Dependencies, AnimateProps>(NonInjectedAn
     requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
     defaultEnterDuration: di.inject(defaultEnterDurationForAnimatedInjectable),
     defaultLeaveDuration: di.inject(defaultLeaveDurationForAnimatedInjectable),
+    doAnimation: di.inject(doAnimationInAnimateComponentInjectable),
   }),
 });

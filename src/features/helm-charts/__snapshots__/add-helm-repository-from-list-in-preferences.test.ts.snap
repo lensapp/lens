@@ -581,22 +581,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -1323,22 +1343,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -2067,22 +2107,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -2860,22 +2920,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -3602,22 +3682,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -4333,22 +4433,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -5109,22 +5229,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -5887,22 +6027,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -6724,22 +6884,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -7455,22 +7635,42 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>

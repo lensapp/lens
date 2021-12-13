@@ -79,7 +79,7 @@ describe("ClusterRoleBindingDialog tests", () => {
     openClusterRoleBindingDialog();
     const res = render(<ClusterRoleBindingDialog />);
 
-    userEvent.keyboard("a");
+    await userEvent.keyboard("a");
     await res.findAllByText("foobar");
   });
 });

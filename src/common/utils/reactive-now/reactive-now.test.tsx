@@ -15,7 +15,9 @@ describe("reactiveNow", () => {
   let someComputed: IComputedValue<boolean>;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
+    testUsingFakeTime({
+      dateTime: "2015-10-21T07:28:00Z",
+    });
 
     someComputed = computed(() => {
       const currentTimestamp = reactiveNow();

@@ -16,7 +16,6 @@ import type { DownloadPlatformUpdate } from "./main/download-update/download-pla
 import downloadPlatformUpdateInjectable from "./main/download-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import processCheckingForUpdatesInjectable from "./main/process-checking-for-updates.injectable";
-import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 describe("installing update", () => {
@@ -27,9 +26,11 @@ describe("installing update", () => {
   let setUpdateOnQuitMock: jest.Mock;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2015-10-21T07:28:00Z",
+      },
+    });
 
     builder.beforeApplicationStart((mainDi) => {
       quitAndInstallUpdateMock = jest.fn();

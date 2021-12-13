@@ -5,14 +5,14 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import type { KubernetesCluster } from "../../../../common/catalog-entities";
-import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
-import { ClusterIconSetting } from "../../cluster-settings/icon-settings";
-import { ClusterKubeconfig } from "../../cluster-settings/kubeconfig";
-import { ClusterNameSetting } from "../../cluster-settings/name-setting";
-import type { EntitySettingViewProps } from "../extension-registrator.injectable";
-import { entitySettingInjectionToken } from "../token";
+import type { KubernetesCluster } from "../../../../../common/catalog-entities";
+import type { GetClusterById } from "../../../../../common/cluster-store/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../../../common/cluster-store/get-by-id.injectable";
+import { ClusterIconSetting } from "../../../cluster-settings/icon-settings";
+import { ClusterKubeconfig } from "../../../cluster-settings/kubeconfig";
+import { ClusterNameSetting } from "../../../cluster-settings/name-setting";
+import type { EntitySettingViewProps, RegisteredEntitySetting } from "../../extension-registrator.injectable";
+import { entitySettingInjectionToken } from "../../token";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -53,18 +53,24 @@ const GeneralKubernetesClusterSettings = withInjectables<Dependencies, EntitySet
 
 const generalKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "general-kubernetes-cluster-entity-settings",
-  instantiate: () => ({
-    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
-    kind: "KubernetesCluster",
-    source: "local",
-    title: "General",
-    group: "Settings",
-    id: "general",
-    orderNumber: 0,
-    components: {
-      View: GeneralKubernetesClusterSettings,
-    },
-  }),
+  instantiate: (): RegisteredEntitySetting => {
+    const apiVersions = new Set(["entity.k8slens.dev/v1alpha1"]);
+
+    return {
+      isFor: (entity) => (
+        apiVersions.has(entity.apiVersion)
+        && entity.kind === "KubernetesCluster"
+      ),
+      source: "local",
+      title: "General",
+      group: "Settings",
+      id: "general",
+      orderNumber: 0,
+      components: {
+        View: GeneralKubernetesClusterSettings,
+      },
+    };
+  },
   injectionToken: entitySettingInjectionToken,
 });
 

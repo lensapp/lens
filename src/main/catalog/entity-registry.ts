@@ -4,7 +4,7 @@
  */
 
 import { action, computed, type IComputedValue, type IObservableArray, makeObservable, observable } from "mobx";
-import type { CatalogEntity } from "../../common/catalog";
+import type { CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../../common/catalog";
 import type { HasCategoryForEntity } from "../../common/catalog/has-category-for-entity.injectable";
 import { iter } from "../../common/utils";
 
@@ -19,11 +19,22 @@ export class CatalogEntityRegistry {
     makeObservable(this);
   }
 
-  @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
+  @action
+  addObservableSource<
+    Entity extends CatalogEntity<Metadata, Status, Spec>,
+    Metadata extends CatalogEntityMetadata,
+    Status extends CatalogEntityStatus,
+    Spec extends object,
+  >(id: string, source: IObservableArray<Entity>) {
     this.sources.set(id, computed(() => source));
   }
 
-  @action addComputedSource(id: string, source: IComputedValue<CatalogEntity[]>) {
+  @action addComputedSource<
+    Entity extends CatalogEntity<Metadata, Status, Spec>,
+    Metadata extends CatalogEntityMetadata,
+    Status extends CatalogEntityStatus,
+    Spec extends object,
+  >(id: string, source: IComputedValue<Entity[]>) {
     this.sources.set(id, source);
   }
 

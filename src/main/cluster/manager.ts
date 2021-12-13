@@ -14,8 +14,8 @@ import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
 import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
-import type { CatalogEntityRegistry } from "../catalog";
 import type { Logger } from "../../common/logger";
+import type { CatalogEntityRegistry } from "../catalog/entity-registry";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 

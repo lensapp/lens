@@ -13,7 +13,11 @@ describe("Command Pallet: keyboard shortcut tests", () => {
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        autoAdvance: true,
+      },
+    });
   });
 
   describe("when on macOS", () => {
@@ -36,8 +40,8 @@ describe("Command Pallet: keyboard shortcut tests", () => {
     });
 
     describe("when pressing ESC", () => {
-      beforeEach(() => {
-        userEvent.keyboard("{Escape}");
+      beforeEach(async () => {
+        await userEvent.keyboard("{Escape}");
       });
 
       it("renders", () => {
@@ -52,8 +56,8 @@ describe("Command Pallet: keyboard shortcut tests", () => {
     });
 
     describe("when pressing SHIFT+CMD+P", () => {
-      beforeEach(() => {
-        userEvent.keyboard("{Shift>}{Meta>}P{/Meta}{/Shift}");
+      beforeEach(async () => {
+        await userEvent.keyboard("{Shift>}{Meta>}P{/Meta}{/Shift}");
       });
 
       it("renders", () => {
@@ -67,8 +71,8 @@ describe("Command Pallet: keyboard shortcut tests", () => {
       });
 
       describe("when pressing ESC", () => {
-        beforeEach(() => {
-          userEvent.keyboard("{Escape}");
+        beforeEach(async () => {
+          await userEvent.keyboard("{Escape}");
         });
 
         it("renders", () => {
@@ -104,8 +108,8 @@ describe("Command Pallet: keyboard shortcut tests", () => {
     });
 
     describe("when pressing ESC", () => {
-      beforeEach(() => {
-        userEvent.keyboard("{Escape}");
+      beforeEach(async () => {
+        await userEvent.keyboard("{Escape}");
       });
 
       it("renders", () => {
@@ -120,8 +124,8 @@ describe("Command Pallet: keyboard shortcut tests", () => {
     });
 
     describe("when pressing SHIFT+CTRL+P", () => {
-      beforeEach(() => {
-        userEvent.keyboard("{Shift>}{Control>}P{/Control}{/Shift}");
+      beforeEach(async () => {
+        await userEvent.keyboard("{Shift>}{Control>}P{/Control}{/Shift}");
       });
 
       it("renders", () => {
@@ -135,8 +139,8 @@ describe("Command Pallet: keyboard shortcut tests", () => {
       });
 
       describe("when pressing ESC", () => {
-        beforeEach(() => {
-          userEvent.keyboard("{Escape}");
+        beforeEach(async () => {
+          await userEvent.keyboard("{Escape}");
         });
 
         it("renders", () => {

@@ -46,7 +46,6 @@ import { renderFor } from "./renderFor";
 import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
-import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
@@ -68,7 +67,10 @@ import shouldStartHiddenInjectable from "../../../main/electron-app/features/sho
 import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
+import type { TestUsingFakeTimeOptions } from "../../../common/test-utils/use-fake-time";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import mainCatalogEntityRegistryInjectable from "../../../main/catalog/entity-registry.injectable";
+import rendererCatalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -86,6 +88,10 @@ const createNamespacesFor = (namespaces: Set<string>): Namespace[] => (
     },
   }))
 );
+
+export interface OpenedMenuActions {
+  selectOption: (labelText: string) => Promise<void>;
+}
 
 export interface ApplicationBuilder {
   mainDi: DiContainer;
@@ -148,8 +154,8 @@ export interface ApplicationBuilder {
   };
   navigateWith: (token: Injectable<() => void, any, void>) => void;
   select: {
-    openMenu: (id: string) => { selectOption: (labelText: string) => void };
-    selectOption: (menuId: string, labelText: string) => void;
+    openMenu: (id: string) => OpenedMenuActions;
+    selectOption: (menuId: string, labelText: string) => Promise<void>;
     getValue: (menuId: string) => string;
   };
 }
@@ -159,7 +165,11 @@ interface Environment {
   onAllowKubeResource: () => void;
 }
 
-export const getApplicationBuilder = () => {
+export interface ApplicationBuilderOptions {
+  useFakeTime?: boolean | TestUsingFakeTimeOptions;
+}
+
+export const getApplicationBuilder = ({ useFakeTime = true }: ApplicationBuilderOptions = {}) => {
   const mainDi = getMainDi({
     doGeneralOverrides: true,
   });
@@ -168,7 +178,11 @@ export const getApplicationBuilder = () => {
     mainDi.register(mainExtensionsStateInjectable);
   });
 
-  testUsingFakeTime();
+  if (useFakeTime === true) {
+    testUsingFakeTime();
+  } else if (useFakeTime) {
+    testUsingFakeTime(useFakeTime);
+  }
 
   const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
@@ -307,6 +321,16 @@ export const getApplicationBuilder = () => {
 
     applicationHasStarted = true;
   };
+
+  const clusterStub = {
+    id: "some-cluster-id",
+    accessibleNamespaces: observable.array(),
+    shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
+  } as Partial<Cluster> as Cluster;
+
+  mainDi.inject(mainCatalogEntityRegistryInjectable).addComputedSource("some-internal-source", computed(() => [
+    catalogEntityFromCluster(clusterStub),
+  ]));
 
   const builder: ApplicationBuilder = {
     mainDi,
@@ -501,18 +525,9 @@ export const getApplicationBuilder = () => {
       environment = environments.clusterFrame;
 
       builder.beforeWindowStart((windowDi) => {
-        const clusterStub = {
-          id: "some-cluster-id",
-          accessibleNamespaces: observable.array(),
-          shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
-        } as Partial<Cluster> as Cluster;
-
-        windowDi.override(activeKubernetesClusterInjectable, () =>
-          computed(() => catalogEntityFromCluster(clusterStub)),
-        );
-
         windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
+        windowDi.inject(rendererCatalogEntityRegistryInjectable).activeEntity = clusterStub.id;
 
         // TODO: Figure out a way to remove this stub.
         windowDi.override(namespaceStoreInjectable, () => ({
@@ -791,7 +806,7 @@ const environments = {
   } as Environment,
 };
 
-const selectOptionFor = (builder: ApplicationBuilder, menuId: string) => (labelText: string) => {
+const selectOptionFor = (builder: ApplicationBuilder, menuId: string) => async (labelText: string) => {
   const rendered = builder.applicationWindow.only.rendered;
 
   const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
@@ -804,7 +819,7 @@ const selectOptionFor = (builder: ApplicationBuilder, menuId: string) => (labelT
 
   assert(option, `Could not find select option with label "${labelText}" for menu with ID "${menuId}"`);
 
-  userEvent.click(option);
+  await userEvent.click(option);
 };
 
 const enableExtensionFor = (

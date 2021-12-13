@@ -16,7 +16,7 @@ import type { ApplicationBuilder } from "../../../../renderer/components/test-ut
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import quitAndInstallUpdateInjectable from "../../main/quit-and-install-update.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../../../common/test-utils/use-fake-time";
 
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
@@ -29,9 +29,11 @@ describe("encourage user to update when sufficient time passed since update was 
   let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    applicationBuilder = getApplicationBuilder();
+    applicationBuilder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2015-10-21T07:28:00Z",
+      },
+    });
 
     applicationBuilder.beforeApplicationStart((mainDi) => {
       checkForPlatformUpdatesMock = asyncFn();

@@ -21,7 +21,9 @@ describe("<RenderDelay/>", () => {
 
     render = renderFor(di);
 
-    testUsingFakeTime("2020-01-17 12:18:19");
+    testUsingFakeTime({
+      dateTime: "2020-01-17 12:18:19",
+    });
 
     di.override(cancelIdleCallbackInjectable, () => clearTimeout);
     di.override(requestIdleCallbackInjectable, () => (callback, opts) => setTimeout(callback, opts.timeout) as any);
