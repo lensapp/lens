@@ -28,7 +28,7 @@ import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
-import { LensProxy, UnsafePortError } from "./lens-proxy";
+import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
@@ -184,39 +184,13 @@ app.on("ready", async () => {
 
   initializers.initClusterMetadataDetectors();
 
-  logger.info("🔌 Starting LensProxy");
+  try {
+    logger.info("🔌 Starting LensProxy");
+    await lensProxy.listen();
+  } catch (error) {
+    dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
-  for (let attempt = 0;; attempt += 1) {
-    try {
-      await lensProxy.listen();
-      break;
-    } catch (error) {
-      if (error instanceof UnsafePortError) {
-        lensProxy.close();
-
-        if (attempt < 16) {
-          continue;
-        }
-
-        const result = await dialog.showMessageBox({
-          title: "Lens Error",
-          message: "Tried to start several times but only got ports that chromium considers unsafe. Would you like to continue trying?",
-          buttons: ["No", "Yes"],
-          cancelId: 0,
-          defaultId: 1,
-          type: "error",
-        });
-
-        if (result.response === 1) {
-          attempt = 0;
-          continue;
-        }
-      }
-
-      dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
-
-      return app.exit();
-    }
+    return app.exit();
   }
 
   // test proxy connection

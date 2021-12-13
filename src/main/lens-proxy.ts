@@ -68,7 +68,9 @@ const disallowedPorts = new Set([
   10080,
 ]);
 
-export class UnsafePortError {}
+class UnsafePortError {
+  constructor(public port: number) {}
+}
 
 export class LensProxy extends Singleton {
   protected origin: string;
@@ -111,11 +113,11 @@ export class LensProxy extends Singleton {
   }
 
   /**
-   * Starts the lens proxy.
-   * @resolves After the server is listening
-   * @rejects if there is an error before that happens
+   * Starts to listen on an OS provided port. Will reject if the server throws
+   * an error or if the port picked by the OS is one which chrome rejects
+   * connections to.
    */
-  listen(): Promise<void> {
+  private attemptToListen(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.proxyServer.listen(0, "127.0.0.1");
 
@@ -128,7 +130,7 @@ export class LensProxy extends Singleton {
           if (disallowedPorts.has(port)) {
             logger.warn(`[LENS-PROXY]: Proxy server has with port known to be considered unsafe to connect to by chrome, restarting...`);
 
-            return reject(new UnsafePortError());
+            return reject(new UnsafePortError(port));
           }
 
           logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
@@ -146,6 +148,33 @@ export class LensProxy extends Singleton {
           reject(error);
         });
     });
+  }
+
+  /**
+   * Starts the lens proxy.
+   * @resolves After the server is listening on a good port
+   * @rejects if there is an error before that happens
+   */
+  async listen(): Promise<void> {
+    const seenPorts = new Set<number>();
+
+    for(;;) {
+      try {
+        this.proxyServer?.close();
+        await this.attemptToListen();
+        break;
+      } catch (error) {
+        if (error instanceof UnsafePortError) {
+          if (seenPorts.has(error.port)) {
+            throw new Error("Failed to start LensProxy due to seeing too many unsafe ports. Please restart Lens.");
+          }
+
+          continue;
+        }
+
+        throw error;
+      }
+    }
   }
 
   close() {
