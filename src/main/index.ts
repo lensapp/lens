@@ -42,7 +42,7 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
 import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
-import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
+import { bindBroadcastHandlers, broadcastMessage, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
@@ -248,38 +248,50 @@ app.on("ready", async () => {
     windowManager.ensureMainWindow();
   }
 
+  const initExtensions = async () => {
+    logger.info("🧩 Initializing extensions");
+
+    // call after windowManager to see splash earlier
+    try {
+      const extensions = await extensionDiscovery.load();
+
+      logger.info(`STARTUP ${new Date()} await extensionDiscovery.load() `);
+
+      // Start watching after bundled extensions are loaded
+      await extensionDiscovery.watchExtensions();
+      logger.info(`STARTUP ${new Date()} extensionDiscovery.watchExtensions()`);
+
+
+      // Subscribe to extensions that are copied or deleted to/from the extensions folder
+      extensionDiscovery.events
+        .on("add", (extension: InstalledExtension) => {
+          ExtensionLoader.getInstance().addExtension(extension);
+        })
+        .on("remove", (lensExtensionId: LensExtensionId) => {
+          ExtensionLoader.getInstance().removeExtension(lensExtensionId);
+        });
+
+      ExtensionLoader.getInstance().initExtensions(extensions);
+      logger.info(`STARTUP ${new Date()} 🧩 Initializing extensions done  ExtensionLoader.getInstance().initExtensions(extensions)`);
+    } catch (error) {
+      dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+      console.error(error);
+      console.trace();
+    }
+  };
+
   ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
     onCloseCleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     await ensureDir(storedKubeConfigFolder());
     KubeconfigSyncManager.getInstance().startSync();
+    logger.info(`STARTUP LENS Init extensions start ${new Date()}`);
+    await initExtensions();
+    logger.info(`STARTUP LENS Init extensions end ${new Date()}`);
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
+    console.log(`STARTUP LENS EXTENSIONS:LOADED ${new Date()}`);
+    broadcastMessage("EXTENSIONS:LOADED");
   });
-
-  logger.info("🧩 Initializing extensions");
-
-  // call after windowManager to see splash earlier
-  try {
-    const extensions = await extensionDiscovery.load();
-
-    // Start watching after bundled extensions are loaded
-    extensionDiscovery.watchExtensions();
-
-    // Subscribe to extensions that are copied or deleted to/from the extensions folder
-    extensionDiscovery.events
-      .on("add", (extension: InstalledExtension) => {
-        ExtensionLoader.getInstance().addExtension(extension);
-      })
-      .on("remove", (lensExtensionId: LensExtensionId) => {
-        ExtensionLoader.getInstance().removeExtension(lensExtensionId);
-      });
-
-    ExtensionLoader.getInstance().initExtensions(extensions);
-  } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
-    console.error(error);
-    console.trace();
-  }
 
   setTimeout(() => {
     appEventBus.emit({ name: "service", action: "start" });

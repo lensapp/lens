@@ -88,11 +88,13 @@ export class LensExtension {
     }
 
     try {
+      logger.info(`STARTUP LENS Extension enable ${new Date()}`);
       await this.onActivate();
       this.isEnabled = true;
 
       this[Disposers].push(...await register(this));
       logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+      logger.info(`STARTUP LENS Extension enabled ${new Date()}`);
     } catch (error) {
       logger.error(`[EXTENSION]: failed to activate ${this.name}@${this.version}: ${error}`);
     }

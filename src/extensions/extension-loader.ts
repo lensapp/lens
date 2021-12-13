@@ -62,7 +62,7 @@ export class ExtensionLoader extends Singleton {
   protected instancesByName = observable.map<string, LensExtension>();
 
   // IPC channel to broadcast changes to extensions from main
-  protected static readonly extensionsMainChannel = "extensions:main";
+  public static readonly extensionsMainChannel = "extensions:main";
 
   // IPC channel to broadcast changes to extensions from renderer
   protected static readonly extensionsRendererChannel = "extensions:renderer";
@@ -73,7 +73,11 @@ export class ExtensionLoader extends Singleton {
   @observable isLoaded = false;
 
   get whenLoaded() {
-    return when(() => this.isLoaded);
+    return when(() => {
+      console.log(`STARTUP ExtensionLoader whenLoaded() when()`);
+
+      return this.isLoaded;
+    });
   }
 
   constructor() {
@@ -146,7 +150,7 @@ export class ExtensionLoader extends Singleton {
     }
 
     await Promise.all([this.whenLoaded]);
-
+    console.log(`STARTUP await Promise.all([this.whenLoaded]);`);
     // broadcasting extensions between main/renderer processes
     reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
       fireImmediately: true,
@@ -328,7 +332,7 @@ export class ExtensionLoader extends Singleton {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    return reaction(() => this.toJSON(), installedExtensions => {
+    return reaction(() => this.toJSON(), async installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -343,7 +347,8 @@ export class ExtensionLoader extends Singleton {
 
             const instance = new LensExtensionClass(extension);
 
-            instance.enable(register);
+            await instance.enable(register);
+            console.log("STARTUP await instance.enable(register) returned");
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });

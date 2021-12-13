@@ -328,6 +328,8 @@ export class ExtensionDiscovery extends Singleton {
 
     const extensions = await this.ensureExtensions();
 
+    console.log(`STARTUP ${new Date()} ensure extensions ready`);
+
     this.isLoaded = true;
 
     return extensions;
@@ -387,14 +389,20 @@ export class ExtensionDiscovery extends Singleton {
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
 
+    console.log(`STARTUP  ${new Date()} const bundledExtensions = await this.loadBundledExtensions() ready`);
+
     await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
+    console.log(`STARTUP  ${new Date()} await this.installBundledPackages(this.packageJsonPath, bundledExtensions);ready`);
 
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
+
+    console.log(`STARTUP  ${new Date()} await userExtensions = await this.loadFromFolder ready ${new Date()}`);
 
     for (const extension of userExtensions) {
       if ((await fse.pathExists(extension.manifestPath)) === false) {
         try {
           await this.installPackage(extension.absolutePath);
+          console.log(`STARTUP  ${new Date()} install this.installPackage(${extension.absolutePath}); ready`);
         } catch (error) {
           const message = error.message || error || "unknown error";
           const { name, version } = extension.manifest;
@@ -403,6 +411,7 @@ export class ExtensionDiscovery extends Singleton {
         }
       }
     }
+    console.log(`STARTUP  ${new Date()} install ALL user extensions ready ${new Date()}`);
 
     const extensions = bundledExtensions.concat(userExtensions);
 
