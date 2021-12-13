@@ -31,7 +31,8 @@ import { watchHistoryState } from "../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../navigation";
 import { catalogRoute, catalogURL } from "../../../common/routes";
 import { IpcMainWindowEvents } from "../../../main/window-manager";
-import { isWindows } from "../../../common/vars";
+import { isLinux, isWindows } from "../../../common/vars";
+import { cssNames } from "../../utils";
 
 interface Props extends React.HTMLAttributes<any> {
 }
@@ -125,7 +126,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   return (
     <div className={styles.topBar} onDoubleClick={windowSizeToggle} ref={elem} {...rest}>
       <div className={styles.tools}>
-        {isWindows && (
+        {(isWindows || isLinux) && (
           <div className={styles.winMenu}>
             <div onClick={openContextMenu} data-testid="window-menu">
               <svg width="12" height="12" viewBox="0 0 12 12" shapeRendering="crispEdges"><path fill="currentColor" d="M0,8.5h12v1H0V8.5z"/><path fill="currentColor" d="M0,5.5h12v1H0V5.5z"/><path fill="currentColor" d="M0,2.5h12v1H0V2.5z"/></svg>
@@ -157,15 +158,15 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
       <div className={styles.controls}>
         {renderRegisteredItems()}
         {children}
-        {isWindows && (
-          <div className={styles.winButtons}>
+        {(isWindows || isLinux) && (
+          <div className={cssNames(styles.windowButtons, { [styles.linuxButtons]: isLinux })}>
             <div className={styles.minimize} data-testid="window-minimize" onClick={minimizeWindow}>
-              <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="6"></rect></svg></div>
+              <svg shapeRendering="crispEdges" viewBox="0 0 12 12"><rect fill="currentColor" width="10" height="1" x="1" y="9"></rect></svg></div>
             <div className={styles.maximize} data-testid="window-maximize" onClick={toggleMaximize}>
-              <svg width="12" height="12" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
+              <svg shapeRendering="crispEdges" viewBox="0 0 12 12"><rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect></svg>
             </div>
             <div className={styles.close} data-testid="window-close" onClick={closeWindow}>
-              <svg width="12" height="12" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
+              <svg shapeRendering="crispEdges" viewBox="0 0 12 12"><polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon></svg>
             </div>
           </div>
         )}

@@ -29,7 +29,7 @@ import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
-import { isWindows, productName } from "../common/vars";
+import { isLinux, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 
 export const enum IpcMainWindowEvents {
@@ -85,8 +85,7 @@ export class WindowManager extends Singleton {
         show: false,
         minWidth: 700,  // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
-        titleBarStyle: isWindows ? "hidden" : "hiddenInset",
-        autoHideMenuBar: true,
+        titleBarStyle: (isWindows || isLinux) ? "hidden" : "hiddenInset",
         backgroundColor: "#1e2124",
         webPreferences: {
           nodeIntegration: true,

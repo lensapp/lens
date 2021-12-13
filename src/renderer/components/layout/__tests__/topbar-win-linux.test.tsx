@@ -26,13 +26,17 @@ import { TopBar } from "../topbar";
 import { TopBarRegistry } from "../../../../extensions/registries";
 import { IpcMainWindowEvents } from "../../../../main/window-manager";
 import { broadcastMessage } from "../../../../common/ipc";
+import * as vars from "../../../../common/vars";
+
+const mockConfig = vars as { isWindows: boolean, isLinux: boolean };
 
 jest.mock("../../../../common/ipc");
 
 jest.mock("../../../../common/vars", () => {
   return {
-    isWindows: true,
-    isLinux: false,
+    __esModule: true,
+    isWindows: null,
+    isLinux: null,
   };
 });
 
@@ -53,7 +57,7 @@ jest.mock("@electron/remote", () => {
   };
 });
 
-describe("<Tobar/> in Windows", () => {
+describe("<Tobar/> in Windows and Linux", () => {
   beforeEach(() => {
     TopBarRegistry.createInstance();
   });
@@ -62,7 +66,22 @@ describe("<Tobar/> in Windows", () => {
     TopBarRegistry.resetInstance();
   });
 
-  it("shows window controls", () => {
+  it("shows window controls on Windows", () => {
+    mockConfig.isWindows = true;
+    mockConfig.isLinux = false;
+
+    const { getByTestId } = render(<TopBar/>);
+
+    expect(getByTestId("window-menu")).toBeInTheDocument();
+    expect(getByTestId("window-minimize")).toBeInTheDocument();
+    expect(getByTestId("window-maximize")).toBeInTheDocument();
+    expect(getByTestId("window-close")).toBeInTheDocument();
+  });
+
+  it("shows window controls on Linux", () => {
+    mockConfig.isWindows = false;
+    mockConfig.isLinux = true;
+
     const { getByTestId } = render(<TopBar/>);
 
     expect(getByTestId("window-menu")).toBeInTheDocument();
@@ -72,6 +91,8 @@ describe("<Tobar/> in Windows", () => {
   });
 
   it("triggers ipc events on click", () => {
+    mockConfig.isWindows = true;
+
     const { getByTestId } = render(<TopBar/>);
 
     const menu = getByTestId("window-menu");
