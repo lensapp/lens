@@ -68,10 +68,6 @@ const disallowedPorts = new Set([
   10080,
 ]);
 
-class UnsafePortError {
-  constructor(public port: number) {}
-}
-
 export class LensProxy extends Singleton {
   protected origin: string;
   protected proxyServer: http.Server;
@@ -114,11 +110,12 @@ export class LensProxy extends Singleton {
 
   /**
    * Starts to listen on an OS provided port. Will reject if the server throws
-   * an error or if the port picked by the OS is one which chrome rejects
-   * connections to.
+   * an error.
+   *
+   * Resolves with the port number that was picked
    */
-  private attemptToListen(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+  private attemptToListen(): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
       this.proxyServer.listen(0, "127.0.0.1");
 
       this.proxyServer
@@ -126,12 +123,6 @@ export class LensProxy extends Singleton {
           this.proxyServer.removeAllListeners("error"); // don't reject the promise
 
           const { address, port } = this.proxyServer.address() as net.AddressInfo;
-
-          if (disallowedPorts.has(port)) {
-            logger.warn(`[LENS-PROXY]: Proxy server has with port known to be considered unsafe to connect to by chrome, restarting...`);
-
-            return reject(new UnsafePortError(port));
-          }
 
           logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
 
@@ -141,7 +132,7 @@ export class LensProxy extends Singleton {
 
           this.port = port;
           appEventBus.emit({ name: "lens-proxy", action: "listen", params: { port }});
-          resolve();
+          resolve(port);
         })
         .once("error", (error) => {
           logger.info(`[LENS-PROXY]: Proxy server failed to start: ${error}`);
@@ -158,21 +149,26 @@ export class LensProxy extends Singleton {
   async listen(): Promise<void> {
     const seenPorts = new Set<number>();
 
-    for(;;) {
-      try {
-        this.proxyServer?.close();
-        await this.attemptToListen();
-        break;
-      } catch (error) {
-        if (error instanceof UnsafePortError) {
-          if (seenPorts.has(error.port)) {
-            throw new Error("Failed to start LensProxy due to seeing too many unsafe ports. Please restart Lens.");
-          }
+    while(true) {
+      this.proxyServer?.close();
+      const port = await this.attemptToListen();
 
-          continue;
-        }
+      if (!disallowedPorts.has(port)) {
+        // We didn't get a port that would result in an ERR_UNSAFE_PORT error, use it
+        return;
+      }
 
-        throw error;
+      logger.warn(`[LENS-PROXY]: Proxy server has with port known to be considered unsafe to connect to by chrome, restarting...`);
+
+      if (seenPorts.has(port)) {
+        /**
+         * Assume that if we have seen the port before, then the OS has looped
+         * through all the ports possible and we will not be able to get a safe
+         * port.
+         */
+        throw new Error("Failed to start LensProxy due to seeing too many unsafe ports. Please restart Lens.");
+      } else {
+        seenPorts.add(port);
       }
     }
   }
