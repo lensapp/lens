@@ -55,6 +55,7 @@ export { ClusterRole, clusterRoleApi } from "../../common/k8s-api/endpoints";
 export { ClusterRoleBinding, clusterRoleBindingApi } from "../../common/k8s-api/endpoints";
 export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints";
 export { KubeObjectStatusLevel } from "./kube-object-status";
+export { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
 
 // types
 export type { ILocalKubeApiConfig, IRemoteKubeApiConfig, IKubeApiCluster } from "../../common/k8s-api/kube-api";
