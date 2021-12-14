@@ -178,7 +178,6 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
           showAllNamespacesOption={true}
           closeMenuOnSelect={false}
           controlShouldRenderValue={false}
-          placeholder={""}
           onChange={this.onChange}
           onBlur={this.reset}
           formatOptionLabel={this.formatOptionLabel}

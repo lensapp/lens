@@ -31,8 +31,9 @@ import Creatable, { CreatableProps } from "react-select/creatable";
 
 import { ThemeStore } from "../../theme.store";
 import { boundMethod, cssNames } from "../../utils";
+import { FixedSizeList } from "react-window";
 
-const { Menu } = components;
+const { Menu, MenuList } = components;
 
 export interface GroupSelectOption<T extends SelectOption = SelectOption> {
   label: ReactNode;
@@ -150,6 +151,29 @@ export class Select extends React.Component<SelectProps> {
             className={cssNames(menuClass, this.themeClass, props.className)}
           />
         ),
+        MenuList: props => {
+          const height = 35;
+          const { options, children, maxHeight, getValue } = props;
+          const [value] = getValue();
+          const initialOffset = options.indexOf(value) * height;
+          const rChildren = React.Children.toArray(children);
+
+          if (rChildren.length < 200) {
+            return <MenuList {...props} />;
+          }
+
+          return (
+            <FixedSizeList
+              height={maxHeight}
+              itemCount={rChildren.length}
+              itemSize={30}
+              initialScrollOffset={initialOffset}
+              width="100%"
+            >
+              {({ index, style }) => <div style={style}>{rChildren[index]}</div>}
+            </FixedSizeList>
+          );
+        },
       },
     };
 
