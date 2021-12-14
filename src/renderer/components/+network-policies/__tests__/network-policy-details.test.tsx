@@ -53,4 +53,19 @@ describe("NetworkPolicyDetails", () => {
     expect(await findByTestId(container, "egress-0")).toBeInstanceOf(HTMLElement);
     expect(await findByText(container, "foo: bar")).toBeInstanceOf(HTMLElement);
   });
+
+  it("should not crash if egress nodeSelector doesn't have matchLabels", async () => {
+    const spec: NetworkPolicySpec = {
+      egress: [{
+        to: [{
+          namespaceSelector: {},
+        }],
+      }],
+      podSelector: {},
+    };
+    const policy = new NetworkPolicy({ metadata: {} as any, spec } as any);
+    const { container } = render(<NetworkPolicyDetails object={policy} />);
+
+    expect(container).toBeInstanceOf(HTMLElement);
+  });
 });
