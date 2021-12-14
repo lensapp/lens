@@ -65,7 +65,11 @@ export class ClusterIconSetting extends React.Component<Props> {
   }
 
   clearIcon() {
-    this.props.cluster.preferences.icon = undefined;
+    /**
+     * NOTE: this needs to be `null` rather than `undefined` so that we can
+     * tell the difference between it not being there and being cleared.
+     */
+    this.props.cluster.preferences.icon = null;
   }
 
   @boundMethod
