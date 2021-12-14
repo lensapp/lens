@@ -71,7 +71,8 @@ describe("preferences page tests", () => {
     }
   }, 10*60*1000);
 
-  utils.itIf(process.platform !== "win32")("ensures helm repos", async () => {
+  // Skipping, but will turn it on again in the follow up PR
+  it.skip("ensures helm repos", async () => {
     await window.click("[data-testid=kubernetes-tab]");
     await window.waitForSelector("[data-testid=repository-name]", {
       timeout: 140_000,
