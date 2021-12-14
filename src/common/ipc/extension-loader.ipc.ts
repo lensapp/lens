@@ -18,13 +18,4 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-export const dialogShowOpenDialogHandler = "dialog:show-open-dialog";
-
-export * from "./ipc";
-export * from "./invalid-kubeconfig";
-export * from "./update-available.ipc";
-export * from "./cluster.ipc";
-export * from "./type-enforced-ipc";
-export * from "./hotbar";
-export * from "./extension-loader.ipc";
+export const BundledExtensionsLoaded = "extension-loader:bundled-extensions-loaded";

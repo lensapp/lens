@@ -255,7 +255,7 @@ export class ExtensionLoader {
 
   loadOnClusterManagerRenderer() {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+    const bundledLoaded = this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
@@ -278,6 +278,8 @@ export class ExtensionLoader {
 
       return removeItems;
     });
+
+    return bundledLoaded;
   }
 
   loadOnClusterRenderer() {
@@ -312,7 +314,9 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    return reaction(() => this.toJSON(), installedExtensions => {
+    const bundledLoaded: Promise<void>[] = [];
+
+    reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -327,7 +331,13 @@ export class ExtensionLoader {
 
             const instance = new LensExtensionClass(extension);
 
-            instance.enable(register);
+            const loaded = instance.enable(register).catch((err) => {
+              logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+            });
+
+            if (extension.isBundled) {
+              bundledLoaded.push(loaded);
+            }
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
@@ -339,6 +349,8 @@ export class ExtensionLoader {
     }, {
       fireImmediately: true,
     });
+
+    return Promise.all(bundledLoaded);
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {

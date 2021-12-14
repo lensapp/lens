@@ -29,7 +29,7 @@ import { ErrorBoundary } from "./components/error-boundary";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
 import type { ExtensionLoader } from "../extensions/extension-loader";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, BundledExtensionsLoaded } from "../common/ipc";
 import { CommandContainer } from "./components/command-palette/command-container";
 import { registerIpcListeners } from "./ipc";
 import { ipcRenderer } from "electron";
@@ -54,8 +54,14 @@ export class RootFrame extends React.Component {
     lensProtocolRouterRendererInjectable: LensProtocolRouterRenderer,
   ) {
     catalogEntityRegistry.init();
-    extensionLoader.loadOnClusterManagerRenderer();
+
+    try {
+      await extensionLoader.loadOnClusterManagerRenderer();
+    } finally {
+      ipcRenderer.send(BundledExtensionsLoaded);
+    }
     lensProtocolRouterRendererInjectable.init();
+
     bindProtocolAddRouteHandlers();
 
     window.addEventListener("offline", () => broadcastMessage("network:offline"));
