@@ -3,7 +3,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "5.3.2",
+  "version": "5.3.3",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -129,6 +129,11 @@
           "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
+      ]
+    },
+    "rpm": {
+      "fpm": [
+        "--rpm-rpmbuild-define=%define _build_id_links none"
       ]
     },
     "mac": {
@@ -380,7 +385,6 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2",
     "webpack-node-externals": "^1.7.2",
-    "what-input": "^5.2.10",
     "xterm": "^4.14.1",
     "xterm-addon-fit": "^0.5.0"
   }

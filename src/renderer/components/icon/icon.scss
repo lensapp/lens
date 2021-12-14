@@ -127,7 +127,7 @@
   }
 
   &.active {
-    color: var(--color-active);
+    color: var(--textColorAccent);
     box-shadow: 0 0 0 2px var(--iconActiveBackground);
     background-color: var(--iconActiveBackground);
   }
@@ -137,16 +137,8 @@
     transition: 250ms color, 250ms opacity, 150ms background-color, 150ms box-shadow;
     border-radius: var(--border-radius);
 
-    &.focusable:focus:not(:hover) {
+    &.focusable:focus-visible {
       box-shadow: 0 0 0 2px var(--focus-color);
-
-      [data-whatintent='mouse'] & {
-        box-shadow: none;
-
-        &.active {
-          box-shadow: 0 0 0 2px var(--iconActiveBackground);
-        }
-      }
     }
 
     &:hover {

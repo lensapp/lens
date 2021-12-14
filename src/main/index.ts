@@ -90,14 +90,22 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+logger.debug("[APP-MAIN] initializing remote");
 initializeRemote();
+
+logger.debug("[APP-MAIN] configuring packages");
 configurePackages();
+
 mangleProxyEnv();
+
+logger.debug("[APP-MAIN] initializing ipc main handlers");
 initializers.initIpcMainHandlers();
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
+
+logger.debug("[APP-MAIN] Lens protocol routing main");
 
 if (!app.requestSingleInstanceLock()) {
   app.exit();
@@ -112,6 +120,8 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 app.on("second-instance", (event, argv) => {
+  logger.debug("second-instance message");
+
   const lprm = LensProtocolRouterMain.createInstance();
 
   for (const arg of argv) {
@@ -295,6 +305,8 @@ autoUpdater.on("before-quit-for-update", () => {
 });
 
 app.on("will-quit", (event) => {
+  logger.debug("will-quit message");
+
   // This is called when the close button of the main window is clicked
 
   const lprm = LensProtocolRouterMain.getInstance(false);
@@ -324,6 +336,8 @@ app.on("will-quit", (event) => {
 });
 
 app.on("open-url", (event, rawUrl) => {
+  logger.debug("open-url message");
+
   // lens:// protocol handler
   event.preventDefault();
   LensProtocolRouterMain.getInstance().route(rawUrl);
@@ -343,3 +357,5 @@ export {
   Mobx,
   LensExtensions,
 };
+
+logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
