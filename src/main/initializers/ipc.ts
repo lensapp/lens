@@ -152,7 +152,13 @@ export function initIpcMainHandlers() {
 
   ipcMainOn(IpcMainWindowEvents.OPEN_CONTEXT_MENU, async (event) => {
     const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance()));
+    const options = {
+      ...BrowserWindow.fromWebContents(event.sender),
+      // Center of the topbar menu icon
+      x: 20,
+      y: 20,
+    } as Electron.PopupOptions;
 
-    menu.popup(BrowserWindow.fromWebContents(event.sender) as Electron.PopupOptions);
+    menu.popup(options);
   });
 }
