@@ -25,6 +25,12 @@ import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "../topbar";
 import { TopBarRegistry } from "../../../../extensions/registries";
 
+jest.mock("../../../../common/vars", () => {
+  return {
+    isMac: true,
+  };
+});
+
 jest.mock(
   "electron",
   () => ({
@@ -65,6 +71,7 @@ jest.mock("@electron/remote", () => {
         }];
       },
     },
+    getCurrentWindow: () => jest.fn(),
   };
 });
 
@@ -133,5 +140,14 @@ describe("<TopBar/>", () => {
     const { getByTestId } = render(<TopBar/>);
 
     expect(await getByTestId(testId)).toHaveTextContent(text);
+  });
+
+  it("doesn't show windows title buttons", () => {
+    const { queryByTestId } = render(<TopBar/>);
+
+    expect(queryByTestId("window-menu")).not.toBeInTheDocument();
+    expect(queryByTestId("window-minimize")).not.toBeInTheDocument();
+    expect(queryByTestId("window-maximize")).not.toBeInTheDocument();
+    expect(queryByTestId("window-close")).not.toBeInTheDocument();
   });
 });

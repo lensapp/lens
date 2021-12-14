@@ -155,8 +155,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 
   render(
     <DiContextProvider value={{ di }}>
-      {isMac && <div id="draggable-top" />}
-
       {DefaultProps(App)}
     </DiContextProvider>,
 

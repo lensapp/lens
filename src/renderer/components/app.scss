@@ -97,17 +97,6 @@ html, body {
   }
 }
 
-#draggable-top {
-  @include set-draggable;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: var(--main-layout-header);
-  z-index: 1000;
-  pointer-events: none;
-}
-
 body {
   font: $font-size $font-main;
 }
