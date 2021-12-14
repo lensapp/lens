@@ -49,7 +49,10 @@ export class RootFrame extends React.Component {
 
   static async init(rootElem: HTMLElement) {
     catalogEntityRegistry.init();
-    ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
+    console.log(`STARTUP ExtensionLoader::init::loadOnClusterManagerRenderer ${new Date()} ${new Date().getTime()}`);
+    await ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
+    console.log(`STARTUP ExtensionLoader::init::loadOnClusterManagerRenderer done ${new Date()} ${new Date().getTime()}`);
+    ipcRenderer.send("EXTENSIONS:LOADED");
     LensProtocolRouterRenderer.createInstance().init();
     bindProtocolAddRouteHandlers();
 

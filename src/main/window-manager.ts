@@ -177,7 +177,7 @@ export class WindowManager extends Singleton {
     if (!this.mainWindow) {
       viewHasLoaded = new Promise<void>(resolve => {
         ipcMain.once("EXTENSIONS:LOADED", () => {
-          logger.info(`STARTUP LENS EXTENSIONS:LOADED: ${showSplash} ${new Date()}`);
+          console.log(`STARTUP GOT EXTENSIONS:LOADED ${new Date()} ${new Date().getTime()}`);
           resolve();
         } );
       });
@@ -186,11 +186,9 @@ export class WindowManager extends Singleton {
 
     try {
       await viewHasLoaded;
-      await delay(50); // wait just a bit longer to let the first round of rendering happen
-      logger.info("[WINDOW-MANAGER]: Main window has reported that it has loaded");
-      logger.info(`STARTUP LENS view has loaded let's show mainWindow ${new Date()}`);
+      await delay(100); // wait just a bit longer to let the first round of rendering happen
+      console.log(`STARTUP this.mainWindow.show ${new Date()} ${new Date().getTime()}`);
       this.mainWindow.show();
-      logger.info(`STARTUP LENS let's close the splashWindow ${new Date()}`);
       this.splashWindow?.close();
       this.splashWindow = undefined;
       setTimeout(() => {

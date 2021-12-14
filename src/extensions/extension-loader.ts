@@ -48,7 +48,6 @@ const logModule = "[EXTENSIONS-LOADER]";
 export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
-
   /**
    * This is the set of extensions that don't come with either
    * - Main.LensExtension when running in the main process
@@ -273,9 +272,9 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  loadOnClusterManagerRenderer() {
+  async loadOnClusterManagerRenderer() {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+    await this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
@@ -298,6 +297,7 @@ export class ExtensionLoader extends Singleton {
 
       return removeItems;
     });
+    console.log(`STARTUP ExtensionLoader:loadOnClusterManagerRenderer done ${new Date()} ${new Date().getTime()}`);
   }
 
   loadOnClusterRenderer() {
@@ -331,8 +331,11 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    return reaction(() => this.toJSON(), async installedExtensions => {
+  protected async autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
+    console.log(`STARTUP ${new Date()} ExtensionLoader::autoInitExtensions`);
+    const enablePromises: Promise<void>[] = [];
+
+    reaction(() => this.toJSON(), async installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -347,9 +350,10 @@ export class ExtensionLoader extends Singleton {
 
             const instance = new LensExtensionClass(extension);
 
-            await instance.enable(register);
-            console.log("STARTUP await instance.enable(register) returned");
             this.instances.set(extId, instance);
+            enablePromises.push(instance.enable(register).catch((err) => {
+              logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+            }));
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
           }
@@ -360,6 +364,8 @@ export class ExtensionLoader extends Singleton {
     }, {
       fireImmediately: true,
     });
+
+    return Promise.all(enablePromises);
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
