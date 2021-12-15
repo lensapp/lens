@@ -90,7 +90,11 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
   terminalCWD?: string;
   clusterName?: string;
   iconOrder?: number;
-  icon?: string;
+  /**
+   * The <img> src for the cluster. If set to `null` that means that it was
+   * cleared by preferences.
+   */
+  icon?: string | null;
   httpsProxy?: string;
   hiddenMetrics?: string[];
   nodeShellImage?: string;

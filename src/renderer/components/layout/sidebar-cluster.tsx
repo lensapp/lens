@@ -31,6 +31,7 @@ import { Icon } from "../icon";
 import { navigate } from "../../navigation";
 import { Menu, MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
+import { Tooltip } from "../tooltip";
 
 const contextMenu: CatalogEntityContextMenuContext = observable({
   menuItems: [],
@@ -60,11 +61,25 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
+function renderLoadingSidebarCluster() {
+  return (
+    <div className={styles.SidebarCluster}>
+      <Avatar
+        title="??"
+        background="var(--halfGray)"
+        size={40}
+        className={styles.loadingAvatar}
+      />
+      <div className={styles.loadingClusterName} />
+    </div>
+  );
+}
+
 export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity }) {
   const [opened, setOpened] = useState(false);
 
   if (!clusterEntity) {
-    return null;
+    return renderLoadingSidebarCluster();
   }
 
   const onMenuOpen = () => {
@@ -95,6 +110,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
 
   const { metadata, spec } = clusterEntity;
   const id = `cluster-${metadata.uid}`;
+  const tooltipId = `tooltip-${id}`;
 
   return (
     <div
@@ -112,9 +128,12 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
         src={spec.icon?.src}
         className={styles.avatar}
       />
-      <div className={styles.clusterName}>
+      <div className={styles.clusterName} id={tooltipId}>
         {metadata.name}
       </div>
+      <Tooltip targetId={tooltipId}>
+        {metadata.name}
+      </Tooltip>
       <Icon material="arrow_drop_down" className={styles.dropdown}/>
       <Menu
         usePortal

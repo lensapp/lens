@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { BrowserWindow, dialog, IpcMainInvokeEvent } from "electron";
+import { BrowserWindow, dialog, IpcMainInvokeEvent, Menu } from "electron";
 import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../common/cluster-ipc";
 import type { ClusterId } from "../../common/cluster-types";
@@ -30,12 +30,15 @@ import { catalogEntityRegistry } from "../catalog";
 import { pushCatalogToRenderer } from "../catalog-pusher";
 import { ClusterManager } from "../cluster-manager";
 import { ResourceApplier } from "../resource-applier";
-import { WindowManager } from "../window-manager";
+import { IpcMainWindowEvents, WindowManager } from "../window-manager";
 import path from "path";
 import { remove } from "fs-extra";
 import { AppPaths } from "../../common/app-paths";
+import { getAppMenu } from "../menu/menu";
+import type { MenuRegistration } from "../menu/menu-registration";
+import type { IComputedValue } from "mobx";
 
-export function initIpcMainHandlers() {
+export function initIpcMainHandlers(electronMenuItems: IComputedValue<MenuRegistration[]>) {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -147,5 +150,17 @@ export function initIpcMainHandlers() {
     await WindowManager.getInstance().ensureMainWindow();
 
     return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
+  });
+
+  ipcMainOn(IpcMainWindowEvents.OPEN_CONTEXT_MENU, async (event) => {
+    const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
+    const options = {
+      ...BrowserWindow.fromWebContents(event.sender),
+      // Center of the topbar menu icon
+      x: 20,
+      y: 20,
+    } as Electron.PopupOptions;
+
+    menu.popup(options);
   });
 }

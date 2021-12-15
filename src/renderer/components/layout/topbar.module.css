@@ -20,22 +20,44 @@
  */
 
 .topBar {
-  display: grid;
-  grid-template-columns: [title] 1fr [controls] auto;
-  grid-template-rows: var(--main-layout-header);
-  grid-template-areas: "title controls";
+  display: flex;
   background-color: var(--layoutBackground);
   z-index: 2;
   width: 100%;
   grid-area: topbar;
+  height: var(--main-layout-header);
+  justify-content: space-between;
+
+  /* Use topbar as draggable region */
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
 }
 
 :global(.is-mac) .topBar {
   padding-left: var(--hotbar-width);
 }
 
+.winMenu {
+  width: var(--hotbar-width);
+
+  > div {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+      background-color: var(--borderFaintColor);
+    }
+
+    &:active {
+      background-color: var(--borderColor);
+    }
+  }
+}
+
 .tools {
   @apply flex items-center;
+  -webkit-app-region: no-drag;
 }
 
 .controls {
@@ -44,4 +66,63 @@
   align-items: center;
   display: flex;
   height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.windowButtons {
+  display: flex;
+  margin-left: 1.5rem;
+  margin-right: -1.5rem;
+
+  > div {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &.linuxButtons {
+    > div {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-right: 1.1rem;
+      color: var(--textColorAccent);
+
+      svg {
+        width: 8px;
+        height: 8px;
+      }
+    }
+
+    .close {
+      color: white;
+      background-color: #e63e02; /* Standard close button bg color on ubuntu */
+    }
+
+    .close:hover {
+      background-color: #ff5a23;
+    }
+  }
+}
+
+.minimize, .maximize {
+  &:hover {
+    background-color: var(--borderFaintColor);
+  }
+
+  &:active {
+    background-color: var(--borderColor);
+  }
+}
+
+.close {
+  &:hover {
+    color: white;
+    background-color: #ef4b4e;
+  }
 }

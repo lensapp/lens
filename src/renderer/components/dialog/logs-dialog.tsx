@@ -24,10 +24,10 @@ import "./logs-dialog.scss";
 import React from "react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { copyToClipboard } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { Icon } from "../icon";
+import { clipboard } from "electron";
 
 // todo: make as external BrowserWindow (?)
 
@@ -40,9 +40,8 @@ export class LogsDialog extends React.Component<Props> {
   public logsElem: HTMLElement;
 
   copyToClipboard = () => {
-    if (copyToClipboard(this.logsElem)) {
-      Notifications.ok(`Logs copied to clipboard.`);
-    }
+    clipboard.writeText(this.props.logs);
+    Notifications.ok(`Logs copied to clipboard.`);
   };
 
   render() {

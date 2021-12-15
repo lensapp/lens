@@ -63,7 +63,7 @@ export function showAbout(browserWindow: BrowserWindow) {
   });
 }
 
-export function buildMenu(
+export function getAppMenu(
   windowManager: WindowManager,
   electronMenuItems: MenuRegistration[],
 ) {
@@ -324,5 +324,15 @@ export function buildMenu(
     appMenu.delete("mac");
   }
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenu.values()]));
+  return [...appMenu.values()];
+
+}
+
+export function buildMenu(
+  windowManager: WindowManager,
+  electronMenuItems: MenuRegistration[],
+) {
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate(getAppMenu(windowManager, electronMenuItems)),
+  );
 }

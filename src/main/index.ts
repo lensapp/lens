@@ -102,7 +102,10 @@ configurePackages();
 mangleProxyEnv();
 
 logger.debug("[APP-MAIN] initializing ipc main handlers");
-initializers.initIpcMainHandlers();
+
+const menuItems = di.inject(electronMenuItemsInjectable);
+
+initializers.initIpcMainHandlers(menuItems);
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
@@ -238,8 +241,6 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
-
-  const menuItems = di.inject(electronMenuItemsInjectable);
 
   onQuitCleanup.push(
     initMenu(windowManager, menuItems),

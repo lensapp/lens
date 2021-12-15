@@ -29,8 +29,12 @@ import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
-import { productName } from "../common/vars";
+import { isMac, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
+
+export const enum IpcMainWindowEvents {
+  OPEN_CONTEXT_MENU = "window:open-context-menu",
+}
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -81,7 +85,8 @@ export class WindowManager extends Singleton {
         show: false,
         minWidth: 700,  // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
-        titleBarStyle: "hiddenInset",
+        titleBarStyle: isMac ? "hiddenInset" : "hidden",
+        frame: isMac,
         backgroundColor: "#1e2124",
         webPreferences: {
           nodeIntegration: true,
