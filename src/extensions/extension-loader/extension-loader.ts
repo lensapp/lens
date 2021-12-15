@@ -255,7 +255,8 @@ export class ExtensionLoader {
 
   loadOnClusterManagerRenderer() {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-    const bundledLoaded = this.autoInitExtensions(async (extension: LensRendererExtension) => {
+
+    return this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
@@ -278,8 +279,6 @@ export class ExtensionLoader {
 
       return removeItems;
     });
-
-    return bundledLoaded;
   }
 
   loadOnClusterRenderer() {
