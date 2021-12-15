@@ -50,7 +50,9 @@ export function createStorage<T>(key: string, defaultValue: T) {
 
       try {
         storage.data = await fse.readJson(filePath);
-      } catch {} finally {
+      } catch {
+        // ignore error
+      } finally {
         if (!isTestEnv) {
           logger.info(`${logPrefix} loading finished for ${filePath}`);
         }

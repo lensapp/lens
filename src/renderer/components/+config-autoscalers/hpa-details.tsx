@@ -45,15 +45,17 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
 
     const renderName = (metric: IHpaMetric) => {
       switch (metric.type) {
-        case HpaMetricType.Resource:
-          const addition = metric.resource.targetAverageUtilization ? <>(as a percentage of request)</> : "";
+        case HpaMetricType.Resource: {
+          const addition = metric.resource.targetAverageUtilization
+            ? "(as a percentage of request)"
+            : "";
 
           return <>Resource {metric.resource.name} on Pods {addition}</>;
-
+        }
         case HpaMetricType.Pods:
           return <>{metric.pods.metricName} on Pods</>;
 
-        case HpaMetricType.Object:
+        case HpaMetricType.Object: {
           const { target } = metric.object;
           const { kind, name } = target;
           const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
@@ -64,6 +66,7 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
               <Link to={objectUrl}>{kind}/{name}</Link>
             </>
           );
+        }
         case HpaMetricType.External:
           return (
             <>

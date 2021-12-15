@@ -31,12 +31,13 @@ export interface ReadFileFromTarOpts {
 }
 
 export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: ReadFileFromTarOpts): Promise<R> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const fileChunks: Buffer[] = [];
 
-    await tar.list({
+    tar.list({
       file: tarPath,
       filter: entryPath => path.normalize(entryPath) === filePath,
+      sync: true,
       onentry(entry: FileStat) {
         entry.on("data", chunk => {
           fileChunks.push(chunk);

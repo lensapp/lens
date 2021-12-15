@@ -73,6 +73,7 @@ export class Icon extends React.PureComponent<IconProps> {
     switch (evt.nativeEvent.code) {
       case "Space":
 
+        // fallthrough
       case "Enter": {
         // eslint-disable-next-line react/no-find-dom-node
         const icon = findDOMNode(this) as HTMLElement;

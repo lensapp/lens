@@ -164,14 +164,14 @@ describe("KubeObject", () => {
 
   describe("isJsonApiDataList", () => {
     function isAny(val: unknown): val is any {
-      return !Boolean(void val);
+      return true;
     }
 
     function isNotAny(val: unknown): val is any {
-      return Boolean(void val);
+      return false;
     }
 
-    function isBoolean(val: unknown): val is Boolean {
+    function isBoolean(val: unknown): val is boolean {
       return typeof val === "boolean";
     }
 

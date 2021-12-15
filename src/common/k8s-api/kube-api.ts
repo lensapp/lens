@@ -698,21 +698,16 @@ export class KubeApi<T extends KubeObject> {
   }
 
   protected modifyWatchEvent(event: IKubeWatchEvent<KubeJsonApiData>) {
+    if (event.type === "ERROR") {
+      return;
 
-    switch (event.type) {
-      case "ADDED":
-      case "DELETED":
-
-      case "MODIFIED": {
-        ensureObjectSelfLink(this, event.object);
-
-        const { namespace, resourceVersion } = event.object.metadata;
-
-        this.setResourceVersion(namespace, resourceVersion);
-        this.setResourceVersion("", resourceVersion);
-
-        break;
-      }
     }
+
+    ensureObjectSelfLink(this, event.object);
+
+    const { namespace, resourceVersion } = event.object.metadata;
+
+    this.setResourceVersion(namespace, resourceVersion);
+    this.setResourceVersion("", resourceVersion);
   }
 }

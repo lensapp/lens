@@ -34,7 +34,7 @@ export default {
       if (!cluster.kubeConfig) continue;
       const config = yaml.load(cluster.kubeConfig);
 
-      if (!config || typeof config !== "object" || !config.hasOwnProperty("users")) {
+      if (!config || typeof config !== "object" || !Object.prototype.hasOwnProperty.call(config, "users")) {
         continue;
       }
 

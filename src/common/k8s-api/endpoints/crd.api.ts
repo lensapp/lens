@@ -162,7 +162,8 @@ export class CustomResourceDefinition extends KubeObject {
           }
         }
         break;
-      case "apiextensions.k8s.io/v1beta1":
+
+      case "apiextensions.k8s.io/v1beta1": {
         const { additionalPrinterColumns: apc } = this.spec;
         const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc }) => ({ ...apc, jsonPath: JSONPath }));
 
@@ -173,6 +174,7 @@ export class CustomResourceDefinition extends KubeObject {
           schema: this.spec.validation,
           additionalPrinterColumns,
         };
+      }
     }
 
     throw new Error(`Unknown apiVersion=${apiVersion}: Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
