@@ -44,7 +44,7 @@ export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
 
   /**
    *
-   * @param stream Readable​Stream: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
+   * @param stream ReadableStream: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
   constructor(stream: ReadableStream<T>) {
     super();
@@ -85,7 +85,7 @@ export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
   }
 
   /**
-   * If there is no unresolved read call to Web-API Readable​Stream immediately returns;
+   * If there is no unresolved read call to Web-API ReadableStream immediately returns;
    * otherwise will wait until the read is resolved.
    */
   public async waitForReadToComplete() {
