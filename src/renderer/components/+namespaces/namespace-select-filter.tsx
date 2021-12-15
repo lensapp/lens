@@ -107,13 +107,9 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
   }
 
   formatOptionLabel({ value: namespace, label }: SelectOption) {
-    let isSelected = false;
-
-    if (namespace) {
-      isSelected = !namespaceStore.areAllSelectedImplicitly && namespaceStore.hasContext(namespace);
-    } else {
-      isSelected = namespaceStore.areAllSelectedImplicitly;
-    }
+    const isSelected = namespace
+      ? !namespaceStore.areAllSelectedImplicitly && namespaceStore.hasContext(namespace)
+      : namespaceStore.areAllSelectedImplicitly;
 
     return (
       <div className="flex gaps align-center">
