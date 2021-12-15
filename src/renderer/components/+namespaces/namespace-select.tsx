@@ -53,7 +53,7 @@ export class NamespaceSelect extends React.Component<Props> {
 
   @computed.struct get options(): SelectOption[] {
     const { customizeOptions, showAllNamespacesOption, sort } = this.props;
-    let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
+    let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName(), label: ns.getName() }));
 
     if (sort) {
       options.sort(sort);
@@ -82,6 +82,24 @@ export class NamespaceSelect extends React.Component<Props> {
     );
   };
 
+  filterOption = (option: SelectOption, rawInput: string) => {
+    if (option.value === "" || (!namespaceStore.areAllSelectedImplicitly && namespaceStore.selectedNames.has(option.value))) {
+      return true;
+    }
+
+    if (namespaceStore.items.length > 500 && rawInput.length < 3) {
+      return false;
+    }
+
+    if (rawInput && !option.value.includes(rawInput)) {
+      return false;
+    }
+
+    console.log("raw", rawInput);
+
+    return true;
+  };
+
   render() {
     const { className, showIcons, customizeOptions, components = {}, ...selectProps } = this.props;
 
@@ -92,6 +110,7 @@ export class NamespaceSelect extends React.Component<Props> {
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
         components={components}
+        filterOption={this.filterOption}
         {...selectProps}
       />
     );

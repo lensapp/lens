@@ -35,6 +35,10 @@ import { isMac } from "../../../common/vars";
 
 const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
+    if (props.isFocused) {
+      return <>Search Namespaces ...</>;
+    }
+
     const namespaces = namespaceStore.contextNamespaces;
 
     if (namespaceStore.areAllSelectedImplicitly || !namespaces.length) {
@@ -91,7 +95,11 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
     disposeOnUnmount(this, [
       reaction(() => this.isMenuOpen, newVal => {
         if (newVal) { // rising edge of selection
-          this.selected.replace(namespaceStore.selectedNames);
+          if (namespaceStore.areAllSelectedImplicitly) {
+            this.selected.replace([""]);
+          } else {
+            this.selected.replace(namespaceStore.selectedNames);
+          }
           this.didToggle = false;
         }
       }),
@@ -99,19 +107,21 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
   }
 
   formatOptionLabel({ value: namespace, label }: SelectOption) {
-    if (namespace) {
-      const isSelected = namespaceStore.hasContext(namespace);
+    let isSelected = false;
 
-      return (
-        <div className="flex gaps align-center">
-          <Icon small material="layers" />
-          <span>{namespace}</span>
-          {isSelected && <Icon small material="check" className="box right" />}
-        </div>
-      );
+    if (namespace) {
+      isSelected = !namespaceStore.areAllSelectedImplicitly && namespaceStore.hasContext(namespace);
+    } else {
+      isSelected = namespaceStore.areAllSelectedImplicitly;
     }
 
-    return label;
+    return (
+      <div className="flex gaps align-center">
+        <Icon small material={ namespace ? "layers" : "panorama_wide_angle" } />
+        <span>{label}</span>
+        {isSelected && <Icon small material="check" className="box right" />}
+      </div>
+    );
   }
 
   @action
