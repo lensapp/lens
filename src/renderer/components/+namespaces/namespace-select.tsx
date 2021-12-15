@@ -95,8 +95,6 @@ export class NamespaceSelect extends React.Component<Props> {
       return false;
     }
 
-    console.log("raw", rawInput);
-
     return true;
   };
 
