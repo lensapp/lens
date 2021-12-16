@@ -30,7 +30,7 @@ import { boundMethod, disposer } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase, once } from "lodash";
 import { UserStore } from "../../../common/user-store";
-import { clipboard } from "electron";
+import { clipboard } from "electron";
 import logger from "../../../common/logger";
 
 export class Terminal {

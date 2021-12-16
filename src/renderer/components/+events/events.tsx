@@ -37,7 +37,7 @@ import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { eventsURL } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 enum columnId {
   message = "message",

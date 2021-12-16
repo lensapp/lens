@@ -42,7 +42,7 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
 
 export const Application = observer(() => {
   const defaultShell = process.env.SHELL
-    || process.env.PTYSHELL
+    || process.env.PTYSHELL
     || (
       isWindows
         ? "powershell.exe"

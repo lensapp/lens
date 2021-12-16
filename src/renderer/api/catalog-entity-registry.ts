@@ -199,7 +199,7 @@ export class CatalogEntityRegistry {
     const runEvent = new CatalogRunEvent({ target: entity });
 
     for (const onBeforeRun of this.onBeforeRunHooks) {
-      try { 
+      try {
         await onBeforeRun(runEvent);
       } catch (error) {
         logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
