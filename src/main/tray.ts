@@ -23,7 +23,7 @@ import path from "path";
 import packageInfo from "../../package.json";
 import { Menu, Tray } from "electron";
 import { autorun } from "mobx";
-import { showAbout } from "./menu";
+import { showAbout } from "./menu/menu";
 import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
 import type { WindowManager } from "./window-manager";
 import logger from "./logger";

@@ -19,5 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./router";
-export * from "./app-handlers";
+export { LensProtocolRouterRenderer } from "./lens-protocol-router-renderer/lens-protocol-router-renderer";
+export { bindProtocolAddRouteHandlers } from "./bind-protocol-add-route-handlers/bind-protocol-add-route-handlers";

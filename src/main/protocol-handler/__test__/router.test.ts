@@ -25,11 +25,15 @@ import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
 import { delay, noop } from "../../../common/utils";
 import { LensExtension } from "../../../extensions/main-api";
-import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { ExtensionsStore } from "../../../extensions/extensions-store";
-import { LensProtocolRouterMain } from "../router";
+import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import mockFs from "mock-fs";
 import { AppPaths } from "../../../common/app-paths";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import extensionLoaderInjectable
+  from "../../../extensions/extension-loader/extension-loader.injectable";
+import lensProtocolRouterMainInjectable
+  from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 
 jest.mock("../../../common/ipc");
 
@@ -58,14 +62,22 @@ function throwIfDefined(val: any): void {
 }
 
 describe("protocol router tests", () => {
+  // TODO: This test suite is using any to access protected property.
+  // Unit tests are allowed to only public interfaces.
+  let extensionLoader: any;
+  let lpr: LensProtocolRouterMain;
+
   beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    extensionLoader = di.inject(extensionLoaderInjectable);
+
     mockFs({
       "tmp": {},
     });
     ExtensionsStore.createInstance();
-    ExtensionLoader.createInstance();
 
-    const lpr = LensProtocolRouterMain.createInstance();
+    lpr = di.inject(lensProtocolRouterMainInjectable);
 
     lpr.rendererLoaded = true;
   });
@@ -74,15 +86,11 @@ describe("protocol router tests", () => {
     jest.clearAllMocks();
 
     ExtensionsStore.resetInstance();
-    ExtensionLoader.resetInstance();
-    LensProtocolRouterMain.resetInstance();
     mockFs.restore();
   });
 
   it("should throw on non-lens URLS", async () => {
     try {
-      const lpr = LensProtocolRouterMain.getInstance();
-
       expect(await lpr.route("https://google.ca")).toBeUndefined();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
@@ -91,8 +99,6 @@ describe("protocol router tests", () => {
 
   it("should throw when host not internal or extension", async () => {
     try {
-      const lpr = LensProtocolRouterMain.getInstance();
-
       expect(await lpr.route("lens://foobar")).toBeUndefined();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
@@ -113,14 +119,13 @@ describe("protocol router tests", () => {
       isCompatible: true,
       absolutePath: "/foo/bar",
     });
-    const lpr = LensProtocolRouterMain.getInstance();
 
     ext.protocolHandlers.push({
       pathSchema: "/",
       handler: noop,
     });
 
-    (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+    extensionLoader.instances.set(extId, ext);
     (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
 
     lpr.addInternalHandler("/", noop);
@@ -143,7 +148,6 @@ describe("protocol router tests", () => {
   });
 
   it("should call handler if matches", async () => {
-    const lpr = LensProtocolRouterMain.getInstance();
     let called = false;
 
     lpr.addInternalHandler("/page", () => { called = true; });
@@ -159,7 +163,6 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler", async () => {
-    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     lpr.addInternalHandler("/page", () => { called = 1; });
@@ -178,7 +181,6 @@ describe("protocol router tests", () => {
   it("should call most exact handler for an extension", async () => {
     let called: any = 0;
 
-    const lpr = LensProtocolRouterMain.getInstance();
     const extId = uuid.v4();
     const ext = new LensExtension({
       id: extId,
@@ -202,7 +204,7 @@ describe("protocol router tests", () => {
         handler: params => { called = params.pathname.id; },
       });
 
-    (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+    extensionLoader.instances.set(extId, ext);
     (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
 
     try {
@@ -217,7 +219,6 @@ describe("protocol router tests", () => {
   });
 
   it("should work with non-org extensions", async () => {
-    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     {
@@ -241,7 +242,7 @@ describe("protocol router tests", () => {
           handler: params => { called = params.pathname.id; },
         });
 
-      (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+      extensionLoader.instances.set(extId, ext);
       (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
     }
 
@@ -266,7 +267,7 @@ describe("protocol router tests", () => {
           handler: () => { called = 1; },
         });
 
-      (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+      extensionLoader.instances.set(extId, ext);
       (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "icecream" });
     }
 
@@ -286,13 +287,10 @@ describe("protocol router tests", () => {
   });
 
   it("should throw if urlSchema is invalid", () => {
-    const lpr = LensProtocolRouterMain.getInstance();
-
     expect(() => lpr.addInternalHandler("/:@", noop)).toThrowError();
   });
 
   it("should call most exact handler with 3 found handlers", async () => {
-    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     lpr.addInternalHandler("/", () => { called = 2; });
@@ -311,7 +309,6 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
-    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     lpr.addInternalHandler("/", () => { called = 2; });

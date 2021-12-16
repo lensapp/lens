@@ -35,7 +35,7 @@ import { isAllowedResource } from "../common/utils/allowed-resource";
 import logger from "../main/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../extensions/registries/page-registry";
-import { ExtensionLoader } from "../extensions/extension-loader";
+import type { ExtensionLoader } from "../extensions/extension-loader";
 import { appEventBus } from "../common/event-bus";
 import { requestMain } from "../common/ipc";
 import { clusterSetFrameIdHandler } from "../common/cluster-ipc";
@@ -86,7 +86,7 @@ export class ClusterFrame extends React.Component {
     makeObservable(this);
   }
 
-  static async init(rootElem: HTMLElement) {
+  static async init(rootElem: HTMLElement, extensionLoader: ExtensionLoader) {
     catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
 
@@ -101,7 +101,8 @@ export class ClusterFrame extends React.Component {
 
     catalogEntityRegistry.activeEntity = ClusterFrame.clusterId;
 
-    ExtensionLoader.getInstance().loadOnClusterRenderer();
+    extensionLoader.loadOnClusterRenderer();
+
     setTimeout(() => {
       appEventBus.emit({
         name: "cluster",

@@ -18,8 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-export * from "./registries";
 export * from "./metrics-providers";
 export * from "./ipc";
 export * from "./cluster-metadata-detectors";
