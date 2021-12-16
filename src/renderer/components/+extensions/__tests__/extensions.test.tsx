@@ -20,7 +20,7 @@
  */
 
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
@@ -35,6 +35,7 @@ import { AppPaths } from "../../../../common/app-paths";
 import extensionLoaderInjectable
   from "../../../../extensions/extension-loader/extension-loader.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { DiRender, renderFor } from "../../test-utils/renderFor";
 
 mockWindow();
 
@@ -77,9 +78,12 @@ AppPaths.init();
 
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
+  let render: DiRender;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting();
+
+    render = renderFor(di);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
 
