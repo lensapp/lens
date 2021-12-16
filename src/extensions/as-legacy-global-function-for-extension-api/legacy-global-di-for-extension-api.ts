@@ -18,11 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { ExtensionDiscovery } from "../../../../../extensions/extension-discovery";
-import { sanitizeExtensionName } from "../../../../../extensions/lens-extension";
-import path from "path";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 
-export const getExtensionDestFolder = (name: string) => path.join(
-  ExtensionDiscovery.getInstance().localFolderPath,
-  sanitizeExtensionName(name),
-);
+let legacyGlobalDi: DependencyInjectionContainer;
+
+export const setLegacyGlobalDiForExtensionApi = (di: DependencyInjectionContainer) => {
+  legacyGlobalDi = di;
+};
+
+export const getLegacyGlobalDiForExtensionApi = () => legacyGlobalDi;

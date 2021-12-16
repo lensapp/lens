@@ -23,10 +23,6 @@ import {
   disposer,
   ExtendableDisposer,
 } from "../../../../common/utils";
-import {
-  ExtensionInstallationState,
-  ExtensionInstallationStateStore,
-} from "../extension-install.store";
 import { Notifications } from "../../notifications";
 import { Button } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
@@ -34,27 +30,43 @@ import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import React from "react";
 import fse from "fs-extra";
 import { shell } from "electron";
-import {
-  createTempFilesAndValidate,
-  InstallRequestValidated,
-} from "./create-temp-files-and-validate/create-temp-files-and-validate";
-import { getExtensionDestFolder } from "./get-extension-dest-folder/get-extension-dest-folder";
+import type { InstallRequestValidated } from "./create-temp-files-and-validate/create-temp-files-and-validate";
 import type { InstallRequest } from "./install-request";
+import {
+  ExtensionInstallationState,
+  ExtensionInstallationStateStore,
+} from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader;
   uninstallExtension: (id: LensExtensionId) => Promise<boolean>;
+  
   unpackExtension: (
     request: InstallRequestValidated,
     disposeDownloading: Disposer,
   ) => Promise<void>;
+  
+  createTempFilesAndValidate: (
+    installRequest: InstallRequest,
+  ) => Promise<InstallRequestValidated | null>;
+
+  getExtensionDestFolder: (name: string) => string
+
+  extensionInstallationStateStore: ExtensionInstallationStateStore
 }
 
 export const attemptInstall =
-  ({ extensionLoader, uninstallExtension, unpackExtension }: Dependencies) =>
+  ({
+    extensionLoader,
+    uninstallExtension,
+    unpackExtension,
+    createTempFilesAndValidate,
+    getExtensionDestFolder,
+    extensionInstallationStateStore,
+  }: Dependencies) =>
     async (request: InstallRequest, d?: ExtendableDisposer): Promise<void> => {
       const dispose = disposer(
-        ExtensionInstallationStateStore.startPreInstall(),
+        extensionInstallationStateStore.startPreInstall(),
         d,
       );
 
@@ -65,7 +77,7 @@ export const attemptInstall =
       }
 
       const { name, version, description } = validatedRequest.manifest;
-      const curState = ExtensionInstallationStateStore.getInstallationState(
+      const curState = extensionInstallationStateStore.getInstallationState(
         validatedRequest.id,
       );
 

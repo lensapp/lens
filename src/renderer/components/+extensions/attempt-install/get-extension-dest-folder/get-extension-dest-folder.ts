@@ -18,15 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { ExtensionDiscovery } from "../../../../../extensions/extension-discovery/extension-discovery";
+import { sanitizeExtensionName } from "../../../../../extensions/lens-extension";
+import path from "path";
 
-import { getAppVersion } from "../../common/utils";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-global-function-for-extension-api/as-legacy-global-function-for-extension-api";
-import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+interface Dependencies {
+  extensionDiscovery: ExtensionDiscovery;
+}
 
-export const version = getAppVersion();
-export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
-
-export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
-
-export { Preferences };
+export const getExtensionDestFolder =
+  ({ extensionDiscovery }: Dependencies) =>
+    (name: string) =>
+      path.join(extensionDiscovery.localFolderPath, sanitizeExtensionName(name));

@@ -18,15 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { LensExtensionManifest } from "../../lens-extension";
+import { isProduction } from "../../../common/vars";
+import type { SemVer } from "semver";
 
-import { getAppVersion } from "../../common/utils";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-global-function-for-extension-api/as-legacy-global-function-for-extension-api";
-import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+interface Dependencies {
+  appSemVer: SemVer;
+}
 
-export const version = getAppVersion();
-export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
-
-export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
-
-export { Preferences };
+export const isCompatibleBundledExtension =
+  ({ appSemVer }: Dependencies) =>
+    (manifest: LensExtensionManifest): boolean =>
+      !isProduction || manifest.version === appSemVer.raw;

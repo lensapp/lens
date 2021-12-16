@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { InstalledExtension } from "./extension-discovery";
+import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, observable, makeObservable, computed } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";

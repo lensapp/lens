@@ -21,26 +21,21 @@
 
 import type { ExtensionLoader } from "../extension-loader";
 import { ipcRenderer } from "electron";
-import { ExtensionsStore } from "../extensions-store";
+import type {
+  ExtensionsStore,
+} from "../extensions-store/extensions-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
+import extensionsStoreInjectable from "../extensions-store/extensions-store.injectable";
+import { AppPaths } from "../../common/app-paths";
 
 console = new Console(stdout, stderr);
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
 const manifestPath3 = "manifest/path3";
-
-jest.mock("../extensions-store", () => ({
-  ExtensionsStore: {
-    getInstance: () => ({
-      whenLoaded: Promise.resolve(true),
-      mergeState: jest.fn(),
-    }),
-  },
-}));
 
 jest.mock(
   "electron",
@@ -129,13 +124,25 @@ jest.mock(
   },
 );
 
+AppPaths.init();
+
 describe("ExtensionLoader", () => {
   let extensionLoader: ExtensionLoader;
-
+  let extensionsStoreStub: ExtensionsStore;
+    
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
     extensionLoader = di.inject(extensionLoaderInjectable);
+
+    // TODO: Find out how to either easily create mocks of interfaces with a lot of members or
+    // introduce design for more minimal interfaces
+    // @ts-ignore
+    extensionsStoreStub = {
+      mergeState: jest.fn(),
+    };
+
+    di.override(extensionsStoreInjectable, () => extensionsStoreStub);
   });
 
   it.only("renderer updates extension after ipc broadcast", async done => {
@@ -177,18 +184,18 @@ describe("ExtensionLoader", () => {
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {
-    (ExtensionsStore.getInstance().mergeState as any).mockClear();
+    (extensionsStoreStub.mergeState as any).mockClear();
 
     // Disable sending events in this test
     (ipcRenderer.on as any).mockImplementation();
 
     await extensionLoader.init();
 
-    expect(ExtensionsStore.getInstance().mergeState).not.toHaveBeenCalled();
+    expect(extensionsStoreStub.mergeState).not.toHaveBeenCalled();
 
     Array.from(extensionLoader.userExtensions.values())[0].isEnabled = false;
 
-    expect(ExtensionsStore.getInstance().mergeState).toHaveBeenCalledWith({
+    expect(extensionsStoreStub.mergeState).toHaveBeenCalledWith({
       "manifest/path": {
         enabled: false,
         name: "TestExtension",

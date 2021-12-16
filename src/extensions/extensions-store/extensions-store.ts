@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { LensExtensionId } from "./lens-extension";
-import { BaseStore } from "../common/base-store";
-import { action, computed, observable, makeObservable } from "mobx";
-import { toJS } from "../common/utils";
+import type { LensExtensionId } from "../lens-extension";
+import { action, computed, makeObservable, observable } from "mobx";
+import { toJS } from "../../common/utils";
+import { BaseStore } from "../../common/base-store";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;

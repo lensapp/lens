@@ -24,10 +24,9 @@ import { fireEvent, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
-import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
+import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
@@ -36,6 +35,8 @@ import extensionLoaderInjectable
   from "../../../../extensions/extension-loader/extension-loader.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
+import extensionDiscoveryInjectable
+  from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 
 mockWindow();
 
@@ -78,6 +79,7 @@ AppPaths.init();
 
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
+  let extensionDiscovery: ExtensionDiscovery;
   let render: DiRender;
 
   beforeEach(async () => {
@@ -87,11 +89,11 @@ describe("Extensions", () => {
 
     extensionLoader = di.inject(extensionLoaderInjectable);
 
+    extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+
     mockFs({
       "tmp": {},
     });
-
-    ExtensionInstallationStateStore.reset();
 
     extensionLoader.addExtension({
       id: "extensionId",
@@ -106,8 +108,6 @@ describe("Extensions", () => {
       isCompatible: true,
     });
 
-    const extensionDiscovery = ExtensionDiscovery.createInstance(extensionLoader);
-
     extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
 
     UserStore.createInstance();
@@ -116,11 +116,10 @@ describe("Extensions", () => {
   afterEach(() => {
     mockFs.restore();
     UserStore.resetInstance();
-    ExtensionDiscovery.resetInstance();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
-    ExtensionDiscovery.getInstance().isLoaded = true;
+    extensionDiscovery.isLoaded = true;
 
     const res = render(<><Extensions /><ConfirmDialog /></>);
     const table = res.getByTestId("extensions-table");
@@ -137,7 +136,7 @@ describe("Extensions", () => {
     fireEvent.click(res.getByText("Yes"));
 
     await waitFor(() => {
-      expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
+      expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
       fireEvent.click(menuTrigger);
       expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
       expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
@@ -164,14 +163,14 @@ describe("Extensions", () => {
   });
 
   it("displays spinner while extensions are loading", () => {
-    ExtensionDiscovery.getInstance().isLoaded = false;
+    extensionDiscovery.isLoaded = false;
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
   });
 
   it("does not display the spinner while extensions are not loading", async () => {
-    ExtensionDiscovery.getInstance().isLoaded = true;
+    extensionDiscovery.isLoaded = true;
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).not.toBeInTheDocument();

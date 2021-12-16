@@ -21,27 +21,20 @@
 
 import mockFs from "mock-fs";
 import { watch } from "chokidar";
-import { ExtensionsStore } from "../extensions-store";
 import path from "path";
-import { ExtensionDiscovery } from "../extension-discovery";
+import type { ExtensionDiscovery } from "./extension-discovery";
 import os from "os";
 import { Console } from "console";
 import { AppPaths } from "../../common/app-paths";
-import type { ExtensionLoader } from "../extension-loader";
-import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import extensionDiscoveryInjectable from "./extension-discovery.injectable";
+import extensionInstallerInjectable from "../extension-installer/extension-installer.injectable";
 
 jest.setTimeout(60_000);
 
 jest.mock("../../common/ipc");
 jest.mock("chokidar", () => ({
   watch: jest.fn(),
-}));
-jest.mock("../extension-installer", () => ({
-  extensionInstaller: {
-    extensionPackagesRoot: "",
-    installPackage: jest.fn(),
-  },
 }));
 jest.mock("electron", () => ({
   app: {
@@ -65,16 +58,23 @@ console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
 
 describe("ExtensionDiscovery", () => {
-  let extensionLoader: ExtensionLoader;
+  let extensionDiscovery: ExtensionDiscovery;
 
   beforeEach(() => {
-    ExtensionDiscovery.resetInstance();
-    ExtensionsStore.resetInstance();
-    ExtensionsStore.createInstance();
-
     const di = getDiForUnitTesting();
 
-    extensionLoader = di.inject(extensionLoaderInjectable);
+    const extensionInstallerStub = {
+      installPackages: () => Promise.resolve(),
+      npm: () => Promise.resolve(),
+      extensionPackagesRoot: "some-extension-packages-root",
+      npmPath: "some-npm-path",
+      installPackage: jest.fn(),
+    };
+
+    // @ts-ignore
+    di.override(extensionInstallerInjectable, () => extensionInstallerStub);
+
+    extensionDiscovery = di.inject(extensionDiscoveryInjectable);
   });
 
   describe("with mockFs", () => {
@@ -103,13 +103,7 @@ describe("ExtensionDiscovery", () => {
         }),
       };
 
-      mockedWatch.mockImplementationOnce(() =>
-        (mockWatchInstance) as any,
-      );
-
-      const extensionDiscovery = ExtensionDiscovery.createInstance(
-        extensionLoader,
-      );
+      mockedWatch.mockImplementationOnce(() => mockWatchInstance as any);
 
       // Need to force isLoaded to be true so that the file watching is started
       extensionDiscovery.isLoaded = true;
@@ -119,15 +113,18 @@ describe("ExtensionDiscovery", () => {
       extensionDiscovery.events.on("add", extension => {
         expect(extension).toEqual({
           absolutePath: expect.any(String),
-          id: path.normalize("node_modules/my-extension/package.json"),
+          id: path.normalize("some-extension-packages-root/node_modules/my-extension/package.json"),
           isBundled: false,
           isEnabled: false,
           isCompatible: false,
-          manifest:  {
+          manifest: {
             name: "my-extension",
           },
-          manifestPath: path.normalize("node_modules/my-extension/package.json"),
+          manifestPath: path.normalize(
+            "some-extension-packages-root/node_modules/my-extension/package.json",
+          ),
         });
+
         done();
       });
 
@@ -148,12 +145,7 @@ describe("ExtensionDiscovery", () => {
       }),
     };
 
-    mockedWatch.mockImplementationOnce(() =>
-      (mockWatchInstance) as any,
-    );
-    const extensionDiscovery = ExtensionDiscovery.createInstance(
-      extensionLoader,
-    );
+    mockedWatch.mockImplementationOnce(() => mockWatchInstance as any);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
