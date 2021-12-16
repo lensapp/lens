@@ -18,7 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { downloadFile, downloadJson, ExtendableDisposer } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { ConfirmDialog } from "../../confirm-dialog";
@@ -28,6 +27,7 @@ import { SemVer } from "semver";
 import URLParse from "url-parse";
 import type { InstallRequest } from "../attempt-install/install-request";
 import lodash from "lodash";
+import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 export interface ExtensionInfo {
   name: string;
@@ -38,14 +38,15 @@ export interface ExtensionInfo {
 interface Dependencies {
   attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>;
   getBaseRegistryUrl: () => Promise<string>;
+  extensionInstallationStateStore: ExtensionInstallationStateStore
 }
 
-export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl }: Dependencies) => async ({
+export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, extensionInstallationStateStore }: Dependencies) => async ({
   name,
   version,
   requireConfirmation = false,
 }: ExtensionInfo) => {
-  const disposer = ExtensionInstallationStateStore.startPreInstall();
+  const disposer = extensionInstallationStateStore.startPreInstall();
   const baseUrl = await getBaseRegistryUrl();
   const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
   let json: any;

@@ -26,10 +26,13 @@ import {
   createContainer,
   ConfigurableDependencyInjectionContainer,
 } from "@ogre-tools/injectable";
+import { setLegacyGlobalDiForExtensionApi } from "./as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
 
 export const getDiForUnitTesting = () => {
   const di: ConfigurableDependencyInjectionContainer = createContainer();
 
+  setLegacyGlobalDiForExtensionApi(di);
+  
   getInjectableFilePaths()
     .map(key => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires

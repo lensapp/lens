@@ -29,9 +29,8 @@ import {
 } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery";
+import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
 import { DropFileInput } from "../input";
-import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
 import { Notice } from "./notice";
@@ -48,6 +47,9 @@ import installFromSelectFileDialogInjectable from "./install-from-select-file-di
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
+import extensionInstallationStateStoreInjectable
+  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -57,6 +59,7 @@ interface Dependencies {
   installFromInput: (input: string) => Promise<void>;
   installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: (files: File[]) => Promise<void>;
+  extensionInstallationStateStore: ExtensionInstallationStateStore
 }
 
 @observer
@@ -73,7 +76,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
       reaction(() => this.props.userExtensions.get().length, (curSize, prevSize) => {
         if (curSize > prevSize) {
           disposeOnUnmount(this, [
-            when(() => !ExtensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
+            when(() => !this.props.extensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
           ]);
         }
       }),
@@ -134,6 +137,8 @@ export const Extensions = withInjectables<Dependencies>(
       installFromSelectFileDialog: di.inject(
         installFromSelectFileDialogInjectable,
       ),
+
+      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     }),
   },
 );

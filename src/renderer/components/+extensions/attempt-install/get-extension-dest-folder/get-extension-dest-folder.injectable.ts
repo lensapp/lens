@@ -18,15 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
-import { getAppVersion } from "../../common/utils";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-global-function-for-extension-api/as-legacy-global-function-for-extension-api";
-import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+import extensionDiscoveryInjectable from "../../../../../extensions/extension-discovery/extension-discovery.injectable";
 
-export const version = getAppVersion();
-export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
+import { getExtensionDestFolder } from "./get-extension-dest-folder";
 
-export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
+const getExtensionDestFolderInjectable = getInjectable({
+  instantiate: (di) =>
+    getExtensionDestFolder({
+      extensionDiscovery: di.inject(extensionDiscoveryInjectable),
+    }),
 
-export { Preferences };
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default getExtensionDestFolderInjectable;

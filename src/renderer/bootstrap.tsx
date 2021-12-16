@@ -33,16 +33,13 @@ import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { ClusterStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
-import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
-import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
 import { HotbarStore } from "../common/hotbar-store";
 import { WeblinkStore } from "../common/weblink-store";
-import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
@@ -59,6 +56,10 @@ import bindProtocolAddRouteHandlersInjectable
 import type { LensProtocolRouterRenderer } from "./protocol-handler";
 import lensProtocolRouterRendererInjectable
   from "./protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
+import extensionDiscoveryInjectable
+  from "../extensions/extension-discovery/extension-discovery.injectable";
+import extensionInstallationStateStoreInjectable
+  from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -139,7 +140,9 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 
   extensionLoader.init();
 
-  ExtensionDiscovery.createInstance(extensionLoader).init();
+  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+
+  extensionDiscovery.init();
 
   // ClusterStore depends on: UserStore
   const clusterStore = ClusterStore.createInstance();
@@ -148,7 +151,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 
   // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
-  ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
 
   // ThemeStore depends on: UserStore
@@ -158,7 +160,10 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   TerminalStore.createInstance();
   WeblinkStore.createInstance();
 
-  ExtensionInstallationStateStore.bindIpcListeners();
+  const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
+
+  extensionInstallationStateStore.bindIpcListeners();
+
   HelmRepoManager.createInstance(); // initialize the manager
 
   // Register additional store listeners

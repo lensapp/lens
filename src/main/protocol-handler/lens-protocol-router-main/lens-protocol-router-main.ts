@@ -29,6 +29,7 @@ import { ProtocolHandlerInvalid, RouteAttempt } from "../../../common/protocol-h
 import { disposer, noop } from "../../../common/utils";
 import { WindowManager } from "../../window-manager";
 import type { ExtensionLoader } from "../../../extensions/extension-loader";
+import type { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -53,6 +54,7 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
 
 interface Dependencies {
   extensionLoader: ExtensionLoader
+  extensionsStore: ExtensionsStore
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {

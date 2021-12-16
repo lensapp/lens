@@ -20,22 +20,33 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { lifecycleEnum } from "@ogre-tools/injectable";
-import { unpackExtension } from "./unpack-extension";
-import extensionLoaderInjectable from "../../../../../extensions/extension-loader/extension-loader.injectable";
-import getExtensionDestFolderInjectable
-  from "../get-extension-dest-folder/get-extension-dest-folder.injectable";
-import extensionInstallationStateStoreInjectable
-  from "../../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import { ExtensionDiscovery } from "./extension-discovery";
+import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
+import extensionInstallerInjectable from "../extension-installer/extension-installer.injectable";
+import isCompatibleExtensionInjectable from "./is-compatible-extension/is-compatible-extension.injectable";
+import isCompatibleBundledExtensionInjectable from "./is-compatible-bundled-extension/is-compatible-bundled-extension.injectable";
+import extensionsStoreInjectable from "../extensions-store/extensions-store.injectable";
+import extensionInstallationStateStoreInjectable from "../extension-installation-state-store/extension-installation-state-store.injectable";
 
-const unpackExtensionInjectable = getInjectable({
+const extensionDiscoveryInjectable = getInjectable({
   instantiate: (di) =>
-    unpackExtension({
+    new ExtensionDiscovery({
       extensionLoader: di.inject(extensionLoaderInjectable),
-      getExtensionDestFolder: di.inject(getExtensionDestFolderInjectable),
-      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+      extensionInstaller: di.inject(extensionInstallerInjectable),
+      extensionsStore: di.inject(extensionsStoreInjectable),
+
+      extensionInstallationStateStore: di.inject(
+        extensionInstallationStateStoreInjectable,
+      ),
+
+      isCompatibleBundledExtension: di.inject(
+        isCompatibleBundledExtensionInjectable,
+      ),
+
+      isCompatibleExtension: di.inject(isCompatibleExtensionInjectable),
     }),
 
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default unpackExtensionInjectable;
+export default extensionDiscoveryInjectable;

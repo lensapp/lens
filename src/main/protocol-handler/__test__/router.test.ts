@@ -25,7 +25,7 @@ import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
 import { delay, noop } from "../../../common/utils";
 import { LensExtension } from "../../../extensions/main-api";
-import { ExtensionsStore } from "../../../extensions/extensions-store";
+import { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import mockFs from "mock-fs";
 import { AppPaths } from "../../../common/app-paths";
@@ -34,6 +34,8 @@ import extensionLoaderInjectable
   from "../../../extensions/extension-loader/extension-loader.injectable";
 import lensProtocolRouterMainInjectable
   from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
+import extensionsStoreInjectable
+  from "../../../extensions/extensions-store/extensions-store.injectable";
 
 jest.mock("../../../common/ipc");
 
@@ -66,16 +68,17 @@ describe("protocol router tests", () => {
   // Unit tests are allowed to only public interfaces.
   let extensionLoader: any;
   let lpr: LensProtocolRouterMain;
+  let extensionsStore: ExtensionsStore;
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
     extensionLoader = di.inject(extensionLoaderInjectable);
+    extensionsStore = di.inject(extensionsStoreInjectable);
 
     mockFs({
       "tmp": {},
     });
-    ExtensionsStore.createInstance();
 
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
@@ -85,7 +88,9 @@ describe("protocol router tests", () => {
   afterEach(() => {
     jest.clearAllMocks();
 
+    // TODO: Remove Singleton from BaseStore to achieve independent unit testing
     ExtensionsStore.resetInstance();
+
     mockFs.restore();
   });
 
@@ -126,7 +131,7 @@ describe("protocol router tests", () => {
     });
 
     extensionLoader.instances.set(extId, ext);
-    (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
+    (extensionsStore as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
 
     lpr.addInternalHandler("/", noop);
 
@@ -205,7 +210,7 @@ describe("protocol router tests", () => {
       });
 
     extensionLoader.instances.set(extId, ext);
-    (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+    (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -243,7 +248,7 @@ describe("protocol router tests", () => {
         });
 
       extensionLoader.instances.set(extId, ext);
-      (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+      (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
     }
 
     {
@@ -268,11 +273,11 @@ describe("protocol router tests", () => {
         });
 
       extensionLoader.instances.set(extId, ext);
-      (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "icecream" });
+      (extensionsStore as any).state.set(extId, { enabled: true, name: "icecream" });
     }
 
-    (ExtensionsStore.getInstance() as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
-    (ExtensionsStore.getInstance() as any).state.set("icecream", { enabled: true, name: "icecream" });
+    (extensionsStore as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
+    (extensionsStore as any).state.set("icecream", { enabled: true, name: "icecream" });
 
     try {
       expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();

@@ -36,7 +36,7 @@ import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
-import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-discovery";
+import type { InstalledExtension } from "../extensions/extension-discovery/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
@@ -54,7 +54,6 @@ import { ClusterStore } from "../common/cluster-store";
 import { HotbarStore } from "../common/hotbar-store";
 import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
-import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
@@ -68,6 +67,8 @@ import { getDi } from "./getDi";
 import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
+import extensionDiscoveryInjectable
+  from "../extensions/extension-discovery/extension-discovery.injectable";
 
 const di = getDi();
 
@@ -169,7 +170,6 @@ app.on("ready", async () => {
   // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
 
-  ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
   WeblinkStore.createInstance();
 
@@ -231,7 +231,7 @@ app.on("ready", async () => {
 
   extensionLoader.init();
 
-  const extensionDiscovery = ExtensionDiscovery.createInstance(extensionLoader);
+  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
 
   extensionDiscovery.init();
 

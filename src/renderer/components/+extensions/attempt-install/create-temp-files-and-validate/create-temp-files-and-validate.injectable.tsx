@@ -18,15 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { createTempFilesAndValidate } from "./create-temp-files-and-validate";
+import extensionDiscoveryInjectable from "../../../../../extensions/extension-discovery/extension-discovery.injectable";
 
-import { getAppVersion } from "../../common/utils";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-global-function-for-extension-api/as-legacy-global-function-for-extension-api";
-import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+const createTempFilesAndValidateInjectable = getInjectable({
+  instantiate: (di) =>
+    createTempFilesAndValidate({
+      extensionDiscovery: di.inject(extensionDiscoveryInjectable),
+    }),
 
-export const version = getAppVersion();
-export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
+  lifecycle: lifecycleEnum.singleton,
+});
 
-export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
-
-export { Preferences };
+export default createTempFilesAndValidateInjectable;

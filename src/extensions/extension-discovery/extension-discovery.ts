@@ -23,19 +23,35 @@ import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fse from "fs-extra";
-import { observable, reaction, when, makeObservable } from "mobx";
+import { makeObservable, observable, reaction, when } from "mobx";
 import os from "os";
 import path from "path";
-import { broadcastMessage, ipcMainHandle, ipcRendererOn, requestMain } from "../common/ipc";
-import { Singleton, toJS } from "../common/utils";
-import logger from "../main/logger";
-import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
-import { extensionInstaller } from "./extension-installer";
-import { ExtensionsStore } from "./extensions-store";
-import type { ExtensionLoader } from "./extension-loader";
-import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
-import { isProduction } from "../common/vars";
-import { isCompatibleBundledExtension, isCompatibleExtension } from "./extension-compatibility";
+import {
+  broadcastMessage,
+  ipcMainHandle,
+  ipcRendererOn,
+  requestMain,
+} from "../../common/ipc";
+import { toJS } from "../../common/utils";
+import logger from "../../main/logger";
+import type { ExtensionInstaller } from "../extension-installer/extension-installer";
+import type { ExtensionsStore } from "../extensions-store/extensions-store";
+import type { ExtensionLoader } from "../extension-loader";
+import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
+import { isProduction } from "../../common/vars";
+import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
+
+interface Dependencies {
+  extensionLoader: ExtensionLoader;
+
+  extensionInstaller: ExtensionInstaller;
+  extensionsStore: ExtensionsStore;
+
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
+
+  isCompatibleBundledExtension: (manifest: LensExtensionManifest) => boolean;
+  isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
+}
 
 export interface InstalledExtension {
   id: LensExtensionId;
@@ -81,7 +97,7 @@ interface LoadFromFolderOptions {
  * - "add": When extension is added. The event is of type InstalledExtension
  * - "remove": When extension is removed. The event is of type LensExtensionId
  */
-export class ExtensionDiscovery extends Singleton {
+export class ExtensionDiscovery {
   protected bundledFolderPath: string;
 
   private loadStarted = false;
@@ -99,9 +115,7 @@ export class ExtensionDiscovery extends Singleton {
 
   public events = new EventEmitter();
 
-  constructor(protected extensionLoader: ExtensionLoader) {
-    super();
-
+  constructor(protected dependencies : Dependencies) {
     makeObservable(this);
   }
 
@@ -110,11 +124,11 @@ export class ExtensionDiscovery extends Singleton {
   }
 
   get packageJsonPath(): string {
-    return path.join(extensionInstaller.extensionPackagesRoot, manifestFilename);
+    return path.join(this.dependencies.extensionInstaller.extensionPackagesRoot, manifestFilename);
   }
 
   get inTreeTargetPath(): string {
-    return path.join(extensionInstaller.extensionPackagesRoot, "extensions");
+    return path.join(this.dependencies.extensionInstaller.extensionPackagesRoot, "extensions");
   }
 
   get inTreeFolderPath(): string {
@@ -122,7 +136,7 @@ export class ExtensionDiscovery extends Singleton {
   }
 
   get nodeModulesPath(): string {
-    return path.join(extensionInstaller.extensionPackagesRoot, "node_modules");
+    return path.join(this.dependencies.extensionInstaller.extensionPackagesRoot, "node_modules");
   }
 
   /**
@@ -197,7 +211,7 @@ export class ExtensionDiscovery extends Singleton {
 
     if (path.basename(manifestPath) === manifestFilename && isUnderLocalFolderPath) {
       try {
-        ExtensionInstallationStateStore.setInstallingFromMain(manifestPath);
+        this.dependencies.extensionInstallationStateStore.setInstallingFromMain(manifestPath);
         const absPath = path.dirname(manifestPath);
 
         // this.loadExtensionFromPath updates this.packagesJson
@@ -217,7 +231,7 @@ export class ExtensionDiscovery extends Singleton {
       } catch (error) {
         logger.error(`${logModule}: failed to add extension: ${error}`, { error });
       } finally {
-        ExtensionInstallationStateStore.clearInstallingFromMain(manifestPath);
+        this.dependencies.extensionInstallationStateStore.clearInstallingFromMain(manifestPath);
       }
     }
   };
@@ -277,7 +291,7 @@ export class ExtensionDiscovery extends Singleton {
    * @param extensionId The ID of the extension to uninstall.
    */
   async uninstallExtension(extensionId: LensExtensionId): Promise<void> {
-    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? this.extensionLoader.getExtension(extensionId);
+    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
 
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
 
@@ -295,10 +309,15 @@ export class ExtensionDiscovery extends Singleton {
 
     this.loadStarted = true;
 
-    logger.info(`${logModule} loading extensions from ${extensionInstaller.extensionPackagesRoot}`);
+    const extensionPackagesRoot =
+      this.dependencies.extensionInstaller.extensionPackagesRoot;
+
+    logger.info(
+      `${logModule} loading extensions from ${extensionPackagesRoot}`,
+    );
 
     // fs.remove won't throw if path is missing
-    await fse.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
+    await fse.remove(path.join(extensionPackagesRoot, "package-lock.json"));
 
     try {
       // Verify write access to static/extensions, which is needed for symlinking
@@ -357,11 +376,11 @@ export class ExtensionDiscovery extends Singleton {
     try {
       const manifest = await fse.readJson(manifestPath) as LensExtensionManifest;
       const id = this.getInstalledManifestPath(manifest.name);
-      const isEnabled = ExtensionsStore.getInstance().isEnabled({ id, isBundled });
+      const isEnabled = this.dependencies.extensionsStore.isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      const isCompatible = (isBundled && isCompatibleBundledExtension(manifest)) || isCompatibleExtension(manifest);
+      const isCompatible = (isBundled && this.dependencies.isCompatibleBundledExtension(manifest)) || this.dependencies.isCompatibleExtension(manifest);
 
       return {
         id,
@@ -417,11 +436,11 @@ export class ExtensionDiscovery extends Singleton {
       extensions.map(extension => [extension.manifest.name, extension.absolutePath]),
     );
 
-    return extensionInstaller.installPackages(packageJsonPath, { dependencies });
+    return this.dependencies.extensionInstaller.installPackages(packageJsonPath, { dependencies });
   }
 
   async installPackage(name: string): Promise<void> {
-    return extensionInstaller.installPackage(name);
+    return this.dependencies.extensionInstaller.installPackage(name);
   }
 
   async loadBundledExtensions(): Promise<InstalledExtension[]> {

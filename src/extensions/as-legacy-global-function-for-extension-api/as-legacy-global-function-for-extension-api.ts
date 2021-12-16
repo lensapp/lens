@@ -18,15 +18,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
 
-import { getAppVersion } from "../../common/utils";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-global-function-for-extension-api/as-legacy-global-function-for-extension-api";
-import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 
-export const version = getAppVersion();
-export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
+type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
-export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
+type FactoryType = <
+  TInjectable extends Injectable<unknown, TInstance, TInstantiationParameter>,
+  TInstantiationParameter,
+  TInstance extends (...args: unknown[]) => any,
+  TFunction extends (...args: unknown[]) => any = Awaited<
+    ReturnType<TInjectable["instantiate"]>
+  >,
+>(
+  injectableKey: TInjectable,
+  ...instantiationParameter: TentativeTuple<TInstantiationParameter>
+) => (...args: Parameters<TFunction>) => ReturnType<TFunction>;
 
-export { Preferences };
+export const asLegacyGlobalFunctionForExtensionApi: FactoryType =
+  (injectableKey, ...instantiationParameter) =>
+    (...args) => {
+      const injected = getLegacyGlobalDiForExtensionApi().inject(
+        injectableKey,
+        ...instantiationParameter,
+      );
+
+      return injected(...args);
+    };
