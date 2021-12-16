@@ -55,10 +55,6 @@ export class InstallChart extends Component<Props> {
     makeObservable(this);
   }
 
-  get values() {
-    return this.chartData.values;
-  }
-
   get chartData() {
     return installChartStore.getData(this.tabId);
   }
@@ -135,7 +131,7 @@ export class InstallChart extends Component<Props> {
   };
 
   render() {
-    const { tabId, chartData, values, versions, install } = this;
+    const { tabId, chartData, versions, install } = this;
 
     if (chartData?.values === undefined || !versions) {
       return <Spinner center/>;
@@ -215,7 +211,7 @@ export class InstallChart extends Component<Props> {
         />
         <EditorPanel
           tabId={tabId}
-          value={values}
+          value={chartData.values}
           onChange={this.onChange}
           onError={this.onError}
         />
