@@ -106,6 +106,13 @@ export class ClusterFrame extends React.Component {
     when(
       () => Boolean(catalogEntityRegistry.activeEntity),
       () => extensionLoader.loadOnClusterRenderer(catalogEntityRegistry.activeEntity as KubernetesCluster),
+      {
+        timeout: 15_000,
+        onError: (error) => {
+          console.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
+          Notifications.error("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
+        },
+      },
     );
 
     setTimeout(() => {

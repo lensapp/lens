@@ -19,26 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { reaction } from "mobx";
-import { broadcastMessage, ipcMainOn } from "../common/ipc";
-import type { CatalogEntityRegistry } from "./catalog";
-import "../common/catalog-entities/kubernetes-cluster";
-import { disposer, toJS } from "../common/utils";
-import { debounce } from "lodash";
-import type { CatalogEntity } from "../common/catalog";
-import { CatalogIpcEvents } from "../common/ipc/catalog";
+export enum CatalogIpcEvents {
+  /**
+   * This is broadcast on whenever there is an update to any catalog item
+   */
+  ITEMS = "catalog:items",
 
-const broadcaster = debounce((items: CatalogEntity[]) => {
-  broadcastMessage(CatalogIpcEvents.ITEMS, items);
-}, 1_000, { leading: true, trailing: true });
-
-export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
-  return disposer(
-    ipcMainOn(CatalogIpcEvents.INIT, () => broadcaster(toJS(catalog.items))),
-    reaction(() => toJS(catalog.items), (items) => {
-      broadcaster(items);
-    }, {
-      fireImmediately: true,
-    }),
-  );
+  /**
+   * This can be sent from renderer to main to initialize a broadcast of ITEMS
+   */
+  INIT = "catalog:init",
 }
