@@ -103,8 +103,7 @@ class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
 
     return (
       <p>
-        Remove {object.kind} <b>{breadcrumb}</b> from{" "}
-        <b>{this.props.dependencies.clusterName}</b>?
+        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.dependencies.clusterName}</b>?
       </p>
     );
   }
