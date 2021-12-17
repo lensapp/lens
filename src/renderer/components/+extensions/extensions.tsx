@@ -49,34 +49,28 @@ import type { LensExtensionId } from "../../../extensions/lens-extension";
 import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 
-interface Props {
-  dependencies: {
-    userExtensions: IComputedValue<InstalledExtension[]>;
-    enableExtension: (id: LensExtensionId) => void;
-    disableExtension: (id: LensExtensionId) => void;
-    confirmUninstallExtension: (extension: InstalledExtension) => Promise<void>;
-    installFromInput: (input: string) => Promise<void>;
-    installFromSelectFileDialog: () => Promise<void>;
-    installOnDrop: (files: File[]) => Promise<void>;
-  };
+interface Dependencies {
+  userExtensions: IComputedValue<InstalledExtension[]>;
+  enableExtension: (id: LensExtensionId) => void;
+  disableExtension: (id: LensExtensionId) => void;
+  confirmUninstallExtension: (extension: InstalledExtension) => Promise<void>;
+  installFromInput: (input: string) => Promise<void>;
+  installFromSelectFileDialog: () => Promise<void>;
+  installOnDrop: (files: File[]) => Promise<void>;
 }
 
 @observer
-class NonInjectedExtensions extends React.Component<Props> {
+class NonInjectedExtensions extends React.Component<Dependencies> {
   @observable installPath = "";
 
-  constructor(props: Props) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
-  }
-  
-  get dependencies() {
-    return this.props.dependencies;
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.dependencies.userExtensions.get().length, (curSize, prevSize) => {
+      reaction(() => this.props.userExtensions.get().length, (curSize, prevSize) => {
         if (curSize > prevSize) {
           disposeOnUnmount(this, [
             when(() => !ExtensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
@@ -87,10 +81,10 @@ class NonInjectedExtensions extends React.Component<Props> {
   }
 
   render() {
-    const userExtensions = this.dependencies.userExtensions.get();
+    const userExtensions = this.props.userExtensions.get();
 
     return (
-      <DropFileInput onDropFiles={this.dependencies.installOnDrop}>
+      <DropFileInput onDropFiles={this.props.installOnDrop}>
         <SettingLayout className="Extensions" contentGaps={false}>
           <section>
             <h1>Extensions</h1>
@@ -106,8 +100,8 @@ class NonInjectedExtensions extends React.Component<Props> {
             <Install
               supportedFormats={supportedExtensionFormats}
               onChange={value => (this.installPath = value)}
-              installFromInput={() => this.dependencies.installFromInput(this.installPath)}
-              installFromSelectFileDialog={this.dependencies.installFromSelectFileDialog}
+              installFromInput={() => this.props.installFromInput(this.installPath)}
+              installFromSelectFileDialog={this.props.installFromSelectFileDialog}
               installPath={this.installPath}
             />
 
@@ -115,9 +109,9 @@ class NonInjectedExtensions extends React.Component<Props> {
 
             <InstalledExtensions
               extensions={userExtensions}
-              enable={this.dependencies.enableExtension}
-              disable={this.dependencies.disableExtension}
-              uninstall={this.dependencies.confirmUninstallExtension}
+              enable={this.props.enableExtension}
+              disable={this.props.disableExtension}
+              uninstall={this.props.confirmUninstallExtension}
             />
           </section>
         </SettingLayout>
@@ -126,10 +120,10 @@ class NonInjectedExtensions extends React.Component<Props> {
   }
 }
 
-
-export const Extensions = withInjectables(NonInjectedExtensions, {
-  getProps: di => ({
-    dependencies: {
+export const Extensions = withInjectables<Dependencies>(
+  NonInjectedExtensions,
+  {
+    getProps: (di) => ({
       userExtensions: di.inject(userExtensionsInjectable),
       enableExtension: di.inject(enableExtensionInjectable),
       disableExtension: di.inject(disableExtensionInjectable),
@@ -140,6 +134,6 @@ export const Extensions = withInjectables(NonInjectedExtensions, {
       installFromSelectFileDialog: di.inject(
         installFromSelectFileDialogInjectable,
       ),
-    },
-  }),
-});
+    }),
+  },
+);
