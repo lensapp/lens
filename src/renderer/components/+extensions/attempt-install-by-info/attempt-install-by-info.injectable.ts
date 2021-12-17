@@ -22,10 +22,12 @@ import type { Injectable } from "@ogre-tools/injectable";
 import { lifecycleEnum } from "@ogre-tools/injectable";
 import { attemptInstallByInfo, ExtensionInfo } from "./attempt-install-by-info";
 import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
+import getBaseRegistryUrlInjectable from "../get-base-registry-url/get-base-registry-url.injectable";
 
 const attemptInstallByInfoInjectable: Injectable<(extensionInfo: ExtensionInfo) => Promise<void>, {}> = {
   getDependencies: di => ({
     attemptInstall: di.inject(attemptInstallInjectable),
+    getBaseRegistryUrl: di.inject(getBaseRegistryUrlInjectable),
   }),
 
   instantiate: attemptInstallByInfo,
