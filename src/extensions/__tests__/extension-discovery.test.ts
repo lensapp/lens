@@ -27,6 +27,9 @@ import { ExtensionDiscovery } from "../extension-discovery";
 import os from "os";
 import { Console } from "console";
 import { AppPaths } from "../../common/app-paths";
+import type { ExtensionLoader } from "../extension-loader";
+import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
 jest.setTimeout(60_000);
 
@@ -62,10 +65,16 @@ console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
 
 describe("ExtensionDiscovery", () => {
+  let extensionLoader: ExtensionLoader;
+
   beforeEach(() => {
     ExtensionDiscovery.resetInstance();
     ExtensionsStore.resetInstance();
     ExtensionsStore.createInstance();
+
+    const di = getDiForUnitTesting();
+
+    extensionLoader = di.inject(extensionLoaderInjectable);
   });
 
   describe("with mockFs", () => {
@@ -98,7 +107,9 @@ describe("ExtensionDiscovery", () => {
         (mockWatchInstance) as any,
       );
 
-      const extensionDiscovery = ExtensionDiscovery.createInstance();
+      const extensionDiscovery = ExtensionDiscovery.createInstance(
+        extensionLoader,
+      );
 
       // Need to force isLoaded to be true so that the file watching is started
       extensionDiscovery.isLoaded = true;
@@ -140,7 +151,9 @@ describe("ExtensionDiscovery", () => {
     mockedWatch.mockImplementationOnce(() =>
       (mockWatchInstance) as any,
     );
-    const extensionDiscovery = ExtensionDiscovery.createInstance();
+    const extensionDiscovery = ExtensionDiscovery.createInstance(
+      extensionLoader,
+    );
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;

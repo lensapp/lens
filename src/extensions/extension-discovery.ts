@@ -32,7 +32,7 @@ import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
 import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
-import { ExtensionLoader } from "./extension-loader";
+import type { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 import { isProduction } from "../common/vars";
 import { isCompatibleBundledExtension, isCompatibleExtension } from "./extension-compatibility";
@@ -99,7 +99,7 @@ export class ExtensionDiscovery extends Singleton {
 
   public events = new EventEmitter();
 
-  constructor() {
+  constructor(protected extensionLoader: ExtensionLoader) {
     super();
 
     makeObservable(this);
@@ -277,7 +277,7 @@ export class ExtensionDiscovery extends Singleton {
    * @param extensionId The ID of the extension to uninstall.
    */
   async uninstallExtension(extensionId: LensExtensionId): Promise<void> {
-    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? ExtensionLoader.getInstance().getExtension(extensionId);
+    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? this.extensionLoader.getExtension(extensionId);
 
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
 

@@ -20,7 +20,7 @@
  */
 
 import type { InstalledExtension } from "./extension-discovery";
-import { action, observable, makeObservable } from "mobx";
+import { action, observable, makeObservable, computed } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
@@ -47,7 +47,12 @@ export class LensExtension {
 
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
-  @observable private isEnabled = false;
+  @observable private _isEnabled = false;
+
+  @computed get isEnabled() {
+    return this._isEnabled;
+  }
+
   [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
@@ -83,13 +88,13 @@ export class LensExtension {
 
   @action
   async enable(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    if (this.isEnabled) {
+    if (this._isEnabled) {
       return;
     }
 
     try {
       await this.onActivate();
-      this.isEnabled = true;
+      this._isEnabled = true;
 
       this[Disposers].push(...await register(this));
       logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
@@ -100,11 +105,11 @@ export class LensExtension {
 
   @action
   async disable() {
-    if (!this.isEnabled) {
+    if (!this._isEnabled) {
       return;
     }
 
-    this.isEnabled = false;
+    this._isEnabled = false;
 
     try {
       await this.onDeactivate();

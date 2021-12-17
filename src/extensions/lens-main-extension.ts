@@ -24,7 +24,7 @@ import { WindowManager } from "../main/window-manager";
 import { catalogEntityRegistry } from "../main/catalog";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "./registries";
+import type { MenuRegistration } from "../main/menu/menu-registration";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];

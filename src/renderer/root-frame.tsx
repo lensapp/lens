@@ -28,10 +28,9 @@ import { ClusterManager } from "./components/cluster-manager";
 import { ErrorBoundary } from "./components/error-boundary";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
-import { ExtensionLoader } from "../extensions/extension-loader";
+import type { ExtensionLoader } from "../extensions/extension-loader";
 import { broadcastMessage } from "../common/ipc";
 import { CommandContainer } from "./components/command-palette/command-container";
-import { bindProtocolAddRouteHandlers, LensProtocolRouterRenderer } from "./protocol-handler";
 import { registerIpcListeners } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
@@ -39,6 +38,7 @@ import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import logger from "../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 import { ClusterFrameHandler } from "./components/cluster-manager/lens-views";
+import type { LensProtocolRouterRenderer } from "./protocol-handler";
 
 injectSystemCAs();
 
@@ -47,10 +47,15 @@ export class RootFrame extends React.Component {
   static readonly logPrefix = "[ROOT-FRAME]:";
   static displayName = "RootFrame";
 
-  static async init(rootElem: HTMLElement) {
+  static async init(
+    rootElem: HTMLElement,
+    extensionLoader: ExtensionLoader,
+    bindProtocolAddRouteHandlers: () => void,
+    lensProtocolRouterRendererInjectable: LensProtocolRouterRenderer,
+  ) {
     catalogEntityRegistry.init();
-    ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
-    LensProtocolRouterRenderer.createInstance().init();
+    extensionLoader.loadOnClusterManagerRenderer();
+    lensProtocolRouterRendererInjectable.init();
     bindProtocolAddRouteHandlers();
 
     window.addEventListener("offline", () => broadcastMessage("network:offline"));

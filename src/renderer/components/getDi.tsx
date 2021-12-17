@@ -20,12 +20,15 @@
  */
 
 import { createContainer } from "@ogre-tools/injectable";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 
-export const getDi = () => {
-  const di: ConfigurableDependencyInjectionContainer = createContainer(
-    () => require.context("./", true, /\.injectable\.(ts|tsx)$/),
+export const getDi = () =>
+  createContainer(
+    getRequireContextForRendererCode,
+    getRequireContextForCommonExtensionCode,
   );
 
-  return di;
-};
+const getRequireContextForRendererCode = () =>
+  require.context("../", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonExtensionCode = () =>
+  require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);

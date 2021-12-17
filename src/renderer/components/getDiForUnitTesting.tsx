@@ -48,6 +48,7 @@ export const getDiForUnitTesting = () => {
   return di;
 };
 
-const getInjectableFilePaths = memoize(() =>
-  glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-);
+const getInjectableFilePaths = memoize(() => [
+  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+]);

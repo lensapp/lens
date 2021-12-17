@@ -18,9 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 
-import * as registries from "../../extensions/registries";
-
-export function initRegistries() {
-  registries.MenuRegistry.createInstance();
+export interface Dependencies {
+  extensionLoader: ExtensionLoader;
 }
+
+export const enableExtension =
+  ({ extensionLoader }: Dependencies) =>
+    (id: LensExtensionId) => {
+      const extension = extensionLoader.getExtension(id);
+
+      if (extension) {
+        extension.isEnabled = true;
+      }
+    };

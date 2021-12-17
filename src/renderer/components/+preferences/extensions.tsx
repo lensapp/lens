@@ -22,16 +22,16 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { AppPreferenceRegistry } from "../../../extensions/registries";
-import { ExtensionSettings } from "./preferences";
+import { ExtensionSettings } from "./extension-settings";
 
 export const Extensions = observer(() => {
-  const extensions = AppPreferenceRegistry.getInstance().getItems();
+  const settings = AppPreferenceRegistry.getInstance().getItems();
 
   return (
     <section id="extensions">
       <h2>Extensions</h2>
-      {extensions.filter(e => !e.showInPreferencesTab).map((extension) =>
-        <ExtensionSettings key={extension.id} {...extension}/>,
+      {settings.filter(e => !e.showInPreferencesTab).map((setting) =>
+        <ExtensionSettings key={setting.id} setting={setting} size="small" />,
       )}
     </section>
   );

@@ -36,11 +36,9 @@ import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
-import { ExtensionLoader } from "../extensions/extension-loader";
 import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
-import { LensProtocolRouterMain } from "./protocol-handler";
 import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
 import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
@@ -61,11 +59,17 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { Router } from "./router";
-import { initMenu } from "./menu";
+import { initMenu } from "./menu/menu";
 import { initTray } from "./tray";
 import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
 import { ShellSession } from "./shell-session/shell-session";
+import { getDi } from "./getDi";
+import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
+import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
+import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
+
+const di = getDi();
 
 injectSystemCAs();
 
@@ -74,7 +78,6 @@ const onQuitCleanup = disposer();
 
 SentryInit();
 app.setName(appName);
-
 
 logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
@@ -99,7 +102,10 @@ configurePackages();
 mangleProxyEnv();
 
 logger.debug("[APP-MAIN] initializing ipc main handlers");
-initializers.initIpcMainHandlers();
+
+const menuItems = di.inject(electronMenuItemsInjectable);
+
+initializers.initIpcMainHandlers(menuItems);
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
@@ -107,14 +113,14 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 
 logger.debug("[APP-MAIN] Lens protocol routing main");
 
+const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
+
 if (!app.requestSingleInstanceLock()) {
   app.exit();
 } else {
-  const lprm = LensProtocolRouterMain.createInstance();
-
   for (const arg of process.argv) {
     if (arg.toLowerCase().startsWith("lens://")) {
-      lprm.route(arg);
+      lensProtocolRouterMain.route(arg);
     }
   }
 }
@@ -122,11 +128,9 @@ if (!app.requestSingleInstanceLock()) {
 app.on("second-instance", (event, argv) => {
   logger.debug("second-instance message");
 
-  const lprm = LensProtocolRouterMain.createInstance();
-
   for (const arg of argv) {
     if (arg.toLowerCase().startsWith("lens://")) {
-      lprm.route(arg);
+      lensProtocolRouterMain.route(arg);
     }
   }
 
@@ -223,10 +227,12 @@ app.on("ready", async () => {
     return app.exit();
   }
 
-  initializers.initRegistries();
-  const extensionDiscovery = ExtensionDiscovery.createInstance();
+  const extensionLoader = di.inject(extensionLoaderInjectable);
 
-  ExtensionLoader.createInstance().init();
+  extensionLoader.init();
+
+  const extensionDiscovery = ExtensionDiscovery.createInstance(extensionLoader);
+
   extensionDiscovery.init();
 
   // Start the app without showing the main window when auto starting on login
@@ -237,7 +243,7 @@ app.on("ready", async () => {
   const windowManager = WindowManager.createInstance();
 
   onQuitCleanup.push(
-    initMenu(windowManager),
+    initMenu(windowManager, menuItems),
     initTray(windowManager),
     () => ShellSession.cleanup(),
   );
@@ -253,7 +259,7 @@ app.on("ready", async () => {
     await ensureDir(storedKubeConfigFolder());
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
-    LensProtocolRouterMain.getInstance().rendererLoaded = true;
+    lensProtocolRouterMain.rendererLoaded = true;
   });
 
   logger.info("🧩 Initializing extensions");
@@ -268,13 +274,13 @@ app.on("ready", async () => {
     // Subscribe to extensions that are copied or deleted to/from the extensions folder
     extensionDiscovery.events
       .on("add", (extension: InstalledExtension) => {
-        ExtensionLoader.getInstance().addExtension(extension);
+        extensionLoader.addExtension(extension);
       })
       .on("remove", (lensExtensionId: LensExtensionId) => {
-        ExtensionLoader.getInstance().removeExtension(lensExtensionId);
+        extensionLoader.removeExtension(lensExtensionId);
       });
 
-    ExtensionLoader.getInstance().initExtensions(extensions);
+    extensionLoader.initExtensions(extensions);
   } catch (error) {
     dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
     console.error(error);
@@ -309,7 +315,6 @@ app.on("will-quit", (event) => {
 
   // This is called when the close button of the main window is clicked
 
-  const lprm = LensProtocolRouterMain.getInstance(false);
 
   logger.info("APP:QUIT");
   appEventBus.emit({ name: "app", action: "close" });
@@ -317,11 +322,9 @@ app.on("will-quit", (event) => {
   KubeconfigSyncManager.getInstance(false)?.stopSync();
   onCloseCleanup();
 
-  if (lprm) {
-    // This is set to false here so that LPRM can wait to send future lens://
-    // requests until after it loads again
-    lprm.rendererLoaded = false;
-  }
+  // This is set to false here so that LPRM can wait to send future lens://
+  // requests until after it loads again
+  lensProtocolRouterMain.rendererLoaded = false;
 
   if (blockQuit) {
     // Quit app on Cmd+Q (MacOS)
@@ -331,7 +334,7 @@ app.on("will-quit", (event) => {
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   }
 
-  lprm?.cleanup();
+  lensProtocolRouterMain.cleanup();
   onQuitCleanup();
 });
 
@@ -340,7 +343,7 @@ app.on("open-url", (event, rawUrl) => {
 
   // lens:// protocol handler
   event.preventDefault();
-  LensProtocolRouterMain.getInstance().route(rawUrl);
+  lensProtocolRouterMain.route(rawUrl);
 });
 
 /**

@@ -118,6 +118,7 @@ module.exports = {
         sourceType: "module",
       },
       rules: {
+        "no-irregular-whitespace": "error",
         "header/header": [2, "./license-header"],
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
@@ -199,6 +200,7 @@ module.exports = {
         jsx: true,
       },
       rules: {
+        "no-irregular-whitespace": "error",
         "header/header": [2, "./license-header"],
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],

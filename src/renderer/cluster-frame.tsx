@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "./navigation";
@@ -35,7 +35,7 @@ import { isAllowedResource } from "../common/utils/allowed-resource";
 import logger from "../main/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../extensions/registries/page-registry";
-import { ExtensionLoader } from "../extensions/extension-loader";
+import type { ExtensionLoader } from "../extensions/extension-loader";
 import { appEventBus } from "../common/event-bus";
 import { requestMain } from "../common/ipc";
 import { clusterSetFrameIdHandler } from "../common/cluster-ipc";
@@ -74,6 +74,7 @@ import { PortForwardDialog } from "./port-forward";
 import { DeleteClusterDialog } from "./components/delete-cluster-dialog";
 import { WorkloadsOverview } from "./components/+workloads-overview/overview";
 import { KubeObjectListLayout } from "./components/kube-object-list-layout";
+import type { KubernetesCluster } from "../common/catalog-entities";
 
 @observer
 export class ClusterFrame extends React.Component {
@@ -86,7 +87,7 @@ export class ClusterFrame extends React.Component {
     makeObservable(this);
   }
 
-  static async init(rootElem: HTMLElement) {
+  static async init(rootElem: HTMLElement, extensionLoader: ExtensionLoader) {
     catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
 
@@ -101,7 +102,19 @@ export class ClusterFrame extends React.Component {
 
     catalogEntityRegistry.activeEntity = ClusterFrame.clusterId;
 
-    ExtensionLoader.getInstance().loadOnClusterRenderer();
+    // Only load the extensions once the catalog has been populated
+    when(
+      () => Boolean(catalogEntityRegistry.activeEntity),
+      () => extensionLoader.loadOnClusterRenderer(catalogEntityRegistry.activeEntity as KubernetesCluster),
+      {
+        timeout: 15_000,
+        onError: (error) => {
+          console.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
+          Notifications.error("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
+        },
+      },
+    );
+
     setTimeout(() => {
       appEventBus.emit({
         name: "cluster",

@@ -18,7 +18,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectedComponent } from "@ogre-tools/injectable-react";
-import KubeObjectMenuInjectable from "./kube-object-menu.injectable";
+import type { Injectable } from "@ogre-tools/injectable";
+import { lifecycleEnum } from "@ogre-tools/injectable";
+import { attemptInstallByInfo, ExtensionInfo } from "./attempt-install-by-info";
+import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
 
-export const KubeObjectMenu = getInjectedComponent(KubeObjectMenuInjectable);
+const attemptInstallByInfoInjectable: Injectable<(extensionInfo: ExtensionInfo) => Promise<void>, {}> = {
+  getDependencies: di => ({
+    attemptInstall: di.inject(attemptInstallInjectable),
+  }),
+
+  instantiate: attemptInstallByInfo,
+  lifecycle: lifecycleEnum.singleton,
+};
+
+export default attemptInstallByInfoInjectable;

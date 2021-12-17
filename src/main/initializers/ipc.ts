@@ -34,9 +34,11 @@ import { IpcMainWindowEvents, WindowManager } from "../window-manager";
 import path from "path";
 import { remove } from "fs-extra";
 import { AppPaths } from "../../common/app-paths";
-import { getAppMenu } from "../menu";
+import { getAppMenu } from "../menu/menu";
+import type { MenuRegistration } from "../menu/menu-registration";
+import type { IComputedValue } from "mobx";
 
-export function initIpcMainHandlers() {
+export function initIpcMainHandlers(electronMenuItems: IComputedValue<MenuRegistration[]>) {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -151,7 +153,7 @@ export function initIpcMainHandlers() {
   });
 
   ipcMainOn(IpcMainWindowEvents.OPEN_CONTEXT_MENU, async (event) => {
-    const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance()));
+    const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
     const options = {
       ...BrowserWindow.fromWebContents(event.sender),
       // Center of the topbar menu icon

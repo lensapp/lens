@@ -19,11 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ExtensionLoader } from "../extension-loader";
+import type { ExtensionLoader } from "../extension-loader";
 import { ipcRenderer } from "electron";
 import { ExtensionsStore } from "../extensions-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -128,13 +130,15 @@ jest.mock(
 );
 
 describe("ExtensionLoader", () => {
+  let extensionLoader: ExtensionLoader;
+
   beforeEach(() => {
-    ExtensionLoader.resetInstance();
+    const di = getDiForUnitTesting();
+
+    extensionLoader = di.inject(extensionLoaderInjectable);
   });
 
-  it.only("renderer updates extension after ipc broadcast", async (done) => {
-    const extensionLoader = ExtensionLoader.createInstance();
-
+  it.only("renderer updates extension after ipc broadcast", async done => {
     expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
 
     await extensionLoader.init();
@@ -178,8 +182,6 @@ describe("ExtensionLoader", () => {
     // Disable sending events in this test
     (ipcRenderer.on as any).mockImplementation();
 
-    const extensionLoader = ExtensionLoader.createInstance();
-
     await extensionLoader.init();
 
     expect(ExtensionsStore.getInstance().mergeState).not.toHaveBeenCalled();
@@ -194,6 +196,7 @@ describe("ExtensionLoader", () => {
       "manifest/path2": {
         enabled: true,
         name: "TestExtension2",
-      }});
+      },
+    });
   });
 });

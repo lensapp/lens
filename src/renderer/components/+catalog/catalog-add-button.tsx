@@ -21,7 +21,7 @@
 
 import "./catalog-add-button.scss";
 import React from "react";
-import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
+import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { observable, makeObservable, action } from "mobx";
@@ -97,7 +97,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   @boundMethod
-  onClose() {
+  onClose() {
     this.isOpen = false;
   }
 

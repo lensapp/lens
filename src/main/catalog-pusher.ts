@@ -20,22 +20,25 @@
  */
 
 import { reaction } from "mobx";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, ipcMainOn } from "../common/ipc";
 import type { CatalogEntityRegistry } from "./catalog";
 import "../common/catalog-entities/kubernetes-cluster";
-import { toJS } from "../common/utils";
+import { disposer, toJS } from "../common/utils";
 import { debounce } from "lodash";
 import type { CatalogEntity } from "../common/catalog";
-
+import { CatalogIpcEvents } from "../common/ipc/catalog";
 
 const broadcaster = debounce((items: CatalogEntity[]) => {
-  broadcastMessage("catalog:items", items);
+  broadcastMessage(CatalogIpcEvents.ITEMS, items);
 }, 1_000, { leading: true, trailing: true });
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
-  return reaction(() => toJS(catalog.items), (items) => {
-    broadcaster(items);
-  }, {
-    fireImmediately: true,
-  });
+  return disposer(
+    ipcMainOn(CatalogIpcEvents.INIT, () => broadcaster(toJS(catalog.items))),
+    reaction(() => toJS(catalog.items), (items) => {
+      broadcaster(items);
+    }, {
+      fireImmediately: true,
+    }),
+  );
 }

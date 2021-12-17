@@ -34,7 +34,6 @@ import { isMac, isDevelopment } from "../common/vars";
 import { ClusterStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
 import { ExtensionDiscovery } from "../extensions/extension-discovery";
-import { ExtensionLoader } from "../extensions/extension-loader";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
@@ -53,6 +52,13 @@ import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./components/getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
+import type { ExtensionLoader } from "../extensions/extension-loader";
+import bindProtocolAddRouteHandlersInjectable
+  from "./protocol-handler/bind-protocol-add-route-handlers/bind-protocol-add-route-handlers.injectable";
+import type { LensProtocolRouterRenderer } from "./protocol-handler";
+import lensProtocolRouterRendererInjectable
+  from "./protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -73,7 +79,14 @@ async function attachChromeDebugger() {
 }
 
 type AppComponent = React.ComponentType & {
-  init(rootElem: HTMLElement): Promise<void>;
+
+  // TODO: This static method is criminal as it has no direct relation with component
+  init(
+    rootElem: HTMLElement,
+    extensionLoader: ExtensionLoader,
+    bindProtocolAddRouteHandlers?: () => void,
+    lensProtocolRouterRendererInjectable?: LensProtocolRouterRenderer
+  ): Promise<void>;
 };
 
 export async function bootstrap(comp: () => Promise<AppComponent>, di: DependencyInjectionContainer) {
@@ -116,14 +129,17 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   logger.info(`${logPrefix} initializing Catalog`);
   initializers.initCatalog();
 
+  const extensionLoader = di.inject(extensionLoaderInjectable);
+
   logger.info(`${logPrefix} initializing IpcRendererListeners`);
-  initializers.initIpcRendererListeners();
+  initializers.initIpcRendererListeners(extensionLoader);
 
   logger.info(`${logPrefix} initializing StatusBarRegistry`);
   initializers.initStatusBarRegistry();
 
-  ExtensionLoader.createInstance().init();
-  ExtensionDiscovery.createInstance().init();
+  extensionLoader.init();
+
+  ExtensionDiscovery.createInstance(extensionLoader).init();
 
   // ClusterStore depends on: UserStore
   const clusterStore = ClusterStore.createInstance();
@@ -151,7 +167,10 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   // init app's dependencies if any
   const App = await comp();
 
-  await App.init(rootElem);
+  const bindProtocolAddRouteHandlers = di.inject(bindProtocolAddRouteHandlersInjectable);
+  const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
+
+  await App.init(rootElem, extensionLoader, bindProtocolAddRouteHandlers, lensProtocolRouterRenderer);
 
   render(
     <DiContextProvider value={{ di }}>

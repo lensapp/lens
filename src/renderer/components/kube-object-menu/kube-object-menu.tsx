@@ -25,34 +25,45 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { MenuActions, MenuActionsProps } from "../menu";
 import identity from "lodash/identity";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterNameInjectable from "./dependencies/cluster-name.injectable";
+import editResourceTabInjectable from "./dependencies/edit-resource-tab.injectable";
+import hideDetailsInjectable from "./dependencies/hide-details.injectable";
+import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
+import apiManagerInjectable from "./dependencies/api-manager.injectable";
 
-export interface KubeObjectMenuDependencies<TKubeObject> {
-  apiManager: ApiManager;
-  kubeObjectMenuItems: React.ElementType[];
-  clusterName: string;
-  hideDetails: () => void;
-  editResourceTab: (kubeObject: TKubeObject) => void;
-}
-
+// TODO: Replace with KubeObjectMenuProps2
 export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
   object: TKubeObject | null | undefined;
   editable?: boolean;
   removable?: boolean;
 }
 
-export interface KubeObjectMenuPropsAndDependencies<TKubeObject>
-  extends KubeObjectMenuProps<TKubeObject>,
-    KubeObjectMenuDependencies<TKubeObject> {}
+interface KubeObjectMenuProps2 extends MenuActionsProps {
+  object: KubeObject | null | undefined;
+  editable?: boolean;
+  removable?: boolean;
 
-export class KubeObjectMenu<
-  TKubeObject extends KubeObject,
-> extends React.Component<KubeObjectMenuPropsAndDependencies<TKubeObject>> {
+  dependencies: {
+    apiManager: ApiManager;
+    kubeObjectMenuItems: React.ElementType[];
+    clusterName: string;
+    hideDetails: () => void;
+    editResourceTab: (kubeObject: KubeObject) => void;
+  };
+}
+
+class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
+  get dependencies() {
+    return this.props.dependencies;
+  }
+  
   get store() {
     const { object } = this.props;
 
     if (!object) return null;
 
-    return this.props.apiManager.getStore(object.selfLink);
+    return this.props.dependencies.apiManager.getStore(object.selfLink);
   }
 
   get isEditable() {
@@ -65,13 +76,13 @@ export class KubeObjectMenu<
 
   @boundMethod
   async update() {
-    this.props.hideDetails();
-    this.props.editResourceTab(this.props.object);
+    this.props.dependencies.hideDetails();
+    this.props.dependencies.editResourceTab(this.props.object);
   }
 
   @boundMethod
   async remove() {
-    this.props.hideDetails();
+    this.props.dependencies.hideDetails();
     const { object, removeAction } = this.props;
 
     if (removeAction) await removeAction();
@@ -92,7 +103,7 @@ export class KubeObjectMenu<
 
     return (
       <p>
-        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.props.clusterName}</b>?
+        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.dependencies.clusterName}</b>?
       </p>
     );
   }
@@ -100,12 +111,8 @@ export class KubeObjectMenu<
   getMenuItems(): React.ReactChild[] {
     const { object, toolbar } = this.props;
 
-    return this.props.kubeObjectMenuItems.map((MenuItem, index) => (
-      <MenuItem
-        object={object}
-        toolbar={toolbar}
-        key={`menu-item-${index}`}
-      />
+    return this.props.dependencies.kubeObjectMenuItems.map((MenuItem, index) => (
+      <MenuItem object={object} toolbar={toolbar} key={`menu-item-${index}`} />
     ));
   }
 
@@ -126,3 +133,20 @@ export class KubeObjectMenu<
     );
   }
 }
+
+export const KubeObjectMenu = withInjectables(NonInjectedKubeObjectMenu, {
+  getProps: (di, props) => ({
+    dependencies: {
+      clusterName: di.inject(clusterNameInjectable),
+      apiManager: di.inject(apiManagerInjectable),
+      editResourceTab: di.inject(editResourceTabInjectable),
+      hideDetails: di.inject(hideDetailsInjectable),
+
+      kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
+        kubeObject: props.object,
+      }),
+    },
+
+    ...props,
+  }),
+});
