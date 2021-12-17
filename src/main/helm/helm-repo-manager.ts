@@ -126,7 +126,7 @@ export class HelmRepoManager extends Singleton {
     };
   }
 
-  public async repositories(previousAttempt = false): Promise<HelmRepo[]> {
+  public async repositories(): Promise<HelmRepo[]> {
     try {
       if (!this.initialized) {
         await this.init();
@@ -135,13 +135,9 @@ export class HelmRepoManager extends Singleton {
       const { repositories } = await this.readConfig();
 
       if (!repositories.length) {
-        if (previousAttempt) {
-          throw new Error("Previous add repo called did not add repo");
-        }
-
         await HelmRepoManager.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });
 
-        return await this.repositories(true);
+        return await this.repositories();
       }
 
       return repositories.map(repo => ({
