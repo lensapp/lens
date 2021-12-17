@@ -30,6 +30,8 @@ import { once } from "lodash";
 import logger from "../../common/logger";
 import { catalogEntityRunContext } from "./catalog-entity";
 import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
+import { ipcRenderer } from "electron";
+import { CatalogIpcEvents } from "../../common/ipc/catalog";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
@@ -70,9 +72,12 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    ipcRendererOn("catalog:items", (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
+    ipcRendererOn(CatalogIpcEvents.ITEMS, (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
       this.updateItems(items);
     });
+
+    // Make sure that we get items ASAP and not the next time one of them changes
+    ipcRenderer.send(CatalogIpcEvents.INIT);
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {

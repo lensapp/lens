@@ -20,13 +20,13 @@
  */
 
 import type * as registries from "./registries";
-import type { Cluster } from "../main/cluster";
 import { Disposers, LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
 import { catalogEntityRegistry, EntityFilter } from "../renderer/api/catalog-entity-registry";
 import { catalogCategoryRegistry, CategoryFilter } from "../renderer/api/catalog-category-registry";
+import type { KubernetesCluster } from "../common/catalog-entities";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -57,9 +57,12 @@ export class LensRendererExtension extends LensExtension {
   }
 
   /**
-   * Defines if extension is enabled for a given cluster. Defaults to `true`.
+   * Defines if extension is enabled for a given cluster. This method is only
+   * called when the extension is created within a cluster frame.
+   *
+   * The default implementation is to return `true`
    */
-  async isEnabledForCluster(cluster: Cluster): Promise<Boolean> {
+  async isEnabledForCluster(cluster: KubernetesCluster): Promise<Boolean> {
     return (void cluster) || true;
   }
 
