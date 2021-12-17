@@ -68,6 +68,10 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
     makeObservable(this);
   }
 
+  get dependencies() {
+    return this.props.dependencies;
+  }
+
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.props.userExtensions.get().length, (curSize, prevSize) => {

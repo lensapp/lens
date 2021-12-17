@@ -29,7 +29,7 @@ import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../event-bus";
 import path from "path";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, EditorConfiguration, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
+import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
 import { AppPaths } from "../app-paths";
 
@@ -75,6 +75,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable kubectlBinariesPath?: string;
   @observable terminalCopyOnSelect: boolean;
   @observable updateChannel?: string;
+  @observable extensionRegistryUrl: ExtensionRegistry;
 
   /**
    * Download kubectl binaries matching cluster version
@@ -201,6 +202,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
     this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
     this.updateChannel = DESCRIPTORS.updateChannel.fromStore(preferences?.updateChannel);
+    this.extensionRegistryUrl = DESCRIPTORS.extensionRegistryUrl.fromStore(preferences?.extensionRegistryUrl);
   }
 
   toJSON(): UserStoreModel {
@@ -224,6 +226,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
         terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
         updateChannel: DESCRIPTORS.updateChannel.toStore(this.updateChannel),
+        extensionRegistryUrl: DESCRIPTORS.extensionRegistryUrl.toStore(this.extensionRegistryUrl),
       },
     };
 

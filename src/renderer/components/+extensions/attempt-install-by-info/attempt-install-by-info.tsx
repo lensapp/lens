@@ -36,32 +36,39 @@ export interface ExtensionInfo {
 }
 
 export interface Dependencies {
-  attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>
+  attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>;
+  getBaseRegistryUrl: () => Promise<string>;
 }
 
-export const attemptInstallByInfo = ({ attemptInstall }: Dependencies) => async ({
+export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl }: Dependencies) => async ({
   name,
   version,
   requireConfirmation = false,
 }: ExtensionInfo) => {
   const disposer = ExtensionInstallationStateStore.startPreInstall();
-  const registryUrl = new URLParse("https://registry.npmjs.com")
-    .set("pathname", name)
-    .toString();
-  const { promise } = downloadJson({ url: registryUrl });
-  const json = await promise.catch(console.error);
+  const baseUrl = await getBaseRegistryUrl();
+  const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
+  let json: any;
 
-  if (
-    !json ||
-    json.error ||
-    typeof json.versions !== "object" ||
-    !json.versions
-  ) {
-    const message = json?.error ? `: ${json.error}` : "";
+  try {
+    json = await downloadJson({ url: registryUrl }).promise;
 
-    Notifications.error(
-      `Failed to get registry information for that extension${message}`,
-    );
+    if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
+      const message = json?.error ? `: ${json.error}` : "";
+
+      Notifications.error(`Failed to get registry information for that extension${message}`);
+
+      return disposer();
+    }
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      // assume invalid JSON
+      console.warn("Set registry has invalid json", { url: baseUrl }, error);
+      Notifications.error("Failed to get valid registry information for that extension. Registry did not return valid JSON");
+    } else {
+      console.error("Failed to download registry information", error);
+      Notifications.error(`Failed to get valid registry information for that extension. ${error}`);
+    }
 
     return disposer();
   }
