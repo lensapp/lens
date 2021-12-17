@@ -21,6 +21,7 @@
 import { SubTitle } from "../layout/sub-title";
 import type { RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import React from "react";
+import { cssNames } from "../../../renderer/utils";
 
 interface ExtensionSettingsProps {
   setting: RegisteredAppPreference;
@@ -36,14 +37,14 @@ export function ExtensionSettings({ setting, size }: ExtensionSettingsProps) {
 
   return (
     <React.Fragment>
-      <section id={id} className={size === "small" ? "small" : ""}>
+      <section id={id} className={cssNames(size)}>
         <SubTitle title={title} />
         <Input />
         <div className="hint">
           <Hint />
         </div>
       </section>
-      <hr className={size === "small" ? "small" : ""} />
+      <hr className={cssNames(size)} />
     </React.Fragment>
   );
 }
