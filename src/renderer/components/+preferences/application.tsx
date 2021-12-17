@@ -30,6 +30,8 @@ import { isWindows } from "../../../common/vars";
 import { FormSwitch, Switcher } from "../switch";
 import moment from "moment-timezone";
 import { CONSTANTS } from "../../../common/user-store/preferences-helpers";
+import { AppPreferenceRegistry } from "../../../extensions/registries";
+import { ExtensionSettings } from "./extension-settings";
 
 const timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
   label: zone,
@@ -50,6 +52,7 @@ export const Application = observer(() => {
     );
 
   const [shell, setShell] = React.useState(UserStore.getInstance().shell || "");
+  const extensionSettings = AppPreferenceRegistry.getInstance().getItems().filter((preference) => preference.showInPreferencesTab === "application");
 
   return (
     <section id="application">
@@ -108,6 +111,10 @@ export const Application = observer(() => {
       </section>
 
       <hr />
+
+      {extensionSettings.map(setting => (
+        <ExtensionSettings key={setting.id} setting={setting} size="normal" />
+      ))}
 
       <section id="update-channel">
         <SubTitle title="Update Channel"/>

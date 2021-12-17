@@ -18,21 +18,33 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { observer } from "mobx-react";
+import { SubTitle } from "../layout/sub-title";
+import type { RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import React from "react";
-import { AppPreferenceRegistry } from "../../../extensions/registries";
-import { ExtensionSettings } from "./extension-settings";
+import { cssNames } from "../../../renderer/utils";
 
-export const Extensions = observer(() => {
-  const settings = AppPreferenceRegistry.getInstance().getItems();
+interface ExtensionSettingsProps {
+  setting: RegisteredAppPreference;
+  size: "small" | "normal"
+}
+
+export function ExtensionSettings({ setting, size }: ExtensionSettingsProps) {
+  const {
+    title,
+    id,
+    components: { Hint, Input },
+  } = setting;
 
   return (
-    <section id="extensions">
-      <h2>Extensions</h2>
-      {settings.filter(e => !e.showInPreferencesTab).map((setting) =>
-        <ExtensionSettings key={setting.id} setting={setting} size="small" />,
-      )}
-    </section>
+    <React.Fragment>
+      <section id={id} className={cssNames(size)}>
+        <SubTitle title={title} />
+        <Input />
+        <div className="hint">
+          <Hint />
+        </div>
+      </section>
+      <hr className={cssNames(size)} />
+    </React.Fragment>
   );
-});
+}
