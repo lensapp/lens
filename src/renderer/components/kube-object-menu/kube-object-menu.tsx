@@ -32,38 +32,28 @@ import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
 
-// TODO: Replace with KubeObjectMenuProps2
-export interface KubeObjectMenuProps<TKubeObject> extends MenuActionsProps {
+export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends MenuActionsProps {
   object: TKubeObject | null | undefined;
   editable?: boolean;
   removable?: boolean;
 }
 
-interface KubeObjectMenuProps2 extends MenuActionsProps {
-  object: KubeObject | null | undefined;
-  editable?: boolean;
-  removable?: boolean;
-
-  dependencies: {
-    apiManager: ApiManager;
-    kubeObjectMenuItems: React.ElementType[];
-    clusterName: string;
-    hideDetails: () => void;
-    editResourceTab: (kubeObject: KubeObject) => void;
-  };
+interface Dependencies {
+  apiManager: ApiManager;
+  kubeObjectMenuItems: React.ElementType[];
+  clusterName: string;
+  hideDetails: () => void;
+  editResourceTab: (kubeObject: KubeObject) => void;
 }
 
-class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
-  get dependencies() {
-    return this.props.dependencies;
-  }
-  
+class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Component<KubeObjectMenuProps<TKubeObject> & Dependencies> {
+
   get store() {
     const { object } = this.props;
 
     if (!object) return null;
 
-    return this.props.dependencies.apiManager.getStore(object.selfLink);
+    return this.props.apiManager.getStore(object.selfLink);
   }
 
   get isEditable() {
@@ -76,13 +66,13 @@ class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
 
   @boundMethod
   async update() {
-    this.props.dependencies.hideDetails();
-    this.props.dependencies.editResourceTab(this.props.object);
+    this.props.hideDetails();
+    this.props.editResourceTab(this.props.object);
   }
 
   @boundMethod
   async remove() {
-    this.props.dependencies.hideDetails();
+    this.props.hideDetails();
     const { object, removeAction } = this.props;
 
     if (removeAction) await removeAction();
@@ -103,7 +93,7 @@ class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
 
     return (
       <p>
-        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.dependencies.clusterName}</b>?
+        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.props.clusterName}</b>?
       </p>
     );
   }
@@ -111,7 +101,7 @@ class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
   getMenuItems(): React.ReactChild[] {
     const { object, toolbar } = this.props;
 
-    return this.props.dependencies.kubeObjectMenuItems.map((MenuItem, index) => (
+    return this.props.kubeObjectMenuItems.map((MenuItem, index) => (
       <MenuItem object={object} toolbar={toolbar} key={`menu-item-${index}`} />
     ));
   }
@@ -134,19 +124,23 @@ class NonInjectedKubeObjectMenu extends React.Component<KubeObjectMenuProps2> {
   }
 }
 
-export const KubeObjectMenu = withInjectables(NonInjectedKubeObjectMenu, {
-  getProps: (di, props) => ({
-    dependencies: {
-      clusterName: di.inject(clusterNameInjectable),
-      apiManager: di.inject(apiManagerInjectable),
-      editResourceTab: di.inject(editResourceTabInjectable),
-      hideDetails: di.inject(hideDetailsInjectable),
+export function KubeObjectMenu<T extends KubeObject>(
+  props: KubeObjectMenuProps<T>,
+) {
+  return withInjectables<Dependencies, KubeObjectMenuProps<T>>(
+    NonInjectedKubeObjectMenu,
+    {
+      getProps: (di, props) => ({
+        clusterName: di.inject(clusterNameInjectable),
+        apiManager: di.inject(apiManagerInjectable),
+        editResourceTab: di.inject(editResourceTabInjectable),
+        hideDetails: di.inject(hideDetailsInjectable),
 
-      kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
-        kubeObject: props.object,
+        kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
+          kubeObject: props.object,
+        }),
+        ...props,
       }),
     },
-
-    ...props,
-  }),
-});
+  )(props);
+}

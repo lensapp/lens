@@ -979,19 +979,19 @@
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-1.4.1.tgz#48d8633462189939292596a66631d6717e39e47f"
-  integrity sha512-SRk3QXvFCEQk4MeVG8TAomGcOt0Pf06hZ5kBh+iNIug3FLYeyWagH6OSVylZRu4u2Izd89J0taS1GmSfYDoHaA==
+"@ogre-tools/injectable-react@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-1.5.2.tgz#7df925ca5abda86210f527333774ddbf027f0693"
+  integrity sha512-n26NyGLYjwyIbfwsLj1tg0uNPK6SI/H0vGisMNpNfrcdci2QiLQBSKemnLMMRn7LF/+JhA/NQClTetiMkcSCuw==
   dependencies:
     "@ogre-tools/fp" "^1.4.0"
-    "@ogre-tools/injectable" "^1.4.1"
+    "@ogre-tools/injectable" "^1.5.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-1.4.1.tgz#45414c6e13c870d7d84f4fa8e0dd67b33f6cc23e"
-  integrity sha512-vX4QXS/2d3g7oUenOKcv3mZRnJ5XewUMPsSsELjCyhL2caJlD0eB9J7y3y0eeFu/I18L8GC3DRs9o3QNshwN5Q==
+"@ogre-tools/injectable@1.5.0", "@ogre-tools/injectable@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-1.5.0.tgz#edf911f360e73bb5f10ac669f147108d1465fc45"
+  integrity sha512-k0Wgc8QqB+p/gHcWPVWJV8N8xX5cMpagEjZ1C5bPVeRyB+73od/yHgb1HOgL2pPzlE6qOtTdkiUrWuTAoqnqUw==
   dependencies:
     "@ogre-tools/fp" "^1.4.0"
     lodash "^4.17.21"
