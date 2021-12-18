@@ -97,11 +97,12 @@ export class PortForwardDialog extends Component<Props> {
 
     try {
       // determine how many port-forwards already exist
-      const { length } = await getPortForwards();
+      const { length } = getPortForwards();
 
       let port: number;
 
       portForward.protocol = dialogState.useHttps ? "https" : "http";
+      portForward.status = "Active";
 
       if (currentPort) {
         port = await modifyPortForward(portForward, desiredPort);

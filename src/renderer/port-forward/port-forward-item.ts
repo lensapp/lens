@@ -50,7 +50,7 @@ export class PortForwardItem implements ItemObject {
     this.port = pf.port;
     this.forwardPort = pf.forwardPort;
     this.protocol = pf.protocol ?? "http";
-    this.status = pf.status;
+    this.status = pf.status ?? "Active";
 
     autoBind(this);
   }

@@ -24,11 +24,11 @@ import "./service-port-component.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Service, ServicePort } from "../../../common/k8s-api/endpoints";
-import { observable, makeObservable, reaction } from "mobx";
+import { observable, makeObservable, reaction, action } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
+import { aboutPortForwarding, addPortForward, forwardedPortStatus, getPortForward, getPortForwards, getPortForwardStatus, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
 import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
 
@@ -66,19 +66,28 @@ export class ServicePortComponent extends React.Component<Props> {
     };
 
     let activePort: number;
+    let status: forwardedPortStatus;
+
+    console.log("checkExistingPortForwarding()");
 
     try {
       activePort = await getPortForward(portForward) ?? 0;
+      status = await getPortForwardStatus(portForward);
     } catch (error) {
       this.isPortForwarded = false;
+
+      console.log("(catch) isPortForwarded:", this.isPortForwarded, this.forwardPort);
 
       return;
     }
 
     this.forwardPort = activePort;
-    this.isPortForwarded = activePort ? true : false;
+    this.isPortForwarded = (status === "Active" && activePort) ? true : false;
+
+    console.log("isPortForwarded:", this.isPortForwarded, this.forwardPort);
   }
 
+  @action
   async portForward() {
     const { service, port } = this.props;
     const portForward: ForwardedPort = {
@@ -88,13 +97,14 @@ export class ServicePortComponent extends React.Component<Props> {
       port: port.port,
       forwardPort: this.forwardPort,
       protocol: predictProtocol(port.name),
+      status: "Active",
     };
 
     this.waiting = true;
 
     try {
       // determine how many port-forwards already exist
-      const { length } = await getPortForwards();
+      const { length } = getPortForwards();
 
       this.forwardPort = await addPortForward(portForward);
 
@@ -116,6 +126,7 @@ export class ServicePortComponent extends React.Component<Props> {
     }
   }
 
+  @action
   async stopPortForward() {
     const { service, port } = this.props;
     const portForward: ForwardedPort = {
@@ -127,6 +138,8 @@ export class ServicePortComponent extends React.Component<Props> {
     };
 
     this.waiting = true;
+
+    console.log("stopPortForward()");
 
     try {
       await removePortForward(portForward);

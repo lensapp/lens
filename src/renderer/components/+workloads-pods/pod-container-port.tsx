@@ -24,12 +24,11 @@ import "./pod-container-port.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { observable, makeObservable, reaction } from "mobx";
+import { action, observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";
-import type { ForwardedPort } from "../../port-forward";
+import { aboutPortForwarding, addPortForward, forwardedPortStatus, getPortForward, getPortForwards, getPortForwardStatus, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
 
 interface Props {
@@ -70,9 +69,11 @@ export class PodContainerPort extends React.Component<Props> {
     };
 
     let activePort: number;
+    let status: forwardedPortStatus;
 
     try {
       activePort = await getPortForward(portForward) ?? 0;
+      status = await getPortForwardStatus(portForward);
     } catch (error) {
       this.isPortForwarded = false;
 
@@ -80,9 +81,10 @@ export class PodContainerPort extends React.Component<Props> {
     }
 
     this.forwardPort = activePort;
-    this.isPortForwarded = activePort ? true : false;
+    this.isPortForwarded = (status === "Active" && activePort) ? true : false;
   }
 
+  @action
   async portForward() {
     const { pod, port } = this.props;
     const portForward: ForwardedPort = {
@@ -92,13 +94,14 @@ export class PodContainerPort extends React.Component<Props> {
       port: port.containerPort,
       forwardPort: this.forwardPort,
       protocol: predictProtocol(port.name),
+      status: "Active",
     };
 
     this.waiting = true;
 
     try {
       // determine how many port-forwards already exist
-      const { length } = await getPortForwards();
+      const { length } = getPortForwards();
 
       this.forwardPort = await addPortForward(portForward);
 
@@ -120,6 +123,7 @@ export class PodContainerPort extends React.Component<Props> {
     }
   }
 
+  @action
   async stopPortForward() {
     const { pod, port } = this.props;
     const portForward: ForwardedPort = {
