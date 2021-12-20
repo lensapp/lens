@@ -22,161 +22,229 @@
 import * as tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { promiseExec } from "../../common/utils/promise-exec";
+import { promiseExecFile } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
-import type { Cluster } from "../cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
+import type { BaseEncodingOptions } from "fs";
+import { execFile, ExecFileOptions } from "child_process";
 
-export async function listReleases(pathToKubeconfig: string, namespace?: string) {
-  const helm = await helmCli.binaryPath();
-  const namespaceFlag = namespace ? `-n ${namespace}` : "--all-namespaces";
+async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFileOptions): Promise<string> {
+  const helmCliPath = await helmCli.binaryPath();
 
   try {
-    const { stdout } = await promiseExec(`"${helm}" ls --output json ${namespaceFlag} --kubeconfig ${pathToKubeconfig}`);
-    const output = JSON.parse(stdout);
+    const { stdout } = await promiseExecFile(helmCliPath, args, options);
 
-    if (output.length == 0) {
-      return output;
-    }
-    output.forEach((release: any, index: number) => {
-      output[index] = toCamelCase(release);
-    });
-
-    return output;
+    return stdout;
   } catch (error) {
     throw error?.stderr || error;
   }
 }
 
+export async function listReleases(pathToKubeconfig: string, namespace?: string): Promise<Record<string, any>[]> {
+  const args = [
+    "ls",
+    "--output", "json",
+  ];
 
-export async function installChart(chart: string, values: any, name: string | undefined, namespace: string, version: string, pathToKubeconfig: string) {
-  const helm = await helmCli.binaryPath();
-  const fileName = tempy.file({ name: "values.yaml" });
+  if (namespace) {
+    args.push("-n", namespace);
+  } else {
+    args.push("--all-namespaces");
+  }
 
-  await fse.writeFile(fileName, yaml.dump(values));
+  args.push("--kubeconfig", pathToKubeconfig);
+
+  const output = JSON.parse(await execHelm(args));
+
+  if (!Array.isArray(output) || output.length == 0) {
+    return [];
+  }
+
+  return output.map(toCamelCase);
+}
+
+
+export async function installChart(chart: string, values: any, name: string | undefined = "", namespace: string, version: string, kubeconfigPath: string) {
+  const valuesFilePath = tempy.file({ name: "values.yaml" });
+
+  await fse.writeFile(valuesFilePath, yaml.dump(values));
+
+  const args = ["install"];
+
+  if (name) {
+    args.push(name);
+  }
+
+  args.push(
+    chart,
+    "--version", version,
+    "--values", valuesFilePath,
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  );
+
+  if (!name) {
+    args.push("--generate-name");
+  }
 
   try {
-    let generateName = "";
-
-    if (!name) {
-      generateName = "--generate-name";
-      name = "";
-    }
-    const { stdout } = await promiseExec(`"${helm}" install ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} ${generateName}`);
-    const releaseName = stdout.split("\n")[0].split(" ")[1].trim();
+    const output = await execHelm(args);
+    const releaseName = output.split("\n")[0].split(" ")[1].trim();
 
     return {
-      log: stdout,
+      log: output,
       release: {
         name: releaseName,
         namespace,
       },
     };
-  } catch (error) {
-    throw error?.stderr || error;
   } finally {
-    await fse.unlink(fileName);
+    await fse.unlink(valuesFilePath);
   }
 }
 
-export async function upgradeRelease(name: string, chart: string, values: any, namespace: string, version: string, cluster: Cluster) {
-  const helm = await helmCli.binaryPath();
-  const fileName = tempy.file({ name: "values.yaml" });
+export async function upgradeRelease(name: string, chart: string, values: any, namespace: string, version: string, kubeconfigPath: string, kubectlPath: string) {
+  const valuesFilePath = tempy.file({ name: "values.yaml" });
 
-  await fse.writeFile(fileName, yaml.dump(values));
+  await fse.writeFile(valuesFilePath, yaml.dump(values));
+
+  const args = [
+    "upgrade",
+    name,
+    chart,
+    "--version", version,
+    "--values", valuesFilePath,
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  ];
 
   try {
-    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
-    const { stdout } = await promiseExec(`"${helm}" upgrade ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${proxyKubeconfig}`);
+    const output = await execHelm(args);
 
     return {
-      log: stdout,
-      release: getRelease(name, namespace, cluster),
+      log: output,
+      release: getRelease(name, namespace, kubeconfigPath, kubectlPath),
     };
-  } catch (error) {
-    throw error?.stderr || error;
   } finally {
-    await fse.unlink(fileName);
+    await fse.unlink(valuesFilePath);
   }
 }
 
-export async function getRelease(name: string, namespace: string, cluster: Cluster) {
-  try {
-    const helm = await helmCli.binaryPath();
-    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+export async function getRelease(name: string, namespace: string, kubeconfigPath: string, kubectlPath: string) {
+  const args = [
+    "status",
+    name,
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+    "--output", "json",
+  ];
 
-    const { stdout } = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${proxyKubeconfig}`, {
-      maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
-    });
-    const release = JSON.parse(stdout);
+  const release = JSON.parse(await execHelm(args, {
+    maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
+  }));
 
-    release.resources = await getResources(name, namespace, cluster);
+  release.resources = await getResources(name, namespace, kubeconfigPath, kubectlPath);
 
-    return release;
-  } catch (error) {
-    throw error?.stderr || error;
-  }
+  return release;
 }
 
-export async function deleteRelease(name: string, namespace: string, pathToKubeconfig: string) {
-  try {
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" delete ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
-
-    return stdout;
-  } catch (error) {
-    throw error?.stderr || error;
-  }
+export async function deleteRelease(name: string, namespace: string, kubeconfigPath: string) {
+  return execHelm([
+    "delete",
+    name,
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  ]);
 }
 
 interface GetValuesOptions {
   namespace: string;
   all?: boolean;
-  pathToKubeconfig: string;
+  kubeconfigPath: string;
 }
 
-export async function getValues(name: string, { namespace, all = false, pathToKubeconfig }: GetValuesOptions) {
-  try {
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" get values ${name} ${all ? "--all" : ""} --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
+export async function getValues(name: string, { namespace, all = false, kubeconfigPath }: GetValuesOptions) {
+  const args = [
+    "get",
+    "values",
+    name,
+  ];
 
-    return stdout;
-  } catch (error) {
-    throw error?.stderr || error;
+  if (all) {
+    args.push("--all");
   }
+
+  args.push(
+    "--output", "yaml",
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  );
+
+  return execHelm(args);
 }
 
-export async function getHistory(name: string, namespace: string, pathToKubeconfig: string) {
-  try {
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" history ${name} --output json --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
-
-    return JSON.parse(stdout);
-  } catch (error) {
-    throw error?.stderr || error;
-  }
+export async function getHistory(name: string, namespace: string, kubeconfigPath: string) {
+  return JSON.parse(await execHelm([
+    "history",
+    name,
+    "--output", "json",
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  ]));
 }
 
-export async function rollback(name: string, namespace: string, revision: number, pathToKubeconfig: string) {
-  try {
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" rollback ${name} ${revision} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
-
-    return stdout;
-  } catch (error) {
-    throw error?.stderr || error;
-  }
+export async function rollback(name: string, namespace: string, revision: number, kubeconfigPath: string) {
+  return JSON.parse(await execHelm([
+    "rollback",
+    name,
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  ]));
 }
 
-async function getResources(name: string, namespace: string, cluster: Cluster) {
-  try {
-    const helm = await helmCli.binaryPath();
-    const kubectl = await cluster.ensureKubectl();
-    const kubectlPath = await kubectl.getPath();
-    const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
-    const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectlPath}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`);
+async function getResources(name: string, namespace: string, kubeconfigPath: string, kubectlPath: string) {
+  const helmArgs = [
+    "get",
+    "manifest",
+    name,
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+  ];
+  const kubectlArgs = [
+    "get",
+    "--namespace", namespace,
+    "--kubeconfig", kubeconfigPath,
+    "-f", "-",
+    "--output", "json",
+  ];
 
-    return JSON.parse(stdout).items;
+  try {
+    const helmOutput = await execHelm(helmArgs);
+
+    return new Promise((resolve, reject) => {
+      let stdout = "";
+      let stderr = "";
+      const kubectl = execFile(kubectlPath, kubectlArgs);
+
+      kubectl
+        .on("exit", (code, signal) => {
+          if (typeof code === "number") {
+            if (code === 0) {
+              resolve(JSON.parse(stdout).items);
+            } else {
+              reject(stderr);
+            }
+          } else {
+            reject(new Error(`Kubectl exited with signal ${signal}`));
+          }
+        })
+        .on("error", reject);
+
+      kubectl.stderr.on("data", output => stderr += output);
+      kubectl.stdout.on("data", output => stdout += output);
+      kubectl.stdin.write(helmOutput);
+      kubectl.stdin.end();
+    });
   } catch {
     return [];
   }

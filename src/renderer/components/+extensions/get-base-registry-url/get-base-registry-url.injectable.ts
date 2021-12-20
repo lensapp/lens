@@ -18,20 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-import { attemptInstallByInfo, ExtensionInfo } from "./attempt-install-by-info";
-import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
-import getBaseRegistryUrlInjectable from "../get-base-registry-url/get-base-registry-url.injectable";
 
-const attemptInstallByInfoInjectable: Injectable<(extensionInfo: ExtensionInfo) => Promise<void>, {}> = {
-  getDependencies: di => ({
-    attemptInstall: di.inject(attemptInstallInjectable),
-    getBaseRegistryUrl: di.inject(getBaseRegistryUrlInjectable),
+import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { UserStore } from "../../../../common/user-store";
+import { Dependencies, getBaseRegistryUrl } from "./get-base-registry-url";
+
+const getBaseRegistryUrlInjectable: Injectable<() => Promise<string>, Dependencies> = {
+  getDependencies: () => ({
+    // TODO: use injection
+    getRegistryUrlPreference: () => UserStore.getInstance().extensionRegistryUrl,
   }),
 
-  instantiate: attemptInstallByInfo,
+  instantiate: getBaseRegistryUrl,
   lifecycle: lifecycleEnum.singleton,
 };
 
-export default attemptInstallByInfoInjectable;
+export default getBaseRegistryUrlInjectable;
