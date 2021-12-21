@@ -25,7 +25,7 @@ import { namespaceStore, NamespaceStore } from "./namespace.store";
 const namespaceStoreInjectable: Injectable<
  NamespaceStore
 > = {
-  getDependencies: di => ({}),
+  getDependencies: () => ({}),
 
   instantiate: () => namespaceStore,
   lifecycle: lifecycleEnum.singleton,

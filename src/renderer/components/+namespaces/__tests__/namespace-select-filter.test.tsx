@@ -21,6 +21,7 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { NamespaceSelectFilter } from "../namespace-select-filter";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
@@ -109,9 +110,9 @@ describe("NamespaceSelectFilter", () => {
 
   it ("renders selected namespaces", async () => {
     namespaceStore.items.replace([
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "one ", uid: "one", resourceVersion: "1" }}),
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "two ", uid: "two", resourceVersion: "1" }}),
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "three ", uid: "three", resourceVersion: "1" }}),
+      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "one", uid: "one", resourceVersion: "1" }}),
+      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "two", uid: "two", resourceVersion: "1" }}),
+      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "three", uid: "three", resourceVersion: "1" }}),
     ]);
 
     namespaceStore.selectNamespaces(["two", "three"]);
@@ -120,5 +121,23 @@ describe("NamespaceSelectFilter", () => {
     const select = getByTestId("namespace-select-filter");
 
     expect(select.getElementsByClassName("Select__placeholder")[0].innerHTML).toEqual("Namespaces: two, three");
+  });
+
+  it ("allows to select namespaces", async () => {
+    namespaceStore.items.replace([
+      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "one", uid: "one", resourceVersion: "1" }}),
+      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "two", uid: "two", resourceVersion: "1" }}),
+      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "three", uid: "three", resourceVersion: "1" }}),
+    ]);
+
+    const { container  } = render(<><NamespaceSelectFilter showIcons={false} /></>);
+
+    fireEvent.click(container.querySelector(".Select__placeholder"));
+
+    await waitFor(() => screen.getByText("one"));
+    fireEvent.click(screen.getByText("one"));
+
+    expect(container.querySelector(".Select__placeholder").innerHTML).toEqual("Namespace: one");
+    expect(namespaceStore.selectedNames).toEqual(new Set(["one"]));
   });
 });

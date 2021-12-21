@@ -28,10 +28,10 @@ import { components, InputActionMeta, PlaceholderProps } from "react-select";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 
 import { Icon } from "../icon";
-import { NamespaceSelect } from "./namespace-select";
+import { NamespaceSelect, NamespaceSelectProps } from "./namespace-select";
 import type { NamespaceStore } from "./namespace.store";
 
-import type { SelectOption, SelectProps } from "../select";
+import type { SelectOption } from "../select";
 import { isMac } from "../../../common/vars";
 import namespaceStoreInjectable from "./namespace.store.injectable";
 
@@ -67,7 +67,7 @@ const Placeholder = observer((props: PlaceholderProps<any, boolean> & NamespaceS
   );
 });
 
-export interface NamespaceSelectFilterProps extends SelectProps {
+export interface NamespaceSelectFilterProps extends NamespaceSelectProps {
   maxItems?: number;
 }
 
@@ -133,7 +133,7 @@ export class NonInjectedNamespaceSelectFilter extends React.Component<NamespaceS
       : this.namespaceStore.areAllSelectedImplicitly;
 
     return (
-      <div className="flex gaps align-center">
+      <div className="flex gaps align-center select-option-label">
         <Icon small material={ namespace ? "layers" : "panorama_wide_angle" } />
         <span>{label}</span>
         {isSelected && <Icon small material="check" className="box right" />}
