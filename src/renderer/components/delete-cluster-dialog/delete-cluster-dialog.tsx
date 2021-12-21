@@ -18,7 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import styles from "./delete-cluster-dialog.module.css";
+import styles from "./delete-cluster-dialog.module.scss";
 
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./list.module.css";
+import styles from "./list.module.scss";
 import React, { useState } from "react";
 import { SearchInput } from "../input";
 

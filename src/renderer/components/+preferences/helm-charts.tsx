@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./helm-charts.module.css";
+import styles from "./helm-charts.module.scss";
 
 import React from "react";
 import { action, computed, observable, makeObservable } from "mobx";

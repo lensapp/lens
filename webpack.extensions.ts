@@ -89,14 +89,13 @@ export default function generateExtensionTypes(): webpack.Configuration {
         {
           test: /\.s?css$/,
           use: [
-            // creates `style` nodes from JS strings
             "style-loader",
-            // translates CSS into CommonJS
             "css-loader",
+            "postcss-loader",
             {
               loader: "sass-loader",
               options: {
-                prependData: `@import "${path.basename(sassCommonVars)}";`,
+                additionalData: `@import "${path.basename(sassCommonVars)}";`,
                 sassOptions: {
                   includePaths: [
                     path.dirname(sassCommonVars),

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./install.module.css";
+import styles from "./install.module.scss";
 import React from "react";
 import { prevDefault } from "../../utils";
 import { Button } from "../button";
