@@ -133,7 +133,7 @@ export class NonInjectedNamespaceSelectFilter extends React.Component<NamespaceS
       : this.namespaceStore.areAllSelectedImplicitly;
 
     return (
-      <div className="flex gaps align-center select-option-label">
+      <div className="flex gaps align-center">
         <Icon small material={ namespace ? "layers" : "panorama_wide_angle" } />
         <span>{label}</span>
         {isSelected && <Icon small material="check" className="box right" />}

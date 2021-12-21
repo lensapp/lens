@@ -130,7 +130,7 @@ describe("NamespaceSelectFilter", () => {
       new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "three", uid: "three", resourceVersion: "1" }}),
     ]);
 
-    const { container  } = render(<><NamespaceSelectFilter showIcons={false} /></>);
+    const { container  } = render(<><NamespaceSelectFilter /></>);
 
     fireEvent.click(container.querySelector(".Select__placeholder"));
 
