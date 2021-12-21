@@ -39,6 +39,7 @@ import logger from "../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 import { ClusterFrameHandler } from "./components/cluster-manager/lens-views";
 import type { LensProtocolRouterRenderer } from "./protocol-handler";
+import { delay } from "./utils";
 
 injectSystemCAs();
 
@@ -56,10 +57,14 @@ export class RootFrame extends React.Component {
     catalogEntityRegistry.init();
 
     try {
+      // maximum time to let bundled extensions finish loading
+      const timeout = delay(10000);
+
       const loadingExtensions = extensionLoader.loadOnClusterManagerRenderer();
       const loadingBundledExtensions = loadingExtensions.filter(e => e.isBundled).map(e => e.loaded);
+      const bundledExtensionsFinished = Promise.all(loadingBundledExtensions);
 
-      await Promise.all(loadingBundledExtensions);
+      await Promise.race([bundledExtensionsFinished, timeout]);
     } finally {
       ipcRenderer.send(BundledExtensionsLoaded);
     }
