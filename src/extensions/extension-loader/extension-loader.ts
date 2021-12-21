@@ -313,7 +313,7 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    const bundledLoaded: Promise<void>[] = [];
+    const loadingExtensions: { isBundled: boolean, loaded: Promise<void> }[] = [];
 
     reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
@@ -334,9 +334,10 @@ export class ExtensionLoader {
               logger.error(`${logModule}: failed to enable`, { ext: extension, err });
             });
 
-            if (extension.isBundled) {
-              bundledLoaded.push(loaded);
-            }
+            loadingExtensions.push({
+              isBundled: extension.isBundled,
+              loaded,
+            });
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
@@ -349,7 +350,7 @@ export class ExtensionLoader {
       fireImmediately: true,
     });
 
-    return Promise.all(bundledLoaded);
+    return loadingExtensions;
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {

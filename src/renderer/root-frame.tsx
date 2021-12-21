@@ -56,7 +56,10 @@ export class RootFrame extends React.Component {
     catalogEntityRegistry.init();
 
     try {
-      await extensionLoader.loadOnClusterManagerRenderer();
+      const loadingExtensions = extensionLoader.loadOnClusterManagerRenderer();
+      const loadingBundledExtensions = loadingExtensions.filter(e => e.isBundled).map(e => e.loaded);
+
+      await Promise.all(loadingBundledExtensions);
     } finally {
       ipcRenderer.send(BundledExtensionsLoaded);
     }
