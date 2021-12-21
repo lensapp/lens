@@ -33,6 +33,7 @@ import { addPortForward, getPortForwards, modifyPortForward } from "./port-forwa
 import type { ForwardedPort } from "./port-forward-item";
 import { aboutPortForwarding, openPortForward } from ".";
 import { Checkbox } from "../components/checkbox";
+import logger from "../../common/logger";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -92,23 +93,21 @@ export class PortForwardDialog extends Component<Props> {
   };
 
   startPortForward = async () => {
-    const { portForward } = this;
+    let { portForward } = this;
     const { currentPort, desiredPort, close } = this;
 
     try {
       // determine how many port-forwards already exist
       const { length } = getPortForwards();
 
-      let port: number;
-
       portForward.protocol = dialogState.useHttps ? "https" : "http";
       portForward.status = "Active";
 
       if (currentPort) {
-        port = await modifyPortForward(portForward, desiredPort);
+        portForward = await modifyPortForward(portForward, desiredPort);
       } else {
         portForward.forwardPort = desiredPort;
-        port = await addPortForward(portForward);
+        portForward = await addPortForward(portForward);
 
         // if this is the first port-forward show the about notification
         if (!length) {
@@ -116,12 +115,15 @@ export class PortForwardDialog extends Component<Props> {
         }
       }
 
-      if (dialogState.openInBrowser) {
-        portForward.forwardPort = port;
-        openPortForward(portForward);
+      if (portForward.status === "Active") {
+        if (dialogState.openInBrowser) {
+          openPortForward(portForward);
+        }
+      } else {
+        Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       }
-    } catch (err) {
-      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+    } catch (error) {
+      logger.error("[PORT-FORWARD-DIALOG]:", error, portForward);
     } finally {
       close();
     }

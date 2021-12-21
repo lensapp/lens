@@ -23,7 +23,7 @@
 import type { ItemObject } from "../../common/item.store";
 import { autoBind } from "../../common/utils";
 
-export type forwardedPortStatus = "Active" | "Disabled";
+export type ForwardedPortStatus = "Active" | "Disabled";
 export interface ForwardedPort {
   kind: string;
   namespace: string;
@@ -31,7 +31,7 @@ export interface ForwardedPort {
   port: number;
   forwardPort: number;
   protocol?: string;
-  status?: forwardedPortStatus;
+  status?: ForwardedPortStatus;
 }
   
 export class PortForwardItem implements ItemObject {
@@ -41,7 +41,7 @@ export class PortForwardItem implements ItemObject {
   port: number;
   forwardPort: number;
   protocol: string;
-  status: forwardedPortStatus;
+  status: ForwardedPortStatus;
   
   constructor(pf: ForwardedPort) {
     this.kind = pf.kind;

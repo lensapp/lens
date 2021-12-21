@@ -28,8 +28,9 @@ import { action, observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { aboutPortForwarding, addPortForward, forwardedPortStatus, getPortForward, getPortForwards, getPortForwardStatus, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";import type { ForwardedPort } from "../../port-forward";
+import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
+import logger from "../../../common/logger";
 
 interface Props {
   pod: Pod;
@@ -60,7 +61,7 @@ export class PodContainerPort extends React.Component<Props> {
 
   async checkExistingPortForwarding() {
     const { pod, port } = this.props;
-    const portForward: ForwardedPort = {
+    let portForward: ForwardedPort = {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
@@ -68,26 +69,22 @@ export class PodContainerPort extends React.Component<Props> {
       forwardPort: this.forwardPort,
     };
 
-    let activePort: number;
-    let status: forwardedPortStatus;
-
     try {
-      activePort = await getPortForward(portForward) ?? 0;
-      status = await getPortForwardStatus(portForward);
+      portForward = await getPortForward(portForward);
     } catch (error) {
       this.isPortForwarded = false;
 
       return;
     }
 
-    this.forwardPort = activePort;
-    this.isPortForwarded = (status === "Active" && activePort) ? true : false;
+    this.forwardPort = portForward.forwardPort;
+    this.isPortForwarded = (portForward.status === "Active" && portForward.forwardPort) ? true : false;
   }
 
   @action
   async portForward() {
     const { pod, port } = this.props;
-    const portForward: ForwardedPort = {
+    let portForward: ForwardedPort = {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
@@ -103,10 +100,9 @@ export class PodContainerPort extends React.Component<Props> {
       // determine how many port-forwards already exist
       const { length } = getPortForwards();
 
-      this.forwardPort = await addPortForward(portForward);
+      portForward = await addPortForward(portForward);
 
-      if (this.forwardPort) {
-        portForward.forwardPort = this.forwardPort;
+      if (portForward.status === "Active") {
         openPortForward(portForward);
         this.isPortForwarded = true;
 
@@ -114,9 +110,12 @@ export class PodContainerPort extends React.Component<Props> {
         if (!length) {
           aboutPortForwarding();
         }
+      } else {
+        Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        this.isPortForwarded = false;
       }
     } catch (error) {
-      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+      logger.error("[POD-CONTAINER-PORT]:", error, portForward);
       this.checkExistingPortForwarding();
     } finally {
       this.waiting = false;

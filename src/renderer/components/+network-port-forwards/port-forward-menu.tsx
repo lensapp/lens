@@ -72,10 +72,12 @@ export class PortForwardMenu extends React.Component<Props> {
 
     return (
       <>
-        <MenuItem onClick={() => openPortForward(this.props.portForward)}>
-          <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
-          <span className="title">Open</span>
-        </MenuItem>
+        { Boolean(portForward.status === "Active") &&
+          <MenuItem onClick={() => openPortForward(portForward)}>
+            <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
+            <span className="title">Open</span>
+          </MenuItem>
+        }
         <MenuItem onClick={() => PortForwardDialog.open(portForward)}>
           <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
           <span className="title">Edit</span>
