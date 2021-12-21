@@ -20,21 +20,33 @@
  */
 
 import { action, comparer, computed, IReactionDisposer, makeObservable, reaction } from "mobx";
-import { autoBind, createStorage, noop, ToggleSet } from "../../utils";
+import { autoBind, createStorage, noop, StorageHelper, ToggleSet } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { Namespace, namespacesApi } from "../../../common/k8s-api/endpoints/namespaces.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
+
+
+export type NamespaceStoreConfig = {
+  storage?: StorageHelper<string[] | undefined>;
+  autoInit?: boolean;
+};
+
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
-  private storage = createStorage<string[] | undefined>("selected_namespaces", undefined);
 
-  constructor() {
+  constructor(private config: NamespaceStoreConfig) {
     super();
     makeObservable(this);
     autoBind(this);
 
-    this.init();
+    if (config.autoInit !== false) {
+      this.init();
+    }
+  }
+
+  private get storage() {
+    return this.config.storage;
   }
 
   private async init() {
@@ -247,7 +259,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 }
 
-export const namespaceStore = new NamespaceStore();
+export const namespaceStore = new NamespaceStore({
+  storage: createStorage<string[] | undefined>("selected_namespaces", undefined),
+});
 apiManager.registerStore(namespaceStore);
 
 export function getDummyNamespace(name: string) {
