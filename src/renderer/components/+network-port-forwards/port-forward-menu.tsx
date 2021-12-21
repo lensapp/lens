@@ -45,6 +45,18 @@ export class PortForwardMenu extends React.Component<Props> {
     }
   }
 
+  private startPortForwarding = async () => {
+    const { portForward } = this.props;
+
+    const pf = await startPortForward(portForward);
+
+    if (pf.status === "Disabled") {
+      const { name, kind, forwardPort } = portForward;
+
+      Notifications.error(`Error occurred starting port-forward, the local port ${forwardPort} may not be available or the ${kind} ${name} may not be reachable`);
+    }
+  };
+
   renderStartStopMenuItem() {
     const { portForward, toolbar } = this.props;
 
@@ -58,7 +70,7 @@ export class PortForwardMenu extends React.Component<Props> {
     }
 
     return (
-      <MenuItem onClick={() => startPortForward(portForward)}>
+      <MenuItem onClick={this.startPortForwarding}>
         <Icon material="play_arrow" tooltip="Start port-forward" interactive={toolbar} />
         <span className="title">Start</span>
       </MenuItem>

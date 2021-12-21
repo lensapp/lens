@@ -63,12 +63,8 @@ export class PortForwardItem implements ItemObject {
     return this.namespace;
   }
    
-  get id() {
-    return this.forwardPort;
-  }
-   
   getId() {
-    return String(this.forwardPort);
+    return `${this.namespace}/${this.kind}/${this.name}:${this.port}`;
   }
   
   getKind() {
@@ -94,10 +90,11 @@ export class PortForwardItem implements ItemObject {
   getSearchFields() {
     return [
       this.name,
-      this.id,
+      this.namespace,
       this.kind,
       this.port,
       this.forwardPort,
+      this.status,
     ];
   }
 }

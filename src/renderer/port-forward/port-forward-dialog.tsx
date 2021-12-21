@@ -101,9 +101,8 @@ export class PortForwardDialog extends Component<Props> {
       const { length } = getPortForwards();
 
       portForward.protocol = dialogState.useHttps ? "https" : "http";
-      portForward.status = "Active";
 
-      if (currentPort) {
+      if (currentPort || portForward.status === "Disabled") {
         portForward = await modifyPortForward(portForward, desiredPort);
       } else {
         portForward.forwardPort = desiredPort;
@@ -115,14 +114,11 @@ export class PortForwardDialog extends Component<Props> {
         }
       }
 
-      if (portForward.status === "Active") {
-        if (dialogState.openInBrowser) {
-          openPortForward(portForward);
-        }
-      } else {
-        Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+      if (portForward.status === "Active" && dialogState.openInBrowser) {
+        openPortForward(portForward);
       }
     } catch (error) {
+      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       logger.error("[PORT-FORWARD-DIALOG]:", error, portForward);
     } finally {
       close();
@@ -187,7 +183,7 @@ export class PortForwardDialog extends Component<Props> {
           <WizardStep
             contentClass="flex gaps column"
             next={this.startPortForward}
-            nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
+            nextLabel={this.currentPort === 0 ? "Start" : "Modify"}
           >
             {this.renderContents()}
           </WizardStep>
