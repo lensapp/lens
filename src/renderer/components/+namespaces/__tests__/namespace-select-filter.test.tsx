@@ -121,13 +121,4 @@ describe("NamespaceSelectFilter", () => {
 
     expect(select.getElementsByClassName("Select__placeholder")[0].innerHTML).toEqual("Namespaces: two, three");
   });
-
-  // it ("renders items", async () => {
-  //   namespaceStore.items.replace([
-  //     new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "one ", uid: "one", resourceVersion: "1" }}),
-  //     new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "two ", uid: "two", resourceVersion: "1" }}),
-  //   ]);
-
-  //   const { } = render(<><NamespaceSelectFilter /></>);
-  // });
 });
