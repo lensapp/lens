@@ -19,16 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { renderFor, DiRender } from "../../../test-utils/renderFor";
 import { clusterRolesStore } from "../../+cluster-roles/store";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import { RoleBindingDialog } from "../dialog";
 
+
 jest.mock("../../+cluster-roles/store");
 
 describe("RoleBindingDialog tests", () => {
+  let render: DiRender;
+
   beforeEach(() => {
     (clusterRolesStore as any).items = [new ClusterRole({
       apiVersion: "rbac.authorization.k8s.io/v1",
@@ -39,6 +43,10 @@ describe("RoleBindingDialog tests", () => {
         uid: "1",
       },
     })];
+
+    const di = getDiForUnitTesting();
+
+    render = renderFor(di);
   });
 
   afterEach(() => {
