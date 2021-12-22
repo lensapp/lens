@@ -64,7 +64,7 @@ export class PortForwardItem implements ItemObject {
   }
    
   getId() {
-    return `${this.namespace}/${this.kind}/${this.name}:${this.port}`;
+    return `${this.namespace}-${this.kind}-${this.name}:${this.port}`;
   }
   
   getKind() {

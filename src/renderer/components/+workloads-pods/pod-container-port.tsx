@@ -28,7 +28,7 @@ import { action, observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, portForwardStore, predictProtocol, removePortForward } from "../../port-forward";import type { ForwardedPort } from "../../port-forward";
+import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, predictProtocol, removePortForward, startPortForward } from "../../port-forward";import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
 import logger from "../../../common/logger";
 
@@ -46,6 +46,7 @@ export class PodContainerPort extends React.Component<Props> {
   @observable waiting = false;
   @observable forwardPort = 0;
   @observable isPortForwarded = false;
+  @observable isActive = false;
 
   constructor(props: Props) {
     super(props);
@@ -55,10 +56,11 @@ export class PodContainerPort extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => [portForwardStore.portForwards.slice(), this.props.pod], () => this.checkExistingPortForwarding()),
+      reaction(() => this.props.pod, () => this.checkExistingPortForwarding()),
     ]);
   }
 
+  @action
   async checkExistingPortForwarding() {
     const { pod, port } = this.props;
     let portForward: ForwardedPort = {
@@ -73,12 +75,14 @@ export class PodContainerPort extends React.Component<Props> {
       portForward = await getPortForward(portForward);
     } catch (error) {
       this.isPortForwarded = false;
+      this.isActive = false;
 
       return;
     }
 
     this.forwardPort = portForward.forwardPort;
-    this.isPortForwarded = (portForward.status === "Active" && portForward.forwardPort) ? true : false;
+    this.isPortForwarded = true;
+    this.isActive = portForward.status === "Active";
   }
 
   @action
@@ -100,11 +104,14 @@ export class PodContainerPort extends React.Component<Props> {
       // determine how many port-forwards already exist
       const { length } = getPortForwards();
 
-      portForward = await addPortForward(portForward);
+      if (!this.isPortForwarded) {
+        portForward = await addPortForward(portForward);
+      } else if (!this.isActive) {
+        portForward = await startPortForward(portForward);
+      }
 
       if (portForward.status === "Active") {
         openPortForward(portForward);
-        this.isPortForwarded = true;
 
         // if this is the first port-forward show the about notification
         if (!length) {
@@ -112,12 +119,11 @@ export class PodContainerPort extends React.Component<Props> {
         }
       } else {
         Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
-        this.isPortForwarded = false;
       }
     } catch (error) {
       logger.error("[POD-CONTAINER-PORT]:", error, portForward);
-      this.checkExistingPortForwarding();
     } finally {
+      this.checkExistingPortForwarding();
       this.waiting = false;
     }
   }
@@ -137,11 +143,11 @@ export class PodContainerPort extends React.Component<Props> {
 
     try {
       await removePortForward(portForward);
-      this.isPortForwarded = false;
     } catch (error) {
       Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
-      this.checkExistingPortForwarding();
     } finally {
+      this.checkExistingPortForwarding();
+      this.forwardPort = 0;
       this.waiting = false;
     }
   }
@@ -151,7 +157,7 @@ export class PodContainerPort extends React.Component<Props> {
     const { name, containerPort, protocol } = port;
     const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol}`;
 
-    const portForwardAction = async () => {
+    const portForwardAction = action(async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
       } else {
@@ -164,16 +170,16 @@ export class PodContainerPort extends React.Component<Props> {
           protocol: predictProtocol(port.name),
         };
 
-        PortForwardDialog.open(portForward, { openInBrowser: true });
+        PortForwardDialog.open(portForward, { openInBrowser: true, onClose: () => this.checkExistingPortForwarding() });
       }
-    };
+    });
 
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
         </span>
-        <Button primary onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
+        <Button primary onClick={portForwardAction}> {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."} </Button>
         {this.waiting && (
           <Spinner />
         )}

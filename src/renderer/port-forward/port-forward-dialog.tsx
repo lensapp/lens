@@ -34,12 +34,14 @@ import type { ForwardedPort } from "./port-forward-item";
 import { aboutPortForwarding, openPortForward } from ".";
 import { Checkbox } from "../components/checkbox";
 import logger from "../../common/logger";
+import { noop } from "lodash";
 
 interface Props extends Partial<DialogProps> {
 }
 
 interface PortForwardDialogOpenOptions {
-  openInBrowser: boolean
+  openInBrowser: boolean;
+  onClose: () => void;
 }
 
 const dialogState = observable.object({
@@ -47,6 +49,7 @@ const dialogState = observable.object({
   data: null as ForwardedPort,
   useHttps: false,
   openInBrowser: false,
+  onClose: noop,
 });
 
 @observer
@@ -59,11 +62,12 @@ export class PortForwardDialog extends Component<Props> {
     makeObservable(this);
   }
 
-  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) {
+  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false, onClose: noop }) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
     dialogState.useHttps = portForward.protocol === "https";
     dialogState.openInBrowser = options.openInBrowser;
+    dialogState.onClose = options.onClose;
   }
 
   static close() {
@@ -85,7 +89,8 @@ export class PortForwardDialog extends Component<Props> {
     this.desiredPort = this.currentPort;
   };
 
-  onClose = () => {
+  onClose = async () => {
+    await (async () => dialogState.onClose())();
   };
 
   changePort = (value: string) => {
@@ -102,15 +107,25 @@ export class PortForwardDialog extends Component<Props> {
 
       portForward.protocol = dialogState.useHttps ? "https" : "http";
 
-      if (currentPort || portForward.status === "Disabled") {
+      if (currentPort) {
+        const wasRunning = portForward.status === "Active";
+
         portForward = await modifyPortForward(portForward, desiredPort);
+        
+        if (wasRunning && portForward.status === "Disabled") {
+          Notifications.error(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        }
       } else {
         portForward.forwardPort = desiredPort;
         portForward = await addPortForward(portForward);
 
-        // if this is the first port-forward show the about notification
-        if (!length) {
-          aboutPortForwarding();
+        if (portForward.status === "Disabled") {
+          Notifications.error(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        } else {
+          // if this is the first port-forward show the about notification
+          if (!length) {
+            aboutPortForwarding();
+          }
         }
       }
 
@@ -118,8 +133,7 @@ export class PortForwardDialog extends Component<Props> {
         openPortForward(portForward);
       }
     } catch (error) {
-      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
-      logger.error("[PORT-FORWARD-DIALOG]:", error, portForward);
+      logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
     } finally {
       close();
     }
