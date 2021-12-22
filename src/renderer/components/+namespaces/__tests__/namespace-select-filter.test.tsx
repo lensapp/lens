@@ -49,8 +49,17 @@ jest.mock("electron", () => ({ // TODO: remove mocks
 }));
 
 describe("NamespaceSelectFilter", () => {
+  const placeholderClass = "Select__placeholder";
+  const placeholderSelector = `.${placeholderClass}`;
+
   let render: DiRender;
   let namespaceStore: NamespaceStore;
+
+  const buildItems = (names: string[]) => {
+    return names.map((name) => {
+      return new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name, uid: name, resourceVersion: "1" }});
+    });
+  };
 
   beforeAll(async () => { // TODO: remove beforeAll
     await AppPaths.init();
@@ -105,39 +114,63 @@ describe("NamespaceSelectFilter", () => {
     const { getByTestId } = render(<><NamespaceSelectFilter /></>);
     const select = getByTestId("namespace-select-filter");
 
-    expect(select.getElementsByClassName("Select__placeholder")[0].innerHTML).toEqual("All namespaces");
+    expect(select.getElementsByClassName(placeholderClass)[0].innerHTML).toEqual("All namespaces");
   });
 
   it ("renders selected namespaces", async () => {
-    namespaceStore.items.replace([
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "one", uid: "one", resourceVersion: "1" }}),
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "two", uid: "two", resourceVersion: "1" }}),
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "three", uid: "three", resourceVersion: "1" }}),
-    ]);
+    namespaceStore.items.replace(buildItems(["one", "two", "three"]));
 
     namespaceStore.selectNamespaces(["two", "three"]);
 
     const { getByTestId } = render(<><NamespaceSelectFilter /></>);
     const select = getByTestId("namespace-select-filter");
 
-    expect(select.getElementsByClassName("Select__placeholder")[0].innerHTML).toEqual("Namespaces: two, three");
+    expect(select.getElementsByClassName(placeholderClass)[0].innerHTML).toEqual("Namespaces: two, three");
   });
 
   it ("allows to select namespaces", async () => {
-    namespaceStore.items.replace([
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "one", uid: "one", resourceVersion: "1" }}),
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "two", uid: "two", resourceVersion: "1" }}),
-      new Namespace({ kind: "Namespace", apiVersion: "v1", metadata: { name: "three", uid: "three", resourceVersion: "1" }}),
-    ]);
+    namespaceStore.items.replace(buildItems(["one", "two", "three"]));
 
     const { container  } = render(<><NamespaceSelectFilter /></>);
 
-    fireEvent.click(container.querySelector(".Select__placeholder"));
+    fireEvent.click(container.querySelector(placeholderSelector));
 
     await waitFor(() => screen.getByText("one"));
     fireEvent.click(screen.getByText("one"));
 
-    expect(container.querySelector(".Select__placeholder").innerHTML).toEqual("Namespace: one");
+    expect(container.querySelector(placeholderSelector).innerHTML).toEqual("Namespace: one");
     expect(namespaceStore.selectedNames).toEqual(new Set(["one"]));
+  });
+
+  it ("allows to change namespaces", async () => {
+    namespaceStore.items.replace(buildItems(["one", "two", "three"]));
+    namespaceStore.selectNamespaces(["one"]);
+
+    const { container  } = render(<><NamespaceSelectFilter /></>);
+
+    fireEvent.click(container.querySelector(placeholderSelector));
+
+    await waitFor(() => screen.getByText("three"));
+    fireEvent.click(screen.getByText("three"));
+
+    expect(container.querySelector(".Select__placeholder").innerHTML).toEqual("Namespace: three");
+    expect(namespaceStore.selectedNames).toEqual(new Set(["three"]));
+  });
+
+  it ("allows to switch back to all namespaces", async () => {
+    const namespaces = ["one", "two", "three"];
+
+    namespaceStore.items.replace(buildItems(namespaces));
+    namespaceStore.selectNamespaces(["three"]);
+
+    const { container  } = render(<><NamespaceSelectFilter /></>);
+
+    fireEvent.click(container.querySelector(placeholderSelector));
+
+    await waitFor(() => screen.getByText("three"));
+    fireEvent.click(screen.getByText("All Namespaces"));
+
+    expect(container.querySelector(placeholderSelector).innerHTML).toEqual("All namespaces");
+    expect(namespaceStore.selectedNames).toEqual(new Set(namespaces));
   });
 });
