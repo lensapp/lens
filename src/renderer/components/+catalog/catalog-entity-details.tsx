@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./catalog-entity-details.module.css";
+import styles from "./catalog-entity-details.module.scss";
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";

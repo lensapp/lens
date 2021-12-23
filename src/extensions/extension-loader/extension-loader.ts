@@ -25,10 +25,10 @@ import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
 import { AppPaths } from "../../common/app-paths";
-import { ClusterStore } from "../../common/cluster-store";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
-import { Disposer, getHostedClusterId, toJS } from "../../common/utils";
+import { Disposer, toJS } from "../../common/utils";
 import logger from "../../main/logger";
+import type { KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery";
 import { ExtensionsStore } from "../extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
@@ -255,7 +255,8 @@ export class ExtensionLoader {
 
   loadOnClusterManagerRenderer() {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+
+    return this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
@@ -280,12 +281,11 @@ export class ExtensionLoader {
     });
   }
 
-  loadOnClusterRenderer() {
+  loadOnClusterRenderer(entity: KubernetesCluster) {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
-    const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if ((await extension.isEnabledForCluster(cluster)) === false) {
+      if ((await extension.isEnabledForCluster(entity)) === false) {
         return [];
       }
 
@@ -312,7 +312,9 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    return reaction(() => this.toJSON(), installedExtensions => {
+    const loadingExtensions: { isBundled: boolean, loaded: Promise<void> }[] = [];
+
+    reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -327,7 +329,14 @@ export class ExtensionLoader {
 
             const instance = new LensExtensionClass(extension);
 
-            instance.enable(register);
+            const loaded = instance.enable(register).catch((err) => {
+              logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+            });
+
+            loadingExtensions.push({
+              isBundled: extension.isBundled,
+              loaded,
+            });
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
@@ -339,6 +348,8 @@ export class ExtensionLoader {
     }, {
       fireImmediately: true,
     });
+
+    return loadingExtensions;
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {

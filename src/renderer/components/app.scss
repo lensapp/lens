@@ -19,9 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@import "tailwindcss/utilities";
-@import "~flex.box";
-@import "fonts";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "~flex.box"; // todo: replace with tailwind's flexbox classes
+@import "./fonts";
 @import "../themes/theme-vars";
 
 :root {

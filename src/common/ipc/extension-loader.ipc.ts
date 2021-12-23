@@ -18,18 +18,4 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-module.exports = {
-  content: ["src/**/*.tsx"],
-  darkMode: "class",
-  theme: {
-    fontFamily: {
-      sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
-    },
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-};
+export const BundledExtensionsLoaded = "extension-loader:bundled-extensions-loaded";

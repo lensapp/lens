@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./react-table.module.css";
+import styles from "./react-table.module.scss";
 import React from "react";
 import { useCallback, useMemo } from "react";
 import { useFlexLayout, useSortBy, useTable, UseTableOptions } from "react-table";

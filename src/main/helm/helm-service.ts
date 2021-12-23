@@ -65,13 +65,19 @@ class HelmService {
   public async listReleases(cluster: Cluster, namespace: string = null) {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
+    logger.debug("list releases");
+
     return listReleases(proxyKubeconfig, namespace);
   }
 
   public async getRelease(cluster: Cluster, releaseName: string, namespace: string) {
+    const kubeconfigPath = await cluster.getProxyKubeconfigPath();
+    const kubectl = await cluster.ensureKubectl();
+    const kubectlPath = await kubectl.getPath();
+
     logger.debug("Fetch release");
 
-    return getRelease(releaseName, namespace, cluster);
+    return getRelease(releaseName, namespace, kubeconfigPath, kubectlPath);
   }
 
   public async getReleaseValues(releaseName: string, { cluster, namespace, all }: GetReleaseValuesArgs) {
@@ -79,7 +85,7 @@ class HelmService {
 
     logger.debug("Fetch release values");
 
-    return getValues(releaseName, { namespace, all, pathToKubeconfig });
+    return getValues(releaseName, { namespace, all, kubeconfigPath: pathToKubeconfig });
   }
 
   public async getReleaseHistory(cluster: Cluster, releaseName: string, namespace: string) {
@@ -99,9 +105,13 @@ class HelmService {
   }
 
   public async updateRelease(cluster: Cluster, releaseName: string, namespace: string, data: { chart: string; values: {}; version: string }) {
+    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+    const kubectl = await cluster.ensureKubectl();
+    const kubectlPath = await kubectl.getPath();
+
     logger.debug("Upgrade release");
 
-    return upgradeRelease(releaseName, data.chart, data.values, namespace, data.version, cluster);
+    return upgradeRelease(releaseName, data.chart, data.values, namespace, data.version, proxyKubeconfig, kubectlPath);
   }
 
   public async rollback(cluster: Cluster, releaseName: string, namespace: string, revision: number) {

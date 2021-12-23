@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./catalog.module.css";
+import styles from "./catalog.module.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";

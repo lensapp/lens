@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import treeStyles from "./catalog-tree.module.css";
-import styles from "./catalog-menu.module.css";
+import treeStyles from "./catalog-tree.module.scss";
+import styles from "./catalog-menu.module.scss";
 
 import React from "react";
 import { TreeItem, TreeItemProps, TreeView } from "@material-ui/lab";

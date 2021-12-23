@@ -19,9 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = {
-  plugins: [
-    require("tailwindcss/nesting"),
-    require("tailwindcss"),
-  ],
-};
+export enum CatalogIpcEvents {
+  /**
+   * This is broadcast on whenever there is an update to any catalog item
+   */
+  ITEMS = "catalog:items",
+
+  /**
+   * This can be sent from renderer to main to initialize a broadcast of ITEMS
+   */
+  INIT = "catalog:init",
+}

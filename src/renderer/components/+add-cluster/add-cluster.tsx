@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./add-cluster.module.css";
+import styles from "./add-cluster.module.scss";
 
 import type { KubeConfig } from "@kubernetes/client-node";
 import fse from "fs-extra";

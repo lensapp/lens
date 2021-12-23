@@ -21,7 +21,7 @@
 
 import path from "path";
 import fs from "fs";
-import { promiseExec } from "../common/utils/promise-exec";
+import { promiseExecFile } from "../common/utils/promise-exec";
 import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
@@ -199,7 +199,12 @@ export class Kubectl {
 
     if (exists) {
       try {
-        const { stdout } = await promiseExec(`"${path}" version --client=true -o json`);
+        const args = [
+          "version",
+          "--client", "true",
+          "--output", "json",
+        ];
+        const { stdout } = await promiseExecFile(path, args);
         const output = JSON.parse(stdout);
 
         if (!checkVersion) {

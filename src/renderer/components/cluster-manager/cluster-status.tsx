@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./cluster-status.module.css";
+import styles from "./cluster-status.module.scss";
 
 import { computed, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";

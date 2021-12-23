@@ -20,13 +20,14 @@
  */
 
 import yaml from "js-yaml";
-import { readFile } from "fs-extra";
-import { promiseExec } from "../../common/utils/promise-exec";
+import { BaseEncodingOptions, readFile } from "fs-extra";
+import { promiseExecFile } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import { Singleton } from "../../common/utils/singleton";
 import { customRequestPromise } from "../../common/request";
 import orderBy from "lodash/orderBy";
 import logger from "../logger";
+import type { ExecFileOptions } from "child_process";
 
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
@@ -47,6 +48,18 @@ export interface HelmRepo {
   keyFile?: string,
   username?: string,
   password?: string,
+}
+
+async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFileOptions): Promise<string> {
+  const helmCliPath = await helmCli.binaryPath();
+
+  try {
+    const { stdout } = await promiseExecFile(helmCliPath, args, options);
+
+    return stdout;
+  } catch (error) {
+    throw error?.stderr || error;
+  }
 }
 
 export class HelmRepoManager extends Singleton {
@@ -77,11 +90,8 @@ export class HelmRepoManager extends Singleton {
   }
 
   protected static async parseHelmEnv() {
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" env`).catch((error) => {
-      throw(error.stderr);
-    });
-    const lines = stdout.split(/\r?\n/); // split by new line feed
+    const output = await execHelm(["env"]);
+    const lines = output.split(/\r?\n/); // split by new line feed
     const env: HelmEnv = {};
 
     lines.forEach((line: string) => {
@@ -135,57 +145,73 @@ export class HelmRepoManager extends Singleton {
         cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
       }));
     } catch (error) {
-      logger.error(`[HELM]: repositories listing error "${error}"`);
+      logger.error(`[HELM]: repositories listing error`, error);
 
       return [];
     }
   }
 
   public static async update() {
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => {
-      return { stdout: error.stdout };
-    });
-
-    return stdout;
+    return execHelm([
+      "repo",
+      "update",
+    ]);
   }
 
   public static async addRepo({ name, url }: HelmRepo) {
     logger.info(`[HELM]: adding repo "${name}" from ${url}`);
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" repo add ${name} ${url}`).catch((error) => {
-      throw(error.stderr);
-    });
 
-    return stdout;
+    return execHelm([
+      "repo",
+      "add",
+      name,
+      url,
+    ]);
   }
 
-  public static async addCustomRepo(repoAttributes : HelmRepo) {
-    logger.info(`[HELM]: adding repo "${repoAttributes.name}" from ${repoAttributes.url}`);
-    const helm = await helmCli.binaryPath();
+  public static async addCustomRepo({ name, url, insecureSkipTlsVerify, username, password, caFile, keyFile, certFile }: HelmRepo) {
+    logger.info(`[HELM]: adding repo ${name} from ${url}`);
+    const args = [
+      "repo",
+      "add",
+      name,
+      url,
+    ];
 
-    const insecureSkipTlsVerify = repoAttributes.insecureSkipTlsVerify ? " --insecure-skip-tls-verify" : "";
-    const username = repoAttributes.username ? ` --username "${repoAttributes.username}"` : "";
-    const password = repoAttributes.password ? ` --password "${repoAttributes.password}"` : "";
-    const caFile = repoAttributes.caFile ? ` --ca-file "${repoAttributes.caFile}"` : "";
-    const keyFile = repoAttributes.keyFile ? ` --key-file "${repoAttributes.keyFile}"` : "";
-    const certFile = repoAttributes.certFile ? ` --cert-file "${repoAttributes.certFile}"` : "";
+    if (insecureSkipTlsVerify) {
+      args.push("--insecure-skip-tls-verify");
+    }
 
-    const addRepoCommand = `"${helm}" repo add ${repoAttributes.name} ${repoAttributes.url}${insecureSkipTlsVerify}${username}${password}${caFile}${keyFile}${certFile}`;
-    const { stdout } = await promiseExec(addRepoCommand).catch((error) => {
-      throw(error.stderr);
-    });
+    if (username) {
+      args.push("--username", username);
+    }
 
-    return stdout;
+    if (password) {
+      args.push("--password", password);
+    }
+
+    if (caFile) {
+      args.push("--ca-file", caFile);
+    }
+
+    if (keyFile) {
+      args.push("--key-file", keyFile);
+    }
+
+    if (certFile) {
+      args.push("--cert-file", certFile);
+    }
+
+    return execHelm(args);
   }
 
   public static async removeRepo({ name, url }: HelmRepo): Promise<string> {
-    logger.info(`[HELM]: removing repo "${name}" from ${url}`);
-    const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {
-      throw(error.stderr);
-    });
+    logger.info(`[HELM]: removing repo ${name} (${url})`);
 
-    return stdout;
+    return execHelm([
+      "repo",
+      "remove",
+      name,
+    ]);
   }
 }

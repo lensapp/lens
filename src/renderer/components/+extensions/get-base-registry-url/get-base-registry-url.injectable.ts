@@ -19,17 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = {
-  content: ["src/**/*.tsx"],
-  darkMode: "class",
-  theme: {
-    fontFamily: {
-      sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
-    },
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
+import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { UserStore } from "../../../../common/user-store";
+import { Dependencies, getBaseRegistryUrl } from "./get-base-registry-url";
+
+const getBaseRegistryUrlInjectable: Injectable<() => Promise<string>, Dependencies> = {
+  getDependencies: () => ({
+    // TODO: use injection
+    getRegistryUrlPreference: () => UserStore.getInstance().extensionRegistryUrl,
+  }),
+
+  instantiate: getBaseRegistryUrl,
+  lifecycle: lifecycleEnum.singleton,
 };
+
+export default getBaseRegistryUrlInjectable;
