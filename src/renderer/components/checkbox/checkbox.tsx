@@ -24,7 +24,6 @@ import React from "react";
 import { boundMethod, cssNames } from "../../utils";
 
 export interface CheckboxProps<T = boolean> {
-  theme?: "dark" | "light";
   className?: string;
   label?: React.ReactNode;
   inline?: boolean;
@@ -50,12 +49,11 @@ export class Checkbox extends React.PureComponent<CheckboxProps> {
   }
 
   render() {
-    const { label, inline, className, value, theme, children, ...inputProps } = this.props;
+    const { label, inline, className, value, children, ...inputProps } = this.props;
     const componentClass = cssNames("Checkbox flex align-center", className, {
       inline,
       checked: value,
       disabled: this.props.disabled,
-      [`theme-${theme}`]: theme,
     });
 
     return (

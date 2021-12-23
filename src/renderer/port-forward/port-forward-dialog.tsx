@@ -145,14 +145,12 @@ export class PortForwardDialog extends Component<Props> {
           </div>
           <Checkbox
             data-testid="port-forward-https"
-            theme="light"
             label="https"
             value={dialogState.useHttps}
             onChange={value => dialogState.useHttps = value}
           />
           <Checkbox
             data-testid="port-forward-open"
-            theme="light"
             label="Open in Browser"
             value={dialogState.openInBrowser}
             onChange={value => dialogState.openInBrowser = value}

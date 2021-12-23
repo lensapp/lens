@@ -244,7 +244,6 @@ export class DeleteClusterDialog extends React.Component {
               <div className="mt-4">
                 <Checkbox
                   data-testid="context-switch"
-                  theme="light"
                   label={(
                     <>
                       <span className="font-semibold">Select current-context</span>{" "}

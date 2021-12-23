@@ -119,7 +119,7 @@
   }
 }
 
-.theme-light {
+@include theme-light {
   .Menu {
     border: 1px solid var(--borderColor);
   }
