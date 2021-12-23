@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./entity-settings.module.css";
+import styles from "./entity-settings.module.scss";
 
 import React from "react";
 import { observable, makeObservable } from "mobx";

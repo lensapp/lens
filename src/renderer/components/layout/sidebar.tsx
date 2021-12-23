@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./sidebar.module.css";
+import styles from "./sidebar.module.scss";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";

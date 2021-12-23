@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./installed-extensions.module.css";
+import styles from "./installed-extensions.module.scss";
 import React, { useMemo } from "react";
 import { ExtensionDiscovery, InstalledExtension } from "../../../extensions/extension-discovery";
 import { Icon } from "../icon";

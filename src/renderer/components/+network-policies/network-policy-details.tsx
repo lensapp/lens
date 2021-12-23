@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./network-policy-details.module.css";
+import styles from "./network-policy-details.module.scss";
 
 import React from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";

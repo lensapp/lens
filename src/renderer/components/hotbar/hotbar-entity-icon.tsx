@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./hotbar-entity-icon.module.css";
+import styles from "./hotbar-entity-icon.module.scss";
 
 import React, { HTMLAttributes } from "react";
 import { makeObservable, observable } from "mobx";

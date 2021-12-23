@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./topbar.module.css";
+import styles from "./topbar.module.scss";
 import React, { useEffect, useMemo, useRef } from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";

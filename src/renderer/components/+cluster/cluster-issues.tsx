@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./cluster-issues.module.css";
+import styles from "./cluster-issues.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./notice.module.css";
+import styles from "./notice.module.scss";
 import React, { DOMAttributes } from "react";
 import { cssNames } from "../../utils";
 

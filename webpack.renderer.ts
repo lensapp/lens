@@ -119,21 +119,30 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
             {
               loader: "css-loader",
               options: {
+                sourceMap: isDevelopment,
                 modules: {
-                  auto: true,
-                  mode: "local",
+                  auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
+                  mode: "local", // :local(.selector) by default
                   localIdentName: "[name]__[local]--[hash:base64:5]",
                 },
               },
             },
             {
               loader: "postcss-loader",
+              options: {
+                sourceMap: isDevelopment,
+                postcssOptions: {
+                  plugins: [
+                    "tailwindcss",
+                  ],
+                },
+              },
             },
             {
               loader: "sass-loader",
               options: {
                 sourceMap: isDevelopment,
-                prependData: `@import "${path.basename(sassCommonVars)}";`,
+                additionalData: `@import "${path.basename(sassCommonVars)}";`,
                 sassOptions: {
                   includePaths: [
                     path.dirname(sassCommonVars),
@@ -157,21 +166,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         languages: ["json", "yaml"],
         globalAPI: isDevelopment,
       }),
-
-      // todo: fix remain warnings about circular dependencies
-      // new CircularDependencyPlugin({
-      //   cwd: __dirname,
-      //   exclude: /node_modules/,
-      //   allowAsyncCycles: true,
-      //   failOnError: false,
-      // }),
-
-      // todo: check if this actually works in mode=production files
-      // new webpack.DllReferencePlugin({
-      //   context: process.cwd(),
-      //   manifest: manifestPath,
-      //   sourceType: libraryTarget,
-      // }),
 
       new HtmlWebpackPlugin({
         filename: `${appName}.html`,

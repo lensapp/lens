@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./kubeconfig-dialog.module.css";
+import styles from "./kubeconfig-dialog.module.scss";
 import React from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";

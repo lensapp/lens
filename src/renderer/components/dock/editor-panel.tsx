@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./editor-panel.module.css";
+import styles from "./editor-panel.module.scss";
 import throttle from "lodash/throttle";
 import React from "react";
 import { makeObservable, observable, reaction } from "mobx";
