@@ -149,9 +149,9 @@ export class ClusterIssues extends React.Component<Props> {
     if (!warnings.length) {
       return (
         <div className={cssNames(styles.noIssues, "flex column box grow gaps align-center justify-center")}>
-          <div><Icon className={styles.allGood} material="check" big sticker/></div>
-          <div className="ok-title">No issues found</div>
-          <span>Everything is fine in the Cluster</span>
+          <Icon className={styles.Icon} material="check" big sticker/>
+          <p className={styles.title}>No issues found</p>
+          <p>Everything is fine in the Cluster</p>
         </div>
       );
     }
