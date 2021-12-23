@@ -182,7 +182,6 @@ export class Router {
     // Port-forward API (the container port and local forwarding port are obtained from the query parameters)
     this.router.add({ method: "post", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routePortForward);
     this.router.add({ method: "get", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForward);
-    this.router.add({ method: "get", path: `${apiPrefix}/pods/port-forwards` }, PortForwardRoute.routeAllPortForwards);
     this.router.add({ method: "delete", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForwardStop);
 
     // Helm API

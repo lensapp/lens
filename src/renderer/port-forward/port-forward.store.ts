@@ -24,10 +24,10 @@ import { action, makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../common/item.store";
 import { autoBind, createStorage, disposer } from "../utils";
 import { ForwardedPort, PortForwardItem } from "./port-forward-item";
+import { notifyErrorPortForwarding } from "./port-forward-notify";
 import { apiBase } from "../api";
 import { waitUntilFree } from "tcp-port-used";
 import logger from "../../common/logger";
-import { Notifications } from "../components/notifications";
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   private storage = createStorage<ForwardedPort[] | undefined>("port_forwards", undefined);
@@ -49,11 +49,16 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
     if (Array.isArray(savedPortForwards)) {
       logger.info("[PORT-FORWARD-STORE] starting saved port-forwards");
-      const results = await Promise.allSettled(savedPortForwards.map(addPortForward));
+
+      // add the disabled ones
+      await Promise.all(savedPortForwards.filter(pf => pf.status === "Disabled").map(addPortForward));
+
+      // add the active ones and check if they started successfully
+      const results = await Promise.allSettled(savedPortForwards.filter(pf => pf.status === "Active").map(addPortForward));
 
       for (const result of results) {
-        if (result.status === "rejected") {
-          Notifications.error("One or more port-forwards could not be started", { timeout: 10_000 });
+        if (result.status === "rejected" || result.value.status === "Disabled") {
+          notifyErrorPortForwarding("One or more port-forwards could not be started");
           
           return;
         }
@@ -99,10 +104,6 @@ interface PortForwardResult {
   port: number;
 }
 
-interface PortForwardsResult {
-  portForwards: ForwardedPort[];
-}
-
 function portForwardsEqual(portForward: ForwardedPort) {
   return (pf: ForwardedPort) => (
     pf.kind == portForward.kind &&
@@ -127,6 +128,16 @@ const setPortForward = action((portForward: ForwardedPort) => {
   portForwardStore.portForwards[index] = new PortForwardItem(portForward);
 });
 
+/**
+ * start an existing port-forward
+ * @param portForward the port-forward to start. If the forwardPort field is 0 then an arbitrary port will be
+ * used
+ * 
+ * @returns the port-forward with updated status ("Active" if successfully started, "Disabled" otherwise) and
+ * forwardPort
+ * 
+ * @throws if the port-forward does not already exist in the store
+ */
 export const startPortForward = action( async (portForward: ForwardedPort): Promise<ForwardedPort> => {
   const pf = findPortForward(portForward);
   
@@ -160,6 +171,15 @@ export const startPortForward = action( async (portForward: ForwardedPort): Prom
   return pf as ForwardedPort;
 });
 
+/**
+ * add a port-forward to the store and optionally start it
+ * @param portForward the port-forward to add. If the port-forward already exists in the store it will be
+ * returned with its current state. If the forwardPort field is 0 then an arbitrary port will be
+ * used. If the status field is "Active" or not present then an attempt is made to start the port-forward.
+ * 
+ * @returns the port-forward with updated status ("Active" if successfully started, "Disabled" otherwise) and
+ * forwardPort
+ */
 export const addPortForward = action(async (portForward: ForwardedPort): Promise<ForwardedPort> => {
   const pf = findPortForward(portForward);
 
@@ -180,7 +200,7 @@ export const addPortForward = action(async (portForward: ForwardedPort): Promise
   return portForward;
 });
 
-export async function getActivePortForward(portForward: ForwardedPort): Promise<ForwardedPort> {
+async function getActivePortForward(portForward: ForwardedPort): Promise<ForwardedPort> {
   const { port, forwardPort, protocol } = portForward;
   let response: PortForwardResult;
 
@@ -196,6 +216,15 @@ export async function getActivePortForward(portForward: ForwardedPort): Promise<
   return portForward;
 }
 
+/**
+ * get a port-forward from the store, with up-to-date status
+ * @param portForward the port-forward to get.
+ * 
+ * @returns the port-forward with updated status ("Active" if running, "Disabled" if not) and
+ * forwardPort used.
+ * 
+ * @throws if the port-forward does not exist in the store
+ */
 export async function getPortForward(portForward: ForwardedPort): Promise<ForwardedPort> {
   if (!findPortForward(portForward)) {
     throw new Error("port-forward not found");
@@ -217,6 +246,12 @@ export async function getPortForward(portForward: ForwardedPort): Promise<Forwar
   return pf;
 }
 
+/**
+ * modifies a port-forward in the store, including the forwardPort and protocol
+ * @param portForward the port-forward to modify.
+ * 
+ * @returns the port-forward after being modified.
+ */
 export const modifyPortForward = action(async (portForward: ForwardedPort, desiredPort: number): Promise<ForwardedPort> => {
   const pf = findPortForward(portForward);
 
@@ -232,6 +267,7 @@ export const modifyPortForward = action(async (portForward: ForwardedPort, desir
     }
     
     pf.forwardPort = desiredPort;
+    pf.protocol = portForward.protocol ?? "http";
     setPortForward(pf);
 
     return await startPortForward(pf);
@@ -244,6 +280,12 @@ export const modifyPortForward = action(async (portForward: ForwardedPort, desir
 });
 
 
+/**
+ * stop an existing port-forward. Its status is set to "Disabled" after successfully stopped.
+ * @param portForward the port-forward to stop. 
+ * 
+ * @throws if the port-forward could not be stopped. Its status is unchanged
+ */
 export const stopPortForward = action(async (portForward: ForwardedPort) => {
   const pf = findPortForward(portForward);
   
@@ -267,6 +309,10 @@ export const stopPortForward = action(async (portForward: ForwardedPort) => {
   setPortForward(pf);
 });
 
+/**
+ * remove and stop an existing port-forward.
+ * @param portForward the port-forward to remove. 
+ */
 export const removePortForward = action(async (portForward: ForwardedPort) => {
   const pf = findPortForward(portForward);
 
@@ -293,18 +339,11 @@ export const removePortForward = action(async (portForward: ForwardedPort) => {
   }
 });
 
-export async function getActivePortForwards(clusterId?: string): Promise<ForwardedPort[]> {
-  try {
-    const response = await apiBase.get<PortForwardsResult>("/pods/port-forwards", { query: { clusterId }});
-
-    return response.portForwards;
-  } catch (error) {
-    logger.warn(`[PORT-FORWARD-STORE] Error getting all port-forwards: ${error}`);
-
-    return [];
-  }
-}
-
+/**
+ * gets the list of port-forwards in the store
+ * 
+ * @returns the port-forwards
+ */
 export function getPortForwards(): ForwardedPort[] {
   return portForwardStore.portForwards;
 }

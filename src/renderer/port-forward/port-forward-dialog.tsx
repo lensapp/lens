@@ -27,14 +27,12 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../components/dialog";
 import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
-import { Notifications } from "../components/notifications";
-import { cssNames } from "../utils";
+import { cssNames, noop } from "../utils";
 import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
-import { aboutPortForwarding, openPortForward } from ".";
+import { aboutPortForwarding, notifyErrorPortForwarding, openPortForward } from ".";
 import { Checkbox } from "../components/checkbox";
 import logger from "../../common/logger";
-import { noop } from "lodash";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -113,14 +111,14 @@ export class PortForwardDialog extends Component<Props> {
         portForward = await modifyPortForward(portForward, desiredPort);
         
         if (wasRunning && portForward.status === "Disabled") {
-          Notifications.error(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
         }
       } else {
         portForward.forwardPort = desiredPort;
         portForward = await addPortForward(portForward);
 
         if (portForward.status === "Disabled") {
-          Notifications.error(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
         } else {
           // if this is the first port-forward show the about notification
           if (!length) {

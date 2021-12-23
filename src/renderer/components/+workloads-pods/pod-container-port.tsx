@@ -28,7 +28,8 @@ import { action, observable, makeObservable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, openPortForward, PortForwardDialog, predictProtocol, removePortForward, startPortForward } from "../../port-forward";import type { ForwardedPort } from "../../port-forward";
+import { aboutPortForwarding, addPortForward, getPortForward, getPortForwards, notifyErrorPortForwarding, openPortForward, PortForwardDialog, predictProtocol, removePortForward, startPortForward } from "../../port-forward";
+import type { ForwardedPort } from "../../port-forward";
 import { Spinner } from "../spinner";
 import logger from "../../../common/logger";
 
@@ -118,7 +119,7 @@ export class PodContainerPort extends React.Component<Props> {
           aboutPortForwarding();
         }
       } else {
-        Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        notifyErrorPortForwarding(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       }
     } catch (error) {
       logger.error("[POD-CONTAINER-PORT]:", error, portForward);

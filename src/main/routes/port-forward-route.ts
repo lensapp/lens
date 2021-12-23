@@ -188,31 +188,6 @@ export class PortForwardRoute {
     respondJson(response, { port: portForward?.forwardPort ?? null });
   }
 
-  static async routeAllPortForwards(request: LensApiRequest) {
-    const { query, response } = request;
-    const clusterId = query.get("clusterId");
-
-    let portForwards: PortForwardArgs[] = PortForward.portForwards.map(f => (
-      {
-        clusterId: f.clusterId,
-        kind: f.kind,
-        namespace: f.namespace,
-        name: f.name,
-        port: f.port,
-        forwardPort: f.forwardPort,
-        protocol: f.protocol,
-      }),
-    );
-
-    if (clusterId) {
-      // filter out any not for this cluster
-      portForwards = portForwards.filter(pf => pf.clusterId == clusterId);
-      
-    }
-
-    respondJson(response, { portForwards });
-  }
-
   static async routeCurrentPortForwardStop(request: LensApiRequest) {
     const { params, query, response, cluster } = request;
     const { namespace, resourceType, resourceName } = params;
