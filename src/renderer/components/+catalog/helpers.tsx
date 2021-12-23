@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./catalog.module.css";
+import styles from "./catalog.module.scss";
 import React from "react";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { CatalogEntity } from "../../api/catalog-entity";
