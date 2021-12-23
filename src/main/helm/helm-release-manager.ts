@@ -43,6 +43,7 @@ async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFile
 export async function listReleases(pathToKubeconfig: string, namespace?: string): Promise<Record<string, any>[]> {
   const args = [
     "ls",
+    "--all",
     "--output", "json",
   ];
 
