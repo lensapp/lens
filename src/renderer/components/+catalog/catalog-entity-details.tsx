@@ -27,14 +27,15 @@ import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
 import { Icon } from "../icon";
 import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
-import type { CatalogEntityItem } from "./catalog-entity-item";
 import { isDevelopment } from "../../../common/vars";
 import { cssNames } from "../../utils";
 import { Avatar } from "../avatar";
+import { getLabelBadges } from "./helpers";
 
 interface Props<T extends CatalogEntity> {
-  item: CatalogEntityItem<T> | null | undefined;
+  entity: T;
   hideDetails(): void;
+  onRun: () => void;
 }
 
 @observer
@@ -47,32 +48,30 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
     }
   }
 
-  renderContent(item: CatalogEntityItem<T>) {
-    const detailItems = CatalogEntityDetailRegistry.getInstance().getItemsForKind(item.kind, item.apiVersion);
-    const details = detailItems.map(({ components }, index) => {
-      return <components.Details entity={item.entity} key={index}/>;
-    });
-
-    const showDetails = detailItems.find((item) => item.priority > 999) === undefined;
+  renderContent(entity: T) {
+    const { onRun, hideDetails } = this.props;
+    const detailItems = CatalogEntityDetailRegistry.getInstance().getItemsForKind(entity.kind, entity.apiVersion);
+    const details = detailItems.map(({ components }, index) => <components.Details entity={entity} key={index} />);
+    const showDefaultDetails = detailItems.find((item) => item.priority > 999) === undefined;
 
     return (
       <>
-        {showDetails && (
+        {showDefaultDetails && (
           <div className="flex">
             <div className={styles.entityIcon}>
               <Avatar
-                title={item.name}
-                colorHash={`${item.name}-${item.source}`}
+                title={entity.getName()}
+                colorHash={`${entity.getName()}-${entity.getSource()}`}
                 size={128}
-                src={item.entity.spec.icon?.src}
+                src={entity.spec.icon?.src}
                 data-testid="detail-panel-hot-bar-icon"
-                background={item.entity.spec.icon?.background}
-                onClick={() => item.onRun()}
+                background={entity.spec.icon?.background}
+                onClick={onRun}
                 className={styles.avatar}
               >
-                {item.entity.spec.icon?.material && <Icon material={item.entity.spec.icon?.material}/>}
+                {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material}/>}
               </Avatar>
-              {item?.enabled && (
+              {entity.isEnabled() && (
                 <div className={styles.hint}>
                   Click to open
                 </div>
@@ -80,23 +79,23 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
             </div>
             <div className={cssNames("box grow", styles.metadata)}>
               <DrawerItem name="Name">
-                {item.name}
+                {entity.getName()}
               </DrawerItem>
               <DrawerItem name="Kind">
-                {item.kind}
+                {entity.kind}
               </DrawerItem>
               <DrawerItem name="Source">
-                {item.source}
+                {entity.getSource()}
               </DrawerItem>
               <DrawerItem name="Status">
-                {item.phase}
+                {entity.status.phase}
               </DrawerItem>
               <DrawerItem name="Labels">
-                {...item.getLabelBadges(this.props.hideDetails)}
+                {getLabelBadges(entity, hideDetails)}
               </DrawerItem>
               {isDevelopment && (
                 <DrawerItem name="Id">
-                  {item.getId()}
+                  {entity.getId()}
                 </DrawerItem>
               )}
             </div>
@@ -110,19 +109,18 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
   }
 
   render() {
-    const { item, hideDetails } = this.props;
-    const title = `${item.kind}: ${item.name}`;
+    const { entity, hideDetails } = this.props;
 
     return (
       <Drawer
         className={styles.entityDetails}
         usePortal={true}
         open={true}
-        title={title}
-        toolbar={<CatalogEntityDrawerMenu item={item} key={item.getId()} />}
+        title={`${entity.kind}: ${entity.getName()}`}
+        toolbar={<CatalogEntityDrawerMenu entity={entity} key={entity.getId()} />}
         onClose={hideDetails}
       >
-        {item && this.renderContent(item)}
+        {this.renderContent(entity)}
       </Drawer>
     );
   }

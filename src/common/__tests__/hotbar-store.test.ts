@@ -20,9 +20,11 @@
  */
 
 import { anyObject } from "jest-mock-extended";
+import { merge } from "lodash";
 import mockFs from "mock-fs";
 import logger from "../../main/logger";
 import { AppPaths } from "../app-paths";
+import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { ClusterStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
 
@@ -54,68 +56,58 @@ jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   },
 }));
 
-const testCluster = {
-  uid: "test",
-  name: "test",
+function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
+  return merge(data, {
+    getName: jest.fn(() => data.metadata?.name),
+    getId: jest.fn(() => data.metadata?.uid),
+    getSource: jest.fn(() => data.metadata?.source ?? "unknown"),
+    isEnabled: jest.fn(() => data.status?.enabled ?? true),
+    onContextMenuOpen: jest.fn(),
+    onSettingsOpen: jest.fn(),
+    metadata: {},
+    spec: {},
+    status: {},
+  }) as CatalogEntity;
+}
+
+const testCluster = getMockCatalogEntity({
   apiVersion: "v1",
   kind: "Cluster",
   status: {
     phase: "Running",
   },
-  spec: {},
-  getName: jest.fn(),
-  getId: jest.fn(),
-  onDetailsOpen: jest.fn(),
-  onContextMenuOpen: jest.fn(),
-  onSettingsOpen: jest.fn(),
   metadata: {
     uid: "test",
     name: "test",
     labels: {},
   },
-};
+});
 
-const minikubeCluster = {
-  uid: "minikube",
-  name: "minikube",
+const minikubeCluster = getMockCatalogEntity({
   apiVersion: "v1",
   kind: "Cluster",
   status: {
     phase: "Running",
   },
-  spec: {},
-  getName: jest.fn(),
-  getId: jest.fn(),
-  onDetailsOpen: jest.fn(),
-  onContextMenuOpen: jest.fn(),
-  onSettingsOpen: jest.fn(),
   metadata: {
     uid: "minikube",
     name: "minikube",
     labels: {},
   },
-};
+});
 
-const awsCluster = {
-  uid: "aws",
-  name: "aws",
+const awsCluster = getMockCatalogEntity({
   apiVersion: "v1",
   kind: "Cluster",
   status: {
     phase: "Running",
   },
-  spec: {},
-  getName: jest.fn(),
-  getId: jest.fn(),
-  onDetailsOpen: jest.fn(),
-  onContextMenuOpen: jest.fn(),
-  onSettingsOpen: jest.fn(),
   metadata: {
     uid: "aws",
     name: "aws",
     labels: {},
   },
-};
+});
 
 jest.mock("electron", () => ({
   app: {

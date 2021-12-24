@@ -26,7 +26,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import { CatalogEntityStore } from "./catalog-entity.store";
-import type { CatalogEntityItem } from "./catalog-entity-item";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
@@ -45,6 +44,8 @@ import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import { Avatar } from "../avatar";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
+import { getLabelBadges } from "./helpers";
 
 export const previousActiveTab = createStorage("catalog-previous-active-tab", browseCatalogTab);
 
@@ -125,19 +126,19 @@ export class Catalog extends React.Component<Props> {
     }));
   }
 
-  addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
-    HotbarStore.getInstance().addToHotbar(item.entity);
+  addToHotbar(entity: CatalogEntity): void {
+    HotbarStore.getInstance().addToHotbar(entity);
   }
 
-  removeFromHotbar(item: CatalogEntityItem<CatalogEntity>): void {
-    HotbarStore.getInstance().removeFromHotbar(item.getId());
+  removeFromHotbar(entity: CatalogEntity): void {
+    HotbarStore.getInstance().removeFromHotbar(entity.getId());
   }
 
-  onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
+  onDetails = (entity: CatalogEntity) => {
     if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
     } else {
-      item.onRun();
+      this.catalogEntityStore.onRun(entity);
     }
   };
 
@@ -179,16 +180,16 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
-  renderItemMenu = (item: CatalogEntityItem<CatalogEntity>) => {
+  renderItemMenu = (entity: CatalogEntity) => {
     const onOpen = () => {
       this.contextMenu.menuItems = [];
 
-      item.onContextMenuOpen(this.contextMenu);
+      entity.onContextMenuOpen(this.contextMenu);
     };
 
     return (
       <MenuActions onOpen={onOpen}>
-        <MenuItem key="open-details" onClick={() => this.catalogEntityStore.selectedItemId = item.getId()}>
+        <MenuItem key="open-details" onClick={() => this.catalogEntityStore.selectedItemId = entity.getId()}>
           View Details
         </MenuItem>
         {
@@ -200,7 +201,7 @@ export class Catalog extends React.Component<Props> {
         }
         <HotbarToggleMenuItem
           key="hotbar-toggle"
-          entity={item.entity}
+          entity={entity}
           addContent="Add to Hotbar"
           removeContent="Remove from Hotbar"
         />
@@ -208,29 +209,29 @@ export class Catalog extends React.Component<Props> {
     );
   };
 
-  renderName(item: CatalogEntityItem<CatalogEntity>) {
-    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(item.entity);
+  renderName(entity: CatalogEntity) {
+    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(entity);
 
     return (
       <>
         <Avatar
-          title={item.getName()}
-          colorHash={`${item.getName()}-${item.source}`}
-          src={item.entity.spec.icon?.src}
-          background={item.entity.spec.icon?.background}
+          title={entity.getName()}
+          colorHash={`${entity.getName()}-${entity.getSource()}`}
+          src={entity.spec.icon?.src}
+          background={entity.spec.icon?.background}
           className={styles.catalogAvatar}
           size={24}
         >
-          {item.entity.spec.icon?.material && <Icon material={item.entity.spec.icon?.material} small/>}
+          {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
         </Avatar>
-        <span>{item.name}</span>
+        <span>{entity.getName()}</span>
         <Icon
           small
           className={styles.pinIcon}
           material={!isItemInHotbar && "push_pin"}
           svg={isItemInHotbar ? "push_off" : "push_pin"}
           tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
-          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(item) : this.addToHotbar(item))}
+          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(entity) : this.addToHotbar(entity))}
         />
       </>
     );
@@ -253,13 +254,19 @@ export class Catalog extends React.Component<Props> {
         isConfigurable={true}
         store={this.catalogEntityStore}
         sortingCallbacks={{
-          [sortBy.name]: item => item.name,
-          [sortBy.source]: item => item.source,
-          [sortBy.status]: item => item.phase,
-          [sortBy.kind]: item => item.kind,
+          [sortBy.name]: entity => entity.getName(),
+          [sortBy.source]: entity => entity.getSource(),
+          [sortBy.status]: entity => entity.status.phase,
+          [sortBy.kind]: entity => entity.kind,
         }}
         searchFilters={[
-          entity => entity.searchFields,
+          entity => [
+            entity.getName(),
+            entity.getId(),
+            entity.status.phase,
+            `source=${entity.getSource()}`,
+            ...KubeObject.stringifyLabels(entity.metadata.labels),
+          ],
         ]}
         renderTableHeader={[
           { title: "Name", className: styles.entityName, sortBy: sortBy.name, id: "name" },
@@ -268,15 +275,15 @@ export class Catalog extends React.Component<Props> {
           { title: "Labels", className: `${styles.labelsCell} scrollable`, id: "labels" },
           { title: "Status", className: styles.statusCell, sortBy: sortBy.status, id: "status" },
         ].filter(Boolean)}
-        customizeTableRowProps={item => ({
-          disabled: !item.enabled,
+        customizeTableRowProps={entity => ({
+          disabled: !entity.isEnabled(),
         })}
-        renderTableContents={item => [
-          this.renderName(item),
-          !activeCategory && item.kind,
-          item.source,
-          item.getLabelBadges(),
-          <span key="phase" className={item.phase}>{item.phase}</span>,
+        renderTableContents={entity => [
+          this.renderName(entity),
+          !activeCategory && entity.kind,
+          entity.getSource(),
+          getLabelBadges(entity),
+          <span key="phase" className={entity.status.phase}>{entity.status.phase}</span>,
         ].filter(Boolean)}
         onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}
@@ -289,16 +296,19 @@ export class Catalog extends React.Component<Props> {
       return null;
     }
 
+    const selectedEntity = this.catalogEntityStore.selectedItem;
+
     return (
       <MainLayout sidebar={this.renderNavigation()}>
         <div className="p-6 h-full">
           {this.renderList()}
         </div>
         {
-          this.catalogEntityStore.selectedItem
+          selectedEntity
             ? <CatalogEntityDetails
-              item={this.catalogEntityStore.selectedItem}
+              entity={selectedEntity}
               hideDetails={() => this.catalogEntityStore.selectedItemId = null}
+              onRun={() => this.catalogEntityStore.onRun(selectedEntity)}
             />
             : (
               <RenderDelay>

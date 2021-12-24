@@ -38,14 +38,44 @@ export type CatalogEntityConstructor<Entity extends CatalogEntity> = (
 );
 
 export interface CatalogCategoryVersion<Entity extends CatalogEntity> {
+  /**
+   * The specific version that the associated constructor is for. This MUST be
+   * a DNS label and SHOULD be of the form `vN`, `vNalphaY`, or `vNbetaY` where
+   * `N` and `Y` are both integers greater than 0.
+   *
+   * Examples: The following are valid values for this field.
+   * - `v1`
+   * - `v1beta1`
+   * - `v1alpha2`
+   * - `v3beta2`
+   */
   name: string;
+
+  /**
+   * The constructor for the entities.
+   */
   entityClass: CatalogEntityConstructor<Entity>;
 }
 
 export interface CatalogCategorySpec {
+  /**
+   * The grouping for for the category. This MUST be a DNS label.
+   */
   group: string;
+  /**
+   * The specific versions of the constructors.
+   *
+   * NOTE: the field `.apiVersion` after construction MUST match `{.group}/{.versions.[] | .name}`.
+   * For example, if `group = "entity.k8slens.dev"` and there is an entry in `.versions` with
+   * `name = "v1alpha1"` then the resulting `.apiVersion` MUST be `entity.k8slens.dev/v1alpha1`
+   */
   versions: CatalogCategoryVersion<CatalogEntity>[];
   names: {
+    /**
+     * The kind of entity that this category is for. This value MUST be a DNS
+     * label and MUST be equal to the `kind` fields that are produced by the
+     * `.versions.[] | .entityClass` fields.
+     */
     kind: string;
   };
 }
@@ -114,6 +144,7 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
 export interface CatalogEntityMetadata {
   uid: string;
   name: string;
+  shortName?: string;
   description?: string;
   source?: string;
   labels: Record<string, string>;
@@ -211,7 +242,14 @@ export abstract class CatalogEntity<
   Status extends CatalogEntityStatus = CatalogEntityStatus,
   Spec extends CatalogEntitySpec = CatalogEntitySpec,
 > implements CatalogEntityKindData {
+  /**
+   * The group and version of this class.
+   */
   public abstract readonly apiVersion: string;
+
+  /**
+   * A DNS label name of the entity.
+   */
   public abstract readonly kind: string;
 
   @observable metadata: Metadata;
@@ -225,12 +263,33 @@ export abstract class CatalogEntity<
     this.spec = data.spec;
   }
 
+  /**
+   * Get the UID of this entity
+   */
   public getId(): string {
     return this.metadata.uid;
   }
 
+  /**
+   * Get the name of this entity
+   */
   public getName(): string {
     return this.metadata.name;
+  }
+
+  /**
+   * Get the specified source of this entity, defaulting to `"unknown"` if not
+   * provided
+   */
+  public getSource(): string {
+    return this.metadata.source ?? "unknown";
+  }
+
+  /**
+   * Get if this entity is enabled.
+   */
+  public isEnabled(): boolean {
+    return this.status.enabled ?? true;
   }
 
   public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
