@@ -27,7 +27,7 @@ import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { isWindows } from "../../../common/vars";
-import { FormSwitch, Switcher } from "../switch";
+import { FormSwitch, Switch, Switcher } from "../switch";
 import moment from "moment-timezone";
 import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
 import { action } from "mobx";
@@ -135,7 +135,8 @@ export const Application = observer(() => {
 
       <section id="other">
         <SubTitle title="Start-up"/>
-        <FormSwitch
+        <Switch checked={userStore.openAtLogin}>Automatically start Lens on login</Switch>
+        {/* <FormSwitch
           control={
             <Switcher
               checked={userStore.openAtLogin}
@@ -144,7 +145,7 @@ export const Application = observer(() => {
             />
           }
           label="Automatically start Lens on login"
-        />
+        /> */}
       </section>
 
       <hr />

@@ -19,6 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./switcher";
-export * from "./form-switcher";
-export * from "./switch";
+import styles from "./switch.module.scss";
+
+import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
+
+interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+}
+
+export function Switch(props: Props) {
+  const id = `switch-${Date.now()}`;
+
+  return (
+    <label htmlFor={id} className={styles.Switch}>
+      {props.children}
+      <input type="checkbox" role="switch" id={id} {...props}/>
+    </label>
+  );
+}
