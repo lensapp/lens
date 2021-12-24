@@ -829,6 +829,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#getsource" class="md-nav__link">
+    getSource
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isenabled" class="md-nav__link">
+    isEnabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oncontextmenuopen" class="md-nav__link">
     onContextMenuOpen
   </a>
@@ -914,6 +928,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <ul>
 <li><a href="./#getid">getId</a></li>
 <li><a href="./#getname">getName</a></li>
+<li><a href="./#getsource">getSource</a></li>
+<li><a href="./#isenabled">isEnabled</a></li>
 <li><a href="./#oncontextmenuopen">onContextMenuOpen</a></li>
 <li><a href="./#ondetailsopen">onDetailsOpen</a></li>
 <li><a href="./#onrun">onRun</a></li>
@@ -942,11 +958,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>"entity.k8slens.dev/v1alpha1"</code></p>
+<p>The group and version of this class.</p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#apiversion">apiVersion</a></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>kind</strong>: <code>"General"</code></p>
+<p>A DNS label name of the entity.</p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#kind">kind</a></p>
 <hr />
@@ -967,6 +985,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
 <p>▸ <strong>getId</strong>(): <code>string</code></p>
+<p>Get the UID of this entity</p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
@@ -974,33 +993,51 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <hr />
 <h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">#</a></h3>
 <p>▸ <strong>getName</strong>(): <code>string</code></p>
+<p>Get the name of this entity</p>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#getname">getName</a></p>
 <hr />
+<h3 id="getsource">getSource<a class="headerlink" href="#getsource" title="Permanent link">#</a></h3>
+<p>▸ <strong>getSource</strong>(): <code>string</code></p>
+<p>Get the specified source of this entity, defaulting to <code>"unknown"</code> if not
+provided</p>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#getsource">getSource</a></p>
+<hr />
+<h3 id="isenabled">isEnabled<a class="headerlink" href="#isenabled" title="Permanent link">#</a></h3>
+<p>▸ <strong>isEnabled</strong>(): <code>boolean</code></p>
+<p>Get if this entity is enabled.</p>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#isenabled">isEnabled</a></p>
+<hr />
 <h3 id="oncontextmenuopen">onContextMenuOpen<a class="headerlink" href="#oncontextmenuopen" title="Permanent link">#</a></h3>
 <p>▸ <strong>onContextMenuOpen</strong>(): <code>void</code></p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#oncontextmenuopen">onContextMenuOpen</a></p>
 <hr />
 <h3 id="ondetailsopen">onDetailsOpen<a class="headerlink" href="#ondetailsopen" title="Permanent link">#</a></h3>
 <p>▸ <strong>onDetailsOpen</strong>(): <code>void</code></p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onrun">onRun<a class="headerlink" href="#onrun" title="Permanent link">#</a></h3>
 <p>▸ <strong>onRun</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
 <h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#onrun">onRun</a></p>
 <hr />
 <h3 id="onsettingsopen">onSettingsOpen<a class="headerlink" href="#onsettingsopen" title="Permanent link">#</a></h3>
 <p>▸ <strong>onSettingsOpen</strong>(): <code>void</code></p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#onsettingsopen">onSettingsOpen</a></p>

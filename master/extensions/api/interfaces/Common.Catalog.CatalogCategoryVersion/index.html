@@ -791,9 +791,18 @@
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="entityclass">entityClass<a class="headerlink" href="#entityclass" title="Permanent link">#</a></h3>
 <p>• <strong>entityClass</strong>: <a href="../../modules/Common.Catalog/#catalogentityconstructor"><code>CatalogEntityConstructor</code></a>&lt;<code>Entity</code>></p>
+<p>The constructor for the entities.</p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
+<p>The specific version that the associated constructor is for. This MUST be
+a DNS label and SHOULD be of the form <code>vN</code>, <code>vNalphaY</code>, or <code>vNbetaY</code> where
+<code>N</code> and <code>Y</code> are both integers greater than 0.</p>
+<p>Examples: The following are valid values for this field.
+- <code>v1</code>
+- <code>v1beta1</code>
+- <code>v1alpha2</code>
+- <code>v3beta2</code></p>
                 
               
               
