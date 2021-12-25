@@ -21,18 +21,27 @@
 
 import styles from "./switch.module.scss";
 
-import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import React, { DetailedHTMLProps,  InputHTMLAttributes } from "react";
 
 interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+  onClick?: () => void;
 }
 
-export function Switch(props: Props) {
+export function Switch({ children, ...settings }: Props) {
   const id = `switch-${Date.now()}`;
 
+  const onClick = () => {
+    if (settings.disabled) {
+      return;
+    }
+
+    settings.onClick?.();
+  };
+
   return (
-    <label htmlFor={id} className={styles.Switch}>
-      {props.children}
-      <input type="checkbox" role="switch" id={id} {...props}/>
+    <label htmlFor={id} className={styles.Switch} onClick={onClick}>
+      {children}
+      <input type="checkbox" role="switch" id={id} {...settings} readOnly/>
     </label>
   );
 }

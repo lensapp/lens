@@ -22,19 +22,25 @@
 /* Based on switch component from https://github.com/argyleink/gui-challenges */
 
 .Switch {
-  --thumb: hsl(0 0% 5%);
-  --thumb-highlight: hsl(0 0% 100% / 25%);
-  --track-inactive: hsl(80 0% 35%);
-  --track-active: hsl(85 75% 60%);
-
   --thumb-size: 2rem;
   --thumb: hsl(0 0% 100%);
-  --thumb-highlight: hsl(0 0% 0% / 25%);
+  --thumb-highlight: hsl(0 0% 100% / 25%);
 
   --track-size: calc(var(--thumb-size) * 2);
   --track-padding: 2px;
-  --track-inactive: hsl(80 0% 80%);
-  --track-active: rgb(85, 70%, 40%);
+  --track-inactive: hsl(80 0% 35%);
+  --track-active: hsl(110, 60%, 60%);
+
+  --thumb-color: var(--thumb);
+  --thumb-color-highlight: var(--thumb-highlight);
+  --track-color-inactive: var(--track-inactive);
+  --track-color-active: var(--track-active);
+
+  /* TODO: change vars for light theme
+    --thumb-highlight
+    --track-active
+    --track-inactive
+  */
 
   display: flex;
   align-items: center;
@@ -42,6 +48,8 @@
   justify-content: space-between;
   cursor: pointer;
   user-select: none;
+  color: var(--textColorAccent);
+  font-weight: 500;
 
   & > input {
     --thumb-position: 0%;
