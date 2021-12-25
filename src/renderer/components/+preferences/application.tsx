@@ -135,7 +135,9 @@ export const Application = observer(() => {
 
       <section id="other">
         <SubTitle title="Start-up"/>
-        <Switch checked={userStore.openAtLogin}>Automatically start Lens on login</Switch>
+        <Switch checked={userStore.openAtLogin} onChange={v => userStore.openAtLogin = v.target.checked}>
+          Automatically start Lens on login
+        </Switch>
         {/* <FormSwitch
           control={
             <Switcher
