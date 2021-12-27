@@ -104,11 +104,19 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
           <div className="toolsRegion">
             {
               this.props.provideBackButtonNavigation && (
-                <div className="fixedTools">
-                  <div className="closeBtn" role="button" aria-label="Close" onClick={back}>
-                    <Icon material="close" />
+                <div className="fixed top-[60px]">
+                  <div
+                    className="w-[35px] h-[35px] grid place-items-center pointer border-2 rounded-full border-solid border-textDimmed hover:bg-[#72767d25] active:translate-y-px"
+                    role="button"
+                    aria-label="Close"
+                    onClick={back}
+                  >
+                    <Icon material="close" className="text-textAccent opacity-60" />
                   </div>
-                  <div className="esc" aria-hidden="true">
+                  <div
+                    className="text-center mt-3 font-bold text-lg select-none text-textDimmed pointer-events-none"
+                    aria-hidden="true"
+                  >
                     ESC
                   </div>
                 </div>
