@@ -24,10 +24,13 @@ import { bindProtocolAddRouteHandlers } from "./bind-protocol-add-route-handlers
 import lensProtocolRouterRendererInjectable from "../lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({
-  instantiate: di=> bindProtocolAddRouteHandlers({
-    attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
-    lensProtocolRouterRenderer: di.inject(lensProtocolRouterRendererInjectable),
-  }),
+  instantiate: (di) =>
+    bindProtocolAddRouteHandlers({
+      attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
+      lensProtocolRouterRenderer: di.inject(
+        lensProtocolRouterRendererInjectable,
+      ),
+    }),
 
   lifecycle: lifecycleEnum.singleton,
 });
