@@ -24,7 +24,7 @@ import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../../extensions/lens-extension";
 import { ConfirmDialog } from "../../confirm-dialog";
 
-export interface Dependencies {
+interface Dependencies {
   uninstallExtension: (id: LensExtensionId) => Promise<boolean>;
 }
 

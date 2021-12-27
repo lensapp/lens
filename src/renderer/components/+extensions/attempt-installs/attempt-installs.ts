@@ -22,7 +22,7 @@ import { readFileNotify } from "../read-file-notify/read-file-notify";
 import path from "path";
 import type { InstallRequest } from "../attempt-install/install-request";
 
-export interface Dependencies {
+interface Dependencies {
   attemptInstall: (request: InstallRequest) => Promise<void>;
 }
 

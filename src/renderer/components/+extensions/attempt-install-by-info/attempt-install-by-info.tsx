@@ -35,7 +35,7 @@ export interface ExtensionInfo {
   requireConfirmation?: boolean;
 }
 
-export interface Dependencies {
+interface Dependencies {
   attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>;
   getBaseRegistryUrl: () => Promise<string>;
 }

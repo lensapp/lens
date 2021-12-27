@@ -41,7 +41,7 @@ import {
 import { getExtensionDestFolder } from "./get-extension-dest-folder/get-extension-dest-folder";
 import type { InstallRequest } from "./install-request";
 
-export interface Dependencies {
+interface Dependencies {
   extensionLoader: ExtensionLoader;
   uninstallExtension: (id: LensExtensionId) => Promise<boolean>;
   unpackExtension: (

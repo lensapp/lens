@@ -32,7 +32,7 @@ import fse from "fs-extra";
 import { when } from "mobx";
 import React from "react";
 
-export interface Dependencies {
+interface Dependencies {
   extensionLoader: ExtensionLoader
 }
 
