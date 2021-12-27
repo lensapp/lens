@@ -60,15 +60,15 @@
     flex-grow: 2;
   }
 
-  .noIssues {
-    .ok-title {
-      font-size: large;
-      color: var(--textColorAccent);
-      font-weight: bold;
-    }
+   .noIssues {
+     .Icon {
+       color: white;
+     }
 
-    .allGood {
-      color: white;
-    }
-  }
+     .title {
+       font-size: large;
+       color: var(--textColorAccent);
+       font-weight: bold;
+     }
+   }
 }

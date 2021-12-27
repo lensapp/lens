@@ -1,11 +1,13 @@
+@include theme-light {
+  .NamespaceSelectFilter {
+    --gradientColor: white;
+  }
+}
+
 .NamespaceSelectFilter {
   --gradientColor: var(--select-menu-bgc);
 
   .Select {
-    &.theme-light {
-      --gradientColor: white;
-    }
-
     &__placeholder {
       width: 100%;
       white-space: nowrap;
@@ -34,12 +36,12 @@
       }
 
       &::before {
-        left: 0px;
+        left: 0;
         background: linear-gradient(to right, var(--gradientColor) 0px, transparent);
       }
 
       &::after {
-        right: 0px;
+        right: 0;
         background: linear-gradient(to left, var(--gradientColor) 0px, transparent);
       }
     }

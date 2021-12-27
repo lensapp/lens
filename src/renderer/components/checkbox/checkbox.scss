@@ -19,6 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@include theme-light {
+  .Checkbox {
+    --checkbox-color-active: var(--blue);
+    --checkbox-bgc-active: none;
+  }
+}
 
 .Checkbox {
   --checkbox-color: var(--textColorPrimary); // tick color [√]
@@ -26,16 +32,6 @@
   --checkbox-bgc-active: var(--blue);
 
   flex-shrink: 0;
-
-  &.theme {
-    &-dark {
-      // default
-    }
-    &-light {
-      --checkbox-color-active: var(--blue);
-      --checkbox-bgc-active: none;
-    }
-  }
 
   &:hover {
     input:not(:checked):not(:disabled) {
@@ -47,25 +43,30 @@
 
   input[type="checkbox"] {
     display: none;
+
     &:checked {
       ~ .box {
         color: var(--checkbox-color-active);
         background: var(--checkbox-bgc-active);
         border-color: var(--checkbox-bgc-active);
+
         &:after {
           opacity: 1;
         }
       }
     }
+
     &:disabled {
       ~ .box {
         color: var(--checkbox-color);
       }
+
       ~ * {
         opacity: .5;
         pointer-events: none;
       }
     }
+
     &:not(:disabled) ~ * {
       cursor: pointer;
     }
