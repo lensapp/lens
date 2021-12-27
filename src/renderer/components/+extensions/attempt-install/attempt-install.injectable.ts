@@ -18,29 +18,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-
-import type { ExtendableDisposer } from "../../../../common/utils";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
-import type { Dependencies } from "./attempt-install";
 import { attemptInstall } from "./attempt-install";
-import type { InstallRequest } from "./install-request";
 import unpackExtensionInjectable from "./unpack-extension/unpack-extension.injectable";
 
-const attemptInstallInjectable: Injectable<
-  (request: InstallRequest, d?: ExtendableDisposer) => Promise<void>,
-  Dependencies
-> = {
-  getDependencies: di => ({
-    extensionLoader: di.inject(extensionLoaderInjectable),
-    uninstallExtension: di.inject(uninstallExtensionInjectable),
-    unpackExtension: di.inject(unpackExtensionInjectable),
-  }),
+const attemptInstallInjectable = getInjectable({
+  instantiate: (di) =>
+    attemptInstall({
+      extensionLoader: di.inject(extensionLoaderInjectable),
+      uninstallExtension: di.inject(uninstallExtensionInjectable),
+      unpackExtension: di.inject(unpackExtensionInjectable),
+    }),
 
-  instantiate: attemptInstall,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default attemptInstallInjectable;

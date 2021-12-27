@@ -18,18 +18,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-import { unpackExtension } from "./unpack-extension";
-import extensionLoaderInjectable from "../../../../../extensions/extension-loader/extension-loader.injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
+import extensionsInjectable from "./extensions.injectable";
+import type { LensMainExtension } from "./lens-main-extension";
 
-const unpackExtensionInjectable = getInjectable({
-  instantiate: (di) =>
-    unpackExtension({
-      extensionLoader: di.inject(extensionLoaderInjectable),
-    }),
-
+const mainExtensionsInjectable = getInjectable({
   lifecycle: lifecycleEnum.singleton,
+
+  instantiate: (di) =>
+    di.inject(extensionsInjectable) as IComputedValue<LensMainExtension[]>,
 });
 
-export default unpackExtensionInjectable;
+export default mainExtensionsInjectable;

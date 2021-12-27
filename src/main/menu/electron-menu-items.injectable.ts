@@ -18,24 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { computed, IComputedValue } from "mobx";
-import type { LensMainExtension } from "../../extensions/lens-main-extension";
-import extensionsInjectable from "../../extensions/extensions.injectable";
-import type { MenuRegistration } from "./menu-registration";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
 
-const electronMenuItemsInjectable: Injectable<
-  IComputedValue<MenuRegistration[]>,
-  { extensions: IComputedValue<LensMainExtension[]> }
-> = {
+const electronMenuItemsInjectable = getInjectable({
   lifecycle: lifecycleEnum.singleton,
 
-  getDependencies: di => ({
-    extensions: di.inject(extensionsInjectable),
-  }),
+  instantiate: (di) => {
+    const extensions = di.inject(mainExtensionsInjectable);
 
-  instantiate: ({ extensions }) =>
-    computed(() => extensions.get().flatMap(extension => extension.appMenus)),
-};
+    return computed(() =>
+      extensions.get().flatMap((extension) => extension.appMenus),
+    );
+  },
+});
 
 export default electronMenuItemsInjectable;

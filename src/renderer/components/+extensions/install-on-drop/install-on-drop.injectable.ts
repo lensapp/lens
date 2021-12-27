@@ -18,21 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-import { Dependencies, installOnDrop } from "./install-on-drop";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { installOnDrop } from "./install-on-drop";
 import attemptInstallsInjectable from "../attempt-installs/attempt-installs.injectable";
 
-const installOnDropInjectable: Injectable<
-  (files: File[]) => Promise<void>,
-  Dependencies
-> = {
-  getDependencies: di => ({
-    attemptInstalls: di.inject(attemptInstallsInjectable),
-  }),
+const installOnDropInjectable = getInjectable({
+  instantiate: (di) =>
+    installOnDrop({
+      attemptInstalls: di.inject(attemptInstallsInjectable),
+    }),
 
-  instantiate: installOnDrop,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default installOnDropInjectable;

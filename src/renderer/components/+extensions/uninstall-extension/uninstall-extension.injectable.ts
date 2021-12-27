@@ -18,23 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
-import extensionLoaderInjectable
-  from "../../../../extensions/extension-loader/extension-loader.injectable";
-import { Dependencies, uninstallExtension } from "./uninstall-extension";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
+import { uninstallExtension } from "./uninstall-extension";
 
-const uninstallExtensionInjectable: Injectable<
-  (extensionId: LensExtensionId) => Promise<boolean>,
-  Dependencies
-> = {
-  getDependencies: di => ({
-    extensionLoader: di.inject(extensionLoaderInjectable),
-  }),
+const uninstallExtensionInjectable = getInjectable({
+  instantiate: (di) =>
+    uninstallExtension({
+      extensionLoader: di.inject(extensionLoaderInjectable),
+    }),
 
-  instantiate: uninstallExtension,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default uninstallExtensionInjectable;
