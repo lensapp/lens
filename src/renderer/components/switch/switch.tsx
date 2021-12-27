@@ -22,6 +22,7 @@
 import styles from "./switch.module.scss";
 
 import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { cssNames } from "../../utils";
 
 interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   onClick?: () => void;
@@ -39,7 +40,12 @@ export function Switch({ children, onClick, ...settings }: Props) {
   };
 
   return (
-    <label htmlFor={id} className={styles.Switch} onClick={onLabelClick}>
+    <label
+      htmlFor={id}
+      className={cssNames(styles.Switch, { [styles.disabled]: settings.disabled })}
+      onClick={onLabelClick}
+      data-testid="switch"
+    >
       {children}
       <input type="checkbox" role="switch" id={id} {...settings}/>
     </label>
