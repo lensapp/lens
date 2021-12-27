@@ -196,8 +196,8 @@
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.16.1",
-    "@ogre-tools/injectable": "1.5.0",
-    "@ogre-tools/injectable-react": "1.5.2",
+    "@ogre-tools/injectable": "2.0.0",
+    "@ogre-tools/injectable-react": "2.0.0",
     "@sentry/electron": "^2.5.4",
     "@sentry/integrations": "^6.15.0",
     "abort-controller": "^3.0.0",
@@ -265,7 +265,7 @@
     "ws": "^7.5.5"
   },
   "devDependencies": {
-    "@async-fn/jest": "^1.5.0",
+    "@async-fn/jest": "1.5.3",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",

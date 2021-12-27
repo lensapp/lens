@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.1.1.tgz#9274ec7460652f9c632c59addf24efb1684ef876"
   integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
 
-"@async-fn/jest@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.5.0.tgz#dda820de3e48eca6d5b17b00a01bdb060dfcc233"
-  integrity sha512-IeuTZj1TdoBS64fpNfHG9efw6dW3UQuIXfEv0qhxyNro3368kKz9E/eO46zvPmQBxbBCox3RCbKexAJH1WAY+Q==
+"@async-fn/jest@1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.5.3.tgz#42be6c0e8ba5ccd737e006ca600e7e319fe2a591"
+  integrity sha512-iQ9gAPZFW5U6TNcFS99ffwYYsB9LNecTnvG73BaDc/zAD0qOWctY1imEACC1pLymmm/xaf/OUq9I9QenfkatTA==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
@@ -972,28 +972,28 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@ogre-tools/fp@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-1.4.0.tgz#94c50378c5bc51ea1571f775e4428256f22c61b5"
-  integrity sha512-Eh/pK67CoYU/tJPWHeuNFEp+YdE8RPAAxZlSDAoXUDAd8sta3e+1vG7OEJlkYIJW4L8sCGKLWZu2DZ8uI6URhA==
+"@ogre-tools/fp@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-2.0.0.tgz#751b280959e7b7132e85ae031a96ea59c951178f"
+  integrity sha512-L3UWyIHuA1z746jSsHV4iwy5Yc/qz8g/0YktiMgYjU6aU5jFtX0vaVVS7MRJWMnOAFg5JcJyg3KqgyYXSe5GKA==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@1.5.2":
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-1.5.2.tgz#7df925ca5abda86210f527333774ddbf027f0693"
-  integrity sha512-n26NyGLYjwyIbfwsLj1tg0uNPK6SI/H0vGisMNpNfrcdci2QiLQBSKemnLMMRn7LF/+JhA/NQClTetiMkcSCuw==
+"@ogre-tools/injectable-react@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-2.0.0.tgz#4a0990426dba0485d6c71e9693ba8882aa42a5d0"
+  integrity sha512-yhYi7jhhi2CitO07xVPHOWBCOESmTgmGcSILWoY6IPjoKdzl88PqMkTem8kO+k6YO3sTQQexEQcCi9NEmR9hOg==
   dependencies:
-    "@ogre-tools/fp" "^1.4.0"
-    "@ogre-tools/injectable" "^1.5.0"
+    "@ogre-tools/fp" "^2.0.0"
+    "@ogre-tools/injectable" "^2.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@1.5.0", "@ogre-tools/injectable@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-1.5.0.tgz#edf911f360e73bb5f10ac669f147108d1465fc45"
-  integrity sha512-k0Wgc8QqB+p/gHcWPVWJV8N8xX5cMpagEjZ1C5bPVeRyB+73od/yHgb1HOgL2pPzlE6qOtTdkiUrWuTAoqnqUw==
+"@ogre-tools/injectable@2.0.0", "@ogre-tools/injectable@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-2.0.0.tgz#16e6255062443ae8aca9a2d149c5b591533b63a8"
+  integrity sha512-9R8J9vJp/obaKKTGSDiJ+PTodJtZ2JCUdzGexL2lQK4s/xvVTjpBhCgQZVCG87uA/6d0oB6rxov/Dkv001rwCw==
   dependencies:
-    "@ogre-tools/fp" "^1.4.0"
+    "@ogre-tools/fp" "^2.0.0"
     lodash "^4.17.21"
 
 "@panva/asn1.js@^1.0.0":
