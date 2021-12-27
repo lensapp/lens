@@ -20,14 +20,33 @@
  */
 
 .closeButton {
-  @apply w-[35px] h-[35px] grid place-items-center cursor-pointer border-2 rounded-full border-solid border-textDimmed
-    hover:bg-[#72767d25] active:translate-y-px;
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 2px solid var(--textColorDimmed);
+  border-radius: 50%;
+
+  &:hover {
+    background-color: #72767d25;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 .icon {
-  @apply text-textAccent opacity-60;
+  color: var(--textColorAccent);
+  opacity: 0.6;
 }
 
 .esc {
-  @apply text-center mt-3 font-bold text-lg select-none text-textDimmed pointer-events-none;
+  text-align: center;
+  margin-top: var(--margin);
+  font-weight: bold;
+  user-select: none;
+  color: var(--textColorDimmed);
+  pointer-events: none;
 }
