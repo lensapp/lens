@@ -38,7 +38,7 @@
   border-radius: var(--border-radius);
 }
 
-:global(.theme-light) {
+@include theme-light {
   .editor {
     border-color: var(--borderFaintColor);
   }

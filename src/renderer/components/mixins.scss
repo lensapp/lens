@@ -64,3 +64,14 @@
     -webkit-app-region: no-drag;
   }
 }
+
+@mixin theme-light() {
+  $selector: "theme-light"; // keep in sync with class in `theme.store.ts`
+
+  body.#{$selector} {
+    @content;
+  }
+  :global(body.#{$selector}) {
+    @content; // css-modules (*.module.scss)
+  }
+}
