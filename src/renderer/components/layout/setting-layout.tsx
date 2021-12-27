@@ -25,8 +25,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
-import { Icon } from "../icon";
 import { catalogURL } from "../../../common/routes";
+import { CloseButton } from "./close-button";
 
 export interface SettingLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -105,20 +105,7 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
             {
               this.props.provideBackButtonNavigation && (
                 <div className="fixed top-[60px]">
-                  <div
-                    className="w-[35px] h-[35px] grid place-items-center pointer border-2 rounded-full border-solid border-textDimmed hover:bg-[#72767d25] active:translate-y-px"
-                    role="button"
-                    aria-label="Close"
-                    onClick={back}
-                  >
-                    <Icon material="close" className="text-textAccent opacity-60" />
-                  </div>
-                  <div
-                    className="text-center mt-3 font-bold text-lg select-none text-textDimmed pointer-events-none"
-                    aria-hidden="true"
-                  >
-                    ESC
-                  </div>
+                  <CloseButton onClick={back}/>
                 </div>
               )
             }
