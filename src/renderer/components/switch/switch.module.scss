@@ -29,6 +29,11 @@
   --track-color-inactive: hsl(80 0% 35%);
   --track-color-active: hsl(110, 60%, 60%);
 
+  --thumb-position: 0%;
+  --thumb-transition-duration: .25s;
+
+  --hover-highlight-size: 0;
+
   display: flex;
   align-items: center;
   gap: 2ch;
@@ -39,9 +44,6 @@
   font-weight: 500;
 
   & > input {
-    --thumb-position: 0%;
-    --thumb-transition-duration: .25s;
-
     padding: var(--track-padding);
     background: var(--track-color-inactive);
     inline-size: var(--track-size);
@@ -62,8 +64,6 @@
     transition: background-color .25s ease;
 
     &::before {
-      --highlight-size: 0;
-
       content: "";
       cursor: pointer;
       pointer-events: auto;
@@ -71,7 +71,7 @@
       inline-size: var(--thumb-size);
       block-size: var(--thumb-size);
       background: var(--thumb-color);
-      box-shadow: 0 0 0 var(--highlight-size) var(--thumb-color-highlight);
+      box-shadow: 0 0 0 var(--hover-highlight-size) var(--thumb-color-highlight);
       border-radius: 50%;
       transform: translateX(var(--thumb-position));
       transition:
@@ -80,7 +80,7 @@
     }
 
     &:not(:disabled):hover::before {
-      --highlight-size: .5rem;
+      --hover-highlight-size: .5rem;
     }
 
     &:checked {
