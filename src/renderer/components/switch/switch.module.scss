@@ -108,7 +108,7 @@
   }
 }
 
-:global(.theme-light) {
+@include theme-light {
   .Switch {
     --thumb-color-highlight: hsl(0 0% 0% / 25%);
 
