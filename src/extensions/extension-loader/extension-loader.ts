@@ -30,10 +30,10 @@ import { Disposer, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
-import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
 import * as registries from "../registries";
+import type { LensExtensionState } from "../extensions-store/extensions-store";
 
 export function extensionPackagesRoot() {
   return path.join(AppPaths.get("userData"));
@@ -42,7 +42,7 @@ export function extensionPackagesRoot() {
 const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
-  extensionsStore: ExtensionsStore
+  updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void
 }
 
 /**
@@ -158,10 +158,13 @@ export class ExtensionLoader {
       fireImmediately: true,
     });
 
-    // save state on change `extension.isEnabled`
-    reaction(() => this.storeState, extensionsState => {
-      this.dependencies.extensionsStore.mergeState(extensionsState);
-    });
+    reaction(
+      () => this.storeState,
+
+      (state) => {
+        this.dependencies.updateExtensionsState(state);
+      },
+    );
   }
 
   initExtensions(extensions?: Map<LensExtensionId, InstalledExtension>) {

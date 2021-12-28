@@ -19,16 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { ExtensionLoader } from "./extension-loader";
-import updateExtensionsStateInjectable from "./update-extensions-state/update-extensions-state.injectable";
+import extensionsStoreInjectable from "../../extensions-store/extensions-store.injectable";
 
-const extensionLoaderInjectable = getInjectable({
-  instantiate: (di) =>
-    new ExtensionLoader({
-      updateExtensionsState: di.inject(updateExtensionsStateInjectable),
-    }),
-
+const updateExtensionsStateInjectable = getInjectable({
+  instantiate: (di) => di.inject(extensionsStoreInjectable).mergeState,
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default extensionLoaderInjectable;
+export default updateExtensionsStateInjectable;
