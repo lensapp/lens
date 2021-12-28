@@ -20,16 +20,14 @@
  */
 
 import type { ExtensionLoader } from "../extension-loader";
-import { ipcRenderer } from "electron";
-import type {
-  ExtensionsStore,
-} from "../extensions-store/extensions-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
-import extensionsStoreInjectable from "../extensions-store/extensions-store.injectable";
 import { AppPaths } from "../../common/app-paths";
+import { runInAction } from "mobx";
+import updateExtensionsStateInjectable
+  from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -124,28 +122,24 @@ jest.mock(
   },
 );
 
+// TODO: Remove explicit global initialization at unclear time window
 AppPaths.init();
 
 describe("ExtensionLoader", () => {
   let extensionLoader: ExtensionLoader;
-  let extensionsStoreStub: ExtensionsStore;
-    
+  let updateExtensionStateMock: jest.Mock;
+
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
+    updateExtensionStateMock = jest.fn();
+
+    di.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
+
     extensionLoader = di.inject(extensionLoaderInjectable);
-
-    // TODO: Find out how to either easily create mocks of interfaces with a lot of members or
-    // introduce design for more minimal interfaces
-    // @ts-ignore
-    extensionsStoreStub = {
-      mergeState: jest.fn(),
-    };
-
-    di.override(extensionsStoreInjectable, () => extensionsStoreStub);
   });
 
-  it.only("renderer updates extension after ipc broadcast", async done => {
+  it("renderer updates extension after ipc broadcast", async done => {
     expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
 
     await extensionLoader.init();
@@ -184,26 +178,26 @@ describe("ExtensionLoader", () => {
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {
-    (extensionsStoreStub.mergeState as any).mockClear();
-
-    // Disable sending events in this test
-    (ipcRenderer.on as any).mockImplementation();
-
     await extensionLoader.init();
 
-    expect(extensionsStoreStub.mergeState).not.toHaveBeenCalled();
+    expect(updateExtensionStateMock).not.toHaveBeenCalled();
 
-    Array.from(extensionLoader.userExtensions.values())[0].isEnabled = false;
-
-    expect(extensionsStoreStub.mergeState).toHaveBeenCalledWith({
-      "manifest/path": {
-        enabled: false,
-        name: "TestExtension",
-      },
-      "manifest/path2": {
-        enabled: true,
-        name: "TestExtension2",
-      },
+    runInAction(() => {
+      extensionLoader.setIsEnabled("manifest/path", false);
     });
+
+    expect(updateExtensionStateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        "manifest/path": {
+          enabled: false,
+          name: "TestExtension",
+        },
+
+        "manifest/path2": {
+          enabled: true,
+          name: "TestExtension2",
+        },
+      }),
+    );
   });
 });
