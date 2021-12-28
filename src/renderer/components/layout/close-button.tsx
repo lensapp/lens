@@ -19,24 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = {
-  content: ["src/**/*.tsx"],
-  darkMode: "class",
-  theme: {
-    fontFamily: {
-      sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
-    },
-    extend: {
-      colors: {
-        textAccent: "var(--textColorAccent)",
-        textPrimary: "var(--textColorPrimary)",
-        textTertiary: "var(--textColorTertiary)",
-        textDimmed: "var(--textColorDimmed)",
-      },
-    },
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-};
+import styles from "./close-button.module.scss";
+
+import React, { HTMLAttributes } from "react";
+import { Icon } from "../icon";
+
+interface Props extends HTMLAttributes<HTMLDivElement> {
+}
+
+export function CloseButton(props: Props) {
+  return (
+    <div {...props}>
+      <div className={styles.closeButton} role="button" aria-label="Close">
+        <Icon material="close" className={styles.icon}/>
+      </div>
+      <div className={styles.esc} aria-hidden="true">
+        ESC
+      </div>
+    </div>
+  );
+}

@@ -19,24 +19,34 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = {
-  content: ["src/**/*.tsx"],
-  darkMode: "class",
-  theme: {
-    fontFamily: {
-      sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
-    },
-    extend: {
-      colors: {
-        textAccent: "var(--textColorAccent)",
-        textPrimary: "var(--textColorPrimary)",
-        textTertiary: "var(--textColorTertiary)",
-        textDimmed: "var(--textColorDimmed)",
-      },
-    },
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-};
+.closeButton {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 2px solid var(--textColorDimmed);
+  border-radius: 50%;
+
+  &:hover {
+    background-color: #72767d25;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.icon {
+  color: var(--textColorAccent);
+  opacity: 0.6;
+}
+
+.esc {
+  text-align: center;
+  margin-top: var(--margin);
+  font-weight: bold;
+  user-select: none;
+  color: var(--textColorDimmed);
+  pointer-events: none;
+}

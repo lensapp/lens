@@ -138,41 +138,7 @@
     }
 
     > .toolsRegion {
-      .fixedTools {
-        position: fixed;
-        top: 60px;
-
-        .closeBtn {
-          width: 35px;
-          height: 35px;
-          display: grid;
-          place-items: center;
-          border: 2px solid var(--textColorDimmed);
-          border-radius: 50%;
-          cursor: pointer;
-
-          &:hover {
-            background-color: #72767d4d;
-          }
-
-          &:active {
-            transform: translateY(1px);
-          }
-
-          .Icon {
-            color: var(--textColorTertiary);
-          }
-        }
-
-        .esc {
-          text-align: center;
-          margin-top: 4px;
-          font-weight: 600;
-          font-size: 14px;
-          color: var(--textColorDimmed);
-          pointer-events: none;
-        }
-      }
+      width: 45px;
     }
   }
 
