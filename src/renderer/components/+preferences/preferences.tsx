@@ -20,7 +20,7 @@
  */
 import "./preferences.scss";
 
-import { makeObservable, observable } from "mobx";
+import { IComputedValue, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { matchPath, Redirect, Route, RouteProps, Switch } from "react-router";
@@ -50,12 +50,19 @@ import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
 import { Extensions } from "./extensions";
 import { sentryDsn } from "../../../common/vars";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { InstalledExtension } from "../../../extensions/extension-discovery";
+import userExtensionsInjectable from "../+extensions/user-extensions/user-extensions.injectable";
+
+interface Dependencies {
+  userExtensions: IComputedValue<InstalledExtension[]>;
+}
 
 @observer
-export class Preferences extends React.Component {
+class Preferences extends React.Component<Dependencies> {
   @observable historyLength: number | undefined;
 
-  constructor(props: {}) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -103,3 +110,12 @@ export class Preferences extends React.Component {
     );
   }
 }
+
+export default withInjectables<Dependencies>(
+  Preferences,
+  {
+    getProps: (di) => ({
+      userExtensions: di.inject(userExtensionsInjectable),
+    }),
+  },
+);
