@@ -21,7 +21,7 @@
 
 import type http from "http";
 import type net from "net";
-import type { Cluster } from "../cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 
 export interface ProxyApiRequestArgs {
   req: http.IncomingMessage,

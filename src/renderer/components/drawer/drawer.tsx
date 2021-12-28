@@ -24,11 +24,15 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import { createStorage, cssNames, noop } from "../../utils";
+import { cssNames, noop, StorageHelper } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
 import { history } from "../../navigation";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
+import drawerStorageInjectable, {
+  defaultDrawerWidth,
+} from "./drawer-storage/drawer-storage.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
 
 export type DrawerPosition = "top" | "left" | "right" | "bottom";
 
@@ -70,12 +74,11 @@ resizingAnchorProps.set("left", [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING
 resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM]);
 resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
 
-const defaultDrawerWidth = 725;
-const drawerStorage = createStorage("drawer", {
-  width: defaultDrawerWidth,
-});
+interface Dependencies {
+  drawerStorage: StorageHelper<{ width: number }>;
+}
 
-export class Drawer extends React.Component<DrawerProps, State> {
+class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, State> {
   static defaultProps = defaultProps as object;
 
   private mouseDownTarget: HTMLElement;
@@ -89,7 +92,7 @@ export class Drawer extends React.Component<DrawerProps, State> {
 
   public state = {
     isCopied: false,
-    width: drawerStorage.get().width,
+    width: this.props.drawerStorage.get().width,
   };
 
   componentDidMount() {
@@ -110,7 +113,7 @@ export class Drawer extends React.Component<DrawerProps, State> {
 
   resizeWidth = (width: number) => {
     this.setState({ width });
-    drawerStorage.merge({ width });
+    this.props.drawerStorage.merge({ width });
   };
 
   fixUpTripleClick = (ev: MouseEvent) => {
@@ -239,3 +242,15 @@ export class Drawer extends React.Component<DrawerProps, State> {
     return usePortal ? createPortal(drawer, document.body) : drawer;
   }
 }
+
+export const Drawer = withInjectables<Dependencies, DrawerProps>(
+  NonInjectedDrawer,
+
+  {
+    getProps: (di, props) => ({
+      drawerStorage: di.inject(drawerStorageInjectable),
+      ...props,
+    }),
+  },
+);
+

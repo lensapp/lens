@@ -43,18 +43,39 @@ import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
 import { ThemeStore } from "../../renderer/theme.store";
-import type { ClusterStoreModel } from "../cluster-store";
-import { AppPaths } from "../app-paths";
+import type { ClusterStoreModel } from "../cluster-store/cluster-store";
+import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
+import userStoreInjectable from "../user-store/user-store.injectable";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 console = new Console(stdout, stderr);
-AppPaths.init();
 
 describe("user store tests", () => {
+  let userStore: UserStore;
+  let mainDi: DependencyInjectionContainer;
+    
+  beforeEach(async () => {
+    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
+
+    mainDi = dis.mainDi;
+
+    mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    await dis.runSetups();
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
   describe("for an empty config", () => {
     beforeEach(() => {
-      mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" }});
+      mockFs({ "some-directory-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
 
-      (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
+      userStore = mainDi.inject(userStoreInjectable);
     });
 
     afterEach(() => {
@@ -63,46 +84,38 @@ describe("user store tests", () => {
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
-      const us = UserStore.getInstance();
-
-      us.lastSeenAppVersion = "1.2.3";
-      expect(us.lastSeenAppVersion).toBe("1.2.3");
+      userStore.lastSeenAppVersion = "1.2.3";
+      expect(userStore.lastSeenAppVersion).toBe("1.2.3");
     });
 
     it("allows setting and getting preferences", () => {
-      const us = UserStore.getInstance();
+      userStore.httpsProxy = "abcd://defg";
 
-      us.httpsProxy = "abcd://defg";
+      expect(userStore.httpsProxy).toBe("abcd://defg");
+      expect(userStore.colorTheme).toBe(ThemeStore.defaultTheme);
 
-      expect(us.httpsProxy).toBe("abcd://defg");
-      expect(us.colorTheme).toBe(ThemeStore.defaultTheme);
-
-      us.colorTheme = "light";
-      expect(us.colorTheme).toBe("light");
+      userStore.colorTheme = "light";
+      expect(userStore.colorTheme).toBe("light");
     });
 
     it("correctly resets theme to default value", async () => {
-      const us = UserStore.getInstance();
-
-      us.colorTheme = "some other theme";
-      us.resetTheme();
-      expect(us.colorTheme).toBe(ThemeStore.defaultTheme);
+      userStore.colorTheme = "some other theme";
+      userStore.resetTheme();
+      expect(userStore.colorTheme).toBe(ThemeStore.defaultTheme);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {
-      const us = UserStore.getInstance();
+      expect(userStore.isNewVersion).toBe(true);
 
-      expect(us.isNewVersion).toBe(true);
-
-      us.lastSeenAppVersion = (new SemVer(electron.app.getVersion())).inc("major").format();
-      expect(us.isNewVersion).toBe(false);
+      userStore.lastSeenAppVersion = (new SemVer(electron.app.getVersion())).inc("major").format();
+      expect(userStore.isNewVersion).toBe(false);
     });
   });
 
   describe("migrations", () => {
     beforeEach(() => {
       mockFs({
-        "tmp": {
+        "some-directory-for-user-data": {
           "config.json": JSON.stringify({
             user: { username: "foobar" },
             preferences: { colorTheme: "light" },
@@ -112,7 +125,7 @@ describe("user store tests", () => {
             clusters: [
               {
                 id: "foobar",
-                kubeConfigPath: "tmp/extension_data/foo/bar",
+                kubeConfigPath: "some-directory-for-user-data/extension_data/foo/bar",
               },
               {
                 id: "barfoo",
@@ -129,7 +142,7 @@ describe("user store tests", () => {
         },
       });
 
-      UserStore.createInstance();
+      userStore = mainDi.inject(userStoreInjectable);
     });
 
     afterEach(() => {
@@ -138,16 +151,12 @@ describe("user store tests", () => {
     });
 
     it("sets last seen app version to 0.0.0", () => {
-      const us = UserStore.getInstance();
-
-      expect(us.lastSeenAppVersion).toBe("0.0.0");
+      expect(userStore.lastSeenAppVersion).toBe("0.0.0");
     });
 
     it.only("skips clusters for adding to kube-sync with files under extension_data/", () => {
-      const us = UserStore.getInstance();
-
-      expect(us.syncKubeconfigEntries.has("tmp/extension_data/foo/bar")).toBe(false);
-      expect(us.syncKubeconfigEntries.has("some/other/path")).toBe(true);
+      expect(userStore.syncKubeconfigEntries.has("some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
+      expect(userStore.syncKubeconfigEntries.has("some/other/path")).toBe(true);
     });
   });
 });

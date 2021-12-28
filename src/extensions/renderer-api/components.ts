@@ -71,5 +71,12 @@ export * from "../../renderer/components/+events/kube-event-details";
 
 // specific exports
 export * from "../../renderer/components/status-brick";
-export { terminalStore, createTerminalTab, TerminalStore } from "../../renderer/components/dock/terminal.store";
-export { logTabStore } from "../../renderer/components/dock/log-tab.store";
+
+// Mikko
+// export { terminalStore, TerminalStore } from "../../renderer/components/dock/terminal-store/terminal.store";
+//
+// // Mikko
+// export { createTerminalTab } from "../../renderer/components/dock/terminal-store/terminal.store";
+//
+// // Mikko
+// export { logTabStore } from "../../renderer/components/dock/log-tab-store/log-tab.store";

@@ -2,6 +2,10 @@
 
 exports[`kube-object-menu given kube object renders 1`] = `
 <body>
+  <div
+    class="terminal-init"
+    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
+  />
   <div>
     <div>
       <ul
@@ -18,7 +22,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_4"
+            id="tooltip_target_2"
             tabindex="0"
           >
             <span
@@ -52,6 +56,10 @@ exports[`kube-object-menu given kube object renders 1`] = `
 
 exports[`kube-object-menu given kube object when removing kube object renders 1`] = `
 <body>
+  <div
+    class="terminal-init"
+    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
+  />
   <div>
     <div>
       <ul
@@ -68,7 +76,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_8"
+            id="tooltip_target_4"
             tabindex="0"
           >
             <span
@@ -155,6 +163,10 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
 
 exports[`kube-object-menu given kube object with namespace when removing kube object, renders confirmation dialog with namespace 1`] = `
 <body>
+  <div
+    class="terminal-init"
+    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
+  />
   <div>
     <div>
       <ul
@@ -171,7 +183,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_33"
+            id="tooltip_target_12"
             tabindex="0"
           >
             <span
@@ -258,6 +270,10 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
 
 exports[`kube-object-menu given kube object without namespace when removing kube object, renders confirmation dialog without namespace 1`] = `
 <body>
+  <div
+    class="terminal-init"
+    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
+  />
   <div>
     <div>
       <ul
@@ -274,7 +290,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_41"
+            id="tooltip_target_17"
             tabindex="0"
           >
             <span
@@ -361,6 +377,10 @@ exports[`kube-object-menu given kube object without namespace when removing kube
 
 exports[`kube-object-menu given no kube object, renders 1`] = `
 <body>
+  <div
+    class="terminal-init"
+    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
+  />
   <div>
     <ul
       class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"

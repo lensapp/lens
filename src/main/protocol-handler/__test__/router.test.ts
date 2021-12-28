@@ -28,7 +28,6 @@ import { LensExtension } from "../../../extensions/main-api";
 import { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../../common/app-paths";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import extensionLoaderInjectable
   from "../../../extensions/extension-loader/extension-loader.injectable";
@@ -38,24 +37,6 @@ import extensionsStoreInjectable
   from "../../../extensions/extensions-store/extensions-store.injectable";
 
 jest.mock("../../../common/ipc");
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
-AppPaths.init();
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -70,15 +51,18 @@ describe("protocol router tests", () => {
   let lpr: LensProtocolRouterMain;
   let extensionsStore: ExtensionsStore;
 
-  beforeEach(() => {
-    const di = getDiForUnitTesting();
-
-    extensionLoader = di.inject(extensionLoaderInjectable);
-    extensionsStore = di.inject(extensionsStoreInjectable);
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
       "tmp": {},
     });
+
+    await di.runSetups();
+
+    extensionLoader = di.inject(extensionLoaderInjectable);
+    extensionsStore = di.inject(extensionsStoreInjectable);
+
 
     lpr = di.inject(lensProtocolRouterMainInjectable);
 

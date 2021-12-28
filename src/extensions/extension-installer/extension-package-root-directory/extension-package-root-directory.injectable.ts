@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import extensionInstallerInjectable from "../extension-installer.injectable";
+import directoryForUserDataInjectable
+  from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const extensionPackageRootDirectoryInjectable = getInjectable({
-  instantiate: (di) =>
-    di.inject(extensionInstallerInjectable).extensionPackagesRoot,
-  
+  instantiate: (di) => di.inject(directoryForUserDataInjectable),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

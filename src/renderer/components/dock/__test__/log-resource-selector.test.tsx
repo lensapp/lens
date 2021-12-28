@@ -21,17 +21,20 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render } from "@testing-library/react";
 import selectEvent from "react-select-event";
 
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
-import type { LogTabData } from "../log-tab.store";
+import type { LogTabData } from "../log-tab-store/log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../../../common/app-paths";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import directoryForUserDataInjectable
+  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -48,8 +51,6 @@ jest.mock("electron", () => ({
     handle: jest.fn(),
   },
 }));
-
-AppPaths.init();
 
 const getComponent = (tabData: LogTabData) => {
   return (
@@ -84,10 +85,21 @@ const getFewPodsTabData = (): LogTabData => {
 };
 
 describe("<LogResourceSelector />", () => {
-  beforeEach(() => {
+  let render: DiRender;
+
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    render = renderFor(di);
+
+    await di.runSetups();
+
     mockFs({
       "tmp": {},
     });
+
     UserStore.createInstance();
     ThemeStore.createInstance();
   });

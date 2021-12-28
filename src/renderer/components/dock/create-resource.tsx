@@ -28,8 +28,8 @@ import { GroupSelectOption, Select, SelectOption } from "../select";
 import yaml from "js-yaml";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { createResourceStore } from "./create-resource.store";
-import type { DockTab } from "./dock.store";
+import type { CreateResourceStore } from "./create-resource-store/create-resource.store";
+import type { DockTab } from "./dock-store/dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
@@ -40,25 +40,32 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { prevDefault } from "../../utils";
 import { navigate } from "../../navigation";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import createResourceStoreInjectable
+  from "./create-resource-store/create-resource-store.injectable";
 
 interface Props {
   tab: DockTab;
 }
 
+interface Dependencies {
+  createResourceStore: CreateResourceStore
+}
+
 @observer
-export class CreateResource extends React.Component<Props> {
+class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
   @observable currentTemplates: Map<string, SelectOption> = new Map();
   @observable error = "";
   @observable templates: GroupSelectOption<SelectOption>[] = [];
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   componentDidMount() {
-    createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
-    createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
+    this.props.createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
+    this.props.createResourceStore.watchUserTemplates(() => this.props.createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
   }
 
   updateGroupSelectOptions(templates: Record<string, string[]>) {
@@ -77,7 +84,7 @@ export class CreateResource extends React.Component<Props> {
   }
 
   get data() {
-    return createResourceStore.getData(this.tabId);
+    return this.props.createResourceStore.getData(this.tabId);
   }
 
   get currentTemplate() {
@@ -86,7 +93,7 @@ export class CreateResource extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.error = ""; // reset first, validation goes later
-    createResourceStore.setData(this.tabId, value);
+    this.props.createResourceStore.setData(this.tabId, value);
   };
 
   onError = (error: Error | string) => {
@@ -96,7 +103,7 @@ export class CreateResource extends React.Component<Props> {
   onSelectTemplate = (item: SelectOption) => {
     this.currentTemplates.set(this.tabId, item);
     fs.readFile(item.value, "utf8").then(v => {
-      createResourceStore.setData(this.tabId, v);
+      this.props.createResourceStore.setData(this.tabId, v);
     });
   };
 
@@ -180,3 +187,14 @@ export class CreateResource extends React.Component<Props> {
     );
   }
 }
+
+export const CreateResource = withInjectables<Dependencies, Props>(
+  NonInjectedCreateResource,
+
+  {
+    getProps: (di, props) => ({
+      createResourceStore: di.inject(createResourceStoreInjectable),
+      ...props,
+    }),
+  },
+);

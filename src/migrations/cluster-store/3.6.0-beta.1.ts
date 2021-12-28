@@ -27,8 +27,13 @@ import fse from "fs-extra";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import type { ClusterModel } from "../../common/cluster-types";
-import { getCustomKubeConfigPath, storedKubeConfigFolder } from "../../common/utils";
-import { AppPaths } from "../../common/app-paths";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForKubeConfigsInjectable
+  from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import getCustomKubeConfigDirectoryInjectable
+  from "../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 
 interface Pre360ClusterModel extends ClusterModel {
   kubeConfig: string;
@@ -37,11 +42,16 @@ interface Pre360ClusterModel extends ClusterModel {
 export default {
   version: "3.6.0-beta.1",
   run(store) {
-    const userDataPath = AppPaths.get("userData");
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const userDataPath = di.inject(directoryForUserDataInjectable);
+    const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
+    const getCustomKubeConfigDirectory = di.inject(getCustomKubeConfigDirectoryInjectable);
+
     const storedClusters: Pre360ClusterModel[] = store.get("clusters") ?? [];
     const migratedClusters: ClusterModel[] = [];
 
-    fse.ensureDirSync(storedKubeConfigFolder());
+    fse.ensureDirSync(kubeConfigsPath);
 
     migrationLog("Number of clusters to migrate: ", storedClusters.length);
 
@@ -50,7 +60,7 @@ export default {
        * migrate kubeconfig
        */
       try {
-        const absPath = getCustomKubeConfigPath(clusterModel.id);
+        const absPath = getCustomKubeConfigDirectory(clusterModel.id);
 
         // take the embedded kubeconfig and dump it into a file
         fse.writeFileSync(absPath, clusterModel.kubeConfig, { encoding: "utf-8", mode: 0o600 });

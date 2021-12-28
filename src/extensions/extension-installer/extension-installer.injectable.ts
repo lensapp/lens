@@ -20,9 +20,16 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { ExtensionInstaller } from "./extension-installer";
+import extensionPackageRootDirectoryInjectable from "./extension-package-root-directory/extension-package-root-directory.injectable";
 
 const extensionInstallerInjectable = getInjectable({
-  instantiate: () => new ExtensionInstaller(),
+  instantiate: (di) =>
+    new ExtensionInstaller({
+      extensionPackageRootDirectory: di.inject(
+        extensionPackageRootDirectoryInjectable,
+      ),
+    }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

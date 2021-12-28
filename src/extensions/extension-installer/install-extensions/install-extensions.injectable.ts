@@ -23,7 +23,7 @@ import extensionInstallerInjectable from "../extension-installer.injectable";
 
 const installExtensionsInjectable = getInjectable({
   instantiate: (di) => di.inject(extensionInstallerInjectable).installPackages,
-  
+
   lifecycle: lifecycleEnum.singleton,
 });
 

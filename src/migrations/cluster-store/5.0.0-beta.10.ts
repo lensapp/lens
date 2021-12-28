@@ -23,7 +23,9 @@ import path from "path";
 import fse from "fs-extra";
 import type { ClusterModel } from "../../common/cluster-types";
 import type { MigrationDeclaration } from "../helpers";
-import { AppPaths } from "../../common/app-paths";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -35,7 +37,9 @@ interface Pre500WorkspaceStoreModel {
 export default {
   version: "5.0.0-beta.10",
   run(store) {
-    const userDataPath = AppPaths.get("userData");
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const userDataPath = di.inject(directoryForUserDataInjectable);
 
     try {
       const workspaceData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));

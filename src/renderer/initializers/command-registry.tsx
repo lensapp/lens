@@ -24,7 +24,6 @@ import * as routes from "../../common/routes";
 import { CommandRegistry } from "../../extensions/registries";
 import { getActiveClusterEntity } from "../api/catalog-entity-registry";
 import { CommandOverlay } from "../components/command-palette";
-import { createTerminalTab } from "../components/dock/terminal.store";
 import { HotbarAddCommand } from "../components/hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../components/hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../components/hotbar/hotbar-switch-command";
@@ -32,7 +31,7 @@ import { navigate } from "../navigation";
 import { HotbarRenameCommand } from "../components/hotbar/hotbar-rename-command";
 import { ActivateEntityCommand } from "../components/activate-entity-command";
 
-export function initCommandRegistry() {
+export function initCommandRegistry(createTerminalTab: () => void) {
   CommandRegistry.getInstance()
     .add([
       {

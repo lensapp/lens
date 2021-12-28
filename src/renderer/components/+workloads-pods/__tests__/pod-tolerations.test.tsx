@@ -21,9 +21,13 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import type { IToleration } from "../../../../common/k8s-api/workload-kube-object";
 import { PodTolerations } from "../pod-tolerations";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { DiRender, renderFor } from "../../test-utils/renderFor";
+import directoryForLensLocalStorageInjectable
+  from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -47,6 +51,21 @@ const tolerations: IToleration[] =[
 ];
 
 describe("<PodTolerations />", () => {
+  let render: DiRender;
+
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(
+      directoryForLensLocalStorageInjectable,
+      () => "some-directory-for-lens-local-storage",
+    );
+
+    await di.runSetups();
+
+    render = renderFor(di);
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<PodTolerations tolerations={tolerations} />);
 

@@ -59,9 +59,9 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
   }
 
   @action
-  mergeState(extensionsState: Record<LensExtensionId, LensExtensionState>) {
+  mergeState = (extensionsState: Record<LensExtensionId, LensExtensionState>) => {
     this.state.merge(extensionsState);
-  }
+  };
 
   @action
   protected fromStore({ extensions }: LensExtensionsStoreModel) {

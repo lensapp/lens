@@ -26,6 +26,7 @@ export const getDi = () => {
   const di = createContainer(
     getRequireContextForRendererCode,
     getRequireContextForCommonExtensionCode,
+    getRequireContextForCommonCode,
   );
 
   setLegacyGlobalDiForExtensionApi(di);
@@ -38,3 +39,6 @@ const getRequireContextForRendererCode = () =>
 
 const getRequireContextForCommonExtensionCode = () =>
   require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonCode = () =>
+  require.context("../../common", true, /\.injectable\.(ts|tsx)$/);

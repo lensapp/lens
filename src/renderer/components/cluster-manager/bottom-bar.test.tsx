@@ -26,18 +26,16 @@ import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
 import { StatusBarRegistry } from "../../../extensions/registries";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { AppPaths } from "../../../common/app-paths";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 import { ActiveHotbarName } from "./active-hotbar-name";
+import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 
 jest.mock("../command-palette", () => ({
   CommandOverlay: {
     open: jest.fn(),
   },
 }));
-
-AppPaths.init();
 
 jest.mock("electron", () => ({
   app: {
@@ -56,7 +54,11 @@ jest.mock("electron", () => ({
 }));
 
 describe("<BottomBar />", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    await dis.runSetups();
+
     const mockOpts = {
       "tmp": {
         "test-store.json": JSON.stringify({}),

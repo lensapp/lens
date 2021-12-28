@@ -29,58 +29,37 @@ import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
 import { Notifications } from "../components/notifications";
 import { cssNames } from "../utils";
-import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
+import { getPortForwards } from "./port-forward-store/port-forward-store";
 import type { ForwardedPort } from "./port-forward-item";
 import { aboutPortForwarding, openPortForward } from ".";
 import { Checkbox } from "../components/checkbox";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import modifyPortForwardInjectable from "./port-forward-store/modify-port-forward/modify-port-forward.injectable";
+import type { PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
+import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-forward-dialog-model.injectable";
+import addPortForwardInjectable from "./port-forward-store/add-port-forward/add-port-forward.injectable";
 
 interface Props extends Partial<DialogProps> {
 }
 
-interface PortForwardDialogOpenOptions {
-  openInBrowser: boolean
+interface Dependencies {
+  modifyPortForward: (item: ForwardedPort, desiredPort: number) => Promise<number>,
+  addPortForward: (item: ForwardedPort) => Promise<number>,
+  model: PortForwardDialogModel
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-  data: null as ForwardedPort,
-  useHttps: false,
-  openInBrowser: false,
-});
-
 @observer
-export class PortForwardDialog extends Component<Props> {
+class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
   @observable currentPort = 0;
   @observable desiredPort = 0;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) {
-    dialogState.isOpen = true;
-    dialogState.data = portForward;
-    dialogState.useHttps = portForward.protocol === "https";
-    dialogState.openInBrowser = options.openInBrowser;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
-  }
-
-  get portForward() {
-    return dialogState.data;
-  }
-
-  close = () => {
-    PortForwardDialog.close();
-  };
-
   onOpen = async () => {
-    const { portForward } = this;
-
-    this.currentPort = +portForward.forwardPort;
+    this.currentPort = +this.props.model.portForward.forwardPort;
     this.desiredPort = this.currentPort;
   };
 
@@ -92,8 +71,8 @@ export class PortForwardDialog extends Component<Props> {
   };
 
   startPortForward = async () => {
-    const { portForward } = this;
-    const { currentPort, desiredPort, close } = this;
+    const portForward = this.props.model.portForward;
+    const { currentPort, desiredPort } = this;
 
     try {
       // determine how many port-forwards are already active
@@ -101,13 +80,13 @@ export class PortForwardDialog extends Component<Props> {
 
       let port: number;
 
-      portForward.protocol = dialogState.useHttps ? "https" : "http";
+      portForward.protocol = this.props.model.useHttps ? "https" : "http";
 
       if (currentPort) {
-        port = await modifyPortForward(portForward, desiredPort);
+        port = await this.props.modifyPortForward(portForward, desiredPort);
       } else {
         portForward.forwardPort = desiredPort;
-        port = await addPortForward(portForward);
+        port = await this.props.addPortForward(portForward);
 
         // if this is the first port-forward show the about notification
         if (!length) {
@@ -115,7 +94,7 @@ export class PortForwardDialog extends Component<Props> {
         }
       }
 
-      if (dialogState.openInBrowser) {
+      if (this.props.model.openInBrowser) {
         portForward.forwardPort = port;
         openPortForward(portForward);
       }
@@ -146,14 +125,14 @@ export class PortForwardDialog extends Component<Props> {
           <Checkbox
             data-testid="port-forward-https"
             label="https"
-            value={dialogState.useHttps}
-            onChange={value => dialogState.useHttps = value}
+            value={this.props.model.useHttps}
+            onChange={value => this.props.model.useHttps = value}
           />
           <Checkbox
             data-testid="port-forward-open"
             label="Open in Browser"
-            value={dialogState.openInBrowser}
-            onChange={value => dialogState.openInBrowser = value}
+            value={this.props.model.openInBrowser}
+            onChange={value => this.props.model.openInBrowser = value}
           />
         </div>
       </>
@@ -161,8 +140,8 @@ export class PortForwardDialog extends Component<Props> {
   }
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const resourceName = this.portForward?.name ?? "";
+    const { className, modifyPortForward, model, ...dialogProps } = this.props;
+    const resourceName = this.props.model.portForward?.name ?? "";
     const header = (
       <h5>
         Port Forwarding for <span>{resourceName}</span>
@@ -172,13 +151,13 @@ export class PortForwardDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={dialogState.isOpen}
+        isOpen={this.props.model.isOpen}
         className={cssNames("PortForwardDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}
-        close={this.close}
+        close={this.props.model.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={this.props.model.close}>
           <WizardStep
             contentClass="flex gaps column"
             next={this.startPortForward}
@@ -191,3 +170,16 @@ export class PortForwardDialog extends Component<Props> {
     );
   }
 }
+
+export const PortForwardDialog = withInjectables<Dependencies, Props>(
+  NonInjectedPortForwardDialog,
+
+  {
+    getProps: (di, props) => ({
+      modifyPortForward: di.inject(modifyPortForwardInjectable),
+      addPortForward: di.inject(addPortForwardInjectable),
+      model: di.inject(portForwardDialogModelInjectable),
+      ...props,
+    }),
+  },
+);

@@ -32,8 +32,8 @@ describe("electron-menu-items", () => {
   let electronMenuItems: IComputedValue<MenuRegistration[]>;
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     extensionsStub = new ObservableMap();
 
@@ -41,6 +41,8 @@ describe("electron-menu-items", () => {
       mainExtensionsInjectable,
       () => computed(() => [...extensionsStub.values()]),
     );
+
+    await di.runSetups();
 
     electronMenuItems = di.inject(electronMenuItemsInjectable);
   });

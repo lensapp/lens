@@ -20,10 +20,12 @@
  */
 
 import { UserStore } from "../../common/user-store";
-import { ContextHandler } from "../context-handler";
+import type { ContextHandler } from "../context-handler/context-handler";
 import { PrometheusProvider, PrometheusProviderRegistry, PrometheusService } from "../prometheus";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../common/app-paths";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import type { Cluster } from "../../common/cluster/cluster";
 
 jest.mock("electron", () => ({
   app: {
@@ -77,25 +79,28 @@ class TestProvider extends PrometheusProvider {
   }
 }
 
-function getHandler() {
-  return new ContextHandler(({
-    getProxyKubeconfig: (): any => ({
-      makeApiClient: (): any => undefined,
-    }),
-    apiUrl: "http://localhost:81",
-  }) as any);
-}
-
-AppPaths.init();
+const clusterStub = {
+  getProxyKubeconfig: (): any => ({
+    makeApiClient: (): any => undefined,
+  }),
+  apiUrl: "http://localhost:81",
+} as Cluster;
 
 describe("ContextHandler", () => {
-  beforeEach(() => {
+  let createContextHandler: (cluster: Cluster) => ContextHandler;
+  
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
     mockFs({
       "tmp": {},
     });
 
+    await di.runSetups();
+
+    createContextHandler = di.inject(createContextHandlerInjectable);
+
     PrometheusProviderRegistry.createInstance();
-    UserStore.createInstance();
   });
 
   afterEach(() => {
@@ -124,7 +129,12 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
-      expect(() => (getHandler() as any).getPrometheusService()).rejects.toBeDefined();
+      expect(() => {
+        // TODO: Unit test shouldn't access protected or private methods
+        const contextHandler = createContextHandler(clusterStub) as any;
+        
+        return contextHandler.getPrometheusService();
+      }).rejects.toBeDefined();
     });
 
     it.each([
@@ -150,7 +160,10 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
-      const service = await (getHandler() as any).getPrometheusService();
+      // TODO: Unit test shouldn't access protected or private methods
+      const contextHandler = createContextHandler(clusterStub) as any;
+      
+      const service = await contextHandler.getPrometheusService();
 
       expect(service.id === `id_${failures}`);
     });
@@ -178,7 +191,10 @@ describe("ContextHandler", () => {
         reg.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
       }
 
-      const service = await (getHandler() as any).getPrometheusService();
+      // TODO: Unit test shouldn't access protected or private methods
+      const contextHandler = createContextHandler(clusterStub) as any;
+      
+      const service = await contextHandler.getPrometheusService();
 
       expect(service.id === "id_0");
     });
@@ -211,8 +227,11 @@ describe("ContextHandler", () => {
       for (let i = 0; i < afterSuccesses; i += 1) {
         reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
-
-      const service = await (getHandler() as any).getPrometheusService();
+      
+      // TODO: Unit test shouldn't access protected or private methods
+      const contextHandler = createContextHandler(clusterStub) as any;
+      
+      const service = await contextHandler.getPrometheusService();
 
       expect(service.id === "id_0");
     });
@@ -224,8 +243,11 @@ describe("ContextHandler", () => {
       reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Failure));
       reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+      
+      // TODO: Unit test shouldn't access protected or private methods
+      const contextHandler = createContextHandler(clusterStub) as any;
 
-      const service = await (getHandler() as any).getPrometheusService();
+      const service = await contextHandler.getPrometheusService();
 
       expect(service.id).not.toBe("id_2");
     });

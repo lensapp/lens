@@ -23,29 +23,39 @@ import React from "react";
 import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
-import { searchStore } from "../../../common/search-store";
 import { boundMethod } from "../../utils";
-import type { DockTab } from "./dock.store";
+import type { DockTab } from "./dock-store/dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";
-import { logStore } from "./log.store";
+import type { LogStore } from "./log-store/log.store";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
-import { LogTabData, logTabStore } from "./log-tab.store";
+import type { LogTabData, LogTabStore } from "./log-tab-store/log-tab.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
+import logStoreInjectable from "./log-store/log-store.injectable";
+import type { SearchStore } from "../../search-store/search-store";
+import searchStoreInjectable from "../../search-store/search-store.injectable";
 
 interface Props {
   className?: string
   tab: DockTab
 }
 
+interface Dependencies {
+  logTabStore: LogTabStore
+  logStore: LogStore
+  searchStore: SearchStore
+}
+
 @observer
-export class Logs extends React.Component<Props> {
+class NonInjectedLogs extends React.Component<Props & Dependencies> {
   @observable isLoading = true;
 
-  private logListElement = React.createRef<LogList>(); // A reference for VirtualList component
+  private logListElement = React.createRef<typeof LogList>(); // A reference for VirtualList component
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -62,12 +72,12 @@ export class Logs extends React.Component<Props> {
 
   load = async () => {
     this.isLoading = true;
-    await logStore.load(this.tabId);
+    await this.props.logStore.load(this.tabId);
     this.isLoading = false;
   };
 
   reload = async () => {
-    logStore.clearLogs(this.tabId);
+    this.props.logStore.clearLogs(this.tabId);
     await this.load();
   };
 
@@ -85,10 +95,12 @@ export class Logs extends React.Component<Props> {
    */
   @boundMethod
   toOverlay() {
-    const { activeOverlayLine } = searchStore;
+    const { activeOverlayLine } = this.props.searchStore;
 
     if (!this.logListElement.current || activeOverlayLine === undefined) return;
     // Scroll vertically
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     this.logListElement.current.scrollToItem(activeOverlayLine, "center");
     // Scroll horizontally in timeout since virtual list need some time to prepare its contents
     setTimeout(() => {
@@ -104,14 +116,14 @@ export class Logs extends React.Component<Props> {
       return null;
     }
 
-    const logs = logStore.logs;
-    const searchLogs = data.showTimestamps ? logs : logStore.logsWithoutTimestamps;
+    const logs = this.props.logStore.logs;
+    const searchLogs = data.showTimestamps ? logs : this.props.logStore.logsWithoutTimestamps;
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
           tabId={this.tabId}
           tabData={data}
-          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
+          save={newData => this.props.logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
         <LogSearch
@@ -135,8 +147,8 @@ export class Logs extends React.Component<Props> {
   }
 
   render() {
-    const logs = logStore.logs;
-    const data = logTabStore.getData(this.tabId);
+    const logs = this.props.logStore.logs;
+    const data = this.props.logTabStore.getData(this.tabId);
 
     if (!data) {
       this.reload();
@@ -150,15 +162,30 @@ export class Logs extends React.Component<Props> {
           id={this.tabId}
           isLoading={this.isLoading}
           load={this.load}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           ref={this.logListElement}
         />
         <LogControls
           logs={logs}
           tabData={data}
-          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
+          save={newData => this.props.logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
       </div>
     );
   }
 }
+
+export const Logs = withInjectables<Dependencies, Props>(
+  NonInjectedLogs,
+
+  {
+    getProps: (di, props) => ({
+      logTabStore: di.inject(logTabStoreInjectable),
+      logStore: di.inject(logStoreInjectable),
+      searchStore: di.inject(searchStoreInjectable),
+      ...props,
+    }),
+  },
+);

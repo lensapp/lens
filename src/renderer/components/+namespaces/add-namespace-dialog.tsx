@@ -26,36 +26,33 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { namespaceStore } from "./namespace.store";
 import type { Namespace } from "../../../common/k8s-api/endpoints";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { Notifications } from "../notifications";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import type { AddNamespaceDialogModel } from "./add-namespace-dialog-model/add-namespace-dialog-model";
+import addNamespaceDialogModelInjectable
+  from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
 
 interface Props extends DialogProps {
   onSuccess?(ns: Namespace): void;
   onError?(error: any): void;
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-});
+interface Dependencies {
+  createNamespace: (params: { name: string }) => Promise<Namespace>,
+  model: AddNamespaceDialogModel
+}
 
 @observer
-export class AddNamespaceDialog extends React.Component<Props> {
+class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies> {
   @observable namespace = "";
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
-  }
-
-  static open() {
-    dialogState.isOpen = true;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
   }
 
   reset = () => {
@@ -67,10 +64,10 @@ export class AddNamespaceDialog extends React.Component<Props> {
     const { onSuccess, onError } = this.props;
 
     try {
-      const created = await namespaceStore.create({ name: namespace });
+      const created = await this.props.createNamespace({ name: namespace });
 
       onSuccess?.(created);
-      AddNamespaceDialog.close();
+      this.props.close();
     } catch (err) {
       Notifications.error(err);
       onError?.(err);
@@ -78,7 +75,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
   };
 
   render() {
-    const { ...dialogProps } = this.props;
+    const { model, createNamespace, ...dialogProps } = this.props;
     const { namespace } = this;
     const header = <h5>Create Namespace</h5>;
 
@@ -86,11 +83,11 @@ export class AddNamespaceDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddNamespaceDialog"
-        isOpen={dialogState.isOpen}
+        isOpen={this.props.model.isOpen}
         onOpen={this.reset}
-        close={AddNamespaceDialog.close}
+        close={this.props.model.close}
       >
-        <Wizard header={header} done={AddNamespaceDialog.close}>
+        <Wizard header={header} done={this.props.model.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"
@@ -110,3 +107,16 @@ export class AddNamespaceDialog extends React.Component<Props> {
     );
   }
 }
+
+export const AddNamespaceDialog = withInjectables<Dependencies, Props>(
+  NonInjectedAddNamespaceDialog,
+
+  {
+    getProps: (di, props) => ({
+      createNamespace: di.inject(namespaceStoreInjectable).create,
+      model: di.inject(addNamespaceDialogModelInjectable),
+
+      ...props,
+    }),
+  },
+);

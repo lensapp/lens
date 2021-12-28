@@ -24,29 +24,37 @@ import "./terminal-window.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import type { Terminal } from "./terminal";
-import { TerminalStore } from "./terminal.store";
+import type { Terminal } from "./terminal/terminal";
+import type { TerminalStore } from "./terminal-store/terminal.store";
 import { ThemeStore } from "../../theme.store";
-import { dockStore, DockTab, TabKind, TabId } from "./dock.store";
+import { DockTab, TabKind, TabId, DockStore } from "./dock-store/dock.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import terminalStoreInjectable from "./terminal-store/terminal-store.injectable";
 
 interface Props {
   tab: DockTab;
 }
 
+interface Dependencies {
+  dockStore: DockStore
+  terminalStore: TerminalStore
+}
+
 @observer
-export class TerminalWindow extends React.Component<Props> {
+class NonInjectedTerminalWindow extends React.Component<Props & Dependencies> {
   public elem: HTMLElement;
   public terminal: Terminal;
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      dockStore.onTabChange(({ tabId }) => this.activate(tabId), {
+      this.props.dockStore.onTabChange(({ tabId }) => this.activate(tabId), {
         tabKind: TabKind.TERMINAL,
         fireImmediately: true,
       }),
 
       // refresh terminal available space (cols/rows) when <Dock/> resized
-      dockStore.onResize(() => this.terminal?.fitLazy(), {
+      this.props.dockStore.onResize(() => this.terminal?.fitLazy(), {
         fireImmediately: true,
       }),
     ]);
@@ -54,7 +62,7 @@ export class TerminalWindow extends React.Component<Props> {
 
   activate(tabId: TabId) {
     this.terminal?.detach(); // detach previous
-    this.terminal = TerminalStore.getInstance().getTerminal(tabId);
+    this.terminal = this.props.terminalStore.getTerminal(tabId);
     this.terminal.attachTo(this.elem);
   }
 
@@ -67,3 +75,16 @@ export class TerminalWindow extends React.Component<Props> {
     );
   }
 }
+
+export const TerminalWindow = withInjectables<Dependencies, Props>(
+  NonInjectedTerminalWindow,
+
+  {
+    getProps: (di, props) => ({
+      dockStore: di.inject(dockStoreInjectable),
+      terminalStore: di.inject(terminalStoreInjectable),
+      ...props,
+    }),
+  },
+);
+

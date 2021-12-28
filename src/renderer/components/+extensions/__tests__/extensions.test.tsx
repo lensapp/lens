@@ -30,13 +30,13 @@ import { ConfirmDialog } from "../../confirm-dialog";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
-import { AppPaths } from "../../../../common/app-paths";
-import extensionLoaderInjectable
-  from "../../../../extensions/extension-loader/extension-loader.injectable";
+import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import extensionDiscoveryInjectable
-  from "../../../../extensions/extension-discovery/extension-discovery.injectable";
+import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForDownloadsInjectable
+  from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 
 mockWindow();
 
@@ -59,41 +59,27 @@ jest.mock("../../../../common/utils/downloadFile", () => ({
 
 jest.mock("../../../../common/utils/tar");
 
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
-AppPaths.init();
-
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
   let extensionDiscovery: ExtensionDiscovery;
   let render: DiRender;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting();
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
+
+    mockFs({
+      "some-directory-for-user-data": {},
+    });
+
+    await di.runSetups();
 
     render = renderFor(di);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
-
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-
-    mockFs({
-      "tmp": {},
-    });
 
     extensionLoader.addExtension({
       id: "extensionId",

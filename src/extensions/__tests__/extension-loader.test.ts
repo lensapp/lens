@@ -22,12 +22,12 @@
 import type { ExtensionLoader } from "../extension-loader";
 import { Console } from "console";
 import { stdout, stderr } from "process";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
-import { AppPaths } from "../../common/app-paths";
 import { runInAction } from "mobx";
 import updateExtensionsStateInjectable
   from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
+import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
+import mockFs from "mock-fs";
 
 console = new Console(stdout, stderr);
 
@@ -122,21 +122,26 @@ jest.mock(
   },
 );
 
-// TODO: Remove explicit global initialization at unclear time window
-AppPaths.init();
-
 describe("ExtensionLoader", () => {
   let extensionLoader: ExtensionLoader;
   let updateExtensionStateMock: jest.Mock;
 
-  beforeEach(() => {
-    const di = getDiForUnitTesting();
+  beforeEach(async () => {
+    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
 
     updateExtensionStateMock = jest.fn();
 
-    di.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
+    dis.mainDi.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
 
-    extensionLoader = di.inject(extensionLoaderInjectable);
+    await dis.runSetups();
+
+    extensionLoader = dis.mainDi.inject(extensionLoaderInjectable);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
   });
 
   it("renderer updates extension after ipc broadcast", async done => {

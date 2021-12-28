@@ -32,32 +32,41 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 import { makeObservable, observable, reaction } from "mobx";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
-import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { Disposer } from "../../../common/utils";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
 interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
-@observer
-export class WorkloadsOverview extends React.Component<Props> {
-  static clusterContext: ClusterContext;
+interface Dependencies {
+  clusterFrameContext: ClusterFrameContext
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+}
 
+@observer
+class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies> {
   @observable loadErrors: string[] = [];
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         cronJobStore,
         daemonSetStore,
         deploymentStore,
@@ -69,7 +78,7 @@ export class WorkloadsOverview extends React.Component<Props> {
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
       }),
-      reaction(() => WorkloadsOverview.clusterContext.contextNamespaces.slice(), () => {
+      reaction(() => this.props.clusterFrameContext.contextNamespaces.slice(), () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),
@@ -117,3 +126,15 @@ export class WorkloadsOverview extends React.Component<Props> {
     );
   }
 }
+
+export const WorkloadsOverview = withInjectables<Dependencies, Props>(
+  NonInjectedWorkloadsOverview,
+
+  {
+    getProps: (di, props) => ({
+      clusterFrameContext: di.inject(clusterFrameContextInjectable),
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);

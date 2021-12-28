@@ -19,5 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 export * from "./metrics-providers";
-export * from "./ipc";
 export * from "./cluster-metadata-detectors";

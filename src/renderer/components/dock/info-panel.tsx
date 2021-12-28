@@ -28,8 +28,10 @@ import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import { dockStore, TabId } from "./dock.store";
+import type { DockStore, TabId } from "./dock-store/dock.store";
 import { Notifications } from "../notifications";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import dockStoreInjectable from "./dock-store/dock-store.injectable";
 
 interface Props extends OptionalProps {
   tabId: TabId;
@@ -50,8 +52,12 @@ interface OptionalProps {
   showStatusPanel?: boolean;
 }
 
+interface Dependencies {
+  dockStore: DockStore
+}
+
 @observer
-export class InfoPanel extends Component<Props> {
+class NonInjectedInfoPanel extends Component<Props & Dependencies> {
   static defaultProps: OptionalProps = {
     submitLabel: "Submit",
     submittingMessage: "Submitting..",
@@ -65,7 +71,7 @@ export class InfoPanel extends Component<Props> {
   @observable error = "";
   @observable waiting = false;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -104,7 +110,7 @@ export class InfoPanel extends Component<Props> {
   };
 
   close = () => {
-    dockStore.closeTab(this.props.tabId);
+    this.props.dockStore.closeTab(this.props.tabId);
   };
 
   renderErrorIcon() {
@@ -159,3 +165,14 @@ export class InfoPanel extends Component<Props> {
     );
   }
 }
+
+export const InfoPanel = withInjectables<Dependencies, Props>(
+  NonInjectedInfoPanel,
+
+  {
+    getProps: (di, props) => ({
+      dockStore: di.inject(dockStoreInjectable),
+      ...props,
+    }),
+  },
+);

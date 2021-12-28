@@ -22,7 +22,7 @@
 import { observable } from "mobx";
 import type { ClusterMetadata } from "../../common/cluster-types";
 import { Singleton } from "../../common/utils";
-import type { Cluster } from "../cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 import type { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
 
 export class DetectorRegistry extends Singleton {

@@ -30,22 +30,30 @@ import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
-import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
-import { dockStore, DockTab, TabKind } from "./dock.store";
+import { DockStore, DockTab, TabKind } from "./dock-store/dock.store";
 import { EditResource } from "./edit-resource";
 import { InstallChart } from "./install-chart";
 import { Logs } from "./logs";
 import { TerminalWindow } from "./terminal-window";
-import { createTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import createResourceTabInjectable from "./create-resource-tab/create-resource-tab.injectable";
+import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import createTerminalTabInjectable from "./create-terminal-tab/create-terminal-tab.injectable";
 
 interface Props {
   className?: string;
 }
 
+interface Dependencies {
+  createResourceTab: () => void
+  createTerminalTab: () => void
+  dockStore: DockStore
+}
+
 @observer
-export class Dock extends React.Component<Props> {
+class NonInjectedDock extends React.Component<Props & Dependencies> {
   private element = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
@@ -57,7 +65,7 @@ export class Dock extends React.Component<Props> {
   }
 
   onKeyDown = (evt: KeyboardEvent) => {
-    const { close, selectedTab, closeTab } = dockStore;
+    const { close, selectedTab, closeTab } = this.props.dockStore;
     const { code, ctrlKey, metaKey, shiftKey } = evt;
     // Determine if user working inside <Dock/> or using any other areas in app
     const dockIsFocused = this.element?.current.contains(document.activeElement);
@@ -75,7 +83,7 @@ export class Dock extends React.Component<Props> {
   };
 
   onChangeTab = (tab: DockTab) => {
-    const { open, selectTab } = dockStore;
+    const { open, selectTab } = this.props.dockStore;
 
     open();
     selectTab(tab.id);
@@ -100,7 +108,7 @@ export class Dock extends React.Component<Props> {
   }
 
   renderTabContent() {
-    const { isOpen, height, selectedTab } = dockStore;
+    const { isOpen, height, selectedTab } = this.props.dockStore;
 
     if (!isOpen || !selectedTab) return null;
 
@@ -112,8 +120,8 @@ export class Dock extends React.Component<Props> {
   }
 
   render() {
-    const { className } = this.props;
-    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+    const { className, dockStore } = this.props;
+    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = this.props.dockStore;
 
     return (
       <div
@@ -142,11 +150,11 @@ export class Dock extends React.Component<Props> {
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
-                <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
+                <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>
                   <Icon small svg="terminal" size={15} />
                   Terminal session
                 </MenuItem>
-                <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
+                <MenuItem className="create-resource-tab" onClick={() => this.props.createResourceTab()}>
                   <Icon small material="create" />
                   Create resource
                 </MenuItem>
@@ -173,3 +181,17 @@ export class Dock extends React.Component<Props> {
     );
   }
 }
+
+export const Dock = withInjectables<Dependencies, Props>(
+  NonInjectedDock,
+
+  {
+    getProps: (di, props) => ({
+      createResourceTab: di.inject(createResourceTabInjectable),
+      dockStore: di.inject(dockStoreInjectable),
+      createTerminalTab: di.inject(createTerminalTabInjectable),
+      ...props,
+    }),
+  },
+);
+

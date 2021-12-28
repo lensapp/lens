@@ -27,25 +27,8 @@ import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import { Notifications } from "../../notifications";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../../../common/app-paths";
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
-AppPaths.init();
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const mockHotbars: { [id: string]: any } = {
   "1": {
@@ -67,10 +50,15 @@ jest.mock("../../../../common/hotbar-store", () => ({
 }));
 
 describe("<HotbarRemoveCommand />", () => {
-  beforeEach(() => {
-    mockFs({
-      "tmp": {},
-    });
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    await di.runSetups();
+
     UserStore.createInstance();
     ThemeStore.createInstance();
   });

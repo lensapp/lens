@@ -25,11 +25,13 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { PortForwardItem, portForwardStore } from "../../port-forward";
+import type { PortForwardItem, PortForwardStore } from "../../port-forward";
 import { PortForwardMenu } from "./port-forward-menu";
 import { PortForwardsRouteParams, portForwardsURL } from "../../../common/routes";
 import { PortForwardDetails } from "./port-forward-details";
 import { navigation } from "../../navigation";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 
 enum columnId {
   name = "name",
@@ -44,19 +46,23 @@ enum columnId {
 interface Props extends RouteComponentProps<PortForwardsRouteParams> {
 }
 
+interface Dependencies {
+  portForwardStore: PortForwardStore
+}
+
 @observer
-export class PortForwards extends React.Component<Props> {
+class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      portForwardStore.watch(),
+      this.props.portForwardStore.watch(),
     ]);
   }
 
   get selectedPortForward() {
     const { match: { params: { forwardport }}} = this.props;
 
-    return portForwardStore.getById(forwardport);
+    return this.props.portForwardStore.getById(forwardport);
   }
 
   onDetails = (item: PortForwardItem) => {
@@ -96,7 +102,7 @@ export class PortForwards extends React.Component<Props> {
         <ItemListLayout
           isConfigurable
           tableId="port_forwards"
-          className="PortForwards" store={portForwardStore}
+          className="PortForwards" store={this.props.portForwardStore}
           sortingCallbacks={{
             [columnId.name]: item => item.getName(),
             [columnId.namespace]: item => item.getNs(),
@@ -150,3 +156,15 @@ export class PortForwards extends React.Component<Props> {
     );
   }
 }
+
+export const PortForwards = withInjectables<Dependencies, Props>(
+  NonInjectedPortForwards,
+
+  {
+    getProps: (di, props) => ({
+      portForwardStore: di.inject(portForwardStoreInjectable),
+      ...props,
+    }),
+  },
+);
+

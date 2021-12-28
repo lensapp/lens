@@ -28,9 +28,13 @@ import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { namespaceStore } from "./namespace.store";
+import type { NamespaceStore } from "./namespace-store/namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { NamespacesRouteParams } from "../../../common/routes";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import addNamespaceDialogModelInjectable
+  from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
 
 enum columnId {
   name = "name",
@@ -42,7 +46,12 @@ enum columnId {
 interface Props extends RouteComponentProps<NamespacesRouteParams> {
 }
 
-export class Namespaces extends React.Component<Props> {
+interface Dependencies {
+  namespaceStore: NamespaceStore
+  openAddNamespaceDialog: () => void
+}
+
+class NonInjectedNamespaces extends React.Component<Props & Dependencies> {
   render() {
     return (
       <TabLayout>
@@ -50,7 +59,7 @@ export class Namespaces extends React.Component<Props> {
           isConfigurable
           tableId="namespaces"
           className="Namespaces"
-          store={namespaceStore}
+          store={this.props.namespaceStore}
           sortingCallbacks={{
             [columnId.name]: ns => ns.getName(),
             [columnId.labels]: ns => ns.getLabels(),
@@ -78,7 +87,7 @@ export class Namespaces extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             addTooltip: "Add Namespace",
-            onAdd: () => AddNamespaceDialog.open(),
+            onAdd: () => this.props.openAddNamespaceDialog(),
           }}
           customizeTableRowProps={item => ({
             disabled: item.getStatus() === NamespaceStatus.TERMINATING,
@@ -89,3 +98,15 @@ export class Namespaces extends React.Component<Props> {
     );
   }
 }
+
+export const Namespaces = withInjectables<Dependencies, Props>(
+  NonInjectedNamespaces,
+
+  {
+    getProps: (di, props) => ({
+      namespaceStore: di.inject(namespaceStoreInjectable),
+      openAddNamespaceDialog: di.inject(addNamespaceDialogModelInjectable).open,
+      ...props,
+    }),
+  },
+);

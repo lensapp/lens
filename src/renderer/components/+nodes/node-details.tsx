@@ -39,18 +39,26 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { NodeDetailsResources } from "./node-details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
-import { boundMethod } from "../../utils";
+import { boundMethod, Disposer } from "../../utils";
 import logger from "../../../common/logger";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class NodeDetails extends React.Component<Props> {
+class NonInjectedNodeDetails extends React.Component<Props & Dependencies> {
   @observable metrics: Partial<IClusterMetrics>;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -60,7 +68,8 @@ export class NodeDetails extends React.Component<Props> {
       reaction(() => this.props.object.getName(), () => {
         this.metrics = null;
       }),
-      kubeWatchApi.subscribeStores([
+
+      this.props.subscribeStores([
         podsStore,
       ]),
     ]);
@@ -190,3 +199,15 @@ export class NodeDetails extends React.Component<Props> {
     );
   }
 }
+
+export const NodeDetails = withInjectables<Dependencies, Props>(
+  NonInjectedNodeDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);
+

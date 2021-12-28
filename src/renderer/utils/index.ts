@@ -20,11 +20,9 @@
  */
 
 // Common usage utils & helpers
-
 export * from "../../common/utils";
 export * from "../../common/event-emitter";
 
-export * from "./createStorage";
 export * from "./cssNames";
 export * from "./cssVar";
 export * from "./display-booleans";

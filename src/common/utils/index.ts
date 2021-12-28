@@ -43,7 +43,6 @@ export * from "./extended-map";
 export * from "./formatDuration";
 export * from "./getRandId";
 export * from "./hash-set";
-export * from "./local-kubeconfig";
 export * from "./n-fircate";
 export * from "./objects";
 export * from "./openExternal";

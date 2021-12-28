@@ -21,10 +21,14 @@
 
 import fse from "fs-extra";
 import path from "path";
-import { AppPaths } from "../../common/app-paths";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 export function fileNameMigration() {
-  const userDataPath = AppPaths.get("userData");
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const userDataPath = di.inject(directoryForUserDataInjectable);
   const configJsonPath = path.join(userDataPath, "config.json");
   const lensUserStoreJsonPath = path.join(userDataPath, "lens-user-store.json");
 

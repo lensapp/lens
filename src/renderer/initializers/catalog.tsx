@@ -23,7 +23,7 @@ import React from "react";
 import fs from "fs";
 import "../../common/catalog-entities/kubernetes-cluster";
 import { WebLinkCategory } from "../../common/catalog-entities";
-import { ClusterStore } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { CommandOverlay } from "../components/command-palette";

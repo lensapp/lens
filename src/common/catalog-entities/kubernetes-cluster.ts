@@ -22,7 +22,7 @@
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
-import { ClusterStore } from "../cluster-store";
+import { ClusterStore } from "../cluster-store/cluster-store";
 import { broadcastMessage, requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { app } from "electron";

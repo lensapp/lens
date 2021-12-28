@@ -86,7 +86,7 @@ export type { NetworkPolicyStore } from "../../renderer/components/+network-poli
 export type { PersistentVolumesStore } from "../../renderer/components/+storage-volumes/volumes.store";
 export type { VolumeClaimStore } from "../../renderer/components/+storage-volume-claims/volume-claim.store";
 export type { StorageClassStore } from "../../renderer/components/+storage-classes/storage-class.store";
-export type { NamespaceStore } from "../../renderer/components/+namespaces/namespace.store";
+export type { NamespaceStore } from "../../renderer/components/+namespaces/namespace-store/namespace.store";
 export type { ServiceAccountsStore } from "../../renderer/components/+user-management/+service-accounts/store";
 export type { RolesStore } from "../../renderer/components/+user-management/+roles/store";
 export type { RoleBindingsStore } from "../../renderer/components/+user-management/+role-bindings/store";

@@ -21,25 +21,34 @@
 
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, removePortForward } from "../../port-forward";
+import { openPortForward, PortForwardItem } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { PortForwardDialog } from "../../port-forward";
 import { Notifications } from "../notifications";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import removePortForwardInjectable
+  from "../../port-forward/port-forward-store/remove-port-forward/remove-port-forward.injectable";
+import portForwardDialogModelInjectable
+  from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 
 interface Props extends MenuActionsProps {
   portForward: PortForwardItem;
   hideDetails?(): void;
 }
 
-export class PortForwardMenu extends React.Component<Props> {
+interface Dependencies {
+  removePortForward: (item: PortForwardItem) => Promise<void>,
+  openPortForwardDialog: (item: PortForwardItem) => void
+}
+
+class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
   @boundMethod
   remove() {
     const { portForward } = this.props;
 
     try {
-      removePortForward(portForward);
+      this.props.removePortForward(portForward);
     } catch (error) {
       Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
     }
@@ -56,7 +65,7 @@ export class PortForwardMenu extends React.Component<Props> {
           <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
           <span className="title">Open</span>
         </MenuItem>
-        <MenuItem onClick={() => PortForwardDialog.open(portForward)}>
+        <MenuItem onClick={() => this.props.openPortForwardDialog(portForward)}>
           <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
           <span className="title">Edit</span>
         </MenuItem>
@@ -78,3 +87,15 @@ export class PortForwardMenu extends React.Component<Props> {
     );
   }
 }
+
+export const PortForwardMenu = withInjectables<Dependencies, Props>(
+  NonInjectedPortForwardMenu,
+
+  {
+    getProps: (di, props) => ({
+      removePortForward: di.inject(removePortForwardInjectable),
+      openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+      ...props,
+    }),
+  },
+);

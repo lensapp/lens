@@ -30,7 +30,7 @@ import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
-import type { IKubeWatchEvent } from "./kube-watch-api";
+import type { IKubeWatchEvent } from "./kube-watch-event";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";

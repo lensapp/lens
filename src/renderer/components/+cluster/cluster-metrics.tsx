@@ -24,7 +24,7 @@ import styles from "./cluster-metrics.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import { clusterOverviewStore, MetricType } from "./cluster-overview.store";
+import { ClusterOverviewStore, MetricType } from "./cluster-overview-store/cluster-overview-store";
 import { BarChart } from "../chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
@@ -32,10 +32,16 @@ import { ZebraStripes } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterOverviewStoreInjectable
+  from "./cluster-overview-store/cluster-overview-store.injectable";
 
-export const ClusterMetrics = observer(() => {
-  const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics } = clusterOverviewStore;
-  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
+interface Dependencies {
+  clusterOverviewStore: ClusterOverviewStore
+}
+
+const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics }}: Dependencies) => {
+  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(metrics);
   const metricValues = getMetricsValues(metrics);
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
   const data = metricValues.map(value => ({
@@ -118,3 +124,13 @@ export const ClusterMetrics = observer(() => {
     </div>
   );
 });
+
+export const ClusterMetrics = withInjectables<Dependencies>(
+  NonInjectedClusterMetrics,
+
+  {
+    getProps: (di) => ({
+      clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
+    }),
+  },
+);

@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Cluster } from "../cluster";
-import { Kubectl } from "../kubectl";
+import type { Cluster } from "../../common/cluster/cluster";
+import type { Kubectl } from "../kubectl/kubectl";
 import type WebSocket from "ws";
 import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
@@ -30,7 +30,7 @@ import os from "os";
 import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
-import { appEventBus } from "../../common/event-bus";
+import { appEventBus } from "../../common/app-event-bus/event-bus";
 import logger from "../logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
@@ -140,7 +140,6 @@ export abstract class ShellSession {
     this.processes.clear();
   }
 
-  protected kubectl: Kubectl;
   protected running = false;
   protected kubectlBinDirP: Promise<string>;
   protected kubeconfigPathP: Promise<string>;
@@ -170,8 +169,7 @@ export abstract class ShellSession {
     return { shellProcess, resume };
   }
 
-  constructor(protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
-    this.kubectl = new Kubectl(cluster.version);
+  constructor(protected kubectl: Kubectl, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;

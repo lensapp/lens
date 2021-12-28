@@ -24,10 +24,13 @@ import child_process from "child_process";
 import fs from "fs-extra";
 import path from "path";
 import logger from "../../main/logger";
-import { extensionPackagesRoot } from "../extension-loader";
 import type { PackageJson } from "type-fest";
 
 const logModule = "[EXTENSION-INSTALLER]";
+
+interface Dependencies {
+  extensionPackageRootDirectory: string
+}
 
 /**
  * Installs dependencies for extensions
@@ -35,9 +38,7 @@ const logModule = "[EXTENSION-INSTALLER]";
 export class ExtensionInstaller {
   private installLock = new AwaitLock();
 
-  get extensionPackagesRoot() {
-    return extensionPackagesRoot();
-  }
+  constructor(private dependencies: Dependencies) {}
 
   get npmPath() {
     return __non_webpack_require__.resolve("npm/bin/npm-cli");
@@ -46,7 +47,7 @@ export class ExtensionInstaller {
   /**
    * Write package.json to the file system and execute npm install for it.
    */
-  async installPackages(packageJsonPath: string, packagesJson: PackageJson): Promise<void> {
+  installPackages = async (packageJsonPath: string, packagesJson: PackageJson): Promise<void> => {
     // Mutual exclusion to install packages in sequence
     await this.installLock.acquireAsync();
 
@@ -56,34 +57,34 @@ export class ExtensionInstaller {
         mode: 0o600,
       });
 
-      logger.info(`${logModule} installing dependencies at ${extensionPackagesRoot()}`);
+      logger.info(`${logModule} installing dependencies at ${this.dependencies.extensionPackageRootDirectory}`);
       await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"]);
-      logger.info(`${logModule} dependencies installed at ${extensionPackagesRoot()}`);
+      logger.info(`${logModule} dependencies installed at ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
     }
-  }
+  };
 
   /**
    * Install single package using npm
    */
-  async installPackage(name: string): Promise<void> {
+  installPackage = async (name: string): Promise<void> => {
     // Mutual exclusion to install packages in sequence
     await this.installLock.acquireAsync();
 
     try {
-      logger.info(`${logModule} installing package from ${name} to ${extensionPackagesRoot()}`);
+      logger.info(`${logModule} installing package from ${name} to ${this.dependencies.extensionPackageRootDirectory}`);
       await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock", "--no-save", name]);
-      logger.info(`${logModule} package ${name} installed to ${extensionPackagesRoot()}`);
+      logger.info(`${logModule} package ${name} installed to ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
     }
-  }
+  };
 
   private npm(args: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
       const child = child_process.fork(this.npmPath, args, {
-        cwd: extensionPackagesRoot(),
+        cwd: this.dependencies.extensionPackageRootDirectory,
         silent: true,
         env: {},
       });

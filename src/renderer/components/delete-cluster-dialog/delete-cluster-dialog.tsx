@@ -26,7 +26,7 @@ import React from "react";
 
 import { Button } from "../button";
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { Cluster } from "../../../main/cluster";
+import type { Cluster } from "../../../common/cluster/cluster";
 import { saveKubeconfig } from "./save-config";
 import { requestMain } from "../../../common/ipc";
 import { clusterClearDeletingHandler, clusterDeleteHandler, clusterSetDeletingHandler } from "../../../common/cluster-ipc";

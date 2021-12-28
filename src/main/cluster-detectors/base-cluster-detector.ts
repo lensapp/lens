@@ -20,7 +20,7 @@
  */
 
 import type { RequestPromiseOptions } from "request-promise-native";
-import type { Cluster } from "../cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 import { k8sRequest } from "../k8s-request";
 
 export type ClusterDetectionResult = {

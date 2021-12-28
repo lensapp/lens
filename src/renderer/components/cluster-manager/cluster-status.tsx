@@ -26,7 +26,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { ipcRendererOn, requestMain } from "../../../common/ipc";
-import type { Cluster } from "../../../main/cluster";
+import type { Cluster } from "../../../common/cluster/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";

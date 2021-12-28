@@ -25,12 +25,12 @@ import spdy from "spdy";
 import httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../common/vars";
 import type { Router } from "./router";
-import type { ContextHandler } from "./context-handler";
+import type { ContextHandler } from "./context-handler/context-handler";
 import logger from "./logger";
 import { Singleton } from "../common/utils";
-import type { Cluster } from "./cluster";
+import type { Cluster } from "../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
-import { appEventBus } from "../common/event-bus";
+import { appEventBus } from "../common/app-event-bus/event-bus";
 import { getBoolean } from "./utils/parse-query";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;

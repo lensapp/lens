@@ -25,7 +25,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import { CatalogEntityStore } from "./catalog-entity.store";
+import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
@@ -36,7 +36,7 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import { createStorage, prevDefault } from "../../utils";
+import { prevDefault } from "../../utils";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
@@ -46,8 +46,10 @@ import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import { Avatar } from "../avatar";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { getLabelBadges } from "./helpers";
-
-export const previousActiveTab = createStorage("catalog-previous-active-tab", browseCatalogTab);
+import { withInjectables } from "@ogre-tools/injectable-react";
+import catalogPreviousActiveTabStorageInjectable
+  from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
+import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
 
 enum sortBy {
   name = "name",
@@ -56,26 +58,23 @@ enum sortBy {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<CatalogViewRouteParam> {
-  catalogEntityStore?: CatalogEntityStore;
+interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
+
+interface Dependencies {
+  catalogPreviousActiveTabStorage: { set: (value: string ) => void }
+  catalogEntityStore: CatalogEntityStore
 }
 
 @observer
-export class Catalog extends React.Component<Props> {
-  @observable private catalogEntityStore?: CatalogEntityStore;
+class NonInjectedCatalog extends React.Component<Props & Dependencies> {
   @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
-    this.catalogEntityStore = props.catalogEntityStore;
   }
-
-  static defaultProps = {
-    catalogEntityStore: new CatalogEntityStore(),
-  };
-
+  
   get routeActiveTab(): string {
     const { group, kind } = this.props.match.params ?? {};
 
@@ -92,9 +91,9 @@ export class Catalog extends React.Component<Props> {
       navigate: (url: string) => navigate(url),
     };
     disposeOnUnmount(this, [
-      this.catalogEntityStore.watch(),
+      this.props.catalogEntityStore.watch(),
       reaction(() => this.routeActiveTab, async (routeTab) => {
-        previousActiveTab.set(this.routeActiveTab);
+        this.props.catalogPreviousActiveTabStorage.set(this.routeActiveTab);
 
         try {
           await when(() => (routeTab === browseCatalogTab || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
@@ -102,7 +101,7 @@ export class Catalog extends React.Component<Props> {
 
           runInAction(() => {
             this.activeTab = routeTab;
-            this.catalogEntityStore.activeCategory = item;
+            this.props.catalogEntityStore.activeCategory = item;
           });
         } catch (error) {
           console.error(error);
@@ -113,13 +112,13 @@ export class Catalog extends React.Component<Props> {
 
     // If active category is filtered out, automatically switch to the first category
     disposeOnUnmount(this, reaction(() => catalogCategoryRegistry.filteredItems, () => {
-      if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === this.catalogEntityStore.activeCategory.getId())) {
+      if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === this.props.catalogEntityStore.activeCategory.getId())) {
         const item = catalogCategoryRegistry.filteredItems[0];
 
         runInAction(() => {
           if (item) {
             this.activeTab = item.getId();
-            this.catalogEntityStore.activeCategory = item;
+            this.props.catalogEntityStore.activeCategory = item;
           }
         });
       }
@@ -135,10 +134,10 @@ export class Catalog extends React.Component<Props> {
   }
 
   onDetails = (entity: CatalogEntity) => {
-    if (this.catalogEntityStore.selectedItemId) {
-      this.catalogEntityStore.selectedItemId = null;
+    if (this.props.catalogEntityStore.selectedItemId) {
+      this.props.catalogEntityStore.selectedItemId = null;
     } else {
-      this.catalogEntityStore.onRun(entity);
+      this.props.catalogEntityStore.onRun(entity);
     }
   };
 
@@ -189,7 +188,7 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <MenuActions onOpen={onOpen}>
-        <MenuItem key="open-details" onClick={() => this.catalogEntityStore.selectedItemId = entity.getId()}>
+        <MenuItem key="open-details" onClick={() => this.props.catalogEntityStore.selectedItemId = entity.getId()}>
           View Details
         </MenuItem>
         {
@@ -238,7 +237,7 @@ export class Catalog extends React.Component<Props> {
   }
 
   renderList() {
-    const { activeCategory } = this.catalogEntityStore;
+    const { activeCategory } = this.props.catalogEntityStore;
     const tableId = activeCategory ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}` : "catalog-items";
 
     if (this.activeTab === undefined) {
@@ -252,7 +251,7 @@ export class Catalog extends React.Component<Props> {
         renderHeaderTitle={activeCategory?.metadata.name || "Browse All"}
         isSelectable={false}
         isConfigurable={true}
-        store={this.catalogEntityStore}
+        store={this.props.catalogEntityStore}
         sortingCallbacks={{
           [sortBy.name]: entity => entity.getName(),
           [sortBy.source]: entity => entity.getSource(),
@@ -292,11 +291,11 @@ export class Catalog extends React.Component<Props> {
   }
 
   render() {
-    if (!this.catalogEntityStore) {
+    if (!this.props.catalogEntityStore) {
       return null;
     }
 
-    const selectedEntity = this.catalogEntityStore.selectedItem;
+    const selectedEntity = this.props.catalogEntityStore.selectedItem;
 
     return (
       <MainLayout sidebar={this.renderNavigation()}>
@@ -307,13 +306,13 @@ export class Catalog extends React.Component<Props> {
           selectedEntity
             ? <CatalogEntityDetails
               entity={selectedEntity}
-              hideDetails={() => this.catalogEntityStore.selectedItemId = null}
-              onRun={() => this.catalogEntityStore.onRun(selectedEntity)}
+              hideDetails={() => this.props.catalogEntityStore.selectedItemId = null}
+              onRun={() => this.props.catalogEntityStore.onRun(selectedEntity)}
             />
             : (
               <RenderDelay>
                 <CatalogAddButton
-                  category={this.catalogEntityStore.activeCategory}
+                  category={this.props.catalogEntityStore.activeCategory}
                 />
               </RenderDelay>
             )
@@ -322,3 +321,18 @@ export class Catalog extends React.Component<Props> {
     );
   }
 }
+
+export const Catalog = withInjectables<Dependencies, Props>(
+  NonInjectedCatalog,
+  {
+    getProps: (di, props) => ({
+      catalogEntityStore: di.inject(catalogEntityStoreInjectable),
+
+      catalogPreviousActiveTabStorage: di.inject(
+        catalogPreviousActiveTabStorageInjectable,
+      ),
+
+      ...props,
+    }),
+  },
+);

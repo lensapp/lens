@@ -21,7 +21,7 @@
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../common/cluster/cluster";
 import { observable, reaction, makeObservable } from "mobx";
 import { Badge } from "../../badge/badge";
 import { Icon } from "../../icon/icon";

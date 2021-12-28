@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import type { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../common/cluster/cluster";
 import { boundMethod } from "../../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";

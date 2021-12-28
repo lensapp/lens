@@ -27,8 +27,11 @@ import {
   ConfigurableDependencyInjectionContainer,
 } from "@ogre-tools/injectable";
 import { setLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
+import writeJsonFileInjectable from "../../common/fs/write-json-file/write-json-file.injectable";
+import readJsonFileInjectable from "../../common/fs/read-json-file/read-json-file.injectable";
 
-export const getDiForUnitTesting = () => {
+export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverrides: false }) => {
   const di: ConfigurableDependencyInjectionContainer = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di);
@@ -47,11 +50,24 @@ export const getDiForUnitTesting = () => {
     .forEach(injectable => di.register(injectable));
 
   di.preventSideEffects();
+  
+  if (doGeneralOverrides) {
+    di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
+
+    di.override(writeJsonFileInjectable, () => () => {
+      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
+    });
+
+    di.override(readJsonFileInjectable, () => () => {
+      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
+    });
+  }
 
   return di;
 };
 
 const getInjectableFilePaths = memoize(() => [
-  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);

@@ -30,7 +30,9 @@ import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
-import { AppPaths } from "./app-paths";
+import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
@@ -102,7 +104,9 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   protected cwd() {
-    return AppPaths.get("userData");
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    return di.inject(directoryForUserDataInjectable);
   }
 
   protected saveToFile(model: T) {

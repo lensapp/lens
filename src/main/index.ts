@@ -35,315 +35,343 @@ import { shellSync } from "./shell-sync";
 import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
-import { appEventBus } from "../common/event-bus";
+import { appEventBus } from "../common/app-event-bus/event-bus";
 import type { InstalledExtension } from "../extensions/extension-discovery/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
-import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
+import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
-import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
+import { syncGeneralEntities, syncWeblinks } from "./catalog-sources";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
-import { ClusterStore } from "../common/cluster-store";
 import { HotbarStore } from "../common/hotbar-store";
-import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
-import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
-import { Router } from "./router";
 import { initMenu } from "./menu/menu";
 import { initTray } from "./tray";
-import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
-import { AppPaths } from "../common/app-paths";
+import { kubeApiRequest } from "./proxy-functions";
 import { ShellSession } from "./shell-session/shell-session";
 import { getDi } from "./getDi";
-import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionDiscoveryInjectable
   from "../extensions/extension-discovery/extension-discovery.injectable";
+import directoryForExesInjectable
+  from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
+import initIpcMainHandlersInjectable
+  from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
+import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
+import directoryForKubeConfigsInjectable
+  from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import kubeconfigSyncManagerInjectable
+  from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
+import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
+import routerInjectable from "./router/router.injectable";
+import shellApiRequestInjectable
+  from "./proxy-functions/shell-api-request/shell-api-request.injectable";
+import userStoreInjectable from "../common/user-store/user-store.injectable";
 
 const di = getDi();
 
-injectSystemCAs();
+di.runSetups().then(() => {
+  injectSystemCAs();
 
-const onCloseCleanup = disposer();
-const onQuitCleanup = disposer();
+  const onCloseCleanup = disposer();
+  const onQuitCleanup = disposer();
 
-SentryInit();
-app.setName(appName);
+  SentryInit();
+  app.setName(appName);
 
-logger.info(`📟 Setting ${productName} as protocol client for lens://`);
+  logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
-if (app.setAsDefaultProtocolClient("lens")) {
-  logger.info("📟 Protocol client register succeeded ✅");
-} else {
-  logger.info("📟 Protocol client register failed ❗");
-}
-
-AppPaths.init();
-
-if (process.env.LENS_DISABLE_GPU) {
-  app.disableHardwareAcceleration();
-}
-
-logger.debug("[APP-MAIN] initializing remote");
-initializeRemote();
-
-logger.debug("[APP-MAIN] configuring packages");
-configurePackages();
-
-mangleProxyEnv();
-
-logger.debug("[APP-MAIN] initializing ipc main handlers");
-
-const menuItems = di.inject(electronMenuItemsInjectable);
-
-initializers.initIpcMainHandlers(menuItems);
-
-if (app.commandLine.getSwitchValue("proxy-server") !== "") {
-  process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
-}
-
-logger.debug("[APP-MAIN] Lens protocol routing main");
-
-const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
-
-if (!app.requestSingleInstanceLock()) {
-  app.exit();
-} else {
-  for (const arg of process.argv) {
-    if (arg.toLowerCase().startsWith("lens://")) {
-      lensProtocolRouterMain.route(arg);
-    }
+  if (app.setAsDefaultProtocolClient("lens")) {
+    logger.info("📟 Protocol client register succeeded ✅");
+  } else {
+    logger.info("📟 Protocol client register failed ❗");
   }
-}
 
-app.on("second-instance", (event, argv) => {
-  logger.debug("second-instance message");
+  if (process.env.LENS_DISABLE_GPU) {
+    app.disableHardwareAcceleration();
+  }
 
-  for (const arg of argv) {
-    if (arg.toLowerCase().startsWith("lens://")) {
-      lensProtocolRouterMain.route(arg);
+  logger.debug("[APP-MAIN] initializing remote");
+  initializeRemote();
+
+  logger.debug("[APP-MAIN] configuring packages");
+  configurePackages();
+
+  mangleProxyEnv();
+
+  const initIpcMainHandlers = di.inject(initIpcMainHandlersInjectable);
+
+  logger.debug("[APP-MAIN] initializing ipc main handlers");
+  initIpcMainHandlers();
+
+  if (app.commandLine.getSwitchValue("proxy-server") !== "") {
+    process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
+  }
+
+  logger.debug("[APP-MAIN] Lens protocol routing main");
+
+  const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
+
+  if (!app.requestSingleInstanceLock()) {
+    app.exit();
+  } else {
+    for (const arg of process.argv) {
+      if (arg.toLowerCase().startsWith("lens://")) {
+        lensProtocolRouterMain.route(arg);
+      }
     }
   }
 
-  WindowManager.getInstance(false)?.ensureMainWindow();
-});
+  app.on("second-instance", (event, argv) => {
+    logger.debug("second-instance message");
 
-app.on("ready", async () => {
-  logger.info(`🚀 Starting ${productName} from "${AppPaths.get("exe")}"`);
-  logger.info("🐚 Syncing shell environment");
-  await shellSync();
+    for (const arg of argv) {
+      if (arg.toLowerCase().startsWith("lens://")) {
+        lensProtocolRouterMain.route(arg);
+      }
+    }
 
-  bindBroadcastHandlers();
-
-  powerMonitor.on("shutdown", () => app.exit());
-
-  registerFileProtocol("static", __static);
-
-  PrometheusProviderRegistry.createInstance();
-  ShellRequestAuthenticator.createInstance().init();
-  initializers.initPrometheusProviderRegistry();
-
-  /**
-   * The following sync MUST be done before HotbarStore creation, because that
-   * store has migrations that will remove items that previous migrations add
-   * if this is not present
-   */
-  syncGeneralEntities();
-
-  logger.info("💾 Loading stores");
-
-  UserStore.createInstance().startMainReactions();
-
-  // ClusterStore depends on: UserStore
-  ClusterStore.createInstance().provideInitialFromMain();
-
-  // HotbarStore depends on: ClusterStore
-  HotbarStore.createInstance();
-
-  FilesystemProvisionerStore.createInstance();
-  WeblinkStore.createInstance();
-
-  syncWeblinks();
-
-  HelmRepoManager.createInstance(); // create the instance
-
-  const lensProxy = LensProxy.createInstance(new Router(), {
-    getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
-    kubeApiRequest,
-    shellApiRequest,
+    WindowManager.getInstance(false)?.ensureMainWindow();
   });
 
-  ClusterManager.createInstance().init();
-  KubeconfigSyncManager.createInstance();
+  app.on("ready", async () => {
+    const directoryForExes = di.inject(directoryForExesInjectable);
 
-  initializers.initClusterMetadataDetectors();
+    logger.info(`🚀 Starting ${productName} from "${directoryForExes}"`);
+    logger.info("🐚 Syncing shell environment");
+    await shellSync();
 
-  try {
-    logger.info("🔌 Starting LensProxy");
-    await lensProxy.listen();
-  } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
+    bindBroadcastHandlers();
 
-    return app.exit();
-  }
+    powerMonitor.on("shutdown", () => app.exit());
 
-  // test proxy connection
-  try {
-    logger.info("🔎 Testing LensProxy connection ...");
-    const versionFromProxy = await getAppVersionFromProxyServer(lensProxy.port);
+    registerFileProtocol("static", __static);
 
-    if (getAppVersion() !== versionFromProxy) {
-      logger.error("Proxy server responded with invalid response");
+    PrometheusProviderRegistry.createInstance();
+    initializers.initPrometheusProviderRegistry();
+
+    /**
+     * The following sync MUST be done before HotbarStore creation, because that
+     * store has migrations that will remove items that previous migrations add
+     * if this is not present
+     */
+    syncGeneralEntities();
+
+    logger.info("💾 Loading stores");
+
+    const userStore = di.inject(userStoreInjectable);
+
+    userStore.startMainReactions();
+
+    // ClusterStore depends on: UserStore
+    const clusterStore = di.inject(clusterStoreInjectable);
+
+    clusterStore.provideInitialFromMain();
+
+    // HotbarStore depends on: ClusterStore
+    HotbarStore.createInstance();
+
+    WeblinkStore.createInstance();
+
+    syncWeblinks();
+
+    HelmRepoManager.createInstance(); // create the instance
+
+    const router = di.inject(routerInjectable);
+    const shellApiRequest = di.inject(shellApiRequestInjectable);
+
+    const lensProxy = LensProxy.createInstance(router, {
+      getClusterForRequest: (req) => ClusterManager.getInstance().getClusterForRequest(req),
+      kubeApiRequest,
+      shellApiRequest,
+    });
+
+    ClusterManager.createInstance().init();
+
+    initializers.initClusterMetadataDetectors();
+
+    try {
+      logger.info("🔌 Starting LensProxy");
+      await lensProxy.listen();
+    } catch (error) {
+      dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
       return app.exit();
     }
 
-    logger.info("⚡ LensProxy connection OK");
-  } catch (error) {
-    logger.error(`🛑 LensProxy: failed connection test: ${error}`);
+    // test proxy connection
+    try {
+      logger.info("🔎 Testing LensProxy connection ...");
+      const versionFromProxy = await getAppVersionFromProxyServer(lensProxy.port);
 
-    const hostsPath = isWindows
-      ? "C:\\windows\\system32\\drivers\\etc\\hosts"
-      : "/etc/hosts";
-    const message = [
-      `Failed connection test: ${error}`,
-      "Check to make sure that no other versions of Lens are running",
-      `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
-      "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
-    ];
+      if (getAppVersion() !== versionFromProxy) {
+        logger.error("Proxy server responded with invalid response");
 
-    dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
+        return app.exit();
+      }
 
-    return app.exit();
-  }
+      logger.info("⚡ LensProxy connection OK");
+    } catch (error) {
+      logger.error(`🛑 LensProxy: failed connection test: ${error}`);
 
-  const extensionLoader = di.inject(extensionLoaderInjectable);
+      const hostsPath = isWindows
+        ? "C:\\windows\\system32\\drivers\\etc\\hosts"
+        : "/etc/hosts";
+      const message = [
+        `Failed connection test: ${error}`,
+        "Check to make sure that no other versions of Lens are running",
+        `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
+        "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
+      ];
 
-  extensionLoader.init();
+      dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
 
-  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+      return app.exit();
+    }
 
-  extensionDiscovery.init();
+    const extensionLoader = di.inject(extensionLoaderInjectable);
 
-  // Start the app without showing the main window when auto starting on login
-  // (On Windows and Linux, we get a flag. On MacOS, we get special API.)
-  const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
+    extensionLoader.init();
 
-  logger.info("🖥️  Starting WindowManager");
-  const windowManager = WindowManager.createInstance();
+    const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
 
-  onQuitCleanup.push(
-    initMenu(windowManager, menuItems),
-    initTray(windowManager),
-    () => ShellSession.cleanup(),
-  );
+    extensionDiscovery.init();
 
-  installDeveloperTools();
+    // Start the app without showing the main window when auto starting on login
+    // (On Windows and Linux, we get a flag. On MacOS, we get special API.)
+    const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
 
-  if (!startHidden) {
-    windowManager.ensureMainWindow();
-  }
+    logger.info("🖥️  Starting WindowManager");
+    const windowManager = WindowManager.createInstance();
 
-  ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
-    onCloseCleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
-    await ensureDir(storedKubeConfigFolder());
-    KubeconfigSyncManager.getInstance().startSync();
-    startUpdateChecking();
-    lensProtocolRouterMain.rendererLoaded = true;
+    const menuItems = di.inject(electronMenuItemsInjectable);
+
+    onQuitCleanup.push(
+      initMenu(windowManager, menuItems),
+      initTray(windowManager),
+      () => ShellSession.cleanup(),
+    );
+
+    installDeveloperTools();
+
+    if (!startHidden) {
+      windowManager.ensureMainWindow();
+    }
+
+    ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
+      onCloseCleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
+
+      const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
+
+      await ensureDir(directoryForKubeConfigs);
+
+      const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
+
+      kubeConfigSyncManager.startSync();
+
+      startUpdateChecking();
+      lensProtocolRouterMain.rendererLoaded = true;
+    });
+
+    logger.info("🧩 Initializing extensions");
+
+    // call after windowManager to see splash earlier
+    try {
+      const extensions = await extensionDiscovery.load();
+
+      // Start watching after bundled extensions are loaded
+      extensionDiscovery.watchExtensions();
+
+      // Subscribe to extensions that are copied or deleted to/from the extensions folder
+      extensionDiscovery.events
+        .on("add", (extension: InstalledExtension) => {
+          extensionLoader.addExtension(extension);
+        })
+        .on("remove", (lensExtensionId: LensExtensionId) => {
+          extensionLoader.removeExtension(lensExtensionId);
+        });
+
+      extensionLoader.initExtensions(extensions);
+    } catch (error) {
+      dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+      console.error(error);
+      console.trace();
+    }
+
+    setTimeout(() => {
+      appEventBus.emit({ name: "service", action: "start" });
+    }, 1000);
   });
 
-  logger.info("🧩 Initializing extensions");
+  app.on("activate", (event, hasVisibleWindows) => {
+    logger.info("APP:ACTIVATE", { hasVisibleWindows });
 
-  // call after windowManager to see splash earlier
-  try {
-    const extensions = await extensionDiscovery.load();
+    if (!hasVisibleWindows) {
+      WindowManager.getInstance(false)?.ensureMainWindow(false);
+    }
+  });
 
-    // Start watching after bundled extensions are loaded
-    extensionDiscovery.watchExtensions();
+  /**
+   * This variable should is used so that `autoUpdater.installAndQuit()` works
+   */
+  let blockQuit = !isIntegrationTesting;
 
-    // Subscribe to extensions that are copied or deleted to/from the extensions folder
-    extensionDiscovery.events
-      .on("add", (extension: InstalledExtension) => {
-        extensionLoader.addExtension(extension);
-      })
-      .on("remove", (lensExtensionId: LensExtensionId) => {
-        extensionLoader.removeExtension(lensExtensionId);
-      });
+  autoUpdater.on("before-quit-for-update", () => {
+    logger.debug("Unblocking quit for update");
+    blockQuit = false;
+  });
 
-    extensionLoader.initExtensions(extensions);
-  } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
-    console.error(error);
-    console.trace();
-  }
+  app.on("will-quit", (event) => {
+    logger.debug("will-quit message");
 
-  setTimeout(() => {
-    appEventBus.emit({ name: "service", action: "start" });
-  }, 1000);
-});
-
-app.on("activate", (event, hasVisibleWindows) => {
-  logger.info("APP:ACTIVATE", { hasVisibleWindows });
-
-  if (!hasVisibleWindows) {
-    WindowManager.getInstance(false)?.ensureMainWindow(false);
-  }
-});
-
-/**
- * This variable should is used so that `autoUpdater.installAndQuit()` works
- */
-let blockQuit = !isIntegrationTesting;
-
-autoUpdater.on("before-quit-for-update", () => {
-  logger.debug("Unblocking quit for update");
-  blockQuit = false;
-});
-
-app.on("will-quit", (event) => {
-  logger.debug("will-quit message");
-
-  // This is called when the close button of the main window is clicked
+    // This is called when the close button of the main window is clicked
 
 
-  logger.info("APP:QUIT");
-  appEventBus.emit({ name: "app", action: "close" });
-  ClusterManager.getInstance(false)?.stop(); // close cluster connections
-  KubeconfigSyncManager.getInstance(false)?.stopSync();
-  onCloseCleanup();
+    logger.info("APP:QUIT");
+    appEventBus.emit({ name: "app", action: "close" });
+    ClusterManager.getInstance(false)?.stop(); // close cluster connections
 
-  // This is set to false here so that LPRM can wait to send future lens://
-  // requests until after it loads again
-  lensProtocolRouterMain.rendererLoaded = false;
+    const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
 
-  if (blockQuit) {
-    // Quit app on Cmd+Q (MacOS)
+    kubeConfigSyncManager.stopSync();
 
-    event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+    onCloseCleanup();
 
-    return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
-  }
+    // This is set to false here so that LPRM can wait to send future lens://
+    // requests until after it loads again
+    lensProtocolRouterMain.rendererLoaded = false;
 
-  lensProtocolRouterMain.cleanup();
-  onQuitCleanup();
-});
+    if (blockQuit) {
+      // Quit app on Cmd+Q (MacOS)
 
-app.on("open-url", (event, rawUrl) => {
-  logger.debug("open-url message");
+      event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
 
-  // lens:// protocol handler
-  event.preventDefault();
-  lensProtocolRouterMain.route(rawUrl);
+      return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+    }
+
+    lensProtocolRouterMain.cleanup();
+    onQuitCleanup();
+  });
+
+  app.on("open-url", (event, rawUrl) => {
+    logger.debug("open-url message");
+
+    // lens:// protocol handler
+    event.preventDefault();
+    lensProtocolRouterMain.route(rawUrl);
+  });
+
+  logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
 });
 
 /**
@@ -360,5 +388,3 @@ export {
   Mobx,
   LensExtensions,
 };
-
-logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
