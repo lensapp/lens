@@ -18,22 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
+import { computed } from "mobx";
 
-import { BaseRegistry } from "./base-registry";
+const welcomeBannerItemsInjectable = getInjectable({
+  instantiate: (di) => {
+    const extensions = di.inject(rendererExtensionsInjectable);
 
-/**
- * WelcomeBannerRegistration is for an extension to register
- * Provide a Banner component to be renderered in the welcome screen.
- */
-export interface WelcomeBannerRegistration {
-  /**
-   * The banner component to be shown on the welcome screen.
-   */
-  Banner?: React.ComponentType
-  /**
-   * The banner width in px.
-   */
-  width?: number
-}
+    return computed(() => [
+      ...extensions.get().flatMap((extension) => extension.welcomeBanners),
+    ]);
+  },
 
-export class WelcomeBannerRegistry extends BaseRegistry<WelcomeBannerRegistration> { }
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default welcomeBannerItemsInjectable;

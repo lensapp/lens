@@ -28,6 +28,7 @@ import { catalogEntityRegistry, EntityFilter } from "../renderer/api/catalog-ent
 import { catalogCategoryRegistry, CategoryFilter } from "../renderer/api/catalog-category-registry";
 import type { KubernetesCluster } from "../common/catalog-entities";
 import type { WelcomeMenuRegistration } from "../renderer/components/+welcome/welcome-menu-items/welcome-menu-registration";
+import type { WelcomeBannerRegistration } from "../renderer/components/+welcome/welcome-banner-items/welcome-banner-registration";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -42,7 +43,7 @@ export class LensRendererExtension extends LensExtension {
   kubeWorkloadsOverviewItems: registries.WorkloadsOverviewDetailRegistration[] = [];
   commands: registries.CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
-  welcomeBanners: registries.WelcomeBannerRegistration[] = [];
+  welcomeBanners: WelcomeBannerRegistration[] = [];
   catalogEntityDetailItems: registries.CatalogEntityDetailRegistration<CatalogEntity>[] = [];
   topBarItems: registries.TopBarRegistration[] = [];
 

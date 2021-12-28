@@ -19,18 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// All registries managed by extensions api
-
-export * from "./page-registry";
-export * from "./page-menu-registry";
-export * from "./app-preference-registry";
-export * from "./status-bar-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./kube-object-status-registry";
-export * from "./command-registry";
-export * from "./entity-setting-registry";
-export * from "./catalog-entity-detail-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./topbar-registry";
-export * from "./protocol-handler";
+/**
+ * WelcomeBannerRegistration is for an extension to register
+ * Provide a Banner component to be renderered in the welcome screen.
+ */
+export interface WelcomeBannerRegistration {
+  /**
+   * The banner component to be shown on the welcome screen.
+   */
+  Banner?: React.ComponentType
+  /**
+   * The banner width in px.
+   */
+  width?: number
+}

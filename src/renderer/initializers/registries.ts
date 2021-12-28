@@ -33,7 +33,6 @@ export function initRegistries() {
   registries.KubeObjectMenuRegistry.createInstance();
   registries.KubeObjectStatusRegistry.createInstance();
   registries.StatusBarRegistry.createInstance();
-  registries.WelcomeBannerRegistry.createInstance();
   registries.WorkloadsOverviewDetailRegistry.createInstance();
   registries.TopBarRegistry.createInstance();
 }

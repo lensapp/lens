@@ -26,22 +26,24 @@ import type { IComputedValue } from "mobx";
 import Carousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
-import { WelcomeBannerRegistry } from "../../../extensions/registries";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import welcomeMenuItemsInjectable from "./welcome-menu-items/welcome-menu-items.injectable";
 import type { WelcomeMenuRegistration } from "./welcome-menu-items/welcome-menu-registration";
+import welcomeBannerItemsInjectable from "./welcome-banner-items/welcome-banner-items.injectable";
+import type { WelcomeBannerRegistration } from "./welcome-banner-items/welcome-banner-registration";
 
 export const defaultWidth = 320;
 
 interface Dependencies {
   welcomeMenuItems: IComputedValue<WelcomeMenuRegistration[]>
+  welcomeBannerItems: IComputedValue<WelcomeBannerRegistration[]>
 }
 
-const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems }) => {
-  const welcomeBanner = WelcomeBannerRegistry.getInstance().getItems();
+const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems, welcomeBannerItems }) => {
+  const welcomeBanners = welcomeBannerItems.get();
 
   // if there is banner with specified width, use it to calculate the width of the container
-  const maxWidth = welcomeBanner.reduce((acc, curr) => {
+  const maxWidth = welcomeBanners.reduce((acc, curr) => {
     const currWidth = curr.width ?? 0;
 
     if (acc > currWidth) {
@@ -57,10 +59,10 @@ const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems }) => {
         style={{ width: `${maxWidth}px` }}
         data-testid="welcome-banner-container"
       >
-        {welcomeBanner.length > 0 ? (
+        {welcomeBanners.length > 0 ? (
           <Carousel
             stopAutoPlayOnHover={true}
-            indicators={welcomeBanner.length > 1}
+            indicators={welcomeBanners.length > 1}
             autoPlay={true}
             navButtonsAlwaysInvisible={true}
             indicatorIconButtonProps={{
@@ -75,7 +77,7 @@ const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems }) => {
             }}
             interval={8000}
           >
-            {welcomeBanner.map((item, index) => (
+            {welcomeBanners.map((item, index) => (
               <item.Banner key={index} />
             ))}
           </Carousel>
@@ -142,6 +144,7 @@ export const Welcome = withInjectables<Dependencies>(
   {
     getProps: (di) => ({
       welcomeMenuItems: di.inject(welcomeMenuItemsInjectable),
+      welcomeBannerItems: di.inject(welcomeBannerItemsInjectable),
     }),
   },
 );
