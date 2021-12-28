@@ -25,7 +25,6 @@ import React from "react";
 import { cssNames } from "../../utils";
 
 interface Props extends React.HTMLProps<HTMLInputElement> {
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function Switch({ children, disabled, ...props }: Props) {

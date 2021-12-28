@@ -86,7 +86,10 @@ export const Application = observer(() => {
 
       <section id="terminalSelection">
         <SubTitle title="Terminal copy & paste" />
-        <Switch checked={userStore.terminalCopyOnSelect} onChange={v => userStore.terminalCopyOnSelect = v.target.checked}>
+        <Switch
+          checked={userStore.terminalCopyOnSelect}
+          onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
+        >
           Copy on select and paste on right-click
         </Switch>
       </section>
@@ -128,7 +131,7 @@ export const Application = observer(() => {
 
       <section id="other">
         <SubTitle title="Start-up"/>
-        <Switch checked={userStore.openAtLogin} onChange={v => userStore.openAtLogin = v.target.checked}>
+        <Switch checked={userStore.openAtLogin} onChange={() => userStore.openAtLogin = !userStore.openAtLogin}>
           Automatically start Lens on login
         </Switch>
       </section>

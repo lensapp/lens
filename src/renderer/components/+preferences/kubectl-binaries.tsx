@@ -48,7 +48,10 @@ export const KubectlBinaries = observer(() => {
     <>
       <section>
         <SubTitle title="Kubectl binary download"/>
-        <Switch checked={userStore.downloadKubectlBinaries} onChange={v => userStore.downloadKubectlBinaries = v.target.checked}>
+        <Switch
+          checked={userStore.downloadKubectlBinaries}
+          onChange={() => userStore.downloadKubectlBinaries = !userStore.downloadKubectlBinaries}
+        >
           Download kubectl binaries matching the Kubernetes cluster version
         </Switch>
       </section>

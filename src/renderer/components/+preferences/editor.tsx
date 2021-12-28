@@ -45,7 +45,10 @@ export const Editor = observer(() => {
       <section>
         <div className="flex gaps justify-space-between">
           <div className="flex gaps align-center">
-            <Switch checked={editorConfiguration.minimap.enabled} onChange={v => editorConfiguration.minimap.enabled = v.target.checked}>
+            <Switch
+              checked={editorConfiguration.minimap.enabled}
+              onChange={() => editorConfiguration.minimap.enabled = !editorConfiguration.minimap.enabled}
+            >
               Copy on select and paste on right-click
             </Switch>
           </div>

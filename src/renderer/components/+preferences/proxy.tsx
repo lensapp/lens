@@ -28,6 +28,7 @@ import { Switch } from "../switch";
 
 export const LensProxy = observer(() => {
   const [proxy, setProxy] = React.useState(UserStore.getInstance().httpsProxy || "");
+  const store = UserStore.getInstance();
 
   return (
     <section id="proxy">
@@ -50,7 +51,7 @@ export const LensProxy = observer(() => {
 
       <section className="small">
         <SubTitle title="Certificate Trust"/>
-        <Switch checked={UserStore.getInstance().allowUntrustedCAs} onChange={v => UserStore.getInstance().allowUntrustedCAs = v.target.checked}>
+        <Switch checked={store.allowUntrustedCAs} onChange={() => store.allowUntrustedCAs = !store.allowUntrustedCAs}>
           Allow untrusted Certificate Authorities
         </Switch>
         <small className="hint">
