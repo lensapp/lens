@@ -28,7 +28,8 @@ import { Console } from "console";
 import { AppPaths } from "../../common/app-paths";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import extensionDiscoveryInjectable from "./extension-discovery.injectable";
-import extensionInstallerInjectable from "../extension-installer/extension-installer.injectable";
+import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory/extension-package-root-directory.injectable";
+import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
 
 jest.setTimeout(60_000);
 
@@ -63,16 +64,12 @@ describe("ExtensionDiscovery", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
-    const extensionInstallerStub = {
-      installPackages: () => Promise.resolve(),
-      npm: () => Promise.resolve(),
-      extensionPackagesRoot: "some-extension-packages-root",
-      npmPath: "some-npm-path",
-      installPackage: jest.fn(),
-    };
+    di.override(installExtensionInjectable, () => () => Promise.resolve());
 
-    // @ts-ignore
-    di.override(extensionInstallerInjectable, () => extensionInstallerStub);
+    di.override(
+      extensionPackageRootDirectoryInjectable,
+      () => "some-extension-packages-root",
+    );
 
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
   });
@@ -80,9 +77,10 @@ describe("ExtensionDiscovery", () => {
   describe("with mockFs", () => {
     beforeEach(() => {
       mockFs({
-        [`${os.homedir()}/.k8slens/extensions/my-extension/package.json`]: JSON.stringify({
-          name: "my-extension",
-        }),
+        [`${os.homedir()}/.k8slens/extensions/my-extension/package.json`]:
+          JSON.stringify({
+            name: "my-extension",
+          }),
       });
     });
 
@@ -110,10 +108,12 @@ describe("ExtensionDiscovery", () => {
 
       await extensionDiscovery.watchExtensions();
 
-      extensionDiscovery.events.on("add", extension => {
+      extensionDiscovery.events.on("add", (extension) => {
         expect(extension).toEqual({
           absolutePath: expect.any(String),
-          id: path.normalize("some-extension-packages-root/node_modules/my-extension/package.json"),
+          id: path.normalize(
+            "some-extension-packages-root/node_modules/my-extension/package.json",
+          ),
           isBundled: false,
           isEnabled: false,
           isCompatible: false,
@@ -128,11 +128,16 @@ describe("ExtensionDiscovery", () => {
         done();
       });
 
-      addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
+      addHandler(
+        path.join(
+          extensionDiscovery.localFolderPath,
+          "/my-extension/package.json",
+        ),
+      );
     });
   });
 
-  it("doesn't emit add for added file under extension", async done => {
+  it("doesn't emit add for added file under extension", async (done) => {
     let addHandler: (filePath: string) => void;
 
     const mockWatchInstance: any = {
@@ -156,7 +161,12 @@ describe("ExtensionDiscovery", () => {
 
     extensionDiscovery.events.on("add", onAdd);
 
-    addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/node_modules/dep/package.json"));
+    addHandler(
+      path.join(
+        extensionDiscovery.localFolderPath,
+        "/my-extension/node_modules/dep/package.json",
+      ),
+    );
 
     setTimeout(() => {
       expect(onAdd).not.toHaveBeenCalled();

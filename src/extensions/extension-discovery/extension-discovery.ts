@@ -34,23 +34,25 @@ import {
 } from "../../common/ipc";
 import { toJS } from "../../common/utils";
 import logger from "../../main/logger";
-import type { ExtensionInstaller } from "../extension-installer/extension-installer";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
 import { isProduction } from "../../common/vars";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
+import type { PackageJson } from "type-fest";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader;
-
-  extensionInstaller: ExtensionInstaller;
   extensionsStore: ExtensionsStore;
 
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 
   isCompatibleBundledExtension: (manifest: LensExtensionManifest) => boolean;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
+
+  installExtension: (name: string) => Promise<void>;
+  installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>
+  extensionPackageRootDirectory: string;
 }
 
 export interface InstalledExtension {
@@ -124,11 +126,11 @@ export class ExtensionDiscovery {
   }
 
   get packageJsonPath(): string {
-    return path.join(this.dependencies.extensionInstaller.extensionPackagesRoot, manifestFilename);
+    return path.join(this.dependencies.extensionPackageRootDirectory, manifestFilename);
   }
 
   get inTreeTargetPath(): string {
-    return path.join(this.dependencies.extensionInstaller.extensionPackagesRoot, "extensions");
+    return path.join(this.dependencies.extensionPackageRootDirectory, "extensions");
   }
 
   get inTreeFolderPath(): string {
@@ -136,7 +138,7 @@ export class ExtensionDiscovery {
   }
 
   get nodeModulesPath(): string {
-    return path.join(this.dependencies.extensionInstaller.extensionPackagesRoot, "node_modules");
+    return path.join(this.dependencies.extensionPackageRootDirectory, "node_modules");
   }
 
   /**
@@ -222,7 +224,7 @@ export class ExtensionDiscovery {
           await fse.remove(extension.manifestPath);
 
           // Install dependencies for the new extension
-          await this.installPackage(extension.absolutePath);
+          await this.dependencies.installExtension(extension.absolutePath);
 
           this.extensions.set(extension.id, extension);
           logger.info(`${logModule} Added extension ${extension.manifest.name}`);
@@ -309,15 +311,12 @@ export class ExtensionDiscovery {
 
     this.loadStarted = true;
 
-    const extensionPackagesRoot =
-      this.dependencies.extensionInstaller.extensionPackagesRoot;
-
     logger.info(
-      `${logModule} loading extensions from ${extensionPackagesRoot}`,
+      `${logModule} loading extensions from ${this.dependencies.extensionPackageRootDirectory}`,
     );
 
     // fs.remove won't throw if path is missing
-    await fse.remove(path.join(extensionPackagesRoot, "package-lock.json"));
+    await fse.remove(path.join(this.dependencies.extensionPackageRootDirectory, "package-lock.json"));
 
     try {
       // Verify write access to static/extensions, which is needed for symlinking
@@ -413,7 +412,7 @@ export class ExtensionDiscovery {
     for (const extension of userExtensions) {
       if ((await fse.pathExists(extension.manifestPath)) === false) {
         try {
-          await this.installPackage(extension.absolutePath);
+          await this.dependencies.installExtension(extension.absolutePath);
         } catch (error) {
           const message = error.message || error || "unknown error";
           const { name, version } = extension.manifest;
@@ -436,11 +435,7 @@ export class ExtensionDiscovery {
       extensions.map(extension => [extension.manifest.name, extension.absolutePath]),
     );
 
-    return this.dependencies.extensionInstaller.installPackages(packageJsonPath, { dependencies });
-  }
-
-  async installPackage(name: string): Promise<void> {
-    return this.dependencies.extensionInstaller.installPackage(name);
+    return this.dependencies.installExtensions(packageJsonPath, { dependencies });
   }
 
   async loadBundledExtensions(): Promise<InstalledExtension[]> {
