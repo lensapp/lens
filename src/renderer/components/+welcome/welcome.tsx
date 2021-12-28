@@ -30,70 +30,103 @@ import { WelcomeBannerRegistry } from "../../../extensions/registries";
 
 export const defaultWidth = 320;
 
-@observer
-export class Welcome extends React.Component {
-  render() {
-    const welcomeBanner = WelcomeBannerRegistry.getInstance().getItems();
+export const Welcome: React.FC = observer(() => {
+  const welcomeBanner = WelcomeBannerRegistry.getInstance().getItems();
 
-    // if there is banner with specified width, use it to calculate the width of the container
-    const maxWidth = welcomeBanner.reduce((acc, curr) => {
-      const currWidth = curr.width ?? 0;
+  // if there is banner with specified width, use it to calculate the width of the container
+  const maxWidth = welcomeBanner.reduce((acc, curr) => {
+    const currWidth = curr.width ?? 0;
 
-      if (acc > currWidth) {
-        return acc;
-      }
+    if (acc > currWidth) {
+      return acc;
+    }
 
-      return currWidth;
-    }, defaultWidth);
+    return currWidth;
+  }, defaultWidth);
 
-    return (
-      <div className="flex justify-center Welcome align-center">
-        <div style={{ width: `${maxWidth}px` }} data-testid="welcome-banner-container">
-          {welcomeBanner.length > 0 ? (
-            <Carousel
-              stopAutoPlayOnHover={true}
-              indicators={welcomeBanner.length > 1}
-              autoPlay={true}
-              navButtonsAlwaysInvisible={true}
-              indicatorIconButtonProps={{
-                style: {
-                  color: "var(--iconActiveBackground)",
-                },
-              }}
-              activeIndicatorIconButtonProps={{
-                style: {
-                  color: "var(--iconActiveColor)",
-                },
-              }}
-              interval={8000}
+  return (
+    <div className="flex justify-center Welcome align-center">
+      <div
+        style={{ width: `${maxWidth}px` }}
+        data-testid="welcome-banner-container"
+      >
+        {welcomeBanner.length > 0 ? (
+          <Carousel
+            stopAutoPlayOnHover={true}
+            indicators={welcomeBanner.length > 1}
+            autoPlay={true}
+            navButtonsAlwaysInvisible={true}
+            indicatorIconButtonProps={{
+              style: {
+                color: "var(--iconActiveBackground)",
+              },
+            }}
+            activeIndicatorIconButtonProps={{
+              style: {
+                color: "var(--iconActiveColor)",
+              },
+            }}
+            interval={8000}
+          >
+            {welcomeBanner.map((item, index) => (
+              <item.Banner key={index} />
+            ))}
+          </Carousel>
+        ) : (
+          <Icon svg="logo-lens" className="logo" />
+        )}
+
+        <div className="flex justify-center">
+          <div
+            style={{ width: `${defaultWidth}px` }}
+            data-testid="welcome-text-container"
+          >
+            <h2>Welcome to {productName} 5!</h2>
+
+            <p>
+              To get you started we have auto-detected your clusters in your
+              kubeconfig file and added them to the catalog, your centralized
+              view for managing all your cloud-native resources.
+              <br />
+              <br />
+              If you have any questions or feedback, please join our{" "}
+              <a
+                href={slackUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="link"
+              >
+                Lens Community slack channel
+              </a>
+              .
+            </p>
+
+            <ul
+              className="block"
+              style={{ width: `${defaultWidth}px` }}
+              data-testid="welcome-menu-container"
             >
-              {welcomeBanner.map((item, index) =>
-                <item.Banner key={index} />,
-              )}
-            </Carousel>
-          ) : <Icon svg="logo-lens" className="logo" />}
-
-          <div className="flex justify-center">
-            <div style={{ width: `${defaultWidth}px` }} data-testid="welcome-text-container">
-              <h2>Welcome to {productName} 5!</h2>
-
-              <p>
-            To get you started we have auto-detected your clusters in your kubeconfig file and added them to the catalog, your centralized view for managing all your cloud-native resources.
-                <br /><br />
-            If you have any questions or feedback, please join our <a href={slackUrl} target="_blank" rel="noreferrer" className="link">Lens Community slack channel</a>.
-              </p>
-
-              <ul className="block" style={{ width: `${defaultWidth}px` }} data-testid="welcome-menu-container">
-                {WelcomeMenuRegistry.getInstance().getItems().map((item, index) => (
-                  <li key={index} className="flex grid-12" onClick={() => item.click()}>
-                    <Icon material={item.icon} className="box col-1" /> <a className="box col-10">{typeof item.title === "string" ? item.title : item.title()}</a> <Icon material="navigate_next" className="box col-1" />
+              {WelcomeMenuRegistry.getInstance()
+                .getItems()
+                .map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex grid-12"
+                    onClick={() => item.click()}
+                  >
+                    <Icon material={item.icon} className="box col-1" />
+                    <a className="box col-10">
+                      {typeof item.title === "string"
+                        ? item.title
+                        : item.title()}
+                    </a>
+                    <Icon material="navigate_next" className="box col-1" />
                   </li>
                 ))}
-              </ul>
-            </div>
+            </ul>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
