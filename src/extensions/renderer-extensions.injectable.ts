@@ -18,22 +18,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
+import extensionsInjectable from "./extensions.injectable";
+import type { LensRendererExtension } from "./lens-renderer-extension";
 
-import * as registries from "../../extensions/registries";
+const rendererExtensionsInjectable = getInjectable({
+  lifecycle: lifecycleEnum.singleton,
 
-export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
-  registries.CatalogEntityDetailRegistry.createInstance();
-  registries.ClusterPageMenuRegistry.createInstance();
-  registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
-  registries.EntitySettingRegistry.createInstance();
-  registries.GlobalPageRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
-  registries.KubeObjectMenuRegistry.createInstance();
-  registries.KubeObjectStatusRegistry.createInstance();
-  registries.StatusBarRegistry.createInstance();
-  registries.WelcomeBannerRegistry.createInstance();
-  registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
-}
+  instantiate: (di) =>
+    di.inject(extensionsInjectable) as IComputedValue<LensRendererExtension[]>,
+});
+
+export default rendererExtensionsInjectable;

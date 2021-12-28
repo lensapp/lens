@@ -263,7 +263,6 @@ export class ExtensionLoader {
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
         registries.CommandRegistry.getInstance().add(extension.commands),
-        registries.WelcomeMenuRegistry.getInstance().add(extension.welcomeMenus),
         registries.WelcomeBannerRegistry.getInstance().add(extension.welcomeBanners),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
         registries.TopBarRegistry.getInstance().add(extension.topBarItems),

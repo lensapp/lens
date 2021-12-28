@@ -20,11 +20,14 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { Welcome } from "../welcome";
-import { TopBarRegistry, WelcomeMenuRegistry, WelcomeBannerRegistry } from "../../../../extensions/registries";
+import { TopBarRegistry, WelcomeBannerRegistry } from "../../../../extensions/registries";
 import { defaultWidth } from "../welcome";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
 
 jest.mock(
   "electron",
@@ -39,15 +42,19 @@ jest.mock(
 );
 
 describe("<Welcome/>", () => {
+  let render: DiRender;
+
   beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    render = renderFor(di);
+
     TopBarRegistry.createInstance();
-    WelcomeMenuRegistry.createInstance();
     WelcomeBannerRegistry.createInstance();
   });
 
   afterEach(() => {
     TopBarRegistry.resetInstance();
-    WelcomeMenuRegistry.resetInstance();
     WelcomeBannerRegistry.resetInstance();
   });
 

@@ -22,15 +22,22 @@
 import "./welcome.scss";
 import React from "react";
 import { observer } from "mobx-react";
+import type { IComputedValue } from "mobx";
 import Carousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
-import { WelcomeMenuRegistry } from "../../../extensions/registries";
 import { WelcomeBannerRegistry } from "../../../extensions/registries";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import welcomeMenuItemsInjectable from "./welcome-menu-items/welcome-menu-items.injectable";
+import type { WelcomeMenuRegistration } from "./welcome-menu-items/welcome-menu-registration";
 
 export const defaultWidth = 320;
 
-export const Welcome: React.FC = observer(() => {
+interface Dependencies {
+  welcomeMenuItems: IComputedValue<WelcomeMenuRegistration[]>
+}
+
+const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems }) => {
   const welcomeBanner = WelcomeBannerRegistry.getInstance().getItems();
 
   // if there is banner with specified width, use it to calculate the width of the container
@@ -106,27 +113,35 @@ export const Welcome: React.FC = observer(() => {
               style={{ width: `${defaultWidth}px` }}
               data-testid="welcome-menu-container"
             >
-              {WelcomeMenuRegistry.getInstance()
-                .getItems()
-                .map((item, index) => (
-                  <li
-                    key={index}
-                    className="flex grid-12"
-                    onClick={() => item.click()}
-                  >
-                    <Icon material={item.icon} className="box col-1" />
-                    <a className="box col-10">
-                      {typeof item.title === "string"
-                        ? item.title
-                        : item.title()}
-                    </a>
-                    <Icon material="navigate_next" className="box col-1" />
-                  </li>
-                ))}
+              {welcomeMenuItems.get().map((item, index) => (
+                <li
+                  key={index}
+                  className="flex grid-12"
+                  onClick={() => item.click()}
+                >
+                  <Icon material={item.icon} className="box col-1" />
+                  <a className="box col-10">
+                    {typeof item.title === "string"
+                      ? item.title
+                      : item.title()}
+                  </a>
+                  <Icon material="navigate_next" className="box col-1" />
+                </li>
+              ))}
             </ul>
           </div>
         </div>
       </div>
     </div>
   );
-});
+};
+
+export const Welcome = withInjectables<Dependencies>(
+  observer(NonInjectedWelcome),
+
+  {
+    getProps: (di) => ({
+      welcomeMenuItems: di.inject(welcomeMenuItemsInjectable),
+    }),
+  },
+);

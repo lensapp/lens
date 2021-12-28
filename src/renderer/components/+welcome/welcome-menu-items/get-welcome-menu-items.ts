@@ -18,22 +18,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { computed, IComputedValue } from "mobx";
+import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
+import { navigate } from "../../../navigation";
+import { catalogURL } from "../../../../common/routes";
 
-import * as registries from "../../extensions/registries";
-
-export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
-  registries.CatalogEntityDetailRegistry.createInstance();
-  registries.ClusterPageMenuRegistry.createInstance();
-  registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
-  registries.EntitySettingRegistry.createInstance();
-  registries.GlobalPageRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
-  registries.KubeObjectMenuRegistry.createInstance();
-  registries.KubeObjectStatusRegistry.createInstance();
-  registries.StatusBarRegistry.createInstance();
-  registries.WelcomeBannerRegistry.createInstance();
-  registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
+interface Dependencies {
+  extensions: IComputedValue<LensRendererExtension[]>;
 }
+
+export const getWelcomeMenuItems = ({ extensions }: Dependencies) => {
+  const browseClusters = {
+    title: "Browse Clusters in Catalog",
+    icon: "view_list",
+    click: () =>
+      navigate(
+        catalogURL({
+          params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" },
+        }),
+      ),
+  };
+
+  return computed(() => [
+    browseClusters,
+    ...extensions.get().flatMap((extension) => extension.welcomeMenus),
+  ]);
+};
