@@ -20,6 +20,7 @@
  */
 
 import type React from "react";
+import type { LensExtension } from "../lens-extension";
 import { BaseRegistry } from "./base-registry";
 
 export interface AppPreferenceComponents {
@@ -29,6 +30,7 @@ export interface AppPreferenceComponents {
 
 export interface AppPreferenceRegistration {
   title: string;
+  extensionId: string;
   id?: string;
   showInPreferencesTab?: string;
   components: AppPreferenceComponents;
@@ -39,8 +41,9 @@ export interface RegisteredAppPreference extends AppPreferenceRegistration {
 }
 
 export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration, RegisteredAppPreference> {
-  getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPreference {
+  getRegisteredItem(item: AppPreferenceRegistration, extension: LensExtension): RegisteredAppPreference {
     return {
+      extensionId: extension.id,
       id: item.id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
       ...item,
     };
