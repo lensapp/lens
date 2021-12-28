@@ -22,7 +22,7 @@ import { dialog } from "../../../remote-helpers";
 import { AppPaths } from "../../../../common/app-paths";
 import { supportedExtensionFormats } from "../supported-extension-formats";
 
-export interface Dependencies {
+interface Dependencies {
   attemptInstalls: (filePaths: string[]) => Promise<void>
 }
 

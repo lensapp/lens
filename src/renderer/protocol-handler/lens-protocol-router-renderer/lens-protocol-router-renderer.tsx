@@ -47,7 +47,7 @@ function verifyIpcArgs(args: unknown[]): args is [string, RouteAttempt] {
   }
 }
 
-export interface Dependencies {
+interface Dependencies {
   extensionLoader: ExtensionLoader
 }
 

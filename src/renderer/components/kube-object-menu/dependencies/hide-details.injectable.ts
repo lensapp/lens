@@ -19,13 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { hideDetails } from "../../kube-detail-params";
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
-export const hideDetailsInjectable: Injectable<typeof hideDetails> = {
-  getDependencies: () => ({}),
+export const hideDetailsInjectable = getInjectable({
   instantiate: () => hideDetails,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default hideDetailsInjectable;

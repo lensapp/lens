@@ -28,7 +28,7 @@ import React from "react";
 import { when } from "mobx";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 
-export interface Dependencies {
+interface Dependencies {
   extensionLoader: ExtensionLoader
 }
 

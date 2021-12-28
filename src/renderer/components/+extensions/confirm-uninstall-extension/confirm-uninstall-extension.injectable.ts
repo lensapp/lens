@@ -18,25 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-import {
-  confirmUninstallExtension,
-  Dependencies,
-} from "./confirm-uninstall-extension";
-import type { InstalledExtension } from "../../../../extensions/extension-discovery";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { confirmUninstallExtension } from "./confirm-uninstall-extension";
 import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
 
-const confirmUninstallExtensionInjectable: Injectable<
-  (extension: InstalledExtension) => Promise<void>,
-  Dependencies
-> = {
-  getDependencies: di => ({
-    uninstallExtension: di.inject(uninstallExtensionInjectable),
-  }),
+const confirmUninstallExtensionInjectable = getInjectable({
+  instantiate: (di) =>
+    confirmUninstallExtension({
+      uninstallExtension: di.inject(uninstallExtensionInjectable),
+    }),
 
-  instantiate: confirmUninstallExtension,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default confirmUninstallExtensionInjectable;
