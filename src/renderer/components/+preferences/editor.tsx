@@ -49,7 +49,7 @@ export const Editor = observer(() => {
               checked={editorConfiguration.minimap.enabled}
               onChange={() => editorConfiguration.minimap.enabled = !editorConfiguration.minimap.enabled}
             >
-              Copy on select and paste on right-click
+              Show minimap
             </Switch>
           </div>
           <div className="flex gaps align-center">
