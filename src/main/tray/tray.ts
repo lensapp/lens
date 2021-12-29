@@ -20,16 +20,17 @@
  */
 
 import path from "path";
-import packageInfo from "../../package.json";
+import packageInfo from "../../../package.json";
 import { Menu, Tray } from "electron";
-import { autorun } from "mobx";
-import { showAbout } from "./menu/menu";
-import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
-import type { WindowManager } from "./window-manager";
-import logger from "./logger";
-import { isDevelopment, isWindows, productName } from "../common/vars";
-import { exitApp } from "./exit-app";
-import { preferencesURL } from "../common/routes";
+import { autorun, IComputedValue } from "mobx";
+import { showAbout } from "../menu/menu";
+import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
+import type { WindowManager } from "../window-manager";
+import logger from "../logger";
+import { isDevelopment, isWindows, productName } from "../../common/vars";
+import { exitApp } from "../exit-app";
+import { preferencesURL } from "../../common/routes";
+import type { MenuItemConstructorOptions } from "electron/main";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -44,7 +45,10 @@ export function getTrayIcon(): string {
   );
 }
 
-export function initTray(windowManager: WindowManager) {
+export function initTray(
+  windowManager: WindowManager,
+  trayItems: IComputedValue<MenuItemConstructorOptions[]>,
+) {
   const icon = getTrayIcon();
 
   tray = new Tray(icon);
@@ -62,7 +66,7 @@ export function initTray(windowManager: WindowManager) {
   const disposers = [
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager);
+        const menu = createTrayMenu(windowManager, trayItems.get());
 
         tray.setContextMenu(menu);
       } catch (error) {
@@ -78,7 +82,10 @@ export function initTray(windowManager: WindowManager) {
   };
 }
 
-function createTrayMenu(windowManager: WindowManager): Menu {
+function createTrayMenu(
+  windowManager: WindowManager,
+  extensionTrayItems: MenuItemConstructorOptions[],
+): Menu {
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: `Open ${productName}`,
@@ -106,6 +113,10 @@ function createTrayMenu(windowManager: WindowManager): Menu {
           .then(() => windowManager.ensureMainWindow());
       },
     });
+  }
+
+  for (const item of extensionTrayItems) {
+    template.push(item);
   }
 
   return Menu.buildFromTemplate(template.concat([
