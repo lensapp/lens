@@ -30,6 +30,7 @@ import logger from "../logger";
 import { isDevelopment, isWindows, productName } from "../../common/vars";
 import { exitApp } from "../exit-app";
 import { preferencesURL } from "../../common/routes";
+import { toJS } from "../../common/utils";
 import type { MenuItemConstructorOptions } from "electron/main";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
@@ -47,7 +48,7 @@ export function getTrayIcon(): string {
 
 export function initTray(
   windowManager: WindowManager,
-  trayItems: IComputedValue<MenuItemConstructorOptions[]>,
+  trayMenuItems: IComputedValue<MenuItemConstructorOptions[]>,
 ) {
   const icon = getTrayIcon();
 
@@ -66,7 +67,7 @@ export function initTray(
   const disposers = [
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager, trayItems.get());
+        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()));
 
         tray.setContextMenu(menu);
       } catch (error) {
@@ -86,7 +87,7 @@ function createTrayMenu(
   windowManager: WindowManager,
   extensionTrayItems: MenuItemConstructorOptions[],
 ): Menu {
-  const template: Electron.MenuItemConstructorOptions[] = [
+  let template: Electron.MenuItemConstructorOptions[] = [
     {
       label: `Open ${productName}`,
       click() {
@@ -115,9 +116,7 @@ function createTrayMenu(
     });
   }
 
-  for (const item of extensionTrayItems) {
-    template.push(item);
-  }
+  template = template.concat(extensionTrayItems);
 
   return Menu.buildFromTemplate(template.concat([
     {
