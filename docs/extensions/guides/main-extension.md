@@ -79,6 +79,8 @@ Note that pages are associated with the [`Renderer.LensExtension`](renderer-exte
 The following example demonstrates how an application menu can be used to navigate to such a page:
 
 ``` typescript
+import { Main } from "@k8slens/extensions";
+
 export default class SamplePageMainExtension extends Main.LensExtension {
   appMenus = [
     {
@@ -95,14 +97,14 @@ This page would be defined in your extension's `Renderer.LensExtension` implemen
 
 ### `trayMenus`
 
-`trayMenus` is a similar than appMenus, but you don't add parentId since all of the tray menus under Lens tray icon. It's an array of Electron's [`MenuItemConstructorOptions`](https://www.electronjs.org/docs/v14-x-y/api/menu-item). Most importantly you can define a `label` and a `click` handler.
+`trayMenus` is an array of Electron's [`MenuItemConstructorOptions`](https://www.electronjs.org/docs/v14-x-y/api/menu-item). Most importantly you can define a `label` and a `click` handler.
 
 The following example demonstrates how tray menus can be added from extension:
 
 ``` typescript
 import { Main } from "@k8slens/extensions";
 
-export default class SamplePageMainExtension extends Main.LensExtension {
+export default class SampleTrayMenuMainExtension extends Main.LensExtension {
   trayMenus = [{
     label: "menu from the extension",
     click: () => { console.log("tray menu clicked!") }
