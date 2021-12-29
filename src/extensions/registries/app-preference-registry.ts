@@ -43,7 +43,7 @@ export interface RegisteredAppPreference extends AppPreferenceRegistration {
 export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration, RegisteredAppPreference> {
   getRegisteredItem(item: AppPreferenceRegistration, extension: LensExtension): RegisteredAppPreference {
     return {
-      extensionId: extension.id,
+      extensionId: extension.manifest.name,
       id: item.id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
       ...item,
     };

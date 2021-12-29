@@ -26,7 +26,7 @@ import { Redirect, Route, Switch } from "react-router";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
 import { Catalog, previousActiveTab } from "../+catalog";
-import { Preferences } from "../+preferences";
+import Preferences from "../+preferences/preferences";
 import { AddCluster } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { GlobalPageRegistry } from "../../../extensions/registries/page-registry";

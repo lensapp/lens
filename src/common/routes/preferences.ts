@@ -50,6 +50,10 @@ export const extensionRoute: RouteProps = {
   path: `${preferencesRoute.path}/extensions`,
 };
 
+export const extensionSettingsRoute: RouteProps = {
+  path: `${preferencesRoute.path}/extension-settings/:extensionId?`,
+};
+
 export const preferencesURL = buildURL(preferencesRoute.path);
 export const appURL = buildURL(appRoute.path);
 export const proxyURL = buildURL(proxyRoute.path);
@@ -57,3 +61,4 @@ export const kubernetesURL = buildURL(kubernetesRoute.path);
 export const editorURL = buildURL(editorRoute.path);
 export const telemetryURL = buildURL(telemetryRoute.path);
 export const extensionURL = buildURL(extensionRoute.path);
+export const extensionSettingsURL = buildURL<{ extensionId?: string }>(extensionSettingsRoute.path);

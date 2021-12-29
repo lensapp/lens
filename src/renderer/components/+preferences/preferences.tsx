@@ -38,6 +38,7 @@ import {
   editorRoute,
   telemetryRoute,
   telemetryURL,
+  extensionSettingsURL,
 } from "../../../common/routes";
 import { AppPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { navigateWithoutHistoryChange, navigation } from "../../navigation";
@@ -53,6 +54,7 @@ import { sentryDsn } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { InstalledExtension } from "../../../extensions/extension-discovery";
 import userExtensionsInjectable from "../+extensions/user-extensions/user-extensions.injectable";
+import { ExtensionSettingsPage } from "./extension-settings-page";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -68,13 +70,19 @@ class Preferences extends React.Component<Dependencies> {
   }
 
   renderNavigation() {
-    const extensions = AppPreferenceRegistry.getInstance().getItems();
-    const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == "telemetry");
+    const preferenceRegistries = AppPreferenceRegistry.getInstance().getItems();
+    const telemetryExtensions = preferenceRegistries.filter(e => e.showInPreferencesTab == "telemetry");
     const currentLocation = navigation.location.pathname;
     const isActive = (route: RouteProps) => !!matchPath(currentLocation, { path: route.path, exact: route.exact });
+    const extensions = this.props.userExtensions.get().filter(extension =>
+      preferenceRegistries.some(registry => registry.extensionId.includes(extension.manifest.name) && !registry.showInPreferencesTab),
+    );
 
     return (
-      <Tabs className="flex column" scrollable={false} onChange={(url) => navigateWithoutHistoryChange({ pathname: url })}>
+      <Tabs className="flex column" scrollable={false} onChange={(url) => {
+        console.log("URL ", url)
+        navigateWithoutHistoryChange({ pathname: url });
+      }}>
         <div className="header">Preferences</div>
         <Tab value={appURL()} label="Application" data-testid="application-tab" active={isActive(appRoute)}/>
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
@@ -83,9 +91,21 @@ class Preferences extends React.Component<Dependencies> {
         {(telemetryExtensions.length > 0 || !!sentryDsn) &&
           <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
         }
-        {extensions.filter(e => !e.showInPreferencesTab).length > 0 &&
+        {preferenceRegistries.filter(e => !e.showInPreferencesTab).length > 0 &&
           <Tab value={extensionURL()} label="Extensions" data-testid="extensions-tab" active={isActive(extensionRoute)}/>
         }
+        {extensions.length > 0 && (
+          <div data-testid="custom-settings">
+            <hr/>
+            {extensions.map(extension => (
+              <Tab key={extension.id} value={extensionSettingsURL({
+                params: {
+                  extensionId: encodeURIComponent(extension.manifest.name),
+                },
+              })} label={extension.manifest.name} active={currentLocation.includes(encodeURIComponent(extension.manifest.name))}/>
+            ))}
+          </div>
+        )}
       </Tabs>
     );
   }
@@ -104,6 +124,7 @@ class Preferences extends React.Component<Dependencies> {
           <Route path={editorURL()} component={Editor}/>
           <Route path={telemetryURL()} component={Telemetry}/>
           <Route path={extensionURL()} component={Extensions}/>
+          <Route path={extensionSettingsURL()} component={ExtensionSettingsPage}/>
           <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
         </Switch>
       </SettingLayout>
