@@ -112,6 +112,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
               enable={this.props.enableExtension}
               disable={this.props.disableExtension}
               uninstall={this.props.confirmUninstallExtension}
+              upgrade={this.props.installFromInput}
             />
           </section>
         </SettingLayout>

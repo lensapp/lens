@@ -37,6 +37,7 @@ interface Props {
   enable: (id: LensExtensionId) => void;
   disable: (id: LensExtensionId) => void;
   uninstall: (extension: InstalledExtension) => void;
+  upgrade: (input: string) => void;
 }
 
 function getStatus(extension: InstalledExtension) {
@@ -47,7 +48,7 @@ function getStatus(extension: InstalledExtension) {
   return extension.isEnabled ? "Enabled" : "Disabled";
 }
 
-export const InstalledExtensions = observer(({ extensions, uninstall, enable, disable }: Props) => {
+export const InstalledExtensions = observer(({ extensions, uninstall, enable, disable, upgrade }: Props) => {
   const filters = [
     (extension: InstalledExtension) => extension.manifest.name,
     (extension: InstalledExtension) => getStatus(extension),
@@ -91,7 +92,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
   const data = useMemo(
     () => {
       return extensions.map(extension => {
-        const { id, isEnabled, isCompatible, manifest } = extension;
+        const { id, isEnabled, isCompatible, manifest, availableUpdate } = extension;
         const { name, description, version } = manifest;
         const isUninstalling = ExtensionInstallationStateStore.isExtensionUninstalling(id);
 
@@ -104,7 +105,15 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
               </div>
             </div>
           ),
-          version,
+          version: (
+            <div>
+              {version}
+              { availableUpdate ?(
+                <Icon small material="autorenew" title="Update available"/>
+              ) : ""
+              }
+            </div>
+          ),
           status: (
             <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
               {getStatus(extension)}
@@ -132,6 +141,16 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
                     </MenuItem>
                   )}
                 </>
+              )}
+
+              { availableUpdate && (
+                <MenuItem
+                  disabled={isUninstalling}
+                  onClick={() => upgrade(availableUpdate.input)}
+                >
+                  <Icon material="upgrade"/>
+                  <span className="title" aria-disabled={isUninstalling}>Upgrade</span>
+                </MenuItem>
               )}
 
               <MenuItem

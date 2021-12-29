@@ -32,6 +32,7 @@ import type {
   LensExtensionManifest,
 } from "../../../../../extensions/lens-extension";
 import type { InstallRequest } from "../install-request";
+import { isCompatibleExtension } from "../../../../../extensions/extension-compatibility";
 
 export interface InstallRequestValidated {
   fileName: string;
@@ -60,6 +61,11 @@ export async function createTempFilesAndValidate({
 
     await fse.writeFile(tempFile, data);
     const manifest = await validatePackage(tempFile);
+
+    if (!isCompatibleExtension(manifest)){
+      throw new Error("Incompatible extension");
+    }
+
     const id = path.join(
       ExtensionDiscovery.getInstance().nodeModulesPath,
       manifest.name,

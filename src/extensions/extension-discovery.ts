@@ -51,6 +51,10 @@ export interface InstalledExtension {
   readonly isBundled: boolean; // defined in project root's package.json
   readonly isCompatible: boolean;
   isEnabled: boolean;
+  availableUpdate?: {
+    version: string;
+    input: string;
+  }
 }
 
 const logModule = "[EXTENSION-DISCOVERY]";
@@ -371,6 +375,7 @@ export class ExtensionDiscovery extends Singleton {
         isBundled,
         isEnabled,
         isCompatible,
+        availableUpdate: null,
       };
     } catch (error) {
       if (error.code === "ENOTDIR") {

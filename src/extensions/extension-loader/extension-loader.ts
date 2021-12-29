@@ -21,12 +21,13 @@
 
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
+import _ from "lodash";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
 import { AppPaths } from "../../common/app-paths";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
-import { Disposer, toJS } from "../../common/utils";
+import { Disposer, downloadJson, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery";
@@ -34,6 +35,8 @@ import { ExtensionsStore } from "../extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
 import * as registries from "../registries";
+import { SemVer } from "semver";
+import URLParse from "url-parse";
 
 export function extensionPackagesRoot() {
   return path.join(AppPaths.get("userData"));
@@ -219,7 +222,6 @@ export class ExtensionLoader {
 
       const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
 
-      // Remove deleted extensions in renderer side only
       this.extensions.forEach((_, lensExtensionId) => {
         if (!receivedExtensionIds.includes(lensExtensionId)) {
           this.removeExtension(lensExtensionId);
@@ -247,6 +249,79 @@ export class ExtensionLoader {
         this.extensions.set(lensExtensionId, extension);
       }
     });
+  }
+
+  async getAvailableExtensionUpdates(): Promise<{ name: string; version: string }[]> {
+    const availableUpdates: { name: string; version: string }[] = [];
+
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    for (const [_, extension] of this.extensions) {
+      console.log(`Check for update: ${extension.manifest.name}`);
+
+      const availableUpdate = await this.getLatestVersionFromNpmJs(extension) || await this.getLatestVersionFromGithub(extension);
+
+      if (availableUpdate) {
+        if (new SemVer(extension.manifest.version, { loose: true, includePrerelease: true }).compare(availableUpdate.version) === -1) {
+          extension.availableUpdate = {
+            version: availableUpdate.version,
+            input: availableUpdate.updateInput,
+          };
+          availableUpdates.push({ name: extension.manifest.name, version: availableUpdate.version });
+        }
+      }
+    }
+
+    return availableUpdates;
+  }
+
+  protected async getLatestVersionFromNpmJs(extension: InstalledExtension) {
+    const name = extension.manifest.name;
+    const registryUrl = new URLParse("https://registry.npmjs.com").set("pathname", name).toString();
+    const { promise } = downloadJson({ url: registryUrl });
+    const json = await promise.catch(() => {
+      // do nothing
+    });
+
+    if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
+      return null;
+    }
+
+    const versions = Object.keys(json.versions)
+      .map(version => new SemVer(version, { loose: true, includePrerelease: true }))
+      // ignore pre-releases for auto picking the version
+      .filter(version => version.prerelease.length === 0);
+
+    const version = _.reduce(versions, (prev, curr) => (
+      prev.compareMain(curr) === -1
+        ? curr
+        : prev
+    )).format();
+
+    return {
+      updateInput: name,
+      version,
+    };
+  }
+
+  protected async getLatestVersionFromGithub(extension: InstalledExtension) {
+
+    const repo = extension.manifest.homepage?.replace("https://github.com/", "");
+
+    const registryUrl = `https://api.github.com/repos/${repo}/releases/latest`;
+
+    const { promise } = downloadJson({ url: registryUrl });
+    const json = await promise.catch(() => {
+      // do nothing
+    });
+
+    if (!json || json.error || json.prerelease || !json.tag_name) {
+      return null;
+    }
+
+    return {
+      updateInput: json.assets[0].browser_download_url,
+      version: new SemVer(json.tag_name).version,
+    };
   }
 
   loadOnMain() {
