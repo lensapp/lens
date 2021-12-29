@@ -29,7 +29,7 @@ const trayItemsInjectable = getInjectable({
     const extensions = di.inject(mainExtensionsInjectable);
 
     return computed(() =>
-      extensions.get().flatMap(extension => extension.trayMenus.slice()));
+      extensions.get().flatMap(extension => extension.trayMenus));
   },
 });
 
