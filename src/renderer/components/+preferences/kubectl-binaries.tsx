@@ -26,7 +26,7 @@ import { getDefaultKubectlDownloadPath, UserStore } from "../../../common/user-s
 import { observer } from "mobx-react";
 import { bundledKubectlPath } from "../../../main/kubectl";
 import { SelectOption, Select } from "../select";
-import { FormSwitch, Switcher } from "../switch";
+import { Switch } from "../switch";
 import { packageMirrors } from "../../../common/user-store/preferences-helpers";
 
 export const KubectlBinaries = observer(() => {
@@ -48,16 +48,12 @@ export const KubectlBinaries = observer(() => {
     <>
       <section>
         <SubTitle title="Kubectl binary download"/>
-        <FormSwitch
-          control={
-            <Switcher
-              checked={userStore.downloadKubectlBinaries}
-              onChange={v => userStore.downloadKubectlBinaries = v.target.checked}
-              name="kubectl-download"
-            />
-          }
-          label="Download kubectl binaries matching the Kubernetes cluster version"
-        />
+        <Switch
+          checked={userStore.downloadKubectlBinaries}
+          onChange={() => userStore.downloadKubectlBinaries = !userStore.downloadKubectlBinaries}
+        >
+          Download kubectl binaries matching the Kubernetes cluster version
+        </Switch>
       </section>
 
       <section>

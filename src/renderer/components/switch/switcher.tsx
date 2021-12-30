@@ -31,6 +31,9 @@ interface Props extends SwitchProps {
   classes: Styles;
 }
 
+/**
+ * @deprecated Use <Switch/> instead from "../switch.tsx".
+ */
 export const Switcher = withStyles((theme: Theme) =>
   createStyles({
     root: {
