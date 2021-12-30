@@ -23,13 +23,13 @@ import { LensMainExtension } from "../../extensions/lens-main-extension";
 import trayItemsInjectable from "./tray-menu-items.injectable";
 import type { IComputedValue } from "mobx";
 import { computed, ObservableMap, runInAction } from "mobx";
-import type { MenuItemConstructorOptions } from "electron";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
+import type { TrayMenuRegistration } from "./tray-menu-registration";
 
 describe("tray-menu-items", () => {
   let di: ConfigurableDependencyInjectionContainer;
-  let trayMenuItems: IComputedValue<MenuItemConstructorOptions[]>;
+  let trayMenuItems: IComputedValue<TrayMenuRegistration[]>;
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 
   beforeEach(() => {
@@ -115,7 +115,7 @@ describe("tray-menu-items", () => {
 class SomeTestExtension extends LensMainExtension {
   constructor({ id, trayMenus }: {
      id: string;
-     trayMenus: MenuItemConstructorOptions[];
+     trayMenus: TrayMenuRegistration[];
    }) {
     super({
       id,

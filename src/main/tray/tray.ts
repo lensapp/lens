@@ -31,7 +31,7 @@ import { isDevelopment, isWindows, productName } from "../../common/vars";
 import { exitApp } from "../exit-app";
 import { preferencesURL } from "../../common/routes";
 import { toJS } from "../../common/utils";
-import type { MenuItemConstructorOptions } from "electron/main";
+import type { TrayMenuRegistration } from "./tray-menu-registration";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -48,7 +48,7 @@ export function getTrayIcon(): string {
 
 export function initTray(
   windowManager: WindowManager,
-  trayMenuItems: IComputedValue<MenuItemConstructorOptions[]>,
+  trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
 ) {
   const icon = getTrayIcon();
 
@@ -85,7 +85,7 @@ export function initTray(
 
 function createTrayMenu(
   windowManager: WindowManager,
-  extensionTrayItems: MenuItemConstructorOptions[],
+  extensionTrayItems: TrayMenuRegistration[],
 ): Menu {
   let template: Electron.MenuItemConstructorOptions[] = [
     {

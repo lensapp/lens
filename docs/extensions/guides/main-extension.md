@@ -97,7 +97,7 @@ This page would be defined in your extension's `Renderer.LensExtension` implemen
 
 ### `trayMenus`
 
-`trayMenus` is an array of Electron's [`MenuItemConstructorOptions`](https://www.electronjs.org/docs/v14-x-y/api/menu-item). Most importantly you can define a `label` and a `click` handler.
+`trayMenus` is a subset of Electron's [`MenuItemConstructorOptions`](https://www.electronjs.org/docs/v14-x-y/api/menu-item). Most importantly you can define a `label` and a `click` handler. Other properties are `submenu`, `enabled`, `visible`, `toolTip`, `id` and `type`.
 
 The following example demonstrates how tray menus can be added from extension:
 
