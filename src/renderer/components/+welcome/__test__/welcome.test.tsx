@@ -24,7 +24,6 @@ import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { defaultWidth, Welcome } from "../welcome";
 import { computed } from "mobx";
-import { TopBarRegistry } from "../../../../extensions/registries";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
@@ -62,12 +61,6 @@ describe("<Welcome/>", () => {
         }),
       ]),
     );
-
-    TopBarRegistry.createInstance();
-  });
-
-  afterEach(() => {
-    TopBarRegistry.resetInstance();
   });
 
   it("renders <Banner /> registered in WelcomeBannerRegistry and hide logo", async () => {
