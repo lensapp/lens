@@ -83,6 +83,16 @@ export function initTray(
   };
 }
 
+function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron.MenuItemConstructorOptions {
+  return {
+    ...trayItem,
+    submenu: trayItem.submenu ? trayItem.submenu.map(getMenuItemConstructorOptions) : undefined,
+    click: trayItem.click ? () => {
+      trayItem.click(trayItem);
+    } : undefined,
+  };
+}
+
 function createTrayMenu(
   windowManager: WindowManager,
   extensionTrayItems: TrayMenuRegistration[],
@@ -116,7 +126,7 @@ function createTrayMenu(
     });
   }
 
-  template = template.concat(extensionTrayItems);
+  template = template.concat(extensionTrayItems.map(getMenuItemConstructorOptions));
 
   return Menu.buildFromTemplate(template.concat([
     {

@@ -19,8 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { MenuItemConstructorOptions } from "electron";
-
-export type TrayMenuRegistration = Pick<MenuItemConstructorOptions,
-  "label" | "type" | "submenu" | "click" |
-  "toolTip" | "visible" | "enabled" | "id">;
+export interface TrayMenuRegistration {
+  label?: string;
+  click?: (menuItem: TrayMenuRegistration) => void;
+  id?: string;
+  type?: "normal" | "separator" | "submenu"
+  toolTip?: string;
+  enabled?: boolean;
+  submenu?: TrayMenuRegistration[]
+}
