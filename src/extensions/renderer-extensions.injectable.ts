@@ -18,19 +18,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
+import extensionsInjectable from "./extensions.injectable";
+import type { LensRendererExtension } from "./lens-renderer-extension";
 
-// All registries managed by extensions api
+const rendererExtensionsInjectable = getInjectable({
+  lifecycle: lifecycleEnum.singleton,
 
-export * from "./page-registry";
-export * from "./page-menu-registry";
-export * from "./app-preference-registry";
-export * from "./status-bar-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./kube-object-status-registry";
-export * from "./command-registry";
-export * from "./entity-setting-registry";
-export * from "./catalog-entity-detail-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./topbar-registry";
-export * from "./protocol-handler";
+  instantiate: (di) =>
+    di.inject(extensionsInjectable) as IComputedValue<LensRendererExtension[]>,
+});
+
+export default rendererExtensionsInjectable;
