@@ -54,7 +54,7 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-const NonInjectedTopBar: React.FC<Props & Dependencies> = (({ items, children, ...rest }) => {
+const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) => {
   const elem = useRef<HTMLDivElement>();
   const window = useMemo(() => getCurrentWindow(), []);
 
