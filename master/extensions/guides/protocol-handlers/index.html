@@ -826,14 +826,14 @@ For example consider an extension <code>example-extension</code> which is publis
 If it were to register a handler with <code>"/display/:type"</code> as its corresponding link then we would match the following URI like this:</p>
 <p><img alt="Lens Protocol Link Resolution" src="../images/routing-diag.png" /></p>
 <p>Once matched, the handler would be called with the following argument (note both <code>"search"</code> and <code>"pathname"</code> will always be defined):</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-  <span class="nt">&quot;search&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;pathname&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;notification&quot;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;pathname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notification&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>As the diagram above shows, the search (or query) params are not considered as part of the handler resolution.
 If the URI had instead been <code>lens://extension/@mirantis/example-extension/display/notification/green</code> then a third (and optional) field will have the rest of the path.
