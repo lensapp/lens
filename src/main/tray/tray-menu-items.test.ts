@@ -70,7 +70,9 @@ describe("tray-menu-items", () => {
     });
 
     it("when disabling extension, does not have tray menu items", () => {
-      extensionsStub.delete("some-extension-id");
+      runInAction(() => {
+        extensionsStub.delete("some-extension-id");
+      });
 
       expect(trayMenuItems.get()).toHaveLength(0);
     });
@@ -82,7 +84,9 @@ describe("tray-menu-items", () => {
           trayMenus: [{ label: "some-label-from-second-extension" }],
         });
 
-        extensionsStub.set("some-other-extension-id", someOtherExtension);
+        runInAction(() => {
+          extensionsStub.set("some-other-extension-id", someOtherExtension);
+        });
       });
 
       it("has tray menu items for both extensions", () => {
