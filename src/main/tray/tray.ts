@@ -20,16 +20,18 @@
  */
 
 import path from "path";
-import packageInfo from "../../package.json";
+import packageInfo from "../../../package.json";
 import { Menu, Tray } from "electron";
-import { autorun } from "mobx";
-import { showAbout } from "./menu/menu";
-import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
-import type { WindowManager } from "./window-manager";
-import logger from "./logger";
-import { isDevelopment, isWindows, productName } from "../common/vars";
-import { exitApp } from "./exit-app";
-import { preferencesURL } from "../common/routes";
+import { autorun, IComputedValue } from "mobx";
+import { showAbout } from "../menu/menu";
+import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
+import type { WindowManager } from "../window-manager";
+import logger from "../logger";
+import { isDevelopment, isWindows, productName } from "../../common/vars";
+import { exitApp } from "../exit-app";
+import { preferencesURL } from "../../common/routes";
+import { toJS } from "../../common/utils";
+import type { TrayMenuRegistration } from "./tray-menu-registration";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -44,7 +46,10 @@ export function getTrayIcon(): string {
   );
 }
 
-export function initTray(windowManager: WindowManager) {
+export function initTray(
+  windowManager: WindowManager,
+  trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
+) {
   const icon = getTrayIcon();
 
   tray = new Tray(icon);
@@ -62,7 +67,7 @@ export function initTray(windowManager: WindowManager) {
   const disposers = [
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager);
+        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()));
 
         tray.setContextMenu(menu);
       } catch (error) {
@@ -78,8 +83,21 @@ export function initTray(windowManager: WindowManager) {
   };
 }
 
-function createTrayMenu(windowManager: WindowManager): Menu {
-  const template: Electron.MenuItemConstructorOptions[] = [
+function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron.MenuItemConstructorOptions {
+  return {
+    ...trayItem,
+    submenu: trayItem.submenu ? trayItem.submenu.map(getMenuItemConstructorOptions) : undefined,
+    click: trayItem.click ? () => {
+      trayItem.click(trayItem);
+    } : undefined,
+  };
+}
+
+function createTrayMenu(
+  windowManager: WindowManager,
+  extensionTrayItems: TrayMenuRegistration[],
+): Menu {
+  let template: Electron.MenuItemConstructorOptions[] = [
     {
       label: `Open ${productName}`,
       click() {
@@ -107,6 +125,8 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       },
     });
   }
+
+  template = template.concat(extensionTrayItems.map(getMenuItemConstructorOptions));
 
   return Menu.buildFromTemplate(template.concat([
     {

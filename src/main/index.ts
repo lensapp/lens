@@ -60,7 +60,7 @@ import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { Router } from "./router";
 import { initMenu } from "./menu/menu";
-import { initTray } from "./tray";
+import { initTray } from "./tray/tray";
 import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
 import { ShellSession } from "./shell-session/shell-session";
@@ -68,6 +68,7 @@ import { getDi } from "./getDi";
 import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
+import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 
 const di = getDi();
 
@@ -104,6 +105,7 @@ mangleProxyEnv();
 logger.debug("[APP-MAIN] initializing ipc main handlers");
 
 const menuItems = di.inject(electronMenuItemsInjectable);
+const trayMenuItems = di.inject(trayMenuItemsInjectable);
 
 initializers.initIpcMainHandlers(menuItems);
 
@@ -244,7 +246,7 @@ app.on("ready", async () => {
 
   onQuitCleanup.push(
     initMenu(windowManager, menuItems),
-    initTray(windowManager),
+    initTray(windowManager, trayMenuItems),
     () => ShellSession.cleanup(),
   );
 
