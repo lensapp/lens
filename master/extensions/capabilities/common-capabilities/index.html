@@ -450,8 +450,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#app-menus" class="md-nav__link">
-    App Menus
+  <a href="#menus" class="md-nav__link">
+    Menus
   </a>
   
 </li>
@@ -872,8 +872,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#app-menus" class="md-nav__link">
-    App Menus
+  <a href="#menus" class="md-nav__link">
+    Menus
   </a>
   
 </li>
@@ -1007,8 +1007,8 @@ In order to see logs from this extension, you need to start Lens from the comman
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="app-menus">App Menus<a class="headerlink" href="#app-menus" title="Permanent link">#</a></h3>
-<p>This extension can register custom app menus that will be displayed on OS native menus.</p>
+<h3 id="menus">Menus<a class="headerlink" href="#menus" title="Permanent link">#</a></h3>
+<p>This extension can register custom app and tray menus that will be displayed on OS native menus.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
@@ -1020,6 +1020,29 @@ In order to see logs from this extension, you need to start Lens from the comman
       <span class="nx">click</span><span class="p">()</span> <span class="p">{</span>
         <span class="nx">Main</span><span class="p">.</span><span class="nx">Navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;https://k8slens.dev&quot;</span><span class="p">);</span>
       <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+
+  <span class="nx">trayMenus</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;My links&quot;</span><span class="p">,</span>
+      <span class="nx">submenu</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;Lens&quot;</span><span class="p">,</span>
+          <span class="nx">click</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Main</span><span class="p">.</span><span class="nx">Navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;https://k8slens.dev&quot;</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="kr">type</span><span class="o">:</span> <span class="s2">&quot;separator&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;Lens Github&quot;</span><span class="p">,</span>
+          <span class="nx">click</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Main</span><span class="p">.</span><span class="nx">Navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;https://github.com/lensapp/lens&quot;</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
