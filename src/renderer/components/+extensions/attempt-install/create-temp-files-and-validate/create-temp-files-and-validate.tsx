@@ -63,7 +63,9 @@ export async function createTempFilesAndValidate({
     const manifest = await validatePackage(tempFile);
 
     if (!isCompatibleExtension(manifest)){
-      throw new Error("Incompatible extension");
+      displayError(fileName, { message: "Incompatible extension" });
+
+      return null;
     }
 
     const id = path.join(
@@ -80,25 +82,29 @@ export async function createTempFilesAndValidate({
       id,
     };
   } catch (error) {
-    const message = getMessageFromError(error);
-
-    logger.info(
-      `[EXTENSION-INSTALLATION]: installing ${fileName} has failed: ${message}`,
-      { error },
-    );
-    Notifications.error(
-      <div className="flex column gaps">
-        <p>
-          Installing <em>{fileName}</em> has failed, skipping.
-        </p>
-        <p>
-          Reason: <em>{message}</em>
-        </p>
-      </div>,
-    );
+    displayError(fileName, error);
   }
 
   return null;
+}
+
+function displayError(fileName: string, error: any) {
+  const message = getMessageFromError(error);
+
+  logger.info(
+    `[EXTENSION-INSTALLATION]: installing ${fileName} has failed: ${message}`,
+    { error },
+  );
+  Notifications.error(
+    <div className="flex column gaps">
+      <p>
+        Installing <em>{fileName}</em> has failed, skipping.
+      </p>
+      <p>
+        Reason: <em>{message}</em>
+      </p>
+    </div>,
+  );
 }
 
 
