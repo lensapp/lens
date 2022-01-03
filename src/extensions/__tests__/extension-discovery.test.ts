@@ -127,6 +127,7 @@ describe("ExtensionDiscovery", () => {
             name: "my-extension",
           },
           manifestPath: path.normalize("node_modules/my-extension/package.json"),
+          availableUpdate: null,
         });
         done();
       });
