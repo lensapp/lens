@@ -76,16 +76,16 @@ interface NamespaceSelectFilterDependencies {
 }
 
 @observer
-export class NonInjectedNamespaceSelectFilter extends React.Component<NamespaceSelectFilterProps & NamespaceSelectFilterDependencies> {
-  static isMultiSelection = observable.box(false);
-  static isMenuOpen = observable.box(false);
+class NonInjectedNamespaceSelectFilter extends React.Component<NamespaceSelectFilterProps & NamespaceSelectFilterDependencies> {
+  private _isMultiSelection = observable.box(false);
+  private _isMenuOpen = observable.box(false);
 
   /**
    * Only updated on every open
    */
   private selected = observable.set<string>();
   private didToggle = false;
-  private inputValue: string;
+  @observable private inputValue: string;
 
   constructor(props: NamespaceSelectFilterProps & NamespaceSelectFilterDependencies) {
     super(props);
@@ -96,16 +96,20 @@ export class NonInjectedNamespaceSelectFilter extends React.Component<NamespaceS
     return this.props.namespaceStore;
   }
 
+  @computed get isMultiSelection() {
+    return this._isMultiSelection.get();
+  }
+
   set isMultiSelection(val: boolean) {
-    NonInjectedNamespaceSelectFilter.isMultiSelection.set(val);
+    this._isMultiSelection.set(val);
   }
 
   @computed get isMenuOpen() {
-    return NonInjectedNamespaceSelectFilter.isMenuOpen.get();
+    return this._isMenuOpen.get();
   }
 
   set isMenuOpen(val: boolean) {
-    NonInjectedNamespaceSelectFilter.isMenuOpen.set(val);
+    this._isMenuOpen.set(val);
   }
 
   get maxItems() {
@@ -165,8 +169,13 @@ export class NonInjectedNamespaceSelectFilter extends React.Component<NamespaceS
   };
 
   onInputChange = (value: string, meta: InputActionMeta) => {
-    if (meta.action === "input-change") this.inputValue = value;
-    if (meta.action === "menu-close") this.inputValue = "";
+    if (meta.action === "input-change") {
+      this.inputValue = value;
+    } else if (!this.isMultiSelection && meta.action === "set-value") {
+      this.inputValue = value;
+    } else if (meta.action === "menu-close") {
+      this.inputValue = "";
+    }
   };
 
   private isSelectionKey(e: React.KeyboardEvent): boolean {
