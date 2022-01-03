@@ -26,6 +26,7 @@ import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import { Disposer, disposer } from "../common/utils";
+import type { LensExtensionUpdateChecker } from "./lens-extension-update-checker";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -45,6 +46,8 @@ export class LensExtension {
   readonly manifestPath: string;
   readonly isBundled: boolean;
 
+  private updateChecker: LensExtensionUpdateChecker;
+
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private _isEnabled = false;
@@ -55,12 +58,14 @@ export class LensExtension {
 
   [Disposers] = disposer();
 
-  constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
+  constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension, updateChecker?: LensExtensionUpdateChecker) {
     makeObservable(this);
     this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
+
+    this.updateChecker = updateChecker;
   }
 
   get name() {
@@ -118,6 +123,10 @@ export class LensExtension {
     } catch (error) {
       logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
+  }
+
+  public async checkForUpdate() {
+    return this.updateChecker?.run(this.manifest);
   }
 
   protected onActivate(): Promise<void> | void {

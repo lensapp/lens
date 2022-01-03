@@ -19,50 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import request from "request";
+import type { LensExtensionManifest } from "./lens-extension";
+import type { LensExtensionAvailableUpdate } from "./lens-extension-update-checker";
 
-export interface DownloadFileOptions {
-  url: string;
-  gzip?: boolean;
-  timeout?: number;
-  headers?: request.Headers;
-}
-
-export interface DownloadFileTicket<T> {
-  url: string;
-  promise: Promise<T>;
-  cancel(): void;
-}
-
-export function downloadFile({ url, timeout, gzip = true, headers = {}}: DownloadFileOptions): DownloadFileTicket<Buffer> {
-  const fileChunks: Buffer[] = [];
-  const req = request(url, { gzip, timeout, headers });
-  const promise: Promise<Buffer> = new Promise((resolve, reject) => {
-    req.on("data", (chunk: Buffer) => {
-      fileChunks.push(chunk);
-    });
-    req.once("error", err => {
-      reject({ url, err });
-    });
-    req.once("complete", () => {
-      resolve(Buffer.concat(fileChunks));
-    });
-  });
-
-  return {
-    url,
-    promise,
-    cancel() {
-      req.abort();
-    },
-  };
-}
-
-export function downloadJson(args: DownloadFileOptions): DownloadFileTicket<any> {
-  const { promise, ...rest } = downloadFile(args);
-
-  return {
-    promise: promise.then(res => JSON.parse(res.toString())),
-    ...rest,
-  };
+export interface LensExtensionLatestVersionChecker {
+  getLatestVersion(manifest: LensExtensionManifest): Promise<LensExtensionAvailableUpdate>
 }

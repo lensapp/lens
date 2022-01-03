@@ -21,22 +21,23 @@
 
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
-import _ from "lodash";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
 import { AppPaths } from "../../common/app-paths";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
-import { Disposer, downloadJson, toJS } from "../../common/utils";
+import { Disposer, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery";
 import { ExtensionsStore } from "../extensions-store";
+import { GitHubVersionChecker } from "../github-latest-version-checker";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
+import { LensExtensionUpdateChecker } from "../lens-extension-update-checker";
+import type { LensMainExtension } from "../lens-main-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
+import { NpmJsVersionChecker } from "../npmjs-latest-version.checker";
 import * as registries from "../registries";
-import { SemVer } from "semver";
-import URLParse from "url-parse";
 
 export function extensionPackagesRoot() {
   return path.join(AppPaths.get("userData"));
@@ -72,13 +73,20 @@ export class ExtensionLoader {
   // emits event "remove" of type LensExtension when the extension is removed
   private events = new EventEmitter();
 
+  private extensionUpdateSources = {
+    github: new GitHubVersionChecker(),
+    npmJs: new NpmJsVersionChecker(),
+  };
+
   @observable isLoaded = false;
+  private extensionUpdateChecker: LensExtensionUpdateChecker;
 
   get whenLoaded() {
     return when(() => this.isLoaded);
   }
 
   constructor() {
+    this.extensionUpdateChecker = new LensExtensionUpdateChecker(this.extensionUpdateSources);
     makeObservable(this);
     observe(this.instances, change => {
       switch (change.type) {
@@ -251,81 +259,15 @@ export class ExtensionLoader {
     });
   }
 
-  async getAvailableExtensionUpdates(): Promise<{ name: string; version: string }[]> {
-    const availableUpdates: { name: string; version: string }[] = [];
-
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    for (const [_, extension] of this.extensions) {
-      console.log(`Check for update: ${extension.manifest.name}`);
-
-      const availableUpdate = await this.getLatestVersionFromNpmJs(extension) || await this.getLatestVersionFromGithub(extension);
-
-      if (availableUpdate) {
-        if (new SemVer(extension.manifest.version, { loose: true, includePrerelease: true }).compare(availableUpdate.version) === -1) {
-          extension.availableUpdate = {
-            version: availableUpdate.version,
-            input: availableUpdate.updateInput,
-          };
-          availableUpdates.push({ name: extension.manifest.name, version: availableUpdate.version });
-        }
-      }
-    }
-
-    return availableUpdates;
-  }
-
-  protected async getLatestVersionFromNpmJs(extension: InstalledExtension) {
-    const name = extension.manifest.name;
-    const registryUrl = new URLParse("https://registry.npmjs.com").set("pathname", name).toString();
-    const { promise } = downloadJson({ url: registryUrl });
-    const json = await promise.catch(() => {
-      // do nothing
-    });
-
-    if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
-      return null;
-    }
-
-    const versions = Object.keys(json.versions)
-      .map(version => new SemVer(version, { loose: true, includePrerelease: true }))
-      // ignore pre-releases for auto picking the version
-      .filter(version => version.prerelease.length === 0);
-
-    const version = _.reduce(versions, (prev, curr) => (
-      prev.compareMain(curr) === -1
-        ? curr
-        : prev
-    )).format();
-
-    return {
-      updateInput: name,
-      version,
-    };
-  }
-
-  protected async getLatestVersionFromGithub(extension: InstalledExtension) {
-
-    const repo = extension.manifest.homepage?.replace("https://github.com/", "");
-
-    const registryUrl = `https://api.github.com/repos/${repo}/releases/latest`;
-
-    const { promise } = downloadJson({ url: registryUrl });
-    const json = await promise.catch(() => {
-      // do nothing
-    });
-
-    if (!json || json.error || json.prerelease || !json.tag_name) {
-      return null;
-    }
-
-    return {
-      updateInput: json.assets[0].browser_download_url,
-      version: new SemVer(json.tag_name).version,
-    };
-  }
-
   loadOnMain() {
-    this.autoInitExtensions(() => Promise.resolve([]));
+    this.autoInitExtensions(async (extension: LensMainExtension) => {
+      // Check for update for the extension on main process that does not have renderer script
+      if (!extension.manifest.renderer) {
+        this.checkForExtensionUpdate(extension);
+      }
+
+      return Promise.resolve([]);
+    });
   }
 
   loadOnClusterManagerRenderer() {
@@ -351,6 +293,8 @@ export class ExtensionLoader {
           });
         }
       });
+
+      this.checkForExtensionUpdate(extension);
 
       return removeItems;
     });
@@ -386,6 +330,10 @@ export class ExtensionLoader {
     });
   }
 
+  protected async checkForExtensionUpdate(extension: LensExtension) {
+    this.extensions.get(extension.id).availableUpdate = await extension.checkForUpdate();
+  }
+
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
     const loadingExtensions: { isBundled: boolean, loaded: Promise<void> }[] = [];
 
@@ -402,7 +350,7 @@ export class ExtensionLoader {
               continue;
             }
 
-            const instance = new LensExtensionClass(extension);
+            const instance = new LensExtensionClass(extension, this.extensionUpdateChecker);
 
             const loaded = instance.enable(register).catch((err) => {
               logger.error(`${logModule}: failed to enable`, { ext: extension, err });
