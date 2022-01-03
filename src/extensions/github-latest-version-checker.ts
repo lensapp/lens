@@ -33,7 +33,7 @@ export class GitHubVersionChecker implements LensExtensionLatestVersionChecker {
   }
 
   public async getLatestVersion(manifest: LensExtensionManifest) {
-    if (!manifest.homepage?.includes("https://github.com")) {
+    if (!manifest.homepage?.startsWith("https://github.com")) {
       return null;
     }
 
