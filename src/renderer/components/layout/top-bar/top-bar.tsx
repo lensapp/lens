@@ -4,17 +4,15 @@
  */
 
 import styles from "./top-bar.module.scss";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Icon } from "../../icon";
-import { webContents, getCurrentWindow } from "@electron/remote";
 import { observable } from "mobx";
-import { broadcastMessage, ipcRendererOn } from "../../../../common/ipc";
+import { broadcastMessage, IpcMainWindowEvents, ipcRendererOn, requestMain } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../../navigation";
 import { catalogRoute, catalogURL } from "../../../../common/routes";
-import { IpcMainWindowEvents } from "../../../../main/window-manager";
 import { isLinux, isWindows } from "../../../../common/vars";
 import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
@@ -40,7 +38,6 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
 
 const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) => {
   const elem = useRef<HTMLDivElement>();
-  const window = useMemo(() => getCurrentWindow(), []);
 
   const openContextMenu = () => {
     broadcastMessage(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
@@ -51,11 +48,11 @@ const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) 
   };
 
   const goBack = () => {
-    webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goBack();
+    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "back");
   };
 
   const goForward = () => {
-    webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goForward();
+    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "forward");
   };
 
   const windowSizeToggle = (evt: React.MouseEvent) => {
@@ -68,19 +65,15 @@ const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) 
   };
 
   const minimizeWindow = () => {
-    window.minimize();
+    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "minimize");
   };
 
   const toggleMaximize = () => {
-    if (window.isMaximized()) {
-      window.unmaximize();
-    } else {
-      window.maximize();
-    }
+    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "toggleMaximize");
   };
 
   const closeWindow = () => {
-    window.close();
+    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "close");
   };
 
   useEffect(() => {

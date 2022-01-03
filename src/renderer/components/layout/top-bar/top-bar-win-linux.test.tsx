@@ -7,7 +7,7 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import { IpcMainWindowEvents } from "../../../../main/window-manager";
+import { IpcMainWindowEvents } from "../../../../common/ipc";
 import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";

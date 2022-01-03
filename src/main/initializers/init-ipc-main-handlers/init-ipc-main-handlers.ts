@@ -9,17 +9,20 @@ import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHand
 import type { ClusterId } from "../../../common/cluster-types";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../common/app-event-bus/event-bus";
-import { dialogShowOpenDialogHandler, ipcMainHandle, ipcMainOn } from "../../../common/ipc";
+import { broadcastMainChannel, broadcastMessage, dialogShowOpenDialogHandler, ipcMainHandle, ipcMainOn, IpcMainWindowEvents } from "../../../common/ipc";
 import { catalogEntityRegistry } from "../../catalog";
 import { pushCatalogToRenderer } from "../../catalog-pusher";
 import { ClusterManager } from "../../cluster-manager";
 import { ResourceApplier } from "../../resource-applier";
-import { IpcMainWindowEvents, WindowManager } from "../../window-manager";
+import { WindowManager } from "../../window-manager";
 import path from "path";
 import { remove } from "fs-extra";
 import { getAppMenu } from "../../menu/menu";
 import type { MenuRegistration } from "../../menu/menu-registration";
 import type { IComputedValue } from "mobx";
+import { onLocationChange, windowAction } from "../../ipc/window";
+import { IpcMainDialogEvents } from "../../../common/ipc/dialog";
+import { showOpenDialog } from "../../ipc/dialog";
 
 interface Dependencies {
   electronMenuItems: IComputedValue<MenuRegistration[]>,
@@ -141,6 +144,14 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
 
     return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
   });
+
+  ipcMainHandle(IpcMainWindowEvents.WINDOW_ACTION, (event, action) => windowAction(action));
+
+  ipcMainHandle(IpcMainWindowEvents.LOCATION_CHANGED, () => onLocationChange());
+
+  ipcMainHandle(IpcMainDialogEvents.SHOW_OPEN, (event, opts) => showOpenDialog(opts));
+
+  ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 
   ipcMainOn(IpcMainWindowEvents.OPEN_CONTEXT_MENU, async (event) => {
     const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
