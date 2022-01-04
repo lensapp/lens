@@ -19,29 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 import React from "react";
 
 export class CommandOverlay {
-  static #component = observable.box<React.ReactElement | null>(null, { deep: false });
+  #component = observable.box<React.ReactElement | null>(null, { deep: false });
 
-  static get isOpen(): boolean {
-    return Boolean(CommandOverlay.#component.get());
+  get isOpen(): boolean {
+    return Boolean(this.#component.get());
   }
 
-  static open(component: React.ReactElement) {
+  open = (component: React.ReactElement) => {
     if (!React.isValidElement(component)) {
       throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
     }
 
-    CommandOverlay.#component.set(component);
-  }
+    this.#component.set(component);
+  };
 
-  static close() {
-    CommandOverlay.#component.set(null);
-  }
+  close = () => {
+    this.#component.set(null);
+  };
 
-  static get component(): React.ReactElement | null {
-    return CommandOverlay.#component.get();
+  get component(): React.ReactElement | null {
+    return this.#component.get();
   }
 }
+
+const commandOverlayInjectable = getInjectable({
+  instantiate: () => new CommandOverlay(),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default commandOverlayInjectable;

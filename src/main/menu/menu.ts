@@ -220,6 +220,8 @@ export function getAppMenu(
           /**
            * Don't broadcast unless it was triggered by menu iteration so that
            * there aren't double events in renderer
+           *
+           * NOTE: this `?` is required because of a bug in playwright. https://github.com/microsoft/playwright/issues/10554
            */
           if (!event?.triggeredByAccelerator) {
             broadcastMessage("command-palette:open");

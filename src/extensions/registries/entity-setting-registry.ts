@@ -54,7 +54,7 @@ export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistratio
     };
   }
 
-  getItemsForKind(kind: string, apiVersion: string, source?: string) {
+  getItemsForKind = (kind: string, apiVersion: string, source?: string) => {
     let items = this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion);
     });
@@ -66,5 +66,5 @@ export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistratio
     }
 
     return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
-  }
+  };
 }

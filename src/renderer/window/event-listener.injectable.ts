@@ -19,18 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { HotbarStore } from "../../../common/hotbar-store";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { Disposer } from "../utils";
 
-function hotbarIndex(id: string) {
-  return HotbarStore.getInstance().hotbarIndex(id) + 1;
+function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): Disposer {
+  window.addEventListener(type, listener, options);
+
+  return () => void window.removeEventListener(type, listener);
 }
 
-export function hotbarDisplayLabel(id: string) : string {
-  const hotbar = HotbarStore.getInstance().getById(id);
+const windowAddEventListenerInjectable = getInjectable({
+  instantiate: () => addWindowEventListener,
+  lifecycle: lifecycleEnum.singleton,
+});
 
-  return `${hotbarIndex(id)}: ${hotbar.name}`;
-}
-
-export function hotbarDisplayIndex(id: string) : string {
-  return hotbarIndex(id).toString();
-}
+export default windowAddEventListenerInjectable;

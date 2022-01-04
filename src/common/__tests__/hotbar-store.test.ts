@@ -26,7 +26,7 @@ import logger from "../../main/logger";
 import { AppPaths } from "../app-paths";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { ClusterStore } from "../cluster-store";
-import { HotbarStore } from "../hotbar-store";
+import { HotbarStore } from "../hotbar-store.injectable";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
@@ -251,7 +251,7 @@ describe("HotbarStore", () => {
       const hotbarStore = HotbarStore.getInstance();
 
       hotbarStore.add({ name: "hottest", id: "hottest" });
-      hotbarStore.activeHotbarId = "hottest";
+      hotbarStore.setActiveHotbar("hottest");
 
       const { error } = logger;
       const mocked = jest.fn();

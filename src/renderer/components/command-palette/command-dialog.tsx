@@ -24,7 +24,7 @@ import { Select } from "../select";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
-import { CommandOverlay } from "./command-overlay";
+import commandOverlayInjectable from "./command-overlay.injectable";
 import type { CatalogEntity } from "../../../common/catalog";
 import { navigate } from "../../navigation";
 import { broadcastMessage } from "../../../common/ipc";
@@ -39,9 +39,10 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 interface Dependencies {
   commands: IComputedValue<Map<string, RegisteredCommand>>;
   activeEntity?: CatalogEntity;
+  closeCommandOverlay: () => void;
 }
 
-const NonInjectedCommandDialog = observer(({ commands, activeEntity }: Dependencies) => {
+const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeCommandOverlay }: Dependencies) => {
   const [searchValue, setSearchValue] = useState("");
 
   const executeAction = (commandId: string) => {
@@ -52,7 +53,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity }: Dependenc
     }
 
     try {
-      CommandOverlay.close();
+      closeCommandOverlay();
       command.action({
         entity: activeEntity,
         navigate: (url, opts = {}) => {
@@ -121,5 +122,6 @@ export const CommandDialog = withInjectables<Dependencies>(NonInjectedCommandDia
     commands: di.inject(registeredCommandsInjectable),
     // TODO: replace with injection
     activeEntity: catalogEntityRegistry.activeEntity,
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
   }),
 });

@@ -20,7 +20,7 @@
  */
 
 import { computed, observable, makeObservable, action } from "mobx";
-import { ipcRendererOn } from "../../common/ipc";
+import { catalogEntityRunListener, ipcRendererOn } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
 import type { Cluster } from "../../main/cluster";
@@ -88,7 +88,7 @@ export class CatalogEntityRegistry {
     ipcRenderer.send(CatalogIpcEvents.INIT);
 
     if (isMainFrame) {
-      ipcRendererOn("catalog-entity:run", (event, id: string) => {
+      ipcRendererOn(catalogEntityRunListener, (event, id: string) => {
         const entity = this.getById(id);
 
         if (entity) {

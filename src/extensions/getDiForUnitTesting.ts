@@ -41,7 +41,6 @@ export const getDiForUnitTesting = () => {
         aliases: [injectable, ...(injectable.aliases || [])],
       };
     })
-
     .forEach(injectable => di.register(injectable));
 
   di.preventSideEffects();

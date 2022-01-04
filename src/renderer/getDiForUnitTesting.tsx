@@ -21,27 +21,20 @@
 
 import glob from "glob";
 import { memoize } from "lodash/fp";
-
-import {
-  createContainer,
-  ConfigurableDependencyInjectionContainer,
-} from "@ogre-tools/injectable";
+import { createContainer } from "@ogre-tools/injectable";
 
 export const getDiForUnitTesting = () => {
-  const di: ConfigurableDependencyInjectionContainer = createContainer();
+  const di = createContainer();
 
-  getInjectableFilePaths()
-    .map(key => {
-      const injectable = require(key).default;
+  for (const filePath of getInjectableFilePaths()) {
+    const injectableInstance = require(filePath).default;
 
-      return {
-        id: key,
-        ...injectable,
-        aliases: [injectable, ...(injectable.aliases || [])],
-      };
-    })
-
-    .forEach(injectable => di.register(injectable));
+    di.register({
+      id: filePath,
+      ...injectableInstance,
+      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
+    });
+  }
 
   di.preventSideEffects();
 
@@ -50,5 +43,6 @@ export const getDiForUnitTesting = () => {
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);

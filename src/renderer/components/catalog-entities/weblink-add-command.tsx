@@ -21,21 +21,26 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { CommandOverlay } from "../command-palette";
 import { Input } from "../input";
 import { isUrl } from "../input/input_validators";
 import { WeblinkStore } from "../../../common/weblink-store";
 import { computed, makeObservable, observable } from "mobx";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+
+interface Dependencies {
+  closeCommandOverlay: () => void;
+}
+
 
 @observer
-export class WeblinkAddCommand extends React.Component {
+class NonInjectedWeblinkAddCommand extends React.Component<Dependencies> {
   @observable url = "";
   @observable nameHidden = true;
   @observable dirty = false;
 
-  constructor(props: {}) {
+  constructor(props: Dependencies) {
     super(props);
-
     makeObservable(this);
   }
 
@@ -55,8 +60,7 @@ export class WeblinkAddCommand extends React.Component {
       name: name || this.url,
       url: this.url,
     });
-
-    CommandOverlay.close();
+    this.props.closeCommandOverlay();
   }
 
   @computed get showValidation() {
@@ -100,3 +104,10 @@ export class WeblinkAddCommand extends React.Component {
     );
   }
 }
+
+export const WeblinkAddCommand = withInjectables<Dependencies>(NonInjectedWeblinkAddCommand, {
+  getProps: (di, props) => ({
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    ...props,
+  }),
+});

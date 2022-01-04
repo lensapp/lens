@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, comparer, observable, makeObservable } from "mobx";
+import { action, comparer, observable, makeObservable, computed } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import { toJS } from "./utils";
@@ -27,7 +27,8 @@ import { CatalogEntity } from "./catalog";
 import { catalogEntity } from "../main/catalog-sources/general";
 import logger from "../main/logger";
 import { broadcastMessage, HotbarTooManyItems } from "./ipc";
-import { defaultHotbarCells, getEmptyHotbar, Hotbar, HotbarCreateOptions } from "./hotbar-types";
+import { defaultHotbarCells, getEmptyHotbar, Hotbar, CreateHotbarData, CreateHotbarOptions } from "./hotbar-types";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
@@ -52,22 +53,40 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     this.load();
   }
 
-  get activeHotbarId() {
+  @computed get activeHotbarId() {
     return this._activeHotbarId;
   }
 
-  set activeHotbarId(id: string) {
-    if (this.getById(id)) {
-      this._activeHotbarId = id;
+  /**
+   * If `hotbar` points to a known hotbar, make it active. Otherwise, ignore
+   * @param hotbar The hotbar instance, or the index, or its ID
+   */
+  setActiveHotbar(hotbar: Hotbar | number | string) {
+    if (typeof hotbar === "number") {
+      if (hotbar >= 0 && hotbar < this.hotbars.length) {
+        this._activeHotbarId = this.hotbars[hotbar].id;
+      }
+    } else if (typeof hotbar === "string") {
+      if (this.getById(hotbar)) {
+        this._activeHotbarId = hotbar;
+      }
+    } else {
+      if (this.hotbars.indexOf(hotbar) >= 0) {
+        this._activeHotbarId = hotbar.id;
+      }
     }
   }
 
-  hotbarIndex(id: string) {
+  private hotbarIndexById(id: string) {
     return this.hotbars.findIndex((hotbar) => hotbar.id === id);
   }
 
-  get activeHotbarIndex() {
-    return this.hotbarIndex(this.activeHotbarId);
+  private hotbarIndex(hotbar: Hotbar) {
+    return this.hotbars.indexOf(hotbar);
+  }
+
+  @computed get activeHotbarIndex() {
+    return this.hotbarIndexById(this.activeHotbarId);
   }
 
   @action
@@ -87,13 +106,11 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     this.hotbars.forEach(ensureExactHotbarItemLength);
 
     if (data.activeHotbarId) {
-      if (this.getById(data.activeHotbarId)) {
-        this.activeHotbarId = data.activeHotbarId;
-      }
+      this.setActiveHotbar(data.activeHotbarId);
     }
 
     if (!this.activeHotbarId) {
-      this.activeHotbarId = this.hotbars[0].id;
+      this.setActiveHotbar(0);
     }
   }
 
@@ -118,8 +135,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.find((hotbar) => hotbar.id === id);
   }
 
-  @action
-  add(data: HotbarCreateOptions, { setActive = false } = {}) {
+  add = action((data: CreateHotbarData, { setActive = false }: CreateHotbarOptions = {}) => {
     const hotbar = getEmptyHotbar(data.name, data.id);
 
     this.hotbars.push(hotbar);
@@ -127,29 +143,29 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     if (setActive) {
       this._activeHotbarId = hotbar.id;
     }
-  }
+  });
 
-  @action
-  setHotbarName(id: string, name: string) {
+  setHotbarName = action((id: string, name: string) => {
     const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
 
-    if(index < 0) {
-      console.warn(`[HOTBAR-STORE]: cannot setHotbarName: unknown id`, { id });
-
-      return;
+    if (index < 0) {
+      return void console.warn(`[HOTBAR-STORE]: cannot setHotbarName: unknown id`, { id });
     }
 
     this.hotbars[index].name = name;
-  }
+  });
 
-  @action
-  remove(hotbar: Hotbar) {
+  remove = action((hotbar: Hotbar) => {
+    if (this.hotbars.length <= 1) {
+      throw new Error("Cannot remove the last hotbar");
+    }
+
     this.hotbars = this.hotbars.filter((h) => h !== hotbar);
 
     if (this.activeHotbarId === hotbar.id) {
-      this.activeHotbarId = this.hotbars[0].id;
+      this.setActiveHotbar(0);
     }
-  }
+  });
 
   @action
   addToHotbar(item: CatalogEntity, cellIndex?: number) {
@@ -263,7 +279,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       index = hotbarStore.hotbars.length - 1;
     }
 
-    hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+    hotbarStore.setActiveHotbar(index);
   }
 
   switchToNext() {
@@ -274,7 +290,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       index = 0;
     }
 
-    hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+    hotbarStore.setActiveHotbar(index);
   }
 
   /**
@@ -284,6 +300,20 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   isAddedToActive(entity: CatalogEntity) {
     return !!this.getActive().items.find(item => item?.entity.uid === entity.metadata.uid);
   }
+
+  getDisplayLabel(hotbar: Hotbar): string {
+    return `${this.getDisplayIndex(hotbar)}: ${hotbar.name}`;
+  }
+
+  getDisplayIndex(hotbar: Hotbar): string {
+    const index = this.hotbarIndex(hotbar);
+
+    if (index < 0) {
+      return "??";
+    }
+
+    return `${index + 1}`;
+  }
 }
 
 /**
@@ -292,12 +322,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
  * @param hotbar The hotbar to modify
  */
 function ensureExactHotbarItemLength(hotbar: Hotbar) {
-  if (hotbar.items.length === defaultHotbarCells) {
-    // if we already have `defaultHotbarCells` then we are good to stop
-    return;
-  }
-
-  // otherwise, keep adding empty entries until full
+  // if there are not enough items
   while (hotbar.items.length < defaultHotbarCells) {
     hotbar.items.push(null);
   }
@@ -314,3 +339,10 @@ function ensureExactHotbarItemLength(hotbar: Hotbar) {
     }
   }
 }
+
+const hotbarManagerInjectable = getInjectable({
+  instantiate: () => HotbarStore.getInstance(),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default hotbarManagerInjectable;

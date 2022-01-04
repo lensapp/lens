@@ -19,41 +19,49 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed } from "mobx";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import { computed, IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { broadcastMessage } from "../../../common/ipc";
+import { broadcastMessage, catalogEntityRunListener } from "../../../common/ipc";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { CommandOverlay } from "../command-palette";
+import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { Select } from "../select";
 
-@observer
-export class ActivateEntityCommand extends React.Component {
-  @computed get options() {
-    return catalogEntityRegistry.items.map(entity => ({
-      label: `${entity.kind}: ${entity.getName()}`,
-      value: entity,
-    }));
-  }
-
-  onSelect(entity: CatalogEntity): void {
-    broadcastMessage("catalog-entity:run", entity.getId());
-    CommandOverlay.close();
-  }
-
-  render() {
-    return (
-      <Select
-        menuPortalTarget={null}
-        onChange={(v) => this.onSelect(v.value)}
-        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-        menuIsOpen={true}
-        options={this.options}
-        autoFocus={true}
-        escapeClearsValue={false}
-        placeholder="Activate entity ..."
-      />
-    );
-  }
+interface Dependencies {
+  closeCommandOverlay: () => void;
+  entities: IComputedValue<CatalogEntity[]>;
 }
+
+const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entities }: Dependencies) => {
+  const options = entities.get().map(entity => ({
+    label: `${entity.kind}: ${entity.getName()}`,
+    value: entity,
+  }));
+
+  const onSelect = (entity: CatalogEntity): void => {
+    broadcastMessage(catalogEntityRunListener, entity.getId());
+    closeCommandOverlay();
+  };
+
+  return (
+    <Select
+      menuPortalTarget={null}
+      onChange={(v) => onSelect(v.value)}
+      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+      menuIsOpen={true}
+      options={options}
+      autoFocus={true}
+      escapeClearsValue={false}
+      placeholder="Activate entity ..."
+    />
+  );
+});
+
+export const ActivateEntityCommand = withInjectables<Dependencies>(NonInjectedActivateEntityCommand, {
+  getProps: di => ({
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    entities: computed(() => [...catalogEntityRegistry.items]),
+  }),
+});

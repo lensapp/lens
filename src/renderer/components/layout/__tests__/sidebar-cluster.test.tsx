@@ -25,7 +25,7 @@ import { render, fireEvent } from "@testing-library/react";
 import { SidebarCluster } from "../sidebar-cluster";
 import { KubernetesCluster } from "../../../../common/catalog-entities";
 
-jest.mock("../../../../common/hotbar-store", () => ({
+jest.mock("../../../../common/hotbar-store.injectable", () => ({
   HotbarStore: {
     getInstance: () => ({
       isAddedToActive: jest.fn(),

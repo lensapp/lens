@@ -34,7 +34,7 @@ import { mockWindow } from "../../../../../__mocks__/windowMock";
 import { AppPaths } from "../../../../common/app-paths";
 import extensionLoaderInjectable
   from "../../../../extensions/extension-loader/extension-loader.injectable";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 
 mockWindow();

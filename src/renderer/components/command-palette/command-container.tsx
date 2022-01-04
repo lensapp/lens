@@ -26,41 +26,43 @@ import React from "react";
 import { Dialog } from "../dialog";
 import { CommandDialog } from "./command-dialog";
 import type { ClusterId } from "../../../common/cluster-types";
-import { CommandOverlay } from "./command-overlay";
+import commandOverlayInjectable, { CommandOverlay } from "./command-overlay.injectable";
 import { isMac } from "../../../common/vars";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
 import { getMatchedClusterId } from "../../navigation";
 import type { Disposer } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
 
 export interface CommandContainerProps {
   clusterId?: ClusterId;
 }
 
-function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): Disposer {
-  window.addEventListener(type, listener, options);
-
-  return () => {
-    window.removeEventListener(type, listener);
-  };
+interface Dependencies {
+  addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
+  commandOverlay: CommandOverlay,
 }
 
 @observer
-export class CommandContainer extends React.Component<CommandContainerProps> {
+class NonInjectedCommandContainer extends React.Component<CommandContainerProps & Dependencies> {
   private escHandler(event: KeyboardEvent) {
+    const { commandOverlay } = this.props;
+
     if (event.key === "Escape") {
       event.stopPropagation();
-      CommandOverlay.close();
+      commandOverlay.close();
     }
   }
 
   handleCommandPalette = () => {
+    const { commandOverlay } = this.props;
     const clusterIsActive = getMatchedClusterId() !== undefined;
 
     if (clusterIsActive) {
       broadcastMessage(`command-palette:${catalogEntityRegistry.activeEntity.getId()}:open`);
     } else {
-      CommandOverlay.open(<CommandDialog />);
+      commandOverlay.open(<CommandDialog />);
     }
   };
 
@@ -75,11 +77,13 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
   }
 
   componentDidMount() {
-    const action = this.props.clusterId
-      ? () => CommandOverlay.open(<CommandDialog />)
+    const { clusterId, addWindowEventListener, commandOverlay } = this.props;
+
+    const action = clusterId
+      ? () => commandOverlay.open(<CommandDialog />)
       : this.handleCommandPalette;
-    const ipcChannel = this.props.clusterId
-      ? `command-palette:${this.props.clusterId}:open`
+    const ipcChannel = clusterId
+      ? `command-palette:${clusterId}:open`
       : "command-palette:open";
 
     disposeOnUnmount(this, [
@@ -90,17 +94,27 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
   }
 
   render() {
+    const { commandOverlay } = this.props;
+
     return (
       <Dialog
-        isOpen={CommandOverlay.isOpen}
+        isOpen={commandOverlay.isOpen}
         animated={true}
-        onClose={CommandOverlay.close}
+        onClose={commandOverlay.close}
         modal={false}
       >
         <div id="command-container">
-          {CommandOverlay.component}
+          {commandOverlay.component}
         </div>
       </Dialog>
     );
   }
 }
+
+export const CommandContainer = withInjectables<Dependencies, CommandContainerProps>(NonInjectedCommandContainer, {
+  getProps: (di, props) => ({
+    addWindowEventListener: di.inject(windowAddEventListenerInjectable),
+    commandOverlay: di.inject(commandOverlayInjectable),
+    ...props,
+  }),
+});

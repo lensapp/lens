@@ -40,7 +40,7 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
-import { HotbarStore } from "../common/hotbar-store";
+import { HotbarStore } from "../common/hotbar-store.injectable";
 import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
@@ -59,6 +59,7 @@ import bindProtocolAddRouteHandlersInjectable
 import type { LensProtocolRouterRenderer } from "./protocol-handler";
 import lensProtocolRouterRendererInjectable
   from "./protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
+import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -121,7 +122,9 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   initializers.initCatalogCategoryRegistryEntries();
 
   logger.info(`${logPrefix} initializing Catalog`);
-  initializers.initCatalog();
+  initializers.initCatalog({
+    openCommandDialog: di.inject(commandOverlayInjectable).open,
+  });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
 

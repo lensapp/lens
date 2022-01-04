@@ -19,81 +19,60 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import { action, computed, makeObservable, observable } from "mobx";
-import { HotbarStore } from "../../../common/hotbar-store";
-import { hotbarDisplayLabel } from "./hotbar-display-label";
+import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
 import { Input } from "../input";
 import { uniqueHotbarName } from "./hotbar-add-command";
-import { CommandOverlay } from "../command-palette";
+import type { Hotbar } from "../../../common/hotbar-types";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 
-@observer
-export class HotbarRenameCommand extends React.Component {
-  @observable hotbarId = "";
-  @observable hotbarName = "";
-
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
-  }
-
-  @computed get options() {
-    return HotbarStore.getInstance().hotbars.map((hotbar) => {
-      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id) };
-    });
-  }
-
-  @action onSelect = (id: string) => {
-    this.hotbarId = id;
-    this.hotbarName = HotbarStore.getInstance().getById(this.hotbarId).name;
+interface Dependencies {
+  closeCommandOverlay: () => void;
+  hotbarManager: {
+    hotbars: Hotbar[];
+    getById: (id: string) => Hotbar | undefined;
+    setHotbarName: (id: string, name: string) => void;
+    getDisplayLabel: (hotbar: Hotbar) => string;
   };
+}
 
-  onSubmit = (name: string) => {
+const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarManager }: Dependencies) => {
+  const [hotbarId, setHotbarId] = useState("");
+  const [hotbarName, setHotbarName] = useState("");
+
+  const options = hotbarManager.hotbars.map(hotbar => ({
+    value: hotbar.id,
+    label: hotbarManager.getDisplayLabel(hotbar),
+  }));
+
+  const onSelect = (id: string) => {
+    setHotbarId(id);
+    setHotbarName(hotbarManager.getById(id).name);
+  };
+  const onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
     }
 
-    const hotbarStore = HotbarStore.getInstance();
-    const hotbar = HotbarStore.getInstance().getById(this.hotbarId);
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbarStore.setHotbarName(this.hotbarId, name);
-    CommandOverlay.close();
+    hotbarManager.setHotbarName(hotbarId, name);
+    closeCommandOverlay();
   };
 
-  renderHotbarList() {
-    return (
-      <>
-        <Select
-          menuPortalTarget={null}
-          onChange={(v) => this.onSelect(v.value)}
-          components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-          menuIsOpen={true}
-          options={this.options}
-          autoFocus={true}
-          escapeClearsValue={false}
-          placeholder="Rename hotbar"/>
-      </>
-    );
-  }
-
-  renderNameInput() {
+  if (hotbarId) {
     return (
       <>
         <Input
           trim={true}
-          value={this.hotbarName}
-          onChange={v => this.hotbarName = v}
+          value={hotbarName}
+          onChange={setHotbarName}
           placeholder="New hotbar name"
           autoFocus={true}
           theme="round-black"
           validators={uniqueHotbarName}
-          onSubmit={this.onSubmit}
+          onSubmit={onSubmit}
           showValidationLine={true}
         />
         <small className="hint">
@@ -103,12 +82,24 @@ export class HotbarRenameCommand extends React.Component {
     );
   }
 
-  render() {
+  return (
+    <Select
+      menuPortalTarget={null}
+      onChange={(v) => onSelect(v.value)}
+      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+      menuIsOpen={true}
+      options={options}
+      autoFocus={true}
+      escapeClearsValue={false}
+      placeholder="Rename hotbar"
+    />
+  );
+});
 
-    return (
-      <>
-        {!this.hotbarId ? this.renderHotbarList() : this.renderNameInput()}
-      </>
-    );
-  }
-}
+export const HotbarRenameCommand = withInjectables<Dependencies>(NonInjectedHotbarRenameCommand, {
+  getProps: (di, props) => ({
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    hotbarManager: di.inject(hotbarManagerInjectable),
+    ...props,
+  }),
+});

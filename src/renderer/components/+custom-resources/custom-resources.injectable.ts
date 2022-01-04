@@ -21,7 +21,7 @@
 
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { crdStore } from "../../../../renderer/components/+custom-resources/crd.store";
+import { crdStore } from "./crd.store";
 
 const customResourceDefinitionsInjectable = getInjectable({
   instantiate: () => computed(() => [...crdStore.items]),

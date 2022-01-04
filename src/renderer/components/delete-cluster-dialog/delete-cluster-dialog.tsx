@@ -31,7 +31,7 @@ import { saveKubeconfig } from "./save-config";
 import { requestMain } from "../../../common/ipc";
 import { clusterClearDeletingHandler, clusterDeleteHandler, clusterSetDeletingHandler } from "../../../common/cluster-ipc";
 import { Notifications } from "../notifications";
-import { HotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store.injectable";
 import { boundMethod } from "autobind-decorator";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
