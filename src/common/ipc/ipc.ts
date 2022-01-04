@@ -34,7 +34,7 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
     return requestMain(broadcastMainChannel, channel, ...args);
   }
 
-  if (!ipcMain) {
+  if (!webContents) {
     return;
   }
 
