@@ -38,7 +38,7 @@ export class PrometheusOperator extends PrometheusProvider {
       case "cluster":
         switch (queryName) {
           case "memoryUsage":
-            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes))`.replace(/_bytes/g, `_bytes{node=~"${opts.nodes}"}`);
+            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes))`.replace(/_bytes/g, `_bytes * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"}`);
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="", instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
@@ -50,7 +50,7 @@ export class PrometheusOperator extends PrometheusProvider {
           case "memoryAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"})`;
           case "cpuUsage":
-            return `sum(rate(node_cpu_seconds_total{node=~"${opts.nodes}", mode=~"user|system"}[${this.rateAccuracy}]))`;
+            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])* on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
           case "cpuRequests":
             return `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="cpu"})`;
           case "cpuLimits":
@@ -66,31 +66,31 @@ export class PrometheusOperator extends PrometheusProvider {
           case "podAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"})`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"} - node_filesystem_avail_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
         }
         break;
       case "nodes":
         switch (queryName) {
           case "memoryUsage":
-            return `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`;
+            return `sum((node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
           case "workloadMemoryUsage":
-            return `sum(container_memory_working_set_bytes{container!=""}) by (node)`;
+            return `sum(container_memory_working_set_bytes{container!="POD", container!=""}) by (node)`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
           case "memoryAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="memory"}) by (node)`;
           case "cpuUsage":
-            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])) by(node)`;
+            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}]) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
           case "cpuCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (node)`;
+            return `sum((node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
         }
         break;
       case "pods":
