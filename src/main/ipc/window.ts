@@ -22,7 +22,7 @@
 import { BrowserWindow, webContents } from "electron";
 import { broadcastMessage } from "../../common/ipc";
 
-type WindowAction = "goBack" | "goForward" | "minimize" | "toggleMaximize" | "close";
+type WindowAction = "back" | "forward" | "minimize" | "toggleMaximize" | "close";
 
 export function windowAction(action: WindowAction) {
   const window = BrowserWindow.getFocusedWindow();
@@ -30,12 +30,12 @@ export function windowAction(action: WindowAction) {
   if (!window) return;
 
   switch (action) {
-    case "goBack": {
+    case "back": {
       window.webContents.goBack();
       break;
     }
 
-    case "goForward": {
+    case "forward": {
       window.webContents.goForward();
       break;
     }
@@ -57,18 +57,6 @@ export function windowAction(action: WindowAction) {
     case "close": {
       window.close();
       break;
-    }
-  }
-
-  if (action === "goBack") {
-    window.webContents.goBack();
-  } else if (action === "goForward") {
-    window.webContents.goForward();
-  } else if (action === "toggleMaximize") {
-    if (window.isMaximized()) {
-      window.unmaximize();
-    } else {
-      window.maximize();
     }
   }
 }

@@ -8,7 +8,7 @@ import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
 import { IpcMainWindowEvents } from "../../../../common/ipc";
-import { broadcastMessage } from "../../../../common/ipc";
+import { broadcastMessage, requestMain } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
@@ -30,23 +30,6 @@ jest.mock("../../../../common/vars", () => {
     isWindows: null,
     isLinux: null,
     appSemVer: versionStub,
-  };
-});
-
-const mockMinimize = jest.fn();
-const mockMaximize = jest.fn();
-const mockUnmaximize = jest.fn();
-const mockClose = jest.fn();
-
-jest.mock("@electron/remote", () => {
-  return {
-    getCurrentWindow: () => ({
-      minimize: () => mockMinimize(),
-      maximize: () => mockMaximize(),
-      unmaximize: () => mockUnmaximize(),
-      close: () => mockClose(),
-      isMaximized: () => false,
-    }),
   };
 });
 
@@ -107,12 +90,12 @@ describe("<TopBar/> in Windows and Linux", () => {
     expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
 
     fireEvent.click(minimize);
-    expect(mockMinimize).toHaveBeenCalled();
+    expect(requestMain).toHaveBeenCalledWith(IpcMainWindowEvents.WINDOW_ACTION, "minimize");
 
     fireEvent.click(maximize);
-    expect(mockMaximize).toHaveBeenCalled();
+    expect(requestMain).toHaveBeenCalledWith(IpcMainWindowEvents.WINDOW_ACTION, "toggleMaximize");
 
     fireEvent.click(close);
-    expect(mockClose).toHaveBeenCalled();
+    expect(requestMain).toHaveBeenCalledWith(IpcMainWindowEvents.WINDOW_ACTION, "close");
   });
 });

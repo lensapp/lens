@@ -34,6 +34,10 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
     return requestMain(broadcastMainChannel, ...args);
   }
 
+  if (!webContents) {
+    return;
+  }
+
   const subFrames = getSubFrames();
   const views = webContents.getAllWebContents();
 
