@@ -34,17 +34,9 @@ import { clipboard } from "electron";
 import logger from "../../../common/logger";
 
 export class Terminal {
-  public static readonly spawningPool = (() => {
-    // terminal element must be in DOM before attaching via xterm.open(elem)
-    // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
-    const pool = document.createElement("div");
-
-    pool.className = "terminal-init";
-    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
-    document.body.appendChild(pool);
-
-    return pool;
-  })();
+  public static get spawningPool() {
+    return document.getElementById("terminal-init");
+  }
 
   static async preloadFonts() {
     const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
