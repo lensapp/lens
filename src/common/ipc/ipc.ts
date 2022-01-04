@@ -31,20 +31,23 @@ function getSubFrames(): ClusterFrameInfo[] {
 
 export async function broadcastMessage(channel: string, ...args: any[]): Promise<void> {
   if (ipcRenderer) {
-    return requestMain(broadcastMainChannel, ...args);
+    return requestMain(broadcastMainChannel, channel, ...args);
   }
 
-  if (!webContents) {
+  if (!ipcMain) {
     return;
   }
+
+  ipcMain.listeners(channel).forEach((func) => func({
+    processId: undefined, frameId: undefined, sender: undefined, senderFrame: undefined,
+  }, ...args));
 
   const subFrames = getSubFrames();
   const views = webContents.getAllWebContents();
 
   if (!views || !Array.isArray(views) || views.length === 0) return;
-  args = args.map(sanitizePayload);
 
-  ipcMain?.emit(channel, ...args);
+  args = args.map(sanitizePayload);
 
   for (const view of views) {
     let viewType = "unknown";
