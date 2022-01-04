@@ -64,7 +64,7 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
       logger.silly(`[IPC]: broadcasting "${channel}" to ${viewType}=${view.id}`, { args });
       view.send(channel, ...args);
     } catch (error) {
-      logger.error(`[IPC]: failed to send IPC message "${channel}" to view "${viewType}=${view.id}"`, { error: String(error) });
+      logger.error(`[IPC]: failed to send IPC message "${channel}" to view "${viewType}=${view.id}"`, { error });
     }
 
     // Send message to subFrames of views.
