@@ -57,15 +57,17 @@ export class Ingresses extends React.Component<IngressesProps> {
           ingress.getNs(),
           ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
           ingress.getRouteDecls().map(route => (
-            <a
-              key={route.url}
-              href={route.url}
-              rel="noreferrer"
-              target="_blank"
-              onClick={e => e.stopPropagation()}
-            >
-              {route.url}
-            </a>
+            <>
+              <a
+                key={route.url}
+                href={route.url}
+                rel="noreferrer"
+                target="_blank"
+                onClick={e => e.stopPropagation()}
+              >
+                {route.url}
+              </a> ⇢ {route.service}
+            </>
           )),
           <KubeObjectAge key="age" object={ingress} />,
         ]}
