@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as tempy from "tempy";
+import tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
 import { promiseExecFile } from "../../common/utils/promise-exec";
@@ -43,6 +43,7 @@ async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFile
 export async function listReleases(pathToKubeconfig: string, namespace?: string): Promise<Record<string, any>[]> {
   const args = [
     "ls",
+    "--all",
     "--output", "json",
   ];
 

@@ -33,7 +33,7 @@ import { Notifications } from "../../components/notifications";
 import * as routes from "../../../common/routes";
 import type { ExtensionInfo } from "../../components/+extensions/attempt-install-by-info/attempt-install-by-info";
 
-export interface Dependencies {
+interface Dependencies {
   attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>;
   lensProtocolRouterRenderer: LensProtocolRouterRenderer;
 }

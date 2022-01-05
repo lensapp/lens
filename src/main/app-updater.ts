@@ -25,10 +25,9 @@ import { isLinux, isMac, isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
-import { ipcMain } from "electron";
+import { ipcMain, autoUpdater as electronAutoUpdater } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
-import { autoUpdater as electronAutoUpdater } from "electron";
 
 let installVersion: null | string = null;
 

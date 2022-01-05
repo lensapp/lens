@@ -37,9 +37,9 @@ export default class ExampleMainExtension extends Main.LensExtension {
 }
 ```
 
-### App Menus
+### Menus
 
-This extension can register custom app menus that will be displayed on OS native menus.
+This extension can register custom app and tray menus that will be displayed on OS native menus.
 
 Example:
 
@@ -54,6 +54,29 @@ export default class ExampleMainExtension extends Main.LensExtension {
       click() {
         Main.Navigation.navigate("https://k8slens.dev");
       }
+    }
+  ]
+
+  trayMenus = [
+    {
+      label: "My links",
+      submenu: [
+        {
+          label: "Lens",
+          click() {
+            Main.Navigation.navigate("https://k8slens.dev");
+          }
+        },
+        {
+          type: "separator"
+        },
+        {
+          label: "Lens Github",
+          click() {
+            Main.Navigation.navigate("https://github.com/lensapp/lens");
+          }
+        }
+      ]
     }
   ]
 }

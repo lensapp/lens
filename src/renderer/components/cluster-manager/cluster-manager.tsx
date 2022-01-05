@@ -39,8 +39,8 @@ import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import { reaction } from "mobx";
 import { navigation } from "../../navigation";
 import { setEntityOnRouteMatch } from "../../../main/catalog-sources/helpers/general-active-sync";
-import { TopBar } from "../layout/topbar";
 import { catalogURL, getPreviousTabUrl } from "../../../common/routes";
+import { TopBar } from "../layout/top-bar/top-bar";
 
 @observer
 export class ClusterManager extends React.Component {

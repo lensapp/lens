@@ -30,7 +30,8 @@ import { Input } from "../components/input";
 import { cssNames, noop } from "../utils";
 import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
-import { aboutPortForwarding, notifyErrorPortForwarding, openPortForward } from ".";
+import { openPortForward } from "./port-forward-utils";
+import { aboutPortForwarding, notifyErrorPortForwarding } from "./port-forward-notify";
 import { Checkbox } from "../components/checkbox";
 import logger from "../../common/logger";
 
@@ -156,14 +157,12 @@ export class PortForwardDialog extends Component<Props> {
           </div>
           <Checkbox
             data-testid="port-forward-https"
-            theme="light"
             label="https"
             value={dialogState.useHttps}
             onChange={value => dialogState.useHttps = value}
           />
           <Checkbox
             data-testid="port-forward-open"
-            theme="light"
             label="Open in Browser"
             value={dialogState.openInBrowser}
             onChange={value => dialogState.openInBrowser = value}

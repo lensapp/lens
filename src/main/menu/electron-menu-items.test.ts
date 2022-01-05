@@ -24,8 +24,8 @@ import electronMenuItemsInjectable from "./electron-menu-items.injectable";
 import type { IComputedValue } from "mobx";
 import { computed, ObservableMap, runInAction } from "mobx";
 import type { MenuRegistration } from "./menu-registration";
-import extensionsInjectable from "../../extensions/extensions.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
 
 describe("electron-menu-items", () => {
   let di: ConfigurableDependencyInjectionContainer;
@@ -38,8 +38,8 @@ describe("electron-menu-items", () => {
     extensionsStub = new ObservableMap();
 
     di.override(
-      extensionsInjectable,
-      computed(() => [...extensionsStub.values()]),
+      mainExtensionsInjectable,
+      () => computed(() => [...extensionsStub.values()]),
     );
 
     electronMenuItems = di.inject(electronMenuItemsInjectable);

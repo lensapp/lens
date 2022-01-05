@@ -20,7 +20,7 @@
  */
 import logger from "../../../../main/logger";
 
-export interface Dependencies {
+interface Dependencies {
   attemptInstalls: (filePaths: string[]) => Promise<void>;
 }
 

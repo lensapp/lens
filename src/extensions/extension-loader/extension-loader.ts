@@ -255,17 +255,15 @@ export class ExtensionLoader {
 
   loadOnClusterManagerRenderer() {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+
+    return this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
         registries.CommandRegistry.getInstance().add(extension.commands),
-        registries.WelcomeMenuRegistry.getInstance().add(extension.welcomeMenus),
-        registries.WelcomeBannerRegistry.getInstance().add(extension.welcomeBanners),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
-        registries.TopBarRegistry.getInstance().add(extension.topBarItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -311,7 +309,9 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    return reaction(() => this.toJSON(), installedExtensions => {
+    const loadingExtensions: { isBundled: boolean, loaded: Promise<void> }[] = [];
+
+    reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -326,7 +326,14 @@ export class ExtensionLoader {
 
             const instance = new LensExtensionClass(extension);
 
-            instance.enable(register);
+            const loaded = instance.enable(register).catch((err) => {
+              logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+            });
+
+            loadingExtensions.push({
+              isBundled: extension.isBundled,
+              loaded,
+            });
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
@@ -338,6 +345,8 @@ export class ExtensionLoader {
     }, {
       fireImmediately: true,
     });
+
+    return loadingExtensions;
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {

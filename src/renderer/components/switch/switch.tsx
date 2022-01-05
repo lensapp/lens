@@ -19,56 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
- .ClusterIssues {
-  min-height: 350px;
-  position: relative;
-  grid-area: issues;
-  padding: calc(var(--margin) * 2) 0;
-  background: var(--contentColor);
+import styles from "./switch.module.scss";
 
-  &:global(.OnlyClusterIssues) {
-    grid-row: row1-start / row2-end;
-  }
+import React, { ChangeEvent, HTMLProps } from "react";
+import { cssNames } from "../../utils";
 
-  @media (max-width: 1150px) {
-    grid-area: unset;
+interface Props extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
+  onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
+}
 
-    &:global(.OnlyClusterIssues) {
-      grid-row: auto;
-    }
-  }
-
-  .SubHeader {
-    padding-top: 0;
-    padding-bottom: 0;
-
-    :global(.Icon) {
-      font-size: 130%;
-      color: var(--colorError);
-    }
-  }
-
-  .message {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    flex-grow: 3;
-  }
-
-  .object {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    flex-grow: 2;
-  }
-
-  .noIssues {
-    .ok-title {
-      font-size: large;
-      color: var(--textColorAccent);
-      font-weight: bold;
-    }
-
-    .allGood {
-      color: white;
-    }
-  }
+export function Switch({ children, disabled, onChange, ...props }: Props) {
+  return (
+    <label className={cssNames(styles.Switch, { [styles.disabled]: disabled })} data-testid="switch">
+      {children}
+      <input type="checkbox" role="switch" disabled={disabled} onChange={(event) => onChange?.(props.checked, event)} {...props}/>
+    </label>
+  );
 }

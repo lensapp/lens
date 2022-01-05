@@ -29,7 +29,7 @@ import { ErrorBoundary } from "./components/error-boundary";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
 import type { ExtensionLoader } from "../extensions/extension-loader";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, BundledExtensionsLoaded } from "../common/ipc";
 import { CommandContainer } from "./components/command-palette/command-container";
 import { registerIpcListeners } from "./ipc";
 import { ipcRenderer } from "electron";
@@ -39,6 +39,7 @@ import logger from "../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 import { ClusterFrameHandler } from "./components/cluster-manager/lens-views";
 import type { LensProtocolRouterRenderer } from "./protocol-handler";
+import { delay } from "./utils";
 
 injectSystemCAs();
 
@@ -54,8 +55,21 @@ export class RootFrame extends React.Component {
     lensProtocolRouterRendererInjectable: LensProtocolRouterRenderer,
   ) {
     catalogEntityRegistry.init();
-    extensionLoader.loadOnClusterManagerRenderer();
+
+    try {
+      // maximum time to let bundled extensions finish loading
+      const timeout = delay(10000);
+
+      const loadingExtensions = extensionLoader.loadOnClusterManagerRenderer();
+      const loadingBundledExtensions = loadingExtensions.filter(e => e.isBundled).map(e => e.loaded);
+      const bundledExtensionsFinished = Promise.all(loadingBundledExtensions);
+
+      await Promise.race([bundledExtensionsFinished, timeout]);
+    } finally {
+      ipcRenderer.send(BundledExtensionsLoaded);
+    }
     lensProtocolRouterRendererInjectable.init();
+
     bindProtocolAddRouteHandlers();
 
     window.addEventListener("offline", () => broadcastMessage("network:offline"));

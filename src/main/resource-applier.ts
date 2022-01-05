@@ -25,7 +25,7 @@ import { exec } from "child_process";
 import fs from "fs-extra";
 import * as yaml from "js-yaml";
 import path from "path";
-import * as tempy from "tempy";
+import tempy from "tempy";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
 import { cloneJsonObject } from "../common/utils";

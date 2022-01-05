@@ -114,9 +114,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   logger.info(`${logPrefix} initializing KubeObjectDetailRegistry`);
   initializers.initKubeObjectDetailRegistry();
 
-  logger.info(`${logPrefix} initializing WelcomeMenuRegistry`);
-  initializers.initWelcomeMenuRegistry();
-
   logger.info(`${logPrefix} initializing WorkloadsOverviewDetailRegistry`);
   initializers.initWorkloadsOverviewDetailRegistry();
 

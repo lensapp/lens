@@ -18,20 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
-import { attemptInstallByInfo, ExtensionInfo } from "./attempt-install-by-info";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { attemptInstallByInfo } from "./attempt-install-by-info";
 import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
 import getBaseRegistryUrlInjectable from "../get-base-registry-url/get-base-registry-url.injectable";
 
-const attemptInstallByInfoInjectable: Injectable<(extensionInfo: ExtensionInfo) => Promise<void>, {}> = {
-  getDependencies: di => ({
-    attemptInstall: di.inject(attemptInstallInjectable),
-    getBaseRegistryUrl: di.inject(getBaseRegistryUrlInjectable),
-  }),
+const attemptInstallByInfoInjectable = getInjectable({
+  instantiate: (di) =>
+    attemptInstallByInfo({
+      attemptInstall: di.inject(attemptInstallInjectable),
+      getBaseRegistryUrl: di.inject(getBaseRegistryUrlInjectable),
+    }),
 
-  instantiate: attemptInstallByInfo,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default attemptInstallByInfoInjectable;

@@ -19,13 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { editResourceTab } from "../../dock/edit-resource.store";
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
-const editResourceTabInjectable: Injectable<typeof editResourceTab> = {
-  getDependencies: () => ({}),
+const editResourceTabInjectable = getInjectable({
   instantiate: () => editResourceTab,
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default editResourceTabInjectable;

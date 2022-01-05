@@ -18,23 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
-import { Dependencies, disableExtension } from "./disable-extension";
+import { disableExtension } from "./disable-extension";
 
-const disableExtensionInjectable: Injectable<
-  (id: LensExtensionId) => void,
-  Dependencies
-> = {
-  getDependencies: di => ({
-    extensionLoader: di.inject(extensionLoaderInjectable),
-  }),
-
-  instantiate: disableExtension,
+const disableExtensionInjectable = getInjectable({
+  instantiate: (di) =>
+    disableExtension({
+      extensionLoader: di.inject(extensionLoaderInjectable),
+    }),
 
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default disableExtensionInjectable;

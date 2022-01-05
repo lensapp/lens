@@ -21,7 +21,7 @@
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 
-export interface Dependencies {
+interface Dependencies {
   extensionLoader: ExtensionLoader;
 }
 

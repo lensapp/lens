@@ -24,7 +24,7 @@ import { defaultExtensionRegistryUrl, ExtensionRegistry, ExtensionRegistryLocati
 import { promiseExecFile } from "../../../utils";
 import { Notifications } from "../../notifications";
 
-export interface Dependencies {
+interface Dependencies {
   getRegistryUrlPreference: () => ExtensionRegistry,
 }
 

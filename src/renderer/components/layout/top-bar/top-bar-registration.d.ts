@@ -18,28 +18,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-.AddClusters {
-  --flex-gap: calc(var(--unit) * 2);
-
-  code {
-    color: rgb(236, 64, 122);
-  }
-
-  a[href] {
-    color: var(--colorInfo);
-  }
+interface TopBarComponents {
+  Item: React.ComponentType;
 }
 
-.editor {
-  min-height: 600px;
-  max-height: 600px;
-  border: 1px solid var(--colorVague);
-  border-radius: var(--border-radius);
-}
-
-:global(.theme-light) {
-  .editor {
-    border-color: var(--borderFaintColor);
-  }
+export interface TopBarRegistration {
+  components: TopBarComponents;
 }

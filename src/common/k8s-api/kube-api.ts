@@ -34,6 +34,9 @@ import type { IKubeWatchEvent } from "./kube-watch-api";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";
+
+// BUG: https://github.com/mysticatea/abort-controller/pull/22
+// eslint-disable-next-line import/no-named-as-default
 import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";

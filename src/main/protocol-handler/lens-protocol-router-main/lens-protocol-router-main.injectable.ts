@@ -18,23 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
-import type { Dependencies } from "./lens-protocol-router-main";
 import { LensProtocolRouterMain } from "./lens-protocol-router-main";
 
-const lensProtocolRouterMainInjectable: Injectable<
-  LensProtocolRouterMain,
-  Dependencies
-> = {
-  getDependencies: di => ({
-    extensionLoader: di.inject(extensionLoaderInjectable),
-  }),
-
-  instantiate: dependencies => new LensProtocolRouterMain(dependencies),
+const lensProtocolRouterMainInjectable = getInjectable({
+  instantiate: (di) =>
+    new LensProtocolRouterMain({
+      extensionLoader: di.inject(extensionLoaderInjectable),
+    }),
 
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default lensProtocolRouterMainInjectable;

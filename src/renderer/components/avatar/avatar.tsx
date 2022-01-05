@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./avatar.module.css";
+import styles from "./avatar.module.scss";
 
 import React, { HTMLAttributes, ImgHTMLAttributes } from "react";
 import randomColor from "randomcolor";

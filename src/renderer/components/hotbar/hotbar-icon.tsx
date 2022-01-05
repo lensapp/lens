@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./hotbar-icon.module.css";
+import styles from "./hotbar-icon.module.scss";
 
 import React, { useState } from "react";
 

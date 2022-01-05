@@ -20,45 +20,55 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { Welcome } from "../welcome";
-import { TopBarRegistry, WelcomeMenuRegistry, WelcomeBannerRegistry } from "../../../../extensions/registries";
-import { defaultWidth } from "../welcome";
+import { defaultWidth, Welcome } from "../welcome";
+import { computed } from "mobx";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
+import { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
+import type { WelcomeBannerRegistration } from "../welcome-banner-items/welcome-banner-registration";
 
-jest.mock(
-  "electron",
-  () => ({
-    ipcRenderer: {
-      on: jest.fn(),
-    },
-    app: {
-      getPath: () => "tmp",
-    },
-  }),
-);
+jest.mock("electron", () => ({
+  ipcRenderer: {
+    on: jest.fn(),
+  },
+  app: {
+    getPath: () => "tmp",
+  },
+}));
 
 describe("<Welcome/>", () => {
-  beforeEach(() => {
-    TopBarRegistry.createInstance();
-    WelcomeMenuRegistry.createInstance();
-    WelcomeBannerRegistry.createInstance();
-  });
+  let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
+  let welcomeBannersStub: WelcomeBannerRegistration[];
 
-  afterEach(() => {
-    TopBarRegistry.resetInstance();
-    WelcomeMenuRegistry.resetInstance();
-    WelcomeBannerRegistry.resetInstance();
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+
+    render = renderFor(di);
+
+    welcomeBannersStub = [];
+
+    di.override(rendererExtensionsInjectable, () =>
+      computed(() => [
+        new TestExtension({
+          id: "some-id",
+          welcomeBanners: welcomeBannersStub,
+        }),
+      ]),
+    );
   });
 
   it("renders <Banner /> registered in WelcomeBannerRegistry and hide logo", async () => {
     const testId = "testId";
 
-    WelcomeBannerRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      {
-        Banner: () => <div data-testid={testId} />,
-      },
-    ]);
+    welcomeBannersStub.push({
+      Banner: () => <div data-testid={testId} />,
+    });
 
     const { container } = render(<Welcome />);
 
@@ -67,16 +77,15 @@ describe("<Welcome/>", () => {
   });
 
   it("calculates max width from WelcomeBanner.width registered in WelcomeBannerRegistry", async () => {
-    WelcomeBannerRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      {
-        width: 100,
-        Banner: () => <div />,
-      },
-      {
-        width: 800,
-        Banner: () => <div />,
-      },
-    ]);
+    welcomeBannersStub.push({
+      width: 100,
+      Banner: () => <div />,
+    });
+
+    welcomeBannersStub.push({
+      width: 800,
+      Banner: () => <div />,
+    });
 
     render(<Welcome />);
 
@@ -92,3 +101,25 @@ describe("<Welcome/>", () => {
     });
   });
 });
+
+class TestExtension extends LensRendererExtension {
+  constructor({
+    id,
+    welcomeBanners,
+  }: {
+    id: string;
+    welcomeBanners: WelcomeBannerRegistration[];
+  }) {
+    super({
+      id,
+      absolutePath: "irrelevant",
+      isBundled: false,
+      isCompatible: false,
+      isEnabled: false,
+      manifest: { name: id, version: "some-version" },
+      manifestPath: "irrelevant",
+    });
+
+    this.welcomeBanners = welcomeBanners;
+  }
+}

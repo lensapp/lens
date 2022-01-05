@@ -18,27 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Injectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import kubeObjectMenuRegistryInjectable from "./kube-object-menu-registry.injectable";
 
-import {
-  InstantiationParameter,
-  Dependencies,
-  getKubeObjectMenuItems,
-} from "./get-kube-object-menu-items";
+import { getKubeObjectMenuItems } from "./get-kube-object-menu-items";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 
-const kubeObjectMenuItemsInjectable: Injectable<
-  ReturnType<typeof getKubeObjectMenuItems>,
-  Dependencies,
-  InstantiationParameter
-> = {
-  getDependencies: di => ({
-    kubeObjectMenuRegistry: di.inject(kubeObjectMenuRegistryInjectable),
-  }),
-
-  instantiate: getKubeObjectMenuItems,
+const kubeObjectMenuItemsInjectable = getInjectable({
+  instantiate: (di, { kubeObject }: { kubeObject: KubeObject }) =>
+    getKubeObjectMenuItems({
+      kubeObjectMenuRegistry: di.inject(kubeObjectMenuRegistryInjectable),
+      kubeObject,
+    }),
 
   lifecycle: lifecycleEnum.transient,
-};
+});
 
 export default kubeObjectMenuItemsInjectable;

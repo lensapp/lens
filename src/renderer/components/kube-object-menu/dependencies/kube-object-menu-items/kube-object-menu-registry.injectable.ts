@@ -19,13 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { KubeObjectMenuRegistry } from "../../../../../extensions/registries";
-import type { Injectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
-const kubeObjectMenuRegistryInjectable: Injectable<KubeObjectMenuRegistry> = {
-  getDependencies: () => ({}),
+const kubeObjectMenuRegistryInjectable = getInjectable({
   instantiate: () => KubeObjectMenuRegistry.getInstance(),
   lifecycle: lifecycleEnum.singleton,
-};
+});
 
 export default kubeObjectMenuRegistryInjectable;

@@ -19,12 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./monaco-editor.module.css";
+import styles from "./monaco-editor.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { editor, Uri } from "monaco-editor";
-import { MonacoTheme, MonacoValidator, monacoValidators } from "./index";
+import type { MonacoTheme } from "./monaco-themes";
+import { MonacoValidator, monacoValidators } from "./monaco-validators";
 import { debounce, merge } from "lodash";
 import { cssNames, disposer } from "../../utils";
 import { UserStore } from "../../../common/user-store";

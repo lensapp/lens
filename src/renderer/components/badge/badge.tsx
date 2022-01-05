@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./badge.module.css";
+import styles from "./badge.module.scss";
 
 import React from "react";
 import { computed, makeObservable, observable } from "mobx";

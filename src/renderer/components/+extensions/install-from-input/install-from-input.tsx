@@ -30,7 +30,7 @@ import { readFileNotify } from "../read-file-notify/read-file-notify";
 import type { InstallRequest } from "../attempt-install/install-request";
 import type { ExtensionInfo } from "../attempt-install-by-info/attempt-install-by-info";
 
-export interface Dependencies {
+interface Dependencies {
   attemptInstall: (request: InstallRequest, disposer?: ExtendableDisposer) => Promise<void>,
   attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>
 }
