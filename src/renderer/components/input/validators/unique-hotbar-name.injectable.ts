@@ -18,12 +18,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { HotbarStore } from "./hotbar-store";
 
-const hotbarManagerInjectable = getInjectable({
-  instantiate: () => HotbarStore.getInstance(),
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
+import type { InputValidator } from "../input_validators";
+
+const uniqueHotbarNameInjectable = getInjectable({
+  instantiate: di => ({
+    condition: ({ required }) => required,
+    message: () => "Hotbar with this name already exists",
+    validate: value => !di.inject(hotbarManagerInjectable).getByName(value),
+  } as InputValidator),
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default hotbarManagerInjectable;
+export default uniqueHotbarNameInjectable;

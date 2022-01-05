@@ -22,7 +22,7 @@
 import styles from "./sidebar-cluster.module.scss";
 import { observable } from "mobx";
 import React, { useState } from "react";
-import { HotbarStore } from "../../../common/hotbar-store.injectable";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../navigation/events";

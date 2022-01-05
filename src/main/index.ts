@@ -51,7 +51,7 @@ import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
 import { ClusterStore } from "../common/cluster-store";
-import { HotbarStore } from "../common/hotbar-store.injectable";
+import { HotbarStore } from "../common/hotbar-store";
 import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";

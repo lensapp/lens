@@ -26,7 +26,7 @@ import logger from "../../main/logger";
 import { AppPaths } from "../app-paths";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { ClusterStore } from "../cluster-store";
-import { HotbarStore } from "../hotbar-store.injectable";
+import { HotbarStore } from "../hotbar-store";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {

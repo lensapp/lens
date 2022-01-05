@@ -20,7 +20,7 @@
  */
 import React, { ReactNode, useState } from "react";
 
-import { HotbarStore } from "../../../common/hotbar-store.injectable";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { MenuItem } from "../menu";
 
 import type { CatalogEntity } from "../../api/catalog-entity";

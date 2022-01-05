@@ -23,11 +23,11 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
 import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
-import { Input } from "../input";
-import { uniqueHotbarName } from "./hotbar-add-command";
+import { Input, InputValidator } from "../input";
 import type { Hotbar } from "../../../common/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
@@ -37,9 +37,10 @@ interface Dependencies {
     setHotbarName: (id: string, name: string) => void;
     getDisplayLabel: (hotbar: Hotbar) => string;
   };
+  uniqueHotbarName: InputValidator;
 }
 
-const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarManager }: Dependencies) => {
+const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarManager, uniqueHotbarName }: Dependencies) => {
   const [hotbarId, setHotbarId] = useState("");
   const [hotbarName, setHotbarName] = useState("");
 
@@ -100,6 +101,7 @@ export const HotbarRenameCommand = withInjectables<Dependencies>(NonInjectedHotb
   getProps: (di, props) => ({
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
     hotbarManager: di.inject(hotbarManagerInjectable),
+    uniqueHotbarName: di.inject(uniqueHotbarNameInjectable),
     ...props,
   }),
 });

@@ -27,10 +27,11 @@ import { AppPaths } from "../../../../common/app-paths";
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { type DiRender, renderFor } from "../../test-utils/renderFor";
-import hotbarManagerInjectable, { HotbarStore } from "../../../../common/hotbar-store.injectable";
+import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
 import { UserStore } from "../../../../common/user-store";
 import { ThemeStore } from "../../../theme.store";
 import { ConfirmDialog } from "../../confirm-dialog";
+import type { HotbarStore } from "../../../../common/hotbar-store";
 
 jest.mock("electron", () => ({
   app: {

@@ -21,24 +21,20 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import hotbarManagerInjectable, { HotbarStore } from "../../../common/hotbar-store.injectable";
 import { Input, InputValidator } from "../input";
 import type { CreateHotbarData, CreateHotbarOptions } from "../../../common/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-
-export const uniqueHotbarName: InputValidator = {
-  condition: ({ required }) => required,
-  message: () => "Hotbar with this name already exists",
-  validate: value => !HotbarStore.getInstance().getByName(value),
-};
+import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
+import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
   addHotbar: (data: CreateHotbarData, { setActive }?: CreateHotbarOptions) => void;
+  uniqueHotbarName: InputValidator;
 }
 
-const NonInjectedHotbarAddCommand = observer(({ closeCommandOverlay, addHotbar }: Dependencies) => {
+const NonInjectedHotbarAddCommand = observer(({ closeCommandOverlay, addHotbar, uniqueHotbarName }: Dependencies) => {
   const onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
@@ -71,6 +67,7 @@ export const HotbarAddCommand = withInjectables<Dependencies>(NonInjectedHotbarA
   getProps: (di, props) => ({
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
     addHotbar: di.inject(hotbarManagerInjectable).add,
+    uniqueHotbarName: di.inject(uniqueHotbarNameInjectable),
     ...props,
   }),
 });
