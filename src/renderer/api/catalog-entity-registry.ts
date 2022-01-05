@@ -28,13 +28,20 @@ import { ClusterStore } from "../../common/cluster-store";
 import { Disposer, iter } from "../utils";
 import { once } from "lodash";
 import logger from "../../common/logger";
-import { catalogEntityRunContext } from "./catalog-entity";
 import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
 import { CatalogIpcEvents } from "../../common/ipc/catalog";
+import { navigate } from "../navigation";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
+
+export const catalogEntityRunContext = {
+  navigate: (url: string) => navigate(url),
+  setCommandPaletteContext: (entity?: CatalogEntity) => {
+    catalogEntityRegistry.activeEntity = entity;
+  },
+};
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;

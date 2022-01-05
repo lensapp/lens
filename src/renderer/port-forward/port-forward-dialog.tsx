@@ -31,7 +31,8 @@ import { Notifications } from "../components/notifications";
 import { cssNames } from "../utils";
 import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
-import { aboutPortForwarding, openPortForward } from ".";
+import { openPortForward } from "./port-forward-utils";
+import { aboutPortForwarding } from "./port-forward-notify";
 import { Checkbox } from "../components/checkbox";
 
 interface Props extends Partial<DialogProps> {

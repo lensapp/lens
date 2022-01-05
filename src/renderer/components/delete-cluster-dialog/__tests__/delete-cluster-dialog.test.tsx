@@ -23,7 +23,7 @@ import { KubeConfig } from "@kubernetes/client-node";
 import { fireEvent, render } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
-import selectEvent from "react-select-event";
+import * as selectEvent from "react-select-event";
 
 import { Cluster } from "../../../../main/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";

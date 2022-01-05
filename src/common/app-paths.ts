@@ -23,7 +23,8 @@ import { app, ipcMain, ipcRenderer } from "electron";
 import { observable, when } from "mobx";
 import path from "path";
 import logger from "./logger";
-import { fromEntries, toJS } from "./utils";
+import { fromEntries } from "./utils/objects";
+import { toJS } from "./utils/toJS";
 import { isWindows } from "./vars";
 
 export type PathName = Parameters<typeof app["getPath"]>[0];

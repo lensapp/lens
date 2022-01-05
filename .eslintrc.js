@@ -108,6 +108,8 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       extends: [
         "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
       ],
       plugins: [
         "header",
@@ -193,6 +195,8 @@ module.exports = {
       extends: [
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
       ],
       parserOptions: {
         ecmaVersion: 2018,
@@ -202,6 +206,7 @@ module.exports = {
       rules: {
         "no-irregular-whitespace": "error",
         "header/header": [2, "./license-header"],
+        "react/prop-types": "off",
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -246,7 +251,6 @@ module.exports = {
           "objectsInObjects": false,
           "arraysInObjects": true,
         }],
-        "react/prop-types": "off",
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "linebreak-style": ["error", "unix"],

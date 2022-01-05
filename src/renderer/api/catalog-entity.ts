@@ -19,10 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../navigation";
-import type { CatalogEntity } from "../../common/catalog";
-import { catalogEntityRegistry } from "./catalog-entity-registry";
-
+export { catalogEntityRunContext } from "./catalog-entity-registry";
 export { CatalogCategory, CatalogEntity } from "../../common/catalog";
 export type {
   CatalogEntityData,
@@ -33,10 +30,3 @@ export type {
   CatalogEntityContextMenu,
   CatalogEntityContextMenuContext,
 } from "../../common/catalog";
-
-export const catalogEntityRunContext = {
-  navigate: (url: string) => navigate(url),
-  setCommandPaletteContext: (entity?: CatalogEntity) => {
-    catalogEntityRegistry.activeEntity = entity;
-  },
-};

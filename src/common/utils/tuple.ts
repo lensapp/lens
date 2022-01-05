@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { array } from "../utils";
+import * as array from "../utils/array";
 
 /**
  * A strict N-tuple of type T
