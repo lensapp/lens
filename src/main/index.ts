@@ -75,6 +75,8 @@ import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 
 const di = getDi();
 
+app.setName(appName);
+
 di.runSetups().then(() => {
   injectSystemCAs();
 
@@ -82,7 +84,6 @@ di.runSetups().then(() => {
   const onQuitCleanup = disposer();
 
   SentryInit();
-  app.setName(appName);
 
   logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
