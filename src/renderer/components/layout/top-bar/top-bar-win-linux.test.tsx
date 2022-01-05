@@ -28,6 +28,7 @@ import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 
@@ -65,10 +66,10 @@ jest.mock("@electron/remote", () => {
 
 describe("<TopBar/> in Windows and Linux", () => {
   let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting();
-
+    di = getDiForUnitTesting();
     render = renderFor(di);
   });
 

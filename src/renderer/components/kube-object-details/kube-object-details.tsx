@@ -21,19 +21,21 @@
 
 import "./kube-object-details.scss";
 
-import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { computed, observable, reaction, makeObservable } from "mobx";
+import React, { ReactNode, useEffect, useState } from "react";
+import { observer } from "mobx-react";
+import { reaction, IComputedValue } from "mobx";
 import { Drawer } from "../drawer";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
 import { KubeObjectMenu } from "../kube-object-menu";
-import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { hideDetails, kubeDetailsUrlParam } from "../kube-detail-params";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { KubeObjectDetailComponents } from "./kube-details-items/kube-detail-items";
+import kubeDetailItemsInjectable from "./kube-details-items/kube-details.injectable";
 
 
 export interface KubeObjectDetailsProps<T extends KubeObject = KubeObject> {
@@ -41,115 +43,116 @@ export interface KubeObjectDetailsProps<T extends KubeObject = KubeObject> {
   object: T;
 }
 
-@observer
-export class KubeObjectDetails extends React.Component {
-  @observable isLoading = false;
-  @observable.ref loadingError: React.ReactNode;
+interface Dependencies {
+  kubeDetailItems: IComputedValue<Map<string, Map<string, KubeObjectDetailComponents<KubeObject>[]>>>;
+}
 
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
+function getKubeObjectByPath(path: string): KubeObject | undefined {
+  try {
+    return apiManager
+      .getStore(path)
+      ?.getByPath(path);
+  } catch (error) {
+    console.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path });
+
+    return undefined;
   }
+}
 
-  @computed get path() {
-    return kubeDetailsUrlParam.get();
-  }
+const NonInjectedKubeObjectDetails = observer(({ kubeDetailItems }: Dependencies) => {
+  const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState<ReactNode>("");
 
-  @computed get object() {
-    try {
-      return apiManager
-        .getStore(this.path)
-        ?.getByPath(this.path);
-    } catch (error) {
-      console.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path: this.path });
+  useEffect(() => reaction(
+    () => [
+      kubeDetailsUrlParam.get(),
+      getKubeObjectByPath(kubeDetailsUrlParam.get()), // resource might be updated via watch-event or from already opened details
+      crdStore.items.length, // crd stores initialized after loading
+    ] as const, async ([path, kubeObject]) => {
+      setLoadingError("");
 
-      return undefined;
-    }
-  }
+      if (!kubeObject) {
+        const store = apiManager.getStore(path);
 
-  @disposeOnUnmount
-  loader = reaction(() => [
-    this.path,
-    this.object, // resource might be updated via watch-event or from already opened details
-    crdStore.items.length, // crd stores initialized after loading
-  ], async () => {
-    this.loadingError = "";
-    const { path, object } = this;
+        if (store) {
+          setLoading(true);
 
-    if (!object) {
-      const store = apiManager.getStore(path);
-
-      if (store) {
-        this.isLoading = true;
-
-        try {
-          await store.loadFromPath(path);
-        } catch (err) {
-          this.loadingError = <>Resource loading has failed: <b>{err.toString()}</b></>;
-        } finally {
-          this.isLoading = false;
+          try {
+            await store.loadFromPath(path);
+          } catch (err) {
+            setLoadingError(<>Resource loading has failed: <b>{err.toString()}</b></>);
+          } finally {
+            setLoading(false);
+          }
         }
       }
-    }
-  });
+    },
+  ), []);
 
-  render() {
-    const { object, isLoading, loadingError } = this;
-    const isOpen = !!(object || isLoading || loadingError);
+  const detailsPath = kubeDetailsUrlParam.get();
+  const kubeObject = getKubeObjectByPath(detailsPath);
 
-    if (!object) {
-      return (
-        <Drawer
-          className="KubeObjectDetails flex column"
-          open={isOpen}
-          title=""
-          toolbar={<KubeObjectMenu object={object} toolbar={true} />}
-          onClose={hideDetails}
-        >
-          {isLoading && <Spinner center />}
-          {loadingError && <div className="box center">{loadingError}</div>}
-        </Drawer>
-      );
-    }
+  const isOpen = !!(kubeObject || loading || loadingError);
 
-    const { kind, getName } = object;
-    const title = `${kind}: ${getName()}`;
-    const details = KubeObjectDetailRegistry
-      .getInstance()
-      .getItemsForKind(object.kind, object.apiVersion)
-      .map((item, index) => (
-        <item.components.Details object={object} key={`object-details-${index}`} />
-      ));
-
-    if (details.length === 0) {
-      const crd = crdStore.getByObject(object);
-
-      /**
-       * This is a fallback so that if a custom resource object doesn't have
-       * any defined details we should try and display at least some details
-       */
-      if (crd) {
-        details.push(<CrdResourceDetails key={object.getId()} object={object} crd={crd} />);
-      }
-    }
-
-    if (details.length === 0) {
-      // if we still don't have any details to show, just show the standard object metadata
-      details.push(<KubeObjectMeta key={object.getId()} object={object} />);
-    }
-
+  if (!kubeObject) {
     return (
       <Drawer
         className="KubeObjectDetails flex column"
         open={isOpen}
-        title={title}
-        toolbar={<KubeObjectMenu object={object} toolbar={true}/>}
+        title=""
+        toolbar={<KubeObjectMenu object={kubeObject} toolbar={true} />}
         onClose={hideDetails}
       >
-        {isLoading && <Spinner center/>}
+        {loading && <Spinner center />}
         {loadingError && <div className="box center">{loadingError}</div>}
-        {details}
       </Drawer>
     );
   }
-}
+
+  const { kind, getName } = kubeObject;
+  const title = `${kind}: ${getName()}`;
+  const details = kubeDetailItems.get()
+    .get(kubeObject.kind)
+    .get(kubeObject.apiVersion)
+    .map(({ Details }, index) => (
+      <Details object={kubeObject} key={`object-details-${index}`} />
+    ));
+
+  if (details.length === 0) {
+    const crd = crdStore.getByObject(kubeObject);
+
+    /**
+     * This is a fallback so that if a custom resource object doesn't have
+     * any defined details we should try and display at least some details
+     */
+    if (crd) {
+      details.push(<CrdResourceDetails key={kubeObject.getId()} object={kubeObject} crd={crd} />);
+    }
+  }
+
+  if (details.length === 0) {
+    // if we still don't have any details to show, just show the standard object metadata
+    details.push(<KubeObjectMeta key={kubeObject.getId()} object={kubeObject} />);
+  }
+
+  return (
+    <Drawer
+      className="KubeObjectDetails flex column"
+      open={isOpen}
+      title={title}
+      toolbar={<KubeObjectMenu object={kubeObject} toolbar={true}/>}
+      onClose={hideDetails}
+    >
+      {loading && <Spinner center/>}
+      {loadingError && <div className="box center">{loadingError}</div>}
+      {details}
+    </Drawer>
+  );
+});
+
+export const KubeObjectDetails = withInjectables<Dependencies>(NonInjectedKubeObjectDetails, {
+  getProps: (di, props) => ({
+    kubeDetailItems: di.inject(kubeDetailItemsInjectable),
+    ...props,
+  }),
+});

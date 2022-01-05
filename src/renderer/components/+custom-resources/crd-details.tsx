@@ -88,10 +88,8 @@ export class CRDDetails extends React.Component<Props> {
         </DrawerItem>
         <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
-            crd.getConditions().map(condition => {
-              const { type, message, lastTransitionTime, status } = condition;
-
-              return (
+            crd.getConditions()
+              .map(({ type, message, lastTransitionTime, status }) => (
                 <Badge
                   key={type}
                   label={type}
@@ -104,8 +102,7 @@ export class CRDDetails extends React.Component<Props> {
                     </>
                   )}
                 />
-              );
-            })
+              ))
           }
         </DrawerItem>
         <DrawerTitle title="Names"/>
@@ -133,19 +130,15 @@ export class CRDDetails extends React.Component<Props> {
                 <TableCell className="json-path">JSON Path</TableCell>
               </TableHead>
               {
-                printerColumns.map((column, index) => {
-                  const { name, type, jsonPath } = column;
-
-                  return (
-                    <TableRow key={index}>
-                      <TableCell className="name">{name}</TableCell>
-                      <TableCell className="type">{type}</TableCell>
-                      <TableCell className="json-path">
-                        <Badge label={jsonPath}/>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
+                printerColumns.map(({ name, type, jsonPath }, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="name">{name}</TableCell>
+                    <TableCell className="type">{type}</TableCell>
+                    <TableCell className="json-path">
+                      <Badge label={jsonPath}/>
+                    </TableCell>
+                  </TableRow>
+                ))
               }
             </Table>
           </>

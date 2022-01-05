@@ -19,4 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { KubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
+/**
+ * The components for a details item
+ */
+export interface KubeObjectDetailComponents<T extends KubeObject = KubeObject> {
+  Details: React.ComponentType<KubeObjectDetailsProps<T>>;
+}
+
+/**
+ * The registration type for extensions
+ */
+export interface KubeObjectDetailRegistration {
+  kind: string;
+  apiVersions: string[];
+  components: KubeObjectDetailComponents<KubeObject>;
+  priority?: number;
+}

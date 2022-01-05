@@ -90,7 +90,6 @@ describe("<TopBar/>", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting();
-
     render = renderFor(di);
   });
 

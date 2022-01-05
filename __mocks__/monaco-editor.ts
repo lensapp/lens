@@ -19,28 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type React from "react";
-import type { KubeObjectDetailsProps } from "../renderer-api/components";
-import type { KubeObject } from "../renderer-api/k8s-api";
-import { BaseRegistry } from "./base-registry";
-
-export interface KubeObjectDetailComponents<T extends KubeObject = KubeObject> {
-  Details: React.ComponentType<KubeObjectDetailsProps<T>>;
-}
-
-export interface KubeObjectDetailRegistration {
-  kind: string;
-  apiVersions: string[];
-  components: KubeObjectDetailComponents<KubeObject>;
-  priority?: number;
-}
-
-export class KubeObjectDetailRegistry extends BaseRegistry<KubeObjectDetailRegistration> {
-  getItemsForKind(kind: string, apiVersion: string) {
-    const items = this.getItems().filter((item) => {
-      return item.kind === kind && item.apiVersions.includes(apiVersion);
-    });
-
-    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
-  }
-}
+module.exports = {
+  languages: {
+    register: jest.fn(),
+    setMonarchTokensProvider: jest.fn(),
+    registerCompletionItemProvider: jest.fn(),
+  },
+  editor: {
+    defineTheme: jest.fn(),
+    getModel: jest.fn(),
+    createModel: jest.fn(),
+  },
+  Uri: {
+    file: jest.fn(),
+  },
+};
