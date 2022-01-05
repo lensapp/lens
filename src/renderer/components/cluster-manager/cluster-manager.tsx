@@ -39,11 +39,10 @@ import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import { reaction } from "mobx";
 import { navigation } from "../../navigation";
 import { setEntityOnRouteMatch } from "../../../main/catalog-sources/helpers/general-active-sync";
-import { TopBar } from "../layout/topbar";
 import { catalogURL, getPreviousTabUrl } from "../../../common/routes";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import catalogPreviousActiveTabStorageInjectable
-  from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
+import { TopBar } from "../layout/top-bar/top-bar";
+import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { get: () => string }

@@ -26,7 +26,14 @@ module.exports = {
     fontFamily: {
       sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
     },
-    extend: {},
+    extend: {
+      colors: {
+        textAccent: "var(--textColorAccent)",
+        textPrimary: "var(--textColorPrimary)",
+        textTertiary: "var(--textColorTertiary)",
+        textDimmed: "var(--textColorDimmed)",
+      },
+    },
   },
   variants: {
     extend: {},

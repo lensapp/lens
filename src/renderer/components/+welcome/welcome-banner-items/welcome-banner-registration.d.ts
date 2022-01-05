@@ -19,26 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
-import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
-  trayMenus: TrayMenuRegistration[] = [];
-
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
-
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
-
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
+/**
+ * WelcomeBannerRegistration is for an extension to register
+ * Provide a Banner component to be renderered in the welcome screen.
+ */
+export interface WelcomeBannerRegistration {
+  /**
+   * The banner component to be shown on the welcome screen.
+   */
+  Banner?: React.ComponentType
+  /**
+   * The banner width in px.
+   */
+  width?: number
 }

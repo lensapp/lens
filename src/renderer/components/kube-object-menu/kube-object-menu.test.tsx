@@ -42,6 +42,9 @@ import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
 import { KubeObjectMenu } from "./index";
 
+// TODO: Make tooltips free of side effects by making it deterministic
+jest.mock("../tooltip");
+
 describe("kube-object-menu", () => {
   let di: ConfigurableDependencyInjectionContainer;
   let render: DiRender;
@@ -66,8 +69,7 @@ describe("kube-object-menu", () => {
       getStore: api => undefined,
     }) as ApiManager);
 
-    di.override(hideDetailsInjectable, () => () => {
-    });
+    di.override(hideDetailsInjectable, () => () => {});
 
     di.override(editResourceTabInjectable, () => () => ({
       id: "irrelevant",

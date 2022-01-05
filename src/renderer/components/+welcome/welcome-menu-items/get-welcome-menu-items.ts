@@ -18,27 +18,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { computed, IComputedValue } from "mobx";
+import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
+import { navigate } from "../../../navigation";
+import { catalogURL } from "../../../../common/routes";
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
-import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
-  trayMenus: TrayMenuRegistration[] = [];
-
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
-
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
-
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
+interface Dependencies {
+  extensions: IComputedValue<LensRendererExtension[]>;
 }
+
+export const getWelcomeMenuItems = ({ extensions }: Dependencies) => {
+  const browseClusters = {
+    title: "Browse Clusters in Catalog",
+    icon: "view_list",
+    click: () =>
+      navigate(
+        catalogURL({
+          params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" },
+        }),
+      ),
+  };
+
+  return computed(() => [
+    browseClusters,
+    ...extensions.get().flatMap((extension) => extension.welcomeMenus),
+  ]);
+};

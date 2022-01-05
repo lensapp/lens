@@ -19,26 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
-import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
-  trayMenus: TrayMenuRegistration[] = [];
+import styles from "./close-button.module.scss";
 
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
+import React, { HTMLAttributes } from "react";
+import { Icon } from "../icon";
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
+interface Props extends HTMLAttributes<HTMLDivElement> {
+}
 
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
+export function CloseButton(props: Props) {
+  return (
+    <div {...props}>
+      <div className={styles.closeButton} role="button" aria-label="Close">
+        <Icon material="close" className={styles.icon}/>
+      </div>
+      <div className={styles.esc} aria-hidden="true">
+        ESC
+      </div>
+    </div>
+  );
 }

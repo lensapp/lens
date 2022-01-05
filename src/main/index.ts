@@ -55,28 +55,23 @@ import { WeblinkStore } from "../common/weblink-store";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { initMenu } from "./menu/menu";
-import { initTray } from "./tray";
 import { kubeApiRequest } from "./proxy-functions";
+import { initTray } from "./tray/tray";
 import { ShellSession } from "./shell-session/shell-session";
 import { getDi } from "./getDi";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
-import extensionDiscoveryInjectable
-  from "../extensions/extension-discovery/extension-discovery.injectable";
-import directoryForExesInjectable
-  from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
-import initIpcMainHandlersInjectable
-  from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
+import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
+import directoryForExesInjectable from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
+import initIpcMainHandlersInjectable from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
 import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
-import directoryForKubeConfigsInjectable
-  from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import kubeconfigSyncManagerInjectable
-  from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
+import directoryForKubeConfigsInjectable from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import routerInjectable from "./router/router.injectable";
-import shellApiRequestInjectable
-  from "./proxy-functions/shell-api-request/shell-api-request.injectable";
+import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
+import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 
 const di = getDi();
 
@@ -255,10 +250,11 @@ di.runSetups().then(() => {
     const windowManager = WindowManager.createInstance();
 
     const menuItems = di.inject(electronMenuItemsInjectable);
+    const trayMenuItems = di.inject(trayMenuItemsInjectable);
 
     onQuitCleanup.push(
       initMenu(windowManager, menuItems),
-      initTray(windowManager),
+      initTray(windowManager, trayMenuItems),
       () => ShellSession.cleanup(),
     );
 

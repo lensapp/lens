@@ -2,10 +2,6 @@
 
 exports[`kube-object-menu given kube object renders 1`] = `
 <body>
-  <div
-    class="terminal-init"
-    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
-  />
   <div>
     <div>
       <ul
@@ -22,8 +18,8 @@ exports[`kube-object-menu given kube object renders 1`] = `
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_2"
             tabindex="0"
+            tooltip="Delete"
           >
             <span
               class="icon"
@@ -31,7 +27,6 @@ exports[`kube-object-menu given kube object renders 1`] = `
             >
               delete
             </span>
-            <div />
           </i>
           <span
             class="title"
@@ -46,20 +41,11 @@ exports[`kube-object-menu given kube object renders 1`] = `
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   />
-  <div
-    class="Tooltip narrow invisible formatter"
-  >
-    Delete
-  </div>
 </body>
 `;
 
 exports[`kube-object-menu given kube object when removing kube object renders 1`] = `
 <body>
-  <div
-    class="terminal-init"
-    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
-  />
   <div>
     <div>
       <ul
@@ -76,8 +62,8 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_4"
             tabindex="0"
+            tooltip="Delete"
           >
             <span
               class="icon"
@@ -85,7 +71,6 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
             >
               delete
             </span>
-            <div />
           </i>
           <span
             class="title"
@@ -152,21 +137,12 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         </button>
       </div>
     </div>
-  </div>
-  <div
-    class="Tooltip narrow invisible formatter"
-  >
-    Delete
   </div>
 </body>
 `;
 
 exports[`kube-object-menu given kube object with namespace when removing kube object, renders confirmation dialog with namespace 1`] = `
 <body>
-  <div
-    class="terminal-init"
-    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
-  />
   <div>
     <div>
       <ul
@@ -183,8 +159,8 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_12"
             tabindex="0"
+            tooltip="Delete"
           >
             <span
               class="icon"
@@ -192,7 +168,6 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
             >
               delete
             </span>
-            <div />
           </i>
           <span
             class="title"
@@ -260,20 +235,11 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
       </div>
     </div>
   </div>
-  <div
-    class="Tooltip narrow invisible formatter"
-  >
-    Delete
-  </div>
 </body>
 `;
 
 exports[`kube-object-menu given kube object without namespace when removing kube object, renders confirmation dialog without namespace 1`] = `
 <body>
-  <div
-    class="terminal-init"
-    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
-  />
   <div>
     <div>
       <ul
@@ -290,8 +256,8 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         >
           <i
             class="Icon material interactive focusable"
-            id="tooltip_target_17"
             tabindex="0"
+            tooltip="Delete"
           >
             <span
               class="icon"
@@ -299,7 +265,6 @@ exports[`kube-object-menu given kube object without namespace when removing kube
             >
               delete
             </span>
-            <div />
           </i>
           <span
             class="title"
@@ -367,20 +332,11 @@ exports[`kube-object-menu given kube object without namespace when removing kube
       </div>
     </div>
   </div>
-  <div
-    class="Tooltip narrow invisible formatter"
-  >
-    Delete
-  </div>
 </body>
 `;
 
 exports[`kube-object-menu given no kube object, renders 1`] = `
 <body>
-  <div
-    class="terminal-init"
-    style="position: absolute; top: 0px; left: 0px; height: 0px; visibility: hidden; overflow: hidden;"
-  />
   <div>
     <ul
       class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"

@@ -18,13 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
+import { getWelcomeMenuItems } from "./get-welcome-menu-items";
 
-import { BaseRegistry } from "./base-registry";
+const welcomeMenuItemsInjectable = getInjectable({
+  instantiate: (di) =>
+    getWelcomeMenuItems({
+      extensions: di.inject(rendererExtensionsInjectable),
+    }),
 
-export interface WelcomeMenuRegistration {
-  title: string | (() => string);
-  icon: string;
-  click: () => void | Promise<void>;
-}
+  lifecycle: lifecycleEnum.singleton,
+});
 
-export class WelcomeMenuRegistry extends BaseRegistry<WelcomeMenuRegistration> {}
+export default welcomeMenuItemsInjectable;

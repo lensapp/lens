@@ -24,10 +24,11 @@ import React from "react";
 import { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
-import { FormSwitch, Switcher } from "../switch";
+import { Switch } from "../switch";
 
 export const LensProxy = observer(() => {
   const [proxy, setProxy] = React.useState(UserStore.getInstance().httpsProxy || "");
+  const store = UserStore.getInstance();
 
   return (
     <section id="proxy">
@@ -50,16 +51,9 @@ export const LensProxy = observer(() => {
 
       <section className="small">
         <SubTitle title="Certificate Trust"/>
-        <FormSwitch
-          control={
-            <Switcher
-              checked={UserStore.getInstance().allowUntrustedCAs}
-              onChange={v => UserStore.getInstance().allowUntrustedCAs = v.target.checked}
-              name="startup"
-            />
-          }
-          label="Allow untrusted Certificate Authorities"
-        />
+        <Switch checked={store.allowUntrustedCAs} onChange={() => store.allowUntrustedCAs = !store.allowUntrustedCAs}>
+          Allow untrusted Certificate Authorities
+        </Switch>
         <small className="hint">
           This will make Lens to trust ANY certificate authority without any validations.{" "}
           Needed with some corporate proxies that do certificate re-writing.{" "}

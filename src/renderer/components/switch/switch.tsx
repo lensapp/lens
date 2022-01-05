@@ -19,26 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
-import type { MenuRegistration } from "../main/menu/menu-registration";
-import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
-export class LensMainExtension extends LensExtension {
-  appMenus: MenuRegistration[] = [];
-  trayMenus: TrayMenuRegistration[] = [];
+import styles from "./switch.module.scss";
 
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
-  }
+import React, { ChangeEvent, HTMLProps } from "react";
+import { cssNames } from "../../utils";
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
-  }
+interface Props extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
+  onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
+}
 
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
-  }
+export function Switch({ children, disabled, onChange, ...props }: Props) {
+  return (
+    <label className={cssNames(styles.Switch, { [styles.disabled]: disabled })} data-testid="switch">
+      {children}
+      <input type="checkbox" role="switch" disabled={disabled} onChange={(event) => onChange?.(props.checked, event)} {...props}/>
+    </label>
+  );
 }
