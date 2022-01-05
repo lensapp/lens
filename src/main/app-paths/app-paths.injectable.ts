@@ -76,6 +76,7 @@ const setupPathForUserData = (di: DependencyInjectionContainer) => {
   setElectronAppPath("userData", path.join(appDataPath, appName));
 };
 
+// Todo: this kludge is here only until we have a proper place to setup integration testing.
 const setupPathForAppDataInIntegrationTesting = (di: DependencyInjectionContainer, appDataPath: string) => {
   const setElectronAppPath = di.inject(setElectronAppPathInjectable);
 
