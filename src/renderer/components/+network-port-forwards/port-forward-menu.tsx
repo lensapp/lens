@@ -83,7 +83,7 @@ export class PortForwardMenu extends React.Component<Props> {
 
     return (
       <>
-        { Boolean(portForward.status === "Active") &&
+        { portForward.status === "Active" &&
           <MenuItem onClick={() => openPortForward(portForward)}>
             <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
             <span className="title">Open</span>

@@ -88,10 +88,6 @@ export class PortForwardDialog extends Component<Props> {
     this.desiredPort = this.currentPort;
   };
 
-  onClose = async () => {
-    await (async () => dialogState.onClose())();
-  };
-
   changePort = (value: string) => {
     this.desiredPort = Number(value);
   };
@@ -187,7 +183,7 @@ export class PortForwardDialog extends Component<Props> {
         isOpen={dialogState.isOpen}
         className={cssNames("PortForwardDialog", className)}
         onOpen={this.onOpen}
-        onClose={this.onClose}
+        onClose={dialogState.onClose}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
