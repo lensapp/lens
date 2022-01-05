@@ -49,44 +49,51 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules }} = ingress;
+    const { spec: { rules = [], tls = [] }} = ingress;
+    const protocol = tls.length === 0
+      ? "http"
+      : "https";
 
-    if (!rules || !rules.length) return null;
-
-    return rules.map((rule, index) => {
-      return (
-        <div className="rules" key={index}>
-          {rule.host && (
-            <div className="host-title">
-              <>Host: {rule.host}</>
-            </div>
-          )}
-          {rule.http && (
-            <Table className="paths">
-              <TableHead>
-                <TableCell className="path">Path</TableCell>
-                <TableCell className="backends">Backends</TableCell>
-              </TableHead>
-              {
-                rule.http.paths.map((path, index) => {
-                  const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-                  const backend = `${serviceName}:${servicePort}`;
+    return rules.map((rule, index) => (
+      <div className="rules" key={index}>
+        {rule.host && (
+          <div className="host-title">
+            <>Host: {rule.host}</>
+          </div>
+        )}
+        {rule.http && (
+          <Table className="paths">
+            <TableHead>
+              <TableCell className="path">Path</TableCell>
+              <TableCell className="link">Link</TableCell>
+              <TableCell className="backends">Backends</TableCell>
+            </TableHead>
+            {
+              rule.http.paths
+                .map(({ path = "/", backend }, index) => {
+                  const link = `${protocol}://${rule.host || "*"}${path}`;
 
                   return (
                     <TableRow key={index}>
-                      <TableCell className="path">{path.path || ""}</TableCell>
-                      <TableCell className="backends">
-                        <p key={backend}>{backend}</p>
+                      <TableCell className="path">{path}</TableCell>
+                      <TableCell className="link">
+                        <a
+                          href={link}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          {link}
+                        </a>
                       </TableCell>
+                      <TableCell className="backends">{getBackendServiceNamePort(backend)}</TableCell>
                     </TableRow>
                   );
                 })
-              }
-            </Table>
-          )}
-        </div>
-      );
-    });
+            }
+          </Table>
+        )}
+      </div>
+    ));
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
@@ -99,15 +106,14 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
             <TableCell className="name">Hostname</TableCell>
             <TableCell className="ingresspoints">IP</TableCell>
           </TableHead>
-          {ingressPoints.map(({ hostname, ip }, index) => {
-            return (
+          {
+            ingressPoints.map(({ hostname, ip }, index) => (
               <TableRow key={index}>
                 <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
                 <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
               </TableRow>
-            );
-          })
-          })
+            ))
+          }
         </Table>
       </div>
     );

@@ -4,7 +4,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autoBind } from "../../utils";
+import { autoBind, iter } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
@@ -61,23 +61,30 @@ export interface IIngressService {
   };
 }
 
-export const getBackendServiceNamePort = (backend: IIngressBackend) => {
+/**
+ * Format an ingress backend into the name of the service and port
+ * @param backend The ingress target
+ */
+export function getBackendServiceNamePort(backend: IIngressBackend): string {
   // .service is available with networking.k8s.io/v1, otherwise using extensions/v1beta1 interface
-  const serviceName = "service" in backend ? backend.service.name : backend.serviceName;
-  // Port is specified either with a number or name
-  const servicePort = "service" in backend ? backend.service.port.number ?? backend.service.port.name : backend.servicePort;
 
-  return { serviceName, servicePort };
-};
+  if ("service" in backend) {
+    const { name, port } = backend.service;
+
+    return `${name}:${port.number ?? port.name}`;
+  }
+
+  return `${backend.serviceName}:${backend.servicePort}`;
+}
 
 export interface Ingress {
   spec: {
-    tls: {
+    tls?: {
       secretName: string;
     }[];
     rules?: {
       host?: string;
-      http: {
+      http?: {
         paths: {
           path?: string;
           backend: IIngressBackend;
@@ -106,6 +113,11 @@ export interface Ingress {
   };
 }
 
+export interface ComputedIngressRoute {
+  url: string;
+  service: string;
+}
+
 export class Ingress extends KubeObject {
   static kind = "Ingress";
   static namespaced = true;
@@ -116,30 +128,22 @@ export class Ingress extends KubeObject {
     autoBind(this);
   }
 
-  getRoutes() {
-    const { spec: { tls, rules }} = this;
+  getRoutes(): string[] {
+    return this.getRouteDecls().map(({ url, service }) => `${url} ⇢ ${service}`);
+  }
 
-    if (!rules) return [];
+  getRouteDecls(): ComputedIngressRoute[] {
+    const { spec: { tls = [], rules = [] }} = this;
+    const protocol = tls.length === 0
+      ? "http"
+      : "https";
 
-    let protocol = "http";
-    const routes: string[] = [];
-
-    if (tls && tls.length > 0) {
-      protocol += "s";
-    }
-    rules.map(rule => {
-      const host = rule.host ? rule.host : "*";
-
-      if (rule.http && rule.http.paths) {
-        rule.http.paths.forEach(path => {
-          const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-
-          routes.push(`${protocol}://${host}${path.path || "/"} ⇢ ${serviceName}:${servicePort}`);
-        });
-      }
-    });
-
-    return routes;
+    return rules.flatMap(({ host = "*", http: { paths } = { paths: [] }}) => (
+      paths.map(({ path = "/", backend }) => ({
+        url: `${protocol}://${host}${path}`,
+        service: getBackendServiceNamePort(backend),
+      }))
+    ));
   }
 
   getServiceNamePort(): IExtensionsBackend {
@@ -155,11 +159,9 @@ export class Ingress extends KubeObject {
   }
 
   getHosts() {
-    const { spec: { rules }} = this;
+    const { spec: { rules = [] }} = this;
 
-    if (!rules) return [];
-
-    return rules.filter(rule => rule.host).map(rule => rule.host);
+    return [...iter.filterMap(rules, rule => rule.host)];
   }
 
   getPorts() {
