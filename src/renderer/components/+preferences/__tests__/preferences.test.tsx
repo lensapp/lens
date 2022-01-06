@@ -28,6 +28,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { AppPreferenceRegistry } from "../../../../extensions/registries";
 import { computed } from "mobx";
 import { MemoryRouter } from "react-router-dom";
+import "@testing-library/jest-dom/extend-expect";
 
 describe("Preferences", () => {
   let di: ConfigurableDependencyInjectionContainer;
@@ -55,8 +56,8 @@ describe("Preferences", () => {
       return computed(() => [] as any);
     });
 
-    const { getByTestId } = render(<MemoryRouter><Preferences /></MemoryRouter>);
+    const { queryByTestId } = render(<MemoryRouter><Preferences /></MemoryRouter>);
 
-    expect(getByTestId("custom-settings")).not.toBeInTheDocument();
+    expect(queryByTestId("custom-settings")).not.toBeInTheDocument();
   });
 });

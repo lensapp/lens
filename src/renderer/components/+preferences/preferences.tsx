@@ -80,7 +80,6 @@ class Preferences extends React.Component<Dependencies> {
 
     return (
       <Tabs className="flex column" scrollable={false} onChange={(url) => {
-        console.log("URL ", url)
         navigateWithoutHistoryChange({ pathname: url });
       }}>
         <div className="header">Preferences</div>
