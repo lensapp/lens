@@ -29,7 +29,7 @@ export class SearchStore {
    * @param value Unescaped string
    */
   public static escapeRegex(value?: string): string {
-    return value ? value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&") : "";
+    return value ? value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") : "";
   }
 
   /**

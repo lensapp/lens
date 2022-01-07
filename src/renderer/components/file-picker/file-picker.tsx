@@ -133,7 +133,8 @@ export class FilePicker extends React.Component<Props> {
     switch (onOverSizeLimit) {
       case OverSizeLimitStyle.FILTER:
         return files.filter(file => file.size <= maxSize );
-      case OverSizeLimitStyle.REJECT:
+
+      case OverSizeLimitStyle.REJECT: {
         const firstFileToLarge = files.find(file => file.size > maxSize);
 
         if (firstFileToLarge) {
@@ -141,6 +142,7 @@ export class FilePicker extends React.Component<Props> {
         }
 
         return files;
+      }
     }
   }
 
@@ -156,7 +158,9 @@ export class FilePicker extends React.Component<Props> {
     switch (onOverTotalSizeLimit) {
       case OverTotalSizeLimitStyle.FILTER_LARGEST:
         files = _.orderBy(files, ["size"]);
-      case OverTotalSizeLimitStyle.FILTER_LAST:
+
+        // fallthrough
+      case OverTotalSizeLimitStyle.FILTER_LAST: {
         let newTotalSize = totalSize;
 
         for (;files.length > 0;) {
@@ -168,6 +172,7 @@ export class FilePicker extends React.Component<Props> {
         }
 
         return files;
+      }
       case OverTotalSizeLimitStyle.REJECT:
         throw `Total file size to upload is too large. Expected at most ${maxTotalSize}. Found ${totalSize}.`;
     }

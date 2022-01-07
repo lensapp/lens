@@ -47,8 +47,8 @@ export const getBaseRegistryUrl = ({ getRegistryUrlPreference }: Dependencies) =
       } catch (error) {
         Notifications.error(<p>Failed to get configured registry from <code>.npmrc</code>. Falling back to default registry</p>);
         console.warn("[EXTENSIONS]: failed to get configured registry from .npmrc", error);
-        // fallthrough
       }
+      // fallthrough
     }
     default:
     case ExtensionRegistryLocation.DEFAULT:

@@ -25,6 +25,7 @@ export type Falsey = false | 0 | "" | null | undefined;
  * Create a new type safe empty Iterable
  * @returns An `Iterable` that yields 0 items
  */
+// eslint-disable-next-line require-yield
 export function* newEmpty<T>(): IterableIterator<T> {
   return;
 }

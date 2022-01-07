@@ -472,7 +472,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
       switch (type) {
         case "ADDED":
-        case "MODIFIED":
+
+          // falls through
+        case "MODIFIED": {
           const newItem = new this.api.objectConstructor(object);
 
           if (!item) {
@@ -480,7 +482,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
           } else {
             items[index] = newItem;
           }
+
           break;
+        }
         case "DELETED":
           if (item) {
             items.splice(index, 1);

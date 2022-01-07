@@ -54,6 +54,7 @@ module.exports = {
         "react-hooks",
       ],
       rules: {
+        "no-constant-condition": ["error", { "checkLoops": false }],
         "header/header": [2, "./license-header"],
         "comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "error",
@@ -107,6 +108,7 @@ module.exports = {
       ],
       parser: "@typescript-eslint/parser",
       extends: [
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
         "plugin:import/typescript",
@@ -120,7 +122,7 @@ module.exports = {
         sourceType: "module",
       },
       rules: {
-        "no-irregular-whitespace": "error",
+        "no-constant-condition": ["error", { "checkLoops": false }],
         "header/header": [2, "./license-header"],
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
@@ -193,6 +195,7 @@ module.exports = {
         "unused-imports",
       ],
       extends: [
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
         "plugin:import/recommended",
@@ -204,7 +207,7 @@ module.exports = {
         jsx: true,
       },
       rules: {
-        "no-irregular-whitespace": "error",
+        "no-constant-condition": ["error", { "checkLoops": false }],
         "header/header": [2, "./license-header"],
         "react/prop-types": "off",
         "no-invalid-this": "off",
