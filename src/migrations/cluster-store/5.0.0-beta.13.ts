@@ -24,7 +24,7 @@ import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import path from "path";
 import { moveSync, removeSync } from "fs-extra";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 

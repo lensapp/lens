@@ -27,7 +27,7 @@ import fse from "fs-extra";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import type { ClusterModel } from "../../common/cluster-types";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable

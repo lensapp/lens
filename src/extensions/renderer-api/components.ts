@@ -18,6 +18,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import createTerminalTabInjectable from "../../renderer/components/dock/create-terminal-tab/create-terminal-tab.injectable";
+import terminalStoreInjectable from "../../renderer/components/dock/terminal-store/terminal-store.injectable";
+import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import logTabStoreInjectable from "../../renderer/components/dock/log-tab-store/log-tab-store.injectable";
+import { asLegacyGlobalSingletonForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-singleton-for-extension-api";
+import { TerminalStore as TerminalStoreClass } from "../../renderer/components/dock/terminal-store/terminal.store";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -72,11 +79,8 @@ export * from "../../renderer/components/+events/kube-event-details";
 // specific exports
 export * from "../../renderer/components/status-brick";
 
-// Mikko
-// export { terminalStore, TerminalStore } from "../../renderer/components/dock/terminal-store/terminal.store";
-//
-// // Mikko
-// export { createTerminalTab } from "../../renderer/components/dock/terminal-store/terminal.store";
-//
-// // Mikko
-// export { logTabStore } from "../../renderer/components/dock/log-tab-store/log-tab.store";
+export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(createTerminalTabInjectable);
+export const TerminalStore = asLegacyGlobalSingletonForExtensionApi(TerminalStoreClass, terminalStoreInjectable);
+export const terminalStore = asLegacyGlobalObjectForExtensionApi(terminalStoreInjectable);
+export const logTabStore = asLegacyGlobalObjectForExtensionApi(logTabStoreInjectable);
+

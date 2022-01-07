@@ -21,7 +21,7 @@
 
 import fse from "fs-extra";
 import path from "path";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 

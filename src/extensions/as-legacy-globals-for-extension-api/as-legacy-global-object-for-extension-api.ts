@@ -18,15 +18,40 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 
-import { getAppVersion } from "../../common/utils";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
-import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
-export const version = getAppVersion();
-export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
+export const asLegacyGlobalObjectForExtensionApi = <
+  TInjectable extends Injectable<unknown, unknown, TInstantiationParameter>,
+  TInstantiationParameter,
+>(
+    injectableKey: TInjectable,
+    ...instantiationParameter: TentativeTuple<TInstantiationParameter>
+  ) =>
+  new Proxy(
+    {},
+    {
+      get(target, propertyName) {
+        if (propertyName === "$$typeof") {
+          return undefined;
+        }
 
-export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
+        const instance: any = getLegacyGlobalDiForExtensionApi().inject(
+          injectableKey,
+          ...instantiationParameter,
+        );
 
-export { Preferences };
+        const propertyValue = instance[propertyName];
+
+        if (typeof propertyValue === "function") {
+          return function (...args: any[]) {
+            return propertyValue.apply(instance, args);
+          };
+        }
+
+        return propertyValue;
+      },
+    },
+  ) as ReturnType<TInjectable["instantiate"]>;

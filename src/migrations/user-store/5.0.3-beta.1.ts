@@ -26,7 +26,7 @@ import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { isLogicalChildPath } from "../../common/utils";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable

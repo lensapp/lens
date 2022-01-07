@@ -20,7 +20,7 @@
  */
 
 import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export const getDi = () => {
   const di = createContainer(

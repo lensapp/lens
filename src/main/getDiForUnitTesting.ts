@@ -28,7 +28,7 @@ import {
   ConfigurableDependencyInjectionContainer,
 } from "@ogre-tools/injectable";
 
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-global-function-for-extension-api/legacy-global-di-for-extension-api";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
