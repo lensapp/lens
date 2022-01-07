@@ -29,6 +29,7 @@ const shellRequestAuthenticatorInjectable = getInjectable({
 
     return authenticator;
   },
+
   lifecycle: lifecycleEnum.singleton,
 });
 
