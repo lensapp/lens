@@ -26,7 +26,8 @@
 
   flex: 1;
   overflow: hidden;
-  left: var(--spacing) !important;
-  top: var(--spacing) !important;
-  bottom: var(--spacing) !important;
+
+  > .xterm {
+    padding: var(--spacing);
+  }
 }

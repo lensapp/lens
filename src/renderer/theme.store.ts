@@ -28,6 +28,7 @@ import lensLightThemeJson from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";
 import type { MonacoEditorProps } from "./components/monaco-editor";
 import { defaultTheme } from "../common/vars";
+import { camelCase } from "lodash";
 
 export type ThemeId = string;
 
@@ -41,7 +42,8 @@ export interface Theme {
 }
 
 export class ThemeStore extends Singleton {
-  protected styles: HTMLStyleElement;
+  private styles: HTMLStyleElement;
+  private terminalColorPrefix = "terminal";
 
   // bundled themes from `themes/${themeId}.json`
   private themes = observable.map<ThemeId, Theme>({
@@ -55,6 +57,24 @@ export class ThemeStore extends Singleton {
 
   @computed get activeTheme(): Theme {
     return this.themes.get(this.activeThemeId) ?? this.themes.get(defaultTheme);
+  }
+
+  @computed get terminalColors(): Record<string, string> {
+    const useDarkThemeColors = UserStore.getInstance().terminalUseDarkTheme;
+    const theme = useDarkThemeColors ? this.themes.get("lens-dark") : this.activeTheme;
+    const xtermColors: Record<string, string> = {}; // see also "terminal.ts"
+
+    // Replacing keys stored in styles to format accepted by terminal
+    // E.g. terminalBrightBlack -> brightBlack
+    for (const [name, color] of Object.entries(theme.colors)) {
+      if (!name.startsWith(this.terminalColorPrefix)) continue; // skip
+
+      const xtermColorName = camelCase(name.replace(this.terminalColorPrefix, ""));
+
+      xtermColors[xtermColorName] = color;
+    }
+
+    return xtermColors;
   }
 
   @computed get themeOptions(): SelectOption<string>[] {

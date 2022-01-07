@@ -74,6 +74,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
   @observable terminalCopyOnSelect: boolean;
+  @observable terminalUseDarkTheme: boolean;
   @observable updateChannel?: string;
   @observable extensionRegistryUrl: ExtensionRegistry;
 
@@ -201,6 +202,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
     this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
+    this.terminalUseDarkTheme = DESCRIPTORS.terminalUseDarkTheme.fromStore(preferences?.terminalUseDarkTheme);
     this.updateChannel = DESCRIPTORS.updateChannel.fromStore(preferences?.updateChannel);
     this.extensionRegistryUrl = DESCRIPTORS.extensionRegistryUrl.fromStore(preferences?.extensionRegistryUrl);
   }
@@ -225,6 +227,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
         terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
+        terminalUseDarkTheme: DESCRIPTORS.terminalUseDarkTheme.toStore(this.terminalUseDarkTheme),
         updateChannel: DESCRIPTORS.updateChannel.toStore(this.updateChannel),
         extensionRegistryUrl: DESCRIPTORS.extensionRegistryUrl.toStore(this.extensionRegistryUrl),
       },

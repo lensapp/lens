@@ -94,6 +94,16 @@ export const Application = observer(() => {
         </Switch>
       </section>
 
+      <section id="terminalColors">
+        <SubTitle title="Terminal color scheme" />
+        <Switch
+          checked={userStore.terminalUseDarkTheme}
+          onChange={() => userStore.terminalUseDarkTheme = !userStore.terminalUseDarkTheme}
+        >
+          Always use dark terminal theme colors
+        </Switch>
+      </section>
+
       <hr/>
 
       <section id="extensionRegistryUrl">

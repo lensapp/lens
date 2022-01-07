@@ -233,6 +233,19 @@ const terminalCopyOnSelect: PreferenceDescription<boolean> = {
   },
 };
 
+const terminalUseDarkTheme: PreferenceDescription<boolean> = {
+  fromStore(val) {
+    return val ?? false;
+  },
+  toStore(val) {
+    if (!val) {
+      return undefined;
+    }
+
+    return val;
+  },
+};
+
 const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, ObservableToggleSet<string>>> = {
   fromStore(val) {
     return new Map(
@@ -364,6 +377,7 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
+  terminalUseDarkTheme,
   updateChannel,
   extensionRegistryUrl,
 };
