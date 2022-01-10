@@ -19,16 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Setup variable in global scope (top-level object)
-// Global type definition must be added separately to `mocks.d.ts` in form:
-// declare const __globalName: any;
-
-export function defineGlobal(propName: string, descriptor: PropertyDescriptor) {
-  const scope = typeof global !== "undefined" ? global : window;
-
-  if (Object.prototype.hasOwnProperty.call(scope, propName)) {
-    return;
-  }
-
-  Object.defineProperty(scope, propName, descriptor);
-}
+module.exports = {
+  "overrides": [
+    {
+      files: [
+        "**/*.ts",
+        "**/*.tsx",
+      ],
+      rules: {
+        "import/no-unresolved": ["error", {
+          ignore: ["@k8slens/extensions"],
+        }],
+      },
+    },
+  ],
+};

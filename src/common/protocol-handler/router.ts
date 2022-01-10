@@ -89,7 +89,7 @@ export abstract class LensProtocolRouter {
 
   public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
 
-  static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
+  static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
   constructor(protected dependencies: Dependencies) {}
 

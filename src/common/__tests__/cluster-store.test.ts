@@ -493,42 +493,9 @@ users:
     it("moves the icon into preferences", async () => {
       const storedClusterData = clusterStore.clustersList[0];
 
-      expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
-      expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
-      expect(
-        storedClusterData.preferences.icon.startsWith("data:;base64,"),
-      ).toBe(true);
-    });
-  });
-
-  describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
-    beforeEach(() => {
-      ClusterStore.resetInstance();
-      const mockOpts = {
-        "some-directory-for-user-data": {
-          "lens-cluster-store.json": JSON.stringify({
-            __internal__: {
-              migrations: {
-                version: "2.6.6",
-              },
-            },
-            cluster1: {
-              kubeConfig: minimalValidKubeConfig,
-              preferences: {
-                terminalCWD: "/some-directory-for-user-data",
-              },
-            },
-          }),
-        },
-      };
-
-      mockFs(mockOpts);
-
-      clusterStore = mainDi.inject(clusterStoreInjectable);
-    });
-
-    afterEach(() => {
-      mockFs.restore();
+      expect(Object.prototype.hasOwnProperty.call(storedClusterData, "icon")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(storedClusterData.preferences, "icon")).toBe(true);
+      expect(storedClusterData.preferences.icon.startsWith("data:;base64,")).toBe(true);
     });
   });
 
@@ -580,6 +547,7 @@ users:
     });
   });
 });
+
 const minimalValidKubeConfig = JSON.stringify({
   apiVersion: "v1",
   clusters: [

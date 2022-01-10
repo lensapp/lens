@@ -101,7 +101,9 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
       const localStorageFilePath = path.resolve(directoryForLensLocalStorage, `${cluster.id}.json`);
 
       await remove(localStorageFilePath);
-    } catch {}
+    } catch {
+      // ignore error
+    }
   });
 
   ipcMainHandle(clusterSetDeletingHandler, (event, clusterId: string) => {

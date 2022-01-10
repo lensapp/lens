@@ -187,7 +187,7 @@ export class Ingress extends KubeObject {
     const servicePort = defaultBackend?.service.port.number ?? backend?.servicePort;
 
     if (rules && rules.length > 0) {
-      if (rules.some(rule => rule.hasOwnProperty("http"))) {
+      if (rules.some(rule => Object.prototype.hasOwnProperty.call(rule, "http"))) {
         ports.push(httpPort);
       }
     } else if (servicePort !== undefined) {

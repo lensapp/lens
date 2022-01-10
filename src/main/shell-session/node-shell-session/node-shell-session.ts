@@ -73,6 +73,7 @@ export class NodeShellSession extends ShellSession {
     switch (nodeOs) {
       default:
         logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
+        // fallthrough
       case "linux":
         args.push("sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))");
         break;

@@ -42,19 +42,19 @@ import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
-import { ThemeStore } from "../../renderer/theme.store";
-import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import type { ClusterStoreModel } from "../cluster-store/cluster-store";
+import { defaultTheme } from "../vars";
 
 console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   let userStore: UserStore;
   let mainDi: DependencyInjectionContainer;
-    
+
   beforeEach(async () => {
     const dis = getDisForUnitTesting({ doGeneralOverrides: true });
 
@@ -92,7 +92,7 @@ describe("user store tests", () => {
       userStore.httpsProxy = "abcd://defg";
 
       expect(userStore.httpsProxy).toBe("abcd://defg");
-      expect(userStore.colorTheme).toBe(ThemeStore.defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultTheme);
 
       userStore.colorTheme = "light";
       expect(userStore.colorTheme).toBe("light");
@@ -101,7 +101,7 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       userStore.colorTheme = "some other theme";
       userStore.resetTheme();
-      expect(userStore.colorTheme).toBe(ThemeStore.defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultTheme);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {

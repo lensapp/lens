@@ -21,8 +21,7 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import selectEvent from "react-select-event";
-
+import * as selectEvent from "react-select-event";
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
 import type { LogTabData } from "../log-tab-store/log-tab.store";
@@ -33,8 +32,7 @@ import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import callForLogsInjectable from "../log-store/call-for-logs/call-for-logs.injectable";
 
 jest.mock("electron", () => ({
