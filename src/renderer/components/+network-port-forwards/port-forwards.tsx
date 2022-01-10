@@ -70,7 +70,7 @@ export class PortForwards extends React.Component<Props> {
   showDetails = (item: PortForwardItem) => {
     navigation.push(portForwardsURL({
       params: {
-        forwardport: String(item.getForwardPort()),
+        forwardport: item.getId(),
       },
     }));
   };

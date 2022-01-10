@@ -21,7 +21,7 @@
 
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, removePortForward, PortForwardDialog } from "../../port-forward";
+import { openPortForward, PortForwardItem, removePortForward, PortForwardDialog, startPortForward, stopPortForward } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
@@ -44,6 +44,38 @@ export class PortForwardMenu extends React.Component<Props> {
     }
   }
 
+  private startPortForwarding = async () => {
+    const { portForward } = this.props;
+
+    const pf = await startPortForward(portForward);
+
+    if (pf.status === "Disabled") {
+      const { name, kind, forwardPort } = portForward;
+
+      Notifications.error(`Error occurred starting port-forward, the local port ${forwardPort} may not be available or the ${kind} ${name} may not be reachable`);
+    }
+  };
+
+  renderStartStopMenuItem() {
+    const { portForward, toolbar } = this.props;
+
+    if (portForward.status === "Active") {
+      return (
+        <MenuItem onClick={() => stopPortForward(portForward)}>
+          <Icon material="stop" tooltip="Stop port-forward" interactive={toolbar} />
+          <span className="title">Stop</span>
+        </MenuItem>
+      );
+    }
+
+    return (
+      <MenuItem onClick={this.startPortForwarding}>
+        <Icon material="play_arrow" tooltip="Start port-forward" interactive={toolbar} />
+        <span className="title">Start</span>
+      </MenuItem>
+    );
+  }
+
   renderContent() {
     const { portForward, toolbar } = this.props;
 
@@ -51,14 +83,17 @@ export class PortForwardMenu extends React.Component<Props> {
 
     return (
       <>
-        <MenuItem onClick={() => openPortForward(this.props.portForward)}>
-          <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
-          <span className="title">Open</span>
-        </MenuItem>
+        { portForward.status === "Active" &&
+          <MenuItem onClick={() => openPortForward(portForward)}>
+            <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
+            <span className="title">Open</span>
+          </MenuItem>
+        }
         <MenuItem onClick={() => PortForwardDialog.open(portForward)}>
           <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
           <span className="title">Edit</span>
         </MenuItem>
+        {this.renderStartStopMenuItem()}
       </>
     );
   }

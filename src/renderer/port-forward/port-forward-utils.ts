@@ -35,7 +35,6 @@ export function openPortForward(portForward: ForwardedPort) {
   openExternal(browseTo)
     .catch(error => {
       logger.error(`failed to open in browser: ${error}`, {
-        clusterId: portForward.clusterId,
         port: portForward.port,
         kind: portForward.kind,
         namespace: portForward.namespace,

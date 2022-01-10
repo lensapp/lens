@@ -56,3 +56,34 @@ export function aboutPortForwarding() {
     },
   );
 }
+
+export function notifyErrorPortForwarding(msg: string) {
+  const notificationId = `port-forward-error-notification-${getHostedClusterId()}`;
+
+  Notifications.error(
+    (
+      <div className="flex column gaps">
+        <b>Port Forwarding</b>
+        <p>
+          {msg}
+        </p>
+        <div className="flex gaps row align-left box grow">
+          <Button
+            active
+            outlined
+            label="Check Port Forwarding"
+            onClick={() => {
+              navigate(portForwardsURL());
+              notificationsStore.remove(notificationId);
+            }}
+          />
+        </div>
+      </div>
+    ),
+    {
+      id: notificationId,
+      timeout: 10_000,
+    },
+  );
+}
+

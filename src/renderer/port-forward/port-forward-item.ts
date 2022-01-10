@@ -23,33 +23,34 @@
 import type { ItemObject } from "../../common/item.store";
 import { autoBind } from "../../common/utils";
 
+export type ForwardedPortStatus = "Active" | "Disabled";
 export interface ForwardedPort {
-  clusterId?: string;
   kind: string;
   namespace: string;
   name: string;
   port: number;
   forwardPort: number;
   protocol?: string;
+  status?: ForwardedPortStatus;
 }
   
 export class PortForwardItem implements ItemObject {
-  clusterId: string;
   kind: string;
   namespace: string;
   name: string;
   port: number;
   forwardPort: number;
   protocol: string;
+  status: ForwardedPortStatus;
   
   constructor(pf: ForwardedPort) {
-    this.clusterId = pf.clusterId;
     this.kind = pf.kind;
     this.namespace = pf.namespace;
     this.name = pf.name;
     this.port = pf.port;
     this.forwardPort = pf.forwardPort;
     this.protocol = pf.protocol ?? "http";
+    this.status = pf.status ?? "Active";
 
     autoBind(this);
   }
@@ -62,12 +63,8 @@ export class PortForwardItem implements ItemObject {
     return this.namespace;
   }
    
-  get id() {
-    return this.forwardPort;
-  }
-   
   getId() {
-    return String(this.forwardPort);
+    return `${this.namespace}-${this.kind}-${this.name}:${this.port}`;
   }
   
   getKind() {
@@ -87,16 +84,17 @@ export class PortForwardItem implements ItemObject {
   }
 
   getStatus() {
-    return "Active"; // to-do allow port-forward-items to be stopped (without removing them)
+    return this.status;
   }
   
   getSearchFields() {
     return [
       this.name,
-      this.id,
+      this.namespace,
       this.kind,
       this.port,
       this.forwardPort,
+      this.status,
     ];
   }
 }

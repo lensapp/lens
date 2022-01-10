@@ -27,19 +27,20 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../components/dialog";
 import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
-import { Notifications } from "../components/notifications";
-import { cssNames } from "../utils";
+import { cssNames, noop } from "../utils";
 import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
 import type { ForwardedPort } from "./port-forward-item";
 import { openPortForward } from "./port-forward-utils";
-import { aboutPortForwarding } from "./port-forward-notify";
+import { aboutPortForwarding, notifyErrorPortForwarding } from "./port-forward-notify";
 import { Checkbox } from "../components/checkbox";
+import logger from "../../common/logger";
 
 interface Props extends Partial<DialogProps> {
 }
 
 interface PortForwardDialogOpenOptions {
-  openInBrowser: boolean
+  openInBrowser: boolean;
+  onClose: () => void;
 }
 
 const dialogState = observable.object({
@@ -47,6 +48,7 @@ const dialogState = observable.object({
   data: null as ForwardedPort,
   useHttps: false,
   openInBrowser: false,
+  onClose: noop,
 });
 
 @observer
@@ -59,11 +61,12 @@ export class PortForwardDialog extends Component<Props> {
     makeObservable(this);
   }
 
-  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) {
+  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false, onClose: noop }) {
     dialogState.isOpen = true;
     dialogState.data = portForward;
     dialogState.useHttps = portForward.protocol === "https";
     dialogState.openInBrowser = options.openInBrowser;
+    dialogState.onClose = options.onClose;
   }
 
   static close() {
@@ -85,43 +88,47 @@ export class PortForwardDialog extends Component<Props> {
     this.desiredPort = this.currentPort;
   };
 
-  onClose = () => {
-  };
-
   changePort = (value: string) => {
     this.desiredPort = Number(value);
   };
 
   startPortForward = async () => {
-    const { portForward } = this;
+    let { portForward } = this;
     const { currentPort, desiredPort, close } = this;
 
     try {
-      // determine how many port-forwards are already active
-      const { length } = await getPortForwards();
-
-      let port: number;
+      // determine how many port-forwards already exist
+      const { length } = getPortForwards();
 
       portForward.protocol = dialogState.useHttps ? "https" : "http";
 
       if (currentPort) {
-        port = await modifyPortForward(portForward, desiredPort);
+        const wasRunning = portForward.status === "Active";
+
+        portForward = await modifyPortForward(portForward, desiredPort);
+        
+        if (wasRunning && portForward.status === "Disabled") {
+          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        }
       } else {
         portForward.forwardPort = desiredPort;
-        port = await addPortForward(portForward);
+        portForward = await addPortForward(portForward);
 
-        // if this is the first port-forward show the about notification
-        if (!length) {
-          aboutPortForwarding();
+        if (portForward.status === "Disabled") {
+          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        } else {
+          // if this is the first port-forward show the about notification
+          if (!length) {
+            aboutPortForwarding();
+          }
         }
       }
 
-      if (dialogState.openInBrowser) {
-        portForward.forwardPort = port;
+      if (portForward.status === "Active" && dialogState.openInBrowser) {
         openPortForward(portForward);
       }
-    } catch (err) {
-      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+    } catch (error) {
+      logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
     } finally {
       close();
     }
@@ -176,14 +183,14 @@ export class PortForwardDialog extends Component<Props> {
         isOpen={dialogState.isOpen}
         className={cssNames("PortForwardDialog", className)}
         onOpen={this.onOpen}
-        onClose={this.onClose}
+        onClose={dialogState.onClose}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
           <WizardStep
             contentClass="flex gaps column"
             next={this.startPortForward}
-            nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
+            nextLabel={this.currentPort === 0 ? "Start" : "Modify"}
           >
             {this.renderContents()}
           </WizardStep>
