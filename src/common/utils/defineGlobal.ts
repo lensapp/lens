@@ -26,7 +26,7 @@
 export function defineGlobal(propName: string, descriptor: PropertyDescriptor) {
   const scope = typeof global !== "undefined" ? global : window;
 
-  if (scope.hasOwnProperty(propName)) {
+  if (Object.prototype.hasOwnProperty.call(scope, propName)) {
     return;
   }
 

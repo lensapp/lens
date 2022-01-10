@@ -19,21 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { BaseRegistry } from "./base-registry";
-
-/**
- * WelcomeBannerRegistration is for an extension to register
- * Provide a Banner component to be renderered in the welcome screen.
- */
-export interface WelcomeBannerRegistration {
-  /**
-   * The banner component to be shown on the welcome screen.
-   */
-  Banner?: React.ComponentType
-  /**
-   * The banner width in px.
-   */
-  width?: number
+export interface TrayMenuRegistration {
+  label?: string;
+  click?: (menuItem: TrayMenuRegistration) => void;
+  id?: string;
+  type?: "normal" | "separator" | "submenu"
+  toolTip?: string;
+  enabled?: boolean;
+  submenu?: TrayMenuRegistration[]
 }
-
-export class WelcomeBannerRegistry extends BaseRegistry<WelcomeBannerRegistration> { }

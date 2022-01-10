@@ -21,3 +21,4 @@
 
 export * from "./switcher";
 export * from "./form-switcher";
+export * from "./switch";

@@ -18,17 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
+import { computed } from "mobx";
 
-import type React from "react";
-import { BaseRegistry } from "./base-registry";
+const welcomeBannerItemsInjectable = getInjectable({
+  instantiate: (di) => {
+    const extensions = di.inject(rendererExtensionsInjectable);
 
-interface TopBarComponents {
-  Item: React.ComponentType;
-}
+    return computed(() => [
+      ...extensions.get().flatMap((extension) => extension.welcomeBanners),
+    ]);
+  },
 
-export interface TopBarRegistration {
-  components: TopBarComponents;
-}
+  lifecycle: lifecycleEnum.singleton,
+});
 
-export class TopBarRegistry extends BaseRegistry<TopBarRegistration> {
-}
+export default welcomeBannerItemsInjectable;

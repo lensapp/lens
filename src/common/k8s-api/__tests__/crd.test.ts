@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CustomResourceDefinition } from "../endpoints";
+import { CustomResourceDefinition, CustomResourceDefinitionSpec } from "../endpoints";
 
 describe("Crds", () => {
-  describe("getVersion", () => {
+  describe("getVersion()", () => {
     it("should throw if none of the versions are served", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "apiextensions.k8s.io/v1",
@@ -136,7 +136,7 @@ describe("Crds", () => {
       expect(crd.getVersion()).toBe("123");
     });
 
-    it("should get the version name from the version field", () => {
+    it("should get the version name from the version field, ignoring versions on v1beta", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "apiextensions.k8s.io/v1beta1",
         kind: "CustomResourceDefinition",
@@ -147,7 +147,14 @@ describe("Crds", () => {
         },
         spec: {
           version: "abc",
-        },
+          versions: [
+            {
+              name: "foobar",
+              served: true,
+              storage: true,
+            },
+          ],
+        } as CustomResourceDefinitionSpec,
       });
 
       expect(crd.getVersion()).toBe("abc");

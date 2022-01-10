@@ -134,7 +134,9 @@ export abstract class ShellSession {
     for (const shellProcess of this.processes.values()) {
       try {
         process.kill(shellProcess.pid);
-      } catch {}
+      } catch {
+        // ignore error
+      }
     }
 
     this.processes.clear();
@@ -214,7 +216,9 @@ export abstract class ShellSession {
         if (stats.isDirectory()) {
           return potentialCwd;
         }
-      } catch {}
+      } catch {
+        // ignore error
+      }
     }
 
     return "."; // Always valid

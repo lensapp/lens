@@ -243,7 +243,9 @@ export class Menu extends React.Component<MenuProps, State> {
         break;
 
       case "Space":
-      case "Enter":
+        // fallthrough
+
+      case "Enter": {
         const focusedItem = this.focusedItem;
 
         if (focusedItem) {
@@ -251,10 +253,12 @@ export class Menu extends React.Component<MenuProps, State> {
           evt.preventDefault();
         }
         break;
+      }
 
       case "ArrowUp":
         this.focusNextItem(true);
         break;
+
       case "ArrowDown":
         this.focusNextItem();
         break;

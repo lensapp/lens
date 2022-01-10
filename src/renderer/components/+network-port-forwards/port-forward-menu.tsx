@@ -21,11 +21,10 @@
 
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, removePortForward } from "../../port-forward";
+import { openPortForward, PortForwardItem, removePortForward, PortForwardDialog } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { PortForwardDialog } from "../../port-forward";
 import { Notifications } from "../notifications";
 
 interface Props extends MenuActionsProps {

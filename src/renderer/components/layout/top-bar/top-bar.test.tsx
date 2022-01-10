@@ -20,14 +20,23 @@
  */
 
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { TopBar } from "../topbar";
-import { TopBarRegistry } from "../../../../extensions/registries";
+import { TopBar } from "./top-bar";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import { DiRender, renderFor } from "../../test-utils/renderFor";
+import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
+import { computed } from "mobx";
 
 jest.mock("../../../../common/vars", () => {
+  const SemVer = require("semver").SemVer;
+
+  const versionStub = new SemVer("1.0.0");
+
   return {
     isMac: true,
+    appSemVer: versionStub,
   };
 });
 
@@ -76,12 +85,13 @@ jest.mock("@electron/remote", () => {
 });
 
 describe("<TopBar/>", () => {
-  beforeEach(() => {
-    TopBarRegistry.createInstance();
-  });
+  let di: ConfigurableDependencyInjectionContainer;
+  let render: DiRender;
 
-  afterEach(() => {
-    TopBarRegistry.resetInstance();
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+
+    render = renderFor(di);
   });
 
   it("renders w/o errors", () => {
@@ -129,13 +139,13 @@ describe("<TopBar/>", () => {
     const testId = "testId";
     const text = "an item";
 
-    TopBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
+    di.override(topBarItemsInjectable, () => computed(() => [
       {
         components: {
           Item: () => <span data-testid={testId}>{text}</span>,
         },
       },
-    ]);
+    ]));
 
     const { getByTestId } = render(<TopBar/>);
 

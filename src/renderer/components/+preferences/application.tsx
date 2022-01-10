@@ -27,7 +27,7 @@ import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { isWindows } from "../../../common/vars";
-import { FormSwitch, Switcher } from "../switch";
+import { Switch } from "../switch";
 import moment from "moment-timezone";
 import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
 import { action } from "mobx";
@@ -86,16 +86,12 @@ export const Application = observer(() => {
 
       <section id="terminalSelection">
         <SubTitle title="Terminal copy & paste" />
-        <FormSwitch
-          label="Copy on select and paste on right-click"
-          control={
-            <Switcher
-              checked={userStore.terminalCopyOnSelect}
-              onChange={v => userStore.terminalCopyOnSelect = v.target.checked}
-              name="terminalCopyOnSelect"
-            />
-          }
-        />
+        <Switch
+          checked={userStore.terminalCopyOnSelect}
+          onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
+        >
+          Copy on select and paste on right-click
+        </Switch>
       </section>
 
       <hr/>
@@ -135,16 +131,9 @@ export const Application = observer(() => {
 
       <section id="other">
         <SubTitle title="Start-up"/>
-        <FormSwitch
-          control={
-            <Switcher
-              checked={userStore.openAtLogin}
-              onChange={v => userStore.openAtLogin = v.target.checked}
-              name="startup"
-            />
-          }
-          label="Automatically start Lens on login"
-        />
+        <Switch checked={userStore.openAtLogin} onChange={() => userStore.openAtLogin = !userStore.openAtLogin}>
+          Automatically start Lens on login
+        </Switch>
       </section>
 
       <hr />

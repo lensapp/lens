@@ -20,23 +20,29 @@
  */
 
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { TopBar } from "../topbar";
-import { TopBarRegistry } from "../../../../extensions/registries";
+import { TopBar } from "./top-bar";
 import { IpcMainWindowEvents } from "../../../../main/window-manager";
 import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { DiRender, renderFor } from "../../test-utils/renderFor";
 
-const mockConfig = vars as { isWindows: boolean, isLinux: boolean };
+const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 
 jest.mock("../../../../common/ipc");
 
 jest.mock("../../../../common/vars", () => {
+  const SemVer = require("semver").SemVer;
+
+  const versionStub = new SemVer("1.0.0");
+
   return {
     __esModule: true,
     isWindows: null,
     isLinux: null,
+    appSemVer: versionStub,
   };
 });
 
@@ -57,20 +63,20 @@ jest.mock("@electron/remote", () => {
   };
 });
 
-describe("<Tobar/> in Windows and Linux", () => {
-  beforeEach(() => {
-    TopBarRegistry.createInstance();
-  });
+describe("<TopBar/> in Windows and Linux", () => {
+  let render: DiRender;
 
-  afterEach(() => {
-    TopBarRegistry.resetInstance();
+  beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    render = renderFor(di);
   });
 
   it("shows window controls on Windows", () => {
     mockConfig.isWindows = true;
     mockConfig.isLinux = false;
 
-    const { getByTestId } = render(<TopBar/>);
+    const { getByTestId } = render(<TopBar />);
 
     expect(getByTestId("window-menu")).toBeInTheDocument();
     expect(getByTestId("window-minimize")).toBeInTheDocument();
@@ -82,7 +88,7 @@ describe("<Tobar/> in Windows and Linux", () => {
     mockConfig.isWindows = false;
     mockConfig.isLinux = true;
 
-    const { getByTestId } = render(<TopBar/>);
+    const { getByTestId } = render(<TopBar />);
 
     expect(getByTestId("window-menu")).toBeInTheDocument();
     expect(getByTestId("window-minimize")).toBeInTheDocument();
@@ -93,7 +99,7 @@ describe("<Tobar/> in Windows and Linux", () => {
   it("triggers ipc events on click", () => {
     mockConfig.isWindows = true;
 
-    const { getByTestId } = render(<TopBar/>);
+    const { getByTestId } = render(<TopBar />);
 
     const menu = getByTestId("window-menu");
     const minimize = getByTestId("window-minimize");

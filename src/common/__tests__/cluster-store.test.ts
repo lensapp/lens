@@ -472,8 +472,8 @@ describe("pre 2.6.0 config with a cluster icon", () => {
   it("moves the icon into preferences", async () => {
     const storedClusterData = ClusterStore.getInstance().clustersList[0];
 
-    expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
-    expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(storedClusterData, "icon")).toBe(false);
+    expect(Object.prototype.hasOwnProperty.call(storedClusterData.preferences, "icon")).toBe(true);
     expect(storedClusterData.preferences.icon.startsWith("data:;base64,")).toBe(true);
   });
 });

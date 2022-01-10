@@ -42,9 +42,9 @@ import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
-import { ThemeStore } from "../../renderer/theme.store";
 import type { ClusterStoreModel } from "../cluster-store";
 import { AppPaths } from "../app-paths";
+import { defaultTheme } from "../vars";
 
 console = new Console(stdout, stderr);
 AppPaths.init();
@@ -75,7 +75,7 @@ describe("user store tests", () => {
       us.httpsProxy = "abcd://defg";
 
       expect(us.httpsProxy).toBe("abcd://defg");
-      expect(us.colorTheme).toBe(ThemeStore.defaultTheme);
+      expect(us.colorTheme).toBe(defaultTheme);
 
       us.colorTheme = "light";
       expect(us.colorTheme).toBe("light");
@@ -86,7 +86,7 @@ describe("user store tests", () => {
 
       us.colorTheme = "some other theme";
       us.resetTheme();
-      expect(us.colorTheme).toBe(ThemeStore.defaultTheme);
+      expect(us.colorTheme).toBe(defaultTheme);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {

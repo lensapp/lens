@@ -20,7 +20,6 @@
  */
 
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
-import "../../../common/catalog-entities";
 import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
 import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";

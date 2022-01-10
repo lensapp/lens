@@ -19,17 +19,34 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { catalogURL } from "../../common/routes";
-import { WelcomeMenuRegistry } from "../../extensions/registries";
-import { navigate } from "../navigation";
+.closeButton {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 2px solid var(--textColorDimmed);
+  border-radius: 50%;
 
-export function initWelcomeMenuRegistry() {
-  WelcomeMenuRegistry.getInstance()
-    .add([
-      {
-        title: "Browse Clusters in Catalog",
-        icon: "view_list",
-        click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" }} )),
-      },
-    ]);
+  &:hover {
+    background-color: #72767d25;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.icon {
+  color: var(--textColorAccent);
+  opacity: 0.6;
+}
+
+.esc {
+  text-align: center;
+  margin-top: var(--margin);
+  font-weight: bold;
+  user-select: none;
+  color: var(--textColorDimmed);
+  pointer-events: none;
 }
