@@ -19,10 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import styles from "./extension-settings-page.module.scss";
+
 import React from "react";
 import { matchPath, RouteComponentProps } from "react-router";
 import { extensionSettingsRoute } from "../../../common/routes";
 import { AppPreferenceRegistry } from "../../../extensions/registries";
+import { Icon } from "../icon";
 import { ExtensionSettings } from "./extension-settings";
 
 interface Props extends RouteComponentProps<{ extensionId?: string }> {
@@ -37,7 +40,7 @@ export const ExtensionSettingsPage = (props: Props) => {
 
   if (!match?.params.extensionId) {
     return (
-      <div>No extension id provided in URL</div>
+      <div className={styles.noItems}><span><Icon material="info"/> No extension id provided in URL.</span></div>
     );
   }
 
@@ -48,7 +51,7 @@ export const ExtensionSettingsPage = (props: Props) => {
   const renderContent = () => {
     if (!currentSettings.length) {
       return (
-        <div>No settings found</div>
+        <div className={styles.noItems}><span><Icon material="info"/> No settings found.</span></div>
       );
     }
 

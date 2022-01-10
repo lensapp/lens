@@ -27,8 +27,6 @@ import {
   appRoute,
   appURL,
   editorURL,
-  extensionRoute,
-  extensionURL,
   kubernetesRoute,
   kubernetesURL,
   preferencesURL,
@@ -89,9 +87,6 @@ class Preferences extends React.Component<Dependencies> {
         <Tab value={editorURL()} label="Editor" data-testid="editor-tab" active={isActive(editorRoute)}/>
         {(telemetryExtensions.length > 0 || !!sentryDsn) &&
           <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
-        }
-        {preferenceRegistries.filter(e => !e.showInPreferencesTab).length > 0 &&
-          <Tab value={extensionURL()} label="Extensions" data-testid="extensions-tab" active={isActive(extensionRoute)}/>
         }
         {extensionsWithSettings.length > 0 && (
           <div data-testid="custom-settings">
