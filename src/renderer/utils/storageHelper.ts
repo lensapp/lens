@@ -74,6 +74,11 @@ export class StorageHelper<T> {
 
     this.storage = storage;
 
+    // TODO: This code uses undocumented MobX internal to criminally permit exotic mutations without encapsulation.
+    this.data.observe_(({ newValue, oldValue }) => {
+      this.onChange(newValue as T, oldValue as T);
+    });
+
     if (autoInit) {
       this.init();
     }
@@ -133,6 +138,7 @@ export class StorageHelper<T> {
     }
   }
 
+  // @deprecated: Switch to using value for being reactive
   get(): T {
     return this.value;
   }
@@ -143,16 +149,12 @@ export class StorageHelper<T> {
   }
 
   @action
-  set(newValue: T) {
-    const oldValue = this.value;
-
-    if (this.isDefaultValue(newValue)) {
+  set(value: T) {
+    if (this.isDefaultValue(value)) {
       this.reset();
     } else {
-      this.data.set(newValue);
+      this.data.set(value);
     }
-
-    this.onChange(newValue, oldValue);
   }
 
   @action
