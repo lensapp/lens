@@ -48,13 +48,13 @@ import { Kubernetes } from "./kubernetes";
 import { Editor } from "./editor";
 import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
-import { Extensions } from "./extensions";
 import { sentryDsn } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { InstalledExtension } from "../../../extensions/extension-discovery";
 import userExtensionsInjectable from "../+extensions/user-extensions/user-extensions.injectable";
 import { ExtensionSettingsPage } from "./extension-settings-page";
 import { Icon } from "../icon";
+import { uniqBy } from "lodash";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -70,11 +70,11 @@ class Preferences extends React.Component<Dependencies> {
   }
 
   renderNavigation() {
-    const preferenceRegistries = AppPreferenceRegistry.getInstance().getItems();
+    const preferenceRegistries = uniqBy(AppPreferenceRegistry.getInstance().getItems(), "extensionId");
     const telemetryExtensions = preferenceRegistries.filter(e => e.showInPreferencesTab == "telemetry");
     const currentLocation = navigation.location.pathname;
     const isActive = (route: RouteProps) => !!matchPath(currentLocation, { path: route.path, exact: route.exact });
-    const extensions = this.props.userExtensions.get().filter(extension =>
+    const extensionsWithSettings = this.props.userExtensions.get().filter(extension =>
       preferenceRegistries.some(registry => registry.extensionId.includes(extension.manifest.name) && !registry.showInPreferencesTab),
     );
 
@@ -93,12 +93,12 @@ class Preferences extends React.Component<Dependencies> {
         {preferenceRegistries.filter(e => !e.showInPreferencesTab).length > 0 &&
           <Tab value={extensionURL()} label="Extensions" data-testid="extensions-tab" active={isActive(extensionRoute)}/>
         }
-        {extensions.length > 0 && (
+        {extensionsWithSettings.length > 0 && (
           <div data-testid="custom-settings">
             <hr/>
             <div className="header flex items-center"><Icon material="extension" smallest className="mr-3"/> Custom settings</div>
             <div>
-              {extensions.map(extension => (
+              {extensionsWithSettings.map(extension => (
                 <Tab key={extension.id} value={extensionSettingsURL({
                   params: {
                     extensionId: encodeURIComponent(extension.manifest.name),
@@ -125,7 +125,6 @@ class Preferences extends React.Component<Dependencies> {
           <Route path={kubernetesURL()} component={Kubernetes}/>
           <Route path={editorURL()} component={Editor}/>
           <Route path={telemetryURL()} component={Telemetry}/>
-          <Route path={extensionURL()} component={Extensions}/>
           <Route path={extensionSettingsURL()} component={ExtensionSettingsPage}/>
           <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
         </Switch>

@@ -29,6 +29,46 @@ import { AppPreferenceRegistry } from "../../../../extensions/registries";
 import { computed } from "mobx";
 import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
+import { LensExtension } from "../../../../extensions/lens-extension";
+
+const extension = {
+  id: "/absolute/path/test",
+  manifest: {
+    name: "@k8slens/test",
+    version: "1.2.3",
+  },
+  absolutePath: "/absolute/path",
+  manifestPath: "/symlinked/path/package.json",
+  isBundled: false,
+  isEnabled: true,
+  isCompatible: true,
+}
+
+const crdExtension = {
+  id: "/absolute/path/crd",
+  manifest: {
+    name: "@k8slens/crd-example",
+    version: "1.2.3",
+  },
+  absolutePath: "/absolute/path/crd",
+  manifestPath: "/symlinked/path/package.json",
+  isBundled: false,
+  isEnabled: true,
+  isCompatible: true,
+}
+
+const sampleExtension = {
+  id: "/absolute/path/sample",
+  manifest: {
+    name: "@k8slens/sample",
+    version: "1.2.3",
+  },
+  absolutePath: "/absolute/path/sample",
+  manifestPath: "/symlinked/path/package.json",
+  isBundled: false,
+  isEnabled: true,
+  isCompatible: true,
+}
 
 describe("Preferences", () => {
   let di: ConfigurableDependencyInjectionContainer;
@@ -39,25 +79,86 @@ describe("Preferences", () => {
     render = renderFor(di);
 
     AppPreferenceRegistry.createInstance();
+    AppPreferenceRegistry.getInstance().add([
+      {
+        components: {
+          Input: () => <div>input</div>,
+          Hint: () => <div>hint</div>
+        },
+        extensionId: "@k8slens/test",
+        id: "example-preferences",
+        title: "Example Preferences",
+      }
+    ], new LensExtension(extension));
+    AppPreferenceRegistry.getInstance().add([
+      {
+        components: {
+          Input: () => <div>crd input</div>,
+          Hint: () => <div>crd hint</div>
+        },
+        extensionId: "@k8slens/crd-example",
+        title: "Example Preferences",
+      }
+    ], new LensExtension(crdExtension));
+    AppPreferenceRegistry.getInstance().add([
+      {
+        components: {
+          Input: () => <div>sample input</div>,
+          Hint: () => <div>sample hint</div>
+        },
+        extensionId: "@k8slens/crd-example",
+        title: "Extension with duplicated name",
+      }
+    ], new LensExtension(crdExtension))
+  });
+
+  afterEach(() => {
+    AppPreferenceRegistry.resetInstance();
   });
 
   it("renders w/o errors", () => {
-    di.override(userExtensionsInjectable, () => {
-      return computed(() => [] as any);
-    });
-
     const { container } = render(<MemoryRouter><Preferences /></MemoryRouter>);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("doesn't render extension settings tabs if no extensions found", () => {
-    di.override(userExtensionsInjectable, () => {
-      return computed(() => [] as any);
+  describe("Extension custom settings", () => {
+    it("doesn't render custom settings tabs if no extensions found", () => {
+      const { queryByTestId } = render(<MemoryRouter><Preferences /></MemoryRouter>);
+
+      expect(queryByTestId("custom-settings")).not.toBeInTheDocument();
     });
 
-    const { queryByTestId } = render(<MemoryRouter><Preferences /></MemoryRouter>);
+    it("renders custom settings tabs if registered extensions found", () => {
+      di.override(userExtensionsInjectable, () => {
+        return computed(() => [extension]);
+      });
 
-    expect(queryByTestId("custom-settings")).not.toBeInTheDocument();
+      const { getByTestId } = render(<MemoryRouter><Preferences /></MemoryRouter>);
+
+      expect(getByTestId("custom-settings")).toBeInTheDocument();
+    })
+
+    it("renders tabs for each extension having custom settings", () => {
+      di.override(userExtensionsInjectable, () => {
+        return computed(() => [extension, crdExtension, sampleExtension]);
+      });
+
+      const { getByText, queryByText } = render(<MemoryRouter><Preferences /></MemoryRouter>);
+
+      expect(getByText("@k8slens/test")).toBeInTheDocument();
+      expect(getByText("@k8slens/crd-example")).toBeInTheDocument();
+      expect(queryByText("@k8slens/sample")).not.toBeInTheDocument();
+    });
+
+    it("renders extension tab only once", () => {
+      di.override(userExtensionsInjectable, () => {
+        return computed(() => [crdExtension]);
+      });
+
+      const { getAllByText } = render(<MemoryRouter><Preferences /></MemoryRouter>);
+
+      expect(getAllByText("@k8slens/crd-example").length).toBe(1);
+    })
   });
 });

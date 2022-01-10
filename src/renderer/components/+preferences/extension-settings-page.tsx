@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observer } from "mobx-react";
 import React from "react";
 import { matchPath, RouteComponentProps } from "react-router";
 import { extensionSettingsRoute } from "../../../common/routes";
@@ -29,13 +28,13 @@ import { ExtensionSettings } from "./extension-settings";
 interface Props extends RouteComponentProps<{ extensionId?: string }> {
 }
 
-export const ExtensionSettingsPage = observer((props: Props) => {
+export const ExtensionSettingsPage = (props: Props) => {
   // https://github.com/remix-run/react-router/issues/5870#issuecomment-394194338
   const match = matchPath<{ extensionId: string }>(props.history.location.pathname, {
     path: extensionSettingsRoute.path,
     exact: true,
   });
-  const extensionId = decodeURIComponent(match.params.extensionId);
+  const extensionId = decodeURIComponent(match?.params?.extensionId);
   const settings = AppPreferenceRegistry.getInstance().getItems();
   const currentSettings = settings.filter(setting => setting.extensionId == extensionId);
 
@@ -57,4 +56,4 @@ export const ExtensionSettingsPage = observer((props: Props) => {
       {renderContent()}
     </section>
   );
-});
+};
