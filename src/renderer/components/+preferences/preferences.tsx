@@ -18,7 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import "./preferences.scss";
 
 import { IComputedValue, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -55,6 +54,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { InstalledExtension } from "../../../extensions/extension-discovery";
 import userExtensionsInjectable from "../+extensions/user-extensions/user-extensions.injectable";
 import { ExtensionSettingsPage } from "./extension-settings-page";
+import { Icon } from "../icon";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -96,13 +96,16 @@ class Preferences extends React.Component<Dependencies> {
         {extensions.length > 0 && (
           <div data-testid="custom-settings">
             <hr/>
-            {extensions.map(extension => (
-              <Tab key={extension.id} value={extensionSettingsURL({
-                params: {
-                  extensionId: encodeURIComponent(extension.manifest.name),
-                },
-              })} label={extension.manifest.name} active={currentLocation.includes(encodeURIComponent(extension.manifest.name))}/>
-            ))}
+            <div className="header flex items-center"><Icon material="extension" smallest className="mr-3"/> Custom settings</div>
+            <div>
+              {extensions.map(extension => (
+                <Tab key={extension.id} value={extensionSettingsURL({
+                  params: {
+                    extensionId: encodeURIComponent(extension.manifest.name),
+                  },
+                })} label={extension.manifest.name} active={currentLocation.includes(encodeURIComponent(extension.manifest.name))}/>
+              ))}
+            </div>
           </div>
         )}
       </Tabs>

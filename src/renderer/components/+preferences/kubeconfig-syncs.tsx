@@ -143,9 +143,7 @@ export class KubeconfigSyncs extends React.Component {
 
     if (!entries) {
       return (
-        <div className="loading-spinner">
-          <Spinner />
-        </div>
+        <Spinner center />
       );
     }
 
@@ -202,7 +200,9 @@ export class KubeconfigSyncs extends React.Component {
       <>
         {this.renderSyncButtons()}
         <SubTitle title="Synced Items" className="pt-5"/>
-        {this.renderEntries()}
+        <div className="relative">
+          {this.renderEntries()}
+        </div>
       </>
     );
   }
