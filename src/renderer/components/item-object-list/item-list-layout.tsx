@@ -546,7 +546,10 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
 export function ItemListLayout<I extends ItemObject>(
   props: ItemListLayoutProps<I>,
 ) {
-  return withInjectables<Dependencies, ItemListLayoutProps<I>>(
+  const InjectedItemListLayout = withInjectables<
+    Dependencies,
+    ItemListLayoutProps<I>
+  >(
     NonInjectedItemListLayout,
 
     {
@@ -556,5 +559,7 @@ export function ItemListLayout<I extends ItemObject>(
         ...props,
       }),
     },
-  )(props);
+  );
+
+  return <InjectedItemListLayout {...props} />;
 }

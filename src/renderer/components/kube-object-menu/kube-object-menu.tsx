@@ -127,7 +127,7 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Co
 export function KubeObjectMenu<T extends KubeObject>(
   props: KubeObjectMenuProps<T>,
 ) {
-  return withInjectables<Dependencies, KubeObjectMenuProps<T>>(
+  const InjectedKubeObjectMenu = withInjectables<Dependencies, KubeObjectMenuProps<T>>(
     NonInjectedKubeObjectMenu,
     {
       getProps: (di, props) => ({
@@ -142,5 +142,7 @@ export function KubeObjectMenu<T extends KubeObject>(
         ...props,
       }),
     },
-  )(props);
+  );
+
+  return <InjectedKubeObjectMenu {...props} />;
 }

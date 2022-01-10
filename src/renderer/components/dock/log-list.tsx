@@ -32,7 +32,6 @@ import type { Align, ListOnScrollProps } from "react-window";
 import { SearchStore } from "../../search-store/search-store";
 import { UserStore } from "../../../common/user-store";
 import { array, boundMethod, cssNames } from "../../utils";
-import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
 import type { LogStore } from "./log-store/log.store";
 import type { LogTabStore } from "./log-tab-store/log-tab.store";
@@ -44,8 +43,6 @@ import searchStoreInjectable from "../../search-store/search-store.injectable";
 
 interface Props {
   logs: string[]
-  isLoading: boolean
-  load: () => void
   id: string
 }
 
@@ -58,7 +55,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedLogList extends React.Component<Props & Dependencies> {
+export class NonInjectedLogList extends React.Component<Props & Dependencies> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -165,7 +162,7 @@ class NonInjectedLogList extends React.Component<Props & Dependencies> {
     const { scrollOffset } = props;
 
     if (scrollOffset === 0) {
-      this.props.load();
+      this.props.logStore.load();
     }
   };
 
@@ -241,17 +238,7 @@ class NonInjectedLogList extends React.Component<Props & Dependencies> {
   };
 
   render() {
-    const { isLoading } = this.props;
-    const isInitLoading = isLoading && !this.logs.length;
     const rowHeights = array.filled(this.logs.length, this.lineHeight);
-
-    if (isInitLoading) {
-      return (
-        <div className="LogList flex box grow align-center justify-center">
-          <Spinner center/>
-        </div>
-      );
-    }
 
     if (!this.logs.length) {
       return (
@@ -262,7 +249,7 @@ class NonInjectedLogList extends React.Component<Props & Dependencies> {
     }
 
     return (
-      <div className={cssNames("LogList flex", { isLoading })}>
+      <div className={cssNames("LogList flex" )}>
         <VirtualList
           items={this.logs}
           rowHeights={rowHeights}

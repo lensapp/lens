@@ -37,7 +37,6 @@ interface Props {
   tabData?: LogTabData
   logs: string[]
   save: (data: Partial<LogTabData>) => void
-  reload: () => void
 }
 
 interface Dependencies {
@@ -45,7 +44,7 @@ interface Dependencies {
 }
 
 const NonInjectedLogControls = observer((props: Props & Dependencies) => {
-  const { tabData, save, reload, logs, logStore } = props;
+  const { tabData, save, logs, logStore } = props;
 
   if (!tabData) {
     return null;
@@ -61,7 +60,7 @@ const NonInjectedLogControls = observer((props: Props & Dependencies) => {
 
   const togglePrevious = () => {
     save({ previous: !previous });
-    reload();
+    logStore.reload();
   };
 
   const downloadLogs = () => {

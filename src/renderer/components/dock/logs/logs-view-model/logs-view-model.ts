@@ -18,20 +18,44 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { LogStore } from "./log.store";
-import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
-import callForLogsInjectable from "./call-for-logs/call-for-logs.injectable";
+import type { LogTabData, LogTabStore } from "../../log-tab-store/log-tab.store";
+import type { LogStore } from "../../log-store/log.store";
+import { computed } from "mobx";
+import { makeObservable } from "mobx";
 
-const logStoreInjectable = getInjectable({
-  instantiate: (di) => new LogStore({
-    logTabStore: di.inject(logTabStoreInjectable),
-    dockStore: di.inject(dockStoreInjectable),
-    callForLogs: di.inject(callForLogsInjectable),
-  }),
+interface Dependencies {
+  dockStore: { selectedTabId: string },
+  logTabStore: LogTabStore
+  logStore: LogStore
+}
 
-  lifecycle: lifecycleEnum.singleton,
-});
+export class LogsViewModel {
+  constructor(private dependencies: Dependencies) {
+    makeObservable(this, {
+      logs: computed,
+      logsWithoutTimestamps: computed,
+      tabs: computed,
+      tabId: computed,
+    });
+  }
 
-export default logStoreInjectable;
+  get logs() {
+    return this.dependencies.logStore.logs;
+  }
+
+  get logsWithoutTimestamps() {
+    return this.dependencies.logStore.logsWithoutTimestamps;
+  }
+
+  get tabs() {
+    return this.dependencies.logTabStore.tabs;
+  }
+
+  get tabId() {
+    return this.dependencies.dockStore.selectedTabId;
+  }
+
+  saveTab = (newTabs: LogTabData) => {
+    this.dependencies.logTabStore.setData(this.tabId, { ...this.tabs, ...newTabs });
+  };
+}

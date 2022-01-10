@@ -58,8 +58,9 @@ export class DockTabStore<T> {
     // auto-save to local-storage
     if (storageKey) {
       this.storage = this.dependencies.createStorage<T>(storageKey, {});
+
       this.storage.whenReady.then(() => {
-        this.data.replace(this.storage.get());
+        this.data.replace(this.storage.value);
         reaction(() => this.toJSON(), data => this.storage.set(data));
       });
     }

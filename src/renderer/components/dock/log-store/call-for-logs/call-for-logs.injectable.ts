@@ -19,19 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { LogStore } from "./log.store";
-import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
-import callForLogsInjectable from "./call-for-logs/call-for-logs.injectable";
+import { podsApi } from "../../../../../common/k8s-api/endpoints";
 
-const logStoreInjectable = getInjectable({
-  instantiate: (di) => new LogStore({
-    logTabStore: di.inject(logTabStoreInjectable),
-    dockStore: di.inject(dockStoreInjectable),
-    callForLogs: di.inject(callForLogsInjectable),
-  }),
-
+const callForLogsInjectable = getInjectable({
+  instantiate: () => podsApi.getLogs,
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default logStoreInjectable;
+export default callForLogsInjectable;

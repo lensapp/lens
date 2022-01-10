@@ -19,19 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { LogStore } from "./log.store";
-import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
-import callForLogsInjectable from "./call-for-logs/call-for-logs.injectable";
+import createStorageInjectable from "../../../../utils/create-storage/create-storage.injectable";
+import { DockStorageState, TabKind } from "../dock.store";
 
-const logStoreInjectable = getInjectable({
-  instantiate: (di) => new LogStore({
-    logTabStore: di.inject(logTabStoreInjectable),
-    dockStore: di.inject(dockStoreInjectable),
-    callForLogs: di.inject(callForLogsInjectable),
-  }),
+const dockStorageInjectable = getInjectable({
+  instantiate: (di) => {
+    const createStorage = di.inject(createStorageInjectable);
+
+    return createStorage<DockStorageState>("dock", {
+      height: 300,
+      tabs: [
+        {
+          id: "terminal",
+          kind: TabKind.TERMINAL,
+          title: "Terminal",
+          pinned: false,
+        },
+      ],
+    });
+  },
 
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default logStoreInjectable;
+export default dockStorageInjectable;

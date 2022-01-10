@@ -20,87 +20,46 @@
  */
 
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-
+import { observer } from "mobx-react";
 import { boundMethod } from "../../utils";
-import type { DockTab } from "./dock-store/dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
-import { LogList } from "./log-list";
-import type { LogStore } from "./log-store/log.store";
+import { LogList, NonInjectedLogList } from "./log-list";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
-import type { LogTabData, LogTabStore } from "./log-tab-store/log-tab.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
-import logStoreInjectable from "./log-store/log-store.injectable";
 import type { SearchStore } from "../../search-store/search-store";
 import searchStoreInjectable from "../../search-store/search-store.injectable";
+import { Spinner } from "../spinner";
+import logsViewModelInjectable from "./logs/logs-view-model/logs-view-model.injectable";
+import type { LogsViewModel } from "./logs/logs-view-model/logs-view-model";
 
 interface Props {
-  className?: string
-  tab: DockTab
+  className?: string;
 }
 
 interface Dependencies {
-  logTabStore: LogTabStore
-  logStore: LogStore
   searchStore: SearchStore
+  model: LogsViewModel
 }
 
 @observer
 class NonInjectedLogs extends React.Component<Props & Dependencies> {
-  @observable isLoading = true;
+  private logListElement = React.createRef<NonInjectedLogList>(); // A reference for VirtualList component
 
-  private logListElement = React.createRef<typeof LogList>(); // A reference for VirtualList component
-
-  constructor(props: Props & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this,
-      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true }),
-    );
-  }
-
-  get tabId() {
-    return this.props.tab.id;
-  }
-
-  load = async () => {
-    this.isLoading = true;
-    await this.props.logStore.load(this.tabId);
-    this.isLoading = false;
-  };
-
-  reload = async () => {
-    this.props.logStore.clearLogs(this.tabId);
-    await this.load();
-  };
-
-  /**
-   * A function for various actions after search is happened
-   * @param query {string} A text from search field
-   */
-  @boundMethod
-  onSearch() {
-    this.toOverlay();
+  get model() {
+    return this.props.model;
   }
 
   /**
    * Scrolling to active overlay (search word highlight)
    */
   @boundMethod
-  toOverlay() {
+  scrollToOverlay() {
     const { activeOverlayLine } = this.props.searchStore;
 
     if (!this.logListElement.current || activeOverlayLine === undefined) return;
     // Scroll vertically
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     this.logListElement.current.scrollToItem(activeOverlayLine, "center");
     // Scroll horizontally in timeout since virtual list need some time to prepare its contents
     setTimeout(() => {
@@ -111,33 +70,35 @@ class NonInjectedLogs extends React.Component<Props & Dependencies> {
     }, 100);
   }
 
-  renderResourceSelector(data?: LogTabData) {
-    if (!data) {
+  renderResourceSelector() {
+    const { tabs, logs, logsWithoutTimestamps, saveTab, tabId } = this.model;
+
+    if (!tabs) {
       return null;
     }
 
-    const logs = this.props.logStore.logs;
-    const searchLogs = data.showTimestamps ? logs : this.props.logStore.logsWithoutTimestamps;
+    const searchLogs = tabs.showTimestamps ? logs : logsWithoutTimestamps;
+
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
-          tabId={this.tabId}
-          tabData={data}
-          save={newData => this.props.logTabStore.setData(this.tabId, { ...data, ...newData })}
-          reload={this.reload}
+          tabId={tabId}
+          tabData={tabs}
+          save={saveTab}
         />
+
         <LogSearch
-          onSearch={this.onSearch}
+          onSearch={this.scrollToOverlay}
           logs={searchLogs}
-          toPrevOverlay={this.toOverlay}
-          toNextOverlay={this.toOverlay}
+          toPrevOverlay={this.scrollToOverlay}
+          toNextOverlay={this.scrollToOverlay}
         />
       </div>
     );
 
     return (
       <InfoPanel
-        tabId={this.props.tab.id}
+        tabId={this.model.tabId}
         controls={controls}
         showSubmitClose={false}
         showButtons={false}
@@ -147,44 +108,44 @@ class NonInjectedLogs extends React.Component<Props & Dependencies> {
   }
 
   render() {
-    const logs = this.props.logStore.logs;
-    const data = this.props.logTabStore.getData(this.tabId);
-
-    if (!data) {
-      this.reload();
-    }
+    const { logs, tabs, tabId, saveTab } = this.model;
 
     return (
       <div className="PodLogs flex column">
-        {this.renderResourceSelector(data)}
+        {this.renderResourceSelector()}
+
         <LogList
           logs={logs}
-          id={this.tabId}
-          isLoading={this.isLoading}
-          load={this.load}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+          id={tabId}
           ref={this.logListElement}
         />
+
         <LogControls
           logs={logs}
-          tabData={data}
-          save={newData => this.props.logTabStore.setData(this.tabId, { ...data, ...newData })}
-          reload={this.reload}
+          tabData={tabs}
+          save={saveTab}
         />
       </div>
     );
   }
 }
 
+
+
 export const Logs = withInjectables<Dependencies, Props>(
   NonInjectedLogs,
 
   {
-    getProps: (di, props) => ({
-      logTabStore: di.inject(logTabStoreInjectable),
-      logStore: di.inject(logStoreInjectable),
+
+    getPlaceholder: () => (
+      <div className="flex box grow align-center justify-center">
+        <Spinner center />
+      </div>
+    ),
+
+    getProps: async (di, props) => ({
       searchStore: di.inject(searchStoreInjectable),
+      model: await di.inject(logsViewModelInjectable),
       ...props,
     }),
   },

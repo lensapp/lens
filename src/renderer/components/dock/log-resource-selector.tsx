@@ -32,20 +32,21 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import type { TabId } from "./dock-store/dock.store";
 import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import logStoreInjectable from "./log-store/log-store.injectable";
 
 interface Props {
   tabId: TabId
   tabData: LogTabData
   save: (data: Partial<LogTabData>) => void
-  reload: () => void
 }
 
 interface Dependencies {
   logTabStore: LogTabStore
+  reloadLogs: () => Promise<void>
 }
 
 const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) => {
-  const { tabData, save, reload, tabId, logTabStore } = props;
+  const { tabData, save, tabId, logTabStore, reloadLogs } = props;
   const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
   const containers = pod.getContainers();
@@ -57,7 +58,8 @@ const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) =>
         .concat(initContainers)
         .find(container => container.name === option.value),
     });
-    reload();
+
+    reloadLogs();
   };
 
   const onPodChange = (option: SelectOption) => {
@@ -96,7 +98,7 @@ const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) =>
   ];
 
   useEffect(() => {
-    reload();
+    reloadLogs();
   }, [selectedPod]);
 
   return (
@@ -128,6 +130,7 @@ export const LogResourceSelector = withInjectables<Dependencies, Props>(
   {
     getProps: (di, props) => ({
       logTabStore: di.inject(logTabStoreInjectable),
+      reloadLogs: di.inject(logStoreInjectable).reload,
       ...props,
     }),
   },

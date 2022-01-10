@@ -131,16 +131,18 @@ export class DockStore implements DockStorageState {
     return this.dependencies.storage.whenReady;
   }
 
+  @computed
   get isOpen(): boolean {
-    return this.dependencies.storage.get().isOpen;
+    return this.dependencies.storage.value.isOpen;
   }
 
   set isOpen(isOpen: boolean) {
     this.dependencies.storage.merge({ isOpen });
   }
 
+  @computed
   get height(): number {
-    return this.dependencies.storage.get().height;
+    return this.dependencies.storage.value.height;
   }
 
   set height(height: number) {
@@ -149,21 +151,23 @@ export class DockStore implements DockStorageState {
     });
   }
 
+  @computed
   get tabs(): DockTab[] {
-    return this.dependencies.storage.get().tabs;
+    return this.dependencies.storage.value.tabs;
   }
 
   set tabs(tabs: DockTab[]) {
     this.dependencies.storage.merge({ tabs });
   }
 
+  @computed
   get selectedTabId(): TabId | undefined {
-    return this.dependencies.storage.get().selectedTabId
-      || (
-        this.tabs.length > 0
-          ? this.tabs[0]?.id
-          : undefined
-      );
+    const storageData = this.dependencies.storage.value;
+
+    return (
+      storageData.selectedTabId ||
+      (this.tabs.length > 0 ? this.tabs[0]?.id : undefined)
+    );
   }
 
   set selectedTabId(tabId: TabId) {

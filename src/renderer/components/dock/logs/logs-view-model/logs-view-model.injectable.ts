@@ -19,19 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { LogStore } from "./log.store";
-import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
-import callForLogsInjectable from "./call-for-logs/call-for-logs.injectable";
+import dockStoreInjectable from "../../dock-store/dock-store.injectable";
+import logTabStoreInjectable from "../../log-tab-store/log-tab-store.injectable";
+import reloadedLogStoreInjectable from "../../log-store/reloaded-log-store.injectable";
+import { LogsViewModel } from "./logs-view-model";
 
-const logStoreInjectable = getInjectable({
-  instantiate: (di) => new LogStore({
-    logTabStore: di.inject(logTabStoreInjectable),
+const logsViewModelInjectable = getInjectable({
+  instantiate: async (di) => new LogsViewModel({
     dockStore: di.inject(dockStoreInjectable),
-    callForLogs: di.inject(callForLogsInjectable),
+    logTabStore: di.inject(logTabStoreInjectable),
+    logStore: await di.inject(reloadedLogStoreInjectable),
   }),
 
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default logStoreInjectable;
+export default logsViewModelInjectable;

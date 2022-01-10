@@ -58,7 +58,6 @@ const getComponent = (tabData: LogTabData) => {
       tabId="tabId"
       tabData={tabData}
       save={jest.fn()}
-      reload={jest.fn()}
     />
   );
 };

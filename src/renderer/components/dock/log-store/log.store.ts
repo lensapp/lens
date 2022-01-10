@@ -21,7 +21,7 @@
 
 import { autorun, computed, observable, makeObservable } from "mobx";
 
-import { IPodLogsQuery, Pod, podsApi } from "../../../../common/k8s-api/endpoints";
+import { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
 import { autoBind, interval } from "../../../utils";
 import { DockStore, TabId, TabKind } from "../dock-store/dock.store";
 import type { LogTabStore } from "../log-tab-store/log-tab.store";
@@ -33,6 +33,7 @@ const logLinesToLoad = 500;
 interface Dependencies {
   logTabStore: LogTabStore
   dockStore: DockStore
+  callForLogs: ({ namespace, name }: { namespace: string, name: string }, query: IPodLogsQuery) => Promise<string>
 }
 
 export class LogStore {
@@ -79,9 +80,10 @@ export class LogStore {
    * Each time it increasing it's number, caused to fetch more logs.
    * Also, it handles loading errors, rewriting whole logs with error
    * messages
-   * @param tabId
    */
-  load = async (tabId: TabId) => {
+  load = async () => {
+    const tabId = this.dependencies.dockStore.selectedTabId;
+
     try {
       const logs = await this.loadLogs(tabId, {
         tailLines: this.lines + logLinesToLoad,
@@ -127,12 +129,13 @@ export class LogStore {
    */
   async loadLogs(tabId: TabId, params: Partial<IPodLogsQuery>): Promise<string[]> {
     const data = this.dependencies.logTabStore.getData(tabId);
+
     const { selectedContainer, previous } = data;
     const pod = new Pod(data.selectedPod);
     const namespace = pod.getNs();
     const name = pod.getName();
 
-    const result = await podsApi.getLogs({ namespace, name }, {
+    const result = await this.dependencies.callForLogs({ namespace, name }, {
       ...params,
       timestamps: true,  // Always setting timestamp to separate old logs from new ones
       container: selectedContainer.name,
@@ -205,4 +208,10 @@ export class LogStore {
   clearLogs(tabId: TabId) {
     this.podLogs.delete(tabId);
   }
+
+  reload = async () => {
+    this.clearLogs(this.dependencies.dockStore.selectedTabId);
+
+    await this.load();
+  };
 }

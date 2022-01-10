@@ -20,7 +20,15 @@
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-import { action, comparer, makeObservable, observable, toJS, when } from "mobx";
+import {
+  action,
+  comparer,
+  computed,
+  makeObservable,
+  observable,
+  toJS,
+  when,
+} from "mobx";
 import produce, { Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -65,10 +73,6 @@ export class StorageHelper<T> {
     const { storage, autoInit = true } = options;
 
     this.storage = storage;
-
-    this.data.observe_(({ newValue, oldValue }) => {
-      this.onChange(newValue as T, oldValue as T);
-    });
 
     if (autoInit) {
       this.init();
@@ -130,16 +134,25 @@ export class StorageHelper<T> {
   }
 
   get(): T {
+    return this.value;
+  }
+  
+  @computed
+  get value(): T {
     return this.data.get() ?? this.defaultValue;
   }
 
   @action
-  set(value: T) {
-    if (this.isDefaultValue(value)) {
+  set(newValue: T) {
+    const oldValue = this.value;
+
+    if (this.isDefaultValue(newValue)) {
       this.reset();
     } else {
-      this.data.set(value);
+      this.data.set(newValue);
     }
+
+    this.onChange(newValue, oldValue);
   }
 
   @action

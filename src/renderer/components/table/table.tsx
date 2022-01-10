@@ -263,7 +263,7 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
 }
 
 export function Table<Item>(props: TableProps<Item>) {
-  return withInjectables<Dependencies, TableProps<Item>>(
+  const InjectedTable = withInjectables<Dependencies, TableProps<Item>>(
     NonInjectedTable,
 
     {
@@ -272,6 +272,8 @@ export function Table<Item>(props: TableProps<Item>) {
         ...props,
       }),
     },
-  )(props);
+  );
+
+  return <InjectedTable {...props} />;
 }
 

@@ -157,7 +157,10 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
 export function KubeObjectListLayout<K extends KubeObject>(
   props: KubeObjectListLayoutProps<K>,
 ) {
-  return withInjectables<Dependencies, KubeObjectListLayoutProps<K>>(
+  const InjectedKubeObjectListLayout = withInjectables<
+    Dependencies,
+    KubeObjectListLayoutProps<K>
+  >(
     NonInjectedKubeObjectListLayout,
 
     {
@@ -167,5 +170,7 @@ export function KubeObjectListLayout<K extends KubeObject>(
         ...props,
       }),
     },
-  )(props);
+  );
+
+  return <InjectedKubeObjectListLayout {...props} />;
 }

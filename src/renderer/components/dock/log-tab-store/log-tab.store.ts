@@ -20,7 +20,7 @@
  */
 
 import uniqueId from "lodash/uniqueId";
-import { reaction } from "mobx";
+import { computed, makeObservable, reaction } from "mobx";
 import { podsStore } from "../../+workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
@@ -59,6 +59,14 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     });
 
     reaction(() => podsStore.items.length, () => this.updateTabsData());
+
+    makeObservable(this, {
+      tabs: computed,
+    });
+  }
+
+  get tabs() {
+    return this.data.get(this.dependencies.dockStore.selectedTabId);
   }
 
   createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): string {
