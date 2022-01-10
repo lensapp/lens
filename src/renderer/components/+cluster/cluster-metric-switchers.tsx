@@ -32,9 +32,9 @@ interface Dependencies {
   clusterOverviewStore: ClusterOverviewStore
 }
 
-const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore: { metricType, metricNodeRole, getMetricsValues, metrics }}: Dependencies) => {
+const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: Dependencies) => {
   const { masterNodes, workerNodes } = nodesStore;
-  const metricsValues = getMetricsValues(metrics);
+  const metricsValues = clusterOverviewStore.getMetricsValues(clusterOverviewStore.metrics);
   const disableRoles = !masterNodes.length || !workerNodes.length;
   const disableMetrics = !metricsValues.length;
 
@@ -44,8 +44,8 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore: { me
         <RadioGroup
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableRoles })}
-          value={metricNodeRole}
-          onChange={(metric: MetricNodeRole) => metricNodeRole = metric}
+          value={clusterOverviewStore.metricNodeRole}
+          onChange={(metric: MetricNodeRole) => clusterOverviewStore.metricNodeRole = metric}
         >
           <Radio label="Master" value={MetricNodeRole.MASTER}/>
           <Radio label="Worker" value={MetricNodeRole.WORKER}/>
@@ -55,8 +55,8 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore: { me
         <RadioGroup
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableMetrics })}
-          value={metricType}
-          onChange={(value: MetricType) => metricType = value}
+          value={clusterOverviewStore.metricType}
+          onChange={(value: MetricType) => clusterOverviewStore.metricType = value}
         >
           <Radio label="CPU" value={MetricType.CPU}/>
           <Radio label="Memory" value={MetricType.MEMORY}/>
