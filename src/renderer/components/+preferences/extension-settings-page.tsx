@@ -30,22 +30,29 @@ interface Props extends RouteComponentProps<{ extensionId?: string }> {
 
 export const ExtensionSettingsPage = (props: Props) => {
   // https://github.com/remix-run/react-router/issues/5870#issuecomment-394194338
-  const match = matchPath<{ extensionId: string }>(props.history.location.pathname, {
+  const match = matchPath<{ extensionId: string }>(props.location.pathname, {
     path: extensionSettingsRoute.path,
     exact: true,
   });
-  const extensionId = decodeURIComponent(match?.params?.extensionId);
+
+  if (!match?.params.extensionId) {
+    return (
+      <div>No extension id provided in URL</div>
+    );
+  }
+
+  const extensionId = decodeURIComponent(match?.params.extensionId);
   const settings = AppPreferenceRegistry.getInstance().getItems();
   const currentSettings = settings.filter(setting => setting.extensionId == extensionId);
 
   const renderContent = () => {
-    if (!currentSettings) {
+    if (!currentSettings.length) {
       return (
         <div>No settings found</div>
       );
     }
 
-    return settings.filter(e => !e.showInPreferencesTab).map((setting) =>
+    return currentSettings.filter(e => !e.showInPreferencesTab).map((setting) =>
       <ExtensionSettings key={setting.id} setting={setting} size="small" />,
     );
   };
