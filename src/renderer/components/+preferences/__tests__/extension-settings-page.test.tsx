@@ -145,13 +145,13 @@ describe("<ExtensionSettingsPage/>", () => {
     const location = createLocation("/preferences/extension-settings/invalid-url");
     const { getByText } = render(<ExtensionSettingsPage history={history} location={location} match={routeMatch}/>);
 
-    expect(getByText("No settings found")).toBeInTheDocument();
+    expect(getByText("No settings found.")).toBeInTheDocument();
   });
 
   it("renders error message if no extension id passed in URL", () => {
     const location = createLocation("/preferences/extension-settings");
     const { getByText } = render(<ExtensionSettingsPage history={history} location={location} match={routeMatch}/>);
 
-    expect(getByText("No extension id provided in URL")).toBeInTheDocument();
+    expect(getByText("No extension id provided in URL.")).toBeInTheDocument();
   });
 });
