@@ -35,6 +35,7 @@ import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable
   from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import callForLogsInjectable from "../log-store/call-for-logs/call-for-logs.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -90,6 +91,7 @@ describe("<LogResourceSelector />", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
 
     render = renderFor(di);
 
