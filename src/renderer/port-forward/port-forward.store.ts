@@ -47,14 +47,14 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
     const savedPortForwards = this.storage.get(); // undefined on first load
 
-    if (Array.isArray(savedPortForwards)) {
+    if (Array.isArray(savedPortForwards) && savedPortForwards.length > 0) {
       logger.info("[PORT-FORWARD-STORE] starting saved port-forwards");
 
       // add the disabled ones
       await Promise.all(savedPortForwards.filter(pf => pf.status === "Disabled").map(addPortForward));
 
-      // add the active ones and check if they started successfully
-      const results = await Promise.allSettled(savedPortForwards.filter(pf => pf.status === "Active").map(addPortForward));
+      // add the active ones (assume active if the status is undefined, for backward compatibilty) and check if they started successfully
+      const results = await Promise.allSettled(savedPortForwards.filter(pf => !pf.status || pf.status === "Active").map(addPortForward));
 
       for (const result of results) {
         if (result.status === "rejected" || result.value.status === "Disabled") {
