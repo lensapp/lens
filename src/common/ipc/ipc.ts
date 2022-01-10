@@ -32,6 +32,7 @@ import type remote from "@electron/remote";
 
 const electronRemote = (() => {
   if (ipcRenderer) {
+    /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
     try {
       return require("@electron/remote");
     } catch {}

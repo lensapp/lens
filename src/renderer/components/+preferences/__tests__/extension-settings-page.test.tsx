@@ -40,8 +40,8 @@ const url = extensionSettingsURL({
 const routeMatch: match<{ extensionId: string }> = {
   isExact: true,
   path: extensionSettingsRoute.path as string,
-  url: url,
-  params: { extensionId: "@k8slens/crd-example" }
+  url,
+  params: { extensionId: "@k8slens/crd-example" },
 };
 const location = createLocation(routeMatch.url);
 
@@ -56,7 +56,7 @@ const crdExtension = {
   isBundled: false,
   isEnabled: true,
   isCompatible: true,
-}
+};
 
 const sampleExtension = {
   id: "/absolute/path/sample",
@@ -69,7 +69,7 @@ const sampleExtension = {
   isBundled: false,
   isEnabled: true,
   isCompatible: true,
-}
+};
 
 describe("<ExtensionSettingsPage/>", () => {
   let di: ConfigurableDependencyInjectionContainer;
@@ -84,7 +84,7 @@ describe("<ExtensionSettingsPage/>", () => {
       {
         components: {
           Input: () => <input data-testid="crd-name"/>,
-          Hint: () => <div>choose crd name</div>
+          Hint: () => <div>choose crd name</div>,
         },
         extensionId: "@k8slens/crd-example",
         title: "CRD Preferences",
@@ -92,7 +92,7 @@ describe("<ExtensionSettingsPage/>", () => {
       {
         components: {
           Input: () => <input type="checkbox" data-testid="save-to-file"/>,
-          Hint: () => <div>save to file</div>
+          Hint: () => <div>save to file</div>,
         },
         extensionId: "@k8slens/crd-example",
         title: "Filesystem",
@@ -102,11 +102,11 @@ describe("<ExtensionSettingsPage/>", () => {
       {
         components: {
           Input: () => <input data-testid="sample-entity-name"/>,
-          Hint: () => <div>sample hint</div>
+          Hint: () => <div>sample hint</div>,
         },
         extensionId: "@k8slens/sample",
         title: "Sample preferences",
-      }
+      },
     ], new LensExtension(sampleExtension));
   });
 

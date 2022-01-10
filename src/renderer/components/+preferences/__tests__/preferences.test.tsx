@@ -42,7 +42,7 @@ const extension = {
   isBundled: false,
   isEnabled: true,
   isCompatible: true,
-}
+};
 
 const crdExtension = {
   id: "/absolute/path/crd",
@@ -55,7 +55,7 @@ const crdExtension = {
   isBundled: false,
   isEnabled: true,
   isCompatible: true,
-}
+};
 
 const sampleExtension = {
   id: "/absolute/path/sample",
@@ -68,7 +68,7 @@ const sampleExtension = {
   isBundled: false,
   isEnabled: true,
   isCompatible: true,
-}
+};
 
 describe("Preferences", () => {
   let di: ConfigurableDependencyInjectionContainer;
@@ -83,33 +83,33 @@ describe("Preferences", () => {
       {
         components: {
           Input: () => <div>input</div>,
-          Hint: () => <div>hint</div>
+          Hint: () => <div>hint</div>,
         },
         extensionId: "@k8slens/test",
         id: "example-preferences",
         title: "Example Preferences",
-      }
+      },
     ], new LensExtension(extension));
     AppPreferenceRegistry.getInstance().add([
       {
         components: {
           Input: () => <div>crd input</div>,
-          Hint: () => <div>crd hint</div>
+          Hint: () => <div>crd hint</div>,
         },
         extensionId: "@k8slens/crd-example",
         title: "Example Preferences",
-      }
+      },
     ], new LensExtension(crdExtension));
     AppPreferenceRegistry.getInstance().add([
       {
         components: {
           Input: () => <div>sample input</div>,
-          Hint: () => <div>sample hint</div>
+          Hint: () => <div>sample hint</div>,
         },
         extensionId: "@k8slens/crd-example",
         title: "Extension with duplicated name",
-      }
-    ], new LensExtension(crdExtension))
+      },
+    ], new LensExtension(crdExtension));
   });
 
   afterEach(() => {
@@ -137,7 +137,7 @@ describe("Preferences", () => {
       const { getByTestId } = render(<MemoryRouter><Preferences /></MemoryRouter>);
 
       expect(getByTestId("custom-settings")).toBeInTheDocument();
-    })
+    });
 
     it("renders tabs for each extension having custom settings", () => {
       di.override(userExtensionsInjectable, () => {
@@ -159,6 +159,6 @@ describe("Preferences", () => {
       const { getAllByText } = render(<MemoryRouter><Preferences /></MemoryRouter>);
 
       expect(getAllByText("@k8slens/crd-example").length).toBe(1);
-    })
+    });
   });
 });
