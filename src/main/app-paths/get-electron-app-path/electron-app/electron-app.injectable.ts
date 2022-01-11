@@ -24,7 +24,7 @@ import { app } from "electron";
 const electronAppInjectable = getInjectable({
   instantiate: () => app,
   lifecycle: lifecycleEnum.singleton,
-  causesSideEffects: false,
+  causesSideEffects: true,
 });
 
 export default electronAppInjectable;
