@@ -71,7 +71,7 @@ class NonInjectedNamespaceSelectFilter extends React.Component<SelectProps & Dep
     ]);
   }
 
-  formatOptionLabel({ value: namespace, label }: SelectOption) {
+  formatOptionLabel = ({ value: namespace, label }: SelectOption) => {
     if (namespace) {
       const isSelected = this.props.namespaceStore.hasContext(namespace);
 
@@ -85,7 +85,7 @@ class NonInjectedNamespaceSelectFilter extends React.Component<SelectProps & Dep
     }
 
     return label;
-  }
+  };
 
   @action
   onChange = ([{ value: namespace }]: SelectOption[]) => {
