@@ -18,17 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { noop } from "lodash/fp";
 import { action, computed, observable, makeObservable } from "mobx";
 import type { ForwardedPort } from "../port-forward-item";
 
 interface PortForwardDialogOpenOptions {
   openInBrowser: boolean
+  onClose: () => void
 }
 
 export class PortForwardDialogModel {
   portForward: ForwardedPort = null;
   useHttps = false;
   openInBrowser = false;
+  onClose = noop;
 
   constructor() {
     makeObservable(this, {
@@ -46,10 +49,11 @@ export class PortForwardDialogModel {
     return !!this.portForward;
   }
 
-  open = (portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false }) => {
+  open = (portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false, onClose: noop }) => {
     this.portForward = portForward;
     this.useHttps = portForward.protocol === "https";
     this.openInBrowser = options.openInBrowser;
+    this.onClose = options.onClose;
   };
 
   close = () => {

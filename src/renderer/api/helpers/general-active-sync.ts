@@ -19,18 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { HotbarStore } from "../../../common/hotbar-store";
+import { when } from "mobx";
+import { catalogCategoryRegistry } from "../../../common/catalog";
+import { catalogEntityRegistry } from "../catalog-entity-registry";
+import { isActiveRoute } from "../../navigation";
+import type { GeneralEntity } from "../../../common/catalog-entities";
 
-function hotbarIndex(id: string) {
-  return HotbarStore.getInstance().hotbarIndex(id) + 1;
-}
+export async function setEntityOnRouteMatch() {
+  await when(() => catalogEntityRegistry.entities.size > 0);
 
-export function hotbarDisplayLabel(id: string) : string {
-  const hotbar = HotbarStore.getInstance().getById(id);
+  const entities: GeneralEntity[] = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
+  const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
 
-  return `${hotbarIndex(id)}: ${hotbar.name}`;
-}
-
-export function hotbarDisplayIndex(id: string) : string {
-  return hotbarIndex(id).toString();
+  if (activeEntity) {
+    catalogEntityRegistry.activeEntity = activeEntity;
+  }
 }

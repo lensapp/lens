@@ -76,7 +76,7 @@ class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
   showDetails = (item: PortForwardItem) => {
     navigation.push(portForwardsURL({
       params: {
-        forwardport: String(item.getForwardPort()),
+        forwardport: item.getId(),
       },
     }));
   };

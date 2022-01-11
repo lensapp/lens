@@ -18,13 +18,27 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import portForwardStoreInjectable from "../port-forward-store.injectable";
 
-const removePortForwardInjectable = getInjectable({
-  instantiate: (di) => di.inject(portForwardStoreInjectable).remove,
+import { createContainer } from "@ogre-tools/injectable";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
-  lifecycle: lifecycleEnum.singleton,
-});
+export const getDi = () => {
+  const di = createContainer(
+    getRequireContextForRendererCode,
+    getRequireContextForCommonExtensionCode,
+    getRequireContextForCommonCode,
+  );
 
-export default removePortForwardInjectable;
+  setLegacyGlobalDiForExtensionApi(di);
+
+  return di;
+};
+
+const getRequireContextForRendererCode = () =>
+  require.context("./", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonCode = () =>
+  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonExtensionCode = () =>
+  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);

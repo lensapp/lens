@@ -34,6 +34,7 @@ $service-status-color-list: (
 
 $port-forward-status-color-list: (
   active: var(--colorOk),
+  disabled: var(--colorSoftError)
 );
 
 @mixin port-forward-status-colors {

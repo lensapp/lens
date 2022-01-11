@@ -23,7 +23,7 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";

@@ -18,8 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
-
 const logger = {
   silly: jest.fn(),
   debug: jest.fn(),
@@ -47,6 +45,7 @@ jest.mock("winston", () => ({
   },
 }));
 
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import mockFs from "mock-fs";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -69,7 +68,7 @@ describe("kubeconfig manager tests", () => {
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
-    const mockOpts = {
+    mockFs({
       "minikube-config.yml": JSON.stringify({
         apiVersion: "v1",
         clusters: [{
@@ -91,9 +90,7 @@ describe("kubeconfig manager tests", () => {
         kind: "Config",
         preferences: {},
       }),
-    };
-
-    mockFs(mockOpts);
+    });
 
     await di.runSetups();
 
@@ -110,7 +107,7 @@ describe("kubeconfig manager tests", () => {
     cluster.contextHandler = {
       ensureServer: () => Promise.resolve(),
     } as any;
-    
+
     jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
@@ -135,7 +132,7 @@ describe("kubeconfig manager tests", () => {
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
     const kubeConfManager = createKubeconfigManager(cluster);
-    
+
     const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);

@@ -29,7 +29,7 @@ import { CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, Cat
 import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
 import catalogEntityRegistryInjectable

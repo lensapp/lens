@@ -22,7 +22,7 @@
 import type { LensApiRequest } from "../router";
 import logger from "../logger";
 import { respondJson } from "../utils/http-responses";
-import { PortForward, PortForwardArgs } from "./port-forward/port-forward";
+import { PortForward } from "./port-forward/port-forward";
 
 export class PortForwardRoute {
   static async routeCurrentPortForward(request: LensApiRequest) {
@@ -38,31 +38,6 @@ export class PortForwardRoute {
     });
 
     respondJson(response, { port: portForward?.forwardPort ?? null });
-  }
-
-  static async routeAllPortForwards(request: LensApiRequest) {
-    const { query, response } = request;
-    const clusterId = query.get("clusterId");
-
-    let portForwards: PortForwardArgs[] = PortForward.portForwards.map(f => (
-      {
-        clusterId: f.clusterId,
-        kind: f.kind,
-        namespace: f.namespace,
-        name: f.name,
-        port: f.port,
-        forwardPort: f.forwardPort,
-        protocol: f.protocol,
-      }),
-    );
-
-    if (clusterId) {
-      // filter out any not for this cluster
-      portForwards = portForwards.filter(pf => pf.clusterId == clusterId);
-      
-    }
-
-    respondJson(response, { portForwards });
   }
 
   static async routeCurrentPortForwardStop(request: LensApiRequest) {

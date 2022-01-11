@@ -239,7 +239,7 @@ describe("HotbarStore", () => {
       const hotbarStore = HotbarStore.getInstance();
 
       hotbarStore.add({ name: "hottest", id: "hottest" });
-      hotbarStore.activeHotbarId = "hottest";
+      hotbarStore.setActiveHotbar("hottest");
 
       const { error } = logger;
       const mocked = jest.fn();

@@ -21,21 +21,19 @@
 
 import React from "react";
 import mockFs from "mock-fs";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
 import { StatusBarRegistry } from "../../../extensions/registries";
-import { HotbarStore } from "../../../common/hotbar-store";
-import { CommandOverlay } from "../command-palette";
+import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
 import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 import { ActiveHotbarName } from "./active-hotbar-name";
-import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { DiRender, renderFor } from "../test-utils/renderFor";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+import { getEmptyHotbar } from "../../../common/hotbar-types";
 
-jest.mock("../command-palette", () => ({
-  CommandOverlay: {
-    open: jest.fn(),
-  },
-}));
 
 jest.mock("electron", () => ({
   app: {
@@ -53,26 +51,36 @@ jest.mock("electron", () => ({
   },
 }));
 
+const foobarHotbar = getEmptyHotbar("foobar");
+
 describe("<BottomBar />", () => {
+  let di: DependencyInjectionContainer;
+  let render: DiRender;
+
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
-
-    await dis.runSetups();
-
     const mockOpts = {
       "tmp": {
         "test-store.json": JSON.stringify({}),
       },
     };
 
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
     mockFs(mockOpts);
+
+    render = renderFor(di);
+
+    di.override(hotbarManagerInjectable, () => ({
+      getActive: () => foobarHotbar,
+    } as any));
+
+    await di.runSetups();
+
     StatusBarRegistry.createInstance();
-    HotbarStore.createInstance();
   });
 
   afterEach(() => {
     StatusBarRegistry.resetInstance();
-    HotbarStore.resetInstance();
     mockFs.restore();
   });
 
@@ -82,24 +90,20 @@ describe("<BottomBar />", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("renders w/o errors when .getItems() returns unexpected (not type compliant) data", async () => {
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => undefined);
-    expect(() => render(<BottomBar />)).not.toThrow();
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => "hello");
-    expect(() => render(<BottomBar />)).not.toThrow();
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => 6);
-    expect(() => render(<BottomBar />)).not.toThrow();
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => null);
-    expect(() => render(<BottomBar />)).not.toThrow();
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => []);
-    expect(() => render(<BottomBar />)).not.toThrow();
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [{}]);
-    expect(() => render(<BottomBar />)).not.toThrow();
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => { return {};});
+  it.each([
+    undefined,
+    "hello",
+    6,
+    null,
+    [],
+    [{}],
+    {},
+  ])("renders w/o errors when .getItems() returns not type compliant (%p)", val => {
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => val);
     expect(() => render(<BottomBar />)).not.toThrow();
   });
 
-  it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", async () => {
+  it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", () => {
     const testId = "testId";
     const text = "heee";
 
@@ -108,10 +112,10 @@ describe("<BottomBar />", () => {
     ]);
     const { getByTestId } = render(<BottomBar />);
 
-    expect(await getByTestId(testId)).toHaveTextContent(text);
+    expect(getByTestId(testId)).toHaveTextContent(text);
   });
 
-  it("renders items [{item: () => React.ReactNode}] (4.0.0-rc.1+)", async () => {
+  it("renders items [{item: () => React.ReactNode}] (4.0.0-rc.1+)", () => {
     const testId = "testId";
     const text = "heee";
 
@@ -120,33 +124,25 @@ describe("<BottomBar />", () => {
     ]);
     const { getByTestId } = render(<BottomBar />);
 
-    expect(await getByTestId(testId)).toHaveTextContent(text);
+    expect(getByTestId(testId)).toHaveTextContent(text);
   });
 
-  it("show default hotbar name", () => {
+  it("shows active hotbar name", () => {
     StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       { item: () => <ActiveHotbarName/> },
     ]);
     const { getByTestId } = render(<BottomBar />);
 
-    expect(getByTestId("current-hotbar-name")).toHaveTextContent("default");
-  });
-
-  it("show active hotbar name", () => {
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      { item: () => <ActiveHotbarName/> },
-    ]);
-    const { getByTestId } = render(<BottomBar />);
-
-    HotbarStore.getInstance().add({
-      id: "new",
-      name: "new",
-    }, { setActive: true });
-
-    expect(getByTestId("current-hotbar-name")).toHaveTextContent("new");
+    expect(getByTestId("current-hotbar-name")).toHaveTextContent("foobar");
   });
 
   it("opens command palette on click", () => {
+    const mockOpen = jest.fn();
+
+    di.override(commandOverlayInjectable, () => ({
+      open: mockOpen,
+    }) as any);
+
     StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       { item: () => <ActiveHotbarName/> },
     ]);
@@ -155,7 +151,8 @@ describe("<BottomBar />", () => {
 
     fireEvent.click(activeHotbar);
 
-    expect(CommandOverlay.open).toHaveBeenCalledWith(<HotbarSwitchCommand />);
+
+    expect(mockOpen).toHaveBeenCalledWith(<HotbarSwitchCommand />);
   });
 
   it("sort positioned items properly", () => {

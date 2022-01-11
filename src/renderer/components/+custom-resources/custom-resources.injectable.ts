@@ -19,26 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import { crdStore } from "./crd.store";
 
-export const getDi = () => {
-  const di = createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-    getRequireContextForCommonCode,
-  );
+const customResourceDefinitionsInjectable = getInjectable({
+  instantiate: () => computed(() => [...crdStore.items]),
 
-  setLegacyGlobalDiForExtensionApi(di);
+  lifecycle: lifecycleEnum.singleton,
+});
 
-  return di;
-};
-
-const getRequireContextForRendererCode = () =>
-  require.context("../", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonCode = () =>
-  require.context("../../common", true, /\.injectable\.(ts|tsx)$/);
+export default customResourceDefinitionsInjectable;

@@ -33,12 +33,16 @@ export interface HotbarItem {
   }
 }
 
-export type Hotbar = Required<HotbarCreateOptions>;
+export type Hotbar = Required<CreateHotbarData>;
 
-export interface HotbarCreateOptions {
+export interface CreateHotbarData {
   id?: string;
   name: string;
   items?: Tuple<HotbarItem | null, typeof defaultHotbarCells>;
+}
+
+export interface CreateHotbarOptions {
+  setActive?: boolean;
 }
 
 export const defaultHotbarCells = 12; // Number is chosen to easy hit any item with keyboard

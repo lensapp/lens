@@ -30,13 +30,12 @@ import { ConfirmDialog } from "../../confirm-dialog";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import directoryForDownloadsInjectable
-  from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
+import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 
 mockWindow();
 

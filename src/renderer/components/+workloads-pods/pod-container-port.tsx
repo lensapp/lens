@@ -24,20 +24,24 @@ import "./pod-container-port.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { observable, makeObservable, reaction } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
-import { aboutPortForwarding, getPortForward, getPortForwards, openPortForward, PortForwardStore, predictProtocol } from "../../port-forward";
 import type { ForwardedPort } from "../../port-forward";
+import {
+  aboutPortForwarding,
+  notifyErrorPortForwarding,
+  openPortForward,
+  PortForwardStore,
+  predictProtocol,
+} from "../../port-forward";
+
 import { Spinner } from "../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
-import removePortForwardInjectable from "../../port-forward/port-forward-store/remove-port-forward/remove-port-forward.injectable";
-import portForwardDialogModelInjectable
-  from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
-import addPortForwardInjectable
-  from "../../port-forward/port-forward-store/add-port-forward/add-port-forward.injectable";
+import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
+import logger from "../../../common/logger";
 
 interface Props {
   pod: Pod;
@@ -45,14 +49,12 @@ interface Props {
     name?: string;
     containerPort: number;
     protocol: string;
-  }
+  };
 }
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  removePortForward: (item: ForwardedPort) => Promise<void>;
-  addPortForward: (item: ForwardedPort) => Promise<number>;
-  openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean }) => void;
+  openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean, onClose: () => void }) => void;
 }
 
 @observer
@@ -60,6 +62,7 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
   @observable waiting = false;
   @observable forwardPort = 0;
   @observable isPortForwarded = false;
+  @observable isActive = false;
 
   constructor(props: Props & Dependencies) {
     super(props);
@@ -69,13 +72,18 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => [this.props.portForwardStore.portForwards, this.props.pod], () => this.checkExistingPortForwarding()),
+      reaction(() => this.props.pod, () => this.checkExistingPortForwarding()),
     ]);
   }
 
+  get portForwardStore() {
+    return this.props.portForwardStore;
+  }
+
+  @action
   async checkExistingPortForwarding() {
     const { pod, port } = this.props;
-    const portForward: ForwardedPort = {
+    let portForward: ForwardedPort = {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
@@ -83,57 +91,64 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
       forwardPort: this.forwardPort,
     };
 
-    let activePort: number;
-
     try {
-      activePort = await getPortForward(portForward) ?? 0;
+      portForward = await this.portForwardStore.getPortForward(portForward);
     } catch (error) {
       this.isPortForwarded = false;
+      this.isActive = false;
 
       return;
     }
 
-    this.forwardPort = activePort;
-    this.isPortForwarded = activePort ? true : false;
+    this.forwardPort = portForward.forwardPort;
+    this.isPortForwarded = true;
+    this.isActive = portForward.status === "Active";
   }
 
+  @action
   async portForward() {
     const { pod, port } = this.props;
-    const portForward: ForwardedPort = {
+    let portForward: ForwardedPort = {
       kind: "pod",
       name: pod.getName(),
       namespace: pod.getNs(),
       port: port.containerPort,
       forwardPort: this.forwardPort,
       protocol: predictProtocol(port.name),
+      status: "Active",
     };
 
     this.waiting = true;
 
     try {
-      // determine how many port-forwards are already active
-      const { length } = await getPortForwards();
+      // determine how many port-forwards already exist
+      const { length } = this.portForwardStore.getPortForwards();
 
-      this.forwardPort = await this.props.addPortForward(portForward);
+      if (!this.isPortForwarded) {
+        portForward = await this.portForwardStore.add(portForward);
+      } else if (!this.isActive) {
+        portForward = await this.portForwardStore.start(portForward);
+      }
 
-      if (this.forwardPort) {
-        portForward.forwardPort = this.forwardPort;
+      if (portForward.status === "Active") {
         openPortForward(portForward);
-        this.isPortForwarded = true;
 
         // if this is the first port-forward show the about notification
         if (!length) {
           aboutPortForwarding();
         }
+      } else {
+        notifyErrorPortForwarding(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       }
     } catch (error) {
-      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
-      this.checkExistingPortForwarding();
+      logger.error("[POD-CONTAINER-PORT]:", error, portForward);
     } finally {
+      this.checkExistingPortForwarding();
       this.waiting = false;
     }
   }
 
+  @action
   async stopPortForward() {
     const { pod, port } = this.props;
     const portForward: ForwardedPort = {
@@ -147,12 +162,12 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
     this.waiting = true;
 
     try {
-      await this.props.removePortForward(portForward);
-      this.isPortForwarded = false;
+      await this.portForwardStore.remove(portForward);
     } catch (error) {
       Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
-      this.checkExistingPortForwarding();
     } finally {
+      this.checkExistingPortForwarding();
+      this.forwardPort = 0;
       this.waiting = false;
     }
   }
@@ -162,7 +177,7 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
     const { name, containerPort, protocol } = port;
     const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol}`;
 
-    const portForwardAction = async () => {
+    const portForwardAction = action(async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
       } else {
@@ -175,16 +190,16 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
           protocol: predictProtocol(port.name),
         };
 
-        this.props.openPortForwardDialog(portForward, { openInBrowser: true });
+        this.props.openPortForwardDialog(portForward, { openInBrowser: true, onClose: () => this.checkExistingPortForwarding() });
       }
-    };
+    });
 
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
         </span>
-        <Button primary onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop" : "Forward..."} </Button>
+        <Button primary onClick={portForwardAction}> {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."} </Button>
         {this.waiting && (
           <Spinner />
         )}
@@ -199,8 +214,6 @@ export const PodContainerPort = withInjectables<Dependencies, Props>(
   {
     getProps: (di, props) => ({
       portForwardStore: di.inject(portForwardStoreInjectable),
-      removePortForward: di.inject(removePortForwardInjectable),
-      addPortForward: di.inject(addPortForwardInjectable),
       openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
       ...props,
     }),

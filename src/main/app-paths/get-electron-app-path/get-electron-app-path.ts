@@ -31,6 +31,6 @@ export const getElectronAppPath =
       try {
         return app.getPath(name);
       } catch (e) {
-        return null;
+        return "";
       }
     };

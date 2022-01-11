@@ -110,6 +110,10 @@ describe("cluster-store", () => {
     createCluster = mainDi.inject(createClusterInjectionToken);
   });
 
+  afterEach(() => {
+    mockFs.restore();
+  });
+
   describe("empty config", () => {
     let getCustomKubeConfigDirectory: (directoryName: string) => string;
 

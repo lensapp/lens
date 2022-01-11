@@ -22,51 +22,44 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import { computed, makeObservable } from "mobx";
-import { HotbarStore } from "../../../common/hotbar-store";
-import { hotbarDisplayLabel } from "./hotbar-display-label";
-import { CommandOverlay } from "../command-palette";
+import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
 import { ConfirmDialog } from "../confirm-dialog";
-import { Notifications } from "../notifications";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+import type { Hotbar } from "../../../common/hotbar-types";
 
-@observer
-export class HotbarRemoveCommand extends React.Component {
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
-  }
+interface Dependencies {
+  closeCommandOverlay: () => void;
+  hotbarManager: {
+    hotbars: Hotbar[];
+    getById: (id: string) => Hotbar | undefined;
+    remove: (hotbar: Hotbar) => void;
+    getDisplayLabel: (hotbar: Hotbar) => string;
+  };
+}
 
-  @computed get options() {
-    return HotbarStore.getInstance().hotbars.map((hotbar) => {
-      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id) };
-    });
-  }
+const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarManager }: Dependencies) => {
+  const options = hotbarManager.hotbars.map(hotbar => ({
+    value: hotbar.id,
+    label: hotbarManager.getDisplayLabel(hotbar),
+  }));
 
-  onChange(id: string): void {
-    const hotbarStore = HotbarStore.getInstance();
-    const hotbar = hotbarStore.getById(id);
-
-    CommandOverlay.close();
+  const onChange = (id: string): void => {
+    const hotbar = hotbarManager.getById(id);
 
     if (!hotbar) {
       return;
     }
 
-    if (hotbarStore.hotbars.length === 1) {
-      Notifications.error("Can't remove the last hotbar");
-
-      return;
-    }
-
+    closeCommandOverlay();
+    // TODO: make confirm dialog injectable
     ConfirmDialog.open({
       okButtonProps: {
-        label: `Remove Hotbar`,
+        label: "Remove Hotbar",
         primary: false,
         accent: true,
       },
-      ok: () => {
-        hotbarStore.remove(hotbar);
-      },
+      ok: () => hotbarManager.remove(hotbar),
       message: (
         <div className="confirm flex column gaps">
           <p>
@@ -75,19 +68,26 @@ export class HotbarRemoveCommand extends React.Component {
         </div>
       ),
     });
-  }
+  };
 
-  render() {
-    return (
-      <Select
-        menuPortalTarget={null}
-        onChange={(v) => this.onChange(v.value)}
-        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-        menuIsOpen={true}
-        options={this.options}
-        autoFocus={true}
-        escapeClearsValue={false}
-        placeholder="Remove hotbar" />
-    );
-  }
-}
+  return (
+    <Select
+      menuPortalTarget={null}
+      onChange={(v) => onChange(v.value)}
+      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+      menuIsOpen={true}
+      options={options}
+      autoFocus={true}
+      escapeClearsValue={false}
+      placeholder="Remove hotbar"
+    />
+  );
+});
+
+export const HotbarRemoveCommand = withInjectables<Dependencies>(NonInjectedHotbarRemoveCommand, {
+  getProps: (di, props) => ({
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    hotbarManager: di.inject(hotbarManagerInjectable),
+    ...props,
+  }),
+});

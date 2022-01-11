@@ -28,7 +28,7 @@ import { DockStore, DockTab, TabKind } from "../dock-store/dock.store";
 import { noop } from "../../../utils";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import dockStoreInjectable from "../dock-store/dock-store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";

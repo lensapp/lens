@@ -41,24 +41,17 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
-import { getDi } from "./components/getDi";
+import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
-
-
-import extensionDiscoveryInjectable
-  from "../extensions/extension-discovery/extension-discovery.injectable";
-import extensionInstallationStateStoreInjectable
-  from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
+import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
-
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
-import initClusterFrameInjectable
-  from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
-import createTerminalTabInjectable
-  from "./components/dock/create-terminal-tab/create-terminal-tab.injectable";
+import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
+import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -80,7 +73,7 @@ async function attachChromeDebugger() {
 
 export async function bootstrap(di: DependencyInjectionContainer) {
   await di.runSetups();
-  
+
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
@@ -92,11 +85,6 @@ export async function bootstrap(di: DependencyInjectionContainer) {
 
   logger.info(`${logPrefix} initializing Registries`);
   initializers.initRegistries();
-
-  const createTerminalTab = di.inject(createTerminalTabInjectable);
-
-  logger.info(`${logPrefix} initializing CommandRegistry`);
-  initializers.initCommandRegistry(createTerminalTab);
 
   logger.info(`${logPrefix} initializing EntitySettingsRegistry`);
   initializers.initEntitySettingsRegistry();
@@ -117,7 +105,9 @@ export async function bootstrap(di: DependencyInjectionContainer) {
   initializers.initCatalogCategoryRegistryEntries();
 
   logger.info(`${logPrefix} initializing Catalog`);
-  initializers.initCatalog();
+  initializers.initCatalog({
+    openCommandDialog: di.inject(commandOverlayInjectable).open,
+  });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
 

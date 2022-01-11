@@ -24,7 +24,7 @@ import React from "react";
 import { clusterRolesStore } from "../../+cluster-roles/store";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import { RoleBindingDialog } from "../dialog";
-import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
 import directoryForUserDataInjectable

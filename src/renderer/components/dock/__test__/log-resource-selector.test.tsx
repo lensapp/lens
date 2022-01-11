@@ -29,7 +29,7 @@ import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";

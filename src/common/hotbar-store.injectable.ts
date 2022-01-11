@@ -19,12 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import portForwardStoreInjectable from "../port-forward-store.injectable";
+import { HotbarStore } from "./hotbar-store";
 
-const addPortForwardInjectable = getInjectable({
-  instantiate: (di) => di.inject(portForwardStoreInjectable).add,
-
+const hotbarManagerInjectable = getInjectable({
+  instantiate: () => HotbarStore.getInstance(),
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default addPortForwardInjectable;
+export default hotbarManagerInjectable;

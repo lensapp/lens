@@ -27,25 +27,21 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../components/dialog";
 import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
-import { Notifications } from "../components/notifications";
 import { cssNames } from "../utils";
-import { getPortForwards } from "./port-forward-store/port-forward-store";
-import type { ForwardedPort } from "./port-forward-item";
+import type { PortForwardStore } from "./port-forward-store/port-forward-store";
 import { openPortForward } from "./port-forward-utils";
-import { aboutPortForwarding } from "./port-forward-notify";
+import { aboutPortForwarding, notifyErrorPortForwarding } from "./port-forward-notify";
 import { Checkbox } from "../components/checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import modifyPortForwardInjectable from "./port-forward-store/modify-port-forward/modify-port-forward.injectable";
 import type { PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
 import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-forward-dialog-model.injectable";
-import addPortForwardInjectable from "./port-forward-store/add-port-forward/add-port-forward.injectable";
+import logger from "../../common/logger";
+import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
 
-interface Props extends Partial<DialogProps> {
-}
+interface Props extends Partial<DialogProps> {}
 
 interface Dependencies {
-  modifyPortForward: (item: ForwardedPort, desiredPort: number) => Promise<number>,
-  addPortForward: (item: ForwardedPort) => Promise<number>,
+  portForwardStore: PortForwardStore,
   model: PortForwardDialogModel
 }
 
@@ -59,12 +55,13 @@ class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
     makeObservable(this);
   }
 
+  get portForwardStore() {
+    return this.props.portForwardStore;
+  }
+
   onOpen = async () => {
     this.currentPort = +this.props.model.portForward.forwardPort;
     this.desiredPort = this.currentPort;
-  };
-
-  onClose = () => {
   };
 
   changePort = (value: string) => {
@@ -72,37 +69,44 @@ class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
   };
 
   startPortForward = async () => {
-    const portForward = this.props.model.portForward;
+    let { portForward } = this.props.model;
     const { currentPort, desiredPort } = this;
 
     try {
-      // determine how many port-forwards are already active
-      const { length } = await getPortForwards();
-
-      let port: number;
+      // determine how many port-forwards already exist
+      const { length } = this.portForwardStore.getPortForwards();
 
       portForward.protocol = this.props.model.useHttps ? "https" : "http";
 
       if (currentPort) {
-        port = await this.props.modifyPortForward(portForward, desiredPort);
+        const wasRunning = portForward.status === "Active";
+
+        portForward = await this.portForwardStore.modify(portForward, desiredPort);
+
+        if (wasRunning && portForward.status === "Disabled") {
+          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        }
       } else {
         portForward.forwardPort = desiredPort;
-        port = await this.props.addPortForward(portForward);
+        portForward = await this.portForwardStore.add(portForward);
 
-        // if this is the first port-forward show the about notification
-        if (!length) {
-          aboutPortForwarding();
+        if (portForward.status === "Disabled") {
+          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        } else {
+          // if this is the first port-forward show the about notification
+          if (!length) {
+            aboutPortForwarding();
+          }
         }
       }
 
-      if (this.props.model.openInBrowser) {
-        portForward.forwardPort = port;
+      if (portForward.status === "Active" && this.props.model.openInBrowser) {
         openPortForward(portForward);
       }
-    } catch (err) {
-      Notifications.error(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+    } catch (error) {
+      logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
     } finally {
-      close();
+      this.props.model.close();
     }
   };
 
@@ -141,7 +145,7 @@ class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
   }
 
   render() {
-    const { className, modifyPortForward, model, ...dialogProps } = this.props;
+    const { className, portForwardStore, model, ...dialogProps } = this.props;
     const resourceName = this.props.model.portForward?.name ?? "";
     const header = (
       <h5>
@@ -155,14 +159,14 @@ class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
         isOpen={this.props.model.isOpen}
         className={cssNames("PortForwardDialog", className)}
         onOpen={this.onOpen}
-        onClose={this.onClose}
+        onClose={model.onClose}
         close={this.props.model.close}
       >
         <Wizard header={header} done={this.props.model.close}>
           <WizardStep
             contentClass="flex gaps column"
             next={this.startPortForward}
-            nextLabel={this.currentPort === 0 ? "Start" : "Restart"}
+            nextLabel={this.currentPort === 0 ? "Start" : "Modify"}
           >
             {this.renderContents()}
           </WizardStep>
@@ -177,8 +181,7 @@ export const PortForwardDialog = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      modifyPortForward: di.inject(modifyPortForwardInjectable),
-      addPortForward: di.inject(addPortForwardInjectable),
+      portForwardStore: di.inject(portForwardStoreInjectable),
       model: di.inject(portForwardDialogModelInjectable),
       ...props,
     }),

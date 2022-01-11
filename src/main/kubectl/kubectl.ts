@@ -26,11 +26,13 @@ import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "../helm/helm-cli";
-import { customRequest } from "../../common/request";
 import { getBundledKubectlVersion } from "../../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../../common/vars";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
+import got from "got/dist/source";
+import { promisify } from "util";
+import stream from "stream";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -51,7 +53,7 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.21", bundledVersion],
 ]);
 let bundledPath: string;
-const initScriptVersionString = "# lens-initscript v3\n";
+const initScriptVersionString = "# lens-initscript v3";
 
 export function bundledKubectlPath(): string {
   if (bundledPath) { return bundledPath; }
@@ -308,99 +310,87 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    return new Promise<void>((resolve, reject) => {
-      const stream = customRequest({
-        url: this.url,
-        gzip: true,
-      });
-      const file = fs.createWriteStream(this.path);
+    const downloadStream = got.stream({ url: this.url, decompress: true });
+    const fileWriteStream = fs.createWriteStream(this.path, { mode: 0o755 });
+    const pipeline = promisify(stream.pipeline);
 
-      stream.on("complete", () => {
-        logger.debug("kubectl binary download finished");
-        file.end();
-      });
-      stream.on("error", (error) => {
-        logger.error(error);
-        fs.unlink(this.path, () => {
-          // do nothing
-        });
-        reject(error);
-      });
-      file.on("close", () => {
-        logger.debug("kubectl binary download closed");
-        fs.chmod(this.path, 0o755, (err) => {
-          if (err) reject(err);
-        });
-        resolve();
-      });
-      stream.pipe(file);
-    });
+    await pipeline(downloadStream, fileWriteStream);
+    logger.debug("kubectl binary download finished");
   }
 
   protected async writeInitScripts() {
-    const kubectlPath = this.dependencies.userStore.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
+    const kubectlPath = this.dependencies.userStore.downloadKubectlBinaries
+      ? this.dirname
+      : path.dirname(this.getPathFromPreferences());
+
     const helmPath = helmCli.getBinaryDir();
-    const fsPromises = fs.promises;
+
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
-    let bashScript = `${initScriptVersionString}`;
-
-    bashScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
-    bashScript += "test -f \"/etc/profile\" && . \"/etc/profile\"\n";
-    bashScript += "if test -f \"$HOME/.bash_profile\"; then\n";
-    bashScript += "  . \"$HOME/.bash_profile\"\n";
-    bashScript += "elif test -f \"$HOME/.bash_login\"; then\n";
-    bashScript += "  . \"$HOME/.bash_login\"\n";
-    bashScript += "elif test -f \"$HOME/.profile\"; then\n";
-    bashScript += "  . \"$HOME/.profile\"\n";
-    bashScript += "fi\n";
-    bashScript += `export PATH="${helmPath}:${kubectlPath}:$PATH"\n`;
-    bashScript += "export KUBECONFIG=\"$tempkubeconfig\"\n";
-
-    bashScript += `NO_PROXY=",\${NO_PROXY:-localhost},"\n`;
-    bashScript += `NO_PROXY="\${NO_PROXY//,localhost,/,}"\n`;
-    bashScript += `NO_PROXY="\${NO_PROXY//,127.0.0.1,/,}"\n`;
-    bashScript += `NO_PROXY="localhost,127.0.0.1\${NO_PROXY%,}"\n`;
-    bashScript += "export NO_PROXY\n";
-    bashScript += "unset tempkubeconfig\n";
-    await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 });
+    const bashScript = [
+      initScriptVersionString,
+      "tempkubeconfig=\"$KUBECONFIG\"",
+      "test -f \"/etc/profile\" && . \"/etc/profile\"",
+      "if test -f \"$HOME/.bash_profile\"; then",
+      "  . \"$HOME/.bash_profile\"",
+      "elif test -f \"$HOME/.bash_login\"; then",
+      "  . \"$HOME/.bash_login\"",
+      "elif test -f \"$HOME/.profile\"; then",
+      "  . \"$HOME/.profile\"",
+      "fi",
+      `export PATH="${helmPath}:${kubectlPath}:$PATH"`,
+      'export KUBECONFIG="$tempkubeconfig"',
+      `NO_PROXY=",\${NO_PROXY:-localhost},"`,
+      `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
+      `NO_PROXY="\${NO_PROXY//,127.0.0.1,/,}"`,
+      `NO_PROXY="localhost,127.0.0.1\${NO_PROXY%,}"`,
+      "export NO_PROXY",
+      "unset tempkubeconfig",
+    ].join("\n");
 
     const zshScriptPath = path.join(this.dirname, ".zlogin");
-    let zshScript = `${initScriptVersionString}`;
+    const zshScript = [
+      initScriptVersionString,
+      "tempkubeconfig=\"$KUBECONFIG\"",
 
-    zshScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
-    // restore previous ZDOTDIR
-    zshScript += "export ZDOTDIR=\"$OLD_ZDOTDIR\"\n";
-    // source all the files
-    zshScript += "test -f \"$OLD_ZDOTDIR/.zshenv\" && . \"$OLD_ZDOTDIR/.zshenv\"\n";
-    zshScript += "test -f \"$OLD_ZDOTDIR/.zprofile\" && . \"$OLD_ZDOTDIR/.zprofile\"\n";
-    zshScript += "test -f \"$OLD_ZDOTDIR/.zlogin\" && . \"$OLD_ZDOTDIR/.zlogin\"\n";
-    zshScript += "test -f \"$OLD_ZDOTDIR/.zshrc\" && . \"$OLD_ZDOTDIR/.zshrc\"\n";
+      // restore previous ZDOTDIR
+      "export ZDOTDIR=\"$OLD_ZDOTDIR\"",
 
-    // voodoo to replace any previous occurrences of kubectl path in the PATH
-    zshScript += `kubectlpath="${kubectlPath}"\n`;
-    zshScript += `helmpath="${helmPath}"\n`;
-    zshScript += "p=\":$kubectlpath:\"\n";
-    zshScript += "d=\":$PATH:\"\n";
-    zshScript += `d=\${d//$p/:}\n`;
-    zshScript += `d=\${d/#:/}\n`;
-    zshScript += `export PATH="$helmpath:$kubectlpath:\${d/%:/}"\n`;
-    zshScript += "export KUBECONFIG=\"$tempkubeconfig\"\n";
-    zshScript += `NO_PROXY=",\${NO_PROXY:-localhost},"\n`;
-    zshScript += `NO_PROXY="\${NO_PROXY//,localhost,/,}"\n`;
-    zshScript += `NO_PROXY="\${NO_PROXY//,127.0.0.1,/,}"\n`;
-    zshScript += `NO_PROXY="localhost,127.0.0.1\${NO_PROXY%,}"\n`;
-    zshScript += "export NO_PROXY\n";
-    zshScript += "unset tempkubeconfig\n";
-    zshScript += "unset OLD_ZDOTDIR\n";
-    await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 });
+      // source all the files
+      "test -f \"$OLD_ZDOTDIR/.zshenv\" && . \"$OLD_ZDOTDIR/.zshenv\"",
+      "test -f \"$OLD_ZDOTDIR/.zprofile\" && . \"$OLD_ZDOTDIR/.zprofile\"",
+      "test -f \"$OLD_ZDOTDIR/.zlogin\" && . \"$OLD_ZDOTDIR/.zlogin\"",
+      "test -f \"$OLD_ZDOTDIR/.zshrc\" && . \"$OLD_ZDOTDIR/.zshrc\"",
+
+      // voodoo to replace any previous occurrences of kubectl path in the PATH
+      `kubectlpath="${kubectlPath}"`,
+      `helmpath="${helmPath}"`,
+      "p=\":$kubectlpath:\"",
+      "d=\":$PATH:\"",
+      `d=\${d//$p/:}`,
+      `d=\${d/#:/}`,
+      `export PATH="$helmpath:$kubectlpath:\${d/%:/}"`,
+      "export KUBECONFIG=\"$tempkubeconfig\"",
+      `NO_PROXY=",\${NO_PROXY:-localhost},"`,
+      `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
+      `NO_PROXY="\${NO_PROXY//,127.0.0.1,/,}"`,
+      `NO_PROXY="localhost,127.0.0.1\${NO_PROXY%,}"`,
+      "export NO_PROXY",
+      "unset tempkubeconfig",
+      "unset OLD_ZDOTDIR",
+    ].join("\n");
+
+    await Promise.all([
+      fs.promises.writeFile(bashScriptPath, bashScript, { mode: 0o644 }),
+      fs.promises.writeFile(zshScriptPath, zshScript, { mode: 0o644 }),
+    ]);
   }
 
   protected getDownloadMirror(): string {
     // MacOS packages are only available from default
 
-    const mirror = packageMirrors.get(this.dependencies.userStore.downloadMirror)
+    const { url } = packageMirrors.get(this.dependencies.userStore.downloadMirror)
       ?? packageMirrors.get(defaultPackageMirror);
 
-    return mirror.url;
+    return url;
   }
 }

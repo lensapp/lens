@@ -18,13 +18,38 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import portForwardStoreInjectable from "../port-forward-store.injectable";
+import { observable } from "mobx";
+import React from "react";
 
-const modifyPortForwardInjectable = getInjectable({
-  instantiate: (di) => di.inject(portForwardStoreInjectable).modify,
+export class CommandOverlay {
+  #component = observable.box<React.ReactElement | null>(null, { deep: false });
 
+  get isOpen(): boolean {
+    return Boolean(this.#component.get());
+  }
+
+  open = (component: React.ReactElement) => {
+    if (!React.isValidElement(component)) {
+      throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
+    }
+
+    this.#component.set(component);
+  };
+
+  close = () => {
+    this.#component.set(null);
+  };
+
+  get component(): React.ReactElement | null {
+    return this.#component.get();
+  }
+}
+
+const commandOverlayInjectable = getInjectable({
+  instantiate: () => new CommandOverlay(),
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default modifyPortForwardInjectable;
+export default commandOverlayInjectable;

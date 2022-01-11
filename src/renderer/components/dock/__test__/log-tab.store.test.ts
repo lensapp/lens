@@ -25,7 +25,7 @@ import { Pod } from "../../../../common/k8s-api/endpoints";
 import { ThemeStore } from "../../../theme.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
 import type { LogTabStore } from "../log-tab-store/log-tab.store";
 import dockStoreInjectable from "../dock-store/dock-store.injectable";
