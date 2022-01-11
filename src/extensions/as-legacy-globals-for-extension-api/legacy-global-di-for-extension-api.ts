@@ -18,27 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 
-import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+let legacyGlobalDi: DependencyInjectionContainer;
 
-export function getDi() {
-  const di = createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-    getRequireContextForCommonCode,
-  );
+export const setLegacyGlobalDiForExtensionApi = (di: DependencyInjectionContainer) => {
+  legacyGlobalDi = di;
+};
 
-  setLegacyGlobalDiForExtensionApi(di);
-
-  return di;
-}
-
-const getRequireContextForRendererCode = () =>
-  require.context("./", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonCode = () =>
-  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);
+export const getLegacyGlobalDiForExtensionApi = () => legacyGlobalDi;

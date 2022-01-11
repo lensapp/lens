@@ -18,27 +18,40 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
+import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 
-import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
-export function getDi() {
-  const di = createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-    getRequireContextForCommonCode,
-  );
+export const asLegacyGlobalObjectForExtensionApi = <
+  TInjectable extends Injectable<unknown, unknown, TInstantiationParameter>,
+  TInstantiationParameter,
+>(
+    injectableKey: TInjectable,
+    ...instantiationParameter: TentativeTuple<TInstantiationParameter>
+  ) =>
+  new Proxy(
+    {},
+    {
+      get(target, propertyName) {
+        if (propertyName === "$$typeof") {
+          return undefined;
+        }
 
-  setLegacyGlobalDiForExtensionApi(di);
+        const instance: any = getLegacyGlobalDiForExtensionApi().inject(
+          injectableKey,
+          ...instantiationParameter,
+        );
 
-  return di;
-}
+        const propertyValue = instance[propertyName];
 
-const getRequireContextForRendererCode = () =>
-  require.context("./", true, /\.injectable\.(ts|tsx)$/);
+        if (typeof propertyValue === "function") {
+          return function (...args: any[]) {
+            return propertyValue.apply(instance, args);
+          };
+        }
 
-const getRequireContextForCommonCode = () =>
-  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);
+        return propertyValue;
+      },
+    },
+  ) as ReturnType<TInjectable["instantiate"]>;
