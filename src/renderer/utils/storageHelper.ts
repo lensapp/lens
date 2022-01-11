@@ -130,7 +130,9 @@ export class StorageHelper<T> {
     }
   }
 
-  // @deprecated: Switch to using value for being reactive
+  /**
+   * @deprecated Switch to using value for being reactive
+   */
   get(): T {
     return this.value;
   }
