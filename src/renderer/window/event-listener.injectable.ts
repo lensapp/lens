@@ -19,29 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observable } from "mobx";
-import React from "react";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { Disposer } from "../utils";
 
-export class CommandOverlay {
-  static #component = observable.box<React.ReactElement | null>(null, { deep: false });
+function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): Disposer {
+  window.addEventListener(type, listener, options);
 
-  static get isOpen(): boolean {
-    return Boolean(CommandOverlay.#component.get());
-  }
-
-  static open(component: React.ReactElement) {
-    if (!React.isValidElement(component)) {
-      throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
-    }
-
-    CommandOverlay.#component.set(component);
-  }
-
-  static close() {
-    CommandOverlay.#component.set(null);
-  }
-
-  static get component(): React.ReactElement | null {
-    return CommandOverlay.#component.get();
-  }
+  return () => void window.removeEventListener(type, listener);
 }
+
+const windowAddEventListenerInjectable = getInjectable({
+  instantiate: () => addWindowEventListener,
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default windowAddEventListenerInjectable;

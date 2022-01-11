@@ -216,8 +216,16 @@ export function getAppMenu(
         label: "Command Palette...",
         accelerator: "Shift+CmdOrCtrl+P",
         id: "command-palette",
-        click() {
-          broadcastMessage("command-palette:open");
+        click(_m, _b, event) {
+          /**
+           * Don't broadcast unless it was triggered by menu iteration so that
+           * there aren't double events in renderer
+           *
+           * NOTE: this `?` is required because of a bug in playwright. https://github.com/microsoft/playwright/issues/10554
+           */
+          if (!event?.triggeredByAccelerator) {
+            broadcastMessage("command-palette:open");
+          }
         },
       },
       { type: "separator" },

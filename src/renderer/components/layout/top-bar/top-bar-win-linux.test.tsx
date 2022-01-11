@@ -26,7 +26,7 @@ import { TopBar } from "./top-bar";
 import { IpcMainWindowEvents } from "../../../../main/window-manager";
 import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };

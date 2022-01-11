@@ -19,18 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { when } from "mobx";
-import { catalogCategoryRegistry } from "../../../common/catalog";
-import { catalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
-import { isActiveRoute } from "../../../renderer/navigation";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
+import type { InputValidator } from "../input_validators";
 
-export async function setEntityOnRouteMatch() {
-  await when(() => catalogEntityRegistry.entities.size > 0);
+const uniqueHotbarNameInjectable = getInjectable({
+  instantiate: di => ({
+    condition: ({ required }) => required,
+    message: () => "Hotbar with this name already exists",
+    validate: value => !di.inject(hotbarManagerInjectable).getByName(value),
+  } as InputValidator),
+  lifecycle: lifecycleEnum.singleton,
+});
 
-  const entities = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
-  const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
-
-  if (activeEntity) {
-    catalogEntityRegistry.activeEntity = activeEntity;
-  }
-}
+export default uniqueHotbarNameInjectable;

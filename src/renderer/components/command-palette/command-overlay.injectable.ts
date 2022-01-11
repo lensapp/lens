@@ -19,36 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import glob from "glob";
-import { memoize } from "lodash/fp";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { observable } from "mobx";
+import React from "react";
 
-import {
-  createContainer,
-  ConfigurableDependencyInjectionContainer,
-} from "@ogre-tools/injectable";
+export class CommandOverlay {
+  #component = observable.box<React.ReactElement | null>(null, { deep: false });
 
-export const getDiForUnitTesting = () => {
-  const di: ConfigurableDependencyInjectionContainer = createContainer();
+  get isOpen(): boolean {
+    return Boolean(this.#component.get());
+  }
 
-  getInjectableFilePaths()
-    .map(key => {
-      const injectable = require(key).default;
+  open = (component: React.ReactElement) => {
+    if (!React.isValidElement(component)) {
+      throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
+    }
 
-      return {
-        id: key,
-        ...injectable,
-        aliases: [injectable, ...(injectable.aliases || [])],
-      };
-    })
+    this.#component.set(component);
+  };
 
-    .forEach(injectable => di.register(injectable));
+  close = () => {
+    this.#component.set(null);
+  };
 
-  di.preventSideEffects();
+  get component(): React.ReactElement | null {
+    return this.#component.get();
+  }
+}
 
-  return di;
-};
+const commandOverlayInjectable = getInjectable({
+  instantiate: () => new CommandOverlay(),
+  lifecycle: lifecycleEnum.singleton,
+});
 
-const getInjectableFilePaths = memoize(() => [
-  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-]);
+export default commandOverlayInjectable;

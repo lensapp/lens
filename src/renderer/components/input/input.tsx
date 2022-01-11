@@ -103,6 +103,10 @@ export class Input extends React.Component<InputProps, State> {
     submitted: false,
   };
 
+  componentWillUnmount(): void {
+    this.setDirtyOnChange.cancel();
+  }
+
   setValue(value = "") {
     if (value !== this.getValue()) {
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;

@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import mockFs from "mock-fs";
 import { watch } from "chokidar";
 import { ExtensionsStore } from "../extensions-store";
 import path from "path";
@@ -30,6 +29,7 @@ import { AppPaths } from "../../common/app-paths";
 import type { ExtensionLoader } from "../extension-loader";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import * as fse from "fs-extra";
 
 jest.setTimeout(60_000);
 
@@ -43,6 +43,7 @@ jest.mock("../extension-installer", () => ({
     installPackage: jest.fn(),
   },
 }));
+jest.mock("fs-extra");
 jest.mock("electron", () => ({
   app: {
     getVersion: () => "99.99.99",
@@ -63,6 +64,7 @@ AppPaths.init();
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
+const mockedFse = fse as jest.Mocked<typeof fse>;
 
 describe("ExtensionDiscovery", () => {
   let extensionLoader: ExtensionLoader;
@@ -77,62 +79,59 @@ describe("ExtensionDiscovery", () => {
     extensionLoader = di.inject(extensionLoaderInjectable);
   });
 
-  describe("with mockFs", () => {
-    beforeEach(() => {
-      mockFs({
-        [`${os.homedir()}/.k8slens/extensions/my-extension/package.json`]: JSON.stringify({
-          name: "my-extension",
-        }),
-      });
-    });
+  it("emits add for added extension", async (done) => {
+    let addHandler: (filePath: string) => void;
 
-    afterEach(() => {
-      mockFs.restore();
-    });
+    mockedFse.readJson.mockImplementation((p) => {
+      expect(p).toBe(path.join(os.homedir(), ".k8slens/extensions/my-extension/package.json"));
 
-    it("emits add for added extension", async (done) => {
-      let addHandler: (filePath: string) => void;
-
-      const mockWatchInstance: any = {
-        on: jest.fn((event: string, handler: typeof addHandler) => {
-          if (event === "add") {
-            addHandler = handler;
-          }
-
-          return mockWatchInstance;
-        }),
+      return {
+        name: "my-extension",
+        version: "1.0.0",
       };
-
-      mockedWatch.mockImplementationOnce(() =>
-        (mockWatchInstance) as any,
-      );
-
-      const extensionDiscovery = ExtensionDiscovery.createInstance(
-        extensionLoader,
-      );
-
-      // Need to force isLoaded to be true so that the file watching is started
-      extensionDiscovery.isLoaded = true;
-
-      await extensionDiscovery.watchExtensions();
-
-      extensionDiscovery.events.on("add", extension => {
-        expect(extension).toEqual({
-          absolutePath: expect.any(String),
-          id: path.normalize("node_modules/my-extension/package.json"),
-          isBundled: false,
-          isEnabled: false,
-          isCompatible: false,
-          manifest:  {
-            name: "my-extension",
-          },
-          manifestPath: path.normalize("node_modules/my-extension/package.json"),
-        });
-        done();
-      });
-
-      addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
     });
+
+    mockedFse.pathExists.mockImplementation(() => true);
+
+    const mockWatchInstance: any = {
+      on: jest.fn((event: string, handler: typeof addHandler) => {
+        if (event === "add") {
+          addHandler = handler;
+        }
+
+        return mockWatchInstance;
+      }),
+    };
+
+    mockedWatch.mockImplementationOnce(() =>
+        (mockWatchInstance) as any,
+    );
+    const extensionDiscovery = ExtensionDiscovery.createInstance(
+      extensionLoader,
+    );
+
+    // Need to force isLoaded to be true so that the file watching is started
+    extensionDiscovery.isLoaded = true;
+
+    await extensionDiscovery.watchExtensions();
+
+    extensionDiscovery.events.on("add", extension => {
+      expect(extension).toEqual({
+        absolutePath: expect.any(String),
+        id: path.normalize("node_modules/my-extension/package.json"),
+        isBundled: false,
+        isEnabled: false,
+        isCompatible: false,
+        manifest:  {
+          name: "my-extension",
+          version: "1.0.0",
+        },
+        manifestPath: path.normalize("node_modules/my-extension/package.json"),
+      });
+      done();
+    });
+
+    addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
   });
 
   it("doesn't emit add for added file under extension", async done => {
@@ -149,7 +148,7 @@ describe("ExtensionDiscovery", () => {
     };
 
     mockedWatch.mockImplementationOnce(() =>
-      (mockWatchInstance) as any,
+        (mockWatchInstance) as any,
     );
     const extensionDiscovery = ExtensionDiscovery.createInstance(
       extensionLoader,
@@ -172,3 +171,4 @@ describe("ExtensionDiscovery", () => {
     }, 10);
   });
 });
+

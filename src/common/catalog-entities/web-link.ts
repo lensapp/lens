@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CatalogCategory, CatalogEntity, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { CatalogCategory, CatalogEntity, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
@@ -86,21 +86,6 @@ export class WebLinkCategory extends CatalogCategory {
       kind: "WebLink",
     },
   };
-  public static onAdd?: () => void;
-
-  constructor() {
-    super();
-
-    this.on("catalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
-      ctx.menuItems.push({
-        icon: "public",
-        title: "Add web link",
-        onClick: () => {
-          WebLinkCategory.onAdd();
-        },
-      });
-    });
-  }
 }
 
 catalogCategoryRegistry.add(new WebLinkCategory());

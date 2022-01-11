@@ -49,7 +49,7 @@ import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import { AppPaths } from "../common/app-paths";
 import { registerCustomThemes } from "./components/monaco-editor";
-import { getDi } from "./components/getDi";
+import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
@@ -59,6 +59,7 @@ import bindProtocolAddRouteHandlersInjectable
 import type { LensProtocolRouterRenderer } from "./protocol-handler";
 import lensProtocolRouterRendererInjectable
   from "./protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
+import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -102,9 +103,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   logger.info(`${logPrefix} initializing Registries`);
   initializers.initRegistries();
 
-  logger.info(`${logPrefix} initializing CommandRegistry`);
-  initializers.initCommandRegistry();
-
   logger.info(`${logPrefix} initializing EntitySettingsRegistry`);
   initializers.initEntitySettingsRegistry();
 
@@ -124,7 +122,9 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   initializers.initCatalogCategoryRegistryEntries();
 
   logger.info(`${logPrefix} initializing Catalog`);
-  initializers.initCatalog();
+  initializers.initCatalog({
+    openCommandDialog: di.inject(commandOverlayInjectable).open,
+  });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
 

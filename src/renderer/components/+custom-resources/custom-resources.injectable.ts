@@ -19,13 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./catalog-entity-detail-registry";
-export * from "./catalog";
-export * from "./entity-settings-registry";
-export * from "./ipc";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./workloads-overview-detail-registry";
-export * from "./catalog-category-registry";
-export * from "./status-bar-registry";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import { crdStore } from "./crd.store";
+
+const customResourceDefinitionsInjectable = getInjectable({
+  instantiate: () => computed(() => [...crdStore.items]),
+
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default customResourceDefinitionsInjectable;

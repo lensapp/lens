@@ -24,7 +24,7 @@ import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { defaultWidth, Welcome } from "../welcome";
 import { computed } from "mobx";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";

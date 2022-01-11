@@ -18,17 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { HotbarStore } from "./hotbar-store";
 
-import { createContainer } from "@ogre-tools/injectable";
+const hotbarManagerInjectable = getInjectable({
+  instantiate: () => HotbarStore.getInstance(),
+  lifecycle: lifecycleEnum.singleton,
+});
 
-export const getDi = () =>
-  createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-  );
-
-const getRequireContextForRendererCode = () =>
-  require.context("../", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);
+export default hotbarManagerInjectable;

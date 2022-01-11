@@ -19,13 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./catalog-entity-detail-registry";
-export * from "./catalog";
-export * from "./entity-settings-registry";
-export * from "./ipc";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./workloads-overview-detail-registry";
-export * from "./catalog-category-registry";
-export * from "./status-bar-registry";
+import glob from "glob";
+import { memoize } from "lodash/fp";
+import { createContainer } from "@ogre-tools/injectable";
+
+export const getDiForUnitTesting = () => {
+  const di = createContainer();
+
+  for (const filePath of getInjectableFilePaths()) {
+    const injectableInstance = require(filePath).default;
+
+    di.register({
+      id: filePath,
+      ...injectableInstance,
+      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
+    });
+  }
+
+  di.preventSideEffects();
+
+  return di;
+};
+
+const getInjectableFilePaths = memoize(() => [
+  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+]);
