@@ -18,27 +18,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
 
-import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 
-export function getDi() {
-  const di = createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-    getRequireContextForCommonCode,
-  );
+type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
-  setLegacyGlobalDiForExtensionApi(di);
+type FactoryType = <
+  TInjectable extends Injectable<unknown, TInstance, TInstantiationParameter>,
+  TInstantiationParameter,
+  TInstance extends (...args: unknown[]) => any,
+  TFunction extends (...args: unknown[]) => any = Awaited<
+    ReturnType<TInjectable["instantiate"]>
+  >,
+>(
+  injectableKey: TInjectable,
+  ...instantiationParameter: TentativeTuple<TInstantiationParameter>
+) => (...args: Parameters<TFunction>) => ReturnType<TFunction>;
 
-  return di;
-}
+export const asLegacyGlobalFunctionForExtensionApi: FactoryType =
+  (injectableKey, ...instantiationParameter) =>
+    (...args) => {
+      const injected = getLegacyGlobalDiForExtensionApi().inject(
+        injectableKey,
+        ...instantiationParameter,
+      );
 
-const getRequireContextForRendererCode = () =>
-  require.context("./", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonCode = () =>
-  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);
+      return injected(...args);
+    };
