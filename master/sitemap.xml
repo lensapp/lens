@@ -96,11 +96,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.CommandOverlay/</loc>
-         <lastmod>2022-01-11</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.ConfirmDialog/</loc>
          <lastmod>2022-01-11</lastmod>
          <changefreq>daily</changefreq>
