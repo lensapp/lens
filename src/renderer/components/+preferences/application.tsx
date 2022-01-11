@@ -79,8 +79,13 @@ export const Application = observer(() => {
         <Select
           themeName="lens"
           options={[
-            { label: "Use global theme settings", value: "" },
-            ...themeStore.themeOptions,
+            { label: "Match current theme", value: "" },
+            ...themeStore.themeOptions.map((option) => {
+              return {
+                ...option,
+                label: <span>Match theme <em>{option.label}</em></span>,
+              };
+            }),
           ]}
           value={userStore.terminalTheme}
           onChange={({ value }) => userStore.terminalTheme = value}

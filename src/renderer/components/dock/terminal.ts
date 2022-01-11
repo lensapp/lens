@@ -104,8 +104,8 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposer.push(
-      reaction(() => ThemeStore.getInstance().terminalColors, themeColors => {
-        this.xterm?.setOption("theme", themeColors);
+      reaction(() => ThemeStore.getInstance().xtermColors, colors => {
+        this.xterm?.setOption("theme", colors);
       }, {
         fireImmediately: true,
       }),
