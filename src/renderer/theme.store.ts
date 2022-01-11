@@ -60,8 +60,8 @@ export class ThemeStore extends Singleton {
   }
 
   @computed get terminalColors(): Record<string, string> {
-    const useDarkThemeColors = UserStore.getInstance().terminalUseDarkTheme;
-    const theme = useDarkThemeColors ? this.themes.get("lens-dark") : this.activeTheme;
+    const { terminalTheme } = UserStore.getInstance();
+    const theme = this.themes.get(terminalTheme) ?? this.activeTheme;
     const xtermColors: Record<string, string> = {}; // see also "terminal.ts"
 
     // Replacing keys stored in styles to format accepted by terminal

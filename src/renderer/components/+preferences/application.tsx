@@ -57,24 +57,38 @@ export const Application = observer(() => {
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
   const [shell, setShell] = React.useState(userStore.shell || "");
   const extensionSettings = AppPreferenceRegistry.getInstance().getItems().filter((preference) => preference.showInPreferencesTab === "application");
+  const themeStore = ThemeStore.getInstance();
 
   return (
     <section id="application">
       <h2 data-testid="application-header">Application</h2>
       <section id="appearance">
-        <SubTitle title="Theme"/>
+        <SubTitle title="Theme" />
         <Select
-          options={ThemeStore.getInstance().themeOptions}
+          options={themeStore.themeOptions}
           value={userStore.colorTheme}
           onChange={({ value }) => userStore.colorTheme = value}
           themeName="lens"
         />
       </section>
 
-      <hr/>
+      <hr />
+
+      <section id="terminalTheme">
+        <SubTitle title="Terminal theme" />
+        <Select
+          themeName="lens"
+          options={[
+            { label: "Use global theme settings", value: "" },
+            ...themeStore.themeOptions,
+          ]}
+          value={userStore.terminalTheme}
+          onChange={({ value }) => userStore.terminalTheme = value}
+        />
+      </section>
 
       <section id="shell">
-        <SubTitle title="Terminal Shell Path"/>
+        <SubTitle title="Terminal Shell Path" />
         <Input
           theme="round-black"
           placeholder={defaultShell}
@@ -94,17 +108,7 @@ export const Application = observer(() => {
         </Switch>
       </section>
 
-      <section id="terminalColors">
-        <SubTitle title="Terminal color scheme" />
-        <Switch
-          checked={userStore.terminalUseDarkTheme}
-          onChange={() => userStore.terminalUseDarkTheme = !userStore.terminalUseDarkTheme}
-        >
-          Always use dark terminal theme colors
-        </Switch>
-      </section>
-
-      <hr/>
+      <hr />
 
       <section id="extensionRegistryUrl">
         <SubTitle title="Extension Install Registry" />

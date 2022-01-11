@@ -67,6 +67,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
+  @observable terminalTheme: string;
   @observable localeTimezone: string;
   @observable downloadMirror: string;
   @observable httpsProxy?: string;
@@ -74,7 +75,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
   @observable terminalCopyOnSelect: boolean;
-  @observable terminalUseDarkTheme: boolean;
   @observable updateChannel?: string;
   @observable extensionRegistryUrl: ExtensionRegistry;
 
@@ -189,6 +189,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.httpsProxy = DESCRIPTORS.httpsProxy.fromStore(preferences?.httpsProxy);
     this.shell = DESCRIPTORS.shell.fromStore(preferences?.shell);
     this.colorTheme = DESCRIPTORS.colorTheme.fromStore(preferences?.colorTheme);
+    this.terminalTheme = DESCRIPTORS.terminalTheme.fromStore(preferences?.terminalTheme);
     this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
     this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
     this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
@@ -202,7 +203,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
     this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
-    this.terminalUseDarkTheme = DESCRIPTORS.terminalUseDarkTheme.fromStore(preferences?.terminalUseDarkTheme);
     this.updateChannel = DESCRIPTORS.updateChannel.fromStore(preferences?.updateChannel);
     this.extensionRegistryUrl = DESCRIPTORS.extensionRegistryUrl.fromStore(preferences?.extensionRegistryUrl);
   }
@@ -214,6 +214,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         httpsProxy: DESCRIPTORS.httpsProxy.toStore(this.httpsProxy),
         shell: DESCRIPTORS.shell.toStore(this.shell),
         colorTheme: DESCRIPTORS.colorTheme.toStore(this.colorTheme),
+        terminalTheme: DESCRIPTORS.terminalTheme.toStore(this.terminalTheme),
         localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
         allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
         allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),
@@ -227,7 +228,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
         terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
-        terminalUseDarkTheme: DESCRIPTORS.terminalUseDarkTheme.toStore(this.terminalUseDarkTheme),
         updateChannel: DESCRIPTORS.updateChannel.toStore(this.updateChannel),
         extensionRegistryUrl: DESCRIPTORS.extensionRegistryUrl.toStore(this.extensionRegistryUrl),
       },

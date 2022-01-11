@@ -27,7 +27,15 @@
   flex: 1;
   overflow: hidden;
 
-  > .xterm {
+  .xterm {
     padding: var(--spacing);
+
+    &, &-viewport {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
   }
 }
