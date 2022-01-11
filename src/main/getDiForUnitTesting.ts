@@ -20,44 +20,34 @@
  */
 
 import glob from "glob";
-import { memoize } from "lodash/fp";
-import { kebabCase } from "lodash/fp";
-
-import {
-  createContainer,
-  ConfigurableDependencyInjectionContainer,
-} from "@ogre-tools/injectable";
+import { memoize, kebabCase } from "lodash/fp";
+import { createContainer } from "@ogre-tools/injectable";
 
 import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
-import writeJsonFileInjectable
-  from "../common/fs/write-json-file/write-json-file.injectable";
-import readJsonFileInjectable
-  from "../common/fs/read-json-file/read-json-file.injectable";
+import writeJsonFileInjectable from "../common/fs/write-json-file/write-json-file.injectable";
+import readJsonFileInjectable from "../common/fs/read-json-file/read-json-file.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
 ) => {
-  const di: ConfigurableDependencyInjectionContainer = createContainer();
+  const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di);
 
-  getInjectableFilePaths()
-    .map((key) => {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const injectable = require(key).default;
+  for (const filePath of getInjectableFilePaths()) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const injectableInstance = require(filePath).default;
 
-      return {
-        id: key,
-        ...injectable,
-        aliases: [injectable, ...(injectable.aliases || [])],
-      };
-    })
-
-    .forEach((injectable) => di.register(injectable));
+    di.register({
+      id: filePath,
+      ...injectableInstance,
+      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
+    });
+  }
 
   di.preventSideEffects();
 
