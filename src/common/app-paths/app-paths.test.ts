@@ -101,7 +101,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: "some-app-data/some-app-name",
+        userData: `some-app-data${path.sep}some-app-name`,
       });
     });
 
