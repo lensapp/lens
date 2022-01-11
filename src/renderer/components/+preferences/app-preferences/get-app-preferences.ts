@@ -20,14 +20,10 @@
  */
 import { computed, IComputedValue } from "mobx";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
-import type { AppPreferenceRegistration } from "./app-preference-registration";
+import type { AppPreferenceRegistration, RegisteredAppPreference } from "./app-preference-registration";
 
 interface Dependencies {
   extensions: IComputedValue<LensRendererExtension[]>;
-}
-
-interface RegisteredAppPreference extends AppPreferenceRegistration {
-  id: string;
 }
 
 function  getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPreference {
@@ -39,11 +35,9 @@ function  getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPrefe
 
 
 export const getAppPreferences = ({ extensions }: Dependencies) => {
-  return computed(() => {
-    return [
-      ...extensions.get()
-        .flatMap((extension) => extension.appPreferences)
-        .map(pref => getRegisteredItem(pref)),
-    ];},
-  );
+  return computed(() => (
+    extensions.get()
+      .flatMap((extension) => extension.appPreferences)
+      .map(getRegisteredItem)
+  ));
 };

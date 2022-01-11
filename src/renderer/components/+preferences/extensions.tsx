@@ -7,12 +7,12 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import { ExtensionSettings } from "./extension-settings";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<AppPreferenceRegistration[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
 }
 
 const NonInjectedExtensions: React.FC<Dependencies> = ({ appPreferenceItems }) => {

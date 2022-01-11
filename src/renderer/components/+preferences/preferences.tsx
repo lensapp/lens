@@ -34,11 +34,11 @@ import { Telemetry } from "./telemetry";
 import { Extensions } from "./extensions";
 import { sentryDsn } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<AppPreferenceRegistration[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
 }
 
 const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) => {

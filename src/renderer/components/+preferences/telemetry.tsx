@@ -9,13 +9,13 @@ import { sentryDsn } from "../../../common/vars";
 import { Checkbox } from "../checkbox";
 import { SubTitle } from "../layout/sub-title";
 import { ExtensionSettings } from "./extension-settings";
-import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<AppPreferenceRegistration[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
 }
 
 const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) => {

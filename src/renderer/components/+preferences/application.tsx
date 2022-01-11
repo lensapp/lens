@@ -17,7 +17,7 @@ import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } fro
 import { action, IComputedValue } from "mobx";
 import { isUrl } from "../input/input_validators";
 import { ExtensionSettings } from "./extension-settings";
-import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 
@@ -31,7 +31,7 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
 );
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<AppPreferenceRegistration[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
 }
 
 const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) => {
