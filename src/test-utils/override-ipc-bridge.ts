@@ -20,7 +20,7 @@
  */
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import type { Channel } from "../common/ipc-channel/channel";
-import getValueFromRegisteredChannelInjectable from "../renderer/components/app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
+import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
 import asyncFn from "@async-fn/jest";
 

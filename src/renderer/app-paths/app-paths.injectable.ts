@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { AppPaths, appPathsInjectionToken, appPathsIpcChannel } from "../../../common/app-paths/app-path-injection-token";
+import { AppPaths, appPathsInjectionToken, appPathsIpcChannel } from "../../common/app-paths/app-path-injection-token";
 import getValueFromRegisteredChannelInjectable from "./get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 
 let syncAppPaths: AppPaths;

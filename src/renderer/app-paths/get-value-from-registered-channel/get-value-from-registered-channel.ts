@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import type { IpcRenderer } from "electron";
-import type { Channel } from "../../../../common/ipc-channel/channel";
+import type { Channel } from "../../../common/ipc-channel/channel";
 
 interface Dependencies {
   ipcRenderer: IpcRenderer;
