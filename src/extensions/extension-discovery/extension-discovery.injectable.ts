@@ -18,8 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import { lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { ExtensionDiscovery } from "./extension-discovery";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import isCompatibleExtensionInjectable from "./is-compatible-extension/is-compatible-extension.injectable";

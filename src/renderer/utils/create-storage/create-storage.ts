@@ -56,7 +56,12 @@ export const createStorage = ({ directoryForLensLocalStorage, readJsonFile, writ
 
       try {
         storage.data = await readJsonFile(filePath);
-      } catch {} finally {
+      }
+
+      // eslint-disable-next-line no-empty
+      catch {}
+
+      finally {
         if (!isTestEnv) {
           logger.info(`${logPrefix} loading finished for ${filePath}`);
         }

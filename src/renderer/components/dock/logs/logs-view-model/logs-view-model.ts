@@ -20,8 +20,7 @@
  */
 import type { LogTabData, LogTabStore } from "../../log-tab-store/log-tab.store";
 import type { LogStore } from "../../log-store/log.store";
-import { computed } from "mobx";
-import { makeObservable } from "mobx";
+import { computed, makeObservable } from "mobx";
 
 interface Dependencies {
   dockStore: { selectedTabId: string },
