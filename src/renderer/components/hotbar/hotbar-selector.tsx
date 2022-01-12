@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./hotbar-selector.scss";
+import styles from "./hotbar-selector.module.scss";
 import React, { useRef, useState } from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
@@ -30,6 +30,7 @@ import { observer } from "mobx-react";
 import type { Hotbar } from "../../../common/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+import { cssNames } from "../../utils";
 
 export interface HotbarSelectorProps {
   hotbar: Hotbar;
@@ -70,15 +71,19 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommand
   };
 
   return (
-    <div className="HotbarSelector flex align-center">
-      <Icon material="play_arrow" className="previous box" onClick={() => onArrowClick(hotbarManager.switchToPrevious)} />
-      <div className="box grow flex align-center">
+    <div className={styles.HotbarSelector}>
+      <Icon
+        material="play_arrow"
+        className={cssNames(styles.Icon, styles.previous)}
+        onClick={() => onArrowClick(hotbarManager.switchToPrevious)}
+      />
+      <div className={styles.HotbarIndex}>
         <Badge
           id="hotbarIndex"
           small
           label={hotbarManager.getDisplayIndex(hotbarManager.getActive())}
           onClick={() => openCommandOverlay(<HotbarSwitchCommand />)}
-          className="SelectorIndex"
+          className={styles.Badge}
           onMouseEnter={onMouseEvent}
           onMouseLeave={onMouseEvent}
         />
@@ -90,7 +95,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommand
           {hotbar.name}
         </Tooltip>
       </div>
-      <Icon material="play_arrow" className="next box" onClick={() => onArrowClick(hotbarManager.switchToNext)} />
+      <Icon material="play_arrow" className={styles.Icon} onClick={() => onArrowClick(hotbarManager.switchToNext)} />
     </div>
   );
 });
