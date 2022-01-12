@@ -23,7 +23,6 @@ import { observable, makeObservable, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "./navigation";
-import { NotFound } from "./components/+404";
 import { UserManagement } from "./components/+user-management/user-management";
 import { ConfirmDialog } from "./components/confirm-dialog";
 import { ClusterOverview } from "./components/+cluster/cluster-overview";
@@ -230,7 +229,11 @@ export class ClusterFrame extends React.Component {
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
               <Redirect exact from="/" to={this.startUrl}/>
-              <Route component={NotFound}/>
+              <Route render={({ location }) => {
+                Notifications.error(`Unknown location ${location.pathname}, redirecting to main page.`);
+
+                return <Redirect to={this.startUrl} />;
+              }} />
             </Switch>
           </MainLayout>
           <Notifications/>
