@@ -92,7 +92,6 @@ export class Tooltip extends React.Component<TooltipProps> {
   componentDidMount() {
     this.hoverTarget.addEventListener("mouseenter", this.onEnterTarget);
     this.hoverTarget.addEventListener("mouseleave", this.onLeaveTarget);
-    this.refreshPosition();
   }
 
   componentDidUpdate() {
