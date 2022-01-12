@@ -131,9 +131,6 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   logger.info(`${logPrefix} initializing IpcRendererListeners`);
   initializers.initIpcRendererListeners(extensionLoader);
 
-  logger.info(`${logPrefix} initializing StatusBarRegistry`);
-  initializers.initStatusBarRegistry();
-
   extensionLoader.init();
 
   ExtensionDiscovery.createInstance(extensionLoader).init();
