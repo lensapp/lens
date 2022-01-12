@@ -67,7 +67,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
       const created = await this.props.createNamespace({ name: namespace });
 
       onSuccess?.(created);
-      this.props.close();
+      this.props.model.close();
     } catch (err) {
       Notifications.error(err);
       onError?.(err);
