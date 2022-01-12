@@ -52,7 +52,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommand
 
   const clearTimer = () => {
     clearTimeout(tooltipTimeout.current);
-  }
+  };
 
   const onTooltipShow = () => {
     setTooltipVisible(true);
