@@ -67,6 +67,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
+  @observable terminalTheme: string;
   @observable localeTimezone: string;
   @observable downloadMirror: string;
   @observable httpsProxy?: string;
@@ -188,6 +189,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.httpsProxy = DESCRIPTORS.httpsProxy.fromStore(preferences?.httpsProxy);
     this.shell = DESCRIPTORS.shell.fromStore(preferences?.shell);
     this.colorTheme = DESCRIPTORS.colorTheme.fromStore(preferences?.colorTheme);
+    this.terminalTheme = DESCRIPTORS.terminalTheme.fromStore(preferences?.terminalTheme);
     this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
     this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
     this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
@@ -212,6 +214,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         httpsProxy: DESCRIPTORS.httpsProxy.toStore(this.httpsProxy),
         shell: DESCRIPTORS.shell.toStore(this.shell),
         colorTheme: DESCRIPTORS.colorTheme.toStore(this.colorTheme),
+        terminalTheme: DESCRIPTORS.terminalTheme.toStore(this.terminalTheme),
         localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
         allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
         allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),

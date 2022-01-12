@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { autoBind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
@@ -28,6 +28,7 @@ import lensLightThemeJson from "./themes/lens-light.json";
 import type { SelectOption } from "./components/select";
 import type { MonacoEditorProps } from "./components/monaco-editor";
 import { defaultTheme } from "../common/vars";
+import { camelCase } from "lodash";
 
 export type ThemeId = string;
 
@@ -41,7 +42,7 @@ export interface Theme {
 }
 
 export class ThemeStore extends Singleton {
-  protected styles: HTMLStyleElement;
+  private terminalColorPrefix = "terminal";
 
   // bundled themes from `themes/${themeId}.json`
   private themes = observable.map<ThemeId, Theme>({
@@ -49,12 +50,35 @@ export class ThemeStore extends Singleton {
     "lens-light": lensLightThemeJson as Theme,
   });
 
-  @computed get activeThemeId(): string {
+  @computed get activeThemeId(): ThemeId {
     return UserStore.getInstance().colorTheme;
+  }
+
+  @computed get terminalThemeId(): ThemeId {
+    return UserStore.getInstance().terminalTheme;
   }
 
   @computed get activeTheme(): Theme {
     return this.themes.get(this.activeThemeId) ?? this.themes.get(defaultTheme);
+  }
+
+  @computed get terminalColors(): [string, string][] {
+    const theme = this.themes.get(this.terminalThemeId) ?? this.activeTheme;
+
+    return Object
+      .entries(theme.colors)
+      .filter(([name]) => name.startsWith(this.terminalColorPrefix));
+  }
+
+  // Replacing keys stored in styles to format accepted by terminal
+  // E.g. terminalBrightBlack -> brightBlack
+  @computed get xtermColors(): Record<string, string> {
+    return Object.fromEntries(
+      this.terminalColors.map(([name, color]) => [
+        camelCase(name.replace(this.terminalColorPrefix, "")),
+        color,
+      ]),
+    );
   }
 
   @computed get themeOptions(): SelectOption<string>[] {
@@ -71,15 +95,19 @@ export class ThemeStore extends Singleton {
     autoBind(this);
 
     // auto-apply active theme
-    reaction(() => this.activeThemeId, themeId => {
+    reaction(() => ({
+      themeId: this.activeThemeId,
+      terminalThemeId: this.terminalThemeId,
+    }), ({ themeId }) => {
       try {
-        this.applyTheme(this.getThemeById(themeId));
+        this.applyTheme(themeId);
       } catch (err) {
         logger.error(err);
         UserStore.getInstance().resetTheme();
       }
     }, {
       fireImmediately: true,
+      equals: comparer.shallow,
     });
   }
 
@@ -87,20 +115,18 @@ export class ThemeStore extends Singleton {
     return this.themes.get(themeId);
   }
 
-  protected applyTheme(theme: Theme) {
-    if (!this.styles) {
-      this.styles = document.createElement("style");
-      this.styles.id = "lens-theme";
-      document.head.append(this.styles);
-    }
-    const cssVars = Object.entries(theme.colors).map(([cssName, color]) => {
-      return `--${cssName}: ${color};`;
+  protected applyTheme(themeId: ThemeId) {
+    const theme = this.getThemeById(themeId);
+    const colors = Object.entries({
+      ...theme.colors,
+      ...Object.fromEntries(this.terminalColors),
     });
 
-    this.styles.textContent = `:root {\n${cssVars.join("\n")}}`;
-    // Adding universal theme flag which can be used in component styles
-    const body = document.querySelector("body");
+    colors.forEach(([name, value]) => {
+      document.documentElement.style.setProperty(`--${name}`, value);
+    });
 
-    body.classList.toggle("theme-light", theme.type === "light");
+    // Adding universal theme flag which can be used in component styles
+    document.body.classList.toggle("theme-light", theme.type === "light");
   }
 }
