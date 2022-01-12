@@ -20,12 +20,12 @@
  */
 
 import "./hotbar-selector.scss";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
 import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { TooltipPosition } from "../tooltip";
+import { Tooltip, TooltipPosition } from "../tooltip";
 import { observer } from "mobx-react";
 import type { Hotbar } from "../../../common/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -45,25 +45,55 @@ interface Dependencies {
   openCommandOverlay: (component: React.ReactElement) => void;
 }
 
-const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommandOverlay }: HotbarSelectorProps & Dependencies) => (
-  <div className="HotbarSelector flex align-center">
-    <Icon material="play_arrow" className="previous box" onClick={() => hotbarManager.switchToPrevious()} />
-    <div className="box grow flex align-center">
-      <Badge
-        id="hotbarIndex"
-        small
-        label={hotbarManager.getDisplayIndex(hotbarManager.getActive())}
-        onClick={() => openCommandOverlay(<HotbarSwitchCommand />)}
-        tooltip={{
-          preferredPositions: [TooltipPosition.TOP, TooltipPosition.TOP_LEFT],
-          children: hotbar.name,
-        }}
-        className="SelectorIndex"
-      />
+const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommandOverlay }: HotbarSelectorProps & Dependencies) => {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const tooltipTimeout = useRef<NodeJS.Timeout>();
+
+  const clearTimer = () => {
+    clearTimeout(tooltipTimeout.current);
+  }
+
+  const onTooltipShow = () => {
+    setTooltipVisible(true);
+    clearTimer();
+    tooltipTimeout.current = setTimeout(() => setTooltipVisible(false), 1500);
+  };
+
+  const onArrowClick = (switchTo: () => void) => {
+    onTooltipShow();
+    switchTo();
+  };
+
+  const onMouseEvent = (event: React.MouseEvent) => {
+    clearTimer();
+    setTooltipVisible(event.type == "mouseenter");
+  };
+
+  return (
+    <div className="HotbarSelector flex align-center">
+      <Icon material="play_arrow" className="previous box" onClick={() => onArrowClick(hotbarManager.switchToPrevious)} />
+      <div className="box grow flex align-center">
+        <Badge
+          id="hotbarIndex"
+          small
+          label={hotbarManager.getDisplayIndex(hotbarManager.getActive())}
+          onClick={() => openCommandOverlay(<HotbarSwitchCommand />)}
+          className="SelectorIndex"
+          onMouseEnter={onMouseEvent}
+          onMouseLeave={onMouseEvent}
+        />
+        <Tooltip
+          visible={tooltipVisible}
+          targetId="hotbarIndex"
+          preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
+        >
+          {hotbar.name}
+        </Tooltip>
+      </div>
+      <Icon material="play_arrow" className="next box" onClick={() => onArrowClick(hotbarManager.switchToNext)} />
     </div>
-    <Icon material="play_arrow" className="next box" onClick={() => hotbarManager.switchToNext()} />
-  </div>
-));
+  );
+});
 
 export const HotbarSelector = withInjectables<Dependencies, HotbarSelectorProps>(NonInjectedHotbarSelector, {
   getProps: (di, props) => ({

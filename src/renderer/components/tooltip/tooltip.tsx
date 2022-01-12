@@ -70,7 +70,7 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable.ref elem: HTMLElement;
   @observable activePosition: TooltipPosition;
-  @observable isVisible = !!this.props.visible;
+  @observable isVisible = false;
 
   constructor(props: TooltipProps) {
     super(props);
@@ -92,6 +92,11 @@ export class Tooltip extends React.Component<TooltipProps> {
   componentDidMount() {
     this.hoverTarget.addEventListener("mouseenter", this.onEnterTarget);
     this.hoverTarget.addEventListener("mouseleave", this.onLeaveTarget);
+    this.refreshPosition();
+  }
+
+  componentDidUpdate() {
+    this.refreshPosition();
   }
 
   componentWillUnmount() {
@@ -226,9 +231,9 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    const { style, formatters, usePortal, children } = this.props;
+    const { style, formatters, usePortal, children, visible } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      invisible: !this.isVisible,
+      invisible: visible === undefined ? !this.isVisible : !visible,
       formatter: !!formatters,
     });
     const tooltip = (
