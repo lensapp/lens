@@ -20,17 +20,18 @@ export interface KubeconfigSyncValue {
 }
 
 export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptions,
-  "minimap" | "tabSize" | "lineNumbers">;
+  "minimap" | "tabSize" | "lineNumbers" | "fontSize" | "fontFamily">;
 
 export const defaultEditorConfig: EditorConfiguration = {
   tabSize: 2,
   lineNumbers: "on",
+  fontSize: 22,
+  fontFamily: "Verdana",
   minimap: {
     enabled: true,
     side: "right",
   },
 };
-
 interface PreferenceDescription<T, R = T> {
   fromStore(val: T | undefined): R;
   toStore(val: R): T | undefined;

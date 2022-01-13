@@ -69,6 +69,27 @@ export const Editor = observer(() => {
           onChange={value => editorConfiguration.tabSize = Number(value)}
         />
       </section>
+      <section>
+        <SubTitle title="Font size"/>
+        <Input
+          theme="round-black"
+          type="number"
+          min={10}
+          validators={InputValidators.isNumber}
+          value={editorConfiguration.fontSize.toString()}
+          onChange={value => editorConfiguration.fontSize = Number(value)}
+        />
+      </section>
+      <section>
+        <SubTitle title="Font family"/>
+        <Input
+          theme="round-black"
+          type="text"
+          validators={InputValidators.isNumber}
+          value={editorConfiguration.fontFamily}
+          onChange={value => editorConfiguration.fontFamily = value}
+        />
+      </section>
     </section>
   );
 });
