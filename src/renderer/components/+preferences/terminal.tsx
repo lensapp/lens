@@ -24,6 +24,7 @@ import { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { isWindows } from "../../../common/vars";
+import { Switch } from "../switch";
 
 export const Terminal = observer(() => {
   const userStore = UserStore.getInstance();
@@ -47,5 +48,17 @@ export const Terminal = observer(() => {
         onBlur={() => userStore.shell = shell}
       />
     </section>
+
+    <section id="terminalSelection">
+      <SubTitle title="Terminal copy & paste" />
+      <Switch
+        checked={userStore.terminalCopyOnSelect}
+        onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
+      >
+          Copy on select and paste on right-click
+      </Switch>
+    </section>
+
+    <hr/>
   </div>);
 });

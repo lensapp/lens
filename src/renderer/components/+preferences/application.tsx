@@ -10,7 +10,6 @@ import { Select, SelectOption } from "../select";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
-import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
 import moment from "moment-timezone";
 import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
@@ -30,69 +29,23 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
 
 export const Application = observer(() => {
   const userStore = UserStore.getInstance();
-  const defaultShell = process.env.SHELL
-    || process.env.PTYSHELL
-    || (
-      isWindows
-        ? "powershell.exe"
-        : "System default shell"
-    );
-
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
-  const [shell, setShell] = React.useState(userStore.shell || "");
   const extensionSettings = AppPreferenceRegistry.getInstance().getItems().filter((preference) => preference.showInPreferencesTab === "application");
-  const themeStore = ThemeStore.getInstance();
 
   return (
     <section id="application">
       <h2 data-testid="application-header">Application</h2>
       <section id="appearance">
-        <SubTitle title="Theme" />
+        <SubTitle title="Theme"/>
         <Select
-          options={themeStore.themeOptions}
+          options={ThemeStore.getInstance().themeOptions}
           value={userStore.colorTheme}
           onChange={({ value }) => userStore.colorTheme = value}
           themeName="lens"
         />
       </section>
 
-      <hr />
-
-      <section id="terminalTheme">
-        <SubTitle title="Terminal theme" />
-        <Select
-          themeName="lens"
-          options={[
-            { label: "Match theme", value: "" },
-            ...themeStore.themeOptions,
-          ]}
-          value={userStore.terminalTheme}
-          onChange={({ value }) => userStore.terminalTheme = value}
-        />
-      </section>
-
-      <section id="shell">
-        <SubTitle title="Terminal Shell Path" />
-        <Input
-          theme="round-black"
-          placeholder={defaultShell}
-          value={shell}
-          onChange={setShell}
-          onBlur={() => userStore.shell = shell}
-        />
-      </section>
-
-      <section id="terminalSelection">
-        <SubTitle title="Terminal copy & paste" />
-        <Switch
-          checked={userStore.terminalCopyOnSelect}
-          onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
-        >
-          Copy on select and paste on right-click
-        </Switch>
-      </section>
-
-      <hr />
+      <hr/>
 
       <section id="extensionRegistryUrl">
         <SubTitle title="Extension Install Registry" />
