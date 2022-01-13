@@ -101,6 +101,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return KubeObjectStore.defaultContext.get();
   }
 
+  // TODO: Circular dependency: KubeObjectStore -> ClusterFrameContext -> NamespaceStore -> KubeObjectStore
   @computed get contextItems(): T[] {
     const namespaces = this.context?.contextNamespaces ?? [];
 
