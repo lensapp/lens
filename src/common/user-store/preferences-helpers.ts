@@ -10,7 +10,7 @@ import { getAppVersion, ObservableToggleSet } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme } from "../vars";
+import { defaultTheme, defaultFontFamily, defaultFontSize } from "../vars";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -188,6 +188,32 @@ const downloadBinariesPath: PreferenceDescription<string | undefined> = {
   },
 };
 
+const terminalFontSize: PreferenceDescription<number | undefined> = {
+  fromStore(val) {
+    return val;
+  },
+  toStore(val) {
+    if (!val) {
+      return defaultFontSize;
+    }
+
+    return val;
+  },
+};
+
+const terminalFontFamily: PreferenceDescription<string | undefined> = {
+  fromStore(val) {
+    return val;
+  },
+  toStore(val) {
+    if (!val) {
+      return defaultFontFamily;
+    }
+
+    return val;
+  },
+};
+
 const kubectlBinariesPath: PreferenceDescription<string | undefined> = {
   fromStore(val) {
     return val;
@@ -359,6 +385,8 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
+  terminalFontSize,
+  terminalFontFamily,
   updateChannel,
   extensionRegistryUrl,
 };

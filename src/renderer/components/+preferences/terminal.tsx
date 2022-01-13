@@ -22,7 +22,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
+import { Input, InputValidators } from "../input";
 import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
 
@@ -58,7 +58,25 @@ export const Terminal = observer(() => {
           Copy on select and paste on right-click
       </Switch>
     </section>
-
-    <hr/>
+    <section>
+      <SubTitle title="Font size"/>
+      <Input
+        theme="round-black"
+        type="number"
+        min={10}
+        validators={InputValidators.isNumber}
+        value={userStore.terminalFontSize.toString()}
+        onChange={value => userStore.terminalFontSize = Number(value)}
+      />
+    </section>
+    <section>
+      <SubTitle title="Font family"/>
+      <Input
+        theme="round-black"
+        type="text"
+        value={userStore.terminalFontFamily}
+        onChange={value => userStore.terminalFontFamily = value}
+      />
+    </section>
   </div>);
 });
