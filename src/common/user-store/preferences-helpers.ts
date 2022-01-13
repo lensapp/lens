@@ -83,15 +83,6 @@ const colorTheme: PreferenceDescription<string> = {
   },
 };
 
-const terminalTheme: PreferenceDescription<string | undefined> = {
-  fromStore(val) {
-    return val || "";
-  },
-  toStore(val) {
-    return val || undefined;
-  },
-};
-
 const localeTimezone: PreferenceDescription<string> = {
   fromStore(val) {
     return val || moment.tz.guess(true) || "UTC";
@@ -360,7 +351,6 @@ export const DESCRIPTORS = {
   httpsProxy,
   shell,
   colorTheme,
-  terminalTheme,
   localeTimezone,
   allowUntrustedCAs,
   allowTelemetry,
