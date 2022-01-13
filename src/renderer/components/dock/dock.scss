@@ -76,13 +76,10 @@
 
   .tab-content {
     position: relative;
+    background: var(--terminalBackground);
     flex: 1;
     overflow: hidden;
     transition: flex-basis 25ms ease-in;
-
-    &.terminal {
-      background: var(--terminalBackground);
-    }
 
     > *:not(.Spinner) {
       position: absolute;
