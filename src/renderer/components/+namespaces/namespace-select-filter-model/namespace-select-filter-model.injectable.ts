@@ -20,9 +20,12 @@
  */
 import { NamespaceSelectFilterModel } from "./namespace-select-filter-model";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import namespaceStoreInjectable from "../namespace-store/namespace-store.injectable";
 
 const NamespaceSelectFilterModelInjectable = getInjectable({
-  instantiate: () => new NamespaceSelectFilterModel(),
+  instantiate: (di) => new NamespaceSelectFilterModel({
+    namespaceStore: di.inject(namespaceStoreInjectable),
+  }),
 
   lifecycle: lifecycleEnum.singleton,
 });

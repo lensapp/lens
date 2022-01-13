@@ -89,7 +89,7 @@ class NonInjectedNamespaceSelect extends React.Component<Props & Dependencies> {
   };
 
   render() {
-    const { className, showIcons, customizeOptions, components = {}, ...selectProps } = this.props;
+    const { className, showIcons, customizeOptions, components = {}, namespaceStore, ...selectProps } = this.props;
 
     return (
       <Select
