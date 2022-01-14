@@ -27,7 +27,6 @@ import { asLegacyGlobalSingletonForExtensionApi } from "../as-legacy-globals-for
 import { TerminalStore as TerminalStoreClass } from "../../renderer/components/dock/terminal-store/terminal.store";
 
 import commandOverlayInjectable from "../../renderer/components/command-palette/command-overlay.injectable";
-import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
