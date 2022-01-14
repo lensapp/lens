@@ -28,7 +28,11 @@ import { Switch } from "../switch";
 
 export const Terminal = observer(() => {
   const userStore = UserStore.getInstance();
-  const [shell, setShell] = React.useState(userStore.shell || "");
+  const [terminalSettings, setTerminalSettings] = React.useState({
+    shell: userStore.shell || "",
+    terminalFontSize: userStore.terminalFontSize,
+    terminalFontFamily: userStore.terminalFontFamily,
+  });
   const defaultShell = process.env.SHELL
   || process.env.PTYSHELL
   || (
@@ -43,9 +47,12 @@ export const Terminal = observer(() => {
       <Input
         theme="round-black"
         placeholder={defaultShell}
-        value={shell}
-        onChange={setShell}
-        onBlur={() => userStore.shell = shell}
+        value={terminalSettings.shell}
+        onChange={(value) => setTerminalSettings({
+          ...terminalSettings,
+          shell: value,
+        })}
+        onBlur={() => userStore.shell = terminalSettings.shell}
       />
     </section>
 
@@ -65,8 +72,11 @@ export const Terminal = observer(() => {
         type="number"
         min={10}
         validators={InputValidators.isNumber}
-        value={userStore.terminalFontSize.toString()}
-        onChange={value => userStore.terminalFontSize = Number(value)}
+        value={terminalSettings.terminalFontSize.toString()}
+        onChange={(value) => setTerminalSettings({
+          ...terminalSettings,
+          terminalFontSize: Number(value),
+        })}
       />
     </section>
     <section>
@@ -74,8 +84,11 @@ export const Terminal = observer(() => {
       <Input
         theme="round-black"
         type="text"
-        value={userStore.terminalFontFamily}
-        onChange={value => userStore.terminalFontFamily = value}
+        value={terminalSettings.terminalFontFamily}
+        onChange={(value) => setTerminalSettings({
+          ...terminalSettings,
+          terminalFontFamily: value.toString(),
+        })}
       />
     </section>
   </div>);
