@@ -33,6 +33,7 @@ import { defaultPackageMirror, packageMirrors } from "../../common/user-store/pr
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
+import { noop } from "../renderer/utils";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -314,8 +315,14 @@ export class Kubectl {
     const fileWriteStream = fs.createWriteStream(this.path, { mode: 0o755 });
     const pipeline = promisify(stream.pipeline);
 
-    await pipeline(downloadStream, fileWriteStream);
-    logger.debug("kubectl binary download finished");
+    try {
+      await pipeline(downloadStream, fileWriteStream);
+      await fs.promises.chmod(this.path, 0o755);
+      logger.debug("kubectl binary download finished");
+    } catch (error) {
+      await fs.promises.unlink(this.path).catch(noop);
+      throw error;
+    }
   }
 
   protected async writeInitScripts() {

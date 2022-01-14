@@ -26,6 +26,9 @@ import logTabStoreInjectable from "../../renderer/components/dock/log-tab-store/
 import { asLegacyGlobalSingletonForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-singleton-for-extension-api";
 import { TerminalStore as TerminalStoreClass } from "../../renderer/components/dock/terminal-store/terminal.store";
 
+import commandOverlayInjectable from "../../renderer/components/command-palette/command-overlay.injectable";
+import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+
 // layouts
 export * from "../../renderer/components/layout/main-layout";
 export * from "../../renderer/components/layout/setting-layout";
@@ -43,7 +46,7 @@ export * from "../../renderer/components/switch";
 export * from "../../renderer/components/input/input";
 
 // command-overlay
-export { CommandOverlay } from "../../renderer/components/command-palette";
+export const CommandOverlay = asLegacyGlobalObjectForExtensionApi(commandOverlayInjectable);
 
 // other components
 export * from "../../renderer/components/icon";
