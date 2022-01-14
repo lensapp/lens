@@ -283,6 +283,9 @@ export class Input extends React.Component<InputProps, State> {
       } else {
         this.setDirty();
       }
+
+      //pressing enter indicates that the edit is complete, we can unfocus now
+      this.blur();
     }
   }
 
