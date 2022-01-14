@@ -33,7 +33,7 @@ import { defaultPackageMirror, packageMirrors } from "../../common/user-store/pr
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
-import { noop } from "../renderer/utils";
+import { noop } from "lodash/fp";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
