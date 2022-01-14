@@ -77,6 +77,7 @@ export const Terminal = observer(() => {
           ...terminalSettings,
           terminalFontSize: Number(value),
         })}
+        onBlur={() => userStore.terminalFontSize = terminalSettings.terminalFontSize}
       />
     </section>
     <section>
@@ -89,6 +90,7 @@ export const Terminal = observer(() => {
           ...terminalSettings,
           terminalFontFamily: value.toString(),
         })}
+        onBlur={() => userStore.terminalFontFamily = terminalSettings.terminalFontFamily}
       />
     </section>
   </div>);

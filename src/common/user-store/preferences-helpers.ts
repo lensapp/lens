@@ -26,7 +26,7 @@ export const defaultEditorConfig: EditorConfiguration = {
   tabSize: 2,
   lineNumbers: "on",
   fontSize: 22,
-  fontFamily: "Verdana",
+  fontFamily: defaultFontFamily,
   minimap: {
     enabled: true,
     side: "right",

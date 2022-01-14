@@ -27,7 +27,7 @@ export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
 export const publicPath = "/build/" as string;
 export const defaultTheme = "lens-dark" as string;
 export const defaultFontSize = 10;
-export const defaultFontFamily = "Verdana";
+export const defaultFontFamily = "RobotoMono";
 
 // Webpack build paths
 export const contextDir = process.cwd();

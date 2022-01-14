@@ -11,7 +11,7 @@ import type { DockStore, TabId } from "../dock-store/dock.store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
-import { isMac } from "../../../../common/vars";
+import { isMac, defaultFontFamily } from "../../../../common/vars";
 import { once } from "lodash";
 import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
@@ -37,8 +37,8 @@ export class Terminal {
   private xterm: XTerm | null = new XTerm({
     cursorBlink: true,
     cursorStyle: "bar",
-    fontSize: 13,
-    fontFamily: "RobotoMono",
+    fontSize: UserStore.getInstance().terminalFontSize || 22,
+    fontFamily: UserStore.getInstance().terminalFontFamily || defaultFontFamily,
   });
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;
