@@ -56,7 +56,6 @@ export class EditableList<T> extends React.Component<Props<T>> {
     if (val) {
       evt.preventDefault();
       this.props.add(val);
-      evt.stopPropagation();
     }
   }
 
