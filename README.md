@@ -28,5 +28,3 @@ See [Development](https://docs.k8slens.dev/latest/contributing/development/) pag
 ## Contributing
 
 See [Contributing](https://docs.k8slens.dev/latest/contributing/) page.
-
-.\lens.exe /S /allusers /disableAutoUpdates /D="path"

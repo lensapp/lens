@@ -37,7 +37,6 @@ export const extensionRoute: RouteProps = {
 export const terminalRoute: RouteProps = {
   path: `${preferencesRoute.path}/terminal`,
 };
-
 export const preferencesURL = buildURL(preferencesRoute.path);
 export const appURL = buildURL(appRoute.path);
 export const proxyURL = buildURL(proxyRoute.path);

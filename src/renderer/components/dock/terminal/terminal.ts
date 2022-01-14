@@ -11,7 +11,7 @@ import type { DockStore, TabId } from "../dock-store/dock.store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
-import { isMac, defaultFontFamily } from "../../../../common/vars";
+import { isMac, defaultFontFamily, defaultFontSize } from "../../../../common/vars";
 import { once } from "lodash";
 import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
@@ -28,7 +28,7 @@ export class Terminal {
 
   static async preloadFonts() {
     const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
-    const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+    const fontFace = new FontFace(defaultFontFamily, `url(${fontPath})`);
 
     await fontFace.load();
     document.fonts.add(fontFace);
@@ -37,7 +37,7 @@ export class Terminal {
   private xterm: XTerm | null = new XTerm({
     cursorBlink: true,
     cursorStyle: "bar",
-    fontSize: UserStore.getInstance().terminalFontSize || 22,
+    fontSize: UserStore.getInstance().terminalFontSize || defaultFontSize,
     fontFamily: UserStore.getInstance().terminalFontFamily || defaultFontFamily,
   });
   private readonly fitAddon = new FitAddon();

@@ -25,7 +25,7 @@ export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptio
 export const defaultEditorConfig: EditorConfiguration = {
   tabSize: 2,
   lineNumbers: "on",
-  fontSize: 22,
+  fontSize: 12,
   fontFamily: defaultFontFamily,
   minimap: {
     enabled: true,
