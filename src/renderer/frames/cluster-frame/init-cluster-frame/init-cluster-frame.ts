@@ -49,7 +49,8 @@ export const initClusterFrame =
 
       // Only load the extensions once the catalog has been populated
       when(
-        () => Boolean(catalogEntityRegistry.activeEntity),
+        // watch for .items, as .activeEntity might be populated only after extensions are loaded (if using custom Catalog Category)
+        () => catalogEntityRegistry.items.length > 0,
         () =>
           loadExtensions(catalogEntityRegistry.activeEntity as KubernetesCluster),
         {
