@@ -140,7 +140,7 @@ export class CustomResourceDefinition extends KubeObject {
   getResourceTitle() {
     const name = this.getPluralName();
 
-    return name[0].toUpperCase() + name.substr(1);
+    return name[0].toUpperCase() + name.slice(1);
   }
 
   getGroup() {
