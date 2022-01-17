@@ -43,12 +43,8 @@ export class CatalogEntityRegistry {
     return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as T[];
   }
 
-  getItemsOfType<T extends CatalogEntity>(Constructor: CatalogEntityConstructor<T>): T[] {
-    return this.items.filter((item) => item instanceof Constructor) as T[];
-  }
-
   getItemsByEntityClass<T extends CatalogEntity>(constructor: CatalogEntityConstructor<T>): T[] {
-    return this.getItemsOfType(constructor);
+    return this.items.filter((item) => item instanceof constructor) as T[];
   }
 }
 
