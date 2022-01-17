@@ -3,12 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, autorun, computed, IReactionDisposer, reaction, makeObservable } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  IReactionDisposer,
+  reaction,
+  makeObservable,
+} from "mobx";
 import { DockStore, DockTab, TabId, TabKind } from "../dock-store/dock.store";
 import { DockTabStorageState, DockTabStore } from "../dock-tab-store/dock-tab.store";
-import { getReleaseValues } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import type { ReleaseStore } from "../../+apps-releases/release.store";
+import {
+  getReleaseValues,
+  HelmRelease,
+} from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { iter, StorageHelper } from "../../../utils";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -16,7 +26,7 @@ export interface IChartUpgradeData {
 }
 
 interface Dependencies {
-  releaseStore: ReleaseStore
+  releases: IAsyncComputed<HelmRelease[]>
   valuesStore: DockTabStore<string>
   dockStore: DockStore
   createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>
@@ -60,14 +70,14 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
       return;
     }
     const dispose = reaction(() => {
-      const release = this.dependencies.releaseStore.getByName(releaseName);
+      const release = this.dependencies.releases.value.get().find(release => release.getName() === releaseName);
 
       return release?.getRevision(); // watch changes only by revision
     },
     release => {
       const releaseTab = this.getTabByRelease(releaseName);
 
-      if (!this.dependencies.releaseStore.isLoaded || !releaseTab) {
+      if (!releaseTab) {
         return;
       }
 
@@ -91,7 +101,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   isLoading(tabId = this.dependencies.dockStore.selectedTabId) {
     const values = this.values.getData(tabId);
 
-    return !this.dependencies.releaseStore.isLoaded || values === undefined;
+    return values === undefined;
   }
 
   @action
@@ -99,7 +109,6 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const values = this.values.getData(tabId);
 
     await Promise.all([
-      !this.dependencies.releaseStore.isLoaded && this.dependencies.releaseStore.loadFromContextNamespaces(),
       !values && this.loadValues(tabId),
     ]);
   }

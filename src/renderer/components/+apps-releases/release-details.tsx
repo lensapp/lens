@@ -11,7 +11,13 @@ import isEqual from "lodash/isEqual";
 import { makeObservable, observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
-import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../../common/k8s-api/endpoints/helm-releases.api";
+import {
+  getRelease,
+  getReleaseValues,
+  HelmRelease,
+  IReleaseDetails, IReleaseUpdateDetails,
+  IReleaseUpdatePayload,
+} from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -20,7 +26,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Button } from "../button";
-import type { ReleaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { ThemeStore } from "../../theme.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
@@ -31,9 +36,10 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { Checkbox } from "../checkbox";
 import { MonacoEditor } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import releaseStoreInjectable from "./release-store.injectable";
 import createUpgradeChartTabInjectable
   from "../dock/create-upgrade-chart-tab/create-upgrade-chart-tab.injectable";
+import updateReleaseInjectable from "./update-release/update-release.injectable";
+import getReleaseSecretInjectable from "./get-release-secret/get-release-secret.injectable";
 
 interface Props {
   release: HelmRelease;
@@ -41,7 +47,8 @@ interface Props {
 }
 
 interface Dependencies {
-  releaseStore: ReleaseStore
+  getReleaseSecret: (release: HelmRelease) => Secret
+  updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>
   createUpgradeChartTab: (release: HelmRelease) => void
 }
 
@@ -65,9 +72,9 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
       }),
       reaction(() => secretsStore.getItems(), () => {
         if (!this.props.release) return;
-        const { getReleaseSecret } = this.props.releaseStore;
+
         const { release } = this.props;
-        const secret = getReleaseSecret(release);
+        const secret = this.props.getReleaseSecret(release);
 
         if (this.releaseSecret) {
           if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
@@ -125,7 +132,7 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
     this.saving = true;
 
     try {
-      await this.props.releaseStore.update(name, namespace, data);
+      await this.props.updateRelease(name, namespace, data);
       Notifications.ok(
         <p>Release <b>{name}</b> successfully updated!</p>,
       );
@@ -313,7 +320,8 @@ export const ReleaseDetails = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      releaseStore: di.inject(releaseStoreInjectable),
+      getReleaseSecret: di.inject(getReleaseSecretInjectable),
+      updateRelease: di.inject(updateReleaseInjectable),
       createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
       ...props,
     }),
