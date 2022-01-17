@@ -10,7 +10,7 @@ import { getAppVersion, ObservableToggleSet } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme, defaultFontFamily, defaultFontSize } from "../vars";
+import { defaultTheme, defaultEditorFontFamily, defaultFontSize } from "../vars";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -25,8 +25,8 @@ export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptio
 export const defaultEditorConfig: EditorConfiguration = {
   tabSize: 2,
   lineNumbers: "on",
-  fontSize: 12,
-  fontFamily: defaultFontFamily,
+  fontSize: defaultFontSize,
+  fontFamily: defaultEditorFontFamily,
   minimap: {
     enabled: true,
     side: "right",
@@ -194,7 +194,7 @@ const terminalFontSize: PreferenceDescription<number | undefined> = {
   },
   toStore(val) {
     if (!val) {
-      return defaultFontSize;
+      return undefined;
     }
 
     return val;
@@ -207,7 +207,7 @@ const terminalFontFamily: PreferenceDescription<string | undefined> = {
   },
   toStore(val) {
     if (!val) {
-      return defaultFontFamily;
+      return undefined;
     }
 
     return val;
