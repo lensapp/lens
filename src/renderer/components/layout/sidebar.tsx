@@ -24,7 +24,7 @@ import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames, Disposer } from "../../utils";
 import { Icon } from "../icon";
 import { Workloads } from "../+workloads";
 import { UserManagement } from "../+user-management";
@@ -42,19 +42,27 @@ import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { SidebarCluster } from "./sidebar-cluster";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props {
   className?: string;
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class Sidebar extends React.Component<Props> {
+class NonInjectedSidebar extends React.Component<Props & Dependencies> {
   static displayName = "Sidebar";
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         crdStore,
       ]),
     ]);
@@ -302,3 +310,14 @@ export class Sidebar extends React.Component<Props> {
     );
   }
 }
+
+export const Sidebar = withInjectables<Dependencies, Props>(
+  NonInjectedSidebar,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);

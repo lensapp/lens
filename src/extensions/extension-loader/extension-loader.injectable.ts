@@ -20,9 +20,17 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { ExtensionLoader } from "./extension-loader";
+import updateExtensionsStateInjectable from "./update-extensions-state/update-extensions-state.injectable";
+import createExtensionInstanceInjectable
+  from "./create-extension-instance/create-extension-instance.injectable";
 
 const extensionLoaderInjectable = getInjectable({
-  instantiate: () => new ExtensionLoader(),
+  instantiate: (di) =>
+    new ExtensionLoader({
+      updateExtensionsState: di.inject(updateExtensionsStateInjectable),
+      createExtensionInstance: di.inject(createExtensionInstanceInjectable),
+    }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

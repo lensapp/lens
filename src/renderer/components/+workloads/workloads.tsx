@@ -22,7 +22,6 @@
 import "./workloads.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
 import { Pods } from "../+workloads-pods";
@@ -35,7 +34,6 @@ import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { ReplicaSets } from "../+workloads-replicasets";
 import * as routes from "../../../common/routes";
 
-@observer
 export class Workloads extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const tabs: TabLayoutRoute[] = [

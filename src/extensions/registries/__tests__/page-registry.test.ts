@@ -26,10 +26,10 @@ import React from "react";
 import fse from "fs-extra";
 import { Console } from "console";
 import { stderr, stdout } from "process";
-import { TerminalStore } from "../../../renderer/components/dock/terminal.store";
 import { ThemeStore } from "../../../renderer/theme.store";
 import { UserStore } from "../../../common/user-store";
-import { AppPaths } from "../../../common/app-paths";
+import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
+import mockFs from "mock-fs";
 
 jest.mock("electron", () => ({
   app: {
@@ -47,14 +47,18 @@ jest.mock("electron", () => ({
   },
 }));
 
-AppPaths.init();
-
 console = new Console(stdout, stderr);
 
 let ext: LensExtension = null;
 
 describe("page registry tests", () => {
   beforeEach(async () => {
+    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
+
+    await dis.runSetups();
+
     ext = new LensExtension({
       manifest: {
         name: "foo-bar",
@@ -69,7 +73,6 @@ describe("page registry tests", () => {
     });
     UserStore.createInstance();
     ThemeStore.createInstance();
-    TerminalStore.createInstance();
     ClusterPageRegistry.createInstance();
     GlobalPageRegistry.createInstance().add({
       id: "page-with-params",
@@ -105,10 +108,10 @@ describe("page registry tests", () => {
   afterEach(() => {
     GlobalPageRegistry.resetInstance();
     ClusterPageRegistry.resetInstance();
-    TerminalStore.resetInstance();
     ThemeStore.resetInstance();
     UserStore.resetInstance();
     fse.remove("tmp");
+    mockFs.restore();
   });
 
   describe("getPageUrl", () => {

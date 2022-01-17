@@ -24,8 +24,10 @@ import "./log-search.scss";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { SearchInput } from "../input";
-import { searchStore } from "../../../common/search-store";
+import type { SearchStore } from "../../search-store/search-store";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import searchStoreInjectable from "../../search-store/search-store.injectable";
 
 export interface PodLogSearchProps {
   onSearch: (query: string) => void
@@ -37,8 +39,12 @@ interface Props extends PodLogSearchProps {
   logs: string[]
 }
 
-export const LogSearch = observer((props: Props) => {
-  const { logs, onSearch, toPrevOverlay, toNextOverlay } = props;
+interface Dependencies {
+  searchStore: SearchStore
+}
+
+const NonInjectedLogSearch = observer((props: Props & Dependencies) => {
+  const { logs, onSearch, toPrevOverlay, toNextOverlay, searchStore } = props;
   const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
   const findCounts = (
@@ -102,3 +108,14 @@ export const LogSearch = observer((props: Props) => {
     </div>
   );
 });
+
+export const LogSearch = withInjectables<Dependencies, Props>(
+  NonInjectedLogSearch,
+
+  {
+    getProps: (di, props) => ({
+      searchStore: di.inject(searchStoreInjectable),
+      ...props,
+    }),
+  },
+);

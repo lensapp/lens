@@ -27,7 +27,7 @@ import identity from "lodash/identity";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterNameInjectable from "./dependencies/cluster-name.injectable";
-import editResourceTabInjectable from "./dependencies/edit-resource-tab.injectable";
+import editResourceTabInjectable from "../dock/edit-resource-tab/edit-resource-tab.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
@@ -127,7 +127,7 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Co
 export function KubeObjectMenu<T extends KubeObject>(
   props: KubeObjectMenuProps<T>,
 ) {
-  return withInjectables<Dependencies, KubeObjectMenuProps<T>>(
+  const InjectedKubeObjectMenu = withInjectables<Dependencies, KubeObjectMenuProps<T>>(
     NonInjectedKubeObjectMenu,
     {
       getProps: (di, props) => ({
@@ -142,5 +142,7 @@ export function KubeObjectMenu<T extends KubeObject>(
         ...props,
       }),
     },
-  )(props);
+  );
+
+  return <InjectedKubeObjectMenu {...props} />;
 }

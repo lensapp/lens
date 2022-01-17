@@ -20,72 +20,43 @@
  */
 
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-
-import { searchStore } from "../../../common/search-store";
+import { observer } from "mobx-react";
 import { boundMethod } from "../../utils";
-import type { DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
-import { LogList } from "./log-list";
-import { logStore } from "./log.store";
+import { LogList, NonInjectedLogList } from "./log-list";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
-import { LogTabData, logTabStore } from "./log-tab.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { SearchStore } from "../../search-store/search-store";
+import searchStoreInjectable from "../../search-store/search-store.injectable";
+import { Spinner } from "../spinner";
+import logsViewModelInjectable from "./logs/logs-view-model/logs-view-model.injectable";
+import type { LogsViewModel } from "./logs/logs-view-model/logs-view-model";
 
 interface Props {
-  className?: string
-  tab: DockTab
+  className?: string;
+}
+
+interface Dependencies {
+  searchStore: SearchStore
+  model: LogsViewModel
 }
 
 @observer
-export class Logs extends React.Component<Props> {
-  @observable isLoading = true;
+class NonInjectedLogs extends React.Component<Props & Dependencies> {
+  private logListElement = React.createRef<NonInjectedLogList>(); // A reference for VirtualList component
 
-  private logListElement = React.createRef<LogList>(); // A reference for VirtualList component
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this,
-      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true }),
-    );
-  }
-
-  get tabId() {
-    return this.props.tab.id;
-  }
-
-  load = async () => {
-    this.isLoading = true;
-    await logStore.load(this.tabId);
-    this.isLoading = false;
-  };
-
-  reload = async () => {
-    logStore.clearLogs(this.tabId);
-    await this.load();
-  };
-
-  /**
-   * A function for various actions after search is happened
-   * @param query {string} A text from search field
-   */
-  @boundMethod
-  onSearch() {
-    this.toOverlay();
+  get model() {
+    return this.props.model;
   }
 
   /**
    * Scrolling to active overlay (search word highlight)
    */
   @boundMethod
-  toOverlay() {
-    const { activeOverlayLine } = searchStore;
+  scrollToOverlay() {
+    const { activeOverlayLine } = this.props.searchStore;
 
     if (!this.logListElement.current || activeOverlayLine === undefined) return;
     // Scroll vertically
@@ -99,33 +70,35 @@ export class Logs extends React.Component<Props> {
     }, 100);
   }
 
-  renderResourceSelector(data?: LogTabData) {
-    if (!data) {
+  renderResourceSelector() {
+    const { tabs, logs, logsWithoutTimestamps, saveTab, tabId } = this.model;
+
+    if (!tabs) {
       return null;
     }
 
-    const logs = logStore.logs;
-    const searchLogs = data.showTimestamps ? logs : logStore.logsWithoutTimestamps;
+    const searchLogs = tabs.showTimestamps ? logs : logsWithoutTimestamps;
+
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
-          tabId={this.tabId}
-          tabData={data}
-          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
-          reload={this.reload}
+          tabId={tabId}
+          tabData={tabs}
+          save={saveTab}
         />
+
         <LogSearch
-          onSearch={this.onSearch}
+          onSearch={this.scrollToOverlay}
           logs={searchLogs}
-          toPrevOverlay={this.toOverlay}
-          toNextOverlay={this.toOverlay}
+          toPrevOverlay={this.scrollToOverlay}
+          toNextOverlay={this.scrollToOverlay}
         />
       </div>
     );
 
     return (
       <InfoPanel
-        tabId={this.props.tab.id}
+        tabId={this.model.tabId}
         controls={controls}
         showSubmitClose={false}
         showButtons={false}
@@ -135,30 +108,45 @@ export class Logs extends React.Component<Props> {
   }
 
   render() {
-    const logs = logStore.logs;
-    const data = logTabStore.getData(this.tabId);
-
-    if (!data) {
-      this.reload();
-    }
+    const { logs, tabs, tabId, saveTab } = this.model;
 
     return (
       <div className="PodLogs flex column">
-        {this.renderResourceSelector(data)}
+        {this.renderResourceSelector()}
+
         <LogList
           logs={logs}
-          id={this.tabId}
-          isLoading={this.isLoading}
-          load={this.load}
+          id={tabId}
           ref={this.logListElement}
         />
+
         <LogControls
           logs={logs}
-          tabData={data}
-          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
-          reload={this.reload}
+          tabData={tabs}
+          save={saveTab}
         />
       </div>
     );
   }
 }
+
+
+
+export const Logs = withInjectables<Dependencies, Props>(
+  NonInjectedLogs,
+
+  {
+
+    getPlaceholder: () => (
+      <div className="flex box grow align-center justify-center">
+        <Spinner center />
+      </div>
+    ),
+
+    getProps: async (di, props) => ({
+      searchStore: di.inject(searchStoreInjectable),
+      model: await di.inject(logsViewModelInjectable),
+      ...props,
+    }),
+  },
+);

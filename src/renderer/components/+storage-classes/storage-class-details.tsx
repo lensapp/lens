@@ -33,16 +33,25 @@ import { storageClassStore } from "./storage-class.store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import { volumesStore } from "../+storage-volumes/volumes.store";
 import logger from "../../../common/logger";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { Disposer } from "../../../common/utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props extends KubeObjectDetailsProps<StorageClass> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class StorageClassDetails extends React.Component<Props> {
+class NonInjectedStorageClassDetails extends React.Component<Props & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         volumesStore,
       ]),
     ]);
@@ -102,3 +111,15 @@ export class StorageClassDetails extends React.Component<Props> {
     );
   }
 }
+
+export const StorageClassDetails = withInjectables<Dependencies, Props>(
+  NonInjectedStorageClassDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);
+

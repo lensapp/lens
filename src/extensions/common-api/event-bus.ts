@@ -19,5 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { appEventBus } from "../../common/event-bus";
-export type { AppEvent } from "../../common/event-bus";
+export { appEventBus } from "../../common/app-event-bus/event-bus";
+export type { AppEvent } from "../../common/app-event-bus/event-bus";

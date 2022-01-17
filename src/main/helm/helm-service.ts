@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Cluster } from "../cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 import logger from "../logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";

@@ -19,18 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { dialog } from "../../../remote-helpers";
-import { AppPaths } from "../../../../common/app-paths";
 import { supportedExtensionFormats } from "../supported-extension-formats";
 
 interface Dependencies {
   attemptInstalls: (filePaths: string[]) => Promise<void>
+  directoryForDownloads: string
 }
 
 export const installFromSelectFileDialog =
-  ({ attemptInstalls }: Dependencies) =>
+  ({ attemptInstalls, directoryForDownloads }: Dependencies) =>
     async () => {
       const { canceled, filePaths } = await dialog.showOpenDialog({
-        defaultPath: AppPaths.get("downloads"),
+        defaultPath: directoryForDownloads,
         properties: ["openFile", "multiSelections"],
         message: `Select extensions to install (formats: ${supportedExtensionFormats.join(
           ", ",

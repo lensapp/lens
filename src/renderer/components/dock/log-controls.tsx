@@ -26,20 +26,25 @@ import { observer } from "mobx-react";
 
 import { Pod } from "../../../common/k8s-api/endpoints";
 import { cssNames, saveFileDialog } from "../../utils";
-import { logStore } from "./log.store";
 import { Checkbox } from "../checkbox";
 import { Icon } from "../icon";
-import type { LogTabData } from "./log-tab.store";
+import type { LogTabData } from "./log-tab-store/log-tab.store";
+import type { LogStore } from "./log-store/log.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import logStoreInjectable from "./log-store/log-store.injectable";
 
 interface Props {
   tabData?: LogTabData
   logs: string[]
   save: (data: Partial<LogTabData>) => void
-  reload: () => void
 }
 
-export const LogControls = observer((props: Props) => {
-  const { tabData, save, reload, logs } = props;
+interface Dependencies {
+  logStore: LogStore
+}
+
+const NonInjectedLogControls = observer((props: Props & Dependencies) => {
+  const { tabData, save, logs, logStore } = props;
 
   if (!tabData) {
     return null;
@@ -55,7 +60,7 @@ export const LogControls = observer((props: Props) => {
 
   const togglePrevious = () => {
     save({ previous: !previous });
-    reload();
+    logStore.reload();
   };
 
   const downloadLogs = () => {
@@ -98,3 +103,15 @@ export const LogControls = observer((props: Props) => {
     </div>
   );
 });
+
+export const LogControls = withInjectables<Dependencies, Props>(
+  NonInjectedLogControls,
+
+  {
+    getProps: (di, props) => ({
+      logStore: di.inject(logStoreInjectable),
+      ...props,
+    }),
+  },
+);
+

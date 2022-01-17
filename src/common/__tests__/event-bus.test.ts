@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { appEventBus, AppEvent } from "../event-bus";
+import { appEventBus, AppEvent } from "../app-event-bus/event-bus";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 

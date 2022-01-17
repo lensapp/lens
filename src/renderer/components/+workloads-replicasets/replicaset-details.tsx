@@ -38,18 +38,26 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { boundMethod } from "../../utils";
+import { boundMethod, Disposer } from "../../utils";
 import logger from "../../../common/logger";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class ReplicaSetDetails extends React.Component<Props> {
+class NonInjectedReplicaSetDetails extends React.Component<Props & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -59,7 +67,8 @@ export class ReplicaSetDetails extends React.Component<Props> {
       reaction(() => this.props.object, () => {
         this.metrics = null;
       }),
-      kubeWatchApi.subscribeStores([
+      
+      this.props.subscribeStores([
         podsStore,
       ]),
     ]);
@@ -140,3 +149,14 @@ export class ReplicaSetDetails extends React.Component<Props> {
     );
   }
 }
+
+export const ReplicaSetDetails = withInjectables<Dependencies, Props>(
+  NonInjectedReplicaSetDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);

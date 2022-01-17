@@ -26,12 +26,14 @@ import { observer } from "mobx-react";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
 import { workloadStores } from "../+workloads";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
 import type { KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
 import { boundMethod } from "../../utils";
 import { workloadURL } from "../../../common/routes";
 import { isAllowedResource } from "../../../common/utils/allowed-resource";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 
 const resources: KubeResource[] = [
   "pods",
@@ -43,8 +45,12 @@ const resources: KubeResource[] = [
   "cronjobs",
 ];
 
+interface Dependencies {
+  namespaceStore: NamespaceStore
+}
+
 @observer
-export class OverviewStatuses extends React.Component {
+class NonInjectedOverviewStatuses extends React.Component<Dependencies> {
   @boundMethod
   renderWorkload(resource: KubeResource): React.ReactElement {
     const store = workloadStores.get(resource);
@@ -53,7 +59,7 @@ export class OverviewStatuses extends React.Component {
       return null;
     }
 
-    const items = store.getAllByNs(namespaceStore.contextNamespaces);
+    const items = store.getAllByNs(this.props.namespaceStore.contextNamespaces);
 
     return (
       <div className="workload" key={resource}>
@@ -79,3 +85,13 @@ export class OverviewStatuses extends React.Component {
     );
   }
 }
+
+export const OverviewStatuses = withInjectables<Dependencies>(
+  NonInjectedOverviewStatuses,
+
+  {
+    getProps: (di) => ({
+      namespaceStore: di.inject(namespaceStoreInjectable),
+    }),
+  },
+);

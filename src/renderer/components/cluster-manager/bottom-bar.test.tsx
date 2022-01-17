@@ -26,16 +26,14 @@ import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
 import { StatusBarRegistry } from "../../../extensions/registries";
 import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
-import { AppPaths } from "../../../common/app-paths";
 import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 import { ActiveHotbarName } from "./active-hotbar-name";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../test-utils/renderFor";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { getEmptyHotbar } from "../../../common/hotbar-types";
 
-AppPaths.init();
 
 jest.mock("electron", () => ({
   app: {
@@ -56,25 +54,29 @@ jest.mock("electron", () => ({
 const foobarHotbar = getEmptyHotbar("foobar");
 
 describe("<BottomBar />", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DependencyInjectionContainer;
   let render: DiRender;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const mockOpts = {
       "tmp": {
         "test-store.json": JSON.stringify({}),
       },
     };
 
-    di = getDiForUnitTesting();
-    render = renderFor(di);
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs(mockOpts);
-    StatusBarRegistry.createInstance();
+
+    render = renderFor(di);
 
     di.override(hotbarManagerInjectable, () => ({
       getActive: () => foobarHotbar,
     } as any));
+
+    await di.runSetups();
+
+    StatusBarRegistry.createInstance();
   });
 
   afterEach(() => {

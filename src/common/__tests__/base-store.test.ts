@@ -20,29 +20,18 @@
  */
 
 import mockFs from "mock-fs";
-import { AppPaths } from "../app-paths";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
+import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 
-AppPaths.init();
+import directoryForUserDataInjectable
+  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
   ipcMain: {
-    handle: jest.fn(),
     on: jest.fn(),
-    removeAllListeners: jest.fn(),
     off: jest.fn(),
-    send: jest.fn(),
   },
 }));
 
@@ -105,10 +94,17 @@ describe("BaseStore", () => {
   let store: TestStore;
 
   beforeEach(async () => {
+    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    dis.mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+
+    await dis.runSetups();
+
     store = undefined;
     TestStore.resetInstance();
+
     const mockOpts = {
-      "tmp": {
+      "some-user-data-directory": {
         "test-store.json": JSON.stringify({}),
       },
     };
@@ -130,7 +126,7 @@ describe("BaseStore", () => {
         a: "foo", b: "bar", c: "hello",
       });
   
-      const data = JSON.parse(readFileSync("tmp/test-store.json").toString());
+      const data = JSON.parse(readFileSync("some-user-data-directory/test-store.json").toString());
   
       expect(data).toEqual({ a: "foo", b: "bar", c: "hello" });
     });
@@ -153,7 +149,7 @@ describe("BaseStore", () => {
   
       expect(fileSpy).toHaveBeenCalledTimes(2);
 
-      const data = JSON.parse(readFileSync("tmp/test-store.json").toString());
+      const data = JSON.parse(readFileSync("some-user-data-directory/test-store.json").toString());
   
       expect(data).toEqual({ a: "a", b: "b", c: "" });
     });

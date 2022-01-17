@@ -26,28 +26,37 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { getHostedClusterId, interval } from "../../utils";
+import { Disposer, getHostedClusterId, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
-import { clusterOverviewStore } from "./cluster-overview.store";
+import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { ClusterStore } from "../../../common/cluster-store";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { eventStore } from "../+events/event.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
+
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer,
+  clusterOverviewStore: ClusterOverviewStore
+}
 
 @observer
-export class ClusterOverview extends React.Component {
+class NonInjectedClusterOverview extends React.Component<Dependencies> {
   private metricPoller = interval(60, () => this.loadMetrics());
 
   loadMetrics() {
     const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
 
     if (cluster.available) {
-      clusterOverviewStore.loadMetrics();
+      this.props.clusterOverviewStore.loadMetrics();
     }
   }
 
@@ -55,13 +64,14 @@ export class ClusterOverview extends React.Component {
     this.metricPoller.start(true);
 
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         podsStore,
         eventStore,
         nodesStore,
       ]),
+
       reaction(
-        () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
+        () => this.props.clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
         () => this.metricPoller.restart(true),
       ),
     ]);
@@ -110,3 +120,14 @@ export class ClusterOverview extends React.Component {
     );
   }
 }
+
+export const ClusterOverview = withInjectables<Dependencies>(
+  NonInjectedClusterOverview,
+
+  {
+    getProps: (di) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
+    }),
+  },
+);

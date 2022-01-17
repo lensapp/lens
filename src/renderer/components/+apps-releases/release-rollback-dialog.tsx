@@ -27,41 +27,36 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { getReleaseHistory, HelmRelease, IReleaseRevision } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { releaseStore } from "./release.store";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
 import orderBy from "lodash/orderBy";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import releaseStoreInjectable from "./release-store.injectable";
+import releaseRollbackDialogModelInjectable
+  from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
+import type { ReleaseRollbackDialogModel } from "./release-rollback-dialog-model/release-rollback-dialog-model";
 
 interface Props extends DialogProps {
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-  release: null as HelmRelease,
-});
+interface Dependencies {
+  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<any>
+  model: ReleaseRollbackDialogModel
+}
 
 @observer
-export class ReleaseRollbackDialog extends React.Component<Props> {
+class NonInjectedReleaseRollbackDialog extends React.Component<Props & Dependencies> {
   @observable isLoading = false;
   @observable revision: IReleaseRevision;
   @observable revisions = observable.array<IReleaseRevision>();
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(release: HelmRelease) {
-    dialogState.isOpen = true;
-    dialogState.release = release;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
-  }
-
   get release(): HelmRelease {
-    return dialogState.release;
+    return this.props.model.release;
   }
 
   onOpen = async () => {
@@ -78,15 +73,11 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     const revisionNumber = this.revision.revision;
 
     try {
-      await releaseStore.rollback(this.release.getName(), this.release.getNs(), revisionNumber);
-      this.close();
+      await this.props.rollbackRelease(this.release.getName(), this.release.getNs(), revisionNumber);
+      this.props.model.close();
     } catch (err) {
       Notifications.error(err);
     }
-  };
-
-  close = () => {
-    ReleaseRollbackDialog.close();
   };
 
   renderContent() {
@@ -120,11 +111,11 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="ReleaseRollbackDialog"
-        isOpen={dialogState.isOpen}
+        isOpen={this.props.model.isOpen}
         onOpen={this.onOpen}
-        close={this.close}
+        close={this.props.model.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={this.props.model.close}>
           <WizardStep
             scrollable={false}
             nextLabel="Rollback"
@@ -138,3 +129,15 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     );
   }
 }
+
+export const ReleaseRollbackDialog = withInjectables<Dependencies, Props>(
+  NonInjectedReleaseRollbackDialog,
+
+  {
+    getProps: (di, props) => ({
+      rollbackRelease: di.inject(releaseStoreInjectable).rollback,
+      model: di.inject(releaseRollbackDialogModelInjectable),
+      ...props,
+    }),
+  },
+);

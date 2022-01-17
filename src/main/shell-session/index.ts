@@ -19,5 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./node-shell-session";
-export * from "./local-shell-session";
+export * from "./node-shell-session/node-shell-session";
+export * from "./local-shell-session/local-shell-session";

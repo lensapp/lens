@@ -32,8 +32,10 @@ describe("tray-menu-items", () => {
   let trayMenuItems: IComputedValue<TrayMenuRegistration[]>;
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    await di.runSetups();
 
     extensionsStub = new ObservableMap();
 

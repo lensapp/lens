@@ -22,7 +22,7 @@
 import React from "react";
 import fs from "fs";
 import "../../common/catalog-entities/kubernetes-cluster";
-import { ClusterStore } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { loadConfigFromString } from "../../common/kube-helpers";
@@ -58,6 +58,7 @@ export function initCatalog({ openCommandDialog }: Dependencies) {
         onClick: () => openCommandDialog(<WeblinkAddCommand />),
       });
     });
+
   catalogCategoryRegistry
     .getForGroupKind("entity.k8slens.dev", "KubernetesCluster")
     .on("contextMenuOpen", (entity, context) => {

@@ -22,7 +22,6 @@
 import React from "react";
 import * as routes from "../../../../common/routes";
 import { EntitySettingRegistry, RegisteredEntitySetting } from "../../../../extensions/registries";
-import { createTerminalTab } from "../../dock/terminal.store";
 import { HotbarAddCommand } from "../../hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../../hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";
@@ -31,6 +30,9 @@ import { ActivateEntityCommand } from "../../activate-entity-command";
 import type { CommandContext, CommandRegistration } from "./commands";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-overlay.injectable";
+import createTerminalTabInjectable
+  from "../../dock/create-terminal-tab/create-terminal-tab.injectable";
+import type { DockTabCreate } from "../../dock/dock-store/dock.store";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -39,9 +41,10 @@ export function isKubernetesClusterActive(context: CommandContext): boolean {
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
   getEntitySettingItems: (kind: string, apiVersion: string, source?: string) => RegisteredEntitySetting[];
+  createTerminalTab: () => DockTabCreate
 }
 
-function getInternalCommands({ openCommandDialog, getEntitySettingItems }: Dependencies): CommandRegistration[] {
+function getInternalCommands({ openCommandDialog, getEntitySettingItems, createTerminalTab }: Dependencies): CommandRegistration[] {
   return [
     {
       id: "app.showPreferences",
@@ -224,6 +227,7 @@ const internalCommandsInjectable = getInjectable({
     getEntitySettingItems: EntitySettingRegistry
       .getInstance()
       .getItemsForKind,
+    createTerminalTab: di.inject(createTerminalTabInjectable),
   }),
   lifecycle: lifecycleEnum.singleton,
 });

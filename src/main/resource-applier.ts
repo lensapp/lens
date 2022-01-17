@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Cluster } from "./cluster";
+import type { Cluster } from "../common/cluster/cluster";
 import type { KubernetesObject } from "@kubernetes/client-node";
 import { exec } from "child_process";
 import fs from "fs-extra";
@@ -27,7 +27,7 @@ import * as yaml from "js-yaml";
 import path from "path";
 import tempy from "tempy";
 import logger from "./logger";
-import { appEventBus } from "../common/event-bus";
+import { appEventBus } from "../common/app-event-bus/event-bus";
 import { cloneJsonObject } from "../common/utils";
 import type { Patch } from "rfc6902";
 import { promiseExecFile } from "../common/utils/promise-exec";

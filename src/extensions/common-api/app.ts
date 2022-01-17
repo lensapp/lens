@@ -20,14 +20,13 @@
  */
 
 import { getAppVersion } from "../../common/utils";
-import { ExtensionsStore } from "../extensions-store";
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
 import * as Preferences from "./user-preferences";
 
 export const version = getAppVersion();
 export { isSnap, isWindows, isMac, isLinux, appName, slackUrl, issuesTrackerUrl } from "../../common/vars";
 
-export function getEnabledExtensions(): string[] {
-  return ExtensionsStore.getInstance().enabledExtensions;
-}
+export const getEnabledExtensions = asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable);
 
 export { Preferences };

@@ -26,12 +26,10 @@ import { BaseStore } from "../base-store";
 import migrations, { fileNameMigration } from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
-import { appEventBus } from "../event-bus";
-import path from "path";
+import { appEventBus } from "../app-event-bus/event-bus";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
-import { AppPaths } from "../app-paths";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -232,12 +230,4 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
     return toJS(model);
   }
-}
-
-/**
- * Getting default directory to download kubectl binaries
- * @returns string
- */
-export function getDefaultKubectlDownloadPath(): string {
-  return path.join(AppPaths.get("userData"), "binaries");
 }

@@ -12,6 +12,9 @@
       <excludeFolder url="file://$MODULE_DIR$/extensions/pod-menu/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/static/build" />
       <excludeFolder url="file://$MODULE_DIR$/src/extensions/npm/extensions/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/binaries" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

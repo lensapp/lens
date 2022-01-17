@@ -20,7 +20,7 @@
  */
 import type { LensExtensionManifest } from "../../../../../extensions/lens-extension";
 import { listTarEntries, readFileFromTar } from "../../../../../common/utils";
-import { manifestFilename } from "../../../../../extensions/extension-discovery";
+import { manifestFilename } from "../../../../../extensions/extension-discovery/extension-discovery";
 import path from "path";
 
 export const validatePackage = async (

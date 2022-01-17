@@ -20,16 +20,20 @@
  */
 
 import React from "react";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import fse from "fs-extra";
 import { DockTabs } from "../dock-tabs";
-import { dockStore, DockTab, TabKind } from "../dock.store";
+import { DockStore, DockTab, TabKind } from "../dock-store/dock.store";
 import { noop } from "../../../utils";
 import { ThemeStore } from "../../../theme.store";
-import { TerminalStore } from "../terminal.store";
 import { UserStore } from "../../../../common/user-store";
-import { AppPaths } from "../../../../common/app-paths";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import dockStoreInjectable from "../dock-store/dock-store.injectable";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import directoryForUserDataInjectable
+  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -46,7 +50,6 @@ jest.mock("electron", () => ({
     handle: jest.fn(),
   },
 }));
-AppPaths.init();
 
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
@@ -56,7 +59,7 @@ const initialTabs: DockTab[] = [
   { id: "logs", kind: TabKind.POD_LOGS, title: "Logs", pinned: false },
 ];
 
-const getComponent = () => (
+const getComponent = (dockStore: DockStore) => (
   <DockTabs
     tabs={dockStore.tabs}
     selectedTab={dockStore.selectedTab}
@@ -65,40 +68,56 @@ const getComponent = () => (
   />
 );
 
-const renderTabs = () => render(getComponent());
-const getTabKinds = () => dockStore.tabs.map(tab => tab.kind);
+const getTabKinds = (dockStore: DockStore) => dockStore.tabs.map((tab) => tab.kind);
 
 describe("<DockTabs />", () => {
+  let dockStore: DockStore;
+  let render: DiRender;
+
   beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+
+    render = renderFor(di);
+
+    di.override(
+      directoryForUserDataInjectable,
+      () => "some-test-suite-specific-directory-for-user-data",
+    );
+
+    await di.runSetups();
+
+    dockStore = di.inject(dockStoreInjectable);
+
     UserStore.createInstance();
     ThemeStore.createInstance();
-    TerminalStore.createInstance();
     await dockStore.whenReady;
     dockStore.tabs = initialTabs;
   });
 
   afterEach(() => {
     ThemeStore.resetInstance();
-    TerminalStore.resetInstance();
     UserStore.resetInstance();
-    fse.remove("tmp");
+
+    // TODO: A unit test may not cause side effects. Here accessing file system is a side effect.
+    fse.remove("some-test-suite-specific-directory-for-user-data");
   });
 
   it("renders w/o errors", () => {
-    const { container } = renderTabs();
+    const { container } = render(getComponent(dockStore));
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("has 6 tabs (1 tab is initial terminal)", () => {
-    const { container } = renderTabs();
+    const { container } = render(getComponent(dockStore));
     const tabs = container.querySelectorAll(".Tab");
 
     expect(tabs.length).toBe(initialTabs.length);
   });
 
   it("opens a context menu", () => {
-    const { container, getByText } = renderTabs();
+    const { container, getByText } = render(getComponent(dockStore));
     const tab = container.querySelector(".Tab");
 
     fireEvent.contextMenu(tab);
@@ -106,17 +125,22 @@ describe("<DockTabs />", () => {
   });
 
   it("closes selected tab", () => {
-    const { container, getByText, rerender } = renderTabs();
+    const { container, getByText, rerender } = render(
+      getComponent(dockStore),
+    );
+
     const tab = container.querySelector(".Tab");
 
     fireEvent.contextMenu(tab);
     fireEvent.click(getByText("Close"));
-    rerender(getComponent());
+
+    rerender(getComponent(dockStore));
 
     const tabs = container.querySelectorAll(".Tab");
 
     expect(tabs.length).toBe(initialTabs.length - 1);
-    expect(getTabKinds()).toEqual([
+
+    expect(getTabKinds(dockStore)).toEqual([
       TabKind.CREATE_RESOURCE,
       TabKind.EDIT_RESOURCE,
       TabKind.INSTALL_CHART,
@@ -125,42 +149,42 @@ describe("<DockTabs />", () => {
   });
 
   it("closes other tabs", () => {
-    const { container, getByText, rerender } = renderTabs();
+    const { container, getByText, rerender } = render(getComponent(dockStore));
     const tab = container.querySelectorAll(".Tab")[3];
 
     fireEvent.contextMenu(tab);
     fireEvent.click(getByText("Close other tabs"));
-    rerender(getComponent());
+    rerender(getComponent(dockStore));
 
     const tabs = container.querySelectorAll(".Tab");
 
     expect(tabs.length).toBe(1);
-    expect(getTabKinds()).toEqual([initialTabs[3].kind]);
+    expect(getTabKinds(dockStore)).toEqual([initialTabs[3].kind]);
   });
 
   it("closes all tabs", () => {
-    const { container, getByText, rerender } = renderTabs();
+    const { container, getByText, rerender } = render(getComponent(dockStore));
     const tab = container.querySelector(".Tab");
 
     fireEvent.contextMenu(tab);
     const command = getByText("Close all tabs");
 
     fireEvent.click(command);
-    rerender(getComponent());
+    rerender(getComponent(dockStore));
     const tabs = container.querySelectorAll(".Tab");
 
     expect(tabs.length).toBe(0);
   });
 
   it("closes tabs to the right", () => {
-    const { container, getByText, rerender } = renderTabs();
+    const { container, getByText, rerender } = render(getComponent(dockStore));
     const tab = container.querySelectorAll(".Tab")[3]; // 4th of 5
 
     fireEvent.contextMenu(tab);
     fireEvent.click(getByText("Close tabs to the right"));
-    rerender(getComponent());
+    rerender(getComponent(dockStore));
 
-    expect(getTabKinds()).toEqual(
+    expect(getTabKinds(dockStore)).toEqual(
       initialTabs.slice(0, 4).map(tab => tab.kind),
     );
   });
@@ -169,7 +193,7 @@ describe("<DockTabs />", () => {
     dockStore.tabs = [{
       id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false,
     }];
-    const { container, getByText } = renderTabs();
+    const { container, getByText } = render(getComponent(dockStore));
     const tab = container.querySelector(".Tab");
 
     fireEvent.contextMenu(tab);
@@ -185,7 +209,7 @@ describe("<DockTabs />", () => {
       { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
       { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs", pinned: false },
     ];
-    const { container, getByText } = renderTabs();
+    const { container, getByText } = render(getComponent(dockStore));
     const tab = container.querySelectorAll(".Tab")[1];
 
     fireEvent.contextMenu(tab);

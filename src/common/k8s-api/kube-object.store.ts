@@ -24,7 +24,7 @@ import type { ClusterContext } from "./cluster-context";
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import { autoBind, noop, rejectPromiseBy } from "../utils";
 import { KubeObject, KubeStatus } from "./kube-object";
-import type { IKubeWatchEvent } from "./kube-watch-api";
+import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
 import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
@@ -101,6 +101,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return KubeObjectStore.defaultContext.get();
   }
 
+  // TODO: Circular dependency: KubeObjectStore -> ClusterFrameContext -> NamespaceStore -> KubeObjectStore
   @computed get contextItems(): T[] {
     const namespaces = this.context?.contextNamespaces ?? [];
 
@@ -327,14 +328,14 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return this.api.create(params, data);
   }
 
-  async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
+  create = async (params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> => {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
 
     this.items.replace(items);
 
     return newItem;
-  }
+  };
 
   private postUpdate(rawItem: KubeJsonApiData): T {
     const newItem = new this.api.objectConstructor(rawItem);

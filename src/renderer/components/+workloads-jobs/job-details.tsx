@@ -45,16 +45,25 @@ import { boundMethod } from "autobind-decorator";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { Disposer } from "../../../common/utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class JobDetails extends React.Component<Props> {
+class NonInjectedJobDetails extends React.Component<Props & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -64,7 +73,7 @@ export class JobDetails extends React.Component<Props> {
       reaction(() => this.props.object, () => {
         this.metrics = null;
       }),
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         podsStore,
       ]),
     ]);
@@ -171,3 +180,15 @@ export class JobDetails extends React.Component<Props> {
     );
   }
 }
+
+export const JobDetails = withInjectables<Dependencies, Props>(
+  NonInjectedJobDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);
+

@@ -31,9 +31,11 @@ import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
 import { Select, SelectOption } from "../select";
-import { createInstallChartTab } from "../dock/install-chart.store";
 import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import createInstallChartTabInjectable
+  from "../dock/create-install-chart-tab/create-install-chart-tab.injectable";
 
 interface Props {
   chart: HelmChart;
@@ -46,8 +48,12 @@ const LargeTooltip = withStyles({
   },
 })(Tooltip);
 
+interface Dependencies {
+  createInstallChartTab: (helmChart: HelmChart) => void
+}
+
 @observer
-export class HelmChartDetails extends Component<Props> {
+class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
   @observable chartVersions: HelmChart[];
   @observable selectedChart?: HelmChart;
   @observable readme?: string;
@@ -55,7 +61,7 @@ export class HelmChartDetails extends Component<Props> {
 
   private abortController?: AbortController;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -106,7 +112,7 @@ export class HelmChartDetails extends Component<Props> {
 
   @boundMethod
   install() {
-    createInstallChartTab(this.selectedChart);
+    this.props.createInstallChartTab(this.selectedChart);
     this.props.hideDetails();
   }
 
@@ -215,3 +221,14 @@ export class HelmChartDetails extends Component<Props> {
     );
   }
 }
+
+export const HelmChartDetails = withInjectables<Dependencies, Props>(
+  NonInjectedHelmChartDetails,
+
+  {
+    getProps: (di, props) => ({
+      createInstallChartTab: di.inject(createInstallChartTabInjectable),
+      ...props,
+    }),
+  },
+);

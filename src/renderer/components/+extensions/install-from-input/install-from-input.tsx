@@ -20,7 +20,6 @@
  */
 import { downloadFile, ExtendableDisposer } from "../../../../common/utils";
 import { InputValidators } from "../../input";
-import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import logger from "../../../../main/logger";
 import { Notifications } from "../../notifications";
@@ -29,20 +28,22 @@ import React from "react";
 import { readFileNotify } from "../read-file-notify/read-file-notify";
 import type { InstallRequest } from "../attempt-install/install-request";
 import type { ExtensionInfo } from "../attempt-install-by-info/attempt-install-by-info";
+import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
   attemptInstall: (request: InstallRequest, disposer?: ExtendableDisposer) => Promise<void>,
-  attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>
+  attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>,
+  extensionInstallationStateStore: ExtensionInstallationStateStore
 }
 
-export const installFromInput = ({ attemptInstall, attemptInstallByInfo }: Dependencies) => async (input: string) => {
+export const installFromInput = ({ attemptInstall, attemptInstallByInfo, extensionInstallationStateStore }: Dependencies) => async (input: string) => {
   let disposer: ExtendableDisposer | undefined = undefined;
 
   try {
     // fixme: improve error messages for non-tar-file URLs
     if (InputValidators.isUrl.validate(input)) {
       // install via url
-      disposer = ExtensionInstallationStateStore.startPreInstall();
+      disposer = extensionInstallationStateStore.startPreInstall();
       const { promise } = downloadFile({ url: input, timeout: 10 * 60 * 1000 });
       const fileName = path.basename(input);
 

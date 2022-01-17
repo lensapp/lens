@@ -25,18 +25,24 @@ import {
   RenderResult,
 } from "@testing-library/react";
 
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 
 export type DiRender = (ui: React.ReactElement) => RenderResult;
 
-type DiRenderFor = (
-  di: ConfigurableDependencyInjectionContainer,
-) => DiRender;
+type DiRenderFor = (di: DependencyInjectionContainer) => DiRender;
 
-export const renderFor: DiRenderFor = di => ui =>
-  testingLibraryRender(
+export const renderFor: DiRenderFor = (di) => (ui) => {
+  const result = testingLibraryRender(
     <DiContextProvider value={{ di }}>{ui}</DiContextProvider>,
   );
 
+  return {
+    ...result,
+
+    rerender: (ui: React.ReactElement) => result.rerender(
+      <DiContextProvider value={{ di }}>{ui}</DiContextProvider>,
+    ),
+  };
+};

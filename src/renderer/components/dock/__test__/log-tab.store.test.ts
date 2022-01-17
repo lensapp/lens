@@ -23,49 +23,47 @@ import { podsStore } from "../../+workloads-pods/pods.store";
 import { UserStore } from "../../../../common/user-store";
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { ThemeStore } from "../../../theme.store";
-import { dockStore } from "../dock.store";
-import { logTabStore } from "../log-tab.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
-import fse from "fs-extra";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
-import { AppPaths } from "../../../../common/app-paths";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
+import type { LogTabStore } from "../log-tab-store/log-tab.store";
+import dockStoreInjectable from "../dock-store/dock-store.injectable";
+import type { DockStore } from "../dock-store/dock.store";
+import directoryForUserDataInjectable
+  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import mockFs from "mock-fs";
 
 mockWindow();
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
-AppPaths.init();
 
 podsStore.items.push(new Pod(dockerPod));
 podsStore.items.push(new Pod(deploymentPod1));
 podsStore.items.push(new Pod(deploymentPod2));
 
 describe("log tab store", () => {
-  beforeEach(() => {
+  let logTabStore: LogTabStore;
+  let dockStore: DockStore;
+
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    
+    await di.runSetups();
+
+    dockStore = di.inject(dockStoreInjectable);
+    logTabStore = di.inject(logTabStoreInjectable);
+
     UserStore.createInstance();
     ThemeStore.createInstance();
   });
 
   afterEach(() => {
-    logTabStore.reset();
-    dockStore.reset();
     UserStore.resetInstance();
     ThemeStore.resetInstance();
-    fse.remove("tmp");
+    mockFs.restore();
   });
 
   it("creates log tab without sibling pods", () => {
