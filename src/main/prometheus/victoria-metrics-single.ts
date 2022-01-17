@@ -19,19 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { PrometheusProviderRegistry } from "../prometheus";
-import { PrometheusHelm } from "../prometheus/helm";
-import { PrometheusLens } from "../prometheus/lens";
-import { PrometheusOperator } from "../prometheus/operator";
-import { PrometheusStacklight } from "../prometheus/stacklight";
-import { PrometheusVictoriaMetricsSingle } from "../prometheus/victoria-metrics-single";
+import { PrometheusLens } from "./lens";
+import type { CoreV1Api } from "@kubernetes/client-node";
+import type { PrometheusService } from "./provider-registry";
 
-export function initPrometheusProviderRegistry() {
-  PrometheusProviderRegistry
-    .getInstance()
-    .registerProvider(new PrometheusLens())
-    .registerProvider(new PrometheusVictoriaMetricsSingle())
-    .registerProvider(new PrometheusHelm())
-    .registerProvider(new PrometheusOperator())
-    .registerProvider(new PrometheusStacklight());
+export class PrometheusVictoriaMetricsSingle extends PrometheusLens {
+  readonly id: string = "victoria-metrics-single";
+  readonly name: string = "Victoria Metrics (single)";
+  readonly rateAccuracy: string = "5m";
+  readonly isConfigurable: boolean = true;
+
+  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+    return this.getFirstNamespacedService(client, "app=server,app.kubernetes.io/name=victoria-metrics-single");
+  }
 }
