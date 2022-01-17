@@ -184,7 +184,8 @@ export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
       if (metric.data.result.length) {
         result[metricName] = +metric.data.result[0].values.slice(-1)[0][1];
       }
-    } catch (e) {
+    } catch {
+      // ignore error
     }
 
     return result;

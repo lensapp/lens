@@ -19,16 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createContainer } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
+import type { InputValidator } from "../input_validators";
 
-export const getDi = () =>
-  createContainer(
-    getRequireContextForRendererCode,
-    getRequireContextForCommonExtensionCode,
-  );
+const uniqueHotbarNameInjectable = getInjectable({
+  instantiate: di => ({
+    condition: ({ required }) => required,
+    message: () => "Hotbar with this name already exists",
+    validate: value => !di.inject(hotbarManagerInjectable).getByName(value),
+  } as InputValidator),
+  lifecycle: lifecycleEnum.singleton,
+});
 
-const getRequireContextForRendererCode = () =>
-  require.context("../", true, /\.injectable\.(ts|tsx)$/);
-
-const getRequireContextForCommonExtensionCode = () =>
-  require.context("../../extensions", true, /\.injectable\.(ts|tsx)$/);
+export default uniqueHotbarNameInjectable;

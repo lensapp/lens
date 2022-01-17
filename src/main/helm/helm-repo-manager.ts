@@ -119,7 +119,9 @@ export class HelmRepoManager extends Singleton {
       if (typeof parsedConfig === "object" && parsedConfig) {
         return parsedConfig as HelmRepoConfig;
       }
-    } catch { }
+    } catch {
+      // ignore error
+    }
 
     return {
       repositories: [],

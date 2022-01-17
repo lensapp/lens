@@ -48,34 +48,36 @@ export interface CRDVersion {
   additionalPrinterColumns?: AdditionalPrinterColumnsV1[];
 }
 
-export interface CustomResourceDefinition {
-  spec: {
-    group: string;
-    /**
-     * @deprecated for apiextensions.k8s.io/v1 but used previously
-     */
-    version?: string;
-    names: {
-      plural: string;
-      singular: string;
-      kind: string;
-      listKind: string;
-    };
-    scope: "Namespaced" | "Cluster" | string;
-    /**
-     * @deprecated for apiextensions.k8s.io/v1 but used previously
-     */
-    validation?: object;
-    versions?: CRDVersion[];
-    conversion: {
-      strategy?: string;
-      webhook?: any;
-    };
-    /**
-     * @deprecated for apiextensions.k8s.io/v1 but used previously
-     */
-    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
+export interface CustomResourceDefinitionSpec {
+  group: string;
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used in v1beta1
+   */
+  version?: string;
+  names: {
+    plural: string;
+    singular: string;
+    kind: string;
+    listKind: string;
   };
+  scope: "Namespaced" | "Cluster";
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used in v1beta1
+   */
+  validation?: object;
+  versions?: CRDVersion[];
+  conversion: {
+    strategy?: string;
+    webhook?: any;
+  };
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used in v1beta1
+   */
+  additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
+}
+
+export interface CustomResourceDefinition {
+  spec: CustomResourceDefinitionSpec;
   status: {
     conditions: {
       lastTransitionTime: string;
@@ -150,27 +152,32 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getPreferedVersion(): CRDVersion {
-    // Prefer the modern `versions` over the legacy `version`
-    if (this.spec.versions) {
-      for (const version of this.spec.versions) {
-        if (version.storage) {
-          return version;
-        }
-      }
-    } else if (this.spec.version) {
-      const { additionalPrinterColumns: apc } = this.spec;
-      const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc }) => ({ ...apc, jsonPath: JSONPath }));
+    const { apiVersion } = this;
 
-      return {
-        name: this.spec.version,
-        served: true,
-        storage: true,
-        schema: this.spec.validation,
-        additionalPrinterColumns,
-      };
+    switch (apiVersion) {
+      case "apiextensions.k8s.io/v1":
+        for (const version of this.spec.versions) {
+          if (version.storage) {
+            return version;
+          }
+        }
+        break;
+
+      case "apiextensions.k8s.io/v1beta1": {
+        const { additionalPrinterColumns: apc } = this.spec;
+        const additionalPrinterColumns = apc?.map(({ JSONPath, ...apc }) => ({ ...apc, jsonPath: JSONPath }));
+
+        return {
+          name: this.spec.version,
+          served: true,
+          storage: true,
+          schema: this.spec.validation,
+          additionalPrinterColumns,
+        };
+      }
     }
 
-    throw new Error(`Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
+    throw new Error(`Unknown apiVersion=${apiVersion}: Failed to find a version for CustomResourceDefinition ${this.metadata.name}`);
   }
 
   getVersion() {
@@ -197,7 +204,7 @@ export class CustomResourceDefinition extends KubeObject {
     const columns = this.getPreferedVersion().additionalPrinterColumns ?? [];
 
     return columns
-      .filter(column => column.name != "Age" && (ignorePriority || !column.priority));
+      .filter(column => column.name.toLowerCase() != "age" && (ignorePriority || !column.priority));
   }
 
   getValidation() {

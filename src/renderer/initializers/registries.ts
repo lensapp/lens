@@ -26,15 +26,11 @@ export function initRegistries() {
   registries.CatalogEntityDetailRegistry.createInstance();
   registries.ClusterPageMenuRegistry.createInstance();
   registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
   registries.EntitySettingRegistry.createInstance();
   registries.GlobalPageRegistry.createInstance();
   registries.KubeObjectDetailRegistry.createInstance();
   registries.KubeObjectMenuRegistry.createInstance();
   registries.KubeObjectStatusRegistry.createInstance();
   registries.StatusBarRegistry.createInstance();
-  registries.WelcomeMenuRegistry.createInstance();
-  registries.WelcomeBannerRegistry.createInstance();
   registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
 }

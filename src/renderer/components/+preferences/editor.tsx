@@ -21,7 +21,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { UserStore } from "../../../common/user-store";
-import { FormSwitch, Switcher } from "../switch";
+import { Switch } from "../switch";
 import { Select } from "../select";
 import { SubTitle } from "../layout/sub-title";
 import { SubHeader } from "../layout/sub-header";
@@ -45,15 +45,12 @@ export const Editor = observer(() => {
       <section>
         <div className="flex gaps justify-space-between">
           <div className="flex gaps align-center">
-            <FormSwitch
-              label={<SubHeader compact>Show minimap</SubHeader>}
-              control={
-                <Switcher
-                  checked={editorConfiguration.minimap.enabled}
-                  onChange={(evt, checked) => editorConfiguration.minimap.enabled = checked}
-                />
-              }
-            />
+            <Switch
+              checked={editorConfiguration.minimap.enabled}
+              onChange={() => editorConfiguration.minimap.enabled = !editorConfiguration.minimap.enabled}
+            >
+              Show minimap
+            </Switch>
           </div>
           <div className="flex gaps align-center">
             <SubHeader compact>Position</SubHeader>

@@ -19,16 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type React from "react";
-import { BaseRegistry } from "./base-registry";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { Disposer } from "../utils";
 
-interface TopBarComponents {
-  Item: React.ComponentType;
+function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): Disposer {
+  window.addEventListener(type, listener, options);
+
+  return () => void window.removeEventListener(type, listener);
 }
 
-export interface TopBarRegistration {
-  components: TopBarComponents;
-}
+const windowAddEventListenerInjectable = getInjectable({
+  instantiate: () => addWindowEventListener,
+  lifecycle: lifecycleEnum.singleton,
+});
 
-export class TopBarRegistry extends BaseRegistry<TopBarRegistration> {
-}
+export default windowAddEventListenerInjectable;

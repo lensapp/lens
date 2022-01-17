@@ -18,18 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
+import { computed } from "mobx";
 
-import React from "react";
-import { TabLayout } from "../layout/tab-layout";
+const welcomeBannerItemsInjectable = getInjectable({
+  instantiate: (di) => {
+    const extensions = di.inject(rendererExtensionsInjectable);
 
-export class NotFound extends React.Component {
-  render() {
-    return (
-      <TabLayout className="NotFound" contentClass="flex">
-        <p className="box center">
-          Page not found
-        </p>
-      </TabLayout>
-    );
-  }
-}
+    return computed(() => [
+      ...extensions.get().flatMap((extension) => extension.welcomeBanners),
+    ]);
+  },
+
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default welcomeBannerItemsInjectable;

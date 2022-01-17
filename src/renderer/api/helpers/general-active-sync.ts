@@ -19,21 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { BaseRegistry } from "./base-registry";
+import { when } from "mobx";
+import { catalogCategoryRegistry } from "../../../common/catalog";
+import { catalogEntityRegistry } from "../catalog-entity-registry";
+import { isActiveRoute } from "../../navigation";
+import type { GeneralEntity } from "../../../common/catalog-entities";
 
-/**
- * WelcomeBannerRegistration is for an extension to register
- * Provide a Banner component to be renderered in the welcome screen.
- */
-export interface WelcomeBannerRegistration {
-  /**
-   * The banner component to be shown on the welcome screen.
-   */
-  Banner?: React.ComponentType
-  /**
-   * The banner width in px.
-   */
-  width?: number
+export async function setEntityOnRouteMatch() {
+  await when(() => catalogEntityRegistry.entities.size > 0);
+
+  const entities: GeneralEntity[] = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
+  const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
+
+  if (activeEntity) {
+    catalogEntityRegistry.activeEntity = activeEntity;
+  }
 }
-
-export class WelcomeBannerRegistry extends BaseRegistry<WelcomeBannerRegistration> { }

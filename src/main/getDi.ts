@@ -24,11 +24,15 @@ import { createContainer } from "@ogre-tools/injectable";
 export const getDi = () =>
   createContainer(
     getRequireContextForMainCode,
+    getRequireContextForCommonCode,
     getRequireContextForCommonExtensionCode,
   );
 
 const getRequireContextForMainCode = () =>
   require.context("./", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonCode = () =>
+  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
 
 const getRequireContextForCommonExtensionCode = () =>
   require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);

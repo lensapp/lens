@@ -27,7 +27,7 @@ import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
-import { Menu, MenuItem, MenuProps } from "../menu";
+import { Menu, MenuItem, MenuProps } from "./menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
 

@@ -21,44 +21,53 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { HotbarStore } from "../../../common/hotbar-store";
-import { CommandOverlay } from "../command-palette";
 import { Input, InputValidator } from "../input";
+import type { CreateHotbarData, CreateHotbarOptions } from "../../../common/hotbar-types";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
+import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
 
-export const uniqueHotbarName: InputValidator = {
-  condition: ({ required }) => required,
-  message: () => "Hotbar with this name already exists",
-  validate: value => !HotbarStore.getInstance().getByName(value),
-};
+interface Dependencies {
+  closeCommandOverlay: () => void;
+  addHotbar: (data: CreateHotbarData, { setActive }?: CreateHotbarOptions) => void;
+  uniqueHotbarName: InputValidator;
+}
 
-@observer
-export class HotbarAddCommand extends React.Component {
-  onSubmit = (name: string) => {
+const NonInjectedHotbarAddCommand = observer(({ closeCommandOverlay, addHotbar, uniqueHotbarName }: Dependencies) => {
+  const onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
     }
 
-    HotbarStore.getInstance().add({ name }, { setActive: true });
-    CommandOverlay.close();
+    addHotbar({ name }, { setActive: true });
+    closeCommandOverlay();
   };
 
-  render() {
-    return (
-      <>
-        <Input
-          placeholder="Hotbar name"
-          autoFocus={true}
-          theme="round-black"
-          data-test-id="command-palette-hotbar-add-name"
-          validators={uniqueHotbarName}
-          onSubmit={this.onSubmit}
-          dirty={true}
-          showValidationLine={true}
-        />
-        <small className="hint">
-          Please provide a new hotbar name (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
-        </small>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Input
+        placeholder="Hotbar name"
+        autoFocus={true}
+        theme="round-black"
+        data-test-id="command-palette-hotbar-add-name"
+        validators={uniqueHotbarName}
+        onSubmit={onSubmit}
+        dirty={true}
+        showValidationLine={true}
+      />
+      <small className="hint">
+        Please provide a new hotbar name (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
+      </small>
+    </>
+  );
+});
+
+export const HotbarAddCommand = withInjectables<Dependencies>(NonInjectedHotbarAddCommand, {
+  getProps: (di, props) => ({
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    addHotbar: di.inject(hotbarManagerInjectable).add,
+    uniqueHotbarName: di.inject(uniqueHotbarNameInjectable),
+    ...props,
+  }),
+});

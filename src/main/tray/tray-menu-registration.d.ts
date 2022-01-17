@@ -19,18 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { HotbarStore } from "../../../common/hotbar-store";
-
-function hotbarIndex(id: string) {
-  return HotbarStore.getInstance().hotbarIndex(id) + 1;
-}
-
-export function hotbarDisplayLabel(id: string) : string {
-  const hotbar = HotbarStore.getInstance().getById(id);
-
-  return `${hotbarIndex(id)}: ${hotbar.name}`;
-}
-
-export function hotbarDisplayIndex(id: string) : string {
-  return hotbarIndex(id).toString();
+export interface TrayMenuRegistration {
+  label?: string;
+  click?: (menuItem: TrayMenuRegistration) => void;
+  id?: string;
+  type?: "normal" | "separator" | "submenu"
+  toolTip?: string;
+  enabled?: boolean;
+  submenu?: TrayMenuRegistration[]
 }

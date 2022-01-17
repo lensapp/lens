@@ -35,6 +35,9 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * @deprecated Use <Switch/> instead from "../switch.tsx".
+ */
 export function FormSwitch(props: FormControlLabelProps) {
   const classes = useStyles();
 

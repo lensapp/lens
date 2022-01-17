@@ -135,10 +135,7 @@ class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
         );
 
         if (notAStringValue && !(parse || stringify)) {
-          throw new Error(
-            `PageRegistry: param's "${paramName}" initialization has failed: 
-              paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`,
-          );
+          throw new Error(`PageRegistry: param's "${paramName}" initialization has failed: paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`);
         }
 
         paramInit.defaultValue = value;

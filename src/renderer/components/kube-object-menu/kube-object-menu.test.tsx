@@ -29,7 +29,7 @@ import type { KubeObjectMenuRegistration } from "../../../extensions/registries"
 import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
@@ -60,8 +60,7 @@ describe("kube-object-menu", () => {
     }) as Cluster);
 
     di.override(apiManagerInjectable, () => ({
-      // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      getStore: api => undefined,
+      getStore: api => void api,
     }) as ApiManager);
 
     di.override(hideDetailsInjectable, () => () => {});
@@ -280,5 +279,5 @@ const addDynamicMenuItem = ({
 
   const kubeObjectMenuRegistry = di.inject(kubeObjectMenuRegistryInjectable);
 
-  kubeObjectMenuRegistry.add(dynamicMenuItemStub);
+  kubeObjectMenuRegistry.add([dynamicMenuItemStub]);
 };

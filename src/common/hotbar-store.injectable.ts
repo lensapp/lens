@@ -18,13 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { HotbarStore } from "./hotbar-store";
 
-import { BaseRegistry } from "./base-registry";
+const hotbarManagerInjectable = getInjectable({
+  instantiate: () => HotbarStore.getInstance(),
+  lifecycle: lifecycleEnum.singleton,
+});
 
-export interface WelcomeMenuRegistration {
-  title: string | (() => string);
-  icon: string;
-  click: () => void | Promise<void>;
-}
-
-export class WelcomeMenuRegistry extends BaseRegistry<WelcomeMenuRegistration> {}
+export default hotbarManagerInjectable;

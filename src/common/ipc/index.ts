@@ -20,6 +20,7 @@
  */
 
 export const dialogShowOpenDialogHandler = "dialog:show-open-dialog";
+export const catalogEntityRunListener = "catalog-entity:run";
 
 export * from "./ipc";
 export * from "./invalid-kubeconfig";

@@ -19,17 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { catalogURL } from "../../common/routes";
-import { WelcomeMenuRegistry } from "../../extensions/registries";
-import { navigate } from "../navigation";
+import styles from "./switch.module.scss";
 
-export function initWelcomeMenuRegistry() {
-  WelcomeMenuRegistry.getInstance()
-    .add([
-      {
-        title: "Browse Clusters in Catalog",
-        icon: "view_list",
-        click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" }} )),
-      },
-    ]);
+import React, { ChangeEvent, HTMLProps } from "react";
+import { cssNames } from "../../utils";
+
+interface Props extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
+  onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function Switch({ children, disabled, onChange, ...props }: Props) {
+  return (
+    <label className={cssNames(styles.Switch, { [styles.disabled]: disabled })} data-testid="switch">
+      {children}
+      <input type="checkbox" role="switch" disabled={disabled} onChange={(event) => onChange?.(props.checked, event)} {...props}/>
+    </label>
+  );
 }

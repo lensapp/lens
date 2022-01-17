@@ -18,37 +18,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { Injectable } from "@ogre-tools/injectable";
 
-import glob from "glob";
-import { memoize } from "lodash/fp";
+import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 
-import {
-  createContainer,
-  ConfigurableDependencyInjectionContainer,
-} from "@ogre-tools/injectable";
+type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
-export const getDiForUnitTesting = () => {
-  const di: ConfigurableDependencyInjectionContainer = createContainer();
+type FactoryType = <
+  TInjectable extends Injectable<unknown, TInstance, TInstantiationParameter>,
+  TInstantiationParameter,
+  TInstance extends (...args: unknown[]) => any,
+  TFunction extends (...args: unknown[]) => any = Awaited<
+    ReturnType<TInjectable["instantiate"]>
+  >,
+>(
+  injectableKey: TInjectable,
+  ...instantiationParameter: TentativeTuple<TInstantiationParameter>
+) => (...args: Parameters<TFunction>) => ReturnType<TFunction>;
 
-  getInjectableFilePaths()
-    .map(key => {
-      const injectable = require(key).default;
+export const asLegacyGlobalFunctionForExtensionApi: FactoryType =
+  (injectableKey, ...instantiationParameter) =>
+    (...args) => {
+      const injected = getLegacyGlobalDiForExtensionApi().inject(
+        injectableKey,
+        ...instantiationParameter,
+      );
 
-      return {
-        id: key,
-        ...injectable,
-        aliases: [injectable, ...(injectable.aliases || [])],
-      };
-    })
-
-    .forEach(injectable => di.register(injectable));
-
-  di.preventSideEffects();
-
-  return di;
-};
-
-const getInjectableFilePaths = memoize(() => [
-  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-]);
+      return injected(...args);
+    };

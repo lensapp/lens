@@ -18,30 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 
-import { observable } from "mobx";
-import React from "react";
+let legacyGlobalDi: DependencyInjectionContainer;
 
-export class CommandOverlay {
-  static #component = observable.box<React.ReactElement | null>(null, { deep: false });
+export const setLegacyGlobalDiForExtensionApi = (di: DependencyInjectionContainer) => {
+  legacyGlobalDi = di;
+};
 
-  static get isOpen(): boolean {
-    return Boolean(CommandOverlay.#component.get());
-  }
-
-  static open(component: React.ReactElement) {
-    if (!React.isValidElement(component)) {
-      throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
-    }
-
-    CommandOverlay.#component.set(component);
-  }
-
-  static close() {
-    CommandOverlay.#component.set(null);
-  }
-
-  static get component(): React.ReactElement | null {
-    return CommandOverlay.#component.get();
-  }
-}
+export const getLegacyGlobalDiForExtensionApi = () => legacyGlobalDi;
