@@ -364,7 +364,7 @@ export class ExtensionLoader {
     });
   }
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
+  protected autoInitExtensions = (register: (ext: LensExtension) => Promise<Disposer[]>) => {
     // Setup reaction to load extensions on JSON changes
     reaction(() => this.toJSON(), installedExtensions => this.loadExtensions(installedExtensions, register));
 

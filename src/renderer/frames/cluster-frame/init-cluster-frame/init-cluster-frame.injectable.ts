@@ -13,11 +13,9 @@ import clusterFrameContextInjectable from "../../../cluster-frame-context/cluste
 
 const initClusterFrameInjectable = getInjectable({
   instantiate: (di) => {
-    const extensionLoader = di.inject(extensionLoaderInjectable);
-
     return initClusterFrame({
       hostedCluster: di.inject(hostedClusterInjectable),
-      loadExtensions: extensionLoader.loadOnClusterRenderer.bind(extensionLoader),
+      loadExtensions: di.inject(extensionLoaderInjectable).loadOnClusterRenderer,
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
       frameRoutingId: di.inject(frameRoutingIdInjectable),
       emitEvent: di.inject(appEventBusInjectable).emit,
