@@ -331,7 +331,7 @@ export class ExtensionLoader {
               extId,
               instance,
               isBundled: extension.isBundled,
-              activated: instance.activate()
+              activated: instance.activate(),
             };
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
@@ -370,7 +370,7 @@ export class ExtensionLoader {
 
     // Load initial extensions
     return this.loadExtensions(this.toJSON(), register);
-  }
+  };
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
     const entryPointName = ipcRenderer ? "renderer" : "main";
