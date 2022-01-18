@@ -8,6 +8,7 @@ import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
 import { iter, Disposer } from "../utils";
+import type { CategoryColumnRegistration } from "../../renderer/components/+catalog/custom-category-columns";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
 type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
@@ -46,6 +47,7 @@ export interface CatalogCategorySpec {
    * The grouping for for the category. This MUST be a DNS label.
    */
   group: string;
+
   /**
    * The specific versions of the constructors.
    *
@@ -54,6 +56,10 @@ export interface CatalogCategorySpec {
    * `name = "v1alpha1"` then the resulting `.apiVersion` MUST be `entity.k8slens.dev/v1alpha1`
    */
   versions: CatalogCategoryVersion<CatalogEntity>[];
+
+  /**
+   * This is the concerning the category
+   */
   names: {
     /**
      * The kind of entity that this category is for. This value MUST be a DNS
@@ -62,6 +68,19 @@ export interface CatalogCategorySpec {
      */
     kind: string;
   };
+
+  /**
+   * These are the columns used for displaying entities when in the catalog.
+   *
+   * If this is not provided then some default columns will be used, similar in
+   * scope to the columns in the "Browse" view.
+   *
+   * Even if you provide columns, a "Name" column will be provided as well with
+   * `priority: 0`.
+   *
+   * These columns will not be used in the "Browse" view.
+   */
+  displayColumns?: CategoryColumnRegistration[];
 }
 
 /**

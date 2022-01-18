@@ -79,20 +79,21 @@ export const browseAllColumns: RegisteredAdditionalCategoryColumn[] = [
   },
 ];
 
-export const anyCategoryColumns: RegisteredAdditionalCategoryColumn[] = [
-  {
+export const nameCategoryColumn: RegisteredAdditionalCategoryColumn = {
+  id: "name",
+  priority: 0,
+  renderCell: renderEntityName,
+  titleProps: {
+    title: "Name",
+    className: styles.entityName,
     id: "name",
-    priority: 0,
-    renderCell: renderEntityName,
-    titleProps: {
-      title: "Name",
-      className: styles.entityName,
-      id: "name",
-      sortBy: "name",
-    },
-    searchFilter: entity => entity.getName(),
-    sortCallback: entity => `name=${entity.getName()}`,
+    sortBy: "name",
   },
+  searchFilter: entity => entity.getName(),
+  sortCallback: entity => `name=${entity.getName()}`,
+};
+
+export const defaultCategoryColumns: RegisteredAdditionalCategoryColumn[] = [
   {
     id: "source",
     priority: 10,

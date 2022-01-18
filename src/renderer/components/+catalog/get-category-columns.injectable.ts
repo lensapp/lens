@@ -26,7 +26,7 @@ import { bind } from "../../utils";
 import type { ItemListLayoutProps } from "../item-object-list";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
 import categoryColumnsInjectable from "./custom-category-columns.injectable";
-import { anyCategoryColumns, browseAllColumns } from "./internal-category-columns";
+import { defaultCategoryColumns, browseAllColumns, nameCategoryColumn } from "./internal-category-columns";
 
 interface Dependencies {
   extensionColumns: IComputedValue<Map<string, Map<string, RegisteredAdditionalCategoryColumn[]>>>;
@@ -38,24 +38,39 @@ export interface GetCategoryColumnsParams {
 
 export type CategoryColumns = Required<Pick<ItemListLayoutProps<CatalogEntity>, "sortingCallbacks" | "searchFilters" | "renderTableContents" | "renderTableHeader">>;
 
-function getNonGlobalColums(activeCategory: CatalogCategory | null | undefined, extensionColumns: IComputedValue<Map<string, Map<string, RegisteredAdditionalCategoryColumn[]>>>) {
-  if (activeCategory) {
-    return extensionColumns
+function getSpecificCategoryColumns(activeCategory: CatalogCategory, extensionColumns: IComputedValue<Map<string, Map<string, RegisteredAdditionalCategoryColumn[]>>>): RegisteredAdditionalCategoryColumn[] {
+  const fromExtensions = (
+    extensionColumns
       .get()
       .get(activeCategory.spec.group)
       ?.get(activeCategory.spec.names.kind)
-      ?? [];
-  }
+      ?? []
+  );
+  const fromCategory = activeCategory.spec.displayColumns?.map(({ priority = 50, ...column }) => ({
+    priority,
+    ...column,
+  })) ?? defaultCategoryColumns;
 
-  return browseAllColumns;
+  return [
+    nameCategoryColumn,
+    ...fromExtensions,
+    ...fromCategory,
+  ];
+}
+
+function getBrowseAllColumns(): RegisteredAdditionalCategoryColumn[] {
+  return [
+    ...browseAllColumns,
+    nameCategoryColumn,
+    ...defaultCategoryColumns,
+  ];
 }
 
 function getCategoryColumns({ extensionColumns }: Dependencies, { activeCategory }: GetCategoryColumnsParams): CategoryColumns {
   const allRegistrations = orderBy(
-    [
-      ...getNonGlobalColums(activeCategory, extensionColumns),
-      ...anyCategoryColumns,
-    ],
+    activeCategory
+      ? getSpecificCategoryColumns(activeCategory, extensionColumns)
+      : getBrowseAllColumns(),
     "priority",
     "asc",
   );

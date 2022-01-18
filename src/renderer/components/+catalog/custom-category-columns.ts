@@ -28,29 +28,10 @@ import type { TableCellProps } from "../table";
  */
 export interface TitleCellProps {
   className?: string;
-  title?: React.ReactNode;
+  title: React.ReactNode;
 }
 
-/**
- * This is the type used to declare new catalog category columns
- */
-export interface AdditionalCategoryColumnRegistration {
-  /**
-   * The catalog entity kind that is declared by the category for this registration
-   *
-   * e.g.
-   * - `"KubernetesCluster"`
-   */
-  kind: string;
-
-  /**
-   * The catalog entity group that is declared by the category for this registration
-   *
-   * e.g.
-   * - `"entity.k8slens.dev"`
-   */
-  group: string;
-
+export interface CategoryColumnRegistration {
   /**
    * The sorting order value.
    *
@@ -87,6 +68,27 @@ export interface AdditionalCategoryColumnRegistration {
    * to determine if the current search string matches for this row.
    */
   searchFilter?: (entity: CatalogEntity) => string | string[];
+}
+
+/**
+ * This is the type used to declare new catalog category columns
+ */
+export interface AdditionalCategoryColumnRegistration extends CategoryColumnRegistration {
+  /**
+   * The catalog entity kind that is declared by the category for this registration
+   *
+   * e.g.
+   * - `"KubernetesCluster"`
+   */
+  kind: string;
+
+  /**
+   * The catalog entity group that is declared by the category for this registration
+   *
+   * e.g.
+   * - `"entity.k8slens.dev"`
+   */
+  group: string;
 }
 
 export interface RegisteredAdditionalCategoryColumn {

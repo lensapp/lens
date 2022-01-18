@@ -18,18 +18,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { bind } from "../index";
 
-/**
- * Get the value behind `key`. If it was not pressent, first insert `value`
- * @param map The map to interact with
- * @param key The key to insert into the map with
- * @param value The value to optional add to the map
- * @returns The value in the map
- */
-export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
-  if (map.has(key)) {
-    return map.get(key);
-  }
+describe("bind", () => {
+  it("should work correctly", () => {
+    function foobar(bound: number, nonBound: number): number {
+      expect(typeof bound).toBe("number");
+      expect(typeof nonBound).toBe("number");
 
-  return map.set(key, value).get(key);
-}
+      return bound + nonBound;
+    }
+    const foobarBound = bind(foobar, null, 5);
+
+    expect(foobarBound(10)).toBe(15);
+  });
+});
