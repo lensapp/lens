@@ -58,8 +58,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable kubectlBinariesPath?: string;
   @observable terminalCopyOnSelect: boolean;
   @observable terminalConfig: TerminalConfig;
-  @observable terminalFontSize?: number;
-  @observable terminalFontFamily?: string;
   @observable updateChannel?: string;
   @observable extensionRegistryUrl: ExtensionRegistry;
 
