@@ -290,7 +290,7 @@
     "@types/jsdom": "^16.2.13",
     "@types/jsonpath": "^0.2.0",
     "@types/lodash": "^4.14.177",
-    "@types/marked": "^2.0.5",
+    "@types/marked": "^4.0.1",
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^0.9.1",
     "@types/mock-fs": "^4.13.1",
