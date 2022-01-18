@@ -12,8 +12,8 @@ import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bu
 import clusterFrameContextInjectable from "../../../cluster-frame-context/cluster-frame-context.injectable";
 
 const initClusterFrameInjectable = getInjectable({
-  instantiate: (di) => {
-    return initClusterFrame({
+  instantiate: (di) =>
+    initClusterFrame({
       hostedCluster: di.inject(hostedClusterInjectable),
       loadExtensions: di.inject(extensionLoaderInjectable).loadOnClusterRenderer,
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
@@ -21,8 +21,7 @@ const initClusterFrameInjectable = getInjectable({
       emitEvent: di.inject(appEventBusInjectable).emit,
 
       clusterFrameContext: di.inject(clusterFrameContextInjectable),
-    });
-  },
+    }),
 
   lifecycle: lifecycleEnum.singleton,
 });
