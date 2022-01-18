@@ -34,7 +34,6 @@ export const routePortForward =
       const { namespace, resourceType, resourceName } = params;
       const port = Number(query.get("port"));
       const forwardPort = Number(query.get("forwardPort"));
-      const protocol = query.get("protocol");
 
       try {
         let portForward = PortForward.getPortforward({
@@ -44,7 +43,6 @@ export const routePortForward =
           namespace,
           port,
           forwardPort,
-          protocol,
         });
 
         if (!portForward) {
@@ -62,7 +60,6 @@ export const routePortForward =
             name: resourceName,
             port,
             forwardPort: thePort,
-            protocol,
           });
 
           const started = await portForward.start();
