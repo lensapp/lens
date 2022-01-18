@@ -270,11 +270,12 @@ export class ExtensionLoader {
     });
   };
 
-  loadOnClusterRenderer = (entity: KubernetesCluster) => {
+  loadOnClusterRenderer(getCluster: () => KubernetesCluster) {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if ((await extension.isEnabledForCluster(entity)) === false) {
+      // getCluster must be a callback, as the entity might be available only after an extension has been loaded
+      if ((await extension.isEnabledForCluster(getCluster())) === false) {
         return [];
       }
 
