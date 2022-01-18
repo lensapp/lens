@@ -25,13 +25,9 @@ import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
 import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
-import { TerminalStore } from "../dock/terminal.store";
-import { dockStore, TabKind } from "../dock/dock.store";
 
 export const Terminal = observer(() => {
   const userStore = UserStore.getInstance();
-  const terminalStore = TerminalStore.getInstance();
-  const { tabs, selectedTab, isOpen  } = dockStore;
   const [terminalSettings, setTerminalSettings] = React.useState({
     shell: userStore.shell || "",
     terminalFontSize: userStore.terminalConfig.fontSize,
@@ -81,17 +77,7 @@ export const Terminal = observer(() => {
           ...terminalSettings,
           terminalFontSize: Number(value),
         })}
-        onBlur={() => {
-          userStore.terminalConfig.fontSize = terminalSettings.terminalFontSize;
-          console.log("tabs", tabs);
-          console.log("selectedTab", selectedTab);
-
-          if (selectedTab?.kind === TabKind.TERMINAL && isOpen) {
-            terminalStore.reconnect(selectedTab.id);
-          }
-
-          terminalStore.reconnectTerminals();
-        }}
+        onBlur={() => userStore.terminalConfig.fontSize = terminalSettings.terminalFontSize}
       />
     </section>
     <section>
@@ -104,10 +90,7 @@ export const Terminal = observer(() => {
           ...terminalSettings,
           terminalFontFamily: value.toString(),
         })}
-        onBlur={() => {
-          userStore.terminalConfig.fontFamily = terminalSettings.terminalFontFamily;
-          terminalStore.reconnectTerminals();
-        }}
+        onBlur={() => userStore.terminalConfig.fontFamily = terminalSettings.terminalFontFamily}
       />
     </section>
   </div>);

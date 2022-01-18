@@ -101,6 +101,12 @@ export class Terminal {
       }, {
         fireImmediately: true,
       }),
+      reaction(() => UserStore.getInstance().terminalConfig.fontSize, this.setFontSize, {
+        fireImmediately: true,
+      }),
+      reaction(() => UserStore.getInstance().terminalConfig.fontFamily, this.setFontFamily, {
+        fireImmediately: true,
+      }),
       dependencies.dockStore.onResize(this.onResize),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),

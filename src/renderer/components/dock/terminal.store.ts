@@ -107,14 +107,6 @@ export class TerminalStore extends Singleton {
     return this.connections.get(tabId)?.readyState === WebSocketApiState.CLOSED;
   }
 
-  reconnectTerminals() {
-    console.log("Reconencting connections", this.connections);
-    console.log("Reconencting terminals", this.terminals);
-    this.connections.forEach(cn => {
-      console.log("cn", cn);
-    });  
-  }
-
   async sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
     const { enter, newTab, tabId } = options;
 
