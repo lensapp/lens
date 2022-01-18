@@ -11,24 +11,28 @@ import type { DockStore, TabId } from "../dock-store/dock.store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
-import { isMac, defaultTerminalFontFamily, defaultFontSize} from "../../../../common/vars";
+import { isMac, defaultTerminalFontFamily } from "../../../../common/vars";
 import { once } from "lodash";
 import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
+import type { TerminalConfig } from "../../../common/user-store/preferences-helpers";
 
 interface Dependencies {
   dockStore: DockStore
 }
 
 export class Terminal {
+
+  private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
+
   public static get spawningPool() {
     return document.getElementById("terminal-init");
   }
 
   static async preloadFonts() {
-    const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
-    const fontFace = new FontFace(defaultFontFamily, `url(${fontPath})`);
+    const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
+    const fontFace = new FontFace(defaultTerminalFontFamily, `url(${fontPath})`);
 
     await fontFace.load();
     document.fonts.add(fontFace);
@@ -37,8 +41,8 @@ export class Terminal {
   private xterm: XTerm | null = new XTerm({
     cursorBlink: true,
     cursorStyle: "bar",
-    fontSize: UserStore.getInstance().terminalFontSize || defaultFontSize,
-    fontFamily: UserStore.getInstance().terminalFontFamily || defaultTerminalFontFamily,
+    fontSize: this.terminalConfig.fontSize,
+    fontFamily: this.terminalConfig.fontFamily,
   });
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;

@@ -10,7 +10,7 @@ import { getAppVersion, ObservableToggleSet } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme, defaultEditorFontFamily, defaultFontSize } from "../vars";
+import { defaultTheme, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -18,6 +18,15 @@ export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
 
 export interface KubeconfigSyncValue {
 }
+export interface TerminalConfig {
+  fontSize: number;
+  fontFamily: string;
+}
+
+export const defaultTerminalConfig: TerminalConfig = {
+  fontSize: defaultFontSize,
+  fontFamily: defaultTerminalFontFamily,
+};
 
 export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptions,
   "minimap" | "tabSize" | "lineNumbers" | "fontSize" | "fontFamily">;
@@ -188,32 +197,6 @@ const downloadBinariesPath: PreferenceDescription<string | undefined> = {
   },
 };
 
-const terminalFontSize: PreferenceDescription<number | undefined> = {
-  fromStore(val) {
-    return val;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const terminalFontFamily: PreferenceDescription<string | undefined> = {
-  fromStore(val) {
-    return val;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
 const kubectlBinariesPath: PreferenceDescription<string | undefined> = {
   fromStore(val) {
     return val;
@@ -294,6 +277,15 @@ const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], Map<st
 const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConfiguration> = {
   fromStore(val) {
     return merge(defaultEditorConfig, val);
+  },
+  toStore(val) {
+    return val;
+  },
+};
+
+const terminalConfig: PreferenceDescription<TerminalConfig, TerminalConfig> = {
+  fromStore(val) {
+    return merge(defaultTerminalConfig, val);
   },
   toStore(val) {
     return val;
@@ -385,8 +377,7 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
-  terminalFontSize,
-  terminalFontFamily,
+  terminalConfig,
   updateChannel,
   extensionRegistryUrl,
 };

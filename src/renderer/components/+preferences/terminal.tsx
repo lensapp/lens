@@ -30,8 +30,8 @@ export const Terminal = observer(() => {
   const userStore = UserStore.getInstance();
   const [terminalSettings, setTerminalSettings] = React.useState({
     shell: userStore.shell || "",
-    terminalFontSize: userStore.terminalFontSize,
-    terminalFontFamily: userStore.terminalFontFamily,
+    terminalFontSize: userStore.terminalConfig.fontSize,
+    terminalFontFamily: userStore.terminalConfig.fontFamily,
   });
   const defaultShell = process.env.SHELL
   || process.env.PTYSHELL
@@ -77,7 +77,7 @@ export const Terminal = observer(() => {
           ...terminalSettings,
           terminalFontSize: Number(value),
         })}
-        onBlur={() => userStore.terminalFontSize = terminalSettings.terminalFontSize}
+        onBlur={() => userStore.terminalConfig.fontSize = terminalSettings.terminalFontSize}
       />
     </section>
     <section>
@@ -90,7 +90,7 @@ export const Terminal = observer(() => {
           ...terminalSettings,
           terminalFontFamily: value.toString(),
         })}
-        onBlur={() => userStore.terminalFontFamily = terminalSettings.terminalFontFamily}
+        onBlur={() => userStore.terminalConfig.fontFamily = terminalSettings.terminalFontFamily}
       />
     </section>
   </div>);
