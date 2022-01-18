@@ -12,16 +12,19 @@ import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bu
 import clusterFrameContextInjectable from "../../../cluster-frame-context/cluster-frame-context.injectable";
 
 const initClusterFrameInjectable = getInjectable({
-  instantiate: (di) =>
-    initClusterFrame({
+  instantiate: (di) => {
+    const extensionLoader = di.inject(extensionLoaderInjectable);
+
+    return initClusterFrame({
       hostedCluster: di.inject(hostedClusterInjectable),
-      loadExtensions: di.inject(extensionLoaderInjectable).loadOnClusterRenderer,
+      loadExtensions: extensionLoader.loadOnClusterRenderer.bind(extensionLoader),
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
       frameRoutingId: di.inject(frameRoutingIdInjectable),
       emitEvent: di.inject(appEventBusInjectable).emit,
 
       clusterFrameContext: di.inject(clusterFrameContextInjectable),
-    }),
+    });
+  },
 
   lifecycle: lifecycleEnum.singleton,
 });
