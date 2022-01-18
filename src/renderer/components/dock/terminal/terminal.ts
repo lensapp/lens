@@ -196,6 +196,14 @@ export class Terminal {
     }
   };
 
+  setFontSize = (size: number) => {
+    this.xterm.options.fontSize = size;
+  };
+
+  setFontFamily = (family: string) => {
+    this.xterm.options.fontFamily = family;
+  };
+
   keyHandler = (evt: KeyboardEvent): boolean => {
     const { code, ctrlKey, metaKey } = evt;
 
