@@ -271,7 +271,7 @@ export class ExtensionLoader {
   loadOnMain() {
     this.autoInitExtensions(async (extension: LensMainExtension) => {
       // Check for update for the extension on main process that does not have renderer script
-      if (!extension.manifest.renderer) {
+      if (extension.isBundled || !extension.manifest.renderer) {
         this.checkForExtensionUpdate(extension);
       }
 
@@ -299,7 +299,9 @@ export class ExtensionLoader {
         }
       });
 
-      this.checkForExtensionUpdate(extension);
+      if (!extension.isBundled) {
+        this.checkForExtensionUpdate(extension);
+      }
 
       return removeItems;
     });

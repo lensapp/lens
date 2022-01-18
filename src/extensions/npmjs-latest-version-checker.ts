@@ -33,11 +33,7 @@ export class NpmJsVersionChecker implements LensExtensionLatestVersionChecker {
     this.downloadJson = downloadJsonOverride || downloadJson;
   }
 
-  public async getLatestVersion(manifest: LensExtensionManifest, isBundled: boolean) {
-    if (!isBundled) {
-      return null;
-    }
-
+  public async getLatestVersion(manifest: LensExtensionManifest) {
     const { name } = manifest;
     const registryUrl = new URLParse("https://registry.npmjs.com").set("pathname", name).toString();
     const json = await this.getJson(registryUrl);
