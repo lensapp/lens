@@ -1,37 +1,23 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render } from "@testing-library/react";
 import * as selectEvent from "react-select-event";
-
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
-import type { LogTabData } from "../log-tab.store";
+import type { LogTabData } from "../log-tab-store/log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../../../common/app-paths";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import callForLogsInjectable from "../log-store/call-for-logs/call-for-logs.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -49,15 +35,12 @@ jest.mock("electron", () => ({
   },
 }));
 
-AppPaths.init();
-
 const getComponent = (tabData: LogTabData) => {
   return (
     <LogResourceSelector
       tabId="tabId"
       tabData={tabData}
       save={jest.fn()}
-      reload={jest.fn()}
     />
   );
 };
@@ -84,10 +67,22 @@ const getFewPodsTabData = (): LogTabData => {
 };
 
 describe("<LogResourceSelector />", () => {
-  beforeEach(() => {
+  let render: DiRender;
+
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
+
+    render = renderFor(di);
+
+    await di.runSetups();
+
     mockFs({
       "tmp": {},
     });
+
     UserStore.createInstance();
     ThemeStore.createInstance();
   });

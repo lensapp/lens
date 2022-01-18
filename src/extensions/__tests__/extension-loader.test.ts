@@ -1,46 +1,23 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import type { ExtensionLoader } from "../extension-loader";
-import { ipcRenderer } from "electron";
-import { ExtensionsStore } from "../extensions-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
+import { runInAction } from "mobx";
+import updateExtensionsStateInjectable
+  from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
+import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
+import mockFs from "mock-fs";
 
 console = new Console(stdout, stderr);
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
 const manifestPath3 = "manifest/path3";
-
-jest.mock("../extensions-store", () => ({
-  ExtensionsStore: {
-    getInstance: () => ({
-      whenLoaded: Promise.resolve(true),
-      mergeState: jest.fn(),
-    }),
-  },
-}));
 
 jest.mock(
   "electron",
@@ -131,14 +108,27 @@ jest.mock(
 
 describe("ExtensionLoader", () => {
   let extensionLoader: ExtensionLoader;
+  let updateExtensionStateMock: jest.Mock;
 
-  beforeEach(() => {
-    const di = getDiForUnitTesting();
+  beforeEach(async () => {
+    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
 
-    extensionLoader = di.inject(extensionLoaderInjectable);
+    mockFs();
+
+    updateExtensionStateMock = jest.fn();
+
+    dis.mainDi.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
+
+    await dis.runSetups();
+
+    extensionLoader = dis.mainDi.inject(extensionLoaderInjectable);
   });
 
-  it.only("renderer updates extension after ipc broadcast", async done => {
+  afterEach(() => {
+    mockFs.restore();
+  });
+
+  it("renderer updates extension after ipc broadcast", async done => {
     expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
 
     await extensionLoader.init();
@@ -177,26 +167,26 @@ describe("ExtensionLoader", () => {
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {
-    (ExtensionsStore.getInstance().mergeState as any).mockClear();
-
-    // Disable sending events in this test
-    (ipcRenderer.on as any).mockImplementation();
-
     await extensionLoader.init();
 
-    expect(ExtensionsStore.getInstance().mergeState).not.toHaveBeenCalled();
+    expect(updateExtensionStateMock).not.toHaveBeenCalled();
 
-    Array.from(extensionLoader.userExtensions.values())[0].isEnabled = false;
-
-    expect(ExtensionsStore.getInstance().mergeState).toHaveBeenCalledWith({
-      "manifest/path": {
-        enabled: false,
-        name: "TestExtension",
-      },
-      "manifest/path2": {
-        enabled: true,
-        name: "TestExtension2",
-      },
+    runInAction(() => {
+      extensionLoader.setIsEnabled("manifest/path", false);
     });
+
+    expect(updateExtensionStateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        "manifest/path": {
+          enabled: false,
+          name: "TestExtension",
+        },
+
+        "manifest/path2": {
+          enabled: true,
+          name: "TestExtension2",
+        },
+      }),
+    );
   });
 });

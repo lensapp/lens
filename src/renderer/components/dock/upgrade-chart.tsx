@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./upgrade-chart.scss";
@@ -25,29 +9,37 @@ import React from "react";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import type { DockTab } from "./dock.store";
+import type { DockTab } from "./dock-store/dock.store";
 import { InfoPanel } from "./info-panel";
-import { upgradeChartStore } from "./upgrade-chart.store";
+import type { UpgradeChartStore } from "./upgrade-chart-store/upgrade-chart.store";
 import { Spinner } from "../spinner";
-import { releaseStore } from "../+apps-releases/release.store";
+import type { ReleaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import releaseStoreInjectable from "../+apps-releases/release-store.injectable";
+import upgradeChartStoreInjectable from "./upgrade-chart-store/upgrade-chart-store.injectable";
 
 interface Props {
   className?: string;
   tab: DockTab;
 }
 
+interface Dependencies {
+  releaseStore: ReleaseStore
+  upgradeChartStore: UpgradeChartStore
+}
+
 @observer
-export class UpgradeChart extends React.Component<Props> {
+export class NonInjectedUpgradeChart extends React.Component<Props & Dependencies> {
   @observable error: string;
   @observable versions = observable.array<IChartVersion>();
   @observable version: IChartVersion;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -65,15 +57,15 @@ export class UpgradeChart extends React.Component<Props> {
   }
 
   get release(): HelmRelease {
-    const tabData = upgradeChartStore.getData(this.tabId);
+    const tabData = this.props.upgradeChartStore.getData(this.tabId);
 
     if (!tabData) return null;
 
-    return releaseStore.getByName(tabData.releaseName);
+    return this.props.releaseStore.getByName(tabData.releaseName);
   }
 
   get value() {
-    return upgradeChartStore.values.getData(this.tabId);
+    return this.props.upgradeChartStore.values.getData(this.tabId);
   }
 
   async loadVersions() {
@@ -89,7 +81,7 @@ export class UpgradeChart extends React.Component<Props> {
   @action
   onChange = (value: string) => {
     this.error = "";
-    upgradeChartStore.values.setData(this.tabId, value);
+    this.props.upgradeChartStore.values.setData(this.tabId, value);
   };
 
   @action
@@ -103,7 +95,7 @@ export class UpgradeChart extends React.Component<Props> {
     const releaseName = this.release.getName();
     const releaseNs = this.release.getNs();
 
-    await releaseStore.update(releaseName, releaseNs, {
+    await this.props.releaseStore.update(releaseName, releaseNs, {
       chart: this.release.getChart(),
       values: this.value,
       repo, version,
@@ -127,7 +119,7 @@ export class UpgradeChart extends React.Component<Props> {
     const { tabId, release, value, error, onChange, onError, upgrade, versions, version } = this;
     const { className } = this.props;
 
-    if (!release || upgradeChartStore.isLoading() || !version) {
+    if (!release || this.props.upgradeChartStore.isLoading() || !version) {
       return <Spinner center/>;
     }
     const currentVersion = release.getVersion();
@@ -169,3 +161,15 @@ export class UpgradeChart extends React.Component<Props> {
     );
   }
 }
+
+export const UpgradeChart = withInjectables<Dependencies, Props>(
+  NonInjectedUpgradeChart,
+
+  {
+    getProps: (di, props) => ({
+      releaseStore: di.inject(releaseStoreInjectable),
+      upgradeChartStore: di.inject(upgradeChartStoreInjectable),
+      ...props,
+    }),
+  },
+);

@@ -1,31 +1,18 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { InstalledExtension } from "./extension-discovery";
+import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, observable, makeObservable, computed } from "mobx";
-import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import { Disposer, disposer } from "../common/utils";
+import {
+  LensExtensionDependencies,
+  setLensExtensionDependencies,
+} from "./lens-extension-set-dependencies";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -75,6 +62,12 @@ export class LensExtension {
     return this.manifest.description;
   }
 
+  private dependencies: LensExtensionDependencies;
+
+  [setLensExtensionDependencies] = (dependencies: LensExtensionDependencies) => {
+    this.dependencies = dependencies;
+  };
+
   /**
    * getExtensionFileFolder returns the path to an already created folder. This
    * folder is for the sole use of this extension.
@@ -83,7 +76,7 @@ export class LensExtension {
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return FilesystemProvisionerStore.getInstance().requestDirectory(this.id);
+    return this.dependencies.fileSystemProvisionerStore.requestDirectory(this.id);
   }
 
   @action

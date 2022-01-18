@@ -1,32 +1,13 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-import { action, comparer, makeObservable, observable, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, toJS, when } from "mobx";
 import { produce, Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
-import { getHostedClusterId } from "../../common/utils";
-import path from "path";
-import { AppPaths } from "../../common/app-paths";
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
@@ -43,10 +24,6 @@ export interface StorageHelperOptions<T> {
 }
 
 export class StorageHelper<T> {
-  static async getLocalStoragePath() {
-    return path.resolve(await AppPaths.getAsync("userData"), "lens-local-storage", `${getHostedClusterId() || "app"}.json`);
-  }
-
   static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
 
@@ -73,6 +50,7 @@ export class StorageHelper<T> {
 
     this.storage = storage;
 
+    // TODO: This code uses undocumented MobX internal to criminally permit exotic mutations without encapsulation.
     this.data.observe_(({ newValue, oldValue }) => {
       this.onChange(newValue as T, oldValue as T);
     });
@@ -136,7 +114,15 @@ export class StorageHelper<T> {
     }
   }
 
+  /**
+   * @deprecated Switch to using value for being reactive
+   */
   get(): T {
+    return this.value;
+  }
+
+  @computed
+  get value(): T {
     return this.data.get() ?? this.defaultValue;
   }
 

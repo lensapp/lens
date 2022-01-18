@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./log-search.scss";
@@ -24,8 +8,10 @@ import "./log-search.scss";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { SearchInput } from "../input";
-import { searchStore } from "../../../common/search-store";
+import type { SearchStore } from "../../search-store/search-store";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import searchStoreInjectable from "../../search-store/search-store.injectable";
 
 export interface PodLogSearchProps {
   onSearch: (query: string) => void
@@ -37,8 +23,12 @@ interface Props extends PodLogSearchProps {
   logs: string[]
 }
 
-export const LogSearch = observer((props: Props) => {
-  const { logs, onSearch, toPrevOverlay, toNextOverlay } = props;
+interface Dependencies {
+  searchStore: SearchStore
+}
+
+const NonInjectedLogSearch = observer((props: Props & Dependencies) => {
+  const { logs, onSearch, toPrevOverlay, toNextOverlay, searchStore } = props;
   const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
   const findCounts = (
@@ -102,3 +92,14 @@ export const LogSearch = observer((props: Props) => {
     </div>
   );
 });
+
+export const LogSearch = withInjectables<Dependencies, Props>(
+  NonInjectedLogSearch,
+
+  {
+    getProps: (di, props) => ({
+      searchStore: di.inject(searchStoreInjectable),
+      ...props,
+    }),
+  },
+);

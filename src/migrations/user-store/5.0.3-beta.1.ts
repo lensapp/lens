@@ -1,41 +1,34 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 import os from "os";
-import type { ClusterStoreModel } from "../../common/cluster-store";
+import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import { MigrationDeclaration, migrationLog } from "../helpers";
-import { isLogicalChildPath, storedKubeConfigFolder } from "../../common/utils";
-import { AppPaths } from "../../common/app-paths";
+import { isLogicalChildPath } from "../../common/utils";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForKubeConfigsInjectable
+  from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 
 export default {
   version: "5.0.3-beta.1",
   run(store) {
     try {
       const { syncKubeconfigEntries = [], ...preferences }: UserPreferencesModel = store.get("preferences") ?? {};
-      const userData = AppPaths.get("userData");
-      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(path.resolve(userData, "lens-cluster-store.json"), "utf-8")) ?? {};
-      const extensionDataDir = path.resolve(userData, "extension_data");
+
+      const di = getLegacyGlobalDiForExtensionApi();
+
+      const userDataPath = di.inject(directoryForUserDataInjectable);
+      const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
+
+      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(path.resolve(userDataPath, "lens-cluster-store.json"), "utf-8")) ?? {};
+      const extensionDataDir = path.resolve(userDataPath, "extension_data");
       const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
       syncPaths.add(path.join(os.homedir(), ".kube"));
@@ -46,7 +39,7 @@ export default {
         }
         const dirOfKubeconfig = path.dirname(cluster.kubeConfigPath);
 
-        if (dirOfKubeconfig === storedKubeConfigFolder()) {
+        if (dirOfKubeconfig === kubeConfigsPath) {
           migrationLog(`Skipping ${cluster.id} because kubeConfigPath is under the stored KubeConfig folder`);
           continue;
         }

@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import * as uuid from "uuid";
@@ -25,35 +9,18 @@ import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
 import { delay, noop } from "../../../common/utils";
 import { LensExtension } from "../../../extensions/main-api";
-import { ExtensionsStore } from "../../../extensions/extensions-store";
+import { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../../common/app-paths";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import extensionLoaderInjectable
   from "../../../extensions/extension-loader/extension-loader.injectable";
 import lensProtocolRouterMainInjectable
   from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
+import extensionsStoreInjectable
+  from "../../../extensions/extensions-store/extensions-store.injectable";
 
 jest.mock("../../../common/ipc");
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
-AppPaths.init();
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -66,16 +33,20 @@ describe("protocol router tests", () => {
   // Unit tests are allowed to only public interfaces.
   let extensionLoader: any;
   let lpr: LensProtocolRouterMain;
+  let extensionsStore: ExtensionsStore;
 
-  beforeEach(() => {
-    const di = getDiForUnitTesting();
-
-    extensionLoader = di.inject(extensionLoaderInjectable);
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
       "tmp": {},
     });
-    ExtensionsStore.createInstance();
+
+    await di.runSetups();
+
+    extensionLoader = di.inject(extensionLoaderInjectable);
+    extensionsStore = di.inject(extensionsStoreInjectable);
+
 
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
@@ -85,7 +56,9 @@ describe("protocol router tests", () => {
   afterEach(() => {
     jest.clearAllMocks();
 
+    // TODO: Remove Singleton from BaseStore to achieve independent unit testing
     ExtensionsStore.resetInstance();
+
     mockFs.restore();
   });
 
@@ -126,7 +99,7 @@ describe("protocol router tests", () => {
     });
 
     extensionLoader.instances.set(extId, ext);
-    (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
+    (extensionsStore as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
 
     lpr.addInternalHandler("/", noop);
 
@@ -205,7 +178,7 @@ describe("protocol router tests", () => {
       });
 
     extensionLoader.instances.set(extId, ext);
-    (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+    (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -243,7 +216,7 @@ describe("protocol router tests", () => {
         });
 
       extensionLoader.instances.set(extId, ext);
-      (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+      (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
     }
 
     {
@@ -268,11 +241,11 @@ describe("protocol router tests", () => {
         });
 
       extensionLoader.instances.set(extId, ext);
-      (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "icecream" });
+      (extensionsStore as any).state.set(extId, { enabled: true, name: "icecream" });
     }
 
-    (ExtensionsStore.getInstance() as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
-    (ExtensionsStore.getInstance() as any).state.set("icecream", { enabled: true, name: "icecream" });
+    (extensionsStore as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
+    (extensionsStore as any).state.set("icecream", { enabled: true, name: "icecream" });
 
     try {
       expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();

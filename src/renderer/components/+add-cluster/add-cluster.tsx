@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import styles from "./add-cluster.module.scss";
@@ -28,21 +12,29 @@ import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import path from "path";
 import React from "react";
+import * as uuid from "uuid";
 
 import { catalogURL } from "../../../common/routes";
-import { appEventBus } from "../../../common/event-bus";
+import { appEventBus } from "../../../common/app-event-bus/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { navigate } from "../../navigation";
-import { getCustomKubeConfigPath, iter } from "../../utils";
+import { iter } from "../../utils";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import { MonacoEditor } from "../monaco-editor";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import getCustomKubeConfigDirectoryInjectable
+  from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 
 interface Option {
   config: KubeConfig;
   error?: string;
+}
+
+interface Dependencies {
+  getCustomKubeConfigDirectory: (directoryName: string) => string
 }
 
 function getContexts(config: KubeConfig): Map<string, Option> {
@@ -56,14 +48,14 @@ function getContexts(config: KubeConfig): Map<string, Option> {
 }
 
 @observer
-export class AddCluster extends React.Component {
+class NonInjectedAddCluster extends React.Component<Dependencies> {
   @observable kubeContexts = observable.map<string, Option>();
   @observable customConfig = "";
   @observable isWaiting = false;
   @observable errors: string[] = [];
 
-  constructor(props: {}) {
-    super(props);
+  constructor(dependencies: Dependencies) {
+    super(dependencies);
     makeObservable(this);
   }
 
@@ -99,7 +91,7 @@ export class AddCluster extends React.Component {
     appEventBus.emit({ name: "cluster-add", action: "click" });
 
     try {
-      const absPath = getCustomKubeConfigPath();
+      const absPath = this.props.getCustomKubeConfigDirectory(uuid.v4());
 
       await fse.ensureDir(path.dirname(absPath));
       await fse.writeFile(absPath, this.customConfig.trim(), { encoding: "utf-8", mode: 0o600 });
@@ -153,3 +145,11 @@ export class AddCluster extends React.Component {
     );
   }
 }
+
+export const AddCluster = withInjectables<Dependencies>(NonInjectedAddCluster, {
+  getProps: (di) => ({
+    getCustomKubeConfigDirectory: di.inject(
+      getCustomKubeConfigDirectoryInjectable,
+    ),
+  }),
+});

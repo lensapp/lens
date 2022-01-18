@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./log-list.scss";
@@ -29,27 +13,33 @@ import { action, computed, observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
-
-import { SearchStore, searchStore } from "../../../common/search-store";
+import { SearchStore } from "../../search-store/search-store";
 import { UserStore } from "../../../common/user-store";
 import { array, boundMethod, cssNames } from "../../utils";
-import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { logStore } from "./log.store";
-import { logTabStore } from "./log-tab.store";
+import type { LogStore } from "./log-store/log.store";
+import type { LogTabStore } from "./log-tab-store/log-tab.store";
 import { ToBottom } from "./to-bottom";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
+import logStoreInjectable from "./log-store/log-store.injectable";
+import searchStoreInjectable from "../../search-store/search-store.injectable";
 
 interface Props {
   logs: string[]
-  isLoading: boolean
-  load: () => void
   id: string
 }
 
 const colorConverter = new AnsiUp();
 
+interface Dependencies {
+  logTabStore: LogTabStore
+  logStore: LogStore
+  searchStore: SearchStore
+}
+
 @observer
-export class LogList extends React.Component<Props> {
+export class NonInjectedLogList extends React.Component<Props & Dependencies> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -57,7 +47,7 @@ export class LogList extends React.Component<Props> {
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
   private lineHeight = 18; // Height of a log line. Should correlate with styles in pod-log-list.scss
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -108,14 +98,14 @@ export class LogList extends React.Component<Props> {
    */
   @computed
   get logs() {
-    const showTimestamps = logTabStore.getData(this.props.id)?.showTimestamps;
+    const showTimestamps = this.props.logTabStore.getData(this.props.id)?.showTimestamps;
 
     if (!showTimestamps) {
-      return logStore.logsWithoutTimestamps;
+      return this.props.logStore.logsWithoutTimestamps;
     }
 
     return this.props.logs
-      .map(log => logStore.splitOutTimestamp(log))
+      .map(log => this.props.logStore.splitOutTimestamp(log))
       .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
   }
 
@@ -156,7 +146,7 @@ export class LogList extends React.Component<Props> {
     const { scrollOffset } = props;
 
     if (scrollOffset === 0) {
-      this.props.load();
+      this.props.logStore.load();
     }
   };
 
@@ -187,7 +177,7 @@ export class LogList extends React.Component<Props> {
    * @returns A react element with a row itself
    */
   getLogRow = (rowIndex: number) => {
-    const { searchQuery, isActiveOverlay } = searchStore;
+    const { searchQuery, isActiveOverlay } = this.props.searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
@@ -232,17 +222,7 @@ export class LogList extends React.Component<Props> {
   };
 
   render() {
-    const { isLoading } = this.props;
-    const isInitLoading = isLoading && !this.logs.length;
     const rowHeights = array.filled(this.logs.length, this.lineHeight);
-
-    if (isInitLoading) {
-      return (
-        <div className="LogList flex box grow align-center justify-center">
-          <Spinner center/>
-        </div>
-      );
-    }
 
     if (!this.logs.length) {
       return (
@@ -253,7 +233,7 @@ export class LogList extends React.Component<Props> {
     }
 
     return (
-      <div className={cssNames("LogList flex", { isLoading })}>
+      <div className={cssNames("LogList flex" )}>
         <VirtualList
           items={this.logs}
           rowHeights={rowHeights}
@@ -270,3 +250,17 @@ export class LogList extends React.Component<Props> {
     );
   }
 }
+
+export const LogList = withInjectables<Dependencies, Props>(
+  NonInjectedLogList,
+
+  {
+    getProps: (di, props) => ({
+      logTabStore: di.inject(logTabStoreInjectable),
+      logStore: di.inject(logStoreInjectable),
+      searchStore: di.inject(searchStoreInjectable),
+      ...props,
+    }),
+  },
+);
+

@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 export { isAllowedResource } from "../../common/utils/allowed-resource";
@@ -86,7 +70,7 @@ export type { NetworkPolicyStore } from "../../renderer/components/+network-poli
 export type { PersistentVolumesStore } from "../../renderer/components/+storage-volumes/volumes.store";
 export type { VolumeClaimStore } from "../../renderer/components/+storage-volume-claims/volume-claim.store";
 export type { StorageClassStore } from "../../renderer/components/+storage-classes/storage-class.store";
-export type { NamespaceStore } from "../../renderer/components/+namespaces/namespace.store";
+export type { NamespaceStore } from "../../renderer/components/+namespaces/namespace-store/namespace.store";
 export type { ServiceAccountsStore } from "../../renderer/components/+user-management/+service-accounts/store";
 export type { RolesStore } from "../../renderer/components/+user-management/+roles/store";
 export type { RoleBindingsStore } from "../../renderer/components/+user-management/+role-bindings/store";

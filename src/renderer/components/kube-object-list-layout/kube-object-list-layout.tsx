@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./kube-object-list-layout.scss";
@@ -29,13 +13,17 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
-import type { ClusterContext } from "../../../common/k8s-api/cluster-context";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
+import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -48,12 +36,16 @@ const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
   subscribeStores: true,
 };
 
-@observer
-export class KubeObjectListLayout<K extends KubeObject> extends React.Component<KubeObjectListLayoutProps<K>> {
-  static defaultProps = defaultProps as object;
-  static clusterContext: ClusterContext;
+interface Dependencies {
+  clusterFrameContext: ClusterFrameContext
+  subscribeToStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+}
 
-  constructor(props: KubeObjectListLayoutProps<K>) {
+@observer
+class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Component<KubeObjectListLayoutProps<K> & Dependencies> {
+  static defaultProps = defaultProps as object;
+
+  constructor(props: KubeObjectListLayoutProps<K> & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -68,7 +60,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
     const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
     const reactions: Disposer[] = [
-      reaction(() => KubeObjectListLayout.clusterContext.contextNamespaces.slice(), () => {
+      reaction(() => this.props.clusterFrameContext.contextNamespaces.slice(), () => {
         // clear load errors
         this.loadErrors.length = 0;
       }),
@@ -76,7 +68,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
 
     if (subscribeStores) {
       reactions.push(
-        kubeWatchApi.subscribeStores(stores, {
+        this.props.subscribeToStores(stores, {
           onLoadFailure: error => this.loadErrors.push(String(error)),
         }),
       );
@@ -144,4 +136,25 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
       />
     );
   }
+}
+
+export function KubeObjectListLayout<K extends KubeObject>(
+  props: KubeObjectListLayoutProps<K>,
+) {
+  const InjectedKubeObjectListLayout = withInjectables<
+    Dependencies,
+    KubeObjectListLayoutProps<K>
+  >(
+    NonInjectedKubeObjectListLayout,
+
+    {
+      getProps: (di, props) => ({
+        clusterFrameContext: di.inject(clusterFrameContextInjectable),
+        subscribeToStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+        ...props,
+      }),
+    },
+  );
+
+  return <InjectedKubeObjectListLayout {...props} />;
 }

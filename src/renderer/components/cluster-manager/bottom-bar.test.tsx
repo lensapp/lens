@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import React from "react";
@@ -26,16 +10,14 @@ import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
 import { StatusBarRegistry } from "../../../extensions/registries";
 import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
-import { AppPaths } from "../../../common/app-paths";
 import { HotbarSwitchCommand } from "../hotbar/hotbar-switch-command";
 import { ActiveHotbarName } from "./active-hotbar-name";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../test-utils/renderFor";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { getEmptyHotbar } from "../../../common/hotbar-types";
 
-AppPaths.init();
 
 jest.mock("electron", () => ({
   app: {
@@ -56,25 +38,29 @@ jest.mock("electron", () => ({
 const foobarHotbar = getEmptyHotbar("foobar");
 
 describe("<BottomBar />", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DependencyInjectionContainer;
   let render: DiRender;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const mockOpts = {
       "tmp": {
         "test-store.json": JSON.stringify({}),
       },
     };
 
-    di = getDiForUnitTesting();
-    render = renderFor(di);
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs(mockOpts);
-    StatusBarRegistry.createInstance();
+
+    render = renderFor(di);
 
     di.override(hotbarManagerInjectable, () => ({
       getActive: () => foobarHotbar,
     } as any));
+
+    await di.runSetups();
+
+    StatusBarRegistry.createInstance();
   });
 
   afterEach(() => {

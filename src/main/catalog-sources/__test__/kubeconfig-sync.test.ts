@@ -1,34 +1,22 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import { ObservableMap } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
-import type { Cluster } from "../../cluster";
-import { computeDiff, configToModels } from "../kubeconfig-sync";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync-manager/kubeconfig-sync-manager";
 import mockFs from "mock-fs";
 import fs from "fs";
-import { ClusterStore } from "../../../common/cluster-store";
 import { ClusterManager } from "../../cluster-manager";
-import { AppPaths } from "../../../common/app-paths";
+import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
+import directoryForKubeConfigsInjectable
+  from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+
 
 jest.mock("electron", () => ({
   app: {
@@ -46,18 +34,28 @@ jest.mock("electron", () => ({
   },
 }));
 
-AppPaths.init();
-
 describe("kubeconfig-sync.source tests", () => {
-  beforeEach(() => {
+  let computeDiff: ReturnType<typeof computeDiffFor>;
+
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
     mockFs();
-    ClusterStore.createInstance();
+
+    await di.runSetups();
+
+    computeDiff = computeDiffFor({
+      directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
+      createCluster: di.inject(createClusterInjectionToken),
+    });
+
+    di.inject(clusterStoreInjectable);
+
     ClusterManager.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ClusterStore.resetInstance();
     ClusterManager.resetInstance();
   });
 

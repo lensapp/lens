@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import "@testing-library/jest-dom/extend-expect";
 import { KubeConfig } from "@kubernetes/client-node";
@@ -25,9 +9,12 @@ import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
 
-import { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../common/cluster/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
-import { AppPaths } from "../../../../common/app-paths";
+
+import type { ClusterModel } from "../../../../common/cluster-types";
+import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
+import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 
 jest.mock("electron", () => ({
   app: {
@@ -44,8 +31,6 @@ jest.mock("electron", () => ({
     handle: jest.fn(),
   },
 }));
-
-AppPaths.init();
 
 const kubeconfig = `
 apiVersion: v1
@@ -101,6 +86,22 @@ users:
 let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
+  let createCluster: (model: ClusterModel) => Cluster;
+
+  beforeEach(async () => {
+    const { mainDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
+
+    await runSetups();
+
+    createCluster = mainDi.inject(createClusterInjectionToken);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
   describe("Kubeconfig with different clusters", () => {
     beforeEach(async () => {
       const mockOpts = {
@@ -124,7 +125,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning when deleting non-current-context cluster", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "test",
         contextName: "test",
         preferences: {
@@ -142,7 +143,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning when deleting current-context cluster", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
@@ -159,7 +160,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows context switcher when deleting current cluster", async () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
@@ -180,7 +181,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows context switcher after checkbox click", async () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "some-cluster",
         contextName: "test",
         preferences: {
@@ -205,7 +206,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning for internal kubeconfig cluster", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "some-cluster",
         contextName: "test",
         preferences: {
@@ -243,7 +244,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning if no other contexts left", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
         preferences: {

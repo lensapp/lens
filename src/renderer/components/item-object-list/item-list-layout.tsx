@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./item-list-layout.scss";
@@ -27,7 +11,17 @@ import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
-import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
+import {
+  boundMethod,
+  cssNames,
+  IClassName,
+  isReactNode,
+  noop,
+  ObservableToggleSet,
+  prevDefault,
+  stopPropagation,
+  StorageHelper,
+} from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -40,8 +34,11 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
-import { namespaceStore } from "../+namespaces/namespace.store";
-
+import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
+import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import itemListLayoutStorageInjectable
+  from "./item-list-layout-storage/item-list-layout-storage.injectable";
 
 
 export type SearchFilter<I extends ItemObject> = (item: I) => string | number | (string | number)[];
@@ -72,7 +69,7 @@ export interface ItemListLayoutProps<I extends ItemObject> {
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
-  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout<I>) => ReactNode);
+  renderHeaderTitle?: ReactNode | ((parent: NonInjectedItemListLayout<I>) => ReactNode);
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 
   // items list configuration
@@ -96,7 +93,7 @@ export interface ItemListLayoutProps<I extends ItemObject> {
 
   // other
   customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
-  renderFooter?: (parent: ItemListLayout<I>) => React.ReactNode;
+  renderFooter?: (parent: NonInjectedItemListLayout<I>) => React.ReactNode;
 
   /**
    * Message to display when a store failed to load
@@ -125,25 +122,26 @@ const defaultProps: Partial<ItemListLayoutProps<ItemObject>> = {
   failedToLoadMessage: "Failed to load items",
 };
 
+interface Dependencies {
+  namespaceStore: NamespaceStore;
+  itemListLayoutStorage: StorageHelper<{ showFilters: boolean }>;
+}
+
 @observer
-export class ItemListLayout<I extends ItemObject> extends React.Component<ItemListLayoutProps<I>> {
+class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<ItemListLayoutProps<I> & Dependencies> {
   static defaultProps = defaultProps as object;
 
-  private storage = createStorage("item_list_layout", {
-    showFilters: false, // setup defaults
-  });
-
-  constructor(props: ItemListLayoutProps<I>) {
+  constructor(props: ItemListLayoutProps<I> & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   get showFilters(): boolean {
-    return this.storage.get().showFilters;
+    return this.props.itemListLayoutStorage.get().showFilters;
   }
 
   set showFilters(showFilters: boolean) {
-    this.storage.merge({ showFilters });
+    this.props.itemListLayoutStorage.merge({ showFilters });
   }
 
   async componentDidMount() {
@@ -166,7 +164,7 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
     const { store, dependentStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
-    stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
+    stores.forEach(store => store.loadAll(this.props.namespaceStore.contextNamespaces));
   }
 
   private filterCallbacks: ItemsFilters<I> = {
@@ -527,4 +525,25 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
       </div>
     );
   }
+}
+
+export function ItemListLayout<I extends ItemObject>(
+  props: ItemListLayoutProps<I>,
+) {
+  const InjectedItemListLayout = withInjectables<
+    Dependencies,
+    ItemListLayoutProps<I>
+  >(
+    NonInjectedItemListLayout,
+
+    {
+      getProps: (di, props) => ({
+        namespaceStore: di.inject(namespaceStoreInjectable),
+        itemListLayoutStorage: di.inject(itemListLayoutStorageInjectable),
+        ...props,
+      }),
+    },
+  );
+
+  return <InjectedItemListLayout {...props} />;
 }

@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./table.scss";
@@ -29,9 +13,11 @@ import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { createPageParam } from "../../navigation";
-import { getSortParams, setSortParams } from "./table.storage";
 import { computed, makeObservable } from "mobx";
 import { getSorted } from "./sorting";
+import type { TableModel } from "./table-model/table-model";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import tableModelInjectable from "./table-model/table-model.injectable";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
@@ -90,8 +76,12 @@ export const orderByUrlParam = createPageParam({
   name: "order",
 });
 
+interface Dependencies {
+  model: TableModel
+}
+
 @observer
-export class Table<Item> extends React.Component<TableProps<Item>> {
+class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependencies> {
   static defaultProps: TableProps<any> = {
     scrollable: true,
     autoSize: true,
@@ -101,7 +91,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
     customRowHeights: (item, lineHeight, paddings) => lineHeight + paddings,
   };
 
-  constructor(props: TableProps<Item>) {
+  constructor(props: TableProps<Item> & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -121,7 +111,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
   }
 
   @computed get sortParams() {
-    return Object.assign({}, this.props.sortByDefault, getSortParams(this.props.tableId));
+    return Object.assign({}, this.props.sortByDefault, this.props.model.getSortParams(this.props.tableId));
   }
 
   renderHead() {
@@ -167,7 +157,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
   }
 
   protected onSort({ sortBy, orderBy }: TableSortParams) {
-    setSortParams(this.props.tableId, { sortBy, orderBy });
+    this.props.model.setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
 
     if (sortSyncWithUrl) {
@@ -255,3 +245,19 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
     );
   }
 }
+
+export function Table<Item>(props: TableProps<Item>) {
+  const InjectedTable = withInjectables<Dependencies, TableProps<Item>>(
+    NonInjectedTable,
+
+    {
+      getProps: (di, props) => ({
+        model: di.inject(tableModelInjectable),
+        ...props,
+      }),
+    },
+  );
+
+  return <InjectedTable {...props} />;
+}
+

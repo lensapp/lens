@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./pod-details-container.scss";
@@ -35,8 +19,10 @@ import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { portForwardStore } from "../../port-forward/port-forward.store";
+import type { PortForwardStore } from "../../port-forward";
 import { disposeOnUnmount, observer } from "mobx-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 
 interface Props {
   pod: Pod;
@@ -44,12 +30,16 @@ interface Props {
   metrics?: { [key: string]: IMetrics };
 }
 
+interface Dependencies {
+  portForwardStore: PortForwardStore
+}
+
 @observer
-export class PodDetailsContainer extends React.Component<Props> {
+class NonInjectedPodDetailsContainer extends React.Component<Props & Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      portForwardStore.watch(),
+      this.props.portForwardStore.watch(),
     ]);
   }
 
@@ -200,3 +190,14 @@ export class PodDetailsContainer extends React.Component<Props> {
     );
   }
 }
+
+export const PodDetailsContainer = withInjectables<Dependencies, Props>(
+  NonInjectedPodDetailsContainer,
+
+  {
+    getProps: (di, props) => ({
+      portForwardStore: di.inject(portForwardStoreInjectable),
+      ...props,
+    }),
+  },
+);

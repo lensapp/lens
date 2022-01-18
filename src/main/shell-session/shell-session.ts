@@ -1,26 +1,10 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Cluster } from "../cluster";
-import { Kubectl } from "../kubectl";
+import type { Cluster } from "../../common/cluster/cluster";
+import type { Kubectl } from "../kubectl/kubectl";
 import type WebSocket from "ws";
 import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
@@ -30,7 +14,7 @@ import os from "os";
 import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
-import { appEventBus } from "../../common/event-bus";
+import { appEventBus } from "../../common/app-event-bus/event-bus";
 import logger from "../logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
@@ -142,7 +126,6 @@ export abstract class ShellSession {
     this.processes.clear();
   }
 
-  protected kubectl: Kubectl;
   protected running = false;
   protected kubectlBinDirP: Promise<string>;
   protected kubeconfigPathP: Promise<string>;
@@ -172,8 +155,7 @@ export abstract class ShellSession {
     return { shellProcess, resume };
   }
 
-  constructor(protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
-    this.kubectl = new Kubectl(cluster.version);
+  constructor(protected kubectl: Kubectl, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;

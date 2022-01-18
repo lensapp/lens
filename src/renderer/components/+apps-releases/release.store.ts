@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import isEqual from "lodash/isEqual";
@@ -26,13 +10,17 @@ import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IRele
 import { ItemStore } from "../../../common/item.store";
 import type { Secret } from "../../../common/k8s-api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
 import { Notifications } from "../notifications";
+
+interface Dependencies {
+  namespaceStore: NamespaceStore
+}
 
 export class ReleaseStore extends ItemStore<HelmRelease> {
   releaseSecrets = observable.map<string, Secret>();
 
-  constructor() {
+  constructor(private dependencies: Dependencies ) {
     super();
     makeObservable(this);
     autoBind(this);
@@ -61,7 +49,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   watchSelectedNamespaces(): (() => void) {
-    return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
+    return reaction(() => this.dependencies.namespaceStore.context.contextNamespaces, namespaces => {
       this.loadAll(namespaces);
     }, {
       fireImmediately: true,
@@ -106,13 +94,13 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    return this.loadAll(namespaceStore.context.contextNamespaces);
+    return this.loadAll(this.dependencies.namespaceStore.context.contextNamespaces);
   }
 
   async loadItems(namespaces: string[]) {
-    const isLoadingAll = namespaceStore.context.allNamespaces?.length > 1
-      && namespaceStore.context.cluster.accessibleNamespaces.length === 0
-      && namespaceStore.context.allNamespaces.every(ns => namespaces.includes(ns));
+    const isLoadingAll = this.dependencies.namespaceStore.context.allNamespaces?.length > 1
+      && this.dependencies.namespaceStore.context.cluster.accessibleNamespaces.length === 0
+      && this.dependencies.namespaceStore.context.allNamespaces.every(ns => namespaces.includes(ns));
 
     if (isLoadingAll) {
       return listReleases();
@@ -123,13 +111,13 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       .then(items => items.flat());
   }
 
-  async create(payload: IReleaseCreatePayload) {
+  create = async (payload: IReleaseCreatePayload) => {
     const response = await createRelease(payload);
 
     if (this.isLoaded) this.loadFromContextNamespaces();
 
     return response;
-  }
+  };
 
   async update(name: string, namespace: string, payload: IReleaseUpdatePayload) {
     const response = await updateRelease(name, namespace, payload);
@@ -139,13 +127,13 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     return response;
   }
 
-  async rollback(name: string, namespace: string, revision: number) {
+  rollback = async (name: string, namespace: string, revision: number) => {
     const response = await rollbackRelease(name, namespace, revision);
 
     if (this.isLoaded) this.loadFromContextNamespaces();
 
     return response;
-  }
+  };
 
   async remove(release: HelmRelease) {
     return super.removeItem(release, () => deleteRelease(release.getName(), release.getNs()));
@@ -155,5 +143,3 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     return Promise.all(this.selectedItems.map(this.remove));
   }
 }
-
-export const releaseStore = new ReleaseStore();
