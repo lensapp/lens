@@ -11,11 +11,10 @@ interface Dependencies {
 
 export const getReleaseSecret =
   ({ secretsStore }: Dependencies) =>
-    (release: HelmRelease) => {
-      return secretsStore
+    (release: HelmRelease) =>
+      secretsStore
         .getByLabel({
           owner: "helm",
           name: release.getName(),
         })
         .find((secret) => secret.getNs() == release.getNs());
-    };
