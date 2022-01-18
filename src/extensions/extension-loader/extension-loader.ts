@@ -298,7 +298,7 @@ export class ExtensionLoader {
 
       return removeItems;
     });
-  };
+  }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
     const loadingExtensions: ExtensionLoading[] = [];
