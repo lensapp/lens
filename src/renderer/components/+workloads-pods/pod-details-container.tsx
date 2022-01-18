@@ -35,8 +35,10 @@ import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { portForwardStore } from "../../port-forward/port-forward.store";
+import type { PortForwardStore } from "../../port-forward";
 import { disposeOnUnmount, observer } from "mobx-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 
 interface Props {
   pod: Pod;
@@ -44,12 +46,16 @@ interface Props {
   metrics?: { [key: string]: IMetrics };
 }
 
+interface Dependencies {
+  portForwardStore: PortForwardStore
+}
+
 @observer
-export class PodDetailsContainer extends React.Component<Props> {
+class NonInjectedPodDetailsContainer extends React.Component<Props & Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      portForwardStore.watch(),
+      this.props.portForwardStore.watch(),
     ]);
   }
 
@@ -200,3 +206,14 @@ export class PodDetailsContainer extends React.Component<Props> {
     );
   }
 }
+
+export const PodDetailsContainer = withInjectables<Dependencies, Props>(
+  NonInjectedPodDetailsContainer,
+
+  {
+    getProps: (di, props) => ({
+      portForwardStore: di.inject(portForwardStoreInjectable),
+      ...props,
+    }),
+  },
+);

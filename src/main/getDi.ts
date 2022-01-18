@@ -20,19 +20,25 @@
  */
 
 import { createContainer } from "@ogre-tools/injectable";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
-export const getDi = () =>
-  createContainer(
+export const getDi = () => {
+  const di = createContainer(
     getRequireContextForMainCode,
-    getRequireContextForCommonCode,
     getRequireContextForCommonExtensionCode,
+    getRequireContextForCommonCode,
   );
+
+  setLegacyGlobalDiForExtensionApi(di);
+
+  return di;
+};
 
 const getRequireContextForMainCode = () =>
   require.context("./", true, /\.injectable\.(ts|tsx)$/);
 
-const getRequireContextForCommonCode = () =>
-  require.context("../common", true, /\.injectable\.(ts|tsx)$/);
-
 const getRequireContextForCommonExtensionCode = () =>
   require.context("../extensions", true, /\.injectable\.(ts|tsx)$/);
+
+const getRequireContextForCommonCode = () =>
+  require.context("../common", true, /\.injectable\.(ts|tsx)$/);

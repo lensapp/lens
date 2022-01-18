@@ -46,8 +46,10 @@ describe("<Welcome/>", () => {
   let di: ConfigurableDependencyInjectionContainer;
   let welcomeBannersStub: WelcomeBannerRegistration[];
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    await di.runSetups();
 
     render = renderFor(di);
 

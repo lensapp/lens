@@ -26,8 +26,8 @@ import { pathToRegexp } from "path-to-regexp";
 import logger from "../../main/logger";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
-import { ExtensionsStore } from "../../extensions/extensions-store";
-import type { ExtensionLoader as ExtensionLoaderType } from "../../extensions/extension-loader/extension-loader";
+import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
+import type { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
 import { when } from "mobx";
@@ -79,7 +79,8 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 }
 
 interface Dependencies {
-  extensionLoader: ExtensionLoaderType
+  extensionLoader: ExtensionLoader
+  extensionsStore: ExtensionsStore
 }
 
 export abstract class LensProtocolRouter {
@@ -212,7 +213,7 @@ export abstract class LensProtocolRouter {
       return name;
     }
 
-    if (!ExtensionsStore.getInstance().isEnabled(extension)) {
+    if (!this.dependencies.extensionsStore.isEnabled(extension)) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;

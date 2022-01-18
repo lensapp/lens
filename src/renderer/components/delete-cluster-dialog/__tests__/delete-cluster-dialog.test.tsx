@@ -25,9 +25,12 @@ import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
 
-import { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../common/cluster/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
-import { AppPaths } from "../../../../common/app-paths";
+
+import type { ClusterModel } from "../../../../common/cluster-types";
+import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
+import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 
 jest.mock("electron", () => ({
   app: {
@@ -44,8 +47,6 @@ jest.mock("electron", () => ({
     handle: jest.fn(),
   },
 }));
-
-AppPaths.init();
 
 const kubeconfig = `
 apiVersion: v1
@@ -101,6 +102,22 @@ users:
 let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
+  let createCluster: (model: ClusterModel) => Cluster;
+
+  beforeEach(async () => {
+    const { mainDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
+    
+    mockFs();
+
+    await runSetups();
+
+    createCluster = mainDi.inject(createClusterInjectionToken);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
   describe("Kubeconfig with different clusters", () => {
     beforeEach(async () => {
       const mockOpts = {
@@ -124,7 +141,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning when deleting non-current-context cluster", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "test",
         contextName: "test",
         preferences: {
@@ -142,7 +159,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning when deleting current-context cluster", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
@@ -159,7 +176,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows context switcher when deleting current cluster", async () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
         preferences: {
@@ -180,7 +197,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows context switcher after checkbox click", async () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "some-cluster",
         contextName: "test",
         preferences: {
@@ -205,7 +222,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning for internal kubeconfig cluster", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "some-cluster",
         contextName: "test",
         preferences: {
@@ -243,7 +260,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("shows warning if no other contexts left", () => {
-      const cluster = new Cluster({
+      const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
         preferences: {

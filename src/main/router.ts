@@ -24,7 +24,7 @@ import Subtext from "@hapi/subtext";
 import type http from "http";
 import path from "path";
 import { readFile } from "fs-extra";
-import type { Cluster } from "./cluster";
+import type { Cluster } from "../common/cluster/cluster";
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { HelmApiRoute, KubeconfigRoute, MetricsRoute, PortForwardRoute, ResourceApplierApiRoute, VersionRoute } from "./routes";
 import logger from "./logger";
@@ -76,11 +76,15 @@ function getMimeType(filename: string) {
   return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
 }
 
+interface Dependencies {
+  routePortForward: (request: LensApiRequest) => Promise<void>
+}
+
 export class Router {
   protected router = new Call.Router();
   protected static rootPath = path.resolve(__static);
 
-  public constructor() {
+  public constructor(private dependencies: Dependencies) {
     this.addRoutes();
   }
 
@@ -180,7 +184,7 @@ export class Router {
     this.router.add({ method: "get", path: `${apiPrefix}/metrics/providers` }, MetricsRoute.routeMetricsProviders);
 
     // Port-forward API (the container port and local forwarding port are obtained from the query parameters)
-    this.router.add({ method: "post", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routePortForward);
+    this.router.add({ method: "post", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, this.dependencies.routePortForward);
     this.router.add({ method: "get", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForward);
     this.router.add({ method: "delete", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForwardStop);
 

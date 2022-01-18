@@ -21,33 +21,45 @@
 
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, removePortForward, PortForwardDialog, startPortForward, stopPortForward } from "../../port-forward";
+import { openPortForward, PortForwardItem, PortForwardStore } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
+import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 
 interface Props extends MenuActionsProps {
   portForward: PortForwardItem;
   hideDetails?(): void;
 }
 
-export class PortForwardMenu extends React.Component<Props> {
+interface Dependencies {
+  portForwardStore: PortForwardStore,
+  openPortForwardDialog: (item: PortForwardItem) => void
+}
+
+class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
   @boundMethod
   remove() {
     const { portForward } = this.props;
 
     try {
-      removePortForward(portForward);
+      this.portForwardStore.remove(portForward);
     } catch (error) {
       Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
     }
   }
 
+  get portForwardStore() {
+    return this.props.portForwardStore;
+  }
+
   private startPortForwarding = async () => {
     const { portForward } = this.props;
 
-    const pf = await startPortForward(portForward);
+    const pf = await this.portForwardStore.start(portForward);
 
     if (pf.status === "Disabled") {
       const { name, kind, forwardPort } = portForward;
@@ -61,7 +73,7 @@ export class PortForwardMenu extends React.Component<Props> {
 
     if (portForward.status === "Active") {
       return (
-        <MenuItem onClick={() => stopPortForward(portForward)}>
+        <MenuItem onClick={() => this.portForwardStore.stop(portForward)}>
           <Icon material="stop" tooltip="Stop port-forward" interactive={toolbar} />
           <span className="title">Stop</span>
         </MenuItem>
@@ -89,7 +101,7 @@ export class PortForwardMenu extends React.Component<Props> {
             <span className="title">Open</span>
           </MenuItem>
         }
-        <MenuItem onClick={() => PortForwardDialog.open(portForward)}>
+        <MenuItem onClick={() => this.props.openPortForwardDialog(portForward)}>
           <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
           <span className="title">Edit</span>
         </MenuItem>
@@ -112,3 +124,15 @@ export class PortForwardMenu extends React.Component<Props> {
     );
   }
 }
+
+export const PortForwardMenu = withInjectables<Dependencies, Props>(
+  NonInjectedPortForwardMenu,
+
+  {
+    getProps: (di, props) => ({
+      portForwardStore: di.inject(portForwardStoreInjectable),
+      openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+      ...props,
+    }),
+  },
+);

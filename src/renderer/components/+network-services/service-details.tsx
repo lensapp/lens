@@ -31,25 +31,37 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
-import { portForwardStore } from "../../port-forward";
+import type { PortForwardStore } from "../../port-forward";
 import logger from "../../../common/logger";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { Disposer } from "../../../common/utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
+import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
+import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+  portForwardStore: PortForwardStore
+}
+
 @observer
-export class ServiceDetails extends React.Component<Props> {
+class NonInjectedServiceDetails extends React.Component<Props & Dependencies> {
   componentDidMount() {
     const { object: service } = this.props;
 
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         endpointStore,
       ], {
         namespaces: [service.getNs()],
       }),
-      portForwardStore.watch(),
+      this.props.portForwardStore.watch(),
     ]);
   }
 
@@ -140,3 +152,15 @@ export class ServiceDetails extends React.Component<Props> {
     );
   }
 }
+
+export const ServiceDetails = withInjectables<Dependencies, Props>(
+  NonInjectedServiceDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      portForwardStore: di.inject(portForwardStoreInjectable),
+      ...props,
+    }),
+  },
+);

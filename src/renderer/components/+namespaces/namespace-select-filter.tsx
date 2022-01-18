@@ -22,171 +22,122 @@
 import "./namespace-select-filter.scss";
 
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { components, PlaceholderProps } from "react-select";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
 
 import { Icon } from "../icon";
 import { NamespaceSelect } from "./namespace-select";
-import { namespaceStore } from "./namespace.store";
+import type { NamespaceStore } from "./namespace-store/namespace.store";
 
 import type { SelectOption, SelectProps } from "../select";
-import { isMac } from "../../../common/vars";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { NamespaceSelectFilterModel } from "./namespace-select-filter-model/namespace-select-filter-model";
+import namespaceSelectFilterModelInjectable from "./namespace-select-filter-model/namespace-select-filter-model.injectable";
+import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
 
-const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
-  const getPlaceholder = (): React.ReactNode => {
-    const namespaces = namespaceStore.contextNamespaces;
+interface Dependencies {
+  model: NamespaceSelectFilterModel;
+}
 
-    if (namespaceStore.areAllSelectedImplicitly || !namespaces.length) {
-      return <>All namespaces</>;
-    }
-
-    if (namespaces.length === 1) {
-      return <>Namespace: {namespaces[0]}</>;
-    }
-
-    return <>Namespaces: {namespaces.join(", ")}</>;
-  };
-
-  return (
-    <components.Placeholder {...props}>
-      {getPlaceholder()}
-    </components.Placeholder>
-  );
-});
-
-@observer
-export class NamespaceSelectFilter extends React.Component<SelectProps> {
-  static isMultiSelection = observable.box(false);
-  static isMenuOpen = observable.box(false);
-
-  /**
-   * Only updated on every open
-   */
-  private selected = observable.set<string>();
-  private didToggle = false;
-
-  constructor(props: SelectProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  @computed get isMultiSelection() {
-    return NamespaceSelectFilter.isMultiSelection.get();
-  }
-
-  set isMultiSelection(val: boolean) {
-    NamespaceSelectFilter.isMultiSelection.set(val);
-  }
-
-  @computed get isMenuOpen() {
-    return NamespaceSelectFilter.isMenuOpen.get();
-  }
-
-  set isMenuOpen(val: boolean) {
-    NamespaceSelectFilter.isMenuOpen.set(val);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.isMenuOpen, newVal => {
-        if (newVal) { // rising edge of selection
-          this.selected.replace(namespaceStore.selectedNames);
-          this.didToggle = false;
-        }
-      }),
-    ]);
-  }
-
-  formatOptionLabel({ value: namespace, label }: SelectOption) {
-    if (namespace) {
-      const isSelected = namespaceStore.hasContext(namespace);
-
-      return (
-        <div className="flex gaps align-center">
-          <Icon small material="layers" />
-          <span>{namespace}</span>
-          {isSelected && <Icon small material="check" className="box right" />}
-        </div>
-      );
-    }
-
-    return label;
-  }
-
-  @action
-  onChange = ([{ value: namespace }]: SelectOption[]) => {
-    if (namespace) {
-      if (this.isMultiSelection) {
-        this.didToggle = true;
-        namespaceStore.toggleSingle(namespace);
-      } else {
-        namespaceStore.selectSingle(namespace);
-      }
-    } else {
-      namespaceStore.selectAll();
-    }
-  };
-
-  private isSelectionKey(e: React.KeyboardEvent): boolean {
-    if (isMac) {
-      return e.key === "Meta";
-    }
-
-    return e.key === "Control"; // windows or linux
-  }
-
-  @action
-  onKeyDown = (e: React.KeyboardEvent) => {
-    if (this.isSelectionKey(e)) {
-      this.isMultiSelection = true;
-    }
-  };
-
-  @action
-  onKeyUp = (e: React.KeyboardEvent) => {
-    if (this.isSelectionKey(e)) {
-      this.isMultiSelection = false;
-    }
-
-    if (!this.isMultiSelection && this.didToggle) {
-      this.isMenuOpen = false;
-    }
-  };
-
-  @action
-  onClick = () => {
-    if (!this.isMenuOpen) {
-      this.isMenuOpen = true;
-    } else if (!this.isMultiSelection) {
-      this.isMenuOpen = !this.isMenuOpen;
-    }
-  };
-
-  reset = () => {
-    this.isMultiSelection = false;
-    this.isMenuOpen = false;
-  };
-
+class NonInjectedNamespaceSelectFilter extends React.Component<
+  SelectProps & Dependencies
+> {
   render() {
     return (
-      <div onKeyUp={this.onKeyUp} onKeyDown={this.onKeyDown} onClick={this.onClick}>
+      <div
+        onKeyUp={this.props.model.onKeyUp}
+        onKeyDown={this.props.model.onKeyDown}
+        onClick={this.props.model.onClick}
+      >
         <NamespaceSelect
           isMulti={true}
-          menuIsOpen={this.isMenuOpen}
+          menuIsOpen={this.props.model.menuIsOpen}
           components={{ Placeholder }}
           showAllNamespacesOption={true}
           closeMenuOnSelect={false}
           controlShouldRenderValue={false}
           placeholder={""}
-          onChange={this.onChange}
-          onBlur={this.reset}
-          formatOptionLabel={this.formatOptionLabel}
+          onChange={this.props.model.onChange}
+          onBlur={this.props.model.reset}
+          formatOptionLabel={formatOptionLabelFor(this.props.model)}
           className="NamespaceSelectFilter"
           menuClass="NamespaceSelectFilterMenu"
-          sort={(left, right) => +this.selected.has(right.value) - +this.selected.has(left.value)}
+          sort={(left, right) =>
+            +this.props.model.selectedNames.has(right.value) -
+            +this.props.model.selectedNames.has(left.value)
+          }
         />
       </div>
     );
   }
 }
+
+const formatOptionLabelFor =
+  (model: NamespaceSelectFilterModel) =>
+    ({ value: namespace, label }: SelectOption) => {
+      if (namespace) {
+        const isSelected = model.isSelected(namespace);
+
+        return (
+          <div className="flex gaps align-center">
+            <Icon small material="layers" />
+            <span>{namespace}</span>
+            {isSelected && <Icon small material="check" className="box right" />}
+          </div>
+        );
+      }
+
+      return label;
+    };
+
+export const NamespaceSelectFilter = withInjectables<Dependencies, SelectProps>(
+  observer(NonInjectedNamespaceSelectFilter),
+
+  {
+    getProps: (di, props) => ({
+      model: di.inject(namespaceSelectFilterModelInjectable),
+      ...props,
+    }),
+  },
+);
+
+type CustomPlaceholderProps = PlaceholderProps<any, boolean>;
+
+interface PlaceholderDependencies {
+  namespaceStore: NamespaceStore;
+}
+
+const NonInjectedPlaceholder = observer(
+  ({ namespaceStore, ...props }: CustomPlaceholderProps & PlaceholderDependencies) => {
+    const getPlaceholder = (): React.ReactNode => {
+      const namespaces = namespaceStore.contextNamespaces;
+
+      if (namespaceStore.areAllSelectedImplicitly || !namespaces.length) {
+        return <>All namespaces</>;
+      }
+
+      if (namespaces.length === 1) {
+        return <>Namespace: {namespaces[0]}</>;
+      }
+
+      return <>Namespaces: {namespaces.join(", ")}</>;
+    };
+
+    return (
+      <components.Placeholder {...props}>
+        {getPlaceholder()}
+      </components.Placeholder>
+    );
+  },
+);
+
+const Placeholder = withInjectables<PlaceholderDependencies, CustomPlaceholderProps>(
+  NonInjectedPlaceholder,
+
+  {
+    getProps: (di, props) => ({
+      namespaceStore: di.inject(namespaceStoreInjectable),
+      ...props,
+    }),
+  },
+);

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { validatePackage } from "../validate-package/validate-package";
-import { ExtensionDiscovery } from "../../../../../extensions/extension-discovery";
+import type { ExtensionDiscovery } from "../../../../../extensions/extension-discovery/extension-discovery";
 import { getMessageFromError } from "../../get-message-from-error/get-message-from-error";
 import logger from "../../../../../main/logger";
 import { Notifications } from "../../../notifications";
@@ -42,51 +42,72 @@ export interface InstallRequestValidated {
   tempFile: string; // temp system path to packed extension for unpacking
 }
 
-export async function createTempFilesAndValidate({
-  fileName,
-  dataP,
-}: InstallRequest): Promise<InstallRequestValidated | null> {
-  // copy files to temp
-  await fse.ensureDir(getExtensionPackageTemp());
-
-  // validate packages
-  const tempFile = getExtensionPackageTemp(fileName);
-
-  try {
-    const data = await dataP;
-
-    if (!data) {
-      return null;
-    }
-
-    await fse.writeFile(tempFile, data);
-    const manifest = await validatePackage(tempFile);
-
-    if (!isCompatibleExtension(manifest)){
-      displayError(fileName, { message: "Incompatible extension" });
-
-      return null;
-    }
-
-    const id = path.join(
-      ExtensionDiscovery.getInstance().nodeModulesPath,
-      manifest.name,
-      "package.json",
-    );
-
-    return {
-      fileName,
-      data,
-      manifest,
-      tempFile,
-      id,
-    };
-  } catch (error) {
-    displayError(fileName, error);
-  }
-
-  return null;
+interface Dependencies {
+  extensionDiscovery: ExtensionDiscovery
 }
+
+export const createTempFilesAndValidate =
+  ({ extensionDiscovery }: Dependencies) =>
+    async ({
+      fileName,
+      dataP,
+    }: InstallRequest): Promise<InstallRequestValidated | null> => {
+      // copy files to temp
+      await fse.ensureDir(getExtensionPackageTemp());
+
+      // validate packages
+      const tempFile = getExtensionPackageTemp(fileName);
+
+      try {
+        const data = await dataP;
+
+        if (!data) {
+          return null;
+        }
+
+        await fse.writeFile(tempFile, data);
+        const manifest = await validatePackage(tempFile);
+
+        if (!isCompatibleExtension(manifest)){
+          displayError(fileName, { message: "Incompatible extension" });
+
+          return null;
+        }
+
+        const id = path.join(
+          extensionDiscovery.nodeModulesPath,
+          manifest.name,
+          "package.json",
+        );
+
+        return {
+          fileName,
+          data,
+          manifest,
+          tempFile,
+          id,
+        };
+      } catch (error) {
+        const message = getMessageFromError(error);
+
+        logger.info(
+          `[EXTENSION-INSTALLATION]: installing ${fileName} has failed: ${message}`,
+          { error },
+        );
+        Notifications.error(
+          <div className="flex column gaps">
+            <p>
+            Installing <em>{fileName}</em> has failed, skipping.
+            </p>
+            <p>
+            Reason: <em>{message}</em>
+            </p>
+          </div>,
+        );
+      }
+
+      return null;
+    };
 
 function displayError(fileName: string, error: any) {
   const message = getMessageFromError(error);

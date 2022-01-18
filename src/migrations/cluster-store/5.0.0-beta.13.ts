@@ -24,7 +24,9 @@ import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import path from "path";
 import { moveSync, removeSync } from "fs-extra";
-import { AppPaths } from "../../common/app-paths";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 function mergePrometheusPreferences(left: ClusterPrometheusPreferences, right: ClusterPrometheusPreferences): ClusterPrometheusPreferences {
   if (left.prometheus && left.prometheusProvider) {
@@ -106,7 +108,11 @@ function moveStorageFolder({ folder, newId, oldId }: { folder: string, newId: st
 export default {
   version: "5.0.0-beta.13",
   run(store) {
-    const folder = path.resolve(AppPaths.get("userData"), "lens-local-storage");
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const userDataPath = di.inject(directoryForUserDataInjectable);
+
+    const folder = path.resolve(userDataPath, "lens-local-storage");
 
     const oldClusters: ClusterModel[] = store.get("clusters") ?? [];
     const clusters = new Map<string, ClusterModel>();

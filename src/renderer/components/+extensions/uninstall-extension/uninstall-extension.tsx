@@ -21,28 +21,30 @@
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { extensionDisplayName, LensExtensionId } from "../../../../extensions/lens-extension";
 import logger from "../../../../main/logger";
-import { ExtensionInstallationStateStore } from "../extension-install.store";
-import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
+import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import { Notifications } from "../../notifications";
 import React from "react";
 import { when } from "mobx";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
+import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader
+  extensionDiscovery: ExtensionDiscovery
+  extensionInstallationStateStore: ExtensionInstallationStateStore
 }
 
 export const uninstallExtension =
-  ({ extensionLoader }: Dependencies) =>
+  ({ extensionLoader, extensionDiscovery, extensionInstallationStateStore }: Dependencies) =>
     async (extensionId: LensExtensionId): Promise<boolean> => {
       const { manifest } = extensionLoader.getExtension(extensionId);
       const displayName = extensionDisplayName(manifest.name, manifest.version);
 
       try {
         logger.debug(`[EXTENSIONS]: trying to uninstall ${extensionId}`);
-        ExtensionInstallationStateStore.setUninstalling(extensionId);
+        extensionInstallationStateStore.setUninstalling(extensionId);
 
-        await ExtensionDiscovery.getInstance().uninstallExtension(extensionId);
+        await extensionDiscovery.uninstallExtension(extensionId);
 
         // wait for the ExtensionLoader to actually uninstall the extension
         await when(() => !extensionLoader.userExtensions.has(extensionId));
@@ -71,6 +73,6 @@ export const uninstallExtension =
         return false;
       } finally {
       // Remove uninstall state on uninstall failure
-        ExtensionInstallationStateStore.clearUninstalling(extensionId);
+        extensionInstallationStateStore.clearUninstalling(extensionId);
       }
     };

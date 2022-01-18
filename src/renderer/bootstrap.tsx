@@ -31,34 +31,26 @@ import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { render } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
-import { ClusterStore } from "../common/cluster-store";
-import { UserStore } from "../common/user-store";
-import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
-import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
 import { HotbarStore } from "../common/hotbar-store";
 import { WeblinkStore } from "../common/weblink-store";
-import { ExtensionsStore } from "../extensions/extensions-store";
-import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
-import { TerminalStore } from "./components/dock/terminal.store";
-import { AppPaths } from "../common/app-paths";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
-import type { ExtensionLoader } from "../extensions/extension-loader";
-import bindProtocolAddRouteHandlersInjectable
-  from "./protocol-handler/bind-protocol-add-route-handlers/bind-protocol-add-route-handlers.injectable";
-import type { LensProtocolRouterRenderer } from "./protocol-handler";
-import lensProtocolRouterRendererInjectable
-  from "./protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
+import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
+import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
+import userStoreInjectable from "../common/user-store/user-store.injectable";
+import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
+import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 
 if (process.isMainFrame) {
@@ -79,23 +71,14 @@ async function attachChromeDebugger() {
   }
 }
 
-type AppComponent = React.ComponentType & {
+export async function bootstrap(di: DependencyInjectionContainer) {
+  await di.runSetups();
 
-  // TODO: This static method is criminal as it has no direct relation with component
-  init(
-    rootElem: HTMLElement,
-    extensionLoader: ExtensionLoader,
-    bindProtocolAddRouteHandlers?: () => void,
-    lensProtocolRouterRendererInjectable?: LensProtocolRouterRenderer
-  ): Promise<void>;
-};
-
-export async function bootstrap(comp: () => Promise<AppComponent>, di: DependencyInjectionContainer) {
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
-  await AppPaths.init();
-  UserStore.createInstance();
+  // TODO: Remove temporal dependencies to make timing of initialization not important
+  di.inject(userStoreInjectable);
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
@@ -136,38 +119,46 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 
   extensionLoader.init();
 
-  ExtensionDiscovery.createInstance(extensionLoader).init();
+  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+
+  extensionDiscovery.init();
 
   // ClusterStore depends on: UserStore
-  const clusterStore = ClusterStore.createInstance();
+  const clusterStore = di.inject(clusterStoreInjectable);
 
   await clusterStore.loadInitialOnRenderer();
 
   // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
-  ExtensionsStore.createInstance();
-  FilesystemProvisionerStore.createInstance();
 
   // ThemeStore depends on: UserStore
   ThemeStore.createInstance();
 
-  // TerminalStore depends on: ThemeStore
-  TerminalStore.createInstance();
   WeblinkStore.createInstance();
 
-  ExtensionInstallationStateStore.bindIpcListeners();
+  const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
+
+  extensionInstallationStateStore.bindIpcListeners();
+
   HelmRepoManager.createInstance(); // initialize the manager
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
 
-  // init app's dependencies if any
-  const App = await comp();
+  let App;
+  let initializeApp;
 
-  const bindProtocolAddRouteHandlers = di.inject(bindProtocolAddRouteHandlersInjectable);
-  const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
+  // TODO: Introduce proper architectural boundaries between root and cluster iframes
+  if (process.isMainFrame) {
+    initializeApp = di.inject(initRootFrameInjectable);
 
-  await App.init(rootElem, extensionLoader, bindProtocolAddRouteHandlers, lensProtocolRouterRenderer);
+    App = (await import("./frames/root-frame/root-frame")).RootFrame;
+  } else {
+    initializeApp = di.inject(initClusterFrameInjectable);
+    App = (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame;
+  }
+
+  await initializeApp(rootElem);
 
   render(
     <DiContextProvider value={{ di }}>
@@ -181,14 +172,7 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
 const di = getDi();
 
 // run
-bootstrap(
-  async () =>
-    process.isMainFrame
-      ? (await import("./root-frame")).RootFrame
-      : (await import("./cluster-frame")).ClusterFrame,
-  di,
-);
-
+bootstrap(di);
 
 /**
  * Exports for virtual package "@k8slens/extensions" for renderer-process.

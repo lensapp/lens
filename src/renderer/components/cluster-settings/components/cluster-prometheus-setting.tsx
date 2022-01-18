@@ -21,7 +21,7 @@
 
 import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
-import type { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../common/cluster/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";

@@ -23,7 +23,7 @@ import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { IMetricsReqParams } from "../common/k8s-api/endpoints/metrics.api";
 import { LensProxy } from "./lens-proxy";
-import type { Cluster } from "./cluster";
+import type { Cluster } from "../common/cluster/cluster";
 
 export async function k8sRequest<T = any>(cluster: Cluster, path: string, options: RequestPromiseOptions = {}): Promise<T> {
   const kubeProxyUrl = `http://localhost:${LensProxy.getInstance().port}${apiKubePrefix}`;

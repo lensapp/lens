@@ -27,11 +27,11 @@ import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class PodsApi extends KubeApi<Pod> {
-  async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
+  getLogs = async (params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> => {
     const path = `${this.getUrl(params)}/log`;
 
     return this.request.get(path, { query });
-  }
+  };
 }
 
 export function getMetricsForPods(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {

@@ -1,0 +1,39 @@
+import { observable } from "mobx"
+import { PrometheusProvider } from "../main/prometheus/provider-registry";
+
+export enum MetricsProviderType {
+  PROMETHEUS = "prometheus",
+  CUSTOM = "custom",
+}
+
+export interface MetricsProviderRegistration {
+  id: string;
+  external?: boolean;
+  type: MetricsProviderType;
+  provider: PrometheusProvider;
+}
+
+export class MetricsProviderRegistry {
+  registry = observable.array<MetricsProviderRegistration>([], { deep: false });
+
+  add(provider: MetricsProviderRegistration) {
+    console.log("Adding provider" + provider.id)
+    this.registry.push(provider)
+    return () => {
+      this.registry.replace(
+        this.registry.filter(p => p.id !== provider.id)
+      )
+    };
+  }
+
+  toJSON() {
+    JSON.stringify(this.registry)
+  }
+
+  getInternalPrometheusProviders(): MetricsProviderRegistration[] {
+    console.log(this.registry.toJSON())
+    return this.registry.filter(p => p.type === MetricsProviderType.PROMETHEUS && !p.external)
+  }
+}
+
+export const metricsProviderRegistry = new MetricsProviderRegistry()

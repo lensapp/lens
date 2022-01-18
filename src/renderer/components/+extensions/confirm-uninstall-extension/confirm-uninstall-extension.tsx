@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import type { InstalledExtension } from "../../../../extensions/extension-discovery";
+import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../../extensions/lens-extension";
 import { ConfirmDialog } from "../../confirm-dialog";

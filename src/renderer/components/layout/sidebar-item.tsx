@@ -23,12 +23,13 @@ import "./sidebar-item.scss";
 
 import React from "react";
 import { computed, makeObservable } from "mobx";
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames, prevDefault, StorageHelper } from "../../utils";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { Icon } from "../icon";
-import { sidebarStorage } from "./sidebar-storage";
 import { isActiveRoute } from "../../navigation";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import sidebarStorageInjectable, { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 
 interface SidebarItemProps {
   /**
@@ -49,11 +50,15 @@ interface SidebarItemProps {
   isActive?: boolean;
 }
 
+interface Dependencies {
+  sidebarStorage: StorageHelper<SidebarStorageState>
+}
+
 @observer
-export class SidebarItem extends React.Component<SidebarItemProps> {
+class NonInjectedSidebarItem extends React.Component<SidebarItemProps & Dependencies> {
   static displayName = "SidebarItem";
 
-  constructor(props: SidebarItemProps) {
+  constructor(props: SidebarItemProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -63,7 +68,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   }
 
   @computed get expanded(): boolean {
-    return Boolean(sidebarStorage.get().expanded[this.id]);
+    return Boolean(this.props.sidebarStorage.get().expanded[this.id]);
   }
 
   @computed get isActive(): boolean {
@@ -78,7 +83,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   }
 
   toggleExpand = () => {
-    sidebarStorage.merge(draft => {
+    this.props.sidebarStorage.merge(draft => {
       draft.expanded[this.id] = !draft.expanded[this.id];
     });
   };
@@ -103,7 +108,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
     if (isHidden) return null;
 
     const { isActive, id, expanded, isExpandable, toggleExpand } = this;
-    const classNames = cssNames(SidebarItem.displayName, className);
+    const classNames = cssNames("SidebarItem", className);
 
     return (
       <div className={classNames} data-test-id={id}>
@@ -124,3 +129,14 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
     );
   }
 }
+
+export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(
+  NonInjectedSidebarItem,
+
+  {
+    getProps: (di, props) => ({
+      sidebarStorage: di.inject(sidebarStorageInjectable),
+      ...props,
+    }),
+  },
+);

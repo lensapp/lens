@@ -25,7 +25,7 @@ import React, { Component } from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { releaseStore } from "./release.store";
+import type { ReleaseStore } from "./release.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { ReleaseDetails } from "./release-details";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
@@ -36,7 +36,9 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import type { ReleaseRouteParams } from "../../../common/routes";
 import { releaseURL } from "../../../common/routes";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import releaseStoreInjectable from "./release-store.injectable";
+import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 
 enum columnId {
   name = "name",
@@ -52,25 +54,30 @@ enum columnId {
 interface Props extends RouteComponentProps<ReleaseRouteParams> {
 }
 
+interface Dependencies {
+  releaseStore: ReleaseStore
+  selectNamespace: (namespace: string) => void
+}
+
 @observer
-export class HelmReleases extends Component<Props> {
+class NonInjectedHelmReleases extends Component<Dependencies & Props> {
   componentDidMount() {
     const { match: { params: { namespace }}} = this.props;
 
     if (namespace) {
-      namespaceStore.selectNamespaces(namespace);
+      this.props.selectNamespace(namespace);
     }
 
     disposeOnUnmount(this, [
-      releaseStore.watchAssociatedSecrets(),
-      releaseStore.watchSelectedNamespaces(),
+      this.props.releaseStore.watchAssociatedSecrets(),
+      this.props.releaseStore.watchSelectedNamespaces(),
     ]);
   }
 
   get selectedRelease() {
     const { match: { params: { name, namespace }}} = this.props;
 
-    return releaseStore.items.find(release => {
+    return this.props.releaseStore.items.find(release => {
       return release.getName() == name && release.getNs() == namespace;
     });
   }
@@ -116,7 +123,7 @@ export class HelmReleases extends Component<Props> {
           isConfigurable
           tableId="helm_releases"
           className="HelmReleases"
-          store={releaseStore}
+          store={this.props.releaseStore}
           dependentStores={[secretsStore]}
           sortingCallbacks={{
             [columnId.name]: release => release.getName(),
@@ -188,3 +195,15 @@ export class HelmReleases extends Component<Props> {
     );
   }
 }
+
+export const HelmReleases = withInjectables<Dependencies, Props>(
+  NonInjectedHelmReleases,
+
+  {
+    getProps: (di, props) => ({
+      releaseStore: di.inject(releaseStoreInjectable),
+      selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
+      ...props,
+    }),
+  },
+);

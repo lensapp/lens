@@ -33,21 +33,26 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
-import editResourceTabInjectable from "./dependencies/edit-resource-tab.injectable";
-import { TabKind } from "../dock/dock.store";
+import editResourceTabInjectable from "../dock/edit-resource-tab/edit-resource-tab.injectable";
+import { TabKind } from "../dock/dock-store/dock.store";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-registry.injectable";
 import { DiRender, renderFor } from "../test-utils/renderFor";
-import type { Cluster } from "../../../main/cluster";
+import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
 import { KubeObjectMenu } from "./index";
+
+// TODO: Make tooltips free of side effects by making it deterministic
+jest.mock("../tooltip");
 
 describe("kube-object-menu", () => {
   let di: ConfigurableDependencyInjectionContainer;
   let render: DiRender;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    await di.runSetups();
 
     // TODO: Remove global shared state
     KubeObjectMenuRegistry.resetInstance();

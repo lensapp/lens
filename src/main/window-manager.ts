@@ -23,7 +23,7 @@ import type { ClusterId } from "../common/cluster-types";
 import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
-import { appEventBus } from "../common/event-bus";
+import { appEventBus } from "../common/app-event-bus/event-bus";
 import { BundledExtensionsLoaded, ipcMainOn } from "../common/ipc";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";

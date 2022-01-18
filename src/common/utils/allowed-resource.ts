@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ClusterStore } from "../cluster-store";
+import { ClusterStore } from "../cluster-store/cluster-store";
 import type { KubeResource } from "../rbac";
 import { getHostedClusterId } from "./cluster-id-url-parsing";
 

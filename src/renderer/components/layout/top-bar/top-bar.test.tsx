@@ -28,6 +28,9 @@ import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injec
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
+import directoryForUserDataInjectable
+  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import mockFs from "mock-fs";
 
 jest.mock("../../../../common/vars", () => {
   const SemVer = require("semver").SemVer;
@@ -55,9 +58,6 @@ jest.mock(
           }
         },
       ),
-    },
-    app: {
-      getPath: () => "tmp",
     },
   }),
 );
@@ -88,10 +88,20 @@ describe("<TopBar/>", () => {
   let di: ConfigurableDependencyInjectionContainer;
   let render: DiRender;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    await di.runSetups();
 
     render = renderFor(di);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
   });
 
   it("renders w/o errors", () => {

@@ -18,9 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import createTerminalTabInjectable from "../../renderer/components/dock/create-terminal-tab/create-terminal-tab.injectable";
+import terminalStoreInjectable from "../../renderer/components/dock/terminal-store/terminal-store.injectable";
+import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import logTabStoreInjectable from "../../renderer/components/dock/log-tab-store/log-tab-store.injectable";
+import { asLegacyGlobalSingletonForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-singleton-for-extension-api";
+import { TerminalStore as TerminalStoreClass } from "../../renderer/components/dock/terminal-store/terminal.store";
 
 import commandOverlayInjectable from "../../renderer/components/command-palette/command-overlay.injectable";
-import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -74,5 +80,9 @@ export * from "../../renderer/components/+events/kube-event-details";
 
 // specific exports
 export * from "../../renderer/components/status-brick";
-export { terminalStore, createTerminalTab, TerminalStore } from "../../renderer/components/dock/terminal.store";
-export { logTabStore } from "../../renderer/components/dock/log-tab.store";
+
+export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(createTerminalTabInjectable);
+export const TerminalStore = asLegacyGlobalSingletonForExtensionApi(TerminalStoreClass, terminalStoreInjectable);
+export const terminalStore = asLegacyGlobalObjectForExtensionApi(terminalStoreInjectable);
+export const logTabStore = asLegacyGlobalObjectForExtensionApi(logTabStoreInjectable);
+

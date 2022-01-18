@@ -24,26 +24,31 @@ import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
-import { AppPaths } from "../../common/app-paths";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
 import { Disposer, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
-import type { InstalledExtension } from "../extension-discovery";
-import { ExtensionsStore } from "../extensions-store";
 import { GitHubVersionChecker } from "../github-latest-version-checker";
+import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import { LensExtensionUpdateChecker } from "../lens-extension-update-checker";
 import type { LensMainExtension } from "../lens-main-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
 import { NpmJsVersionChecker } from "../npmjs-latest-version.checker";
 import * as registries from "../registries";
-
-export function extensionPackagesRoot() {
-  return path.join(AppPaths.get("userData"));
-}
+import type { LensExtensionState } from "../extensions-store/extensions-store";
 
 const logModule = "[EXTENSIONS-LOADER]";
+
+interface Dependencies {
+  updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void
+  createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension, updateChecker: LensExtensionUpdateChecker) => LensExtension,
+}
+
+export interface ExtensionLoading {
+  isBundled: boolean,
+  loaded: Promise<void>
+}
 
 /**
  * Loads installed extensions to the Lens application
@@ -85,9 +90,10 @@ export class ExtensionLoader {
     return when(() => this.isLoaded);
   }
 
-  constructor() {
+  constructor(protected dependencies : Dependencies) {
     this.extensionUpdateChecker = new LensExtensionUpdateChecker(this.extensionUpdateSources);
     makeObservable(this);
+
     observe(this.instances, change => {
       switch (change.type) {
         case "add":
@@ -165,10 +171,13 @@ export class ExtensionLoader {
       fireImmediately: true,
     });
 
-    // save state on change `extension.isEnabled`
-    reaction(() => this.storeState, extensionsState => {
-      ExtensionsStore.getInstance().mergeState(extensionsState);
-    });
+    reaction(
+      () => this.storeState,
+
+      (state) => {
+        this.dependencies.updateExtensionsState(state);
+      },
+    );
   }
 
   initExtensions(extensions?: Map<LensExtensionId, InstalledExtension>) {
@@ -270,7 +279,7 @@ export class ExtensionLoader {
     });
   }
 
-  loadOnClusterManagerRenderer() {
+  loadOnClusterManagerRenderer = () => {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
 
     return this.autoInitExtensions(async (extension: LensRendererExtension) => {
@@ -294,9 +303,9 @@ export class ExtensionLoader {
 
       return removeItems;
     });
-  }
+  };
 
-  loadOnClusterRenderer(entity: KubernetesCluster) {
+  loadOnClusterRenderer = (entity: KubernetesCluster) => {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
@@ -323,16 +332,16 @@ export class ExtensionLoader {
 
       return removeItems;
     });
-  }
+  };
 
   protected async checkForExtensionUpdate(extension: LensExtension) {
     this.extensions.get(extension.id).availableUpdate = await extension.checkForUpdate();
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    const loadingExtensions: { isBundled: boolean, loaded: Promise<void> }[] = [];
+    const loadingExtensions: ExtensionLoading[] = [];
 
-    reaction(() => this.toJSON(), installedExtensions => {
+    reaction(() => this.toJSON(), async installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -345,7 +354,12 @@ export class ExtensionLoader {
               continue;
             }
 
-            const instance = new LensExtensionClass(extension, this.extensionUpdateChecker);
+            // const instance = new LensExtensionClass(extension, this.extensionUpdateChecker);
+            const instance = this.dependencies.createExtensionInstance(
+              LensExtensionClass,
+              extension,
+              this.extensionUpdateChecker
+            );
 
             const loaded = instance.enable(register).catch((err) => {
               logger.error(`${logModule}: failed to enable`, { ext: extension, err });

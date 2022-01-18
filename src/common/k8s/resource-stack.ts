@@ -27,7 +27,7 @@ import logger from "../../main/logger";
 import { app } from "electron";
 import { requestMain } from "../ipc";
 import { clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../cluster-ipc";
-import { ClusterStore } from "../cluster-store";
+import { ClusterStore } from "../cluster-store/cluster-store";
 import yaml from "js-yaml";
 import { productName } from "../vars";
 

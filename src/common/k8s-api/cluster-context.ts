@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Cluster } from "../../main/cluster";
+import type { Cluster } from "../cluster/cluster";
 
 export interface ClusterContext {
   cluster?: Cluster;

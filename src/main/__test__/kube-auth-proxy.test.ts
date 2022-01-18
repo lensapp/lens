@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type { ClusterModel } from "../../common/cluster-types";
+
 jest.mock("winston", () => ({
   format: {
     colorize: jest.fn(),
@@ -48,11 +50,11 @@ jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
 
-import { Cluster } from "../cluster";
-import { KubeAuthProxy } from "../kube-auth-proxy";
+import type { Cluster } from "../../common/cluster/cluster";
+import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import { broadcastMessage } from "../../common/ipc";
 import { ChildProcess, spawn } from "child_process";
-import { bundledKubectlPath, Kubectl } from "../kubectl";
+import { bundledKubectlPath, Kubectl } from "../kubectl/kubectl";
 import { mock, MockProxy } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
 import { EventEmitter, Readable } from "stream";
@@ -60,7 +62,9 @@ import { UserStore } from "../../common/user-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import mockFs from "mock-fs";
-import { AppPaths } from "../../common/app-paths";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 
 console = new Console(stdout, stderr);
 
@@ -68,25 +72,11 @@ const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcas
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
 const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilUsed>;
 
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-AppPaths.init();
-
 describe("kube auth proxy tests", () => {
-  beforeEach(() => {
+  let createCluster: (model: ClusterModel) => Cluster;
+  let createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+
+  beforeEach(async () => {
     jest.clearAllMocks();
 
     const mockMinikubeConfig = {
@@ -115,7 +105,16 @@ describe("kube auth proxy tests", () => {
       "tmp": {},
     };
 
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
     mockFs(mockMinikubeConfig);
+    
+    await di.runSetups();
+
+    createCluster = di.inject(createClusterInjectionToken);
+
+    createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
+
     UserStore.createInstance();
   });
 
@@ -125,7 +124,13 @@ describe("kube auth proxy tests", () => {
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
-    const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "minikube-config.yml", contextName: "minikube" }), {});
+    const cluster = createCluster({
+      id: "foobar",
+      kubeConfigPath: "minikube-config.yml",
+      contextName: "minikube",
+    });
+
+    const kap = createKubeAuthProxy(cluster, {});
 
     kap.exit();
     kap.exit();
@@ -211,9 +216,13 @@ describe("kube auth proxy tests", () => {
       });
       mockWaitUntilUsed.mockReturnValueOnce(Promise.resolve());
 
-      const cluster = new Cluster({ id: "foobar", kubeConfigPath: "minikube-config.yml", contextName: "minikube" });
+      const cluster = createCluster({
+        id: "foobar",
+        kubeConfigPath: "minikube-config.yml",
+        contextName: "minikube",
+      });
 
-      proxy = new KubeAuthProxy(cluster, {});
+      proxy = createKubeAuthProxy(cluster, {});
     });
 
     it("should call spawn and broadcast errors", async () => {

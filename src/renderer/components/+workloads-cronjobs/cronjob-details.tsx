@@ -34,16 +34,25 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { CronJob, Job } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { Disposer } from "../../../common/utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props extends KubeObjectDetailsProps<CronJob> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class CronJobDetails extends React.Component<Props> {
+class NonInjectedCronJobDetails extends React.Component<Props & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
+      this.props.subscribeStores([
         jobStore,
       ]),
     ]);
@@ -119,3 +128,14 @@ export class CronJobDetails extends React.Component<Props> {
     );
   }
 }
+
+export const CronJobDetails = withInjectables<Dependencies, Props>(
+  NonInjectedCronJobDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);

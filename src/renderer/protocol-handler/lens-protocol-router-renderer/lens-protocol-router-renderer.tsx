@@ -27,6 +27,7 @@ import { onCorrect } from "../../../common/ipc";
 import { foldAttemptResults, ProtocolHandlerInvalid, RouteAttempt } from "../../../common/protocol-handler";
 import { Notifications } from "../../components/notifications";
 import type { ExtensionLoader } from "../../../extensions/extension-loader";
+import type { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 
 function verifyIpcArgs(args: unknown[]): args is [string, RouteAttempt] {
   if (args.length !== 2) {
@@ -49,6 +50,7 @@ function verifyIpcArgs(args: unknown[]): args is [string, RouteAttempt] {
 
 interface Dependencies {
   extensionLoader: ExtensionLoader
+  extensionsStore: ExtensionsStore
 }
 
 

@@ -23,7 +23,7 @@ import { JsonApi } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { apiKubePrefix, apiPrefix, isDebugging, isDevelopment } from "../../common/vars";
 import { isClusterPageContext } from "../utils/cluster-id-url-parsing";
-import { appEventBus } from "../event-bus";
+import { appEventBus } from "../app-event-bus/event-bus";
 
 let apiBase: JsonApi;
 let apiKube: KubeJsonApi;

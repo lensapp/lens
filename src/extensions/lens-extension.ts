@@ -19,14 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { InstalledExtension } from "./extension-discovery";
+import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, observable, makeObservable, computed } from "mobx";
-import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import { Disposer, disposer } from "../common/utils";
 import type { LensExtensionUpdateChecker } from "./lens-extension-update-checker";
+import {
+  LensExtensionDependencies,
+  setLensExtensionDependencies,
+} from "./lens-extension-set-dependencies";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -80,6 +83,12 @@ export class LensExtension {
     return this.manifest.description;
   }
 
+  private dependencies: LensExtensionDependencies;
+
+  [setLensExtensionDependencies] = (dependencies: LensExtensionDependencies) => {
+    this.dependencies = dependencies;
+  };
+
   /**
    * getExtensionFileFolder returns the path to an already created folder. This
    * folder is for the sole use of this extension.
@@ -88,7 +97,7 @@ export class LensExtension {
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return FilesystemProvisionerStore.getInstance().requestDirectory(this.id);
+    return this.dependencies.fileSystemProvisionerStore.requestDirectory(this.id);
   }
 
   @action

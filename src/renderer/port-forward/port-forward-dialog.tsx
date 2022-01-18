@@ -27,64 +27,40 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../components/dialog";
 import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
-import { cssNames, noop } from "../utils";
-import { addPortForward, getPortForwards, modifyPortForward } from "./port-forward.store";
-import type { ForwardedPort } from "./port-forward-item";
+import { cssNames } from "../utils";
+import type { PortForwardStore } from "./port-forward-store/port-forward-store";
 import { openPortForward } from "./port-forward-utils";
 import { aboutPortForwarding, notifyErrorPortForwarding } from "./port-forward-notify";
 import { Checkbox } from "../components/checkbox";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
+import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-forward-dialog-model.injectable";
 import logger from "../../common/logger";
+import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
 
-interface Props extends Partial<DialogProps> {
+interface Props extends Partial<DialogProps> {}
+
+interface Dependencies {
+  portForwardStore: PortForwardStore,
+  model: PortForwardDialogModel
 }
-
-interface PortForwardDialogOpenOptions {
-  openInBrowser: boolean;
-  onClose: () => void;
-}
-
-const dialogState = observable.object({
-  isOpen: false,
-  data: null as ForwardedPort,
-  useHttps: false,
-  openInBrowser: false,
-  onClose: noop,
-});
 
 @observer
-export class PortForwardDialog extends Component<Props> {
+class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
   @observable currentPort = 0;
   @observable desiredPort = 0;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false, onClose: noop }) {
-    dialogState.isOpen = true;
-    dialogState.data = portForward;
-    dialogState.useHttps = portForward.protocol === "https";
-    dialogState.openInBrowser = options.openInBrowser;
-    dialogState.onClose = options.onClose;
+  get portForwardStore() {
+    return this.props.portForwardStore;
   }
-
-  static close() {
-    dialogState.isOpen = false;
-  }
-
-  get portForward() {
-    return dialogState.data;
-  }
-
-  close = () => {
-    PortForwardDialog.close();
-  };
 
   onOpen = async () => {
-    const { portForward } = this;
-
-    this.currentPort = +portForward.forwardPort;
+    this.currentPort = +this.props.model.portForward.forwardPort;
     this.desiredPort = this.currentPort;
   };
 
@@ -93,26 +69,26 @@ export class PortForwardDialog extends Component<Props> {
   };
 
   startPortForward = async () => {
-    let { portForward } = this;
-    const { currentPort, desiredPort, close } = this;
+    let { portForward } = this.props.model;
+    const { currentPort, desiredPort } = this;
 
     try {
       // determine how many port-forwards already exist
-      const { length } = getPortForwards();
+      const { length } = this.portForwardStore.getPortForwards();
 
-      portForward.protocol = dialogState.useHttps ? "https" : "http";
+      portForward.protocol = this.props.model.useHttps ? "https" : "http";
 
       if (currentPort) {
         const wasRunning = portForward.status === "Active";
 
-        portForward = await modifyPortForward(portForward, desiredPort);
-        
+        portForward = await this.portForwardStore.modify(portForward, desiredPort);
+
         if (wasRunning && portForward.status === "Disabled") {
           notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
         }
       } else {
         portForward.forwardPort = desiredPort;
-        portForward = await addPortForward(portForward);
+        portForward = await this.portForwardStore.add(portForward);
 
         if (portForward.status === "Disabled") {
           notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
@@ -124,13 +100,13 @@ export class PortForwardDialog extends Component<Props> {
         }
       }
 
-      if (portForward.status === "Active" && dialogState.openInBrowser) {
+      if (portForward.status === "Active" && this.props.model.openInBrowser) {
         openPortForward(portForward);
       }
     } catch (error) {
       logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
     } finally {
-      close();
+      this.props.model.close();
     }
   };
 
@@ -154,14 +130,14 @@ export class PortForwardDialog extends Component<Props> {
           <Checkbox
             data-testid="port-forward-https"
             label="https"
-            value={dialogState.useHttps}
-            onChange={value => dialogState.useHttps = value}
+            value={this.props.model.useHttps}
+            onChange={value => this.props.model.useHttps = value}
           />
           <Checkbox
             data-testid="port-forward-open"
             label="Open in Browser"
-            value={dialogState.openInBrowser}
-            onChange={value => dialogState.openInBrowser = value}
+            value={this.props.model.openInBrowser}
+            onChange={value => this.props.model.openInBrowser = value}
           />
         </div>
       </>
@@ -169,8 +145,8 @@ export class PortForwardDialog extends Component<Props> {
   }
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const resourceName = this.portForward?.name ?? "";
+    const { className, portForwardStore, model, ...dialogProps } = this.props;
+    const resourceName = this.props.model.portForward?.name ?? "";
     const header = (
       <h5>
         Port Forwarding for <span>{resourceName}</span>
@@ -180,13 +156,13 @@ export class PortForwardDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={dialogState.isOpen}
+        isOpen={this.props.model.isOpen}
         className={cssNames("PortForwardDialog", className)}
         onOpen={this.onOpen}
-        onClose={dialogState.onClose}
-        close={this.close}
+        onClose={model.onClose}
+        close={this.props.model.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={this.props.model.close}>
           <WizardStep
             contentClass="flex gaps column"
             next={this.startPortForward}
@@ -199,3 +175,15 @@ export class PortForwardDialog extends Component<Props> {
     );
   }
 }
+
+export const PortForwardDialog = withInjectables<Dependencies, Props>(
+  NonInjectedPortForwardDialog,
+
+  {
+    getProps: (di, props) => ({
+      portForwardStore: di.inject(portForwardStoreInjectable),
+      model: di.inject(portForwardDialogModelInjectable),
+      ...props,
+    }),
+  },
+);

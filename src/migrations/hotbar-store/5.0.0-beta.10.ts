@@ -23,12 +23,14 @@ import fse from "fs-extra";
 import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
-import { AppPaths } from "../../common/app-paths";
-import type { ClusterStoreModel } from "../../common/cluster-store";
+import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
 import { defaultHotbarCells, getEmptyHotbar, Hotbar, HotbarItem } from "../../common/hotbar-types";
 import { catalogEntity } from "../../main/catalog-sources/general";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -48,7 +50,10 @@ export default {
   run(store) {
     const rawHotbars = store.get("hotbars");
     const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars.filter(h => h && typeof h === "object") : [];
-    const userDataPath = AppPaths.get("userData");
+
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const userDataPath = di.inject(directoryForUserDataInjectable);
 
     // Hotbars might be empty, if some of the previous migrations weren't run
     if (hotbars.length === 0) {

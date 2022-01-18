@@ -24,18 +24,18 @@ import { fireEvent, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
-import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
+import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
 import { mockWindow } from "../../../../../__mocks__/windowMock";
-import { AppPaths } from "../../../../common/app-paths";
-import extensionLoaderInjectable
-  from "../../../../extensions/extension-loader/extension-loader.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
+import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 
 mockWindow();
 
@@ -58,40 +58,27 @@ jest.mock("../../../../common/utils/downloadFile", () => ({
 
 jest.mock("../../../../common/utils/tar");
 
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
-AppPaths.init();
-
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
+  let extensionDiscovery: ExtensionDiscovery;
   let render: DiRender;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting();
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
+
+    mockFs({
+      "some-directory-for-user-data": {},
+    });
+
+    await di.runSetups();
 
     render = renderFor(di);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
-
-    mockFs({
-      "tmp": {},
-    });
-
-    ExtensionInstallationStateStore.reset();
+    extensionDiscovery = di.inject(extensionDiscoveryInjectable);
 
     extensionLoader.addExtension({
       id: "extensionId",
@@ -106,8 +93,6 @@ describe("Extensions", () => {
       isCompatible: true,
     });
 
-    const extensionDiscovery = ExtensionDiscovery.createInstance(extensionLoader);
-
     extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
 
     UserStore.createInstance();
@@ -116,11 +101,10 @@ describe("Extensions", () => {
   afterEach(() => {
     mockFs.restore();
     UserStore.resetInstance();
-    ExtensionDiscovery.resetInstance();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
-    ExtensionDiscovery.getInstance().isLoaded = true;
+    extensionDiscovery.isLoaded = true;
 
     const res = render(<><Extensions /><ConfirmDialog /></>);
     const table = res.getByTestId("extensions-table");
@@ -137,7 +121,7 @@ describe("Extensions", () => {
     fireEvent.click(res.getByText("Yes"));
 
     await waitFor(() => {
-      expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
+      expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
       fireEvent.click(menuTrigger);
       expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
       expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
@@ -164,14 +148,14 @@ describe("Extensions", () => {
   });
 
   it("displays spinner while extensions are loading", () => {
-    ExtensionDiscovery.getInstance().isLoaded = false;
+    extensionDiscovery.isLoaded = false;
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
   });
 
   it("does not display the spinner while extensions are not loading", async () => {
-    ExtensionDiscovery.getInstance().isLoaded = true;
+    extensionDiscovery.isLoaded = true;
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).not.toBeInTheDocument();

@@ -25,7 +25,7 @@ import React from "react";
 import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
-import { boundMethod, cssNames } from "../../utils";
+import { boundMethod, cssNames, Disposer } from "../../utils";
 import { getMetricsForNamespace, IPodMetrics, Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
@@ -39,16 +39,24 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeWatchApiInjectable
+  from "../../kube-watch-api/kube-watch-api.injectable";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
 
+interface Dependencies {
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+}
+
 @observer
-export class NamespaceDetails extends React.Component<Props> {
+class NonInjectedNamespaceDetails extends React.Component<Props & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -58,7 +66,8 @@ export class NamespaceDetails extends React.Component<Props> {
       reaction(() => this.props.object, () => {
         this.metrics = null;
       }),
-      kubeWatchApi.subscribeStores([
+
+      this.props.subscribeStores([
         resourceQuotaStore,
         limitRangeStore,
       ]),
@@ -138,3 +147,15 @@ export class NamespaceDetails extends React.Component<Props> {
     );
   }
 }
+
+export const NamespaceDetails = withInjectables<Dependencies, Props>(
+  NonInjectedNamespaceDetails,
+
+  {
+    getProps: (di, props) => ({
+      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      ...props,
+    }),
+  },
+);
+

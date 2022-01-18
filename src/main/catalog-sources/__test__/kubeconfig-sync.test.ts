@@ -22,13 +22,17 @@
 import { ObservableMap } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
-import type { Cluster } from "../../cluster";
-import { computeDiff, configToModels } from "../kubeconfig-sync";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync-manager/kubeconfig-sync-manager";
 import mockFs from "mock-fs";
 import fs from "fs";
-import { ClusterStore } from "../../../common/cluster-store";
 import { ClusterManager } from "../../cluster-manager";
-import { AppPaths } from "../../../common/app-paths";
+import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
+import directoryForKubeConfigsInjectable
+  from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+
 
 jest.mock("electron", () => ({
   app: {
@@ -46,18 +50,28 @@ jest.mock("electron", () => ({
   },
 }));
 
-AppPaths.init();
-
 describe("kubeconfig-sync.source tests", () => {
-  beforeEach(() => {
+  let computeDiff: ReturnType<typeof computeDiffFor>;
+  
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
     mockFs();
-    ClusterStore.createInstance();
+
+    await di.runSetups();
+
+    computeDiff = computeDiffFor({
+      directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
+      createCluster: di.inject(createClusterInjectionToken),
+    });
+
+    di.inject(clusterStoreInjectable);
+
     ClusterManager.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ClusterStore.resetInstance();
     ClusterManager.resetInstance();
   });
 

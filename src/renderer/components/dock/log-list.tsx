@@ -29,27 +29,33 @@ import { action, computed, observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
-
-import { SearchStore, searchStore } from "../../../common/search-store";
+import { SearchStore } from "../../search-store/search-store";
 import { UserStore } from "../../../common/user-store";
 import { array, boundMethod, cssNames } from "../../utils";
-import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { logStore } from "./log.store";
-import { logTabStore } from "./log-tab.store";
+import type { LogStore } from "./log-store/log.store";
+import type { LogTabStore } from "./log-tab-store/log-tab.store";
 import { ToBottom } from "./to-bottom";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
+import logStoreInjectable from "./log-store/log-store.injectable";
+import searchStoreInjectable from "../../search-store/search-store.injectable";
 
 interface Props {
   logs: string[]
-  isLoading: boolean
-  load: () => void
   id: string
 }
 
 const colorConverter = new AnsiUp();
 
+interface Dependencies {
+  logTabStore: LogTabStore
+  logStore: LogStore
+  searchStore: SearchStore
+}
+
 @observer
-export class LogList extends React.Component<Props> {
+export class NonInjectedLogList extends React.Component<Props & Dependencies> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -57,7 +63,7 @@ export class LogList extends React.Component<Props> {
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
   private lineHeight = 18; // Height of a log line. Should correlate with styles in pod-log-list.scss
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -108,14 +114,14 @@ export class LogList extends React.Component<Props> {
    */
   @computed
   get logs() {
-    const showTimestamps = logTabStore.getData(this.props.id)?.showTimestamps;
+    const showTimestamps = this.props.logTabStore.getData(this.props.id)?.showTimestamps;
 
     if (!showTimestamps) {
-      return logStore.logsWithoutTimestamps;
+      return this.props.logStore.logsWithoutTimestamps;
     }
 
     return this.props.logs
-      .map(log => logStore.splitOutTimestamp(log))
+      .map(log => this.props.logStore.splitOutTimestamp(log))
       .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
   }
 
@@ -156,7 +162,7 @@ export class LogList extends React.Component<Props> {
     const { scrollOffset } = props;
 
     if (scrollOffset === 0) {
-      this.props.load();
+      this.props.logStore.load();
     }
   };
 
@@ -187,7 +193,7 @@ export class LogList extends React.Component<Props> {
    * @returns A react element with a row itself
    */
   getLogRow = (rowIndex: number) => {
-    const { searchQuery, isActiveOverlay } = searchStore;
+    const { searchQuery, isActiveOverlay } = this.props.searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
@@ -232,17 +238,7 @@ export class LogList extends React.Component<Props> {
   };
 
   render() {
-    const { isLoading } = this.props;
-    const isInitLoading = isLoading && !this.logs.length;
     const rowHeights = array.filled(this.logs.length, this.lineHeight);
-
-    if (isInitLoading) {
-      return (
-        <div className="LogList flex box grow align-center justify-center">
-          <Spinner center/>
-        </div>
-      );
-    }
 
     if (!this.logs.length) {
       return (
@@ -253,7 +249,7 @@ export class LogList extends React.Component<Props> {
     }
 
     return (
-      <div className={cssNames("LogList flex", { isLoading })}>
+      <div className={cssNames("LogList flex" )}>
         <VirtualList
           items={this.logs}
           rowHeights={rowHeights}
@@ -270,3 +266,17 @@ export class LogList extends React.Component<Props> {
     );
   }
 }
+
+export const LogList = withInjectables<Dependencies, Props>(
+  NonInjectedLogList,
+
+  {
+    getProps: (di, props) => ({
+      logTabStore: di.inject(logTabStoreInjectable),
+      logStore: di.inject(logStoreInjectable),
+      searchStore: di.inject(searchStoreInjectable),
+      ...props,
+    }),
+  },
+);
+

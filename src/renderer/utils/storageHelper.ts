@@ -20,13 +20,10 @@
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-import { action, comparer, makeObservable, observable, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, toJS, when } from "mobx";
 import { produce, Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
-import { getHostedClusterId } from "../../common/utils";
-import path from "path";
-import { AppPaths } from "../../common/app-paths";
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
@@ -43,10 +40,6 @@ export interface StorageHelperOptions<T> {
 }
 
 export class StorageHelper<T> {
-  static async getLocalStoragePath() {
-    return path.resolve(await AppPaths.getAsync("userData"), "lens-local-storage", `${getHostedClusterId() || "app"}.json`);
-  }
-
   static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
 
@@ -73,6 +66,7 @@ export class StorageHelper<T> {
 
     this.storage = storage;
 
+    // TODO: This code uses undocumented MobX internal to criminally permit exotic mutations without encapsulation.
     this.data.observe_(({ newValue, oldValue }) => {
       this.onChange(newValue as T, oldValue as T);
     });
@@ -136,7 +130,15 @@ export class StorageHelper<T> {
     }
   }
 
+  /**
+   * @deprecated Switch to using value for being reactive
+   */
   get(): T {
+    return this.value;
+  }
+
+  @computed
+  get value(): T {
     return this.data.get() ?? this.defaultValue;
   }
 
