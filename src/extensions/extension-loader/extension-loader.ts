@@ -271,7 +271,7 @@ export class ExtensionLoader {
   loadOnMain() {
     this.autoInitExtensions(async (extension: LensMainExtension) => {
       // Check for update for the extension on main process that does not have renderer script
-      if (extension.isBundled || !extension.manifest.renderer) {
+      if (extension.isBundled || !extension.manifest.renderer) {
         this.checkForExtensionUpdate(extension);
       }
 
@@ -360,7 +360,7 @@ export class ExtensionLoader {
             const instance = this.dependencies.createExtensionInstance(
               LensExtensionClass,
               extension,
-              this.extensionUpdateChecker
+              this.extensionUpdateChecker,
             );
 
             const loaded = instance.enable(register).catch((err) => {
