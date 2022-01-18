@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import { HashSet, ObservableHashSet } from "../hash-set";
@@ -75,7 +59,7 @@ describe("ObservableHashSet<T>", () => {
     expect(res.has({ a: 1 })).toBe(true);
     expect(res.delete({ a: 1 })).toBe(true);
     expect(res.has({ a: 1 })).toBe(false);
-    
+
     expect(res.has({ a: 5 })).toBe(false);
     expect(res.delete({ a: 5 })).toBe(false);
     expect(res.has({ a: 5 })).toBe(false);
@@ -177,27 +161,27 @@ describe("ObservableHashSet<T>", () => {
     ], item => item.a.toString());
     const iter = res.values();
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 1 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 2 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 3 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 4 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: undefined,
       done: true,
     });
@@ -212,27 +196,27 @@ describe("ObservableHashSet<T>", () => {
     ], item => item.a.toString());
     const iter = res.keys();
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 1 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 2 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 3 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 4 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: undefined,
       done: true,
     });
@@ -247,27 +231,27 @@ describe("ObservableHashSet<T>", () => {
     ], item => item.a.toString());
     const iter = res.entries();
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 1 }, { a: 1 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 2 }, { a: 2 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 3 }, { a: 3 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 4 }, { a: 4 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: undefined,
       done: true,
     });
@@ -328,7 +312,7 @@ describe("HashSet<T>", () => {
     expect(res.has({ a: 1 })).toBe(true);
     expect(res.delete({ a: 1 })).toBe(true);
     expect(res.has({ a: 1 })).toBe(false);
-    
+
     expect(res.has({ a: 5 })).toBe(false);
     expect(res.delete({ a: 5 })).toBe(false);
     expect(res.has({ a: 5 })).toBe(false);
@@ -430,27 +414,27 @@ describe("HashSet<T>", () => {
     ], item => item.a.toString());
     const iter = res.values();
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 1 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 2 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 3 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 4 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: undefined,
       done: true,
     });
@@ -465,27 +449,27 @@ describe("HashSet<T>", () => {
     ], item => item.a.toString());
     const iter = res.keys();
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 1 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 2 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 3 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: { a: 4 },
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: undefined,
       done: true,
     });
@@ -500,27 +484,27 @@ describe("HashSet<T>", () => {
     ], item => item.a.toString());
     const iter = res.entries();
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 1 }, { a: 1 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 2 }, { a: 2 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 3 }, { a: 3 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: [{ a: 4 }, { a: 4 }],
       done: false,
     });
 
-    expect(iter.next()).toStrictEqual({ 
+    expect(iter.next()).toStrictEqual({
       value: undefined,
       done: true,
     });
