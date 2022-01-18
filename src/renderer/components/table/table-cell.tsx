@@ -14,18 +14,66 @@ import { Checkbox } from "../checkbox";
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
 export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
-  id?: string; // used for configuration visibility of columns
+  /**
+   * used for configuration visibility of columns
+   */
+  id?: string;
+
+  /**
+   * Any css class names for this table cell. Only used if `title` is a "simple" react node
+   */
   className?: string;
+
+  /**
+   * The actual value of the cell
+   */
   title?: ReactNode;
-  scrollable?: boolean; // content inside could be scrolled
-  checkbox?: boolean; // render cell with a checkbox
-  isChecked?: boolean; // mark checkbox as checked or not
-  renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
-  sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
-  showWithColumn?: string // id of the column which follow same visibility rules
-  _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
-  _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
-  _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
+
+  /**
+   * content inside could be scrolled
+   */
+  scrollable?: boolean;
+
+  /**
+   * render cell with a checkbox
+   */
+  checkbox?: boolean;
+
+  /**
+   * mark checkbox as checked or not
+   */
+  isChecked?: boolean;
+
+  /**
+   * show "true" or "false" for all of the children elements are "typeof boolean"
+   */
+  renderBoolean?: boolean;
+
+  /**
+   * column name, must be same as key in sortable object <Table sortable={}/>
+   */
+  sortBy?: TableSortBy;
+
+  /**
+   * id of the column which follow same visibility rules
+   */
+  showWithColumn?: string
+
+  /**
+   * @internal
+   */
+  _sorting?: Partial<TableSortParams>;
+
+  /**
+   * @internal
+   */
+  _sort?(sortBy: TableSortBy): void;
+
+  /**
+   * @internal
+   * indicator, might come from parent <TableHead>, don't use this prop outside (!)
+   */
+  _nowrap?: boolean;
 }
 
 export class TableCell extends React.Component<TableCellProps> {

@@ -28,25 +28,18 @@ import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import { Avatar } from "../avatar";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
-import { getLabelBadges } from "./helpers";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import catalogPreviousActiveTabStorageInjectable
-  from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
+import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
-
-enum sortBy {
-  name = "name",
-  kind = "kind",
-  source = "source",
-  status = "status",
-}
+import type { GetCategoryColumnsParams, CategoryColumns } from "./get-category-columns.injectable";
+import getCategoryColumnsInjectable from "./get-category-columns.injectable";
 
 interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { set: (value: string ) => void }
-  catalogEntityStore: CatalogEntityStore
+  catalogPreviousActiveTabStorage: { set: (value: string ) => void };
+  catalogEntityStore: CatalogEntityStore;
+  getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
 }
 
 @observer
@@ -228,46 +221,23 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
       return null;
     }
 
+    const { sortingCallbacks, searchFilters, renderTableContents, renderTableHeader } = this.props.getCategoryColumns({ activeCategory });
+
     return (
       <ItemListLayout
         className={styles.Catalog}
         tableId={tableId}
-        renderHeaderTitle={activeCategory?.metadata.name || "Browse All"}
+        renderHeaderTitle={activeCategory?.metadata.name ?? "Browse All"}
         isSelectable={false}
         isConfigurable={true}
         store={this.props.catalogEntityStore}
-        sortingCallbacks={{
-          [sortBy.name]: entity => entity.getName(),
-          [sortBy.source]: entity => entity.getSource(),
-          [sortBy.status]: entity => entity.status.phase,
-          [sortBy.kind]: entity => entity.kind,
-        }}
-        searchFilters={[
-          entity => [
-            entity.getName(),
-            entity.getId(),
-            entity.status.phase,
-            `source=${entity.getSource()}`,
-            ...KubeObject.stringifyLabels(entity.metadata.labels),
-          ],
-        ]}
-        renderTableHeader={[
-          { title: "Name", className: styles.entityName, sortBy: sortBy.name, id: "name" },
-          !activeCategory && { title: "Kind", sortBy: sortBy.kind, id: "kind" },
-          { title: "Source", className: styles.sourceCell, sortBy: sortBy.source, id: "source" },
-          { title: "Labels", className: `${styles.labelsCell} scrollable`, id: "labels" },
-          { title: "Status", className: styles.statusCell, sortBy: sortBy.status, id: "status" },
-        ].filter(Boolean)}
+        sortingCallbacks={sortingCallbacks}
+        searchFilters={searchFilters}
+        renderTableHeader={renderTableHeader}
         customizeTableRowProps={entity => ({
           disabled: !entity.isEnabled(),
         })}
-        renderTableContents={entity => [
-          this.renderName(entity),
-          !activeCategory && entity.kind,
-          entity.getSource(),
-          getLabelBadges(entity),
-          <span key="phase" className={entity.status.phase}>{entity.status.phase}</span>,
-        ].filter(Boolean)}
+        renderTableContents={renderTableContents}
         onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}
       />
@@ -306,17 +276,11 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
   }
 }
 
-export const Catalog = withInjectables<Dependencies, Props>(
-  NonInjectedCatalog,
-  {
-    getProps: (di, props) => ({
-      catalogEntityStore: di.inject(catalogEntityStoreInjectable),
-
-      catalogPreviousActiveTabStorage: di.inject(
-        catalogPreviousActiveTabStorageInjectable,
-      ),
-
-      ...props,
-    }),
-  },
-);
+export const Catalog = withInjectables<Dependencies, Props>( NonInjectedCatalog, {
+  getProps: (di, props) => ({
+    catalogEntityStore: di.inject(catalogEntityStoreInjectable),
+    catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
+    getCategoryColumns: di.inject(getCategoryColumnsInjectable),
+    ...props,
+  }),
+});
