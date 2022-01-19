@@ -36,23 +36,23 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommand
 
   function clearTimer() {
     clearTimeout(tooltipTimeout.current);
-  };
+  }
 
   function onTooltipShow() {
     setTooltipVisible(true);
     clearTimer();
     tooltipTimeout.current = setTimeout(() => setTooltipVisible(false), 1500);
-  };
+  }
 
   function onArrowClick(switchTo: () => void) {
     onTooltipShow();
     switchTo();
-  };
+  }
 
   function onMouseEvent(event: React.MouseEvent) {
     clearTimer();
     setTooltipVisible(event.type == "mouseenter");
-  };
+  }
 
   return (
     <div className={styles.HotbarSelector}>
