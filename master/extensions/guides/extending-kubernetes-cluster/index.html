@@ -13,24 +13,24 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntitySettingsMenu/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/guides/extending-kubernetes-cluster/">
       
       
         
       
-      <link rel="icon" href="../../../../img/favicon.ico">
+      <link rel="icon" href="../../../img/favicon.ico">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.1.8+insiders-2.9.2">
     
     
       
-        <title>Interface: CatalogEntitySettingsMenu - Lens Extension Development</title>
+        <title>Extending KubernetesCluster - Lens Extension Development</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.92048cb8.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.92048cb8.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.73e53a79.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.73e53a79.min.css">
         
       
       
@@ -46,7 +46,7 @@
     
     
     
-      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
     
       
@@ -78,7 +78,7 @@
     <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
   
     
-    <script>function __scope(t,e="../../../.."){return new URL(e,location).pathname+"."+t}function __get(t,e=localStorage,n){return JSON.parse(e.getItem(__scope(t,n)))}function __set(t,e,n=localStorage,o){try{n.setItem(__scope(t,o),JSON.stringify(e))}catch(t){}}</script>
+    <script>function __scope(t,e="../../.."){return new URL(e,location).pathname+"."+t}function __get(t,e=localStorage,n){return JSON.parse(e.getItem(__scope(t,n)))}function __set(t,e,n=localStorage,o){try{n.setItem(__scope(t,o),JSON.stringify(e))}catch(t){}}</script>
     
       <script>var palette=__get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-catalogentitysettingsmenu" class="md-skip">
+        <a href="#extending-kubernetescluster" class="md-skip">
           Skip to content
         </a>
       
@@ -108,9 +108,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="Lens Extension Development" class="md-header__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+    <a href="../../.." title="Lens Extension Development" class="md-header__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
       
-  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+  <img src="../../../img/lens-logo-icon.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: CatalogEntitySettingsMenu
+              Extending KubernetesCluster
             
           </span>
         </div>
@@ -231,9 +231,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+    <a href="../../.." title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
       
-  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+  <img src="../../../img/lens-logo-icon.svg" alt="logo">
 
     </a>
     Lens Extension Development
@@ -262,7 +262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         Overview
       </a>
     </li>
@@ -303,7 +303,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../get-started/overview/" class="md-nav__link">
+      <a href="../../get-started/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -317,7 +317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../get-started/your-first-extension/" class="md-nav__link">
+      <a href="../../get-started/your-first-extension/" class="md-nav__link">
         Your First Extension
       </a>
     </li>
@@ -331,7 +331,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../get-started/anatomy/" class="md-nav__link">
+      <a href="../../get-started/anatomy/" class="md-nav__link">
         Extension Anatomy
       </a>
     </li>
@@ -345,7 +345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../get-started/wrapping-up/" class="md-nav__link">
+      <a href="../../get-started/wrapping-up/" class="md-nav__link">
         Wrapping Up
       </a>
     </li>
@@ -393,7 +393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../capabilities/common-capabilities/" class="md-nav__link">
+      <a href="../../capabilities/common-capabilities/" class="md-nav__link">
         Common Capabilities
       </a>
     </li>
@@ -407,7 +407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../capabilities/styling/" class="md-nav__link">
+      <a href="../../capabilities/styling/" class="md-nav__link">
         Styling
       </a>
     </li>
@@ -427,12 +427,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
@@ -455,7 +457,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -469,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/generator/" class="md-nav__link">
+      <a href="../generator/" class="md-nav__link">
         Generator
       </a>
     </li>
@@ -483,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/main-extension/" class="md-nav__link">
+      <a href="../main-extension/" class="md-nav__link">
         Main Extension
       </a>
     </li>
@@ -497,7 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/renderer-extension/" class="md-nav__link">
+      <a href="../renderer-extension/" class="md-nav__link">
         Renderer Extension
       </a>
     </li>
@@ -511,7 +513,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/catalog/" class="md-nav__link">
+      <a href="../catalog/" class="md-nav__link">
         Catalog
       </a>
     </li>
@@ -525,7 +527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/resource-stack/" class="md-nav__link">
+      <a href="../resource-stack/" class="md-nav__link">
         Resource Stack
       </a>
     </li>
@@ -537,11 +539,58 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../guides/extending-kubernetes-cluster/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Extending KubernetesCluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Extending KubernetesCluster
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#extending-commoncatalogkubernetescluster" class="md-nav__link">
+    Extending Common.Catalog.KubernetesCluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extending-commoncatalogcatalogcategory" class="md-nav__link">
+    Extending Common.Catalog.CatalogCategory
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -553,7 +602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/stores/" class="md-nav__link">
+      <a href="../stores/" class="md-nav__link">
         Stores
       </a>
     </li>
@@ -567,7 +616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/working-with-mobx/" class="md-nav__link">
+      <a href="../working-with-mobx/" class="md-nav__link">
         Working with MobX
       </a>
     </li>
@@ -581,7 +630,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/protocol-handlers/" class="md-nav__link">
+      <a href="../protocol-handlers/" class="md-nav__link">
         Protocol Handlers
       </a>
     </li>
@@ -595,7 +644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guides/ipc/" class="md-nav__link">
+      <a href="../ipc/" class="md-nav__link">
         IPC
       </a>
     </li>
@@ -643,7 +692,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../testing-and-publishing/testing/" class="md-nav__link">
+      <a href="../../testing-and-publishing/testing/" class="md-nav__link">
         Testing Extensions
       </a>
     </li>
@@ -657,7 +706,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../testing-and-publishing/publishing/" class="md-nav__link">
+      <a href="../../testing-and-publishing/publishing/" class="md-nav__link">
         Publishing Extensions
       </a>
     </li>
@@ -679,7 +728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../../api/" class="md-nav__link">
         API Reference
       </a>
     </li>
@@ -712,56 +761,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#table-of-contents" class="md-nav__link">
-    Table of contents
+  <a href="#extending-commoncatalogkubernetescluster" class="md-nav__link">
+    Extending Common.Catalog.KubernetesCluster
   </a>
-  
-    <nav class="md-nav" aria-label="Table of contents">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#properties" class="md-nav__link">
-    Properties
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#properties_1" class="md-nav__link">
-    Properties
+  <a href="#extending-commoncatalogcatalogcategory" class="md-nav__link">
+    Extending Common.Catalog.CatalogCategory
   </a>
-  
-    <nav class="md-nav" aria-label="Properties">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    components
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#group" class="md-nav__link">
-    group
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#title" class="md-nav__link">
-    title
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -779,39 +788,59 @@
                 
                 
                 
-                <h1 id="interface-catalogentitysettingsmenu">Interface: CatalogEntitySettingsMenu<a class="headerlink" href="#interface-catalogentitysettingsmenu" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Catalog/">Catalog</a>.CatalogEntitySettingsMenu</p>
-<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#components">components</a></li>
-<li><a href="./#group">group</a></li>
-<li><a href="./#title">title</a></li>
-</ul>
-<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
-<p>• <strong>components</strong>: <code>Object</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>View</code></td>
-<td align="left"><code>ComponentType</code>&lt;<code>any</code>></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="group">group<a class="headerlink" href="#group" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>group</strong>: <code>string</code></p>
-<hr />
-<h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
-<p>• <strong>title</strong>: <code>string</code></p>
+                <h1 id="extending-kubernetescluster">Extending KubernetesCluster<a class="headerlink" href="#extending-kubernetescluster" title="Permanent link">#</a></h1>
+<p>Extension can specify it's own subclass of Common.Catalog.KubernetesCluster. Extension can also specify a new Category for it in the Catalog.</p>
+<h2 id="extending-commoncatalogkubernetescluster">Extending Common.Catalog.KubernetesCluster<a class="headerlink" href="#extending-commoncatalogkubernetescluster" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+
+<span class="c1">// The kind must be different from KubernetesCluster&#39;s kind</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">kind</span> <span class="o">=</span> <span class="s2">&quot;ManagedDevCluster&quot;</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ManagedDevCluster</span> <span class="k">extends</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">KubernetesCluster</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">kind</span> <span class="o">=</span> <span class="nx">kind</span><span class="p">;</span>
+
+  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">kind</span> <span class="o">=</span> <span class="nx">kind</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="extending-commoncatalogcatalogcategory">Extending Common.Catalog.CatalogCategory<a class="headerlink" href="#extending-commoncatalogcatalogcategory" title="Permanent link">#</a></h2>
+<p>These custom Catalog entities can be added a new Category in the Catalog.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">kind</span><span class="p">,</span> <span class="nx">ManagedDevCluster</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;../entities/ManagedDevCluster&quot;</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">ManagedDevClusterCategory</span> <span class="k">extends</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">CatalogCategory</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">apiVersion</span> <span class="o">=</span> <span class="s2">&quot;catalog.k8slens.dev/v1alpha1&quot;</span><span class="p">;</span>
+  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">kind</span> <span class="o">=</span> <span class="s2">&quot;CatalogCategory&quot;</span><span class="p">;</span>
+  <span class="k">public</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Managed Dev Clusters&quot;</span><span class="p">,</span>
+    <span class="nx">icon</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+  <span class="p">};</span>
+  <span class="k">public</span> <span class="nx">spec</span>: <span class="kt">Common.Catalog.CatalogCategorySpec</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">group</span><span class="o">:</span> <span class="s2">&quot;entity.k8slens.dev&quot;</span><span class="p">,</span>
+    <span class="nx">versions</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;v1alpha1&quot;</span><span class="p">,</span>
+        <span class="nx">entityClass</span>: <span class="kt">ManagedDevCluster</span> <span class="kr">as</span> <span class="nx">any</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="nx">names</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">kind</span>
+    <span class="p">},</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="p">{</span> <span class="nx">ManagedDevClusterCategory</span> <span class="p">};</span>
+<span class="k">export</span> <span class="kr">type</span> <span class="p">{</span> <span class="nx">ManagedDevClusterCategory</span> <span class="kr">as</span> <span class="nx">ManagedDevClusterCategoryType</span> <span class="p">};</span>
+</code></pre></div>
+<p>The category needs to be registered in the <code>onActivate()</code> method both in main and renderer</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// in main&#39;s on onActivate</span>
+<span class="nx">Main</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">catalogCategories</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span> <span class="nx">ManagedDevClusterCategory</span><span class="p">());</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// in renderer&#39;s on onActivate</span>
+<span class="nx">Renderer</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">catalogCategories</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span> <span class="nx">ManagedDevClusterCategory</span><span class="p">());</span>
+</code></pre></div>
+<p>You can then add the entities to the Catalog as a new source:</p>
+<div class="highlight"><pre><span></span><code><span class="k">this</span><span class="p">.</span><span class="nx">addCatalogSource</span><span class="p">(</span><span class="s2">&quot;managedDevClusters&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">managedDevClusters</span><span class="p">);</span>
+</code></pre></div>
                 
               
               
@@ -828,6 +857,41 @@
       
         
 <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../resource-stack/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Resource Stack" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Resource Stack
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../stores/" class="md-footer__link md-footer__link--next" aria-label="Next: Stores" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Stores
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -877,10 +941,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.df8cae7d.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["toc.autohide", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.df8cae7d.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.82217815.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.82217815.min.js"></script>
       
     
   </body>

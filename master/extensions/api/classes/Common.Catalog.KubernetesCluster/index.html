@@ -539,6 +539,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../guides/extending-kubernetes-cluster/" class="md-nav__link">
+        Extending KubernetesCluster
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../guides/stores/" class="md-nav__link">
         Stores
       </a>
@@ -976,13 +990,13 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>"entity.k8slens.dev/v1alpha1"</code></p>
+<p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code> = <code>KubernetesCluster.apiVersion</code></p>
 <p>The group and version of this class.</p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#apiversion">apiVersion</a></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>kind</strong>: <code>"KubernetesCluster"</code></p>
+<p>• <code>Readonly</code> <strong>kind</strong>: <code>string</code> = <code>KubernetesCluster.kind</code></p>
 <p>A DNS label name of the entity.</p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#kind">kind</a></p>
@@ -1003,10 +1017,10 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 <p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#status">status</a></p>
 <hr />
 <h3 id="apiversion_1">apiVersion<a class="headerlink" href="#apiversion_1" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <code>Readonly</code> <strong>apiVersion</strong>: <code>"entity.k8slens.dev/v1alpha1"</code></p>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code> = <code>"entity.k8slens.dev/v1alpha1"</code></p>
 <hr />
 <h3 id="kind_1">kind<a class="headerlink" href="#kind_1" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <code>Readonly</code> <strong>kind</strong>: <code>"KubernetesCluster"</code></p>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>kind</strong>: <code>string</code> = <code>"KubernetesCluster"</code></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="connect">connect<a class="headerlink" href="#connect" title="Permanent link">#</a></h3>
 <p>▸ <strong>connect</strong>(): <code>Promise</code>&lt;<code>void</code>></p>

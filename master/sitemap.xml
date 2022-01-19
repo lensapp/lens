@@ -1276,6 +1276,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/guides/extending-kubernetes-cluster/</loc>
+         <lastmod>2022-01-19</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/generator/</loc>
          <lastmod>2022-01-19</lastmod>
          <changefreq>daily</changefreq>
