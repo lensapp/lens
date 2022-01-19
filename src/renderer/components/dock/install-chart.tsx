@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./install-chart.scss";
@@ -24,39 +8,52 @@ import "./install-chart.scss";
 import React, { Component } from "react";
 import { action, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { dockStore, DockTab } from "./dock.store";
+import type { DockStore, DockTab } from "./dock-store/dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { prevDefault } from "../../utils";
-import { IChartInstallData, installChartStore } from "./install-chart.store";
+import type { IChartInstallData, InstallChartStore } from "./install-chart-store/install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { Button } from "../button";
-import { releaseStore } from "../+apps-releases/release.store";
 import { LogsDialog } from "../dialog/logs-dialog";
 import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { EditorPanel } from "./editor-panel";
 import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
+import type {
+  IReleaseCreatePayload,
+  IReleaseUpdateDetails,
+} from "../../../common/k8s-api/endpoints/helm-releases.api";
+import releaseStoreInjectable from "../+apps-releases/release-store.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import installChartStoreInjectable from "./install-chart-store/install-chart-store.injectable";
+import dockStoreInjectable from "./dock-store/dock-store.injectable";
 
 interface Props {
   tab: DockTab;
 }
 
+interface Dependencies {
+  createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>
+  installChartStore: InstallChartStore
+  dockStore: DockStore
+}
+
 @observer
-export class InstallChart extends Component<Props> {
+class NonInjectedInstallChart extends Component<Props & Dependencies> {
   @observable error = "";
   @observable showNotes = false;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   get chartData() {
-    return installChartStore.getData(this.tabId);
+    return this.props.installChartStore.getData(this.tabId);
   }
 
   get tabId() {
@@ -64,11 +61,11 @@ export class InstallChart extends Component<Props> {
   }
 
   get versions() {
-    return installChartStore.versions.getData(this.tabId);
+    return this.props.installChartStore.versions.getData(this.tabId);
   }
 
   get releaseDetails() {
-    return installChartStore.details.getData(this.tabId);
+    return this.props.installChartStore.details.getData(this.tabId);
   }
 
   viewRelease = () => {
@@ -80,20 +77,20 @@ export class InstallChart extends Component<Props> {
         namespace: release.namespace,
       },
     }));
-    dockStore.closeTab(this.tabId);
+    this.props.dockStore.closeTab(this.tabId);
   };
 
   save(data: Partial<IChartInstallData>) {
     const chart = { ...this.chartData, ...data };
 
-    installChartStore.setData(this.tabId, chart);
+    this.props.installChartStore.setData(this.tabId, chart);
   }
 
   onVersionChange = (option: SelectOption) => {
     const version = option.value;
 
     this.save({ version, values: "" });
-    installChartStore.loadValues(this.tabId);
+    this.props.installChartStore.loadValues(this.tabId);
   };
 
   @action
@@ -117,13 +114,13 @@ export class InstallChart extends Component<Props> {
 
   install = async () => {
     const { repo, name, version, namespace, values, releaseName } = this.chartData;
-    const details = await releaseStore.create({
+    const details = await this.props.createRelease({
       name: releaseName || undefined,
       chart: name,
       repo, namespace, version, values,
     });
 
-    installChartStore.details.setData(this.tabId, details);
+    this.props.installChartStore.details.setData(this.tabId, details);
 
     return (
       <p>Chart Release <b>{details.release.name}</b> successfully created.</p>
@@ -219,3 +216,16 @@ export class InstallChart extends Component<Props> {
     );
   }
 }
+
+export const InstallChart = withInjectables<Dependencies, Props>(
+  NonInjectedInstallChart,
+
+  {
+    getProps: (di, props) => ({
+      createRelease: di.inject(releaseStoreInjectable).create,
+      installChartStore: di.inject(installChartStoreInjectable),
+      dockStore: di.inject(dockStoreInjectable),
+      ...props,
+    }),
+  },
+);

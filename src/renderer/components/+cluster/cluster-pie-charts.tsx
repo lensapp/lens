@@ -1,29 +1,13 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import styles from "./cluster-pie-charts.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { clusterOverviewStore, MetricNodeRole } from "./cluster-overview.store";
+import { ClusterOverviewStore, MetricNodeRole } from "./cluster-overview-store/cluster-overview-store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -32,12 +16,18 @@ import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
 
 function createLabels(rawLabelData: [string, number | undefined][]): string[] {
   return rawLabelData.map(([key, value]) => `${key}: ${value?.toFixed(2) || "N/A"}`);
 }
 
-export const ClusterPieCharts = observer(() => {
+interface Dependencies {
+  clusterOverviewStore: ClusterOverviewStore
+}
+
+const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependencies) => {
   const renderLimitWarning = () => {
     return (
       <div className="node-warning flex gaps align-center">
@@ -213,9 +203,8 @@ export const ClusterPieCharts = observer(() => {
     );
   };
 
-  const renderContent = () => {
+  const renderContent = ({ metricNodeRole, metricsLoaded }: ClusterOverviewStore) => {
     const { masterNodes, workerNodes } = nodesStore;
-    const { metricNodeRole, metricsLoaded } = clusterOverviewStore;
     const nodes = metricNodeRole === MetricNodeRole.MASTER ? masterNodes : workerNodes;
 
     if (!nodes.length) {
@@ -245,7 +234,17 @@ export const ClusterPieCharts = observer(() => {
 
   return (
     <div className="flex">
-      {renderContent()}
+      {renderContent(clusterOverviewStore)}
     </div>
   );
 });
+
+export const ClusterPieCharts = withInjectables<Dependencies>(
+  NonInjectedClusterPieCharts,
+
+  {
+    getProps: (di) => ({
+      clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
+    }),
+  },
+);

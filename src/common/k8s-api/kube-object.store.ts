@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import type { ClusterContext } from "./cluster-context";
@@ -24,7 +8,7 @@ import type { ClusterContext } from "./cluster-context";
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import { autoBind, noop, rejectPromiseBy } from "../utils";
 import { KubeObject, KubeStatus } from "./kube-object";
-import type { IKubeWatchEvent } from "./kube-watch-api";
+import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
 import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
@@ -101,6 +85,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return KubeObjectStore.defaultContext.get();
   }
 
+  // TODO: Circular dependency: KubeObjectStore -> ClusterFrameContext -> NamespaceStore -> KubeObjectStore
   @computed get contextItems(): T[] {
     const namespaces = this.context?.contextNamespaces ?? [];
 
@@ -238,8 +223,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async loadAll({ namespaces = this.context.contextNamespaces, merge = true, reqInit, onLoadFailure }: KubeObjectStoreLoadAllParams = {}): Promise<void | T[]> {
+  async loadAll({ namespaces, merge = true, reqInit, onLoadFailure }: KubeObjectStoreLoadAllParams = {}): Promise<void | T[]> {
     await this.contextReady;
+    namespaces ??= this.context.contextNamespaces;
     this.isLoading = true;
 
     try {
@@ -326,14 +312,14 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return this.api.create(params, data);
   }
 
-  async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
+  create = async (params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> => {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
 
     this.items.replace(items);
 
     return newItem;
-  }
+  };
 
   private postUpdate(rawItem: KubeJsonApiData): T {
     const newItem = new this.api.objectConstructor(rawItem);

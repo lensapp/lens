@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./helm-chart-details.scss";
@@ -31,9 +15,11 @@ import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
 import { Select, SelectOption } from "../select";
-import { createInstallChartTab } from "../dock/install-chart.store";
 import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import createInstallChartTabInjectable
+  from "../dock/create-install-chart-tab/create-install-chart-tab.injectable";
 
 interface Props {
   chart: HelmChart;
@@ -46,8 +32,12 @@ const LargeTooltip = withStyles({
   },
 })(Tooltip);
 
+interface Dependencies {
+  createInstallChartTab: (helmChart: HelmChart) => void
+}
+
 @observer
-export class HelmChartDetails extends Component<Props> {
+class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
   @observable chartVersions: HelmChart[];
   @observable selectedChart?: HelmChart;
   @observable readme?: string;
@@ -55,7 +45,7 @@ export class HelmChartDetails extends Component<Props> {
 
   private abortController?: AbortController;
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -106,7 +96,7 @@ export class HelmChartDetails extends Component<Props> {
 
   @boundMethod
   install() {
-    createInstallChartTab(this.selectedChart);
+    this.props.createInstallChartTab(this.selectedChart);
     this.props.hideDetails();
   }
 
@@ -215,3 +205,14 @@ export class HelmChartDetails extends Component<Props> {
     );
   }
 }
+
+export const HelmChartDetails = withInjectables<Dependencies, Props>(
+  NonInjectedHelmChartDetails,
+
+  {
+    getProps: (di, props) => ({
+      createInstallChartTab: di.inject(createInstallChartTabInjectable),
+      ...props,
+    }),
+  },
+);

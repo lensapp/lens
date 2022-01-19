@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./namespaces.scss";
@@ -28,9 +12,13 @@ import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { namespaceStore } from "./namespace.store";
+import type { NamespaceStore } from "./namespace-store/namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { NamespacesRouteParams } from "../../../common/routes";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import addNamespaceDialogModelInjectable
+  from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
 
 enum columnId {
   name = "name",
@@ -42,7 +30,12 @@ enum columnId {
 interface Props extends RouteComponentProps<NamespacesRouteParams> {
 }
 
-export class Namespaces extends React.Component<Props> {
+interface Dependencies {
+  namespaceStore: NamespaceStore
+  openAddNamespaceDialog: () => void
+}
+
+class NonInjectedNamespaces extends React.Component<Props & Dependencies> {
   render() {
     return (
       <TabLayout>
@@ -50,7 +43,7 @@ export class Namespaces extends React.Component<Props> {
           isConfigurable
           tableId="namespaces"
           className="Namespaces"
-          store={namespaceStore}
+          store={this.props.namespaceStore}
           sortingCallbacks={{
             [columnId.name]: ns => ns.getName(),
             [columnId.labels]: ns => ns.getLabels(),
@@ -78,7 +71,7 @@ export class Namespaces extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             addTooltip: "Add Namespace",
-            onAdd: () => AddNamespaceDialog.open(),
+            onAdd: () => this.props.openAddNamespaceDialog(),
           }}
           customizeTableRowProps={item => ({
             disabled: item.getStatus() === NamespaceStatus.TERMINATING,
@@ -89,3 +82,15 @@ export class Namespaces extends React.Component<Props> {
     );
   }
 }
+
+export const Namespaces = withInjectables<Dependencies, Props>(
+  NonInjectedNamespaces,
+
+  {
+    getProps: (di, props) => ({
+      namespaceStore: di.inject(namespaceStoreInjectable),
+      openAddNamespaceDialog: di.inject(addNamespaceDialogModelInjectable).open,
+      ...props,
+    }),
+  },
+);

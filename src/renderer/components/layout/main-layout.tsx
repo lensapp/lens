@@ -1,32 +1,20 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import styles from "./main-layout.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames, StorageHelper } from "../../utils";
 import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
-import { defaultSidebarWidth, sidebarStorage } from "./sidebar-storage";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import sidebarStorageInjectable, {
+  defaultSidebarWidth,
+  SidebarStorageState,
+} from "./sidebar-storage/sidebar-storage.injectable";
 
 interface Props {
   sidebar: React.ReactNode;
@@ -39,15 +27,20 @@ interface Props {
  *
  * @link https://api-docs.k8slens.dev/master/extensions/capabilities/common-capabilities/#global-pages
  */
+
+interface Dependencies {
+  sidebarStorage: StorageHelper<SidebarStorageState>
+}
+
 @observer
-export class MainLayout extends React.Component<Props> {
+class NonInjectedMainLayout extends React.Component<Props & Dependencies> {
   onSidebarResize = (width: number) => {
-    sidebarStorage.merge({ width });
+    this.props.sidebarStorage.merge({ width });
   };
 
   render() {
     const { className, footer, children, sidebar } = this.props;
-    const { width: sidebarWidth } = sidebarStorage.get();
+    const { width: sidebarWidth } = this.props.sidebarStorage.get();
     const style = { "--sidebar-width": `${sidebarWidth}px` } as React.CSSProperties;
 
     return (
@@ -75,3 +68,16 @@ export class MainLayout extends React.Component<Props> {
     );
   }
 }
+
+export const MainLayout = withInjectables<Dependencies, Props>(
+  NonInjectedMainLayout,
+
+  {
+    getProps: (di, props) => ({
+      sidebarStorage: di.inject(sidebarStorageInjectable),
+
+      ...props,
+    }),
+  },
+);
+

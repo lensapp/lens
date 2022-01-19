@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./extensions.scss";
@@ -29,9 +13,8 @@ import {
 } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery";
+import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
 import { DropFileInput } from "../input";
-import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
 import { Notice } from "./notice";
@@ -48,6 +31,9 @@ import installFromSelectFileDialogInjectable from "./install-from-select-file-di
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
+import extensionInstallationStateStoreInjectable
+  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -57,6 +43,7 @@ interface Dependencies {
   installFromInput: (input: string) => Promise<void>;
   installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: (files: File[]) => Promise<void>;
+  extensionInstallationStateStore: ExtensionInstallationStateStore
 }
 
 @observer
@@ -73,7 +60,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
       reaction(() => this.props.userExtensions.get().length, (curSize, prevSize) => {
         if (curSize > prevSize) {
           disposeOnUnmount(this, [
-            when(() => !ExtensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
+            when(() => !this.props.extensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
           ]);
         }
       }),
@@ -134,6 +121,8 @@ export const Extensions = withInjectables<Dependencies>(
       installFromSelectFileDialog: di.inject(
         installFromSelectFileDialogInjectable,
       ),
+
+      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     }),
   },
 );

@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./drawer.scss";
@@ -24,11 +8,15 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import { createStorage, cssNames, noop } from "../../utils";
+import { cssNames, noop, StorageHelper } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
 import { history } from "../../navigation";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
+import drawerStorageInjectable, {
+  defaultDrawerWidth,
+} from "./drawer-storage/drawer-storage.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
 
 export type DrawerPosition = "top" | "left" | "right" | "bottom";
 
@@ -70,12 +58,11 @@ resizingAnchorProps.set("left", [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING
 resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM]);
 resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
 
-const defaultDrawerWidth = 725;
-const drawerStorage = createStorage("drawer", {
-  width: defaultDrawerWidth,
-});
+interface Dependencies {
+  drawerStorage: StorageHelper<{ width: number }>;
+}
 
-export class Drawer extends React.Component<DrawerProps, State> {
+class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, State> {
   static defaultProps = defaultProps as object;
 
   private mouseDownTarget: HTMLElement;
@@ -89,7 +76,7 @@ export class Drawer extends React.Component<DrawerProps, State> {
 
   public state = {
     isCopied: false,
-    width: drawerStorage.get().width,
+    width: this.props.drawerStorage.get().width,
   };
 
   componentDidMount() {
@@ -110,7 +97,7 @@ export class Drawer extends React.Component<DrawerProps, State> {
 
   resizeWidth = (width: number) => {
     this.setState({ width });
-    drawerStorage.merge({ width });
+    this.props.drawerStorage.merge({ width });
   };
 
   fixUpTripleClick = (ev: MouseEvent) => {
@@ -239,3 +226,15 @@ export class Drawer extends React.Component<DrawerProps, State> {
     return usePortal ? createPortal(drawer, document.body) : drawer;
   }
 }
+
+export const Drawer = withInjectables<Dependencies, DrawerProps>(
+  NonInjectedDrawer,
+
+  {
+    getProps: (di, props) => ({
+      drawerStorage: di.inject(drawerStorageInjectable),
+      ...props,
+    }),
+  },
+);
+

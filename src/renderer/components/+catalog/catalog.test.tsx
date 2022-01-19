@@ -1,36 +1,30 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Catalog } from "./catalog";
 import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
-import { kubernetesClusterCategory } from "../../../common/catalog-entities/kubernetes-cluster";
-import { catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
-import { CatalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
+import { CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
+import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
-import { CatalogEntityStore } from "./catalog-entity.store";
-import { AppPaths } from "../../../common/app-paths";
+import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
+import catalogEntityRegistryInjectable
+  from "../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import type { DiRender } from "../test-utils/renderFor";
+import { renderFor } from "../test-utils/renderFor";
+import { ThemeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import mockFs from "mock-fs";
+import directoryForUserDataInjectable
+  from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -48,8 +42,6 @@ jest.mock("electron", () => ({
     handle: jest.fn(),
   },
 }));
-
-AppPaths.init();
 
 jest.mock("./hotbar-toggle-menu-item", () => ({
   HotbarToggleMenuItem: () => <div>menu item</div>,
@@ -103,31 +95,46 @@ describe("<Catalog />", () => {
     }, onRun);
   }
 
-  beforeEach(() => {
-    CatalogEntityDetailRegistry.createInstance();
-    // mock the return of getting CatalogCategoryRegistry.filteredItems
-    jest
-      .spyOn(catalogCategoryRegistry, "filteredItems", "get")
-      .mockImplementation(() => {
-        return [kubernetesClusterCategory];
-      });
+  let di: DependencyInjectionContainer;
+  let catalogEntityStore: CatalogEntityStore;
+  let catalogEntityRegistry: CatalogEntityRegistry;
+  let render: DiRender;
 
-    // we don't care what this.renderList renders in this test case.
-    jest.spyOn(Catalog.prototype, "renderList").mockImplementation(() => {
-      return <span>empty renderList</span>;
-    });
+  beforeEach(async () => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    await di.runSetups();
+
+    mockFs();
+
+    UserStore.createInstance();
+    ThemeStore.createInstance();
+    CatalogEntityDetailRegistry.createInstance();
+
+    render = renderFor(di);
+
+    const catalogCategoryRegistry = new CatalogCategoryRegistry();
+
+    catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+
+    di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
+
+    catalogEntityStore = di.inject(catalogEntityStoreInjectable);
   });
 
   afterEach(() => {
+    UserStore.resetInstance();
+    ThemeStore.resetInstance();
     CatalogEntityDetailRegistry.resetInstance();
+
     jest.clearAllMocks();
     jest.restoreAllMocks();
+    mockFs.restore();
   });
 
   it("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", (done) => {
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = createMockCatalogEntity(onRun);
 
@@ -153,7 +160,6 @@ describe("<Catalog />", () => {
         history={history}
         location={mockLocation}
         match={mockMatch}
-        catalogEntityStore={catalogEntityStore}
       />,
     );
 
@@ -161,9 +167,6 @@ describe("<Catalog />", () => {
   });
 
   it("onBeforeRun prevents event => onRun wont be triggered", (done) => {
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = createMockCatalogEntity(onRun);
 
@@ -187,7 +190,6 @@ describe("<Catalog />", () => {
         history={history}
         location={mockLocation}
         match={mockMatch}
-        catalogEntityStore={catalogEntityStore}
       />,
     );
 
@@ -195,9 +197,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnBeforeRun throw an exception => onRun will be triggered", (done) => {
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = createMockCatalogEntity(onRun);
 
@@ -222,7 +221,6 @@ describe("<Catalog />", () => {
         history={history}
         location={mockLocation}
         match={mockMatch}
-        catalogEntityStore={catalogEntityStore}
       />,
     );
 
@@ -230,9 +228,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn(() => done());
     const catalogEntityItem = createMockCatalogEntity(onRun);
 
@@ -252,7 +247,6 @@ describe("<Catalog />", () => {
         history={history}
         location={mockLocation}
         match={mockMatch}
-        catalogEntityStore={catalogEntityStore}
       />,
     );
 
@@ -260,9 +254,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and prevents event wont be triggered", (done) => {
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = createMockCatalogEntity(onRun);
 
@@ -289,7 +280,6 @@ describe("<Catalog />", () => {
         history={history}
         location={mockLocation}
         match={mockMatch}
-        catalogEntityStore={catalogEntityStore}
       />,
     );
 
@@ -297,9 +287,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and reject => onRun will be triggered", (done) => {
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-    const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-    const catalogEntityStore = new CatalogEntityStore(catalogEntityRegistry);
     const onRun = jest.fn();
     const catalogEntityItem = createMockCatalogEntity(onRun);
 
@@ -324,7 +311,6 @@ describe("<Catalog />", () => {
         history={history}
         location={mockLocation}
         match={mockMatch}
-        catalogEntityStore={catalogEntityStore}
       />,
     );
 

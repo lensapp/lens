@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./log-resource-selector.scss";
@@ -27,19 +11,26 @@ import { observer } from "mobx-react";
 import { Pod } from "../../../common/k8s-api/endpoints";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
-import { LogTabData, logTabStore } from "./log-tab.store";
+import type { LogTabData, LogTabStore } from "./log-tab-store/log-tab.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import type { TabId } from "./dock.store";
+import type { TabId } from "./dock-store/dock.store";
+import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import logStoreInjectable from "./log-store/log-store.injectable";
 
 interface Props {
   tabId: TabId
   tabData: LogTabData
   save: (data: Partial<LogTabData>) => void
-  reload: () => void
 }
 
-export const LogResourceSelector = observer((props: Props) => {
-  const { tabData, save, reload, tabId } = props;
+interface Dependencies {
+  logTabStore: LogTabStore
+  reloadLogs: () => Promise<void>
+}
+
+const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) => {
+  const { tabData, save, tabId, logTabStore, reloadLogs } = props;
   const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
   const containers = pod.getContainers();
@@ -51,13 +42,15 @@ export const LogResourceSelector = observer((props: Props) => {
         .concat(initContainers)
         .find(container => container.name === option.value),
     });
-    reload();
+
+    reloadLogs();
   };
 
   const onPodChange = (option: SelectOption) => {
     const selectedPod = podsStore.getByName(option.value, pod.getNs());
 
     save({ selectedPod });
+
     logTabStore.renameTab(tabId);
   };
 
@@ -89,7 +82,7 @@ export const LogResourceSelector = observer((props: Props) => {
   ];
 
   useEffect(() => {
-    reload();
+    reloadLogs();
   }, [selectedPod]);
 
   return (
@@ -114,3 +107,16 @@ export const LogResourceSelector = observer((props: Props) => {
     </div>
   );
 });
+
+export const LogResourceSelector = withInjectables<Dependencies, Props>(
+  NonInjectedLogResourceSelector,
+
+  {
+    getProps: (di, props) => ({
+      logTabStore: di.inject(logTabStoreInjectable),
+      reloadLogs: di.inject(logStoreInjectable).reload,
+      ...props,
+    }),
+  },
+);
+

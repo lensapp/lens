@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import { app, ipcMain } from "electron";
@@ -26,12 +10,10 @@ import { BaseStore } from "../base-store";
 import migrations, { fileNameMigration } from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
-import { appEventBus } from "../event-bus";
-import path from "path";
+import { appEventBus } from "../app-event-bus/event-bus";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
-import { AppPaths } from "../app-paths";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -67,6 +49,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
+  @observable terminalTheme: string;
   @observable localeTimezone: string;
   @observable downloadMirror: string;
   @observable httpsProxy?: string;
@@ -188,6 +171,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.httpsProxy = DESCRIPTORS.httpsProxy.fromStore(preferences?.httpsProxy);
     this.shell = DESCRIPTORS.shell.fromStore(preferences?.shell);
     this.colorTheme = DESCRIPTORS.colorTheme.fromStore(preferences?.colorTheme);
+    this.terminalTheme = DESCRIPTORS.terminalTheme.fromStore(preferences?.terminalTheme);
     this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
     this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
     this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
@@ -212,6 +196,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         httpsProxy: DESCRIPTORS.httpsProxy.toStore(this.httpsProxy),
         shell: DESCRIPTORS.shell.toStore(this.shell),
         colorTheme: DESCRIPTORS.colorTheme.toStore(this.colorTheme),
+        terminalTheme: DESCRIPTORS.terminalTheme.toStore(this.terminalTheme),
         localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
         allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
         allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),
@@ -232,12 +217,4 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
     return toJS(model);
   }
-}
-
-/**
- * Getting default directory to download kubectl binaries
- * @returns string
- */
-export function getDefaultKubectlDownloadPath(): string {
-  return path.join(AppPaths.get("userData"), "binaries");
 }

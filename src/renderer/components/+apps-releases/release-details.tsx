@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./release-details.scss";
@@ -36,9 +20,8 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Button } from "../button";
-import { releaseStore } from "./release.store";
+import type { ReleaseStore } from "./release.store";
 import { Notifications } from "../notifications";
-import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
 import { ThemeStore } from "../../theme.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { SubTitle } from "../layout/sub-title";
@@ -47,14 +30,23 @@ import { Secret } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 import { Checkbox } from "../checkbox";
 import { MonacoEditor } from "../monaco-editor";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import releaseStoreInjectable from "./release-store.injectable";
+import createUpgradeChartTabInjectable
+  from "../dock/create-upgrade-chart-tab/create-upgrade-chart-tab.injectable";
 
 interface Props {
   release: HelmRelease;
   hideDetails(): void;
 }
 
+interface Dependencies {
+  releaseStore: ReleaseStore
+  createUpgradeChartTab: (release: HelmRelease) => void
+}
+
 @observer
-export class ReleaseDetails extends Component<Props> {
+class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
   @observable details: IReleaseDetails | null = null;
   @observable values = "";
   @observable valuesLoading = false;
@@ -73,7 +65,7 @@ export class ReleaseDetails extends Component<Props> {
       }),
       reaction(() => secretsStore.getItems(), () => {
         if (!this.props.release) return;
-        const { getReleaseSecret } = releaseStore;
+        const { getReleaseSecret } = this.props.releaseStore;
         const { release } = this.props;
         const secret = getReleaseSecret(release);
 
@@ -89,7 +81,7 @@ export class ReleaseDetails extends Component<Props> {
     ]);
   }
 
-  constructor(props: Props) {
+  constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -133,7 +125,7 @@ export class ReleaseDetails extends Component<Props> {
     this.saving = true;
 
     try {
-      await releaseStore.update(name, namespace, data);
+      await this.props.releaseStore.update(name, namespace, data);
       Notifications.ok(
         <p>Release <b>{name}</b> successfully updated!</p>,
       );
@@ -146,7 +138,7 @@ export class ReleaseDetails extends Component<Props> {
   upgradeVersion = () => {
     const { release, hideDetails } = this.props;
 
-    createUpgradeChartTab(release);
+    this.props.createUpgradeChartTab(release);
     hideDetails();
   };
 
@@ -315,3 +307,15 @@ export class ReleaseDetails extends Component<Props> {
     );
   }
 }
+
+export const ReleaseDetails = withInjectables<Dependencies, Props>(
+  NonInjectedReleaseDetails,
+
+  {
+    getProps: (di, props) => ({
+      releaseStore: di.inject(releaseStoreInjectable),
+      createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
+      ...props,
+    }),
+  },
+);

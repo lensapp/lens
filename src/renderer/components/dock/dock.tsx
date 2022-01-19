@@ -1,22 +1,6 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import "./dock.scss";
@@ -30,22 +14,30 @@ import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
-import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
-import { dockStore, DockTab, TabKind } from "./dock.store";
+import { DockStore, DockTab, TabKind } from "./dock-store/dock.store";
 import { EditResource } from "./edit-resource";
 import { InstallChart } from "./install-chart";
 import { Logs } from "./logs";
 import { TerminalWindow } from "./terminal-window";
-import { createTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import createResourceTabInjectable from "./create-resource-tab/create-resource-tab.injectable";
+import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import createTerminalTabInjectable from "./create-terminal-tab/create-terminal-tab.injectable";
 
 interface Props {
   className?: string;
 }
 
+interface Dependencies {
+  createResourceTab: () => void
+  createTerminalTab: () => void
+  dockStore: DockStore
+}
+
 @observer
-export class Dock extends React.Component<Props> {
+class NonInjectedDock extends React.Component<Props & Dependencies> {
   private element = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
@@ -57,7 +49,7 @@ export class Dock extends React.Component<Props> {
   }
 
   onKeyDown = (evt: KeyboardEvent) => {
-    const { close, selectedTab, closeTab } = dockStore;
+    const { close, selectedTab, closeTab } = this.props.dockStore;
     const { code, ctrlKey, metaKey, shiftKey } = evt;
     // Determine if user working inside <Dock/> or using any other areas in app
     const dockIsFocused = this.element?.current.contains(document.activeElement);
@@ -75,7 +67,7 @@ export class Dock extends React.Component<Props> {
   };
 
   onChangeTab = (tab: DockTab) => {
-    const { open, selectTab } = dockStore;
+    const { open, selectTab } = this.props.dockStore;
 
     open();
     selectTab(tab.id);
@@ -93,27 +85,27 @@ export class Dock extends React.Component<Props> {
       case TabKind.UPGRADE_CHART:
         return <UpgradeChart tab={tab} />;
       case TabKind.POD_LOGS:
-        return <Logs tab={tab} />;
+        return <Logs />;
       case TabKind.TERMINAL:
         return <TerminalWindow tab={tab} />;
     }
   }
 
   renderTabContent() {
-    const { isOpen, height, selectedTab } = dockStore;
+    const { isOpen, height, selectedTab } = this.props.dockStore;
 
     if (!isOpen || !selectedTab) return null;
 
     return (
-      <div className="tab-content" style={{ flexBasis: height }}>
+      <div className={`tab-content ${selectedTab.kind}`} style={{ flexBasis: height }}>
         {this.renderTab(selectedTab)}
       </div>
     );
   }
 
   render() {
-    const { className } = this.props;
-    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+    const { className, dockStore } = this.props;
+    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = this.props.dockStore;
 
     return (
       <div
@@ -142,11 +134,11 @@ export class Dock extends React.Component<Props> {
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
-                <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
+                <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>
                   <Icon small svg="terminal" size={15} />
                   Terminal session
                 </MenuItem>
-                <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
+                <MenuItem className="create-resource-tab" onClick={() => this.props.createResourceTab()}>
                   <Icon small material="create" />
                   Create resource
                 </MenuItem>
@@ -173,3 +165,17 @@ export class Dock extends React.Component<Props> {
     );
   }
 }
+
+export const Dock = withInjectables<Dependencies, Props>(
+  NonInjectedDock,
+
+  {
+    getProps: (di, props) => ({
+      createResourceTab: di.inject(createResourceTabInjectable),
+      dockStore: di.inject(dockStoreInjectable),
+      createTerminalTab: di.inject(createTerminalTabInjectable),
+      ...props,
+    }),
+  },
+);
+

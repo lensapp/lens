@@ -1,28 +1,11 @@
 /**
- * Copyright (c) 2021 OpenLens Authors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
 import React from "react";
 import * as routes from "../../../../common/routes";
 import { EntitySettingRegistry, RegisteredEntitySetting } from "../../../../extensions/registries";
-import { createTerminalTab } from "../../dock/terminal.store";
 import { HotbarAddCommand } from "../../hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../../hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";
@@ -31,6 +14,9 @@ import { ActivateEntityCommand } from "../../activate-entity-command";
 import type { CommandContext, CommandRegistration } from "./commands";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-overlay.injectable";
+import createTerminalTabInjectable
+  from "../../dock/create-terminal-tab/create-terminal-tab.injectable";
+import type { DockTabCreate } from "../../dock/dock-store/dock.store";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -39,9 +25,10 @@ export function isKubernetesClusterActive(context: CommandContext): boolean {
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
   getEntitySettingItems: (kind: string, apiVersion: string, source?: string) => RegisteredEntitySetting[];
+  createTerminalTab: () => DockTabCreate
 }
 
-function getInternalCommands({ openCommandDialog, getEntitySettingItems }: Dependencies): CommandRegistration[] {
+function getInternalCommands({ openCommandDialog, getEntitySettingItems, createTerminalTab }: Dependencies): CommandRegistration[] {
   return [
     {
       id: "app.showPreferences",
@@ -224,6 +211,7 @@ const internalCommandsInjectable = getInjectable({
     getEntitySettingItems: EntitySettingRegistry
       .getInstance()
       .getItemsForKind,
+    createTerminalTab: di.inject(createTerminalTabInjectable),
   }),
   lifecycle: lifecycleEnum.singleton,
 });
