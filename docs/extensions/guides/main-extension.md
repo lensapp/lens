@@ -16,11 +16,11 @@ import { Main } from "@k8slens/extensions";
 
 export default class ExampleExtensionMain extends Main.LensExtension {
   onActivate() {
-    console.log('custom main process extension code started');
+    console.log("custom main process extension code started");
   }
 
   onDeactivate() {
-    console.log('custom main process extension de-activated');
+    console.log("custom main process extension de-activated");
   }
 }
 ```
@@ -33,21 +33,21 @@ Implementing `onDeactivate()` gives you the opportunity to clean up after your e
 Disable extensions from the Lens Extensions page:
 
 1. Navigate to **File** > **Extensions** in the top menu bar.
-(On Mac, it is **Lens** > **Extensions**.)
+   (On Mac, it is **Lens** > **Extensions**.)
 2. Click **Disable** on the extension you want to disable.
 
 The example above logs messages when the extension is enabled and disabled.
 To see standard output from the main process there must be a console connected to it.
 Achieve this by starting Lens from the command prompt.
 
-For more details on accessing Lens state data, please see the [Stores](../stores) guide.
+For more details on accessing Lens state data, please see the [Stores](stores.md) guide.
 
 ### `appMenus`
 
 The Main Extension API allows you to customize the UI application menu.
 The following example demonstrates adding an item to the **Help** menu.
 
-``` typescript
+```typescript
 import { Main } from "@k8slens/extensions";
 
 export default class SamplePageMainExtension extends Main.LensExtension {
@@ -57,9 +57,9 @@ export default class SamplePageMainExtension extends Main.LensExtension {
       label: "Sample",
       click() {
         console.log("Sample clicked");
-      }
-    }
-  ]
+      },
+    },
+  ];
 }
 ```
 
@@ -67,18 +67,18 @@ export default class SamplePageMainExtension extends Main.LensExtension {
 `MenuRegistration` extends Electron's `MenuItemConstructorOptions` interface.
 The properties of the appMenus array objects are defined as follows:
 
-* `parentId` is the name of the menu where your new menu item will be listed.
-Valid values include: `"file"`, `"edit"`, `"view"`, and `"help"`.
-`"lens"` is valid on Mac only.
-* `label` is the name of your menu item.
-* `click()` is called when the menu item is selected.
-In this example, we simply log a message.
-However, you would typically have this navigate to a specific page or perform another operation.
-Note that pages are associated with the [`Renderer.LensExtension`](renderer-extension.md) class and can be defined in the process of extending it.
+- `parentId` is the name of the menu where your new menu item will be listed.
+  Valid values include: `"file"`, `"edit"`, `"view"`, and `"help"`.
+  `"lens"` is valid on Mac only.
+- `label` is the name of your menu item.
+- `click()` is called when the menu item is selected.
+  In this example, we simply log a message.
+  However, you would typically have this navigate to a specific page or perform another operation.
+  Note that pages are associated with the [`Renderer.LensExtension`](renderer-extension.md) class and can be defined in the process of extending it.
 
 The following example demonstrates how an application menu can be used to navigate to such a page:
 
-``` typescript
+```typescript
 import { Main } from "@k8slens/extensions";
 
 export default class SamplePageMainExtension extends Main.LensExtension {
@@ -86,9 +86,9 @@ export default class SamplePageMainExtension extends Main.LensExtension {
     {
       parentId: "help",
       label: "Sample",
-      click: () => this.navigate("myGlobalPage")
-    }
-  ]
+      click: () => this.navigate("myGlobalPage"),
+    },
+  ];
 }
 ```
 
@@ -99,28 +99,32 @@ This page would be defined in your extension's `Renderer.LensExtension` implemen
 
 `trayMenus` is an array of `TrayMenuRegistration` objects. Most importantly you can define a `label` and a `click` handler. Other properties are `submenu`, `enabled`, `toolTip`, `id` and `type`.
 
-``` typescript
+```typescript
 interface TrayMenuRegistration {
   label?: string;
   click?: (menuItem: TrayMenuRegistration) => void;
   id?: string;
-  type?: "normal" | "separator" | "submenu"
+  type?: "normal" | "separator" | "submenu";
   toolTip?: string;
   enabled?: boolean;
-  submenu?: TrayMenuRegistration[]
+  submenu?: TrayMenuRegistration[];
 }
 ```
 
 The following example demonstrates how tray menus can be added from extension:
 
-``` typescript
+```typescript
 import { Main } from "@k8slens/extensions";
 
 export default class SampleTrayMenuMainExtension extends Main.LensExtension {
-  trayMenus = [{
-    label: "menu from the extension",
-    click: () => { console.log("tray menu clicked!") }
-  }]
+  trayMenus = [
+    {
+      label: "menu from the extension",
+      click: () => {
+        console.log("tray menu clicked!");
+      },
+    },
+  ];
 }
 ```
 

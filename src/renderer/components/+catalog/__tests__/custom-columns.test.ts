@@ -14,9 +14,12 @@ import type { AdditionalCategoryColumnRegistration, CategoryColumnRegistration }
 import getCategoryColumnsInjectable, { CategoryColumns, GetCategoryColumnsParams } from "../get-category-columns.injectable";
 
 class TestCategory extends CatalogCategory {
-  apiVersion: string;
-  kind: string;
-  metadata: { name: string; icon: string; };
+  apiVersion = "catalog.k8slens.dev/v1alpha1";
+  kind = "CatalogCategory";
+  metadata: {
+    name: "Test";
+    icon: "question_mark";
+  };
   spec: CatalogCategorySpec = {
     group: "foo.bar.bat",
     names: {

@@ -84,35 +84,91 @@ export interface CatalogCategorySpec {
 }
 
 /**
- * If the filter returns true, the menu item is displayed
+ * If the filter return a thruthy value, the menu item is displayed
  */
 export type AddMenuFilter = (menu: CatalogEntityAddMenu) => any;
 
 export interface CatalogCategoryEvents {
+  /**
+   * This event will be emitted when the category is loaded in the catalog
+   * view.
+   */
   load: () => void;
+
+  /**
+   * This event will be emitted when the catalog add menu is opened and is the
+   * way to added entries to that menu.
+   */
   catalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
+
+  /**
+   * This event will be emitted when the context menu for an entity is declared
+   * by this category is opened.
+   */
   contextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
 }
 
 export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
+  /**
+   * The version of category that you are wanting to declare.
+   *
+   * Currently supported values:
+   *
+   * - `"catalog.k8slens.dev/v1alpha1"`
+   */
   abstract readonly apiVersion: string;
+
+  /**
+   * The kind of item you wish to declare.
+   *
+   * Currently supported values:
+   *
+   * - `"CatalogCategory"`
+   */
   abstract readonly kind: string;
-  abstract metadata: {
+
+  /**
+   * The data about the category itself
+   */
+  abstract readonly metadata: {
+    /**
+     * The name of your category. The category can be searched for by this
+     * value. This will also be used for the catalog menu.
+     */
     name: string;
+
+    /**
+     * Either an `<svg>` or the name of an icon from {@link IconProps}
+     */
     icon: string;
   };
+
+  /**
+   * The most important part of a category, as it is where entity versions are declared.
+   */
   abstract spec: CatalogCategorySpec;
 
+  /**
+   * @internal
+   */
   protected filters = observable.set<AddMenuFilter>([], {
     deep: false,
   });
 
-  static parseId(id = ""): { group?: string, kind?: string } {
+  /**
+   * Parse a category ID into parts.
+   * @param id The id of a category is parse
+   * @returns The group and kind parts of the ID
+   */
+  public static parseId(id: string): { group?: string, kind?: string } {
     const [group, kind] = id.split("/") ?? [];
 
     return { group, kind };
   }
 
+  /**
+   * Get the ID of this category
+   */
   public getId(): string {
     return `${this.spec.group}/${this.spec.names.kind}`;
   }
