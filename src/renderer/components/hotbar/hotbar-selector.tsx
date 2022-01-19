@@ -16,10 +16,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { cssNames } from "../../utils";
 
-export interface HotbarSelectorProps {
-  hotbar: Hotbar;
-}
-
 interface Dependencies {
   hotbarManager: {
     switchToPrevious: () => void;
@@ -30,26 +26,30 @@ interface Dependencies {
   openCommandOverlay: (component: React.ReactElement) => void;
 }
 
+export interface HotbarSelectorProps extends Partial<Dependencies> {
+  hotbar: Hotbar;
+}
+
 const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommandOverlay }: HotbarSelectorProps & Dependencies) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltipTimeout = useRef<NodeJS.Timeout>();
 
-  const clearTimer = () => {
+  function clearTimer() {
     clearTimeout(tooltipTimeout.current);
   };
 
-  const onTooltipShow = () => {
+  function onTooltipShow() {
     setTooltipVisible(true);
     clearTimer();
     tooltipTimeout.current = setTimeout(() => setTooltipVisible(false), 1500);
   };
 
-  const onArrowClick = (switchTo: () => void) => {
+  function onArrowClick(switchTo: () => void) {
     onTooltipShow();
     switchTo();
   };
 
-  const onMouseEvent = (event: React.MouseEvent) => {
+  function onMouseEvent(event: React.MouseEvent) {
     clearTimer();
     setTooltipVisible(event.type == "mouseenter");
   };
