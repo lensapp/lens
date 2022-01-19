@@ -10,6 +10,7 @@ import { Button } from "../button";
 import { Stepper } from "../stepper";
 import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
+import { debounce } from "lodash";
 
 interface WizardCommonProps<D = any> {
   data?: Partial<D>;
@@ -179,14 +180,16 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     }
   };
 
-  submit = () => {
+  //because submit MIGHT be called through pressing enter, it might be fired twice.
+  //we'll debounce it to ensure it isn't
+  submit = debounce(() => {
     if (!this.form.noValidate) {
       const valid = this.form.checkValidity();
 
       if (!valid) return;
     }
     this.next();
-  };
+  }, 100);
 
   renderLoading() {
     return (
@@ -194,6 +197,17 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
         <Spinner/>
       </div>
     );
+  }
+
+  //make sure we call submit if the "enter" keypress doesn't trigger the events
+  keyDown(evt: React.KeyboardEvent<HTMLElement>) {
+    if (evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey || evt.repeat) {
+      return;
+    }
+
+    if(evt.key === "Enter"){
+      this.submit();
+    }
   }
 
   render() {
@@ -216,6 +230,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     return (
       <form className={className}
         onSubmit={prevDefault(this.submit)} noValidate={noValidate}
+        onKeyDown={(evt) => this.keyDown(evt)}
         ref={e => this.form = e}>
         {beforeContent}
         <div className={contentClass}>

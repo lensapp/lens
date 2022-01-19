@@ -52,6 +52,7 @@ export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   iconRight?: IconData;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
   validators?: InputValidator | InputValidator[];
+  blurOnEnter?: boolean;
   onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: string, evt: React.KeyboardEvent<InputElement>): void;
 };
@@ -70,6 +71,7 @@ const defaultProps: Partial<InputProps> = {
   maxRows: 10000,
   showValidationLine: true,
   validators: [],
+  blurOnEnter: true,
 };
 
 export class Input extends React.Component<InputProps, State> {
@@ -266,6 +268,11 @@ export class Input extends React.Component<InputProps, State> {
         }
       } else {
         this.setDirty();
+      }
+
+      if(this.props.blurOnEnter){
+        //pressing enter indicates that the edit is complete, we can unfocus now
+        this.blur();
       }
     }
   }
