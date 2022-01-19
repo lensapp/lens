@@ -10,11 +10,19 @@ export function noop<T extends any[]>(...args: T): void {
   return void args;
 }
 
+/**
+ * A typecorrect version of <function>.bind()
+ */
+export function bind<BoundArgs extends any[], NonBoundArgs extends any[], ReturnType>(fn: (...args: [...BoundArgs, ...NonBoundArgs]) => ReturnType, thisArg: any, ...boundArgs: BoundArgs): (...args: NonBoundArgs) => ReturnType {
+  return fn.bind(thisArg, ...boundArgs);
+}
+
 export * from "./app-version";
 export * from "./autobind";
 export * from "./camelCase";
 export * from "./cloneJson";
 export * from "./cluster-id-url-parsing";
+export * from "./collection-functions";
 export * from "./convertCpu";
 export * from "./convertMemory";
 export * from "./debouncePromise";

@@ -31,6 +31,11 @@ export * from "../../renderer/components/input/input";
 // command-overlay
 export const CommandOverlay = asLegacyGlobalObjectForExtensionApi(commandOverlayInjectable);
 
+export type {
+  CategoryColumnRegistration,
+  AdditionalCategoryColumnRegistration,
+} from "../../renderer/components/+catalog/custom-category-columns";
+
 // other components
 export * from "../../renderer/components/icon";
 export * from "../../renderer/components/tooltip";

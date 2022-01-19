@@ -8,6 +8,7 @@ import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
 import { iter, Disposer } from "../utils";
+import type { CategoryColumnRegistration } from "../../renderer/components/+catalog/custom-category-columns";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
 type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
@@ -46,6 +47,7 @@ export interface CatalogCategorySpec {
    * The grouping for for the category. This MUST be a DNS label.
    */
   group: string;
+
   /**
    * The specific versions of the constructors.
    *
@@ -54,6 +56,10 @@ export interface CatalogCategorySpec {
    * `name = "v1alpha1"` then the resulting `.apiVersion` MUST be `entity.k8slens.dev/v1alpha1`
    */
   versions: CatalogCategoryVersion<CatalogEntity>[];
+
+  /**
+   * This is the concerning the category
+   */
   names: {
     /**
      * The kind of entity that this category is for. This value MUST be a DNS
@@ -62,38 +68,107 @@ export interface CatalogCategorySpec {
      */
     kind: string;
   };
+
+  /**
+   * These are the columns used for displaying entities when in the catalog.
+   *
+   * If this is not provided then some default columns will be used, similar in
+   * scope to the columns in the "Browse" view.
+   *
+   * Even if you provide columns, a "Name" column will be provided as well with
+   * `priority: 0`.
+   *
+   * These columns will not be used in the "Browse" view.
+   */
+  displayColumns?: CategoryColumnRegistration[];
 }
 
 /**
- * If the filter returns true, the menu item is displayed
+ * If the filter return a thruthy value, the menu item is displayed
  */
 export type AddMenuFilter = (menu: CatalogEntityAddMenu) => any;
 
 export interface CatalogCategoryEvents {
+  /**
+   * This event will be emitted when the category is loaded in the catalog
+   * view.
+   */
   load: () => void;
+
+  /**
+   * This event will be emitted when the catalog add menu is opened and is the
+   * way to added entries to that menu.
+   */
   catalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
+
+  /**
+   * This event will be emitted when the context menu for an entity is declared
+   * by this category is opened.
+   */
   contextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
 }
 
 export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
+  /**
+   * The version of category that you are wanting to declare.
+   *
+   * Currently supported values:
+   *
+   * - `"catalog.k8slens.dev/v1alpha1"`
+   */
   abstract readonly apiVersion: string;
+
+  /**
+   * The kind of item you wish to declare.
+   *
+   * Currently supported values:
+   *
+   * - `"CatalogCategory"`
+   */
   abstract readonly kind: string;
-  abstract metadata: {
+
+  /**
+   * The data about the category itself
+   */
+  abstract readonly metadata: {
+    /**
+     * The name of your category. The category can be searched for by this
+     * value. This will also be used for the catalog menu.
+     */
     name: string;
+
+    /**
+     * Either an `<svg>` or the name of an icon from {@link IconProps}
+     */
     icon: string;
   };
+
+  /**
+   * The most important part of a category, as it is where entity versions are declared.
+   */
   abstract spec: CatalogCategorySpec;
 
+  /**
+   * @internal
+   */
   protected filters = observable.set<AddMenuFilter>([], {
     deep: false,
   });
 
-  static parseId(id = ""): { group?: string, kind?: string } {
+  /**
+   * Parse a category ID into parts.
+   * @param id The id of a category is parse
+   * @returns The group and kind parts of the ID
+   */
+  public static parseId(id: string): { group?: string, kind?: string } {
     const [group, kind] = id.split("/") ?? [];
 
     return { group, kind };
   }
 
+  /**
+   * Get the ID of this category
+   */
   public getId(): string {
     return `${this.spec.group}/${this.spec.names.kind}`;
   }

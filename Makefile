@@ -103,8 +103,12 @@ publish-npm: node_modules build-npm
 	cd src/extensions/npm/extensions && npm publish --access=public --tag=$(NPM_RELEASE_TAG)
 	git restore src/extensions/npm/extensions/package.json
 
+.PHONY: build-docs
+build-docs:
+	yarn typedocs-extensions-api
+
 .PHONY: docs
-docs:
+docs: build-docs
 	yarn mkdocs-serve-local
 
 .PHONY: clean-extensions
