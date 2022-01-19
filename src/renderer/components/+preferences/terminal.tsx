@@ -16,11 +16,6 @@ import { ThemeStore } from "../../theme.store";
 export const Terminal = observer(() => {
   const userStore = UserStore.getInstance();
   const themeStore = ThemeStore.getInstance();
-  const [terminalSettings, setTerminalSettings] = React.useState({
-    shell: userStore.shell || "",
-    terminalFontSize: userStore.terminalConfig.fontSize,
-    terminalFontFamily: userStore.terminalConfig.fontFamily,
-  });
   const defaultShell = process.env.SHELL
   || process.env.PTYSHELL
   || (
@@ -35,12 +30,8 @@ export const Terminal = observer(() => {
       <Input
         theme="round-black"
         placeholder={defaultShell}
-        value={terminalSettings.shell}
-        onChange={(value) => setTerminalSettings({
-          ...terminalSettings,
-          shell: value,
-        })}
-        onBlur={() => userStore.shell = terminalSettings.shell}
+        value={userStore.shell}
+        onChange={(value) => userStore.shell = value}
       />
     </section>
 
@@ -74,12 +65,8 @@ export const Terminal = observer(() => {
         type="number"
         min={10}
         validators={InputValidators.isNumber}
-        value={terminalSettings.terminalFontSize.toString()}
-        onChange={(value) => setTerminalSettings({
-          ...terminalSettings,
-          terminalFontSize: Number(value),
-        })}
-        onBlur={() => userStore.terminalConfig.fontSize = terminalSettings.terminalFontSize}
+        value={userStore.terminalConfig.fontSize.toString()}
+        onChange={(value) => userStore.terminalConfig.fontSize=Number(value)}
       />
     </section>
     <section>
@@ -87,12 +74,8 @@ export const Terminal = observer(() => {
       <Input
         theme="round-black"
         type="text"
-        value={terminalSettings.terminalFontFamily}
-        onChange={(value) => setTerminalSettings({
-          ...terminalSettings,
-          terminalFontFamily: value.toString(),
-        })}
-        onBlur={() => userStore.terminalConfig.fontFamily = terminalSettings.terminalFontFamily}
+        value={userStore.terminalConfig.fontFamily}
+        onChange={(value) => userStore.terminalConfig.fontFamily=value}
       />
     </section>
   </div>);
