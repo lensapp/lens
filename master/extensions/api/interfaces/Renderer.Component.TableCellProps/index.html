@@ -2194,12 +2194,16 @@
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="_nowrap">_nowrap<a class="headerlink" href="#_nowrap" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>_nowrap</strong>: <code>boolean</code></p>
+<p><strong><code>internal</code></strong>
+indicator, might come from parent <TableHead>, don't use this prop outside (!)</p>
 <hr />
 <h3 id="_sorting">_sorting<a class="headerlink" href="#_sorting" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>_sorting</strong>: <code>Partial</code>&lt;<a href="../../modules/Renderer.Component/#tablesortparams"><code>TableSortParams</code></a>></p>
+<p><strong><code>internal</code></strong></p>
 <hr />
 <h3 id="checkbox">checkbox<a class="headerlink" href="#checkbox" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>checkbox</strong>: <code>boolean</code></p>
+<p>render cell with a checkbox</p>
 <hr />
 <h3 id="children">children<a class="headerlink" href="#children" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>children</strong>: <code>ReactNode</code></p>
@@ -2208,6 +2212,7 @@
 <hr />
 <h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
+<p>Any css class names for this table cell. Only used if <code>title</code> is a "simple" react node</p>
 <hr />
 <h3 id="dangerouslysetinnerhtml">dangerouslySetInnerHTML<a class="headerlink" href="#dangerouslysetinnerhtml" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>dangerouslySetInnerHTML</strong>: <code>Object</code></p>
@@ -2231,9 +2236,11 @@
 <hr />
 <h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>id</strong>: <code>string</code></p>
+<p>used for configuration visibility of columns</p>
 <hr />
 <h3 id="ischecked">isChecked<a class="headerlink" href="#ischecked" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>isChecked</strong>: <code>boolean</code></p>
+<p>mark checkbox as checked or not</p>
 <hr />
 <h3 id="onabort">onAbort<a class="headerlink" href="#onabort" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>onAbort</strong>: <code>ReactEventHandler</code>&lt;<code>HTMLDivElement</code>></p>
@@ -3037,21 +3044,27 @@
 <hr />
 <h3 id="renderboolean">renderBoolean<a class="headerlink" href="#renderboolean" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>renderBoolean</strong>: <code>boolean</code></p>
+<p>show "true" or "false" for all of the children elements are "typeof boolean"</p>
 <hr />
 <h3 id="scrollable">scrollable<a class="headerlink" href="#scrollable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>scrollable</strong>: <code>boolean</code></p>
+<p>content inside could be scrolled</p>
 <hr />
 <h3 id="showwithcolumn">showWithColumn<a class="headerlink" href="#showwithcolumn" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>showWithColumn</strong>: <code>string</code></p>
+<p>id of the column which follow same visibility rules</p>
 <hr />
 <h3 id="sortby">sortBy<a class="headerlink" href="#sortby" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>sortBy</strong>: <code>string</code></p>
+<p>column name, must be same as key in sortable object <Table sortable={}/></p>
 <hr />
 <h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>title</strong>: <code>ReactNode</code></p>
+<p>The actual value of the cell</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="_sort">_sort<a class="headerlink" href="#_sort" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>_sort</strong>(<code>sortBy</code>): <code>void</code></p>
+<p><strong><code>internal</code></strong></p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>

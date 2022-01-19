@@ -841,12 +841,22 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.AdditionalCategoryColumnRegistration/</loc>
+         <lastmod>2022-01-19</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.BadgeProps/</loc>
          <lastmod>2022-01-19</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.ButtonProps/</loc>
+         <lastmod>2022-01-19</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.CategoryColumnRegistration/</loc>
          <lastmod>2022-01-19</lastmod>
          <changefreq>daily</changefreq>
     </url>

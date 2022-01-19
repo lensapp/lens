@@ -854,11 +854,11 @@ It also provides convenient methods for navigating to built-in Lens pages and ex
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;custom main process extension code started&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;custom main process extension code started&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="nx">onDeactivate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;custom main process extension de-activated&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;custom main process extension de-activated&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -869,13 +869,13 @@ Implementing <code>onDeactivate()</code> gives you the opportunity to clean up a
 <p>Disable extensions from the Lens Extensions page:</p>
 <ol>
 <li>Navigate to <strong>File</strong> &gt; <strong>Extensions</strong> in the top menu bar.
-(On Mac, it is <strong>Lens</strong> &gt; <strong>Extensions</strong>.)</li>
+   (On Mac, it is <strong>Lens</strong> &gt; <strong>Extensions</strong>.)</li>
 <li>Click <strong>Disable</strong> on the extension you want to disable.</li>
 </ol>
 <p>The example above logs messages when the extension is enabled and disabled.
 To see standard output from the main process there must be a console connected to it.
 Achieve this by starting Lens from the command prompt.</p>
-<p>For more details on accessing Lens state data, please see the <a href="../stores">Stores</a> guide.</p>
+<p>For more details on accessing Lens state data, please see the <a href="../stores/">Stores</a> guide.</p>
 <h3 id="appmenus"><code>appMenus</code><a class="headerlink" href="#appmenus" title="Permanent link">#</a></h3>
 <p>The Main Extension API allows you to customize the UI application menu.
 The following example demonstrates adding an item to the <strong>Help</strong> menu.</p>
@@ -888,9 +888,9 @@ The following example demonstrates adding an item to the <strong>Help</strong> m
       <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;Sample&quot;</span><span class="p">,</span>
       <span class="nx">click</span><span class="p">()</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Sample clicked&quot;</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><code>appMenus</code> is an array of objects that satisfy the <code>MenuRegistration</code> interface.
@@ -898,13 +898,13 @@ The following example demonstrates adding an item to the <strong>Help</strong> m
 The properties of the appMenus array objects are defined as follows:</p>
 <ul>
 <li><code>parentId</code> is the name of the menu where your new menu item will be listed.
-Valid values include: <code>"file"</code>, <code>"edit"</code>, <code>"view"</code>, and <code>"help"</code>.
-<code>"lens"</code> is valid on Mac only.</li>
+  Valid values include: <code>"file"</code>, <code>"edit"</code>, <code>"view"</code>, and <code>"help"</code>.
+  <code>"lens"</code> is valid on Mac only.</li>
 <li><code>label</code> is the name of your menu item.</li>
 <li><code>click()</code> is called when the menu item is selected.
-In this example, we simply log a message.
-However, you would typically have this navigate to a specific page or perform another operation.
-Note that pages are associated with the <a href="../renderer-extension/"><code>Renderer.LensExtension</code></a> class and can be defined in the process of extending it.</li>
+  In this example, we simply log a message.
+  However, you would typically have this navigate to a specific page or perform another operation.
+  Note that pages are associated with the <a href="../renderer-extension/"><code>Renderer.LensExtension</code></a> class and can be defined in the process of extending it.</li>
 </ul>
 <p>The following example demonstrates how an application menu can be used to navigate to such a page:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
@@ -914,9 +914,9 @@ Note that pages are associated with the <a href="../renderer-extension/"><code>R
     <span class="p">{</span>
       <span class="nx">parentId</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
       <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;Sample&quot;</span><span class="p">,</span>
-      <span class="nx">click</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;myGlobalPage&quot;</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
+      <span class="nx">click</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;myGlobalPage&quot;</span><span class="p">),</span>
+    <span class="p">},</span>
+  <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>When the menu item is clicked the <code>navigate()</code> method looks for and displays a global page with id <code>"myGlobalPage"</code>.
@@ -927,20 +927,24 @@ This page would be defined in your extension's <code>Renderer.LensExtension</cod
   <span class="nx">label?</span>: <span class="kt">string</span><span class="p">;</span>
   <span class="nx">click</span><span class="o">?:</span> <span class="p">(</span><span class="nx">menuItem</span>: <span class="kt">TrayMenuRegistration</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="ow">void</span><span class="p">;</span>
   <span class="nx">id?</span>: <span class="kt">string</span><span class="p">;</span>
-  <span class="kr">type</span><span class="o">?:</span> <span class="s2">&quot;normal&quot;</span> <span class="o">|</span> <span class="s2">&quot;separator&quot;</span> <span class="o">|</span> <span class="s2">&quot;submenu&quot;</span>
+  <span class="kr">type</span><span class="o">?:</span> <span class="s2">&quot;normal&quot;</span> <span class="o">|</span> <span class="s2">&quot;separator&quot;</span> <span class="o">|</span> <span class="s2">&quot;submenu&quot;</span><span class="p">;</span>
   <span class="nx">toolTip?</span>: <span class="kt">string</span><span class="p">;</span>
   <span class="nx">enabled?</span>: <span class="kt">boolean</span><span class="p">;</span>
-  <span class="nx">submenu?</span>: <span class="kt">TrayMenuRegistration</span><span class="p">[]</span>
+  <span class="nx">submenu?</span>: <span class="kt">TrayMenuRegistration</span><span class="p">[];</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>The following example demonstrates how tray menus can be added from extension:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">SampleTrayMenuMainExtension</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">trayMenus</span> <span class="o">=</span> <span class="p">[{</span>
-    <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;menu from the extension&quot;</span><span class="p">,</span>
-    <span class="nx">click</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;tray menu clicked!&quot;</span><span class="p">)</span> <span class="p">}</span>
-  <span class="p">}]</span>
+  <span class="nx">trayMenus</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;menu from the extension&quot;</span><span class="p">,</span>
+      <span class="nx">click</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;tray menu clicked!&quot;</span><span class="p">);</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="addcatalogsource-and-removecatalogsource-methods"><code>addCatalogSource()</code> and <code>removeCatalogSource()</code> Methods<a class="headerlink" href="#addcatalogsource-and-removecatalogsource-methods" title="Permanent link">#</a></h3>

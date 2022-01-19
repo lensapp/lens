@@ -546,15 +546,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#catalogcategoryregistry" class="md-nav__link">
-    CatalogCategoryRegistry
+  <a href="#categories" class="md-nav__link">
+    Categories
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#catalogentityregistry" class="md-nav__link">
-    CatalogEntityRegistry
+  <a href="#entities" class="md-nav__link">
+    Entities
   </a>
   
 </li>
@@ -761,15 +761,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#catalogcategoryregistry" class="md-nav__link">
-    CatalogCategoryRegistry
+  <a href="#categories" class="md-nav__link">
+    Categories
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#catalogentityregistry" class="md-nav__link">
-    CatalogEntityRegistry
+  <a href="#entities" class="md-nav__link">
+    Entities
   </a>
   
 </li>
@@ -789,8 +789,24 @@
                 
                 
                 <h1 id="catalog-wip">Catalog (WIP)<a class="headerlink" href="#catalog-wip" title="Permanent link">#</a></h1>
-<h2 id="catalogcategoryregistry">CatalogCategoryRegistry<a class="headerlink" href="#catalogcategoryregistry" title="Permanent link">#</a></h2>
-<h2 id="catalogentityregistry">CatalogEntityRegistry<a class="headerlink" href="#catalogentityregistry" title="Permanent link">#</a></h2>
+<p>This guide is a brief overview about how the catalog works within Lens.
+The catalog should be thought of as the single source of truth about data within Lens.</p>
+<p>The data flow is unidirectional, it only flows from the main side to the renderer side.
+All data is public within the catalog.</p>
+<h2 id="categories">Categories<a class="headerlink" href="#categories" title="Permanent link">#</a></h2>
+<p>A category is the declaration to the catalog of a specific kind of entity.
+It declares the currently supported versions of that kind of entity but providing the constructors for the entity classes.</p>
+<p>To declare a new category class you must create a new class that extends <a href="../../api/classes/Common.Catalog.CatalogCategory/">Common.Catalog.CatalogCategory</a> and implement all of the abstract fields.</p>
+<p>The categories provided by Lens itself have the following names:</p>
+<ul>
+<li><code>KubernetesClusters</code></li>
+<li><code>WebLinks</code></li>
+<li><code>General</code></li>
+</ul>
+<p>To register a category, call the <code>Main.Catalog.catalogCategories.add()</code> and <code>Renderer.Catalog.catalogCategories.add()</code> with instances of your class.</p>
+<h2 id="entities">Entities<a class="headerlink" href="#entities" title="Permanent link">#</a></h2>
+<p>An entity is the data within the catalog.
+All entities are typed and the class instances will be recreated on the renderer side by the catalog and the category registrations.</p>
                 
               
               

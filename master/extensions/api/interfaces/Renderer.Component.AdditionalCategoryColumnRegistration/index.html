@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogCategorySpec/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.AdditionalCategoryColumnRegistration/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Interface: CatalogCategorySpec - Lens Extension Development</title>
+        <title>Interface: AdditionalCategoryColumnRegistration - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-catalogcategoryspec" class="md-skip">
+        <a href="#interface-additionalcategorycolumnregistration" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: CatalogCategorySpec
+              Interface: AdditionalCategoryColumnRegistration
             
           </span>
         </div>
@@ -712,6 +712,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -722,6 +729,13 @@
           <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
   </a>
   
 </li>
@@ -740,13 +754,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#displaycolumns" class="md-nav__link">
-    displayColumns
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#group" class="md-nav__link">
     group
   </a>
@@ -754,15 +761,63 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#names" class="md-nav__link">
-    names
+  <a href="#id" class="md-nav__link">
+    id
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#versions" class="md-nav__link">
-    versions
+  <a href="#kind" class="md-nav__link">
+    kind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority" class="md-nav__link">
+    priority
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#titleprops" class="md-nav__link">
+    titleProps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendercell" class="md-nav__link">
+    renderCell
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#searchfilter" class="md-nav__link">
+    searchFilter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortcallback" class="md-nav__link">
+    sortCallback
   </a>
   
 </li>
@@ -786,57 +841,133 @@
                 
                 
                 
-                <h1 id="interface-catalogcategoryspec">Interface: CatalogCategorySpec<a class="headerlink" href="#interface-catalogcategoryspec" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Catalog/">Catalog</a>.CatalogCategorySpec</p>
+                <h1 id="interface-additionalcategorycolumnregistration">Interface: AdditionalCategoryColumnRegistration<a class="headerlink" href="#interface-additionalcategorycolumnregistration" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.AdditionalCategoryColumnRegistration</p>
+<p>This is the type used to declare new catalog category columns</p>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../Renderer.Component.CategoryColumnRegistration/"><code>CategoryColumnRegistration</code></a></li>
+</ul>
+<p>↳ <strong><code>AdditionalCategoryColumnRegistration</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#displaycolumns">displayColumns</a></li>
 <li><a href="./#group">group</a></li>
-<li><a href="./#names">names</a></li>
-<li><a href="./#versions">versions</a></li>
+<li><a href="./#id">id</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#priority">priority</a></li>
+<li><a href="./#titleprops">titleProps</a></li>
+</ul>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#rendercell">renderCell</a></li>
+<li><a href="./#searchfilter">searchFilter</a></li>
+<li><a href="./#sortcallback">sortCallback</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="displaycolumns">displayColumns<a class="headerlink" href="#displaycolumns" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>displayColumns</strong>: <a href="../Renderer.Component.CategoryColumnRegistration/"><code>CategoryColumnRegistration</code></a>[]</p>
-<p>These are the columns used for displaying entities when in the catalog.</p>
-<p>If this is not provided then some default columns will be used, similar in
-scope to the columns in the "Browse" view.</p>
-<p>Even if you provide columns, a "Name" column will be provided as well with
-<code>priority: 0</code>.</p>
-<p>These columns will not be used in the "Browse" view.</p>
-<hr />
 <h3 id="group">group<a class="headerlink" href="#group" title="Permanent link">#</a></h3>
 <p>• <strong>group</strong>: <code>string</code></p>
-<p>The grouping for for the category. This MUST be a DNS label.</p>
+<p>The catalog entity group that is declared by the category for this registration</p>
+<p>e.g.
+- <code>"entity.k8slens.dev"</code></p>
 <hr />
-<h3 id="names">names<a class="headerlink" href="#names" title="Permanent link">#</a></h3>
-<p>• <strong>names</strong>: <code>Object</code></p>
-<p>This is the concerning the category</p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
+<p>• <strong>id</strong>: <code>string</code></p>
+<p>This value MUST to be unique to your extension</p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.Component.CategoryColumnRegistration/">CategoryColumnRegistration</a>.<a href="../Renderer.Component.CategoryColumnRegistration/#id">id</a></p>
+<hr />
+<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
+<p>• <strong>kind</strong>: <code>string</code></p>
+<p>The catalog entity kind that is declared by the category for this registration</p>
+<p>e.g.
+- <code>"KubernetesCluster"</code></p>
+<hr />
+<h3 id="priority">priority<a class="headerlink" href="#priority" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>priority</strong>: <code>number</code></p>
+<p>The sorting order value.</p>
+<p><strong><code>default</code></strong> 50</p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.Component.CategoryColumnRegistration/">CategoryColumnRegistration</a>.<a href="../Renderer.Component.CategoryColumnRegistration/#priority">priority</a></p>
+<hr />
+<h3 id="titleprops">titleProps<a class="headerlink" href="#titleprops" title="Permanent link">#</a></h3>
+<p>• <strong>titleProps</strong>: <code>TitleCellProps</code></p>
+<p>This function will be used to generate the columns title cell.</p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.Component.CategoryColumnRegistration/">CategoryColumnRegistration</a>.<a href="../Renderer.Component.CategoryColumnRegistration/#titleprops">titleProps</a></p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="rendercell">renderCell<a class="headerlink" href="#rendercell" title="Permanent link">#</a></h3>
+<p>▸ <strong>renderCell</strong>(<code>entity</code>): <code>ReactNode</code></p>
+<p>This function will be called to generate the cells (on demand) for the column</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
-<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>kind</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">The kind of entity that this category is for. This value MUST be a DNS label and MUST be equal to the <code>kind</code> fields that are produced by the <code>.versions.[] | .entityClass</code> fields.</td>
+<td align="left"><code>entity</code></td>
+<td align="left"><a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></td>
 </tr>
 </tbody>
 </table>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>ReactNode</code></p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.Component.CategoryColumnRegistration/">CategoryColumnRegistration</a>.<a href="../Renderer.Component.CategoryColumnRegistration/#rendercell">renderCell</a></p>
 <hr />
-<h3 id="versions">versions<a class="headerlink" href="#versions" title="Permanent link">#</a></h3>
-<p>• <strong>versions</strong>: <a href="../Common.Catalog.CatalogCategoryVersion/"><code>CatalogCategoryVersion</code></a>&lt;<a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>>[]</p>
-<p>The specific versions of the constructors.</p>
-<p>NOTE: the field <code>.apiVersion</code> after construction MUST match <code>{.group}/{.versions.[] | .name}</code>.
-For example, if <code>group = "entity.k8slens.dev"</code> and there is an entry in <code>.versions</code> with
-<code>name = "v1alpha1"</code> then the resulting <code>.apiVersion</code> MUST be <code>entity.k8slens.dev/v1alpha1</code></p>
+<h3 id="searchfilter">searchFilter<a class="headerlink" href="#searchfilter" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>searchFilter</strong>(<code>entity</code>): <code>string</code> | <code>string</code>[]</p>
+<p>If provided then searching is supported on this column and this function will be called
+to determine if the current search string matches for this row.</p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>entity</code></td>
+<td align="left"><a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>string</code> | <code>string</code>[]</p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.Component.CategoryColumnRegistration/">CategoryColumnRegistration</a>.<a href="../Renderer.Component.CategoryColumnRegistration/#searchfilter">searchFilter</a></p>
+<hr />
+<h3 id="sortcallback">sortCallback<a class="headerlink" href="#sortcallback" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>sortCallback</strong>(<code>entity</code>): <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<p>If provided then the column will support sorting and this function will be called to
+determine a row's ordering.</p>
+<p>strings are sorted ahead of numbers, and arrays determine ordering between equal
+elements of the previous index.</p>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>entity</code></td>
+<td align="left"><a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.Component.CategoryColumnRegistration/">CategoryColumnRegistration</a>.<a href="../Renderer.Component.CategoryColumnRegistration/#sortcallback">sortCallback</a></p>
                 
               
               
