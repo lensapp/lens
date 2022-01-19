@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./close-button.module.scss";
+import "./close-button.scss";
 
 import React, { HTMLAttributes } from "react";
 import { Icon } from "../icon";
@@ -30,10 +30,10 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 export function CloseButton(props: Props) {
   return (
     <div {...props}>
-      <div className={styles.closeButton} role="button" aria-label="Close">
-        <Icon material="close" className={styles.icon}/>
+      <div className="SettingsCloseButton" role="button" aria-label="Close">
+        <Icon material="close" />
       </div>
-      <div className={styles.esc} aria-hidden="true">
+      <div className="escLabel" aria-hidden="true">
         ESC
       </div>
     </div>

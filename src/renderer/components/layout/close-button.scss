@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.closeButton {
+.SettingsCloseButton {
   width: 35px;
   height: 35px;
   display: grid;
@@ -35,18 +35,18 @@
   &:active {
     transform: translateY(1px);
   }
-}
 
-.icon {
-  color: var(--textColorAccent);
-  opacity: 0.6;
-}
+  .Icon {
+    color: var(--textColorAccent);
+    opacity: 0.6;
+  }
 
-.esc {
-  text-align: center;
-  margin-top: var(--margin);
-  font-weight: bold;
-  user-select: none;
-  color: var(--textColorDimmed);
-  pointer-events: none;
+  .escLabel {
+    text-align: center;
+    margin-top: var(--margin);
+    font-weight: bold;
+    user-select: none;
+    color: var(--textColorDimmed);
+    pointer-events: none;
+  }
 }
