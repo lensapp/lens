@@ -16,7 +16,7 @@ import { once } from "lodash";
 import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
-import type { TerminalConfig } from "../../../common/user-store/preferences-helpers";
+import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 
 interface Dependencies {
   dockStore: DockStore
@@ -31,7 +31,7 @@ export class Terminal {
   }
 
   static async preloadFonts() {
-    const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
+    const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
     const fontFace = new FontFace(defaultTerminalFontFamily, `url(${fontPath})`);
 
     await fontFace.load();
