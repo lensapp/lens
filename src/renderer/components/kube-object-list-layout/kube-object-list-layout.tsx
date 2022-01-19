@@ -99,7 +99,7 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
   }
 
   render() {
-    const { className, customizeHeader, store, items = store.contextItems, ...layoutProps } = this.props;
+    const { className, customizeHeader, store, items, ...layoutProps } = this.props;
     const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
 
     return (
@@ -107,7 +107,7 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
         {...layoutProps}
         className={cssNames("KubeObjectListLayout", className)}
         store={store}
-        items={items}
+        getItems={() => this.props.items || store.contextItems}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
         customizeHeader={[
