@@ -8,7 +8,7 @@
 import "./markdown-viewer.scss";
 
 import React, { Component } from "react";
-import marked from "marked";
+import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { cssNames } from "../../utils";
 

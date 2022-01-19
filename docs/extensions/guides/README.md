@@ -14,21 +14,20 @@ Each guide or code sample includes the following:
 
 ## Guides
 
-| Guide                                                              | APIs                   |
-| ------------------------------------------------------------------ | ---------------------- |
-| [Generate new extension project](generator.md)                     |                        |
-| [Main process extension](main-extension.md)                        | Main.LensExtension     |
-| [Renderer process extension](renderer-extension.md)                | Renderer.LensExtension |
-| [Resource stack (cluster feature)](resource-stack.md)              |                        |
-| [Extending KubernetesCluster)](extending-kubernetes-cluster.md)    |                        |
-| [Stores](stores.md)                                                |                        |
-| [Components](components.md)                                        |                        |
-| [KubeObjectListLayout](kube-object-list-layout.md)                 |                        |
-| [Working with mobx](working-with-mobx.md)                          |                        |
-| [Protocol Handlers](protocol-handlers.md)                          |                        |
-| [Sending Data between main and renderer](ipc.md)                   |                        |
-| [Catalog Entities and Categories](catalog.md)                      |                        |
-| [Adding Custom Columns for Categories](custom-category-columns.md) |                        |
+| Guide                                                           | APIs                   |
+| --------------------------------------------------------------- | ---------------------- |
+| [Generate new extension project](generator.md)                  |                        |
+| [Main process extension](main-extension.md)                     | Main.LensExtension     |
+| [Renderer process extension](renderer-extension.md)             | Renderer.LensExtension |
+| [Resource stack (cluster feature)](resource-stack.md)           |                        |
+| [Extending KubernetesCluster)](extending-kubernetes-cluster.md) |                        |
+| [Stores](stores.md)                                             |                        |
+| [Components](components.md)                                     |                        |
+| [KubeObjectListLayout](kube-object-list-layout.md)              |                        |
+| [Working with mobx](working-with-mobx.md)                       |                        |
+| [Protocol Handlers](protocol-handlers.md)                       |                        |
+| [Sending Data between main and renderer](ipc.md)                |                        |
+| [Catalog Entities and Categories](catalog.md)                   |                        |
 
 ## Samples
 
