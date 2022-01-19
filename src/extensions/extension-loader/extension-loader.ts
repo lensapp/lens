@@ -270,11 +270,12 @@ export class ExtensionLoader {
     });
   };
 
-  loadOnClusterRenderer = (entity: KubernetesCluster) => {
+  loadOnClusterRenderer = (getCluster: () => KubernetesCluster) => {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if ((await extension.isEnabledForCluster(entity)) === false) {
+      // getCluster must be a callback, as the entity might be available only after an extension has been loaded
+      if ((await extension.isEnabledForCluster(getCluster())) === false) {
         return [];
       }
 
@@ -299,11 +300,15 @@ export class ExtensionLoader {
     });
   };
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
-    const loadingExtensions: ExtensionLoading[] = [];
+  protected async loadExtensions(installedExtensions: Map<string, InstalledExtension>, register: (ext: LensExtension) => Promise<Disposer[]>) {
+    // Steps of the function:
+    // 1. require and call .activate for each Extension
+    // 2. Wait until every extension's onActivate has been resolved
+    // 3. Call .enable for each extension
+    // 4. Return ExtensionLoading[]
 
-    reaction(() => this.toJSON(), async installedExtensions => {
-      for (const [extId, extension] of installedExtensions) {
+    const extensions = [...installedExtensions.entries()]
+      .map(([extId, extension]) => {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
         if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
@@ -312,7 +317,8 @@ export class ExtensionLoader {
 
             if (!LensExtensionClass) {
               this.nonInstancesByName.add(extension.manifest.name);
-              continue;
+
+              return null;
             }
 
             const instance = this.dependencies.createExtensionInstance(
@@ -320,27 +326,49 @@ export class ExtensionLoader {
               extension,
             );
 
-            const loaded = instance.enable(register).catch((err) => {
-              logger.error(`${logModule}: failed to enable`, { ext: extension, err });
-            });
-
-            loadingExtensions.push({
+            return {
+              extId,
+              instance,
               isBundled: extension.isBundled,
-              loaded,
-            });
-            this.instances.set(extId, instance);
+              activated: instance.activate(),
+            };
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
           }
         } else if (!extension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
         }
-      }
-    }, {
-      fireImmediately: true,
-    });
 
-    return loadingExtensions;
+        return null;
+      })
+      // Remove null values
+      .filter(extension => Boolean(extension));
+
+    // We first need to wait until each extension's `onActivate` is resolved,
+    // as this might register new catalog categories. Afterwards we can safely .enable the extension.
+    await Promise.all(extensions.map(extension => extension.activated));
+
+    // Return ExtensionLoading[]
+    return extensions.map(extension => {
+      const loaded = extension.instance.enable(register).catch((err) => {
+        logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+      });
+
+      this.instances.set(extension.extId, extension.instance);
+
+      return {
+        isBundled: extension.isBundled,
+        loaded,
+      };
+    });
+  }
+
+  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
+    // Setup reaction to load extensions on JSON changes
+    reaction(() => this.toJSON(), installedExtensions => this.loadExtensions(installedExtensions, register));
+
+    // Load initial extensions
+    return this.loadExtensions(this.toJSON(), register);
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {

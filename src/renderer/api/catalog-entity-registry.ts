@@ -47,8 +47,23 @@ export class CatalogEntityRegistry {
     makeObservable(this);
   }
 
-  get activeEntity(): CatalogEntity | null {
+  protected getActiveEntityById() {
     return this._entities.get(this.activeEntityId) || null;
+  }
+
+  get activeEntity(): CatalogEntity | null {
+    const entity = this.getActiveEntityById();
+
+    // If the entity was not found but there are rawEntities to be processed,
+    // try to process them and return the entity.
+    // This might happen if an extension registered a new Catalog category.
+    if (this.activeEntityId && !entity && this.rawEntities.length > 0) {
+      this.processRawEntities();
+
+      return this.getActiveEntityById();
+    }
+
+    return entity;
   }
 
   set activeEntity(raw: CatalogEntity | string | null) {
