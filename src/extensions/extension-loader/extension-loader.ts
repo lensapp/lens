@@ -252,7 +252,6 @@ export class ExtensionLoader {
     return this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
-        registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),

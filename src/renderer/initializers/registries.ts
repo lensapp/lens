@@ -6,7 +6,6 @@
 import * as registries from "../../extensions/registries";
 
 export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
   registries.CatalogEntityDetailRegistry.createInstance();
   registries.ClusterPageMenuRegistry.createInstance();
   registries.ClusterPageRegistry.createInstance();

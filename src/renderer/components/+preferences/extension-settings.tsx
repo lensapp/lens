@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { SubTitle } from "../layout/sub-title";
-import type { RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
+import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
 import React from "react";
 import { cssNames } from "../../../renderer/utils";
 
 interface ExtensionSettingsProps {
-  setting: RegisteredAppPreference;
+  setting: AppPreferenceRegistration;
   size: "small" | "normal"
 }
 
