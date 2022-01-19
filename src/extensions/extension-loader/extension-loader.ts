@@ -270,7 +270,7 @@ export class ExtensionLoader {
     });
   };
 
-  loadOnClusterRenderer(getCluster: () => KubernetesCluster) {
+  loadOnClusterRenderer = (getCluster: () => KubernetesCluster) => {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
@@ -298,7 +298,7 @@ export class ExtensionLoader {
 
       return removeItems;
     });
-  }
+  };
 
   protected async loadExtensions(installedExtensions: Map<string, InstalledExtension>, register: (ext: LensExtension) => Promise<Disposer[]>) {
     // Steps of the function:
@@ -364,13 +364,13 @@ export class ExtensionLoader {
     });
   }
 
-  protected autoInitExtensions = (register: (ext: LensExtension) => Promise<Disposer[]>) => {
+  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
     // Setup reaction to load extensions on JSON changes
     reaction(() => this.toJSON(), installedExtensions => this.loadExtensions(installedExtensions, register));
 
     // Load initial extensions
     return this.loadExtensions(this.toJSON(), register);
-  };
+  }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
     const entryPointName = ipcRenderer ? "renderer" : "main";
