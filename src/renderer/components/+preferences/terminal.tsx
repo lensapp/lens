@@ -25,9 +25,12 @@ import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
 import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
+import { Select } from "../select";
+import { ThemeStore } from "../../theme.store";
 
 export const Terminal = observer(() => {
   const userStore = UserStore.getInstance();
+  const themeStore = ThemeStore.getInstance();
   const [terminalSettings, setTerminalSettings] = React.useState({
     shell: userStore.shell || "",
     terminalFontSize: userStore.terminalConfig.fontSize,
@@ -65,6 +68,20 @@ export const Terminal = observer(() => {
           Copy on select and paste on right-click
       </Switch>
     </section>
+
+    <section id="terminalTheme">
+      <SubTitle title="Terminal theme" />
+      <Select
+        themeName="lens"
+        options={[
+          { label: "Match theme", value: "" },
+          ...themeStore.themeOptions,
+        ]}
+        value={userStore.terminalTheme}
+        onChange={({ value }) => userStore.terminalTheme = value}
+      />
+    </section>
+
     <section>
       <SubTitle title="Font size"/>
       <Input
