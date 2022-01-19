@@ -29,8 +29,8 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 
 export function CloseButton(props: Props) {
   return (
-    <div {...props}>
-      <div className="SettingsCloseButton" role="button" aria-label="Close">
+    <div className="SettingsCloseButton" {...props}>
+      <div className="closeIcon" role="button" aria-label="Close">
         <Icon material="close" />
       </div>
       <div className="escLabel" aria-hidden="true">

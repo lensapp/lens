@@ -20,25 +20,27 @@
  */
 
 .SettingsCloseButton {
-  width: 35px;
-  height: 35px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  border: 2px solid var(--textColorDimmed);
-  border-radius: 50%;
+  .closeIcon {
+    width: 35px;
+    height: 35px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border: 2px solid var(--textColorDimmed);
+    border-radius: 50%;
 
-  &:hover {
-    background-color: #72767d25;
-  }
+    &:hover {
+      background-color: #72767d25;
+    }
 
-  &:active {
-    transform: translateY(1px);
-  }
+    &:active {
+      transform: translateY(1px);
+    }
 
-  .Icon {
-    color: var(--textColorAccent);
-    opacity: 0.6;
+    .Icon {
+      color: var(--textColorAccent);
+      opacity: 0.6;
+    }
   }
 
   .escLabel {
