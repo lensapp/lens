@@ -5,7 +5,6 @@
 
 import fs from "fs";
 import mockFs from "mock-fs";
-import yaml from "js-yaml";
 import path from "path";
 import fse from "fs-extra";
 import type { Cluster } from "../cluster/cluster";
