@@ -19,7 +19,7 @@ import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 
 interface Dependencies {
   hostedCluster: Cluster;
-  loadExtensions: (entity: CatalogEntity) => void;
+  loadExtensions: (getCluster: () => CatalogEntity) => void;
   catalogEntityRegistry: CatalogEntityRegistry;
   frameRoutingId: number;
   emitEvent: (event: AppEvent) => void;
@@ -47,11 +47,12 @@ export const initClusterFrame =
 
       catalogEntityRegistry.activeEntity = hostedCluster.id;
 
-      // Only load the extensions once the catalog has been populated
+      // Only load the extensions once the catalog has been populated.
+      // Note that the Catalog might still have unprocessed entities until the extensions are fully loaded.
       when(
-        () => Boolean(catalogEntityRegistry.activeEntity),
+        () => catalogEntityRegistry.items.length > 0,
         () =>
-          loadExtensions(catalogEntityRegistry.activeEntity as KubernetesCluster),
+          loadExtensions(() => catalogEntityRegistry.activeEntity as KubernetesCluster),
         {
           timeout: 15_000,
           onError: (error) => {

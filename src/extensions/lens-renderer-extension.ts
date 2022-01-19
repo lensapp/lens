@@ -15,13 +15,14 @@ import type { KubernetesCluster } from "../common/catalog-entities";
 import type { WelcomeMenuRegistration } from "../renderer/components/+welcome/welcome-menu-items/welcome-menu-registration";
 import type { WelcomeBannerRegistration } from "../renderer/components/+welcome/welcome-banner-items/welcome-banner-registration";
 import type { CommandRegistration } from "../renderer/components/command-palette/registered-commands/commands";
+import type { AppPreferenceRegistration } from "../renderer/components/+preferences/app-preferences/app-preference-registration";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
   clusterPages: registries.PageRegistration[] = [];
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
   kubeObjectStatusTexts: registries.KubeObjectStatusRegistration[] = [];
-  appPreferences: registries.AppPreferenceRegistration[] = [];
+  appPreferences: AppPreferenceRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
   statusBarItems: registries.StatusBarRegistration[] = [];
   kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];

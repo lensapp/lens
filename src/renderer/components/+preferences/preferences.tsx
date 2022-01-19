@@ -4,7 +4,7 @@
  */
 import "./preferences.scss";
 
-import { makeObservable, observable } from "mobx";
+import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { matchPath, Redirect, Route, RouteProps, Switch } from "react-router";
@@ -25,7 +25,6 @@ import {
   terminalRoute,
   terminalURL,
 } from "../../../common/routes";
-import { AppPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { navigateWithoutHistoryChange, navigation } from "../../navigation";
 import { SettingLayout } from "../layout/setting-layout";
 import { Tab, Tabs } from "../tabs";
@@ -37,18 +36,18 @@ import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
 import { Extensions } from "./extensions";
 import { sentryDsn } from "../../../common/vars";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
+import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 
-@observer
-export class Preferences extends React.Component {
-  @observable historyLength: number | undefined;
+interface Dependencies {
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+}
 
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
-  }
+const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) => {
 
-  renderNavigation() {
-    const extensions = AppPreferenceRegistry.getInstance().getItems();
+  function renderNavigation() {
+    const extensions = appPreferenceItems.get();
     const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == "telemetry");
     const currentLocation = navigation.location.pathname;
     const isActive = (route: RouteProps) => !!matchPath(currentLocation, { path: route.path, exact: route.exact });
@@ -71,24 +70,32 @@ export class Preferences extends React.Component {
     );
   }
 
-  render() {
-    return (
-      <SettingLayout
-        navigation={this.renderNavigation()}
-        className="Preferences"
-        contentGaps={false}
-      >
-        <Switch>
-          <Route path={appURL()} component={Application}/>
-          <Route path={proxyURL()} component={LensProxy}/>
-          <Route path={kubernetesURL()} component={Kubernetes}/>
-          <Route path={editorURL()} component={Editor}/>
-          <Route path={terminalURL()} component={Terminal}/>
-          <Route path={telemetryURL()} component={Telemetry}/>
-          <Route path={extensionURL()} component={Extensions}/>
-          <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
-        </Switch>
-      </SettingLayout>
-    );
-  }
-}
+  return (
+    <SettingLayout
+      navigation={renderNavigation()}
+      className="Preferences"
+      contentGaps={false}
+    >
+      <Switch>
+        <Route path={appURL()} component={Application}/>
+        <Route path={proxyURL()} component={LensProxy}/>
+        <Route path={kubernetesURL()} component={Kubernetes}/>
+        <Route path={editorURL()} component={Editor}/>
+        <Route path={terminalURL()} component={Terminal}/>
+        <Route path={telemetryURL()} component={Telemetry}/>
+        <Route path={extensionURL()} component={Extensions}/>
+        <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
+      </Switch>
+    </SettingLayout>
+  );
+};
+
+export const Preferences = withInjectables<Dependencies>(
+  observer(NonInjectedPreferences),
+
+  {
+    getProps: (di) => ({
+      appPreferenceItems: di.inject(appPreferencesInjectable),
+    }),
+  },
+);

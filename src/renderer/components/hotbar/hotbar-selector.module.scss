@@ -4,6 +4,8 @@
  */
 
 .HotbarSelector {
+  display: flex;
+  align-items: center;
   height: 26px;
   background-color: var(--layoutBackground);
   position: relative;
@@ -17,7 +19,13 @@
     top: -20px;
   }
 
-  .SelectorIndex {
+  .HotbarIndex {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  .Badge {
     cursor: pointer;
     background: var(--secondaryBackground);
     width: 100%;

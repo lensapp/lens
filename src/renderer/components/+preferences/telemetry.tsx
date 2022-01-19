@@ -6,13 +6,20 @@ import { observer } from "mobx-react";
 import React from "react";
 import { UserStore } from "../../../common/user-store";
 import { sentryDsn } from "../../../common/vars";
-import { AppPreferenceRegistry } from "../../../extensions/registries";
 import { Checkbox } from "../checkbox";
 import { SubTitle } from "../layout/sub-title";
 import { ExtensionSettings } from "./extension-settings";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
+import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
+import type { IComputedValue } from "mobx";
+import { withInjectables } from "@ogre-tools/injectable-react";
 
-export const Telemetry = observer(() => {
-  const extensions = AppPreferenceRegistry.getInstance().getItems();
+interface Dependencies {
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+}
+
+const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) => {
+  const extensions = appPreferenceItems.get();
   const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == "telemetry");
 
   return (
@@ -44,4 +51,14 @@ export const Telemetry = observer(() => {
       }
     </section>
   );
-});
+};
+
+export const Telemetry = withInjectables<Dependencies>(
+  observer(NonInjectedTelemetry),
+
+  {
+    getProps: (di) => ({
+      appPreferenceItems: di.inject(appPreferencesInjectable),
+    }),
+  },
+);

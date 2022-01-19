@@ -4,7 +4,6 @@
  */
 
 import type React from "react";
-import { BaseRegistry } from "./base-registry";
 
 export interface AppPreferenceComponents {
   Hint: React.ComponentType<any>;
@@ -22,11 +21,3 @@ export interface RegisteredAppPreference extends AppPreferenceRegistration {
   id: string;
 }
 
-export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration, RegisteredAppPreference> {
-  getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPreference {
-    return {
-      id: item.id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
-      ...item,
-    };
-  }
-}

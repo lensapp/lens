@@ -20,6 +20,7 @@ Each guide or code sample includes the following:
 | [Main process extension](main-extension.md) | Main.LensExtension |
 | [Renderer process extension](renderer-extension.md) | Renderer.LensExtension |
 | [Resource stack (cluster feature)](resource-stack.md) | |
+| [Extending KubernetesCluster)](extending-kubernetes-cluster.md) | |
 | [Stores](stores.md) | |
 | [Components](components.md) | |
 | [KubeObjectListLayout](kube-object-list-layout.md) | |

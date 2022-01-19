@@ -86,7 +86,6 @@ export class LensExtension {
     }
 
     try {
-      await this.onActivate();
       this._isEnabled = true;
 
       this[Disposers].push(...await register(this));
@@ -111,6 +110,11 @@ export class LensExtension {
     } catch (error) {
       logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
+  }
+
+  @action
+  activate() {
+    return this.onActivate();
   }
 
   protected onActivate(): Promise<void> | void {

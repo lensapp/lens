@@ -25,14 +25,15 @@
   pointer-events: none;
   transition: opacity 150ms 150ms ease-in-out;
   z-index: 100000;
-  opacity: 1;
   box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
 
-  &.invisible {
-    left: 0;
-    top: 0;
-    opacity: 0;
-    visibility: hidden;
+  &.visible {
+    opacity: 1;
+    visibility: visible;
   }
 
   &:empty {
