@@ -98,9 +98,6 @@ export async function bootstrap(di: DependencyInjectionContainer) {
   logger.info(`${logPrefix} initializing IpcRendererListeners`);
   initializers.initIpcRendererListeners(extensionLoader);
 
-  logger.info(`${logPrefix} initializing StatusBarRegistry`);
-  initializers.initStatusBarRegistry();
-
   extensionLoader.init();
 
   const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
