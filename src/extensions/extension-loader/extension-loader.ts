@@ -309,7 +309,6 @@ export class ExtensionLoader {
 
     const extensions = [...installedExtensions.entries()]
       .map(([extId, extension]) => {
-        // for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
         if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
