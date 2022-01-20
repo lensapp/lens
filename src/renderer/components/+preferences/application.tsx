@@ -14,10 +14,12 @@ import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
 import moment from "moment-timezone";
 import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
-import { action } from "mobx";
+import { action, IComputedValue } from "mobx";
 import { isUrl } from "../input/input_validators";
-import { AppPreferenceRegistry } from "../../../extensions/registries";
 import { ExtensionSettings } from "./extension-settings";
+import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 
 const timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
   label: zone,
@@ -28,7 +30,11 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
   ([value, { label }]) => ({ value, label }),
 );
 
-export const Application = observer(() => {
+interface Dependencies {
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+}
+
+const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) => {
   const userStore = UserStore.getInstance();
   const defaultShell = process.env.SHELL
     || process.env.PTYSHELL
@@ -40,25 +46,39 @@ export const Application = observer(() => {
 
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
   const [shell, setShell] = React.useState(userStore.shell || "");
-  const extensionSettings = AppPreferenceRegistry.getInstance().getItems().filter((preference) => preference.showInPreferencesTab === "application");
+  const extensionSettings = appPreferenceItems.get().filter((preference) => preference.showInPreferencesTab === "application");
+  const themeStore = ThemeStore.getInstance();
 
   return (
     <section id="application">
       <h2 data-testid="application-header">Application</h2>
       <section id="appearance">
-        <SubTitle title="Theme"/>
+        <SubTitle title="Theme" />
         <Select
-          options={ThemeStore.getInstance().themeOptions}
+          options={themeStore.themeOptions}
           value={userStore.colorTheme}
           onChange={({ value }) => userStore.colorTheme = value}
           themeName="lens"
         />
       </section>
 
-      <hr/>
+      <hr />
+
+      <section id="terminalTheme">
+        <SubTitle title="Terminal theme" />
+        <Select
+          themeName="lens"
+          options={[
+            { label: "Match theme", value: "" },
+            ...themeStore.themeOptions,
+          ]}
+          value={userStore.terminalTheme}
+          onChange={({ value }) => userStore.terminalTheme = value}
+        />
+      </section>
 
       <section id="shell">
-        <SubTitle title="Terminal Shell Path"/>
+        <SubTitle title="Terminal Shell Path" />
         <Input
           theme="round-black"
           placeholder={defaultShell}
@@ -78,7 +98,7 @@ export const Application = observer(() => {
         </Switch>
       </section>
 
-      <hr/>
+      <hr />
 
       <section id="extensionRegistryUrl">
         <SubTitle title="Extension Install Registry" />
@@ -111,10 +131,10 @@ export const Application = observer(() => {
         />
       </section>
 
-      <hr/>
+      <hr />
 
       <section id="other">
-        <SubTitle title="Start-up"/>
+        <SubTitle title="Start-up" />
         <Switch checked={userStore.openAtLogin} onChange={() => userStore.openAtLogin = !userStore.openAtLogin}>
           Automatically start Lens on login
         </Switch>
@@ -127,7 +147,7 @@ export const Application = observer(() => {
       ))}
 
       <section id="update-channel">
-        <SubTitle title="Update Channel"/>
+        <SubTitle title="Update Channel" />
         <Select
           options={updateChannelOptions}
           value={userStore.updateChannel}
@@ -149,4 +169,14 @@ export const Application = observer(() => {
       </section>
     </section>
   );
-});
+};
+
+export const Application = withInjectables<Dependencies>(
+  observer(NonInjectedApplication),
+
+  {
+    getProps: (di) => ({
+      appPreferenceItems: di.inject(appPreferencesInjectable),
+    }),
+  },
+);

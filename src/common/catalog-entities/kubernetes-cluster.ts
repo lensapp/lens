@@ -59,8 +59,8 @@ export interface KubernetesClusterStatus extends CatalogEntityStatus {
 }
 
 export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
-  public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public static readonly kind = "KubernetesCluster";
+  public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
+  public static readonly kind: string = "KubernetesCluster";
 
   public readonly apiVersion = KubernetesCluster.apiVersion;
   public readonly kind = KubernetesCluster.kind;

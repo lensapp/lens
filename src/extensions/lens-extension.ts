@@ -91,7 +91,6 @@ export class LensExtension {
     }
 
     try {
-      await this.onActivate();
       this._isEnabled = true;
 
       this[Disposers].push(...await register(this));
@@ -117,6 +116,12 @@ export class LensExtension {
       logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
   }
+
+  @action
+  activate() {
+    return this.onActivate();
+  }
+
 
   public async checkForUpdate() {
     return this.updateChecker?.run(this.manifest);

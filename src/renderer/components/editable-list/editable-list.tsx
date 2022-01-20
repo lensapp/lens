@@ -54,6 +54,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
             onSubmit={this.onSubmit}
             validators={validators}
             placeholder={placeholder}
+            blurOnEnter={false}
             iconRight={({ isDirty }) => isDirty ? <Icon material="keyboard_return" size={16} /> : null}
           />
         </div>

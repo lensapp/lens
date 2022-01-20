@@ -11,15 +11,15 @@ import type { ExtensionLoading } from "../../../../extensions/extension-loader";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
 
 interface Dependencies {
-  loadExtensions: () => ExtensionLoading[]
+  loadExtensions: () => Promise<ExtensionLoading[]>;
 
   // TODO: Move usages of third party library behind abstraction
-  ipcRenderer: { send: (name: string) => void }
+  ipcRenderer: { send: (name: string) => void };
 
   // TODO: Remove dependencies being here only for correct timing of initialization
   bindProtocolAddRouteHandlers: () => void;
   lensProtocolRouterRenderer: { init: () => void };
-  catalogEntityRegistry: CatalogEntityRegistry
+  catalogEntityRegistry: CatalogEntityRegistry;
 }
 
 const logPrefix = "[ROOT-FRAME]:";
@@ -40,7 +40,7 @@ export const initRootFrame =
       // maximum time to let bundled extensions finish loading
         const timeout = delay(10000);
 
-        const loadingExtensions = loadExtensions();
+        const loadingExtensions = await loadExtensions();
 
         const loadingBundledExtensions = loadingExtensions
           .filter((e) => e.isBundled)
