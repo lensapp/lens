@@ -20,7 +20,7 @@ import { kebabCase } from "lodash/fp";
 import { HelmReleaseMenu } from "./release-menu";
 import type { ItemStore } from "../../../common/item.store";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
-import { ReleaseDetails } from "./release-details";
+import { ReleaseDetails } from "./release-details/release-details";
 import removableReleasesInjectable from "./removable-releases.injectable";
 import type { RemovableHelmRelease } from "./removable-releases";
 import { observer } from "mobx-react";
@@ -58,20 +58,8 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
     }
   }
 
-  get selectedRelease() {
-    const { match: { params: { name, namespace }}} = this.props;
-
-    return this.props.releases.get().find(release => {
-      return release.getName() == name && release.getNs() == namespace;
-    });
-  }
-
   onDetails = (item: HelmRelease) => {
-    if (item === this.selectedRelease) {
-      this.hideDetails();
-    } else {
-      this.showDetails(item);
-    }
+    this.showDetails(item);
   };
 
   showDetails = (item: HelmRelease) => {
@@ -210,12 +198,10 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
           customizeRemoveDialog={selectedItems => ({
             message: this.renderRemoveDialogMessage(selectedItems),
           })}
-          detailsItem={this.selectedRelease}
           onDetails={this.onDetails}
         />
-
+        
         <ReleaseDetails
-          release={this.selectedRelease}
           hideDetails={this.hideDetails}
         />
 
