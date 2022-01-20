@@ -23,13 +23,15 @@ import styles from "./network-policy-details.module.css";
 
 import React from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { IPolicyIpBlock, IPolicySelector, NetworkPolicy, NetworkPolicyPeer, NetworkPolicyPort } from "../../../common/k8s-api/endpoints/network-policy.api";
+import { IPolicyIpBlock, NetworkPolicy, NetworkPolicyPeer, NetworkPolicyPort } from "../../../common/k8s-api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
+import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
+import { isEmpty } from "lodash";
 
 interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 }
@@ -60,20 +62,57 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     );
   }
 
-  renderIPolicySelector(name: string, selector: IPolicySelector | undefined) {
+  renderMatchLabels(matchLabels: Record<string, string | undefined> | undefined) {
+    if (!matchLabels) {
+      return null;
+    }
+
+    return Object.entries(matchLabels)
+      .map(([key, value]) => <li key={key}>{key}: {value}</li>);
+  }
+
+  renderMatchExpressions(matchExpressions: LabelMatchExpression[] | undefined) {
+    if (!matchExpressions) {
+      return null;
+    }
+
+    return matchExpressions.map(expr => {
+      switch (expr.operator) {
+        case "DoesNotExist":
+        case "Exists":
+          return <li key={expr.key}>{expr.key} ({expr.operator})</li>;
+        case "In":
+        case "NotIn":
+          return (
+            <li key={expr.key}>
+              {expr.key}({expr.operator})
+              <ul>
+                {expr.values.map((value, index) => <li key={index}>{value}</li>)}
+              </ul>
+            </li>
+          );
+      }
+    });
+  }
+
+  renderIPolicySelector(name: string, selector: LabelSelector | undefined) {
     if (!selector) {
       return null;
     }
 
+    const { matchLabels, matchExpressions } = selector;
+
     return (
       <DrawerItem name={name}>
-        {
-          Object
-            .entries(selector.matchLabels)
-            .map(data => data.join(": "))
-            .join(", ")
-          || "(empty)"
-        }
+        <ul className={styles.policySelectorList}>
+          {this.renderMatchLabels(matchLabels)}
+          {this.renderMatchExpressions(matchExpressions)}
+          {
+            (isEmpty(matchLabels) && isEmpty(matchExpressions)) && (
+              <li>(empty)</li>
+            )
+          }
+        </ul>
       </DrawerItem>
     );
   }

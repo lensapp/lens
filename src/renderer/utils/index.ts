@@ -24,7 +24,6 @@
 export * from "../../common/utils";
 export * from "../../common/event-emitter";
 
-export * from "./copyToClipboard";
 export * from "./createStorage";
 export * from "./cssNames";
 export * from "./cssVar";

@@ -19,34 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Helper for selecting element's text content and copy in clipboard
+import "./close-button.scss";
 
-export function copyToClipboard(elem: HTMLElement, { resetSelection = true } = {}) {
-  let clearSelection: () => void;
+import React, { HTMLAttributes } from "react";
+import { Icon } from "../icon";
 
-  if (isSelectable(elem)) {
-    elem.select();
-    clearSelection = () => elem.setSelectionRange(0, 0);
-  } else {
-    const selection = window.getSelection();
-
-    selection.selectAllChildren(elem);
-    clearSelection = () => selection.removeAllRanges();
-  }
-  const selectedText = document.getSelection().toString();
-  const isCopied = document.execCommand("copy");
-
-  if (resetSelection) {
-    clearSelection();
-  }
-
-  return {
-    copied: isCopied,
-    copiedText: selectedText,
-    clearSelection,
-  };
+interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
-function isSelectable(elem: HTMLElement): elem is HTMLInputElement {
-  return !!(elem as HTMLInputElement).select;
+export function CloseButton(props: Props) {
+  return (
+    <div className="SettingsCloseButton" {...props}>
+      <div className="closeIcon" role="button" aria-label="Close">
+        <Icon material="close" />
+      </div>
+      <div className="escLabel" aria-hidden="true">
+        ESC
+      </div>
+    </div>
+  );
 }

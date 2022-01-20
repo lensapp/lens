@@ -136,11 +136,16 @@ export class ClusterManager extends Singleton {
       entity.spec.metrics.prometheus = prometheus;
     }
 
-    // Only set the icon if the preference is set. If the preference is not set
-    // then let the source determine if a cluster has an icon.
     if (cluster.preferences.icon) {
       entity.spec.icon ??= {};
       entity.spec.icon.src = cluster.preferences.icon;
+    } else if (cluster.preferences.icon === null) {
+      /**
+       * NOTE: only clear the icon if set to `null` by ClusterIconSettings.
+       * We can then also clear that value too
+       */
+      entity.spec.icon = undefined;
+      cluster.preferences.icon = undefined;
     }
 
     catalogEntityRegistry.items.splice(index, 1, entity);
@@ -177,7 +182,8 @@ export class ClusterManager extends Singleton {
     }
   }
 
-  @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
+  @action
+  protected syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
       const cluster = this.store.getById(entity.metadata.uid);
 

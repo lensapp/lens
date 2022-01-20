@@ -19,4 +19,36 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./clipboard";
+.SettingsCloseButton {
+  .closeIcon {
+    width: 35px;
+    height: 35px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border: 2px solid var(--textColorDimmed);
+    border-radius: 50%;
+
+    &:hover {
+      background-color: #72767d25;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    .Icon {
+      color: var(--textColorAccent);
+      opacity: 0.6;
+    }
+  }
+
+  .escLabel {
+    text-align: center;
+    margin-top: var(--margin);
+    font-weight: bold;
+    user-select: none;
+    color: var(--textColorDimmed);
+    pointer-events: none;
+  }
+}
