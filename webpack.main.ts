@@ -6,9 +6,7 @@
 import path from "path";
 import type webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
-import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
@@ -17,12 +15,13 @@ const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
   console.info("WEBPACK:main", vars);
+  const { isProduction, mainDir, buildDir, isDevelopment } = vars;
 
   return {
     context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    devtool: isDevelopment ? "hidden-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
@@ -47,7 +46,6 @@ configs.push((): webpack.Configuration => {
       ],
     },
     plugins: [
-      new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
       new CircularDependencyPlugin({

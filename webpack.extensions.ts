@@ -6,9 +6,15 @@
 
 import path from "path";
 import type webpack from "webpack";
-import { sassCommonVars, isDevelopment, isProduction } from "./src/common/vars";
+import * as vars from "./src/common/vars";
+import {
+  cssModulesWebpackRule,
+  filesAndIconsWebpackRule,
+  fontsLoaderWebpackRule,
+} from "./webpack.renderer";
 
 export default function generateExtensionTypes(): webpack.Configuration {
+  const { isDevelopment, isProduction } = vars;
   const entry = "./src/extensions/extension-api.ts";
   const outDir = "./src/extensions/npm/extensions/dist";
 
@@ -48,47 +54,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
             },
           },
         },
-        // for src/renderer/components/fonts/roboto-mono-nerd.ttf
-        // in src/renderer/components/dock/terminal.ts 95:25-65
-        {
-          test: /\.(ttf|eot|woff2?)$/,
-          use: {
-            loader: "url-loader",
-            options: {
-              name: "fonts/[name].[ext]",
-            },
-          },
-        },
-        {
-          test: /\.(jpg|png|svg|map|ico)$/,
-          use: {
-            loader: "file-loader",
-            options: {
-              name: "images/[name]-[hash:6].[ext]",
-              esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (react)
-            },
-          },
-        },
-        // for import scss files
-        {
-          test: /\.s?css$/,
-          use: [
-            "style-loader",
-            "css-loader",
-            "postcss-loader",
-            {
-              loader: "sass-loader",
-              options: {
-                additionalData: `@import "${path.basename(sassCommonVars)}";`,
-                sassOptions: {
-                  includePaths: [
-                    path.dirname(sassCommonVars),
-                  ],
-                },
-              },
-            },
-          ],
-        },
+        fontsLoaderWebpackRule(),
+        filesAndIconsWebpackRule(),
+        cssModulesWebpackRule(), // import sass/css files and (s)css-modules
       ],
     },
     resolve: {
