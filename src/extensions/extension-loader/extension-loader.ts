@@ -325,6 +325,8 @@ export class ExtensionLoader {
               extension,
             );
 
+            this.instances.set(extId, instance);
+
             return {
               extId,
               instance,
@@ -352,8 +354,6 @@ export class ExtensionLoader {
       const loaded = extension.instance.enable(register).catch((err) => {
         logger.error(`${logModule}: failed to enable`, { ext: extension, err });
       });
-
-      this.instances.set(extension.extId, extension.instance);
 
       return {
         isBundled: extension.isBundled,
