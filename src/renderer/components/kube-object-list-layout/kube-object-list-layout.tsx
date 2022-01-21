@@ -10,7 +10,7 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames, Disposer } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
+import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/list-layout";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";

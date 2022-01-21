@@ -3,20 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../item-list-layout.scss";
+import "./item-list-layout.scss";
 
 import React, { ReactNode } from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../../utils";
-import type { ItemObject, ItemStore } from "../../../../common/item.store";
-import type { Filter } from "../page-filters.store";
-import { ItemListLayoutHeaderTitle } from "./item-list-layout-header-title/item-list-layout-header-title";
-import { ItemListLayoutHeaderInfo } from "./item-list-layout-header-info/item-list-layout-header-info";
-import { ItemListLayoutHeaderFilters } from "./item-list-layout-header-filters/item-list-layout-header-filters";
-import { ItemListLayoutHeaderSearch } from "./item-list-layout-header-search/item-list-layout-header-search";
-import type { HeaderCustomizer, SearchFilter } from "../item-list-layout";
+import { cssNames, IClassName } from "../../utils";
+import type { ItemObject, ItemStore } from "../../../common/item.store";
+import type { Filter } from "./page-filters.store";
+import { ItemListLayoutHeaderTitle } from "./header-title";
+import { ItemListLayoutHeaderInfo } from "./header-info";
+import { ItemListLayoutHeaderFilters } from "./header-filters";
+import { ItemListLayoutHeaderSearch } from "./header-search";
+import type { HeaderCustomizer, SearchFilter } from "./list-layout";
 
-interface ItemListLayoutHeaderProps<I extends ItemObject> {
+export interface ItemListLayoutHeaderProps<I extends ItemObject> {
   getItems: () => I[];
   getFilters: () => Filter[];
   toggleFilters: () => void;
@@ -44,6 +44,10 @@ export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
       renderHeaderTitle,
       headerClassName,
       searchFilters,
+      getItems,
+      store,
+      getFilters,
+      toggleFilters,
     } = this.props;
 
     if (!showHeader) {
@@ -69,10 +73,10 @@ export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
 
         <ItemListLayoutHeaderInfo
           headerPlaceholders={headerPlaceholders}
-          getItems={this.props.getItems}
-          store={this.props.store}
-          getFilters={this.props.getFilters}
-          toggleFilters={this.props.toggleFilters}
+          getItems={getItems}
+          store={store}
+          getFilters={getFilters}
+          toggleFilters={toggleFilters}
         />
 
         <ItemListLayoutHeaderFilters headerPlaceholders={headerPlaceholders} />

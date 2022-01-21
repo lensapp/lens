@@ -32,11 +32,11 @@ import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.st
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import itemListLayoutStorageInjectable
-  from "./item-list-layout-storage/item-list-layout-storage.injectable";
-import { ItemListLayoutContent } from "./item-list-layout-content/item-list-layout-content";
-import { ItemListLayoutHeader } from "./item-list-layout-header/item-list-layout-header";
+  from "./storage.injectable";
+import { ItemListLayoutContent } from "./content";
+import { ItemListLayoutHeader } from "./header";
 import groupBy from "lodash/groupBy";
-import { ItemListLayoutFilters } from "./item-list-layout-filters/item-list-layout-filters";
+import { ItemListLayoutFilters } from "./filters";
 import { observer } from "mobx-react";
 
 export type SearchFilter<I extends ItemObject> = (item: I) => string | number | (string | number)[];
@@ -286,38 +286,28 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
           failedToLoadMessage={this.props.failedToLoadMessage}
         />
 
-        {this.props.renderFooter && this.props.renderFooter(this)}
+        {this.props.renderFooter?.(this)}
       </div>
     ));
   }
 }
 
-export function ItemListLayout<I extends ItemObject>(
-  props: ItemListLayoutProps<I>,
-) {
-  const InjectedItemListLayout = withInjectables<
-    Dependencies,
-    ItemListLayoutProps<I>
-  >(
-    NonInjectedItemListLayout,
+const InjectedItemListLayout = withInjectables<Dependencies, ItemListLayoutProps<ItemObject>>(NonInjectedItemListLayout, {
+  getProps: (di, props) => ({
+    namespaceStore: di.inject(namespaceStoreInjectable),
+    itemListLayoutStorage: di.inject(itemListLayoutStorageInjectable),
+    ...props,
+  }),
+});
 
-    {
-      getProps: (di, props) => ({
-        namespaceStore: di.inject(namespaceStoreInjectable),
-        itemListLayoutStorage: di.inject(itemListLayoutStorageInjectable),
-        ...props,
-      }),
-    },
-  );
-
+export function ItemListLayout<I extends ItemObject>(props: ItemListLayoutProps<I>) {
   return <InjectedItemListLayout {...props} />;
 }
 
-const applyFilters = <I extends ItemObject>(
-  filters: ItemsFilter<I>[],
-  items: I[],
-): I[] => {
-  if (!filters || !filters.length) return items;
+function applyFilters<I extends ItemObject>(filters: ItemsFilter<I>[], items: I[]): I[] {
+  if (!filters || !filters.length) {
+    return items;
+  }
 
   return filters.reduce((items, filter) => filter(items), items);
-};
+}

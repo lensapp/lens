@@ -3,24 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../item-list-layout.scss";
+import "./item-list-layout.scss";
 
 import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { ConfirmDialog, ConfirmDialogParams } from "../../confirm-dialog";
-import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../../table";
-import { boundMethod, cssNames, IClassName, isReactNode, prevDefault, stopPropagation } from "../../../utils";
-import { AddRemoveButtons, AddRemoveButtonsProps } from "../../add-remove-buttons";
-import { NoItems } from "../../no-items";
-import { Spinner } from "../../spinner";
-import type { ItemObject, ItemStore } from "../../../../common/item.store";
-import { Filter, pageFilters } from "../page-filters.store";
-import { ThemeStore } from "../../../theme.store";
-import { MenuActions } from "../../menu/menu-actions";
-import { MenuItem } from "../../menu";
-import { Checkbox } from "../../checkbox";
-import { UserStore } from "../../../../common/user-store";
+import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
+import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
+import { boundMethod, cssNames, IClassName, isReactNode, prevDefault, stopPropagation } from "../../utils";
+import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
+import { NoItems } from "../no-items";
+import { Spinner } from "../spinner";
+import type { ItemObject, ItemStore } from "../../../common/item.store";
+import { Filter, pageFilters } from "./page-filters.store";
+import { ThemeStore } from "../../theme.store";
+import { MenuActions } from "../menu/menu-actions";
+import { MenuItem } from "../menu";
+import { Checkbox } from "../checkbox";
+import { UserStore } from "../../../common/user-store";
 
 interface ItemListLayoutContentProps<I extends ItemObject> {
   getFilters: () => Filter[]

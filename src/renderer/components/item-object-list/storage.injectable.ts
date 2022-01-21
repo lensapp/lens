@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
+import createStorageInjectable from "../../utils/create-storage/create-storage.injectable";
 
 const itemListLayoutStorageInjectable = getInjectable({
   instantiate: (di) => {

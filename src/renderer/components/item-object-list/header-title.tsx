@@ -4,7 +4,7 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import type { HeaderPlaceholders } from "../../item-list-layout";
+import type { HeaderPlaceholders } from "./list-layout";
 
 interface ItemListLayoutHeaderTitleProps {
   renderHeaderTitle: React.ReactNode | (() => React.ReactNode);
