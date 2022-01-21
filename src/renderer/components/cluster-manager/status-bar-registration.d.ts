@@ -2,12 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-// Extensions API -> Status bar customizations
-
-import type React from "react";
-import { BaseRegistry } from "./base-registry";
-
 interface StatusBarComponents {
   Item?: React.ComponentType;
   /**
@@ -27,7 +21,4 @@ export interface StatusBarRegistration extends StatusBarRegistrationV2 {
    * @deprecated use components.Item instead
    */
   item?: React.ReactNode;
-}
-
-export class StatusBarRegistry extends BaseRegistry<StatusBarRegistration> {
 }

@@ -18,6 +18,7 @@ import type { CommandRegistration } from "../renderer/components/command-palette
 import type { AppPreferenceRegistration } from "../renderer/components/+preferences/app-preferences/app-preference-registration";
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
+import type { StatusBarRegistration } from "../renderer/components/cluster-manager/status-bar-registration";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -26,7 +27,7 @@ export class LensRendererExtension extends LensExtension {
   kubeObjectStatusTexts: registries.KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
-  statusBarItems: registries.StatusBarRegistration[] = [];
+  statusBarItems: StatusBarRegistration[] = [];
   kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: registries.KubeObjectMenuRegistration[] = [];
   kubeWorkloadsOverviewItems: registries.WorkloadsOverviewDetailRegistration[] = [];

@@ -4,10 +4,15 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
-import { StatusBarRegistry } from "../../../extensions/registries";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { DiRender } from "../test-utils/renderFor";
+import { renderFor } from "../test-utils/renderFor";
+import directoryForUserDataInjectable  from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
+import { computed, IObservableArray, observable, runInAction } from "mobx";
+import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -15,13 +20,43 @@ jest.mock("electron", () => ({
   },
 }));
 
-describe("<BottomBar />", () => {
-  beforeEach(() => {
-    StatusBarRegistry.createInstance();
-  });
+class SomeTestExtension extends LensRendererExtension {
+  constructor(statusBarItems: IObservableArray<any>) {
+    super({
+      id: 'some-id',
+      absolutePath: "irrelevant",
+      isBundled: false,
+      isCompatible: false,
+      isEnabled: false,
+      manifest: { name: 'some-id', version: "some-version" },
+      manifestPath: "irrelevant",
+    });
 
-  afterEach(() => {
-    StatusBarRegistry.resetInstance();
+    this.statusBarItems = statusBarItems;
+  }
+}
+
+describe("<BottomBar />", () => {
+  let render: DiRender;
+  let statusBarItems: IObservableArray<any>;
+
+  beforeEach(async () => {
+
+    statusBarItems = observable.array([]);
+
+    const someTestExtension = new SomeTestExtension(statusBarItems);
+
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => 'some-directory-for-user-data')
+
+    di.override(rendererExtensionsInjectable, () => {
+      return computed(() => [someTestExtension]);
+    });
+
+    render = renderFor(di);
+
+    await di.runSetups();
   });
 
   it("renders w/o errors", () => {
@@ -29,6 +64,7 @@ describe("<BottomBar />", () => {
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
+
 
   it.each([
     undefined,
@@ -39,7 +75,10 @@ describe("<BottomBar />", () => {
     [{}],
     {},
   ])("renders w/o errors when .getItems() returns not type compliant (%p)", val => {
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => val);
+    runInAction(() => {
+      statusBarItems.replace([val]);
+    })
+
     expect(() => render(<BottomBar />)).not.toThrow();
   });
 
@@ -47,9 +86,12 @@ describe("<BottomBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      { item: <span data-testid={testId} >{text}</span> },
-    ]);
+    runInAction(() => {
+      statusBarItems.replace([
+        { item: <span data-testid={testId} >{text}</span> }
+      ]);
+    })
+
     const { getByTestId } = render(<BottomBar />);
 
     expect(getByTestId(testId)).toHaveTextContent(text);
@@ -59,9 +101,12 @@ describe("<BottomBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      { item: () => <span data-testid={testId} >{text}</span> },
-    ]);
+    runInAction(() => {
+      statusBarItems.replace([
+        { item: () => <span data-testid={testId} >{text}</span> },
+      ]);
+    })
+
     const { getByTestId } = render(<BottomBar />);
 
     expect(getByTestId(testId)).toHaveTextContent(text);
@@ -69,31 +114,33 @@ describe("<BottomBar />", () => {
 
 
   it("sort positioned items properly", () => {
-    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">right</div>,
+    runInAction(() => {
+      statusBarItems.replace([
+        {
+          components: {
+            Item: () => <div data-testid="sortedElem">right</div>,
+          },
         },
-      },
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">right</div>,
-          position: "right",
+        {
+          components: {
+            Item: () => <div data-testid="sortedElem">right</div>,
+            position: "right",
+          },
         },
-      },
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">left</div>,
-          position: "left",
+        {
+          components: {
+            Item: () => <div data-testid="sortedElem">left</div>,
+            position: "left",
+          },
         },
-      },
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">left</div>,
-          position: "left",
+        {
+          components: {
+            Item: () => <div data-testid="sortedElem">left</div>,
+            position: "left",
+          },
         },
-      },
-    ]);
+      ]);
+    });
 
     const { getAllByTestId } = render(<BottomBar />);
     const elems = getAllByTestId("sortedElem");
