@@ -23,12 +23,12 @@ jest.mock("electron", () => ({
 class SomeTestExtension extends LensRendererExtension {
   constructor(statusBarItems: IObservableArray<any>) {
     super({
-      id: 'some-id',
+      id: "some-id",
       absolutePath: "irrelevant",
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: 'some-id', version: "some-version" },
+      manifest: { name: "some-id", version: "some-version" },
       manifestPath: "irrelevant",
     });
 
@@ -48,7 +48,7 @@ describe("<BottomBar />", () => {
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => 'some-directory-for-user-data')
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     di.override(rendererExtensionsInjectable, () => {
       return computed(() => [someTestExtension]);
@@ -77,7 +77,7 @@ describe("<BottomBar />", () => {
   ])("renders w/o errors when .getItems() returns not type compliant (%p)", val => {
     runInAction(() => {
       statusBarItems.replace([val]);
-    })
+    });
 
     expect(() => render(<BottomBar />)).not.toThrow();
   });
@@ -88,9 +88,9 @@ describe("<BottomBar />", () => {
 
     runInAction(() => {
       statusBarItems.replace([
-        { item: <span data-testid={testId} >{text}</span> }
+        { item: <span data-testid={testId} >{text}</span> },
       ]);
-    })
+    });
 
     const { getByTestId } = render(<BottomBar />);
 
@@ -105,7 +105,7 @@ describe("<BottomBar />", () => {
       statusBarItems.replace([
         { item: () => <span data-testid={testId} >{text}</span> },
       ]);
-    })
+    });
 
     const { getByTestId } = render(<BottomBar />);
 
