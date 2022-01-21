@@ -17,3 +17,11 @@ export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
 
   return map.get(key);
 }
+
+/**
+ * Like `getOrInsert` but specifically for when `V` is `Map<any, any>` so that
+ * the typings are inferred.
+ */
+export function getOrInsertMap<K, MK, MV>(map: Map<K, Map<MK, MV>>, key: K): Map<MK, MV> {
+  return getOrInsert(map, key, new Map<MK, MV>());
+}
