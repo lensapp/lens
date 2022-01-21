@@ -7,7 +7,7 @@ import React from "react";
 import type { HeaderPlaceholders } from "../../item-list-layout";
 
 interface ItemListLayoutHeaderTitleProps {
-  renderHeaderTitle: React.ReactNode | (() => React.ReactNode); // MIKKO: "this" parameter
+  renderHeaderTitle: React.ReactNode | (() => React.ReactNode);
   headerPlaceholders: HeaderPlaceholders;
 }
 
