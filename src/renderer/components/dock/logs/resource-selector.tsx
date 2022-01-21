@@ -3,55 +3,48 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./log-resource-selector.scss";
+import "./resource-selector.scss";
 
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../common/k8s-api/endpoints";
-import { Badge } from "../badge";
-import { Select, SelectOption } from "../select";
-import type { LogTabData, LogTabStore } from "./log-tab-store/log-tab.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import type { TabId } from "./dock-store/dock.store";
-import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import logStoreInjectable from "./log-store/log-store.injectable";
+import { Pod } from "../../../../common/k8s-api/endpoints";
+import { Badge } from "../../badge";
+import { Select, SelectOption } from "../../select";
+import { podsStore } from "../../+workloads-pods/pods.store";
+import type { LogTabViewModel } from "./logs-view-model";
 
-interface Props {
-  tabId: TabId
-  tabData: LogTabData
-  save: (data: Partial<LogTabData>) => void
+export interface LogResourceSelectorProps {
+  model: LogTabViewModel;
 }
 
-interface Dependencies {
-  logTabStore: LogTabStore
-  reloadLogs: () => Promise<void>
-}
+export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps) => {
+  const tabData = model.logTabData.get();
 
-const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) => {
-  const { tabData, save, tabId, logTabStore, reloadLogs } = props;
+  if (!tabData) {
+    return null;
+  }
+
   const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
   const containers = pod.getContainers();
   const initContainers = pod.getInitContainers();
 
   const onContainerChange = (option: SelectOption) => {
-    save({
+    model.updateLogTabData({
       selectedContainer: containers
         .concat(initContainers)
         .find(container => container.name === option.value),
     });
 
-    reloadLogs();
+    model.reloadLogs();
   };
 
   const onPodChange = (option: SelectOption) => {
     const selectedPod = podsStore.getByName(option.value, pod.getNs());
 
-    save({ selectedPod });
-
-    logTabStore.renameTab(tabId);
+    model.updateLogTabData({ selectedPod });
+    model.updateTabName();
   };
 
   const getSelectOptions = (items: string[]) => {
@@ -82,7 +75,7 @@ const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) =>
   ];
 
   useEffect(() => {
-    reloadLogs();
+    model.reloadLogs();
   }, [selectedPod]);
 
   return (
@@ -95,6 +88,7 @@ const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) =>
         onChange={onPodChange}
         autoConvertOptions={false}
         className="pod-selector"
+        menuClass="pod-selector-menu"
       />
       <span>Container</span>
       <Select
@@ -103,20 +97,9 @@ const NonInjectedLogResourceSelector = observer((props: Props & Dependencies) =>
         onChange={onContainerChange}
         autoConvertOptions={false}
         className="container-selector"
+        menuClass="container-selector-menu"
       />
     </div>
   );
 });
-
-export const LogResourceSelector = withInjectables<Dependencies, Props>(
-  NonInjectedLogResourceSelector,
-
-  {
-    getProps: (di, props) => ({
-      logTabStore: di.inject(logTabStoreInjectable),
-      reloadLogs: di.inject(logStoreInjectable).reload,
-      ...props,
-    }),
-  },
-);
 

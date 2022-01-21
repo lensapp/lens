@@ -3,19 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podsStore } from "../../+workloads-pods/pods.store";
-import { UserStore } from "../../../../common/user-store";
-import { Pod } from "../../../../common/k8s-api/endpoints";
-import { ThemeStore } from "../../../theme.store";
+import { podsStore } from "../../../+workloads-pods/pods.store";
+import { UserStore } from "../../../../../common/user-store";
+import { Pod } from "../../../../../common/k8s-api/endpoints";
+import { ThemeStore } from "../../../../theme.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
-import { mockWindow } from "../../../../../__mocks__/windowMock";
-import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
-import type { LogTabStore } from "../log-tab-store/log-tab.store";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
-import type { DockStore } from "../dock-store/dock.store";
+import { mockWindow } from "../../../../../../__mocks__/windowMock";
+import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
+import logTabStoreInjectable from "../tab-store.injectable";
+import type { LogTabStore } from "../tab.store";
+import dockStoreInjectable from "../../dock-store/dock-store.injectable";
+import type { DockStore } from "../../dock-store/dock.store";
 import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+  from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 
 mockWindow();
