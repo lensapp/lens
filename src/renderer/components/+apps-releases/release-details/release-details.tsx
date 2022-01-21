@@ -15,7 +15,7 @@ import { HelmReleaseMenu } from "../release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../../drawer";
 import { Badge } from "../../badge";
 import { cssNames, stopPropagation } from "../../../utils";
-import { observer } from "mobx-react";
+import { Observer, observer } from "mobx-react";
 import { Spinner } from "../../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { Button } from "../../button";
@@ -49,9 +49,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
-
   @observable saving = false;
-  @observable error?: string = undefined;
 
   private nonSavedValues: string;
 
@@ -66,10 +64,6 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
 
   @computed get details() {
     return this.props.releaseDetails.value.get();
-  }
-
-  @computed get values() {
-    return this.props.releaseValues.value.get();
   }
 
   updateValues = async () => {
@@ -105,36 +99,43 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
   };
 
   renderValues() {
-    const { saving } = this;
-
-    const releaseValuesArePending = this.props.releaseValues.pending.get();
-
-    this.nonSavedValues = this.values;
-
     return (
-      <div className="values">
-        <DrawerTitle title="Values"/>
-        <div className="flex column gaps">
-          <Checkbox
-            label="User-supplied values only"
-            value={this.props.userSuppliedValuesAreShown.value}
-            onChange={this.props.userSuppliedValuesAreShown.toggle}
-            disabled={releaseValuesArePending}
-          />
-          <MonacoEditor
-            style={{ minHeight: 300 }}
-            value={this.values}
-            onChange={text => this.nonSavedValues = text}
-          />
-          <Button
-            primary
-            label="Save"
-            waiting={saving}
-            disabled={releaseValuesArePending}
-            onClick={this.updateValues}
-          />
-        </div>
-      </div>
+      <Observer>
+        {() => {
+          const { saving } = this;
+
+          const releaseValuesArePending =
+            this.props.releaseValues.pending.get();
+
+          this.nonSavedValues = this.props.releaseValues.value.get();
+
+          return (
+            <div className="values">
+              <DrawerTitle title="Values" />
+              <div className="flex column gaps">
+                <Checkbox
+                  label="User-supplied values only"
+                  value={this.props.userSuppliedValuesAreShown.value}
+                  onChange={this.props.userSuppliedValuesAreShown.toggle}
+                  disabled={releaseValuesArePending}
+                />
+                <MonacoEditor
+                  style={{ minHeight: 300 }}
+                  value={this.nonSavedValues}
+                  onChange={(text) => (this.nonSavedValues = text)}
+                />
+                <Button
+                  primary
+                  label="Save"
+                  waiting={saving}
+                  disabled={releaseValuesArePending}
+                  onClick={this.updateValues}
+                />
+              </div>
+            </div>
+          );
+        }}
+      </Observer>
     );
   }
 
@@ -194,14 +195,6 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
 
   renderContent() {
     if (!this.release) return null;
-
-    if (this.error) {
-      return (
-        <div className="loading-error">
-          {this.error}
-        </div>
-      );
-    }
 
     if (!this.details) {
       return <Spinner center/>;

@@ -16,6 +16,10 @@ const releaseInjectable = getInjectable({
     return asyncComputed(async () => {
       const { name, namespace } = releaseRouteParameters.get();
 
+      if (!name || !namespace) {
+        return null;
+      }
+
       return releases.value.get().find(matches({ name, namespace }));
     });
   },
