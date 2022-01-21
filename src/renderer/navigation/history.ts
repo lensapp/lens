@@ -14,8 +14,14 @@ export const searchParamsOptions: ObservableSearchParamsOptions = {
   joinArraysWith: ",", // param values splitter, applicable only with {joinArrays:true}
 };
 
+/**
+ * @deprecated: Switch to using di.inject(historyInjectable)
+ */
 export const history = ipcRenderer ? createBrowserHistory() : createMemoryHistory();
 
+/**
+ * @deprecated: Switch to using di.inject(observableHistoryInjectable)
+ */
 export const navigation = createObservableHistory(history, {
   searchParams: searchParamsOptions,
 });

@@ -4,7 +4,7 @@
  */
 
 import yaml from "js-yaml";
-import { autoBind, formatDuration } from "../../utils";
+import { formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
 import { apiBase } from "../index";
 import { helmChartStore } from "../../../renderer/components/+apps-helm-charts/helm-chart.store";
@@ -80,9 +80,9 @@ interface EndpointQuery {
 const endpoint = buildURLPositional<EndpointParams, EndpointQuery>("/v2/releases/:namespace?/:name?/:route?");
 
 export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
-  const releases = await apiBase.get<HelmRelease[]>(endpoint({ namespace }));
+  const releases = await apiBase.get<HelmReleaseDto[]>(endpoint({ namespace }));
 
-  return releases.map(HelmRelease.create);
+  return releases.map(toHelmRelease);
 }
 
 export async function getRelease(name: string, namespace: string): Promise<IReleaseDetails> {
@@ -152,7 +152,7 @@ export async function rollbackRelease(name: string, namespace: string, revision:
   return apiBase.put(path, { data });
 }
 
-export interface HelmRelease {
+interface HelmReleaseDto {
   appVersion: string;
   name: string;
   namespace: string;
@@ -162,27 +162,30 @@ export interface HelmRelease {
   revision: string;
 }
 
-export class HelmRelease implements ItemObject {
-  constructor(data: any) {
-    Object.assign(this, data);
-    autoBind(this);
-  }
+export interface HelmRelease extends HelmReleaseDto, ItemObject {
+  getNs: () => string
+  getChart: (withVersion?: boolean) => string
+  getRevision: () => number
+  getStatus: () => string
+  getVersion: () => string
+  getUpdated: (humanize?: boolean, compact?: boolean) => string | number
+  getRepo: () => Promise<string>
+}
 
-  static create(data: any) {
-    return new HelmRelease(data);
-  }
+const toHelmRelease = (release: HelmReleaseDto) : HelmRelease => ({
+  ...release,
 
   getId() {
     return this.namespace + this.name;
-  }
+  },
 
   getName() {
     return this.name;
-  }
+  },
 
   getNs() {
     return this.namespace;
-  }
+  },
 
   getChart(withVersion = false) {
     let chart = this.chart;
@@ -194,24 +197,24 @@ export class HelmRelease implements ItemObject {
     }
 
     return chart;
-  }
+  },
 
   getRevision() {
     return parseInt(this.revision, 10);
-  }
+  },
 
   getStatus() {
     return capitalize(this.status);
-  }
+  },
 
   getVersion() {
     const versions = this.chart.match(/(?<=-)(v?\d+)[^-].*$/);
 
     return versions?.[0] ?? "";
-  }
+  },
 
   getUpdated(humanize = true, compact = true) {
-    const updated = this.updated.replace(/\s\w*$/, "");  // 2019-11-26 10:58:09 +0300 MSK -> 2019-11-26 10:58:09 +0300 to pass into Date()
+    const updated = this.updated.replace(/\s\w*$/, ""); // 2019-11-26 10:58:09 +0300 MSK -> 2019-11-26 10:58:09 +0300 to pass into Date()
     const updatedDate = new Date(updated).getTime();
     const diff = Date.now() - updatedDate;
 
@@ -220,7 +223,7 @@ export class HelmRelease implements ItemObject {
     }
 
     return diff;
-  }
+  },
 
   // Helm does not store from what repository the release is installed,
   // so we have to try to guess it by searching charts
@@ -228,8 +231,10 @@ export class HelmRelease implements ItemObject {
     const chartName = this.getChart();
     const version = this.getVersion();
     const versions = await helmChartStore.getVersions(chartName);
-    const chartVersion = versions.find(chartVersion => chartVersion.version === version);
+    const chartVersion = versions.find(
+      (chartVersion) => chartVersion.version === version,
+    );
 
     return chartVersion ? chartVersion.repo : "";
-  }
-}
+  },
+});
