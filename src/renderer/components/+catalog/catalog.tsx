@@ -8,7 +8,7 @@ import styles from "./catalog.module.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { action, IComputedValue, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
@@ -33,6 +33,9 @@ import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
 import type { GetCategoryColumnsParams, CategoryColumns } from "./get-category-columns.injectable";
 import getCategoryColumnsInjectable from "./get-category-columns.injectable";
+import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable";
+import customCategoryViewsInjectable from "./custom-views.injectable";
+import type { CustomCategoryViewComponents } from "./custom-views";
 
 interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
 
@@ -40,6 +43,7 @@ interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void };
   catalogEntityStore: CatalogEntityStore;
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
+  customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
 }
 
 @observer
@@ -213,15 +217,43 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
     );
   }
 
+  renderViews = () => {
+    const { catalogEntityStore, customCategoryViews } = this.props;
+    const { activeCategory } = catalogEntityStore;
+
+    if (!activeCategory) {
+      return this.renderList();
+    }
+
+    const customViews = customCategoryViews.get()
+      .get(activeCategory.spec.group)
+      ?.get(activeCategory.spec.names.kind);
+    const renderView = ({ View }: CustomCategoryViewComponents, index: number) => (
+      <View
+        key={index}
+        category={activeCategory}
+      />
+    );
+
+    return (
+      <>
+        {customViews?.before.map(renderView)}
+        {this.renderList()}
+        {customViews?.after.map(renderView)}
+      </>
+    );
+  };
+
   renderList() {
-    const { activeCategory } = this.props.catalogEntityStore;
-    const tableId = activeCategory ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}` : "catalog-items";
+    const { catalogEntityStore, getCategoryColumns } = this.props;
+    const { activeCategory } = catalogEntityStore;
+    const tableId = activeCategory
+      ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}`
+      : "catalog-items";
 
     if (this.activeTab === undefined) {
       return null;
     }
-
-    const { sortingCallbacks, searchFilters, renderTableContents, renderTableHeader } = this.props.getCategoryColumns({ activeCategory });
 
     return (
       <ItemListLayout
@@ -230,14 +262,11 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
         renderHeaderTitle={activeCategory?.metadata.name ?? "Browse All"}
         isSelectable={false}
         isConfigurable={true}
-        store={this.props.catalogEntityStore}
-        sortingCallbacks={sortingCallbacks}
-        searchFilters={searchFilters}
-        renderTableHeader={renderTableHeader}
+        store={catalogEntityStore}
         customizeTableRowProps={entity => ({
           disabled: !entity.isEnabled(),
         })}
-        renderTableContents={renderTableContents}
+        {...getCategoryColumns({ activeCategory })}
         onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}
       />
@@ -254,7 +283,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
     return (
       <MainLayout sidebar={this.renderNavigation()}>
         <div className="p-6 h-full">
-          {this.renderList()}
+          {this.renderViews()}
         </div>
         {
           selectedEntity
@@ -281,6 +310,7 @@ export const Catalog = withInjectables<Dependencies, Props>( NonInjectedCatalog,
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
+    customCategoryViews: di.inject(customCategoryViewsInjectable),
     ...props,
   }),
 });

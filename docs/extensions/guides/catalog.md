@@ -21,6 +21,42 @@ The categories provided by Lens itself have the following names:
 
 To register a category, call the `Main.Catalog.catalogCategories.add()` and `Renderer.Catalog.catalogCategories.add()` with instances of your class.
 
+### Custom Category Views
+
+By default when a specific category is selected in the catalog page a list of entities of the group and kind that the category has registered.
+It is possible to register custom views for specific categories by registering them on your `Renderer.LensExtension` class.
+
+A registration takes the form of a [Common.Types.CustomCategoryViewRegistration](../api/interfaces/Common.Types.CustomCategoryViewRegistration.md)
+
+For example:
+
+```typescript
+import { Renderer, Common } from "@k8slens/extensions";
+
+function MyKubernetesClusterView({
+  category,
+}: Common.Types.CustomCategoryViewProps) {
+  return <div>My view: {category.getId()}</div>;
+}
+
+export default class extends Renderer.LensExtension {
+  customCategoryViews = [
+    {
+      group: "entity.k8slens.dev",
+      kind: "KubernetesCluster",
+      priority: 10,
+      components: {
+        View: MyKubernetesClusterView,
+      },
+    },
+  ];
+}
+```
+
+Will register a new view for the KubernetesCluster category, and because the priority is < 50 it will be displayed above the default list view.
+
+The default list view has a priority of 50 and and custom views with priority (defaulting to 50) >= 50 will be displayed afterwards.
+
 ## Entities
 
 An entity is the data within the catalog.
