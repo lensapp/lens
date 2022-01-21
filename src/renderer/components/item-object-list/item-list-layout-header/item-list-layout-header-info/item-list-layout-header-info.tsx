@@ -17,13 +17,10 @@ interface ItemListLayoutHeaderInfoProps<I extends ItemObject> {
 }
 
 export const ItemListLayoutHeaderInfo = observer(
-  <I extends ItemObject>({
-    headerPlaceholders,
-    getItems,
-    getFilters,
-    store,
-    toggleFilters,
-  }: ItemListLayoutHeaderInfoProps<I>) => {
+  <I extends ItemObject>(props: ItemListLayoutHeaderInfoProps<I>) => {
+    const { headerPlaceholders, getItems, getFilters, store, toggleFilters } =
+      props;
+
     const renderInfo = () => {
       const allItemsCount = store.getTotalCount();
       const itemsCount = getItems().length;
@@ -42,9 +39,10 @@ export const ItemListLayoutHeaderInfo = observer(
         : `${allItemsCount} items`;
     };
 
-    const info = headerPlaceholders.info === undefined
-      ? renderInfo()
-      : headerPlaceholders.info;
+    const info =
+      headerPlaceholders.info === undefined
+        ? renderInfo()
+        : headerPlaceholders.info;
 
     if (!info) {
       return null;
