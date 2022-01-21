@@ -550,6 +550,19 @@
     Categories
   </a>
   
+    <nav class="md-nav" aria-label="Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-category-views" class="md-nav__link">
+    Custom Category Views
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -765,6 +778,19 @@
     Categories
   </a>
   
+    <nav class="md-nav" aria-label="Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-category-views" class="md-nav__link">
+    Custom Category Views
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -804,6 +830,34 @@ It declares the currently supported versions of that kind of entity but providin
 <li><code>General</code></li>
 </ul>
 <p>To register a category, call the <code>Main.Catalog.catalogCategories.add()</code> and <code>Renderer.Catalog.catalogCategories.add()</code> with instances of your class.</p>
+<h3 id="custom-category-views">Custom Category Views<a class="headerlink" href="#custom-category-views" title="Permanent link">#</a></h3>
+<p>By default when a specific category is selected in the catalog page a list of entities of the group and kind that the category has registered.
+It is possible to register custom views for specific categories by registering them on your <code>Renderer.LensExtension</code> class.</p>
+<p>A registration takes the form of a <a href="../../api/interfaces/Common.Types.CustomCategoryViewRegistration/">Common.Types.CustomCategoryViewRegistration</a></p>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span><span class="p">,</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">MyKubernetesClusterView</span><span class="p">({</span>
+  <span class="nx">category</span><span class="p">,</span>
+<span class="p">}</span><span class="o">:</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">CustomCategoryViewProps</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">view</span><span class="o">:</span> <span class="p">{</span><span class="nx">category</span><span class="p">.</span><span class="nx">getId</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
+  <span class="nx">customCategoryViews</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">group</span><span class="o">:</span> <span class="s2">&quot;entity.k8slens.dev&quot;</span><span class="p">,</span>
+      <span class="nx">kind</span><span class="o">:</span> <span class="s2">&quot;KubernetesCluster&quot;</span><span class="p">,</span>
+      <span class="nx">priority</span>: <span class="kt">10</span><span class="p">,</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">View</span>: <span class="kt">MyKubernetesClusterView</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Will register a new view for the KubernetesCluster category, and because the priority is &lt; 50 it will be displayed above the default list view.</p>
+<p>The default list view has a priority of 50 and and custom views with priority (defaulting to 50) &gt;= 50 will be displayed afterwards.</p>
 <h2 id="entities">Entities<a class="headerlink" href="#entities" title="Permanent link">#</a></h2>
 <p>An entity is the data within the catalog.
 All entities are typed and the class instances will be recreated on the renderer side by the catalog and the category registrations.</p>

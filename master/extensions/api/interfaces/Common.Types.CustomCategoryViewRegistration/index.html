@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Types/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.CustomCategoryViewRegistration/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Namespace: Types - Lens Extension Development</title>
+        <title>Interface: CustomCategoryViewRegistration - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#namespace-types" class="md-skip">
+        <a href="#interface-customcategoryviewregistration" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Namespace: Types
+              Interface: CustomCategoryViewRegistration
             
           </span>
         </div>
@@ -720,15 +720,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#interfaces" class="md-nav__link">
-    Interfaces
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#type-aliases" class="md-nav__link">
-    Type aliases
+  <a href="#properties" class="md-nav__link">
+    Properties
   </a>
   
 </li>
@@ -739,30 +732,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#type-aliases_1" class="md-nav__link">
-    Type aliases
+  <a href="#properties_1" class="md-nav__link">
+    Properties
   </a>
   
-    <nav class="md-nav" aria-label="Type aliases">
+    <nav class="md-nav" aria-label="Properties">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ipcmainevent" class="md-nav__link">
-    IpcMainEvent
+  <a href="#components" class="md-nav__link">
+    components
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#ipcmaininvokeevent" class="md-nav__link">
-    IpcMainInvokeEvent
+  <a href="#group" class="md-nav__link">
+    group
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#ipcrendererevent" class="md-nav__link">
-    IpcRendererEvent
+  <a href="#kind" class="md-nav__link">
+    kind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority" class="md-nav__link">
+    priority
   </a>
   
 </li>
@@ -786,51 +786,38 @@
                 
                 
                 
-                <h1 id="namespace-types">Namespace: Types<a class="headerlink" href="#namespace-types" title="Permanent link">#</a></h1>
-<p><a href="../Common/">Common</a>.Types</p>
+                <h1 id="interface-customcategoryviewregistration">Interface: CustomCategoryViewRegistration<a class="headerlink" href="#interface-customcategoryviewregistration" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Types/">Types</a>.CustomCategoryViewRegistration</p>
+<p>This is the type used to declare additional views for a specific category</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="../../interfaces/Common.Types.AppPreferenceComponents/">AppPreferenceComponents</a></li>
-<li><a href="../../interfaces/Common.Types.AppPreferenceRegistration/">AppPreferenceRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.ClusterPageMenuComponents/">ClusterPageMenuComponents</a></li>
-<li><a href="../../interfaces/Common.Types.ClusterPageMenuRegistration/">ClusterPageMenuRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.CustomCategoryViewComponents/">CustomCategoryViewComponents</a></li>
-<li><a href="../../interfaces/Common.Types.CustomCategoryViewProps/">CustomCategoryViewProps</a></li>
-<li><a href="../../interfaces/Common.Types.CustomCategoryViewRegistration/">CustomCategoryViewRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.KubeObjectDetailComponents/">KubeObjectDetailComponents</a></li>
-<li><a href="../../interfaces/Common.Types.KubeObjectDetailRegistration/">KubeObjectDetailRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.KubeObjectMenuComponents/">KubeObjectMenuComponents</a></li>
-<li><a href="../../interfaces/Common.Types.KubeObjectMenuRegistration/">KubeObjectMenuRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.KubeObjectStatusRegistration/">KubeObjectStatusRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.PageComponentProps/">PageComponentProps</a></li>
-<li><a href="../../interfaces/Common.Types.PageComponents/">PageComponents</a></li>
-<li><a href="../../interfaces/Common.Types.PageParams/">PageParams</a></li>
-<li><a href="../../interfaces/Common.Types.PageRegistration/">PageRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.PageTarget/">PageTarget</a></li>
-<li><a href="../../interfaces/Common.Types.ProtocolHandlerRegistration/">ProtocolHandlerRegistration</a></li>
-<li><a href="../../interfaces/Common.Types.ProtocolRouteHandler/">ProtocolRouteHandler</a></li>
-<li><a href="../../interfaces/Common.Types.ProtocolRouteParams/">ProtocolRouteParams</a></li>
-<li><a href="../../interfaces/Common.Types.RegisteredPage/">RegisteredPage</a></li>
-<li><a href="../../interfaces/Common.Types.StatusBarRegistration/">StatusBarRegistration</a></li>
+<li><a href="./#components">components</a></li>
+<li><a href="./#group">group</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#priority">priority</a></li>
 </ul>
-<h3 id="type-aliases">Type aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#ipcmainevent">IpcMainEvent</a></li>
-<li><a href="./#ipcmaininvokeevent">IpcMainInvokeEvent</a></li>
-<li><a href="./#ipcrendererevent">IpcRendererEvent</a></li>
-</ul>
-<h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
-<h3 id="ipcmainevent">IpcMainEvent<a class="headerlink" href="#ipcmainevent" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>IpcMainEvent</strong>: <code>Electron.IpcMainEvent</code></p>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
+<p>• <strong>components</strong>: <a href="../Common.Types.CustomCategoryViewComponents/"><code>CustomCategoryViewComponents</code></a></p>
+<p>The components for this registration</p>
 <hr />
-<h3 id="ipcmaininvokeevent">IpcMainInvokeEvent<a class="headerlink" href="#ipcmaininvokeevent" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>IpcMainInvokeEvent</strong>: <code>Electron.IpcMainInvokeEvent</code></p>
-<p>Copyright (c) OpenLens Authors. All rights reserved.
-Licensed under MIT License. See LICENSE in root directory for more information.</p>
+<h3 id="group">group<a class="headerlink" href="#group" title="Permanent link">#</a></h3>
+<p>• <strong>group</strong>: <code>string</code></p>
+<p>The catalog entity group that is declared by the category for this registration</p>
+<p>e.g.
+- <code>"entity.k8slens.dev"</code></p>
 <hr />
-<h3 id="ipcrendererevent">IpcRendererEvent<a class="headerlink" href="#ipcrendererevent" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>IpcRendererEvent</strong>: <code>Electron.IpcRendererEvent</code></p>
+<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
+<p>• <strong>kind</strong>: <code>string</code></p>
+<p>The catalog entity kind that is declared by the category for this registration</p>
+<p>e.g.
+- <code>"KubernetesCluster"</code></p>
+<hr />
+<h3 id="priority">priority<a class="headerlink" href="#priority" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>priority</strong>: <code>number</code></p>
+<p>The sorting order value. Used to determine the total order of the views.</p>
+<p><strong><code>default</code></strong> 50</p>
                 
               
               
