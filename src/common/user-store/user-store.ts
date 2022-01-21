@@ -12,7 +12,7 @@ import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../app-event-bus/event-bus";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
+import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel, TerminalConfig } from "./preferences-helpers";
 import logger from "../../main/logger";
 
 export interface UserStoreModel {
@@ -57,6 +57,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
   @observable terminalCopyOnSelect: boolean;
+  @observable terminalConfig: TerminalConfig;
   @observable updateChannel?: string;
   @observable extensionRegistryUrl: ExtensionRegistry;
 
@@ -185,6 +186,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
     this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
+    this.terminalConfig = DESCRIPTORS.terminalConfig.fromStore(preferences?.terminalConfig);
     this.updateChannel = DESCRIPTORS.updateChannel.fromStore(preferences?.updateChannel);
     this.extensionRegistryUrl = DESCRIPTORS.extensionRegistryUrl.fromStore(preferences?.extensionRegistryUrl);
   }
@@ -210,6 +212,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
         terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
+        terminalConfig: DESCRIPTORS.terminalConfig.toStore(this.terminalConfig),
         updateChannel: DESCRIPTORS.updateChannel.toStore(this.updateChannel),
         extensionRegistryUrl: DESCRIPTORS.extensionRegistryUrl.toStore(this.extensionRegistryUrl),
       },
