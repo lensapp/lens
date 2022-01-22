@@ -34,11 +34,14 @@ export function webpackLensRenderer(): webpack.Configuration {
     // @ts-ignore: seems like types from "webpack-dev-server@4.7" not properly merged with "webpack@5"
     // API: https://webpack.js.org/configuration/dev-server/#usage-via-api
     devServer: {
-      headers: { "Access-Control-Allow-Origin": "*" },
-      host: "local-ip",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      host: "0.0.0.0",
       allowedHosts: "all",
       port: webpackDevServerPort,
-      hot: isDevelopment ? "only" : false,
+      static: buildDir, // aka `devServer.contentBase` in webpack@4
+      hot: true,
       historyApiFallback: true,
       client: {
         logging: isDevelopment ? "verbose" : "error",
@@ -85,9 +88,9 @@ export function webpackLensRenderer(): webpack.Configuration {
           use: "node-loader",
         },
         getTSLoader(/\.tsx?$/),
-        filesAndIconsWebpackRule(), // svg-icons and plain text files
-        fontsLoaderWebpackRule(), // custom fonts
-        cssModulesWebpackRule(), // css-styles, sass & modules (*.css/*.scss)
+        filesAndIconsWebpackRule(),
+        fontsLoaderWebpackRule(),
+        cssModulesWebpackRule(),
       ],
     },
 
@@ -123,6 +126,9 @@ export function webpackLensRenderer(): webpack.Configuration {
   };
 }
 
+/**
+ * Import content of svg-icons, images and text files
+ */
 export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
   return {
     test: /\.(jpg|png|svg|map|ico)$/,
@@ -136,6 +142,9 @@ export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
   };
 }
 
+/**
+ * Import custom fonts as URL
+ */
 export function fontsLoaderWebpackRule(): webpack.RuleSetRule {
   return {
     test: /\.(ttf|eot|woff2?)$/,
@@ -148,13 +157,20 @@ export function fontsLoaderWebpackRule(): webpack.RuleSetRule {
   };
 }
 
-export function cssModulesWebpackRule(styleLoader?: string): webpack.RuleSetRule {
+/**
+ * Import CSS or SASS styles with modules support (*.module.scss)
+ * @param {string} styleLoader
+ */
+export function cssModulesWebpackRule(
+  {
+    styleLoader = vars.isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+  } = {}): webpack.RuleSetRule {
   const { isDevelopment, sassCommonVars } = vars;
 
   return {
     test: /\.s?css$/,
     use: [
-      styleLoader ?? (isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader),
+      styleLoader,
       {
         loader: "css-loader",
         options: {

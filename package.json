@@ -383,7 +383,7 @@
     "type-fest": "^1.0.2",
     "typed-emitter": "^1.4.0",
     "typedoc": "0.22.10",
-    "typedoc-plugin-markdown": "^3.11.3",
+    "typedoc-plugin-markdown": "^3.11.12",
     "typeface-roboto": "^1.1.13",
     "typescript": "^4.5.2",
     "typescript-plugin-css-modules": "^3.4.0",

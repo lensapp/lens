@@ -56,7 +56,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
         },
         fontsLoaderWebpackRule(),
         filesAndIconsWebpackRule(),
-        cssModulesWebpackRule(), // import sass/css files and (s)css-modules
+        cssModulesWebpackRule({ styleLoader: "style-loader" }),
       ],
     },
     resolve: {
