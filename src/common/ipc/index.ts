@@ -12,5 +12,4 @@ export * from "./update-available.ipc";
 export * from "./cluster.ipc";
 export * from "./type-enforced-ipc";
 export * from "./hotbar";
-export * from "./extension-loader.ipc";
 export * from "./window";

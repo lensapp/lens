@@ -7,17 +7,18 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import { IpcMainWindowEvents, broadcastMessage, requestMain } from "../../../../common/ipc";
+import { IpcMainWindowEvents, broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
+import { requestWindowAction } from "../../../ipc";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 
 jest.mock("../../../../common/ipc");
+jest.mock("../../../ipc");
 
 jest.mock("../../../../common/vars", () => {
   const SemVer = require("semver").SemVer;
@@ -89,12 +90,12 @@ describe("<TopBar/> in Windows and Linux", () => {
     expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
 
     fireEvent.click(minimize);
-    expect(requestMain).toHaveBeenCalledWith(IpcMainWindowEvents.WINDOW_ACTION, "minimize");
+    expect(requestWindowAction).toHaveBeenCalledWith("minimize");
 
     fireEvent.click(maximize);
-    expect(requestMain).toHaveBeenCalledWith(IpcMainWindowEvents.WINDOW_ACTION, "toggleMaximize");
+    expect(requestWindowAction).toHaveBeenCalledWith("toggle-maximize");
 
     fireEvent.click(close);
-    expect(requestMain).toHaveBeenCalledWith(IpcMainWindowEvents.WINDOW_ACTION, "close");
+    expect(requestWindowAction).toHaveBeenCalledWith("close");
   });
 });
