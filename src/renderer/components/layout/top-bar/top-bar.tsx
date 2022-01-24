@@ -46,7 +46,8 @@ const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) 
   const toggleAppContextMenu = () => {
     toggleIsAppContextMenuOpen();
 
-    if (isAppContextMenuOpen) {
+    if (!isAppContextMenuOpen) {
+      // This is done when the current value is false as that is the rising edge
       emitOpenAppMenuAsContextMenu();
     }
   };
