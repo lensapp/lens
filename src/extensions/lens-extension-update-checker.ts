@@ -26,7 +26,7 @@ export class LensExtensionUpdateChecker {
     this.updateSources = updateSources;
   }
 
-  public async run(manifest: LensExtensionManifest): Promise<LensExtensionAvailableUpdate|undefined> {
+  public async run(manifest: LensExtensionManifest, isBundled?: boolean): Promise<LensExtensionAvailableUpdate|undefined> {
     const { name, version } = manifest;
 
     logger.debug(`Check update for extension ${name}`);
@@ -34,7 +34,7 @@ export class LensExtensionUpdateChecker {
     const versions: LensExtensionAvailableUpdate[] = [];
 
     for(const checker of Object.values(this.updateSources)) {
-      const latestVersionFromSource = await checker.getLatestVersion(manifest);
+      const latestVersionFromSource = await checker.getLatestVersion(manifest, isBundled);
 
       if (latestVersionFromSource && this.isUpdate(version, latestVersionFromSource.version)) {
         versions.push(latestVersionFromSource);

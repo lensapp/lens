@@ -5,6 +5,7 @@
 
 import { SemVer } from "semver";
 import logger from "../common/logger";
+import { extensionUpdateUrl } from "../common/vars";
 import { DownloadFileOptions, downloadJson } from "../renderer/utils";
 import type { LensExtensionManifest } from "./lens-extension";
 import type { LensExtensionLatestVersionChecker } from "./lens-extension-latest-version-checker";
@@ -25,8 +26,7 @@ export class BundledVersionChecker implements LensExtensionLatestVersionChecker 
       return null;
     }
 
-    const updateUrl = process.env.BUNDLED_EXTENSIONS_URL;
-    const json = await this.getJson(updateUrl);
+    const json = await this.getJson(extensionUpdateUrl);
 
     if (!json || json.error || !json[manifest.name]) {
       logger.info(`[BUNDLED-EXTENSIONS-UPDATER]: No version found for ${manifest.name}.`);
@@ -36,7 +36,7 @@ export class BundledVersionChecker implements LensExtensionLatestVersionChecker 
     const version = json[manifest.name];
 
     return {
-      input: `${updateUrl}/${manifest.name}-${version}.tar`,
+      input: `${extensionUpdateUrl}/${manifest.name}-${version}.tar`,
       version: new SemVer(version).version
     }
   }

@@ -7,5 +7,5 @@ import type { LensExtensionManifest } from "./lens-extension";
 import type { LensExtensionAvailableUpdate } from "./lens-extension-update-checker";
 
 export interface LensExtensionLatestVersionChecker {
-  getLatestVersion(manifest: LensExtensionManifest): Promise<LensExtensionAvailableUpdate>
+  getLatestVersion(manifest: LensExtensionManifest, isBundled?: boolean): Promise<LensExtensionAvailableUpdate>
 }
