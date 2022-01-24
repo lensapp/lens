@@ -5,7 +5,6 @@
 
 .DockTab {
   padding: $padding;
-  padding-right: 0;
 
   .Icon {
     &.material {
@@ -36,4 +35,8 @@
   &:last-child {
     padding-right: $padding;
   }
+
+  border-right-width: 2px;
+  border-right-color: var(--dockInfoBackground);
+  border-right-style: solid;
 }
