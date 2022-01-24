@@ -64,4 +64,31 @@ describe("BundledExtensionsVersionChecker", () => {
 
     expect(version).toBeNull();
   });
+
+  it("fetches latest version from remote json file", async () => {
+    const downloadJson = (args: DownloadFileOptions) => {
+      expect(args).toEqual({
+        url: process.env.BUNDLED_EXTENSIONS_URL,
+      });
+
+      return { promise: new Promise((resolve) => {
+        resolve({
+          "sample-foo": "v4.4.0",
+          "sample-bar": "1.0.1"
+        });
+      }) };
+    };
+
+    const checker = new BundledVersionChecker(downloadJson);
+
+    const version = await checker.getLatestVersion({
+      name: "sample-bar",
+      version: "1.0.0"
+    }, true);
+
+    expect(version).toMatchObject({
+      input: `${process.env.BUNDLED_EXTENSIONS_URL}/sample-bar-1.0.1.tar`,
+      version: "1.0.1"
+    })
+  })
 })
