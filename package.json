@@ -360,7 +360,7 @@
     "mini-css-extract-plugin": "^1.6.2",
     "node-gyp": "7.1.2",
     "node-loader": "^1.0.3",
-    "nodemon": "^2.0.14",
+    "nodemon": "^2.0.15",
     "playwright": "^1.17.1",
     "postcss": "^8.4.5",
     "postcss-loader": "^4.3.0",
