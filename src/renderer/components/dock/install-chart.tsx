@@ -93,16 +93,14 @@ class NonInjectedInstallChart extends Component<Props & Dependencies> {
     this.props.installChartStore.loadValues(this.tabId);
   };
 
-  @action
-  onChange = (values: string) => {
+  onChange = action((values: string) => {
     this.error = "";
     this.save({ values });
-  };
+  });
 
-  @action
-  onError = (error: Error | string) => {
+  onError = action((error: Error | string) => {
     this.error = error.toString();
-  };
+  });
 
   onNamespaceChange = (opt: SelectOption) => {
     this.save({ namespace: opt.value });

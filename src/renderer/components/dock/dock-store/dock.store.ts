@@ -276,8 +276,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  @action
-  createTab = (rawTabDesc: DockTabCreate, addNumber = true): DockTab => {
+  createTab = action((rawTabDesc: DockTabCreate, addNumber = true): DockTab => {
     const {
       id = uuid.v4(),
       kind,
@@ -307,7 +306,7 @@ export class DockStore implements DockStorageState {
     this.open();
 
     return tab;
-  };
+  });
 
   @action
   closeTab(tabId: TabId) {

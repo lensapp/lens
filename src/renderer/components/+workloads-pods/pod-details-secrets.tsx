@@ -20,19 +20,22 @@ interface Props {
 export class PodDetailsSecrets extends Component<Props> {
   @observable secrets: Map<string, Secret> = observable.map<string, Secret>();
 
-  @disposeOnUnmount
-  secretsLoader = autorun(async () => {
-    const { pod } = this.props;
+  componentDidMount(): void {
+    disposeOnUnmount(this, [
+      autorun(async () => {
+        const { pod } = this.props;
 
-    const secrets = await Promise.all(
-      pod.getSecrets().map(secretName => secretsApi.get({
-        name: secretName,
-        namespace: pod.getNs(),
-      })),
-    );
+        const secrets = await Promise.all(
+          pod.getSecrets().map(secretName => secretsApi.get({
+            name: secretName,
+            namespace: pod.getNs(),
+          })),
+        );
 
-    secrets.forEach(secret => secret && this.secrets.set(secret.getName(), secret));
-  });
+        secrets.forEach(secret => secret && this.secrets.set(secret.getName(), secret));
+      }),
+    ]);
+  }
 
   constructor(props: Props) {
     super(props);

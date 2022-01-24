@@ -116,8 +116,7 @@ export class RoleBindingDialog extends React.Component<Props> {
     return this.serviceAccountOptions.filter(({ value }) => this.selectedAccounts.has(value));
   }
 
-  @action
-  onOpen = () => {
+  onOpen = action(() => {
     const binding = this.roleBinding;
 
     if (!binding) {
@@ -140,17 +139,16 @@ export class RoleBindingDialog extends React.Component<Props> {
     );
     this.selectedUsers.replace(uSubjects.map(user => user.name));
     this.selectedGroups.replace(gSubjects.map(group => group.name));
-  };
+  });
 
-  @action
-  reset = () => {
+  reset = action(() => {
     this.selectedRoleRef = undefined;
     this.bindingName = "";
     this.bindingNamespace = "";
     this.selectedAccounts.clear();
     this.selectedUsers.clear();
     this.selectedGroups.clear();
-  };
+  });
 
   createBindings = async () => {
     const { selectedRoleRef, bindingNamespace: namespace, selectedBindings } = this;

@@ -86,16 +86,14 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
     this.version = this.versions[0];
   }
 
-  @action
-  onChange = (value: string) => {
+  onChange = action((value: string) => {
     this.error = "";
     this.props.upgradeChartStore.values.setData(this.tabId, value);
-  };
+  });
 
-  @action
-  onError = (error: Error | string) => {
+  onError = action((error: Error | string) => {
     this.error = error.toString();
-  };
+  });
 
   upgrade = async () => {
     if (this.error) return null;

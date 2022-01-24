@@ -103,8 +103,7 @@ export class LogList extends React.Component<LogListProps> {
    * Checks if JumpToBottom button should be visible and sets its observable
    * @param props Scrolling props from virtual list core
    */
-  @action
-  setButtonVisibility = (props: ListOnScrollProps) => {
+  setButtonVisibility = action((props: ListOnScrollProps) => {
     const offset = 100 * this.lineHeight;
     const { scrollHeight } = this.virtualListDiv.current;
     const { scrollOffset } = props;
@@ -114,19 +113,18 @@ export class LogList extends React.Component<LogListProps> {
     } else {
       this.isJumpButtonVisible = true;
     }
-  };
+  });
 
   /**
    * Checks if last log line considered visible to user, setting its observable
    * @param props Scrolling props from virtual list core
    */
-  @action
-  setLastLineVisibility = (props: ListOnScrollProps) => {
+  setLastLineVisibility = action((props: ListOnScrollProps) => {
     const { scrollHeight, clientHeight } = this.virtualListDiv.current;
     const { scrollOffset } = props;
 
     this.isLastLineVisible = (clientHeight + scrollOffset) === scrollHeight;
-  };
+  });
 
   /**
    * Check if user scrolled to top and new logs should be loaded
