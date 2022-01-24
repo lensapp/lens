@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Icon } from "../../icon";
 import { observable } from "mobx";
-import { broadcastMessage, IpcMainWindowEvents, ipcRendererOn } from "../../../../common/ipc";
+import { ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../../navigation";
 import { catalogRoute, catalogURL } from "../../../../common/routes";
@@ -18,8 +18,8 @@ import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
-import { requestWindowAction } from "../../../ipc";
-import { WindowAction } from "../../../../common/ipc/window-actions";
+import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc";
+import { WindowAction } from "../../../../common/ipc/window";
 
 interface Props extends React.HTMLAttributes<any> {}
 
@@ -42,7 +42,7 @@ const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) 
   const elem = useRef<HTMLDivElement>();
 
   const openContextMenu = () => {
-    broadcastMessage(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
+    emitOpenAppMenuAsContextMenu();
   };
 
   const goHome = () => {

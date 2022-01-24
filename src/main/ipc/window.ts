@@ -5,7 +5,7 @@
 
 import { BrowserWindow, webContents } from "electron";
 import { broadcastMessage } from "../../common/ipc";
-import { WindowAction } from "../../common/ipc/window-actions";
+import { WindowAction } from "../../common/ipc/window";
 
 export function handleWindowAction(action: WindowAction) {
   const window = BrowserWindow.getFocusedWindow();

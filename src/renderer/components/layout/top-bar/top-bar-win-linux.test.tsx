@@ -7,13 +7,14 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import { IpcMainWindowEvents, broadcastMessage } from "../../../../common/ipc";
+import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 import { requestWindowAction } from "../../../ipc";
+import { windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 
@@ -87,7 +88,7 @@ describe("<TopBar/> in Windows and Linux", () => {
     const close = getByTestId("window-close");
 
     fireEvent.click(menu);
-    expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
+    expect(broadcastMessage).toHaveBeenCalledWith(windowOpenAppMenuAsContextMenuChannel);
 
     fireEvent.click(minimize);
     expect(requestWindowAction).toHaveBeenCalledWith("minimize");

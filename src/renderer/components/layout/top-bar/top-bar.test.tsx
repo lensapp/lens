@@ -14,7 +14,6 @@ import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
-import { IpcMainWindowEvents } from "../../../../common/ipc";
 
 jest.mock("../../../../common/vars", () => {
   const SemVer = require("semver").SemVer;
@@ -49,7 +48,7 @@ jest.mock(
         (channel: string, action: string) => {
           console.log("channel", channel, action);
 
-          if (channel !== IpcMainWindowEvents.WINDOW_ACTION) return;
+          if (channel !== "window:window-action") return;
 
           switch(action) {
             case "back": {

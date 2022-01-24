@@ -4,22 +4,34 @@
  */
 
 import { ipcRenderer, OpenDialogOptions } from "electron";
-import { clusterActivateHandler, clusterClearDeletingHandler, clusterDeleteHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetDeletingHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/cluster-ipc";
+import { clusterActivateHandler, clusterClearDeletingHandler, clusterDeleteHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetDeletingHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
-import { IpcMainWindowEvents } from "../../common/ipc";
+import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { openFilePickingDialogChannel } from "../../common/ipc/dialog";
 import { extensionDiscoveryStateChannel, extensionLoaderFromMainChannel } from "../../common/ipc/extension-handling";
-import type { WindowAction } from "../../common/ipc/window-actions";
 import type { InstalledExtension } from "../../extensions/extension-discovery/extension-discovery";
 import type { LensExtensionId } from "../../extensions/lens-extension";
 import { toJS } from "../utils";
+import type { Location } from "history";
 
 function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args.map(toJS));
 }
 
+function emitToMain(channel: string, ...args: any[]) {
+  return ipcRenderer.send(channel, ...args.map(toJS));
+}
+
+export function emitOpenAppMenuAsContextMenu(): void {
+  emitToMain(windowOpenAppMenuAsContextMenuChannel);
+}
+
+export function emitWindowLocationChanged(location: Location): void {
+  emitToMain(windowLocationChangedChannel, location);
+}
+
 export function requestWindowAction(type: WindowAction): Promise<void> {
-  return requestMain(IpcMainWindowEvents.WINDOW_ACTION, type);
+  return requestMain(windowActionHandleChannel, type);
 }
 
 export function requestOpenFilePickingDialog(opts: OpenDialogOptions): Promise<{ canceled: boolean; filePaths: string[]; }> {

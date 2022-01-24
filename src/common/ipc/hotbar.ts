@@ -3,4 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export const HotbarTooManyItems = "hotbar:too-many-items";
+export const hotbarTooManyItemsChannel = "hotbar:too-many-items";

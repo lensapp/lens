@@ -15,7 +15,7 @@ import { ipcMainHandle } from "../ipc";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
 import { requestInitialClusterStates } from "../../renderer/ipc";
-import { clusterStates } from "../cluster-ipc";
+import { clusterStates } from "../ipc/cluster";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
