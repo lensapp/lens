@@ -112,11 +112,21 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
         item.toggle();
       },
 
-      isSelectedAll: () =>
-        releases.get().every((release) => release.isSelected),
+      isSelectedAll: (visibleItems: RemovableHelmRelease[]) =>
+        visibleItems.every((release) => release.isSelected),
 
-      toggleSelectionAll: () => {
-        releases.get().forEach((release) => release.toggle());
+      toggleSelectionAll: (visibleItems: RemovableHelmRelease[]) => {
+        let selected = false;
+
+        if (!legacyReleaseStore.isSelectedAll(visibleItems)) {
+          selected = true;
+        }
+
+        visibleItems.forEach((release) => {
+          if (release.isSelected !== selected) {
+            release.toggle();
+          }
+        });
       },
 
       isSelected: (item) => item.isSelected,
