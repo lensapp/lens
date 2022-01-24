@@ -3,12 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { delay } from "../../../../common/utils";
-import { broadcastMessage, BundledExtensionsLoaded } from "../../../../common/ipc";
-import { registerIpcListeners } from "../../../ipc";
+import { broadcastMessage } from "../../../../common/ipc";
+import { registerIpcListeners } from "../../../ipc/register-listeners";
 import logger from "../../../../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 import type { ExtensionLoading } from "../../../../extensions/extension-loader";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
 
 interface Dependencies {
   loadExtensions: () => Promise<ExtensionLoading[]>;
@@ -50,7 +51,7 @@ export const initRootFrame =
 
         await Promise.race([bundledExtensionsFinished, timeout]);
       } finally {
-        ipcRenderer.send(BundledExtensionsLoaded);
+        ipcRenderer.send(bundledExtensionsLoaded);
       }
 
       lensProtocolRouterRenderer.init();

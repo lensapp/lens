@@ -20,8 +20,8 @@ import { remove } from "fs-extra";
 import { getAppMenu } from "../../menu/menu";
 import type { MenuRegistration } from "../../menu/menu-registration";
 import type { IComputedValue } from "mobx";
-import { onLocationChange, windowAction } from "../../ipc/window";
-import { IpcMainDialogEvents } from "../../../common/ipc/dialog";
+import { onLocationChange, handleWindowAction } from "../../ipc/window";
+import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
 import { showOpenDialog } from "../../ipc/dialog";
 
 interface Dependencies {
@@ -145,11 +145,11 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
     return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
   });
 
-  ipcMainHandle(IpcMainWindowEvents.WINDOW_ACTION, (event, action) => windowAction(action));
+  ipcMainHandle(IpcMainWindowEvents.WINDOW_ACTION, (event, action) => handleWindowAction(action));
 
-  ipcMainHandle(IpcMainWindowEvents.LOCATION_CHANGED, () => onLocationChange());
+  ipcMainOn(IpcMainWindowEvents.LOCATION_CHANGED, () => onLocationChange());
 
-  ipcMainHandle(IpcMainDialogEvents.SHOW_OPEN, (event, opts) => showOpenDialog(opts));
+  ipcMainHandle(openFilePickingDialogChannel, (event, opts) => showOpenDialog(opts));
 
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 

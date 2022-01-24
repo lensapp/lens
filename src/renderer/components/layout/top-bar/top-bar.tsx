@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Icon } from "../../icon";
 import { observable } from "mobx";
-import { broadcastMessage, IpcMainWindowEvents, ipcRendererOn, requestMain } from "../../../../common/ipc";
+import { broadcastMessage, IpcMainWindowEvents, ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../../navigation";
 import { catalogRoute, catalogURL } from "../../../../common/routes";
@@ -18,6 +18,8 @@ import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
+import { requestWindowAction } from "../../../ipc";
+import { WindowAction } from "../../../../common/ipc/window-actions";
 
 interface Props extends React.HTMLAttributes<any> {}
 
@@ -48,11 +50,11 @@ const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) 
   };
 
   const goBack = () => {
-    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "back");
+    requestWindowAction(WindowAction.GO_BACK);
   };
 
   const goForward = () => {
-    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "forward");
+    requestWindowAction(WindowAction.GO_FORWARD);
   };
 
   const windowSizeToggle = (evt: React.MouseEvent) => {
@@ -65,22 +67,18 @@ const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) 
   };
 
   const minimizeWindow = () => {
-    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "minimize");
+    requestWindowAction(WindowAction.MINIMIZE);
   };
 
   const toggleMaximize = () => {
-    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "toggleMaximize");
+    requestWindowAction(WindowAction.TOGGLE_MAXIMIZE);
   };
 
   const closeWindow = () => {
-    requestMain(IpcMainWindowEvents.WINDOW_ACTION, "close");
+    requestWindowAction(WindowAction.CLOSE);
   };
 
-  useEffect(() => {
-    const disposer = watchHistoryState();
-
-    return () => disposer();
-  }, []);
+  useEffect(() => watchHistoryState(), []);
 
   return (
     <div className={styles.topBar} onDoubleClick={windowSizeToggle} ref={elem} {...rest}>

@@ -15,10 +15,6 @@ import type { Disposer } from "../utils";
 
 export const broadcastMainChannel = "ipc:broadcast-main";
 
-export async function requestMain(channel: string, ...args: any[]) {
-  return ipcRenderer.invoke(channel, ...args.map(sanitizePayload));
-}
-
 export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
   ipcMain.handle(channel, async (event, ...args) => {
     return sanitizePayload(await listener(event, ...args));
@@ -31,7 +27,7 @@ function getSubFrames(): ClusterFrameInfo[] {
 
 export async function broadcastMessage(channel: string, ...args: any[]): Promise<void> {
   if (ipcRenderer) {
-    return requestMain(broadcastMainChannel, channel, ...args);
+    return ipcRenderer.invoke(broadcastMainChannel, channel, ...args.map(sanitizePayload));
   }
 
   if (!webContents) {

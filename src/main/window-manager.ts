@@ -8,13 +8,14 @@ import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/app-event-bus/event-bus";
-import { BundledExtensionsLoaded, ipcMainOn } from "../common/ipc";
+import { ipcMainOn } from "../common/ipc";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { isMac, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
+import { bundledExtensionsLoaded } from "../common/ipc/extension-handling";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -160,7 +161,7 @@ export class WindowManager extends Singleton {
 
     if (!this.mainWindow) {
       viewHasLoaded = new Promise<void>(resolve => {
-        ipcMain.once(BundledExtensionsLoaded, () => resolve());
+        ipcMain.once(bundledExtensionsLoaded, () => resolve());
       });
       await this.initMainWindow(showSplash);
     }

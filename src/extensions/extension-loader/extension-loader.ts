@@ -8,7 +8,7 @@ import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
-import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
+import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import { Disposer, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
@@ -17,6 +17,8 @@ import type { LensExtension, LensExtensionConstructor, LensExtensionId } from ".
 import type { LensRendererExtension } from "../lens-renderer-extension";
 import * as registries from "../registries";
 import type { LensExtensionState } from "../extensions-store/extensions-store";
+import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
+import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
@@ -48,12 +50,6 @@ export class ExtensionLoader {
    * This is updated by the `observe` in the constructor. DO NOT write directly to it
    */
   protected instancesByName = observable.map<string, LensExtension>();
-
-  // IPC channel to broadcast changes to extensions from main
-  protected static readonly extensionsMainChannel = "extensions:main";
-
-  // IPC channel to broadcast changes to extensions from renderer
-  protected static readonly extensionsRendererChannel = "extensions:renderer";
 
   // emits event "remove" of type LensExtension when the extension is removed
   private events = new EventEmitter();
@@ -196,11 +192,11 @@ export class ExtensionLoader {
     this.isLoaded = true;
     this.loadOnMain();
 
-    ipcMainHandle(ExtensionLoader.extensionsMainChannel, () => {
+    ipcMainHandle(extensionLoaderFromMainChannel, () => {
       return Array.from(this.toJSON());
     });
 
-    ipcMainOn(ExtensionLoader.extensionsRendererChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    ipcMainOn(extensionLoaderFromRendererChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       this.syncExtensions(extensions);
     });
   }
@@ -220,16 +216,16 @@ export class ExtensionLoader {
       });
     };
 
-    requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
-    ipcRendererOn(ExtensionLoader.extensionsMainChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    requestExtensionLoaderInitialState().then(extensionListHandler);
+    ipcRendererOn(extensionLoaderFromMainChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
   }
 
   broadcastExtensions() {
     const channel = ipcRenderer
-      ? ExtensionLoader.extensionsRendererChannel
-      : ExtensionLoader.extensionsMainChannel;
+      ? extensionLoaderFromRendererChannel
+      : extensionLoaderFromMainChannel;
 
     broadcastMessage(channel, Array.from(this.extensions));
   }

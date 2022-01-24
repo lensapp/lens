@@ -13,3 +13,4 @@ export const clusterSetDeletingHandler = "cluster:deleting:set";
 export const clusterClearDeletingHandler = "cluster:deleting:clear";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
+export const clusterStates = "cluster:states";

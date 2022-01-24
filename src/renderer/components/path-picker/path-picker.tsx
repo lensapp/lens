@@ -8,8 +8,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
-import { requestMain } from "../../../common/ipc";
-import { IpcMainDialogEvents } from "../../../common/ipc/dialog";
+import { requestOpenFilePickingDialog } from "../../ipc";
 
 export interface PathPickOpts {
   label: string;
@@ -32,7 +31,7 @@ export class PathPicker extends React.Component<PathPickerProps> {
   static async pick(opts: PathPickOpts) {
     const { onPick, onCancel, label, ...dialogOptions } = opts;
 
-    const { canceled, filePaths } = await requestMain(IpcMainDialogEvents.SHOW_OPEN, {
+    const { canceled, filePaths } = await requestOpenFilePickingDialog({
       message: label,
       ...dialogOptions,
     });
