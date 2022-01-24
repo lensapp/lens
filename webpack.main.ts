@@ -42,7 +42,7 @@ configs.push((): webpack.Configuration => {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader(/\.ts$/),
+        getTSLoader({}, /\.ts$/),
       ],
     },
     plugins: [

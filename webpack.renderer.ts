@@ -10,6 +10,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import ReactRefreshTypescript from "react-refresh-typescript";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
@@ -42,11 +43,9 @@ export function webpackLensRenderer(): webpack.Configuration {
       port: webpackDevServerPort,
       static: buildDir, // aka `devServer.contentBase` in webpack@4
       hot: true,
-      historyApiFallback: true,
       client: {
         logging: isDevelopment ? "verbose" : "error",
-        overlay: false,
-        progress: true,
+        overlay: true,
       },
     },
     name: "lens-app",
@@ -87,7 +86,11 @@ export function webpackLensRenderer(): webpack.Configuration {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader(/\.tsx?$/),
+        getTSLoader({
+          getCustomTransformers: () => ({
+            before: isDevelopment ? [ReactRefreshTypescript as any] : [],
+          }),
+        }),
         filesAndIconsWebpackRule(),
         fontsLoaderWebpackRule(),
         cssModulesWebpackRule(),
