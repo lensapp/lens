@@ -6,7 +6,6 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { history } from "../../navigation";
 import { UserManagement } from "../../components/+user-management/user-management";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { ClusterOverview } from "../../components/+cluster/cluster-overview";
@@ -41,17 +40,18 @@ import { PortForwardDialog } from "../../port-forward";
 import { DeleteClusterDialog } from "../../components/delete-cluster-dialog";
 import type { NamespaceStore } from "../../components/+namespaces/namespace-store/namespace.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable
-  from "../../components/+namespaces/namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable  from "../../components/+namespaces/namespace-store/namespace-store.injectable";
 import type { ClusterId } from "../../../common/cluster-types";
-import hostedClusterInjectable
-  from "../../../common/cluster-store/hosted-cluster/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster/hosted-cluster.injectable";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { Disposer } from "../../../common/utils";
 import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import historyInjectable from "../../navigation/history.injectable";
+import type { History } from "history";
 
 interface Dependencies {
+  history: History,
   namespaceStore: NamespaceStore
   hostedClusterId: ClusterId
   subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
@@ -135,10 +135,11 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
 
   render() {
     return (
-      <Router history={history}>
+      <Router history={this.props.history}>
         <ErrorBoundary>
           <MainLayout sidebar={<Sidebar />} footer={<Dock />}>
             <Switch>
+
               <Route component={ClusterOverview} {...routes.clusterRoute}/>
               <Route component={Nodes} {...routes.nodesRoute}/>
               <Route component={Workloads} {...routes.workloadsRoute}/>
@@ -181,6 +182,7 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
 
 export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFrame, {
   getProps: di => ({
+    history: di.inject(historyInjectable),
     namespaceStore: di.inject(namespaceStoreInjectable),
     hostedClusterId: di.inject(hostedClusterInjectable).id,
     subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,

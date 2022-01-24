@@ -11,12 +11,13 @@ import { createPortal } from "react-dom";
 import { cssNames, noop, StorageHelper } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
-import { history } from "../../navigation";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import drawerStorageInjectable, {
   defaultDrawerWidth,
 } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import historyInjectable from "../../navigation/history.injectable";
+import type { History } from "history";
 
 export type DrawerPosition = "top" | "left" | "right" | "bottom";
 
@@ -59,6 +60,7 @@ resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, R
 resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
 
 interface Dependencies {
+  history: History
   drawerStorage: StorageHelper<{ width: number }>;
 }
 
@@ -70,7 +72,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
   private scrollElem: HTMLElement;
   private scrollPos = new Map<string, number>();
 
-  private stopListenLocation = history.listen(() => {
+  private stopListenLocation = this.props.history.listen(() => {
     this.restoreScrollPos();
   });
 
@@ -111,14 +113,14 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
 
   saveScrollPos = () => {
     if (!this.scrollElem) return;
-    const key = history.location.key;
+    const key = this.props.history.location.key;
 
     this.scrollPos.set(key, this.scrollElem.scrollTop);
   };
 
   restoreScrollPos = () => {
     if (!this.scrollElem) return;
-    const key = history.location.key;
+    const key = this.props.history.location.key;
 
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
   };
@@ -232,6 +234,7 @@ export const Drawer = withInjectables<Dependencies, DrawerProps>(
 
   {
     getProps: (di, props) => ({
+      history: di.inject(historyInjectable),
       drawerStorage: di.inject(drawerStorageInjectable),
       ...props,
     }),

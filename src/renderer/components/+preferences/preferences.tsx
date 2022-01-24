@@ -22,6 +22,8 @@ import {
   editorRoute,
   telemetryRoute,
   telemetryURL,
+  terminalRoute,
+  terminalURL,
 } from "../../../common/routes";
 import { navigateWithoutHistoryChange, navigation } from "../../navigation";
 import { SettingLayout } from "../layout/setting-layout";
@@ -29,6 +31,7 @@ import { Tab, Tabs } from "../tabs";
 import { Application } from "./application";
 import { Kubernetes } from "./kubernetes";
 import { Editor } from "./editor";
+import { Terminal } from "./terminal";
 import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
 import { Extensions } from "./extensions";
@@ -56,6 +59,7 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
         <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kubernetes-tab" active={isActive(kubernetesRoute)}/>
         <Tab value={editorURL()} label="Editor" data-testid="editor-tab" active={isActive(editorRoute)}/>
+        <Tab value={terminalURL()} label="Terminal" data-testid="terminal-tab" active={isActive(terminalRoute)}/>
         {(telemetryExtensions.length > 0 || !!sentryDsn) &&
           <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
         }
@@ -77,6 +81,7 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         <Route path={proxyURL()} component={LensProxy}/>
         <Route path={kubernetesURL()} component={Kubernetes}/>
         <Route path={editorURL()} component={Editor}/>
+        <Route path={terminalURL()} component={Terminal}/>
         <Route path={telemetryURL()} component={Telemetry}/>
         <Route path={extensionURL()} component={Extensions}/>
         <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>

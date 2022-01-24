@@ -27,10 +27,10 @@ import type {
   IReleaseCreatePayload,
   IReleaseUpdateDetails,
 } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import releaseStoreInjectable from "../+apps-releases/release-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import installChartStoreInjectable from "./install-chart-store/install-chart-store.injectable";
 import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import createReleaseInjectable from "../+apps-releases/create-release/create-release.injectable";
 
 interface Props {
   tab: DockTab;
@@ -222,7 +222,7 @@ export const InstallChart = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      createRelease: di.inject(releaseStoreInjectable).create,
+      createRelease: di.inject(createReleaseInjectable),
       installChartStore: di.inject(installChartStoreInjectable),
       dockStore: di.inject(dockStoreInjectable),
       ...props,

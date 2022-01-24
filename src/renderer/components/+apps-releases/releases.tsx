@@ -3,26 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import "../item-object-list/item-list-layout.scss";
 import "./releases.scss";
 
 import React, { Component } from "react";
-import kebabCase from "lodash/kebabCase";
-import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { ReleaseStore } from "./release.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { ReleaseDetails } from "./release-details";
-import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { navigation } from "../../navigation";
-import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { HelmReleaseMenu } from "./release-menu";
-import { secretsStore } from "../+config-secrets/secrets.store";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import type { ReleaseRouteParams } from "../../../common/routes";
 import { releaseURL } from "../../../common/routes";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import releaseStoreInjectable from "./release-store.injectable";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import { ItemListLayout } from "../item-object-list";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { kebabCase } from "lodash/fp";
+import { HelmReleaseMenu } from "./release-menu";
+import type { ItemStore } from "../../../common/item.store";
+import { ReleaseRollbackDialog } from "./release-rollback-dialog";
+import { ReleaseDetails } from "./release-details/release-details";
+import removableReleasesInjectable from "./removable-releases.injectable";
+import type { RemovableHelmRelease } from "./removable-releases";
+import { observer } from "mobx-react";
+import type { IComputedValue } from "mobx";
+import releasesInjectable from "./releases.injectable";
+import { Spinner } from "../spinner";
 
 enum columnId {
   name = "name",
@@ -39,7 +43,8 @@ interface Props extends RouteComponentProps<ReleaseRouteParams> {
 }
 
 interface Dependencies {
-  releaseStore: ReleaseStore
+  releases: IComputedValue<RemovableHelmRelease[]>
+  releasesArePending: IComputedValue<boolean>
   selectNamespace: (namespace: string) => void
 }
 
@@ -51,27 +56,10 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
     if (namespace) {
       this.props.selectNamespace(namespace);
     }
-
-    disposeOnUnmount(this, [
-      this.props.releaseStore.watchAssociatedSecrets(),
-      this.props.releaseStore.watchSelectedNamespaces(),
-    ]);
-  }
-
-  get selectedRelease() {
-    const { match: { params: { name, namespace }}} = this.props;
-
-    return this.props.releaseStore.items.find(release => {
-      return release.getName() == name && release.getNs() == namespace;
-    });
   }
 
   onDetails = (item: HelmRelease) => {
-    if (item === this.selectedRelease) {
-      this.hideDetails();
-    } else {
-      this.showDetails(item);
-    }
+    this.showDetails(item);
   };
 
   showDetails = (item: HelmRelease) => {
@@ -101,14 +89,57 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
   }
 
   render() {
+    if (this.props.releasesArePending.get()) {
+      // TODO: Make Spinner "center" work properly
+      return <div className="flex center" style={{ height: "100%" }}><Spinner /></div>;
+    }
+
+    const releases = this.props.releases;
+
+    // TODO: Implement ItemListLayout without stateful stores
+    const legacyReleaseStore = {
+      get items() {
+        return releases.get();
+      },
+
+      loadAll: () => Promise.resolve(),
+      isLoaded: true,
+      failedLoading: false,
+
+      getTotalCount: () => releases.get().length,
+
+      toggleSelection: (item) => {
+        item.toggle();
+      },
+
+      isSelectedAll: () =>
+        releases.get().every((release) => release.isSelected),
+
+      toggleSelectionAll: () => {
+        releases.get().forEach((release) => release.toggle());
+      },
+
+      isSelected: (item) => item.isSelected,
+
+      get selectedItems() {
+        return releases.get().filter((release) => release.isSelected);
+      },
+
+      removeSelectedItems() {
+        return Promise.all(
+          releases.get().filter((release) => release.isSelected).map((release) => release.delete()),
+        );
+      },
+    } as ItemStore<RemovableHelmRelease>;
+
     return (
       <>
         <ItemListLayout
+          store={legacyReleaseStore}
+          preloadStores={false}
           isConfigurable
           tableId="helm_releases"
           className="HelmReleases"
-          store={this.props.releaseStore}
-          dependentStores={[secretsStore]}
           sortingCallbacks={{
             [columnId.name]: release => release.getName(),
             [columnId.namespace]: release => release.getNs(),
@@ -167,13 +198,13 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
           customizeRemoveDialog={selectedItems => ({
             message: this.renderRemoveDialogMessage(selectedItems),
           })}
-          detailsItem={this.selectedRelease}
           onDetails={this.onDetails}
         />
+        
         <ReleaseDetails
-          release={this.selectedRelease}
           hideDetails={this.hideDetails}
         />
+
         <ReleaseRollbackDialog/>
       </>
     );
@@ -185,7 +216,8 @@ export const HelmReleases = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      releaseStore: di.inject(releaseStoreInjectable),
+      releases: di.inject(removableReleasesInjectable),
+      releasesArePending: di.inject(releasesInjectable).pending,
       selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
       ...props,
     }),

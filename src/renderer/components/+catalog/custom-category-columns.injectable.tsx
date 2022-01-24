@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
-import { getOrInsert } from "../../utils";
+import { getOrInsert, getOrInsertMap } from "../../utils";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
 
 interface Dependencies {
@@ -19,7 +19,7 @@ function getAdditionCategoryColumns({ extensions }: Dependencies): IComputedValu
 
     for (const ext of extensions.get()) {
       for (const { renderCell, titleProps, priority = 50, searchFilter, sortCallback, ...registration } of ext.additionalCategoryColumns) {
-        const byGroup = getOrInsert(res, registration.group, new Map<string, RegisteredAdditionalCategoryColumn[]>());
+        const byGroup = getOrInsertMap(res, registration.group);
         const byKind = getOrInsert(byGroup, registration.kind, []);
         const id = `${ext.name}:${registration.id}`;
 

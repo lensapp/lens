@@ -17,6 +17,7 @@ import type { WelcomeBannerRegistration } from "../renderer/components/+welcome/
 import type { CommandRegistration } from "../renderer/components/command-palette/registered-commands/commands";
 import type { AppPreferenceRegistration } from "../renderer/components/+preferences/app-preferences/app-preference-registration";
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
+import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -35,6 +36,7 @@ export class LensRendererExtension extends LensExtension {
   catalogEntityDetailItems: registries.CatalogEntityDetailRegistration<CatalogEntity>[] = [];
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
+  customCategoryViews: CustomCategoryViewRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {
     const { navigate } = await import("../renderer/navigation");

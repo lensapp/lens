@@ -4,10 +4,10 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { UpgradeChartStore } from "./upgrade-chart.store";
-import releaseStoreInjectable from "../../+apps-releases/release-store.injectable";
 import dockStoreInjectable from "../dock-store/dock-store.injectable";
 import createDockTabStoreInjectable from "../dock-tab-store/create-dock-tab-store.injectable";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
+import releasesInjectable from "../../+apps-releases/releases.injectable";
 
 const upgradeChartStoreInjectable = getInjectable({
   instantiate: (di) => {
@@ -16,7 +16,7 @@ const upgradeChartStoreInjectable = getInjectable({
     const valuesStore = createDockTabStore<string>();
 
     return new UpgradeChartStore({
-      releaseStore: di.inject(releaseStoreInjectable),
+      releases: di.inject(releasesInjectable),
       dockStore: di.inject(dockStoreInjectable),
       createStorage: di.inject(createStorageInjectable),
       valuesStore,

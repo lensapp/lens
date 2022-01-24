@@ -14,11 +14,10 @@ export class PortForwardRoute {
     const { namespace, resourceType, resourceName } = params;
     const port = Number(query.get("port"));
     const forwardPort = Number(query.get("forwardPort"));
-    const protocol = query.get("protocol");
 
     const portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
-      namespace, port, forwardPort, protocol,
+      namespace, port, forwardPort,
     });
 
     respondJson(response, { port: portForward?.forwardPort ?? null });

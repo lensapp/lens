@@ -6,16 +6,13 @@
 import React from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { cssNames } from "../../utils";
-import type { ReleaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import releaseStoreInjectable from "./release-store.injectable";
-import createUpgradeChartTabInjectable
-  from "../dock/create-upgrade-chart-tab/create-upgrade-chart-tab.injectable";
-import releaseRollbackDialogModelInjectable
-  from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
+import createUpgradeChartTabInjectable from "../dock/create-upgrade-chart-tab/create-upgrade-chart-tab.injectable";
+import releaseRollbackDialogModelInjectable from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
+import deleteReleaseInjectable from "./delete-release/delete-release.injectable";
 
 interface Props extends MenuActionsProps {
   release: HelmRelease;
@@ -23,14 +20,14 @@ interface Props extends MenuActionsProps {
 }
 
 interface Dependencies {
-  releaseStore: ReleaseStore
+  deleteRelease: (release: HelmRelease) => Promise<any>
   createUpgradeChartTab: (release: HelmRelease) => void
   openRollbackDialog: (release: HelmRelease) => void
 }
 
 class NonInjectedHelmReleaseMenu extends React.Component<Props & Dependencies> {
   remove = () => {
-    return this.props.releaseStore.remove(this.props.release);
+    return this.props.deleteRelease(this.props.release);
   };
 
   upgrade = () => {
@@ -87,7 +84,7 @@ export const HelmReleaseMenu = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      releaseStore: di.inject(releaseStoreInjectable),
+      deleteRelease: di.inject(deleteReleaseInjectable),
       createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
       openRollbackDialog: di.inject(releaseRollbackDialogModelInjectable).open,
 

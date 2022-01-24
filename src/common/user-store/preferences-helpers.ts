@@ -10,7 +10,7 @@ import { getAppVersion, ObservableToggleSet } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme } from "../vars";
+import { defaultTheme, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -18,19 +18,29 @@ export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
 
 export interface KubeconfigSyncValue {
 }
+export interface TerminalConfig {
+  fontSize: number;
+  fontFamily: string;
+}
+
+export const defaultTerminalConfig: TerminalConfig = {
+  fontSize: defaultFontSize,
+  fontFamily: defaultTerminalFontFamily,
+};
 
 export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptions,
-  "minimap" | "tabSize" | "lineNumbers">;
+  "minimap" | "tabSize" | "lineNumbers" | "fontSize" | "fontFamily">;
 
 export const defaultEditorConfig: EditorConfiguration = {
   tabSize: 2,
   lineNumbers: "on",
+  fontSize: defaultFontSize,
+  fontFamily: defaultEditorFontFamily,
   minimap: {
     enabled: true,
     side: "right",
   },
 };
-
 interface PreferenceDescription<T, R = T> {
   fromStore(val: T | undefined): R;
   toStore(val: R): T | undefined;
@@ -273,6 +283,15 @@ const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConf
   },
 };
 
+const terminalConfig: PreferenceDescription<TerminalConfig, TerminalConfig> = {
+  fromStore(val) {
+    return merge(defaultTerminalConfig, val);
+  },
+  toStore(val) {
+    return val;
+  },
+};
+
 const updateChannels = new Map([
   ["latest", {
     label: "Stable",
@@ -358,6 +377,7 @@ export const DESCRIPTORS = {
   syncKubeconfigEntries,
   editorConfiguration,
   terminalCopyOnSelect,
+  terminalConfig,
   updateChannel,
   extensionRegistryUrl,
 };

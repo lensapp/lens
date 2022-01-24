@@ -16,7 +16,6 @@ export interface PortForwardArgs {
   name: string;
   port: number;
   forwardPort: number;
-  protocol?: string;
 }
 
 interface Dependencies {
@@ -32,8 +31,7 @@ export class PortForward {
       pf.kind == forward.kind &&
       pf.name == forward.name &&
       pf.namespace == forward.namespace &&
-      pf.port == forward.port &&
-      (!forward.protocol || pf.protocol == forward.protocol)
+      pf.port == forward.port
     ));
   }
 
@@ -44,7 +42,6 @@ export class PortForward {
   public name: string;
   public port: number;
   public forwardPort: number;
-  public protocol: string;
 
   constructor(private dependencies: Dependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
@@ -53,7 +50,6 @@ export class PortForward {
     this.name = args.name;
     this.port = args.port;
     this.forwardPort = args.forwardPort;
-    this.protocol = args.protocol ?? "http";
   }
 
   public async start() {

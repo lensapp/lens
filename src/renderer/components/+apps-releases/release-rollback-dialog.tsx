@@ -15,16 +15,16 @@ import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
 import orderBy from "lodash/orderBy";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import releaseStoreInjectable from "./release-store.injectable";
 import releaseRollbackDialogModelInjectable
   from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
 import type { ReleaseRollbackDialogModel } from "./release-rollback-dialog-model/release-rollback-dialog-model";
+import rollbackReleaseInjectable from "./rollback-release/rollback-release.injectable";
 
 interface Props extends DialogProps {
 }
 
 interface Dependencies {
-  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<any>
+  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<void>
   model: ReleaseRollbackDialogModel
 }
 
@@ -119,7 +119,7 @@ export const ReleaseRollbackDialog = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      rollbackRelease: di.inject(releaseStoreInjectable).rollback,
+      rollbackRelease: di.inject(rollbackReleaseInjectable),
       model: di.inject(releaseRollbackDialogModelInjectable),
       ...props,
     }),

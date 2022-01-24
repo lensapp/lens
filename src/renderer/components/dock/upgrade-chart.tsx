@@ -13,15 +13,22 @@ import type { DockTab } from "./dock-store/dock.store";
 import { InfoPanel } from "./info-panel";
 import type { UpgradeChartStore } from "./upgrade-chart-store/upgrade-chart.store";
 import { Spinner } from "../spinner";
-import type { ReleaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
-import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
-import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
+import {
+  helmChartStore,
+  IChartVersion,
+} from "../+apps-helm-charts/helm-chart.store";
+import type {
+  HelmRelease,
+  IReleaseUpdateDetails,
+  IReleaseUpdatePayload,
+} from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import releaseStoreInjectable from "../+apps-releases/release-store.injectable";
+import { IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";
 import upgradeChartStoreInjectable from "./upgrade-chart-store/upgrade-chart-store.injectable";
+import updateReleaseInjectable from "../+apps-releases/update-release/update-release.injectable";
+import releasesInjectable from "../+apps-releases/releases.injectable";
 
 interface Props {
   className?: string;
@@ -29,8 +36,9 @@ interface Props {
 }
 
 interface Dependencies {
-  releaseStore: ReleaseStore
+  releases: IAsyncComputed<HelmRelease[]>
   upgradeChartStore: UpgradeChartStore
+  updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>
 }
 
 @observer
@@ -61,7 +69,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
 
     if (!tabData) return null;
 
-    return this.props.releaseStore.getByName(tabData.releaseName);
+    return this.props.releases.value.get().find(release => release.getName() === tabData.releaseName);
   }
 
   get value() {
@@ -95,7 +103,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
     const releaseName = this.release.getName();
     const releaseNs = this.release.getNs();
 
-    await this.props.releaseStore.update(releaseName, releaseNs, {
+    await this.props.updateRelease(releaseName, releaseNs, {
       chart: this.release.getChart(),
       values: this.value,
       repo, version,
@@ -167,7 +175,8 @@ export const UpgradeChart = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      releaseStore: di.inject(releaseStoreInjectable),
+      releases: di.inject(releasesInjectable),
+      updateRelease: di.inject(updateReleaseInjectable),
       upgradeChartStore: di.inject(upgradeChartStoreInjectable),
       ...props,
     }),

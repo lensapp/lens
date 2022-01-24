@@ -273,11 +273,9 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     let response: PortForwardResult;
 
     try {
-      const protocol = pf.protocol ?? "http";
-
       response = await apiBase.post<PortForwardResult>(
         `/pods/port-forward/${pf.namespace}/${pf.kind}/${pf.name}`,
-        { query: { port, forwardPort, protocol }},
+        { query: { port, forwardPort }},
       );
 
       // expecting the received port to be the specified port, unless the specified port is 0, which indicates any available port is suitable
@@ -355,11 +353,11 @@ function portForwardsEqual(portForward: ForwardedPort) {
 }
 
 async function getActivePortForward(portForward: ForwardedPort): Promise<ForwardedPort> {
-  const { port, forwardPort, protocol } = portForward;
+  const { port, forwardPort } = portForward;
   let response: PortForwardResult;
 
   try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort, protocol }});
+    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort }});
   } catch (error) {
     logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${error}`, portForward);
   }
