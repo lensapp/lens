@@ -21,6 +21,7 @@ import type { LensRendererExtension } from "../lens-renderer-extension";
 import { NpmJsVersionChecker } from "../npmjs-latest-version.checker";
 import * as registries from "../registries";
 import type { LensExtensionState } from "../extensions-store/extensions-store";
+import { BundledVersionChecker } from "../bundled-latest-version-checker";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
@@ -65,6 +66,7 @@ export class ExtensionLoader {
   private extensionUpdateSources = {
     github: new GitHubVersionChecker(),
     npmJs: new NpmJsVersionChecker(),
+    bundled: new BundledVersionChecker(),
   };
 
   @observable isLoaded = false;
@@ -110,6 +112,10 @@ export class ExtensionLoader {
     });
 
     return extensions;
+  }
+
+  @computed get bundledExtensions(): InstalledExtension[] {
+    return [...this.extensions.values()].filter(extension => extension.isBundled)
   }
 
   /**
@@ -282,9 +288,7 @@ export class ExtensionLoader {
         }
       });
 
-      if (!extension.isBundled) {
-        this.checkForExtensionUpdate(extension);
-      }
+      this.checkForExtensionUpdate(extension);
 
       return removeItems;
     });

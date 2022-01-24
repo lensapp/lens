@@ -9,6 +9,7 @@ import logger from "../../../../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 import type { ExtensionLoading } from "../../../../extensions/extension-loader";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { BundledExtensionsUpdater } from "../../../../extensions/extension-updater/bundled-extensions-updater";
 
 interface Dependencies {
   loadExtensions: () => Promise<ExtensionLoading[]>;
@@ -20,6 +21,8 @@ interface Dependencies {
   bindProtocolAddRouteHandlers: () => void;
   lensProtocolRouterRenderer: { init: () => void };
   catalogEntityRegistry: CatalogEntityRegistry;
+
+  bundledExtensionsUpdater: BundledExtensionsUpdater;
 }
 
 const logPrefix = "[ROOT-FRAME]:";
@@ -30,11 +33,12 @@ export const initRootFrame =
     bindProtocolAddRouteHandlers,
     lensProtocolRouterRenderer,
     ipcRenderer,
-
     catalogEntityRegistry,
+    bundledExtensionsUpdater,
   }: Dependencies) =>
     async (rootElem: HTMLElement) => {
       catalogEntityRegistry.init();
+      bundledExtensionsUpdater.init();
 
       try {
       // maximum time to let bundled extensions finish loading

@@ -9,6 +9,7 @@ import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-
 import bindProtocolAddRouteHandlersInjectable from "../../../protocol-handler/bind-protocol-add-route-handlers/bind-protocol-add-route-handlers.injectable";
 import lensProtocolRouterRendererInjectable from "../../../protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import bundledExtensionsUpdaterInjectable from "../../../../extensions/extension-updater/bundled-extensions-updater.injectable";
 
 const initRootFrameInjectable = getInjectable({
   instantiate: (di) => {
@@ -28,6 +29,8 @@ const initRootFrameInjectable = getInjectable({
       ),
 
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
+
+      bundledExtensionsUpdater: di.inject(bundledExtensionsUpdaterInjectable)
     });
   },
 
