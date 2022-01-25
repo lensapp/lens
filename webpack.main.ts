@@ -21,7 +21,7 @@ configs.push((): webpack.Configuration => {
     context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
-    devtool: isDevelopment ? "hidden-source-map" : "source-map",
+    devtool: isDevelopment ? "eval-cheap-module-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),

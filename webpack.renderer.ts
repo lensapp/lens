@@ -9,14 +9,13 @@ import type webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
-import ReactRefreshTypescript from "react-refresh-typescript";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
 
 export function webpackLensRenderer(): webpack.Configuration {
   console.info("WEBPACK:renderer", vars);
+
   const {
     appName,
     buildDir,
@@ -31,21 +30,21 @@ export function webpackLensRenderer(): webpack.Configuration {
   return {
     context: __dirname,
     target: "electron-renderer",
-    devtool: isDevelopment ? "eval-source-map" : "source-map",
+    devtool: isDevelopment ? "eval-cheap-module-source-map" : "source-map",
     // @ts-ignore: seems like types from "webpack-dev-server@4.7" not properly merged with "webpack@5"
     // API: https://webpack.js.org/configuration/dev-server/#usage-via-api
     devServer: {
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-      host: "0.0.0.0",
       allowedHosts: "all",
+      host: "localhost",
       port: webpackDevServerPort,
       static: buildDir, // aka `devServer.contentBase` in webpack@4
       hot: true,
       client: {
+        overlay: false, // don't show warnings and errors on top of rendered app view
         logging: isDevelopment ? "verbose" : "error",
-        overlay: true,
       },
     },
     name: "lens-app",
@@ -86,14 +85,10 @@ export function webpackLensRenderer(): webpack.Configuration {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader({
-          getCustomTransformers: () => ({
-            before: isDevelopment ? [ReactRefreshTypescript as any] : [],
-          }),
-        }),
+        getTSLoader(),
+        cssModulesWebpackRule(),
         filesAndIconsWebpackRule(),
         fontsLoaderWebpackRule(),
-        cssModulesWebpackRule(),
       ],
     },
 
@@ -123,8 +118,6 @@ export function webpackLensRenderer(): webpack.Configuration {
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
-
-      isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
   };
 }

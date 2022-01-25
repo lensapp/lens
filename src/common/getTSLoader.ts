@@ -33,7 +33,7 @@ const getTSLoader = (options: Partial<TSLoaderOptions> = {}, testRegExp?: RegExp
     test: testRegExp,
     exclude: /node_modules/,
     use: {
-      loader: require.resolve("ts-loader"),
+      loader: "ts-loader",
       options,
     },
   };

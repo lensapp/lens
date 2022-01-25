@@ -147,23 +147,24 @@ export class Router {
       }
 
       try {
-        const filename = path.basename(req.url);
-
         // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-        const toWebpackDevServer = [appName, "hot-update"].includes(filename) || req.url.includes("sockjs-node");
+        const filename = path.basename(req.url);
+        const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
 
-        logger.info(`[ROUTER]: handling request`, {
-          url: req.url,
-          isWebpackRequestUpdate: toWebpackDevServer,
-        });
+        if (isDevelopment) {
+          logger.info(`[ROUTER]: handling request`, {
+            url: req.url,
+            toWebpackDevServer,
+          });
 
-        if (isDevelopment && toWebpackDevServer) {
-          const redirectLocation = `http://0.0.0.0:${webpackDevServerPort}${req.url}`;
+          if (toWebpackDevServer) {
+            const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
 
-          response.statusCode = 307;
-          response.setHeader("Location", redirectLocation);
+            response.statusCode = 307;
+            response.setHeader("Location", redirectLocation);
 
-          return response.end();
+            return response.end();
+          }
         }
 
         const data = await readFile(asset);
