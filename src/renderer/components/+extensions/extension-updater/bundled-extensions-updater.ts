@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BundledExtensionsLoaded, BundledExtensionsUpdated, ipcRendererOn } from "../../common/ipc"
-import { logger } from "../common-api";
-import type { InstalledExtension } from "../extension-discovery/extension-discovery";
+import { BundledExtensionsUpdated } from "../../../../common/ipc";
+import { logger } from "../../../../extensions/common-api";
+import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
 import { ExtensionUpdater, UpdaterDependencies } from "./extension-updater";
 
 interface Dependencies extends UpdaterDependencies {
@@ -18,13 +18,7 @@ export class BundledExtensionsUpdater extends ExtensionUpdater {
     super(dependencies);
   }
 
-  init() {
-    ipcRendererOn(BundledExtensionsLoaded, (event) => {
-      this.updateAll();
-    });
-  }
-
-  private async updateAll() {
+  async updateAll() {
     logger.info("[EXTENSIONS-UPDATER]: Bundled extensions update started.");
 
     const updates = this.dependencies.extensions.map(this.update);
