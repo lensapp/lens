@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { Fragment } from "react";
-
+import React, { Fragment, useRef, useEffect, useState, UIEvent } from "react";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
@@ -20,6 +19,43 @@ interface Props {
 }
 
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
+  const elem = useRef(null);
+  const contentElem = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollStep = 200;
+
+  const scrollToRight = (): void => {
+    if(!elem) return;
+
+    setScrollPosition(scrollPosition + scrollStep);
+
+    elem.current.scrollLeft = scrollPosition;
+  };
+
+
+  const scrollToLeft = (): void => {
+    if(!elem) return;
+
+    setScrollPosition(scrollPosition - scrollStep);
+
+    elem.current.scrollLeft = scrollPosition;
+  };
+
+  const  isScrollableRight = (): boolean => {
+    if(!elem || !contentElem) return false;
+
+    const containerWidth = elem.current?.clientWidth;
+    const contentWidth = contentElem.current?.clientWidth;
+
+    return contentWidth > containerWidth && scrollPosition < contentWidth - scrollStep;
+  };
+
+  const  isScrollableLeft = (): boolean => {
+    if(!elem || !contentElem) return false;
+
+    return scrollPosition > scrollStep;
+  };
+
   const renderTab = (tab?: DockTabModel) => {
     if (!tab) {
       return null;
@@ -39,14 +75,46 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
     }
   };
 
+  useEffect(() => {
+    elem.current.addEventListener("scroll", ( evt: UIEvent<HTMLDivElement>) => {
+      const position = evt.currentTarget.scrollLeft;
+
+      if (position!== undefined) {
+        setScrollPosition(position);
+      }
+    });
+  }, []);
+
   return (
-    <Tabs
-      className="DockTabs"
-      autoFocus={autoFocus}
-      value={selectedTab}
-      onChange={onChangeTab}
-    >
-      {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
-    </Tabs>
+    <div style={{ overflow: "hidden" }} className={"flex gaps align-center"}>
+      {isScrollableLeft() && (
+        <Icon
+          material="keyboard_arrow_left"
+          tooltip="Show tabs to the left"
+          onClick={scrollToLeft}
+          className={"tab-control scroll-left"}
+        />
+      )}
+      <div ref={elem} className={"tabs-control flex gaps align-center"}>
+        <div ref={contentElem} className={"scrollable"}>
+          <Tabs
+            className="DockTabs"
+            autoFocus={autoFocus}
+            value={selectedTab}
+            onChange={onChangeTab}
+          >
+            {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
+          </Tabs>
+        </div>
+      </div>
+      {isScrollableRight() && (
+        <Icon
+          material="keyboard_arrow_right"
+          tooltip="Show tabs to the right"
+          onClick={scrollToRight}
+          className={"tab-control scroll-right"}
+        />
+      )}
+    </div>
   );
 };

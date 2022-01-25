@@ -76,4 +76,47 @@
       bottom: 0;
     }
   }
+
+  .tabs-control {
+    overflow: auto;
+    position: relative;
+
+    &::-webkit-scrollbar {
+      visibility: hidden;
+      height: 4px;
+      background:transparent;
+      position: absolute;
+      bottom: 0;
+    }
+
+    &:hover::-webkit-scrollbar {
+      visibility: visible;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background: var(--scrollBarColor);
+    }
+
+    .tab-control {
+      position: absolute;
+      z-index: 9999;
+    }
+
+    .scroll-left {
+      left: 0;
+    }
+
+    .right {
+      right: 0;
+    }
+
+  }
+
+  .DockTab.active {
+    background-color: var(--menuActiveBackground);
+
+    &::after {
+      color: var(--terminalWhite);
+    }
+  }
 }
