@@ -21,39 +21,56 @@ interface Props {
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
   const elem = useRef(null);
   const contentElem = useRef(null);
+  const [contentWidth, setContentWidth] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollStep = 200;
 
   const scrollToRight = (): void => {
     if(!elem) return;
+    const scroll = scrollPosition + scrollStep;
 
-    setScrollPosition(scrollPosition + scrollStep);
+    setScrollPosition(scroll);
 
-    elem.current.scrollLeft = scrollPosition;
+    elem.current.scrollLeft = scroll;
   };
 
 
   const scrollToLeft = (): void => {
     if(!elem) return;
+    const scroll = scrollPosition - scrollStep;
 
-    setScrollPosition(scrollPosition - scrollStep);
+    setScrollPosition(scroll);
 
-    elem.current.scrollLeft = scrollPosition;
+    elem.current.scrollLeft = scroll;
   };
 
   const  isScrollableRight = (): boolean => {
     if(!elem || !contentElem) return false;
 
-    const containerWidth = elem.current?.clientWidth;
-    const contentWidth = contentElem.current?.clientWidth;
-
-    return contentWidth > containerWidth && scrollPosition < contentWidth - scrollStep;
+    return contentWidth > containerWidth && scrollPosition < contentWidth - containerWidth;
   };
 
   const  isScrollableLeft = (): boolean => {
     if(!elem || !contentElem) return false;
 
     return scrollPosition > scrollStep;
+  };
+
+  const updateScrollPosition = ( evt: UIEvent<HTMLDivElement>) => {
+    const position = evt.currentTarget.scrollLeft;
+
+    if (position!== undefined) {
+      setScrollPosition(position);
+    }
+  };
+
+  const onWindowResize = () => {
+    if(!elem || !contentElem) return;
+
+    setContentWidth(contentElem.current.clientWidth);
+    setContainerWidth(elem.current.clientWidth);
+    setScrollPosition(elem.current.scrollLeft);
   };
 
   const renderTab = (tab?: DockTabModel) => {
@@ -75,14 +92,19 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
     }
   };
 
-  useEffect(() => {
-    elem.current.addEventListener("scroll", ( evt: UIEvent<HTMLDivElement>) => {
-      const position = evt.currentTarget.scrollLeft;
 
-      if (position!== undefined) {
-        setScrollPosition(position);
-      }
-    });
+  useEffect(() => {
+    if(!elem || !contentElem) return;
+
+    setContentWidth(contentElem.current.clientWidth);
+    setContainerWidth(elem.current.clientWidth);
+    setScrollPosition(elem.current.scrollLeft);
+
+    // update values in store on scroll
+    elem.current.addEventListener("scroll", updateScrollPosition);
+
+    // update current values on resize to show/hide scroll
+    window.addEventListener("resize", onWindowResize);
   }, []);
 
   return (
