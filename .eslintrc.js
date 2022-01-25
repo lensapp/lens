@@ -11,6 +11,7 @@ module.exports = {
     "**/dist/**/*",
     "**/static/**/*",
     "**/site/**/*",
+    "extensions/*/*.tgz",
   ],
   settings: {
     react: {
