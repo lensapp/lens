@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./log-list.scss";
+import "./list.scss";
 
 import React from "react";
 import AnsiUp from "ansi_up";
@@ -13,33 +13,21 @@ import { action, computed, observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
-import { SearchStore } from "../../search-store/search-store";
-import { UserStore } from "../../../common/user-store";
-import { array, boundMethod, cssNames } from "../../utils";
-import { VirtualList } from "../virtual-list";
-import type { LogStore } from "./log-store/log.store";
-import type { LogTabStore } from "./log-tab-store/log-tab.store";
+import { SearchStore } from "../../../search-store/search-store";
+import { UserStore } from "../../../../common/user-store";
+import { array, boundMethod, cssNames } from "../../../utils";
+import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import logTabStoreInjectable from "./log-tab-store/log-tab-store.injectable";
-import logStoreInjectable from "./log-store/log-store.injectable";
-import searchStoreInjectable from "../../search-store/search-store.injectable";
+import type { LogTabViewModel } from "../logs/logs-view-model";
 
-interface Props {
-  logs: string[]
-  id: string
+export interface LogListProps {
+  model: LogTabViewModel;
 }
 
 const colorConverter = new AnsiUp();
 
-interface Dependencies {
-  logTabStore: LogTabStore
-  logStore: LogStore
-  searchStore: SearchStore
-}
-
 @observer
-export class NonInjectedLogList extends React.Component<Props & Dependencies> {
+export class LogList extends React.Component<LogListProps> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -47,16 +35,18 @@ export class NonInjectedLogList extends React.Component<Props & Dependencies> {
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
   private lineHeight = 18; // Height of a log line. Should correlate with styles in pod-log-list.scss
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: LogListProps) {
     super(props);
     makeObservable(this);
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.logs, this.onLogsInitialLoad),
-      reaction(() => this.props.logs, this.onLogsUpdate),
-      reaction(() => this.props.logs, this.onUserScrolledUp),
+      reaction(() => this.props.model.logs.get(), (logs, prevLogs) => {
+        this.onLogsInitialLoad(logs, prevLogs);
+        this.onLogsUpdate();
+        this.onUserScrolledUp(logs, prevLogs);
+      }),
     ]);
   }
 
@@ -85,7 +75,7 @@ export class NonInjectedLogList extends React.Component<Props & Dependencies> {
 
     if (newLogsAdded && scrolledToBeginning) {
       const firstLineContents = prevLogs[0];
-      const lineToScroll = this.props.logs.findIndex((value) => value == firstLineContents);
+      const lineToScroll = logs.findIndex((value) => value == firstLineContents);
 
       if (lineToScroll !== -1) {
         this.scrollToItem(lineToScroll, "start");
@@ -97,15 +87,15 @@ export class NonInjectedLogList extends React.Component<Props & Dependencies> {
    * Returns logs with or without timestamps regarding to showTimestamps prop
    */
   @computed
-  get logs() {
-    const showTimestamps = this.props.logTabStore.getData(this.props.id)?.showTimestamps;
+  get logs(): string[] {
+    const { showTimestamps } = this.props.model.logTabData.get();
 
     if (!showTimestamps) {
-      return this.props.logStore.logsWithoutTimestamps;
+      return this.props.model.logsWithoutTimestamps.get();
     }
 
-    return this.props.logs
-      .map(log => this.props.logStore.splitOutTimestamp(log))
+    return this.props.model.timestampSplitLogs
+      .get()
       .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
   }
 
@@ -146,7 +136,7 @@ export class NonInjectedLogList extends React.Component<Props & Dependencies> {
     const { scrollOffset } = props;
 
     if (scrollOffset === 0) {
-      this.props.logStore.load();
+      this.props.model.loadLogs();
     }
   };
 
@@ -177,7 +167,7 @@ export class NonInjectedLogList extends React.Component<Props & Dependencies> {
    * @returns A react element with a row itself
    */
   getLogRow = (rowIndex: number) => {
-    const { searchQuery, isActiveOverlay } = this.props.searchStore;
+    const { searchQuery, isActiveOverlay } = this.props.model.searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
@@ -250,17 +240,3 @@ export class NonInjectedLogList extends React.Component<Props & Dependencies> {
     );
   }
 }
-
-export const LogList = withInjectables<Dependencies, Props>(
-  NonInjectedLogList,
-
-  {
-    getProps: (di, props) => ({
-      logTabStore: di.inject(logTabStoreInjectable),
-      logStore: di.inject(logStoreInjectable),
-      searchStore: di.inject(searchStoreInjectable),
-      ...props,
-    }),
-  },
-);
-

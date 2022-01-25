@@ -6,7 +6,7 @@ import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-
 import createTerminalTabInjectable from "../../renderer/components/dock/create-terminal-tab/create-terminal-tab.injectable";
 import terminalStoreInjectable from "../../renderer/components/dock/terminal-store/terminal-store.injectable";
 import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import logTabStoreInjectable from "../../renderer/components/dock/log-tab-store/log-tab-store.injectable";
+import logTabStoreInjectable from "../../renderer/components/dock/logs/tab-store.injectable";
 import { asLegacyGlobalSingletonForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-singleton-for-extension-api";
 import { TerminalStore as TerminalStoreClass } from "../../renderer/components/dock/terminal-store/terminal.store";
 
