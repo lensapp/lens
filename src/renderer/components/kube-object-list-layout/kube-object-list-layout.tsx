@@ -104,7 +104,6 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
 
     return (
       <ItemListLayout
-        {...layoutProps}
         className={cssNames("KubeObjectListLayout", className)}
         store={store}
         items={items}
@@ -133,6 +132,7 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
           ...[customizeHeader].flat(),
         ]}
         renderItemMenu={item => <KubeObjectMenu object={item} />}
+        {...layoutProps}
       />
     );
   }
