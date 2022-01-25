@@ -12,6 +12,8 @@
   :global(.TableRow):hover .pinIcon {
     opacity: 1;
   }
+
+  flex-grow: 1;
 }
 
 .entityName {
@@ -127,4 +129,11 @@
 
 .catalogAvatar {
   font-size: 1.2ch;
+}
+
+.views {
+  padding: calc(var(--padding) * 2);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
