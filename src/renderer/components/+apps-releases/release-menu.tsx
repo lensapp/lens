@@ -10,7 +10,7 @@ import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import createUpgradeChartTabInjectable from "../dock/create-upgrade-chart-tab/create-upgrade-chart-tab.injectable";
+import createUpgradeChartTabInjectable from "../dock/upgrade-chart/create-upgrade-chart-tab.injectable";
 import releaseRollbackDialogModelInjectable from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
 import deleteReleaseInjectable from "./delete-release/delete-release.injectable";
 

@@ -19,7 +19,7 @@ import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable
-  from "../dock/create-install-chart-tab/create-install-chart-tab.injectable";
+  from "../dock/install-chart/create-install-chart-tab.injectable";
 
 interface Props {
   chart: HelmChart;

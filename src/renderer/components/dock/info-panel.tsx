@@ -12,10 +12,10 @@ import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import type { DockStore, TabId } from "./dock-store/dock.store";
+import type { DockStore, TabId } from "./dock/store";
 import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import dockStoreInjectable from "./dock/store.injectable";
 
 interface Props extends OptionalProps {
   tabId: TabId;

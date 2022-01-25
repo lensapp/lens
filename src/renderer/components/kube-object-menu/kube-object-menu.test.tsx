@@ -17,8 +17,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
-import editResourceTabInjectable from "../dock/edit-resource-tab/edit-resource-tab.injectable";
-import { TabKind } from "../dock/dock-store/dock.store";
+import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-registry.injectable";
 import { DiRender, renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
@@ -54,12 +53,7 @@ describe("kube-object-menu", () => {
 
     di.override(hideDetailsInjectable, () => () => {});
 
-    di.override(editResourceTabInjectable, () => () => ({
-      id: "irrelevant",
-      kind: TabKind.TERMINAL,
-      pinned: false,
-      title: "irrelevant",
-    }));
+    di.override(createEditResourceTabInjectable, () => () => "irrelevant");
 
     addDynamicMenuItem({
       di,

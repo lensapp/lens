@@ -3,31 +3,28 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { computed, observable, makeObservable, IComputedValue } from "mobx";
-
-import { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
-import { autoBind, getOrInsertWith, interval, IntervalFn } from "../../../utils";
-import type { TabId } from "../dock-store/dock.store";
-import type { LogTabData } from "./tab.store";
+import { observable, IComputedValue } from "mobx";
+import type { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
+import { getOrInsertWith, interval, IntervalFn } from "../../../utils";
+import type { TabId } from "../dock/store";
+import type { LogTabData } from "./tab-store";
 
 type PodLogLine = string;
 
 const logLinesToLoad = 500;
 
 interface Dependencies {
+  getPodById: (id: string) => Pod | undefined;
   callForLogs: ({ namespace, name }: { namespace: string, name: string }, query: IPodLogsQuery) => Promise<string>
 }
 
 export class LogStore {
-  @observable protected podLogs = observable.map<TabId, PodLogLine[]>();
+  protected podLogs = observable.map<TabId, PodLogLine[]>();
   protected refreshers = new Map<TabId, IntervalFn>();
 
-  constructor(private dependencies: Dependencies) {
-    makeObservable(this);
-    autoBind(this);
-  }
+  constructor(private dependencies: Dependencies) {}
 
-  handlerError(tabId: TabId, error: any): void {
+  protected handlerError(tabId: TabId, error: any): void {
     if (error.error && !(error.message || error.reason || error.code)) {
       error = error.error;
     }
@@ -47,10 +44,10 @@ export class LogStore {
    * Also, it handles loading errors, rewriting whole logs with error
    * messages
    */
-  load = async (tabId: TabId, logTabData: IComputedValue<LogTabData>) => {
+  public async load(tabId: TabId, logTabData: IComputedValue<LogTabData>): Promise<void> {
     try {
       const logs = await this.loadLogs(logTabData, {
-        tailLines: this.getLinesByTabId(tabId) + logLinesToLoad,
+        tailLines: this.getLogLines(tabId) + logLinesToLoad,
       });
 
       this.getRefresher(tabId, logTabData).start();
@@ -58,7 +55,7 @@ export class LogStore {
     } catch (error) {
       this.handlerError(tabId, error);
     }
-  };
+  }
 
   private getRefresher(tabId: TabId, logTabData: IComputedValue<LogTabData>): IntervalFn {
     return getOrInsertWith(this.refreshers, tabId, () => (
@@ -84,7 +81,7 @@ export class LogStore {
    * starting from last line received.
    * @param tabId
    */
-  loadMore = async (tabId: TabId, logTabData: IComputedValue<LogTabData>) => {
+  public async loadMore(tabId: TabId, logTabData: IComputedValue<LogTabData>): Promise<void> {
     if (!this.podLogs.get(tabId).length) {
       return;
     }
@@ -100,7 +97,7 @@ export class LogStore {
     } catch (error) {
       this.handlerError(tabId, error);
     }
-  };
+  }
 
   /**
    * Main logs loading function adds necessary data to payload and makes
@@ -110,16 +107,16 @@ export class LogStore {
    * @returns A fetch request promise
    */
   private async loadLogs(logTabData: IComputedValue<LogTabData>, params: Partial<IPodLogsQuery>): Promise<string[]> {
-    const { selectedContainer, previous, selectedPod } = logTabData.get();
-    const pod = new Pod(selectedPod);
+    const { selectedContainer, showPrevious, selectedPodId } = logTabData.get();
+    const pod = this.dependencies.getPodById(selectedPodId);
     const namespace = pod.getNs();
     const name = pod.getName();
 
     const result = await this.dependencies.callForLogs({ namespace, name }, {
       ...params,
       timestamps: true,  // Always setting timestamp to separate old logs from new ones
-      container: selectedContainer.name,
-      previous,
+      container: selectedContainer,
+      previous: showPrevious,
     });
 
     return result.trimEnd().split("\n");
@@ -130,26 +127,25 @@ export class LogStore {
    * Converts logs into a string array
    * @returns Length of log lines
    */
-  @computed
   get lines(): number {
     return this.logs.length;
   }
 
-  public getLinesByTabId = (tabId: TabId): number => {
-    return this.getLogsByTabId(tabId).length;
-  };
+  getLogLines(tabId: TabId): number{
+    return this.getLogs(tabId).length;
+  }
 
-  public getLogsByTabId = (tabId: TabId): string[] => {
+  getLogs(tabId: TabId): string[]{
     return this.podLogs.get(tabId) ?? [];
-  };
+  }
 
-  public getLogsWithoutTimestampsByTabId = (tabId: TabId): string[] => {
-    return this.getLogsByTabId(tabId).map(this.removeTimestamps);
-  };
+  getLogsWithoutTimestamps(tabId: TabId): string[]{
+    return this.getLogs(tabId).map(this.removeTimestamps);
+  }
 
-  public getTimestampSplitLogsByTabId = (tabId: TabId): [string, string][] => {
-    return this.getLogsByTabId(tabId).map(this.splitOutTimestamp);
-  };
+  getTimestampSplitLogs(tabId: TabId): [string, string][]{
+    return this.getLogs(tabId).map(this.splitOutTimestamp);
+  }
 
   /**
    * @deprecated This now only returns the empty array
@@ -173,7 +169,7 @@ export class LogStore {
    * (this allows to avoid getting the last stamp in the selection)
    * @param tabId
    */
-  getLastSinceTime(tabId: TabId) {
+  getLastSinceTime(tabId: TabId): string {
     const logs = this.podLogs.get(tabId);
     const timestamps = this.getTimestamps(logs[logs.length - 1]);
     const stamp = new Date(timestamps ? timestamps[0] : null);
@@ -183,7 +179,7 @@ export class LogStore {
     return stamp.toISOString();
   }
 
-  splitOutTimestamp = (logs: string): [string, string] => {
+  splitOutTimestamp(logs: string): [string, string] {
     const extraction = /^(\d+\S+)(.*)/m.exec(logs);
 
     if (!extraction || extraction.length < 3) {
@@ -191,23 +187,23 @@ export class LogStore {
     }
 
     return [extraction[1], extraction[2]];
-  };
+  }
 
-  getTimestamps(logs: string) {
+  getTimestamps(logs: string): RegExpMatchArray {
     return logs.match(/^\d+\S+/gm);
   }
 
-  removeTimestamps = (logs: string) => {
+  removeTimestamps(logs: string): string {
     return logs.replace(/^\d+.*?\s/gm, "");
-  };
+  }
 
-  clearLogs(tabId: TabId) {
+  clearLogs(tabId: TabId): void {
     this.podLogs.delete(tabId);
   }
 
-  reload = (tabId: TabId, logTabData: IComputedValue<LogTabData>) => {
+  reload(tabId: TabId, logTabData: IComputedValue<LogTabData>): Promise<void> {
     this.clearLogs(tabId);
 
     return this.load(tabId, logTabData);
-  };
+  }
 }

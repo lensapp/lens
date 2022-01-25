@@ -8,11 +8,10 @@ import "./resource-selector.scss";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../../common/k8s-api/endpoints";
 import { Badge } from "../../badge";
 import { Select, SelectOption } from "../../select";
-import { podsStore } from "../../+workloads-pods/pods.store";
 import type { LogTabViewModel } from "./logs-view-model";
+import { action } from "mobx";
 
 export interface LogResourceSelectorProps {
   model: LogTabViewModel;
@@ -25,27 +24,26 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     return null;
   }
 
-  const { selectedPod, selectedContainer, pods } = tabData;
-  const pod = new Pod(selectedPod);
+  const { selectedContainer } = tabData;
+  const pods = model.pods.get();
+  const pod = model.pod.get();
   const containers = pod.getContainers();
   const initContainers = pod.getInitContainers();
 
-  const onContainerChange = (option: SelectOption) => {
+  const onContainerChange = (option: SelectOption<string>) => {
     model.updateLogTabData({
-      selectedContainer: containers
-        .concat(initContainers)
-        .find(container => container.name === option.value),
+      selectedContainer: option.value,
     });
 
     model.reloadLogs();
   };
 
-  const onPodChange = (option: SelectOption) => {
-    const selectedPod = podsStore.getByName(option.value, pod.getNs());
-
-    model.updateLogTabData({ selectedPod });
+  const onPodChange = action((option: SelectOption<string>) => {
+    model.updateLogTabData({
+      selectedPodId: option.value,
+    });
     model.updateTabName();
-  };
+  });
 
   const getSelectOptions = (items: string[]) => {
     return items.map(item => {
@@ -76,7 +74,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
 
   useEffect(() => {
     model.reloadLogs();
-  }, [selectedPod]);
+  }, [pod.getId()]);
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
@@ -93,7 +91,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       <span>Container</span>
       <Select
         options={containerSelectOptions}
-        value={{ label: selectedContainer.name, value: selectedContainer.name }}
+        value={{ label: selectedContainer, value: selectedContainer }}
         onChange={onContainerChange}
         autoConvertOptions={false}
         className="container-selector"
