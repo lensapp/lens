@@ -27,7 +27,7 @@ import { getDetailsUrl } from "../../kube-detail-params";
 import { Checkbox } from "../../checkbox";
 import { MonacoEditor } from "../../monaco-editor";
 import { IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";
-import createUpgradeChartTabInjectable from "../../dock/create-upgrade-chart-tab/create-upgrade-chart-tab.injectable";
+import createUpgradeChartTabInjectable from "../../dock/upgrade-chart/create-upgrade-chart-tab.injectable";
 import updateReleaseInjectable from "../update-release/update-release.injectable";
 import releaseInjectable from "./release.injectable";
 import releaseDetailsInjectable from "./release-details.injectable";

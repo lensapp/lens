@@ -8,7 +8,6 @@ import "./controls.scss";
 import React from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../../common/k8s-api/endpoints";
 import { cssNames, saveFileDialog } from "../../../utils";
 import { Checkbox } from "../../checkbox";
 import { Icon } from "../../icon";
@@ -26,21 +25,20 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
   }
 
   const logs = model.timestampSplitLogs.get();
-  const { showTimestamps, previous } = tabData;
+  const { showTimestamps, showPrevious: previous } = tabData;
   const since = logs.length ? logs[0][0] : null;
-  const pod = new Pod(tabData.selectedPod);
 
   const toggleTimestamps = () => {
     model.updateLogTabData({ showTimestamps: !showTimestamps });
   };
 
   const togglePrevious = () => {
-    model.updateLogTabData({ previous: !previous });
+    model.updateLogTabData({ showPrevious: !previous });
     model.reloadLogs();
   };
 
   const downloadLogs = () => {
-    const fileName = pod.getName();
+    const fileName = model.pod.get().getName();
     const logsToDownload: string[] = showTimestamps
       ? model.logs.get()
       : model.logsWithoutTimestamps.get();

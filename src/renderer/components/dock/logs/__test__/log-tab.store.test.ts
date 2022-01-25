@@ -11,12 +11,13 @@ import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod
 import { mockWindow } from "../../../../../../__mocks__/windowMock";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import logTabStoreInjectable from "../tab-store.injectable";
-import type { LogTabStore } from "../tab.store";
-import dockStoreInjectable from "../../dock-store/dock-store.injectable";
-import type { DockStore } from "../../dock-store/dock.store";
-import directoryForUserDataInjectable
-  from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import type { LogTabStore } from "../tab-store";
+import dockStoreInjectable from "../../dock/store.injectable";
+import type { DockStore, TabId } from "../../dock/store";
+import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
+import type { PodLogsTabData } from "../create-pod-logs-tab.injectable";
+import createPodLogsTabInjectable from "../create-pod-logs-tab.injectable";
 
 mockWindow();
 
@@ -27,6 +28,7 @@ podsStore.items.push(new Pod(deploymentPod2));
 describe("log tab store", () => {
   let logTabStore: LogTabStore;
   let dockStore: DockStore;
+  let createPodTab: ({ selectedPod, selectedContainer }: PodLogsTabData) => TabId;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -39,6 +41,7 @@ describe("log tab store", () => {
 
     dockStore = di.inject(dockStoreInjectable);
     logTabStore = di.inject(logTabStoreInjectable);
+    createPodTab = di.inject(createPodLogsTabInjectable);
 
     UserStore.createInstance();
     ThemeStore.createInstance();
@@ -54,7 +57,7 @@ describe("log tab store", () => {
     const selectedPod = new Pod(dockerPod);
     const selectedContainer = selectedPod.getAllContainers()[0];
 
-    logTabStore.createPodTab({
+    createPodTab({
       selectedPod,
       selectedContainer,
     });
@@ -73,7 +76,7 @@ describe("log tab store", () => {
     const siblingPod = new Pod(deploymentPod2);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    createPodTab({
       selectedPod,
       selectedContainer,
     });
@@ -91,7 +94,7 @@ describe("log tab store", () => {
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    createPodTab({
       selectedPod,
       selectedContainer,
     });
@@ -111,7 +114,7 @@ describe("log tab store", () => {
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    createPodTab({
       selectedPod,
       selectedContainer,
     });
@@ -132,7 +135,7 @@ describe("log tab store", () => {
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    const id = logTabStore.createPodTab({
+    const id = createPodTab({
       selectedPod,
       selectedContainer,
     });

@@ -8,7 +8,7 @@ import "@testing-library/jest-dom/extend-expect";
 import * as selectEvent from "react-select-event";
 import { Pod } from "../../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../resource-selector";
-import { dockerPod, deploymentPod1 } from "./pod.mock";
+import { dockerPod, deploymentPod1, deploymentPod2 } from "./pod.mock";
 import { ThemeStore } from "../../../../theme.store";
 import { UserStore } from "../../../../../common/user-store";
 import mockFs from "mock-fs";
@@ -18,7 +18,7 @@ import { renderFor } from "../../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import callForLogsInjectable from "../call-for-logs.injectable";
 import { LogTabViewModel, LogTabViewModelDependencies } from "../logs-view-model";
-import type { TabId } from "../../dock-store/dock.store";
+import type { TabId } from "../../dock/store";
 
 jest.mock("electron", () => ({
   app: {
@@ -51,6 +51,8 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
     reloadLogs: jest.fn(),
     updateTabName: jest.fn(),
     stopLoadingLogs: jest.fn(),
+    getPodById: jest.fn(),
+    getPodsByOwnerId: jest.fn(),
     ...deps,
   });
 }
@@ -60,23 +62,53 @@ const getOnePodViewModel = (tabId: TabId): LogTabViewModel => {
 
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
-      pods: [selectedPod],
-      selectedPod,
-      selectedContainer: selectedPod.getContainers()[0],
+      selectedPodId: selectedPod.getId(),
+      selectedContainer: selectedPod.getContainers()[0].name,
+      namespace: selectedPod.getNs(),
+      showPrevious: false,
+      showTimestamps: false,
     }),
+    getPodById: (id) => {
+      if (id === selectedPod.getId()) {
+        return selectedPod;
+      }
+
+      return undefined;
+    },
   });
 };
 
 const getFewPodsTabData = (tabId: TabId): LogTabViewModel => {
   const selectedPod = new Pod(deploymentPod1);
-  const anotherPod = new Pod(dockerPod);
+  const anotherPod = new Pod(deploymentPod2);
 
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
-      pods: [selectedPod, anotherPod],
-      selectedPod,
-      selectedContainer: selectedPod.getContainers()[0],
+      ownerId: "uuid",
+      selectedPodId: selectedPod.getId(),
+      selectedContainer: selectedPod.getContainers()[0].name,
+      namespace: selectedPod.getNs(),
+      showPrevious: false,
+      showTimestamps: false,
     }),
+    getPodById: (id) => {
+      if (id === selectedPod.getId()) {
+        return selectedPod;
+      }
+
+      if (id === anotherPod.getId()) {
+        return anotherPod;
+      }
+
+      return undefined;
+    },
+    getPodsByOwnerId: (id) => {
+      if (id === "uuid") {
+        return [selectedPod, anotherPod];
+      }
+
+      return [];
+    },
   });
 };
 
