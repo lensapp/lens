@@ -58,6 +58,10 @@
     }
   }
 
+  .tabs-wrapper {
+    overflow: hidden;
+  }
+
   .tab-content {
     position: relative;
     flex: 1;

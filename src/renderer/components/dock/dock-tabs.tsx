@@ -27,14 +27,13 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
   const scrollStep = 200;
 
   const scrollToRight = (): void => {
-    if(!elem) return;
+    if(!elem || scrollPosition + scrollStep > contentWidth) return;
     const scroll = scrollPosition + scrollStep;
 
     setScrollPosition(scroll);
 
     elem.current.scrollLeft = scroll;
   };
-
 
   const scrollToLeft = (): void => {
     if(!elem) return;
@@ -57,7 +56,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
     return scrollPosition > scrollStep;
   };
 
-  const updateScrollPosition = ( evt: UIEvent<HTMLDivElement>) => {
+  const updateScrollPosition = ( evt: UIEvent<HTMLDivElement>): void => {
     const position = evt.currentTarget.scrollLeft;
 
     if (position!== undefined) {
@@ -65,7 +64,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
     }
   };
 
-  const onWindowResize = () => {
+  const onWindowResize = (): void => {
     if(!elem || !contentElem) return;
 
     setContentWidth(contentElem.current.clientWidth);
@@ -108,7 +107,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
   }, []);
 
   return (
-    <div style={{ overflow: "hidden" }} className={"flex gaps align-center"}>
+    <div className={"tabs-wrapper flex gaps align-center"}>
       {isScrollableLeft() && (
         <Icon
           material="keyboard_arrow_left"
