@@ -8,7 +8,7 @@ import "./dock.scss";
 import React from "react";
 import { observer } from "mobx-react";
 
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
@@ -91,20 +91,6 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     }
   }
 
-  isScrollableRight = (): boolean => {
-    if(!this.element) return false;
-    const child = document.querySelector(".DockTabs");
-
-    const parentWidth = this.element.current.clientWidth;
-    const childWidth = child && child.clientWidth || 0;
-
-    return childWidth > parentWidth;
-  };
-
-  scrollToRight = (): void => {
-    console.log("Current", this.element?.current);
-  };
-
   renderTabContent() {
     const { isOpen, height, selectedTab } = this.props.dockStore;
 
@@ -138,7 +124,7 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
           onMinExtentExceed={dockStore.open}
           onDrag={extent => dockStore.height = extent}
         />
-        <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
+        <div className="tabs-container flex align-center">
           <DockTabs
             tabs={tabs}
             selectedTab={selectedTab}
@@ -146,11 +132,6 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
             onChangeTab={this.onChangeTab}
           />
           <div className="toolbar flex gaps align-center box grow">
-            <Icon
-              material="keyboard_arrow_right"
-              tooltip="Show tabs to the right"
-              onClick={this.scrollToRight}
-            />
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>
