@@ -8,7 +8,7 @@ import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/app-event-bus/event-bus";
-import { BundledExtensionsUpdated, ipcMainOn } from "../common/ipc";
+import { BundledExtensionsLoaded, ipcMainOn } from "../common/ipc";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
@@ -165,7 +165,7 @@ export class WindowManager extends Singleton {
 
     if (!this.mainWindow) {
       viewHasLoaded = new Promise<void>(resolve => {
-        ipcMain.once(BundledExtensionsUpdated, () => resolve());
+        ipcMain.once(BundledExtensionsLoaded, () => resolve());
       });
       await this.initMainWindow(showSplash);
     }
