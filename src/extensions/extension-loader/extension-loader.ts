@@ -8,7 +8,7 @@ import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
-import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../../common/ipc";
+import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle, UpdateBundledExtension } from "../../common/ipc";
 import { Disposer, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { KubernetesCluster } from "../common-api/catalog";
@@ -288,7 +288,9 @@ export class ExtensionLoader {
         }
       });
 
-      this.checkForExtensionUpdate(extension);
+      this.checkForExtensionUpdate(extension).then(() => {
+        broadcastMessage(UpdateBundledExtension, extension.id)
+      });
 
       return removeItems;
     });

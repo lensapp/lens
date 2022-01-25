@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BundledExtensionsUpdated } from "../../../../common/ipc";
+import { UpdateBundledExtension } from "../../../../common/ipc";
 import { logger } from "../../../../extensions/common-api";
 import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
 import { ExtensionUpdater, UpdaterDependencies } from "./extension-updater";
 
 interface Dependencies extends UpdaterDependencies {
   extensions: InstalledExtension[];
-  ipcRenderer: { send: (name: string) => void };
+  ipcRenderer: { send: (name: string) => void, on: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any) => void };
 }
 
 export class BundledExtensionsUpdater extends ExtensionUpdater {
@@ -18,16 +18,17 @@ export class BundledExtensionsUpdater extends ExtensionUpdater {
     super(dependencies);
   }
 
-  async updateAll() {
-    logger.info("[EXTENSIONS-UPDATER]: Bundled extensions update started.");
+  init() {
+    this.dependencies.ipcRenderer.on(UpdateBundledExtension, async (event, extensionId: string) => {
+      const extension = this.dependencies.extensions.find(extension => extension.id == extensionId);
 
-    const updates = this.dependencies.extensions.map(this.update);
-    try {
-      await Promise.allSettled(updates);
-    } finally {
-      this.dependencies.ipcRenderer.send(BundledExtensionsUpdated);
-    }
-
-    logger.info("[EXTENSIONS-UPDATER]: Bundled extensions update finished.");
+      if (extension?.isBundled && extension?.availableUpdate) {
+        try {
+          await this.update(extension);
+        } catch (err) {
+          logger.error(`Update failed for ${extension.manifest.name}`)
+        }
+      }
+    });
   }
 }

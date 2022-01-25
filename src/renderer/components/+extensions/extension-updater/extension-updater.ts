@@ -22,7 +22,7 @@ export class ExtensionUpdater {
         // TODO: actual install
         // this.dependencies.installFromInput(availableUpdate.input);
       }
-      reject();
+      reject("Update failed");
     });
 
   }

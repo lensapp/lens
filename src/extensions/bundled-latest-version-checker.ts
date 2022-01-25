@@ -29,7 +29,7 @@ export class BundledVersionChecker implements LensExtensionLatestVersionChecker 
     const json = await this.getJson(`${extensionUpdateUrl}/versions.json`);
 
     if (!json || json.error || !json[manifest.name]) {
-      logger.info(`[BUNDLED-EXTENSIONS-UPDATER]: No version found for ${manifest.name}.`);
+      logger.info(`[EXTENSION-VERSION-CHECKER]: No version found for ${manifest.name}.`);
       return null;
     }
 
