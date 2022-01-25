@@ -36,6 +36,11 @@ interface Dependencies {
   dockStore: DockStore
 }
 
+enum Direction {
+  next = "next",
+  prev = "prev",
+}
+
 @observer
 class NonInjectedDock extends React.Component<Props & Dependencies> {
   private element = React.createRef<HTMLDivElement>();
@@ -51,6 +56,7 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
   onKeyDown = (evt: KeyboardEvent) => {
     const { close, selectedTab, closeTab } = this.props.dockStore;
     const { code, ctrlKey, metaKey, shiftKey } = evt;
+
     // Determine if user working inside <Dock/> or using any other areas in app
     const dockIsFocused = this.element?.current.contains(document.activeElement);
 
@@ -64,6 +70,14 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
       closeTab(selectedTab.id);
       this.element?.current.focus();  // Avoid loosing focus when closing tab
     }
+
+    if(ctrlKey && code === "Period") {
+      this.nextTab(Direction.next);
+    }
+
+    if(ctrlKey && code === "Comma") {
+      this.nextTab(Direction.prev);
+    }
   };
 
   onChangeTab = (tab: DockTab) => {
@@ -72,6 +86,19 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     open();
     selectTab(tab.id);
     this.element?.current.focus();
+  };
+
+  nextTab = (direction: Direction) => {
+    const { tabs, selectedTab } = this.props.dockStore;
+    const currentIndex = tabs.indexOf(selectedTab);
+    const nextIndex = direction === Direction.next ? currentIndex + 1 : currentIndex - 1;
+
+    if (direction === Direction.next && currentIndex!== -1 && nextIndex >= tabs.length) return;
+    if (direction === Direction.prev && currentIndex!== -1 && nextIndex < 0) return;
+
+    const nextElement = tabs[nextIndex];
+
+    this.onChangeTab(nextElement);
   };
 
   renderTab(tab: DockTab) {
