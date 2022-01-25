@@ -124,7 +124,7 @@ export class LensExtension {
 
 
   public async checkForUpdate() {
-    return this.updateChecker?.run(this.manifest);
+    return this.updateChecker?.run(this.manifest, this.isBundled);
   }
 
   protected onActivate(): Promise<void> | void {

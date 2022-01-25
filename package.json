@@ -50,7 +50,7 @@
     "bundledKubectlVersion": "1.21.2",
     "bundledHelmVersion": "3.6.3",
     "sentryDsn": "",
-    "extensionUpdateUrl": "https://lens-binaries.s3-eu-west-1.amazonaws.com/extensions/versions.json"
+    "extensionUpdateUrl": "https://lens-binaries.s3-eu-west-1.amazonaws.com/extensions"
   },
   "engines": {
     "node": ">=14 <15"
