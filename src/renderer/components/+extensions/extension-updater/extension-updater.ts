@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import logger from "../../../../common/logger";
 import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery"
 
 export interface UpdaterDependencies {
@@ -14,16 +15,7 @@ export class ExtensionUpdater {
   }
 
   async update({ availableUpdate, manifest }: InstalledExtension): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (availableUpdate) {
-        console.info(`[EXTENSIONS-UPDATER]: Trying to update ${manifest.name} extension`);
-
-        resolve();
-        // TODO: actual install
-        // this.dependencies.installFromInput(availableUpdate.input);
-      }
-      reject("Update failed");
-    });
-
+    logger.info(`[EXTENSION-UPDATER]: Trying to update ${manifest.name} extension`);
+    return this.dependencies.installFromInput(availableUpdate.input);
   }
 }
