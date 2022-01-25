@@ -3,13 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BundledExtensionsLoaded, ipcRendererOn } from "../../common/ipc"
+import { BundledExtensionsLoaded, BundledExtensionsUpdated, ipcRendererOn } from "../../common/ipc"
 import { logger } from "../common-api";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import { ExtensionUpdater, UpdaterDependencies } from "./extension-updater";
 
 interface Dependencies extends UpdaterDependencies {
   extensions: InstalledExtension[];
+  ipcRenderer: { send: (name: string) => void };
 }
 
 export class BundledExtensionsUpdater extends ExtensionUpdater {
@@ -27,7 +28,11 @@ export class BundledExtensionsUpdater extends ExtensionUpdater {
     logger.info("[EXTENSIONS-UPDATER]: Bundled extensions update started.");
 
     const updates = this.dependencies.extensions.map(this.update);
-    await Promise.allSettled(updates);
+    try {
+      await Promise.allSettled(updates);
+    } finally {
+      this.dependencies.ipcRenderer.send(BundledExtensionsUpdated);
+    }
 
     logger.info("[EXTENSIONS-UPDATER]: Bundled extensions update finished.");
   }

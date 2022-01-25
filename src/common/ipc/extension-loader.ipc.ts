@@ -3,3 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 export const BundledExtensionsLoaded = "extension-loader:bundled-extensions-loaded";
+export const BundledExtensionsUpdated = "extension-loader:bundled-extensions-updated";
