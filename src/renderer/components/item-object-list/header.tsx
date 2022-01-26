@@ -10,11 +10,8 @@ import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { Filter } from "./page-filters.store";
-import { ItemListLayoutHeaderTitle } from "./header-title";
-import { ItemListLayoutHeaderInfo } from "./header-info";
-import { ItemListLayoutHeaderFilters } from "./header-filters";
-import { ItemListLayoutHeaderSearch } from "./header-search";
-import type { HeaderCustomizer, SearchFilter } from "./list-layout";
+import type { HeaderCustomizer, HeaderPlaceholders, SearchFilter } from "./list-layout";
+import { SearchInputUrl } from "../input";
 
 export interface ItemListLayoutHeaderProps<I extends ItemObject> {
   getItems: () => I[];
@@ -54,37 +51,54 @@ export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
       return null;
     }
 
-    const customizeHeaders = [customizeHeader].flat().filter(Boolean);
+    const renderInfo = () => {
+      const allItemsCount = store.getTotalCount();
+      const itemsCount = getItems().length;
 
-    const headerPlaceholders = customizeHeaders.reduce(
+      if (getFilters().length > 0) {
+        return (
+          <>
+            <a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}
+          </>
+        );
+      }
+
+      return allItemsCount === 1
+        ? `${allItemsCount} item`
+        : `${allItemsCount} items`;
+    };
+
+    const customizeHeaderFunctions = [customizeHeader].flat().filter(Boolean);
+    const renderedTitle = typeof renderHeaderTitle === "function"
+      ? renderHeaderTitle(this)
+      : renderHeaderTitle;
+
+    const {
+      filters,
+      info,
+      searchProps,
+      title,
+    } = customizeHeaderFunctions.reduce<HeaderPlaceholders>(
       (prevPlaceholders, customizer) => customizer(prevPlaceholders),
-      {},
+      {
+        title: <h5 className="title">{renderedTitle}</h5>,
+        info: renderInfo(),
+        searchProps: {},
+      },
     );
 
-
     return (
-      <div
-        className={cssNames("header flex gaps align-center", headerClassName)}
-      >
-        <ItemListLayoutHeaderTitle
-          renderHeaderTitle={renderHeaderTitle}
-          headerPlaceholders={headerPlaceholders}
-        />
-
-        <ItemListLayoutHeaderInfo
-          headerPlaceholders={headerPlaceholders}
-          getItems={getItems}
-          store={store}
-          getFilters={getFilters}
-          toggleFilters={toggleFilters}
-        />
-
-        <ItemListLayoutHeaderFilters headerPlaceholders={headerPlaceholders} />
-
-        <ItemListLayoutHeaderSearch
-          headerPlaceholders={headerPlaceholders}
-          searchFilters={searchFilters}
-        />
+      <div className={cssNames("header flex gaps align-center", headerClassName)}>
+        {title}
+        {
+          info && (
+            <div className="info-panel box grow">
+              {info}
+            </div>
+          )
+        }
+        {filters}
+        {searchFilters.length > 0 && searchProps && <SearchInputUrl {...searchProps} />}
       </div>
     );
   }
