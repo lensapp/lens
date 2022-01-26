@@ -4,11 +4,9 @@
  */
 
 import React from "react";
-import path from "path";
-import fs from "fs-extra";
 import { GroupSelectOption, Select, SelectOption } from "../../select";
 import yaml from "js-yaml";
-import { makeObservable, observable } from "mobx";
+import { IComputedValue, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import type { CreateResourceTabStore } from "./store";
 import type { DockTab } from "../dock/store";
@@ -23,42 +21,25 @@ import { apiManager } from "../../../../common/k8s-api/api-manager";
 import { prevDefault } from "../../../utils";
 import { navigate } from "../../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import createResourceTabStoreInjectable
-  from "./store.injectable";
+import createResourceTabStoreInjectable from "./store.injectable";
+import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
 
 interface Props {
   tab: DockTab;
 }
 
 interface Dependencies {
+  createResourceTemplates: IComputedValue<GroupSelectOption<SelectOption>[]>;
   createResourceTabStore: CreateResourceTabStore;
 }
 
 @observer
 class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
-  @observable currentTemplates: Map<string, SelectOption> = new Map();
   @observable error = "";
-  @observable templates: GroupSelectOption<SelectOption>[] = [];
 
   constructor(props: Props & Dependencies) {
     super(props);
     makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.props.createResourceTabStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
-    this.props.createResourceTabStore.watchUserTemplates(() => this.props.createResourceTabStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
-  }
-
-  updateGroupSelectOptions(templates: Record<string, string[]>) {
-    this.templates = Object.entries(templates)
-      .map(([name, grouping]) => this.convertToGroup(name, grouping));
-  }
-
-  convertToGroup(group: string, items: string[]): GroupSelectOption {
-    const options = items.map(v => ({ label: path.parse(v).name, value: v }));
-
-    return { label: group, options };
   }
 
   get tabId() {
@@ -67,10 +48,6 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
 
   get data() {
     return this.props.createResourceTabStore.getData(this.tabId);
-  }
-
-  get currentTemplate() {
-    return this.currentTemplates.get(this.tabId) ?? null;
   }
 
   onChange = (value: string) => {
@@ -82,17 +59,14 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
     this.error = error.toString();
   };
 
-  onSelectTemplate = (item: SelectOption) => {
-    this.currentTemplates.set(this.tabId, item);
-    fs.readFile(item.value, "utf8").then(v => {
-      this.props.createResourceTabStore.setData(this.tabId, v);
-    });
+  onSelectTemplate = (item: SelectOption<string>) => {
+    this.props.createResourceTabStore.setData(this.tabId, item.value);
   };
 
-  create = async (): Promise<undefined> => {
+  create = async (): Promise<void> => {
     if (this.error || !this.data.trim()) {
       // do not save when field is empty or there is an error
-      return null;
+      return;
     }
 
     // skip empty documents
@@ -104,11 +78,12 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
 
     const creatingResources = resources.map(async (resource: string) => {
       try {
-        const data: KubeJsonApiData = await resourceApplierApi.update(resource);
+        const data = await resourceApplierApi.update(resource) as KubeJsonApiData;
         const { kind, apiVersion, metadata: { name, namespace }} = data;
-        const resourceLink = apiManager.lookupApiLink({ kind, apiVersion, name, namespace });
 
         const showDetails = () => {
+          const resourceLink = apiManager.lookupApiLink({ kind, apiVersion, name, namespace });
+
           navigate(getDetailsUrl(resourceLink));
           close();
         };
@@ -124,8 +99,6 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
     });
 
     await Promise.allSettled(creatingResources);
-
-    return undefined;
   };
 
   renderControls() {
@@ -136,11 +109,10 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
           controlShouldRenderValue={false} // always keep initial placeholder
           className="TemplateSelect"
           placeholder="Select Template ..."
-          options={this.templates}
+          options={this.props.createResourceTemplates.get()}
           menuPlacement="top"
           themeName="outlined"
-          onChange={v => this.onSelectTemplate(v)}
-          value={this.currentTemplate}
+          onChange={ this.onSelectTemplate}
         />
       </div>
     );
@@ -170,13 +142,10 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
   }
 }
 
-export const CreateResource = withInjectables<Dependencies, Props>(
-  NonInjectedCreateResource,
-
-  {
-    getProps: (di, props) => ({
-      createResourceTabStore: di.inject(createResourceTabStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const CreateResource = withInjectables<Dependencies, Props>(NonInjectedCreateResource, {
+  getProps: (di, props) => ({
+    createResourceTabStore: di.inject(createResourceTabStoreInjectable),
+    createResourceTemplates: di.inject(createResourceTemplatesInjectable),
+    ...props,
+  }),
+});
