@@ -11,7 +11,7 @@ import { runInAction } from "mobx";
 import createDockTabInjectable from "../dock/create-dock-tab.injectable";
 import setLogTabDataInjectable from "./set-log-tab-data.injectable";
 
-export type CreateLogsTabData = Pick<LogTabData, "ownerId" | "selectedPodId" | "selectedContainer" | "namespace"> & Omit<Partial<LogTabData>, "ownerId" | "selectedPodId" | "selectedContainer" | "namespace">;
+export type CreateLogsTabData = Pick<LogTabData, "owner" | "selectedPodId" | "selectedContainer" | "namespace"> & Omit<Partial<LogTabData>, "owner" | "selectedPodId" | "selectedContainer" | "namespace">;
 
 interface Dependencies {
   createDockTab: (rawTabDesc: DockTabCreate, addNumber?: boolean) => DockTab;

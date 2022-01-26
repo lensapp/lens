@@ -30,7 +30,11 @@ function createWorkloadLogsTab({ createLogsTab }: Dependencies, { workload }: Wo
     selectedContainer: selectedPod.getAllContainers()[0].name,
     selectedPodId: selectedPod.getId(),
     namespace: selectedPod.getNs(),
-    ownerId: workload.getId(),
+    owner: {
+      kind: workload.kind,
+      name: workload.getName(),
+      uid: workload.getId(),
+    },
   });
 }
 

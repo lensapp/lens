@@ -46,7 +46,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
     setLogTabData: jest.fn(),
     loadLogs: jest.fn(),
     reloadLogs: jest.fn(),
-    updateTabName: jest.fn(),
+    renameTab: jest.fn(),
     stopLoadingLogs: jest.fn(),
     getPodById: jest.fn(),
     getPodsByOwnerId: jest.fn(),
@@ -190,13 +190,13 @@ describe("<LogResourceSelector />", () => {
   });
 
   it("updates tab name if selected pod changes", async () => {
-    const updateTabName = jest.fn();
-    const model = getFewPodsTabData("foobar", { updateTabName });
+    const renameTab = jest.fn();
+    const model = getFewPodsTabData("foobar", { renameTab });
     const { findByText, container } = render(<LogResourceSelector model={model} />);
 
     selectEvent.openMenu(container.querySelector(".pod-selector"));
 
     userEvent.click(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" }));
-    expect(updateTabName).toBeCalled();
+    expect(renameTab).toBeCalledWith("foobar", "Pod deploymentPod1");
   });
 });

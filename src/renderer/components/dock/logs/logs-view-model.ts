@@ -16,7 +16,7 @@ export interface LogTabViewModelDependencies {
   setLogTabData: (tabId: TabId, data: LogTabData) => void;
   loadLogs: (tabId: TabId, logTabData: IComputedValue<LogTabData>) => Promise<void>;
   reloadLogs: (tabId: TabId, logTabData: IComputedValue<LogTabData>) => Promise<void>;
-  updateTabName: (tabId: TabId, pod: Pod) => void;
+  renameTab: (tabId: TabId, title: string) => void;
   stopLoadingLogs: (tabId: TabId) => void;
   getPodById: (id: string) => Pod | undefined;
   getPodsByOwnerId: (id: string) => Pod[];
@@ -37,8 +37,8 @@ export class LogTabViewModel {
       return [];
     }
 
-    if (typeof data.ownerId === "string") {
-      return this.dependencies.getPodsByOwnerId(data.ownerId);
+    if (typeof data.owner?.uid === "string") {
+      return this.dependencies.getPodsByOwnerId(data.owner.uid);
     }
 
     return [this.dependencies.getPodById(data.selectedPodId)];
@@ -60,6 +60,6 @@ export class LogTabViewModel {
 
   loadLogs = () => this.dependencies.loadLogs(this.tabId, this.logTabData);
   reloadLogs = () => this.dependencies.reloadLogs(this.tabId, this.logTabData);
-  updateTabName = () => this.dependencies.updateTabName(this.tabId, this.pod.get());
+  renameTab = (title: string) => this.dependencies.renameTab(this.tabId, title);
   stopLoadingLogs = () => this.dependencies.stopLoadingLogs(this.tabId);
 }
