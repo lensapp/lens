@@ -7,7 +7,6 @@ import { SearchStore } from "./search-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import searchStoreInjectable from "./search-store.injectable";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
@@ -35,7 +34,7 @@ describe("search store tests", () => {
 
     await di.runSetups();
 
-    searchStore = di.inject(searchStoreInjectable);
+    searchStore = new SearchStore();
   });
 
   it("does nothing with empty search query", () => {

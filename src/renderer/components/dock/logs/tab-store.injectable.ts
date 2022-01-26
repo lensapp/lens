@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { LogTabStore } from "./log-tab.store";
+import { LogTabStore } from "./tab.store";
 import dockStoreInjectable from "../dock-store/dock-store.injectable";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 

@@ -3,33 +3,33 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./log-search.scss";
+import "./search.scss";
 
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
-import { SearchInput } from "../input";
-import type { SearchStore } from "../../search-store/search-store";
-import { Icon } from "../icon";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import searchStoreInjectable from "../../search-store/search-store.injectable";
+import { SearchInput } from "../../input";
+import { Icon } from "../../icon";
+import type { LogTabViewModel } from "./logs-view-model";
 
 export interface PodLogSearchProps {
-  onSearch: (query: string) => void
-  toPrevOverlay: () => void
-  toNextOverlay: () => void
+  onSearch: (query: string) => void;
+  toPrevOverlay: () => void;
+  toNextOverlay: () => void;
+  model: LogTabViewModel;
 }
 
-interface Props extends PodLogSearchProps {
-  logs: string[]
-}
 
-interface Dependencies {
-  searchStore: SearchStore
-}
+export const LogSearch = observer(({ onSearch, toPrevOverlay, toNextOverlay, model }: PodLogSearchProps) => {
+  const tabData = model.logTabData.get();
 
-const NonInjectedLogSearch = observer((props: Props & Dependencies) => {
-  const { logs, onSearch, toPrevOverlay, toNextOverlay, searchStore } = props;
-  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
+  if (!tabData) {
+    return null;
+  }
+
+  const logs = tabData.showTimestamps
+    ? model.logs.get()
+    : model.logsWithoutTimestamps.get();
+  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = model.searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
   const findCounts = (
     <div className="find-count">
@@ -38,7 +38,7 @@ const NonInjectedLogSearch = observer((props: Props & Dependencies) => {
   );
 
   const setSearch = (query: string) => {
-    searchStore.onSearch(logs, query);
+    model.searchStore.onSearch(logs, query);
     onSearch(query);
   };
 
@@ -64,7 +64,7 @@ const NonInjectedLogSearch = observer((props: Props & Dependencies) => {
 
   useEffect(() => {
     // Refresh search when logs changed
-    searchStore.onSearch(logs);
+    model.searchStore.onSearch(logs);
   }, [logs]);
 
   return (
@@ -92,14 +92,3 @@ const NonInjectedLogSearch = observer((props: Props & Dependencies) => {
     </div>
   );
 });
-
-export const LogSearch = withInjectables<Dependencies, Props>(
-  NonInjectedLogSearch,
-
-  {
-    getProps: (di, props) => ({
-      searchStore: di.inject(searchStoreInjectable),
-      ...props,
-    }),
-  },
-);

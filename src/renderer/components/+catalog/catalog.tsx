@@ -282,7 +282,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
 
     return (
       <MainLayout sidebar={this.renderNavigation()}>
-        <div className="p-6 h-full">
+        <div className={styles.views}>
           {this.renderViews()}
         </div>
         {

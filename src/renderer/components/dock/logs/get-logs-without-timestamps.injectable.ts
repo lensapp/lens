@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { podsApi } from "../../../../../common/k8s-api/endpoints";
+import logStoreInjectable from "./store.injectable";
 
-const callForLogsInjectable = getInjectable({
-  instantiate: () => podsApi.getLogs,
+const getLogsWithoutTimestampsInjectable = getInjectable({
+  instantiate: (di) => di.inject(logStoreInjectable).getLogsWithoutTimestampsByTabId,
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default callForLogsInjectable;
+export default getLogsWithoutTimestampsInjectable;
