@@ -16,13 +16,12 @@ import directoryForUserDataInjectable from "../../../../common/app-paths/directo
 import mockFs from "mock-fs";
 
 jest.mock("../../../../common/vars", () => {
-  const SemVer = require("semver").SemVer;
-
-  const versionStub = new SemVer("1.0.0");
+  const { SemVer } = require("semver");
 
   return {
+    ...jest.requireActual<{}>("../../../../common/vars"),
     isMac: true,
-    appSemVer: versionStub,
+    appSemVer: new SemVer("1.0.0"),
   };
 });
 

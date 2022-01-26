@@ -4,19 +4,26 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import path from "path";
-import { readdir, readFile } from "fs/promises";
 import { hasCorrectExtension } from "./has-correct-extension";
 import type { RawTemplates } from "./create-resource-templates.injectable";
+import "../../../../common/vars";
+import readFileInjectable from "../../../../common/fs/read-file.injectable";
+import readDirInjectable from "../../../../common/fs/read-dir.injectable";
 
-const templatesFolder = path.resolve(__static, "../templates/create-resource");
+interface Dependencies {
+  readDir: (dirPath: string) => Promise<string[]>;
+  readFile: (filePath: string, encoding: "utf-8") => Promise<string>;
+}
 
-async function getTemplates() {
+async function getTemplates({ readDir, readFile }: Dependencies) {
+  const templatesFolder = path.resolve(__static, "../templates/create-resource");
+
   /**
    * Mapping between file names and their contents
    */
   const templates: [file: string, contents: string][] = [];
 
-  for (const dirEntry of await readdir(templatesFolder)) {
+  for (const dirEntry of await readDir(templatesFolder)) {
     if (hasCorrectExtension(dirEntry)) {
       templates.push([path.parse(dirEntry).name, await readFile(path.join(templatesFolder, dirEntry), "utf-8")]);
     }
@@ -28,8 +35,11 @@ async function getTemplates() {
 let lensTemplatePaths: RawTemplates;
 
 const lensCreateResourceTemplatesInjectable = getInjectable({
-  setup: async () => {
-    lensTemplatePaths = ["lens", await getTemplates()];
+  setup: async (di) => {
+    lensTemplatePaths = ["lens", await getTemplates({
+      readFile: di.inject(readFileInjectable),
+      readDir: di.inject(readDirInjectable),
+    })];
   },
   instantiate: () => lensTemplatePaths,
   lifecycle: lifecycleEnum.singleton,

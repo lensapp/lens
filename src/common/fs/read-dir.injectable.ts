@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { writeJsonFile } from "./write-json-file";
-import fsInjectable from "../fs.injectable";
+import fsInjectable from "./fs.injectable";
 
-const writeJsonFileInjectable = getInjectable({
-  instantiate: (di) => writeJsonFile({ fs: di.inject(fsInjectable) }),
+const readDirInjectable = getInjectable({
+  instantiate: (di) => di.inject(fsInjectable).readdir,
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default writeJsonFileInjectable;
+export default readDirInjectable;
