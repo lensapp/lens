@@ -41,27 +41,25 @@ async function sendCommand({ selectTab, createTerminalTab, getTerminalApi }: Dep
   if (tabId) {
     selectTab(tabId);
   } else {
-    const tab = createTerminalTab();
-
-    tabId = tab.id;
-    await when(() => Boolean(getTerminalApi(tab.id)));
-
-    const shellIsReady = when(() => getTerminalApi(tab.id).isReady);
-    const notifyVeryLong = setTimeout(() => {
-      shellIsReady.cancel();
-      Notifications.info(
-        "If terminal shell is not ready please check your shell init files, if applicable.",
-        {
-          timeout: 4_000,
-        },
-      );
-    }, 10_000);
-
-    await shellIsReady.catch(noop);
-    clearTimeout(notifyVeryLong);
+    tabId = createTerminalTab().id;
   }
 
+  await when(() => Boolean(getTerminalApi(tabId)));
+
   const terminalApi = getTerminalApi(tabId);
+  const shellIsReady = when(() =>terminalApi.isReady);
+  const notifyVeryLong = setTimeout(() => {
+    shellIsReady.cancel();
+    Notifications.info(
+      "If terminal shell is not ready please check your shell init files, if applicable.",
+      {
+        timeout: 4_000,
+      },
+    );
+  }, 10_000);
+
+  await shellIsReady.catch(noop);
+  clearTimeout(notifyVeryLong);
 
   if (terminalApi) {
     if (options.enter) {

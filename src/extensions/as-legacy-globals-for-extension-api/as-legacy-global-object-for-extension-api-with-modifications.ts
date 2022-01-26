@@ -33,7 +33,7 @@ export const asLegacyGlobalObjectForExtensionApiWithModifications = <
           ...instantiationParameter,
         );
 
-        const propertyValue = instance[propertyName] ?? otherFields[propertyName as any];
+        const propertyValue = instance[propertyName] ?? otherFields[propertyName as any]();
 
         if (typeof propertyValue === "function") {
           return function (...args: any[]) {
