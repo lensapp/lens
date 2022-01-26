@@ -22,6 +22,8 @@ export class BundledExtensionsUpdater extends ExtensionUpdater {
     this.dependencies.ipcRenderer.on(UpdateBundledExtension, async (event, extensionId: string) => {
       const extension = this.dependencies.extensions.find(extension => extension.id == extensionId);
 
+      console.log({extension})
+
       if (extension?.isBundled && extension?.availableUpdate) {
         try {
           await this.update(extension);
