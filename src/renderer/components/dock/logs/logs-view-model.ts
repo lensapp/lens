@@ -14,18 +14,20 @@ export interface LogTabViewModelDependencies {
   getTimestampSplitLogs: (tabId: TabId) => [string, string][];
   getLogTabData: (tabId: TabId) => LogTabData;
   setLogTabData: (tabId: TabId, data: LogTabData) => void;
-  loadLogs: (tabId: TabId, logTabData: IComputedValue<LogTabData>) => Promise<void>;
-  reloadLogs: (tabId: TabId, logTabData: IComputedValue<LogTabData>) => Promise<void>;
+  loadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>) => Promise<void>;
+  reloadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>) => Promise<void>;
   renameTab: (tabId: TabId, title: string) => void;
   stopLoadingLogs: (tabId: TabId) => void;
   getPodById: (id: string) => Pod | undefined;
   getPodsByOwnerId: (id: string) => Pod[];
+  areLogsPresent: (tabId: TabId) => boolean;
   createSearchStore: () => SearchStore;
 }
 
 export class LogTabViewModel {
   constructor(protected readonly tabId: TabId, private readonly dependencies: LogTabViewModelDependencies) {}
 
+  readonly isLoading = computed(() => this.dependencies.areLogsPresent(this.tabId));
   readonly logs = computed(() => this.dependencies.getLogs(this.tabId));
   readonly logsWithoutTimestamps = computed(() => this.dependencies.getLogsWithoutTimestamps(this.tabId));
   readonly timestampSplitLogs = computed(() => this.dependencies.getTimestampSplitLogs(this.tabId));
@@ -58,8 +60,8 @@ export class LogTabViewModel {
     this.dependencies.setLogTabData(this.tabId, { ...this.logTabData.get(), ...partialData });
   };
 
-  loadLogs = () => this.dependencies.loadLogs(this.tabId, this.logTabData);
-  reloadLogs = () => this.dependencies.reloadLogs(this.tabId, this.logTabData);
+  loadLogs = () => this.dependencies.loadLogs(this.tabId, this.pod, this.logTabData);
+  reloadLogs = () => this.dependencies.reloadLogs(this.tabId, this.pod, this.logTabData);
   renameTab = (title: string) => this.dependencies.renameTab(this.tabId, title);
   stopLoadingLogs = () => this.dependencies.stopLoadingLogs(this.tabId);
 }

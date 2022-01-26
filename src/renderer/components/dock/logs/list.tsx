@@ -19,6 +19,7 @@ import { array, boundMethod, cssNames } from "../../../utils";
 import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
+import { Spinner } from "../../spinner";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -212,10 +213,18 @@ export class LogList extends React.Component<LogListProps> {
   };
 
   render() {
+    if (this.props.model.isLoading.get()) {
+      return (
+        <div className="LogList flex box grow align-center justify-center">
+          <Spinner />
+        </div>
+      );
+    }
+
     if (!this.logs.length) {
       return (
         <div className="LogList flex box grow align-center justify-center">
-          There are no logs available for container
+          There are no logs available for container {this.props.model.logTabData.get()?.selectedContainer}
         </div>
       );
     }

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { observable, IComputedValue } from "mobx";
+import { observable, IComputedValue, when } from "mobx";
 import type { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
 import { getOrInsertWith, interval, IntervalFn } from "../../../utils";
 import type { TabId } from "../dock/store";
@@ -14,7 +14,6 @@ type PodLogLine = string;
 const logLinesToLoad = 500;
 
 interface Dependencies {
-  getPodById: (id: string) => Pod | undefined;
   callForLogs: ({ namespace, name }: { namespace: string, name: string }, query: IPodLogsQuery) => Promise<string>
 }
 
@@ -44,24 +43,24 @@ export class LogStore {
    * Also, it handles loading errors, rewriting whole logs with error
    * messages
    */
-  public async load(tabId: TabId, logTabData: IComputedValue<LogTabData>): Promise<void> {
+  public async load(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
     try {
-      const logs = await this.loadLogs(logTabData, {
+      const logs = await this.loadLogs(computedPod, logTabData, {
         tailLines: this.getLogLines(tabId) + logLinesToLoad,
       });
 
-      this.getRefresher(tabId, logTabData).start();
+      this.getRefresher(tabId, computedPod, logTabData).start();
       this.podLogs.set(tabId, logs);
     } catch (error) {
       this.handlerError(tabId, error);
     }
   }
 
-  private getRefresher(tabId: TabId, logTabData: IComputedValue<LogTabData>): IntervalFn {
+  private getRefresher(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): IntervalFn {
     return getOrInsertWith(this.refreshers, tabId, () => (
       interval(10, () => {
         if (this.podLogs.has(tabId)) {
-          this.loadMore(tabId, logTabData);
+          this.loadMore(tabId, computedPod, logTabData);
         }
       })
     ));
@@ -81,14 +80,14 @@ export class LogStore {
    * starting from last line received.
    * @param tabId
    */
-  public async loadMore(tabId: TabId, logTabData: IComputedValue<LogTabData>): Promise<void> {
+  public async loadMore(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
     if (!this.podLogs.get(tabId).length) {
       return;
     }
 
     try {
       const oldLogs = this.podLogs.get(tabId);
-      const logs = await this.loadLogs(logTabData, {
+      const logs = await this.loadLogs(computedPod, logTabData, {
         sinceTime: this.getLastSinceTime(tabId),
       });
 
@@ -106,9 +105,11 @@ export class LogStore {
    * @param params request parameters described in IPodLogsQuery interface
    * @returns A fetch request promise
    */
-  private async loadLogs(logTabData: IComputedValue<LogTabData>, params: Partial<IPodLogsQuery>): Promise<string[]> {
-    const { selectedContainer, showPrevious, selectedPodId } = logTabData.get();
-    const pod = this.dependencies.getPodById(selectedPodId);
+  private async loadLogs(computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>, params: Partial<IPodLogsQuery>): Promise<string[]> {
+    await when(() => Boolean(computedPod.get() && logTabData.get()), { timeout: 5_000 });
+
+    const { selectedContainer, showPrevious } = logTabData.get();
+    const pod = computedPod.get();
     const namespace = pod.getNs();
     const name = pod.getName();
 
@@ -133,6 +134,10 @@ export class LogStore {
 
   getLogLines(tabId: TabId): number{
     return this.getLogs(tabId).length;
+  }
+
+  areLogsPresent(tabId: TabId): boolean {
+    return !this.podLogs.has(tabId);
   }
 
   getLogs(tabId: TabId): string[]{
@@ -201,9 +206,9 @@ export class LogStore {
     this.podLogs.delete(tabId);
   }
 
-  reload(tabId: TabId, logTabData: IComputedValue<LogTabData>): Promise<void> {
+  reload(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
     this.clearLogs(tabId);
 
-    return this.load(tabId, logTabData);
+    return this.load(tabId, computedPod, logTabData);
   }
 }
