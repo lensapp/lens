@@ -49,7 +49,8 @@ describe("lens extension", () => {
         isBundled: false,
         isEnabled: true,
         isCompatible: true,
-      }, updateChecker);
+        updateChecker
+      });
 
       const updateSpy = jest.spyOn(updateChecker, "run");
 
@@ -58,7 +59,7 @@ describe("lens extension", () => {
       expect(updateSpy).toHaveBeenCalledWith({
         name: "foo-bar",
         version: "0.1.1",
-      });
+      }, false);
     });
   });
 
@@ -81,7 +82,8 @@ describe("lens extension", () => {
       isBundled: false,
       isEnabled: true,
       isCompatible: true,
-    }, updateChecker);
+      updateChecker
+    });
 
     const availableUpdate = await ext.checkForUpdate();
 
