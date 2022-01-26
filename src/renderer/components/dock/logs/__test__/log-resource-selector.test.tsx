@@ -51,6 +51,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
     getPodById: jest.fn(),
     getPodsByOwnerId: jest.fn(),
     createSearchStore: jest.fn(),
+    areLogsPresent: jest.fn(),
     ...deps,
   });
 }
