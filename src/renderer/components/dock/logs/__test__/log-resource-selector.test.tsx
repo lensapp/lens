@@ -19,6 +19,7 @@ import directoryForUserDataInjectable from "../../../../../common/app-paths/dire
 import callForLogsInjectable from "../call-for-logs.injectable";
 import { LogTabViewModel, LogTabViewModelDependencies } from "../logs-view-model";
 import type { TabId } from "../../dock/store";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("electron", () => ({
   app: {
@@ -57,7 +58,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
   });
 }
 
-const getOnePodViewModel = (tabId: TabId): LogTabViewModel => {
+const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
   const selectedPod = new Pod(dockerPod);
 
   return mockLogTabViewModel(tabId, {
@@ -75,10 +76,11 @@ const getOnePodViewModel = (tabId: TabId): LogTabViewModel => {
 
       return undefined;
     },
+    ...deps,
   });
 };
 
-const getFewPodsTabData = (tabId: TabId): LogTabViewModel => {
+const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
   const selectedPod = new Pod(deploymentPod1);
   const anotherPod = new Pod(deploymentPod2);
 
@@ -109,6 +111,7 @@ const getFewPodsTabData = (tabId: TabId): LogTabViewModel => {
 
       return [];
     },
+    ...deps,
   });
 };
 
@@ -167,18 +170,15 @@ describe("<LogResourceSelector />", () => {
     const { container, findByText } = render(getComponent(model));
 
     selectEvent.openMenu(container.querySelector(".pod-selector"));
-
-    expect(await findByText("dockerExporter", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
+    expect(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
     expect(await findByText("deploymentPod1", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
   });
 
   it("renders sibling containers in dropdown", async () => {
     const model = getFewPodsTabData("foobar");
     const { findByText, container } = render(getComponent(model));
-    const containerSelector: HTMLElement = container.querySelector(".container-selector");
 
-    selectEvent.openMenu(containerSelector);
-
+    selectEvent.openMenu(container.querySelector(".container-selector"));
     expect(await findByText("node-exporter-1")).toBeInTheDocument();
     expect(await findByText("init-node-exporter")).toBeInTheDocument();
     expect(await findByText("init-node-exporter-1")).toBeInTheDocument();
@@ -187,10 +187,19 @@ describe("<LogResourceSelector />", () => {
   it("renders pod owner as dropdown title", async () => {
     const model = getFewPodsTabData("foobar");
     const { findByText, container } = render(getComponent(model));
-    const podSelector: HTMLElement = container.querySelector(".pod-selector");
 
-    selectEvent.openMenu(podSelector);
-
+    selectEvent.openMenu(container.querySelector(".pod-selector"));
     expect(await findByText("super-deployment")).toBeInTheDocument();
+  });
+
+  it("updates tab name if selected pod changes", async () => {
+    const updateTabName = jest.fn();
+    const model = getFewPodsTabData("foobar", { updateTabName });
+    const { findByText, container } = render(getComponent(model));
+
+    selectEvent.openMenu(container.querySelector(".pod-selector"));
+
+    userEvent.click(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" }));
+    expect(updateTabName).toBeCalled();
   });
 });

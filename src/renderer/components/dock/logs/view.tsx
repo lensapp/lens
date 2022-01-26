@@ -46,15 +46,13 @@ const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStore
     namespaces: data ? [data.namespace] : [],
   }), [data?.namespace]);
 
-  const scrollToOverlay = () => {
-    const { activeOverlayLine } = model.searchStore;
-
-    if (!logListElement.current || activeOverlayLine === undefined) {
+  const scrollToOverlay = (overlayLine: number | undefined) => {
+    if (!logListElement.current || overlayLine === undefined) {
       return;
     }
 
     // Scroll vertically
-    logListElement.current.scrollToItem(activeOverlayLine, "center");
+    logListElement.current.scrollToItem(overlayLine, "center");
     // Scroll horizontally in timeout since virtual list need some time to prepare its contents
     setTimeout(() => {
       const overlay = document.querySelector(".PodLogs .list span.active");
@@ -76,10 +74,8 @@ const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStore
           <div className="flex gaps">
             <LogResourceSelector model={model} />
             <LogSearch
-              onSearch={scrollToOverlay}
               model={model}
-              toPrevOverlay={scrollToOverlay}
-              toNextOverlay={scrollToOverlay}
+              scrollToOverlay={scrollToOverlay}
             />
           </div>
         )}
