@@ -5,7 +5,7 @@
 import type { LogTabData } from "./tab-store";
 import { computed, IComputedValue } from "mobx";
 import type { TabId } from "../dock/store";
-import { SearchStore } from "../../../search-store/search-store";
+import type { SearchStore } from "../../../search-store/search-store";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
 
 export interface LogTabViewModelDependencies {
@@ -20,6 +20,7 @@ export interface LogTabViewModelDependencies {
   stopLoadingLogs: (tabId: TabId) => void;
   getPodById: (id: string) => Pod | undefined;
   getPodsByOwnerId: (id: string) => Pod[];
+  createSearchStore: () => SearchStore;
 }
 
 export class LogTabViewModel {
@@ -51,7 +52,7 @@ export class LogTabViewModel {
 
     return this.dependencies.getPodById(data.selectedPodId);
   });
-  readonly searchStore = new SearchStore();
+  readonly searchStore = this.dependencies.createSearchStore();
 
   updateLogTabData = (partialData: Partial<LogTabData>) => {
     this.dependencies.setLogTabData(this.tabId, { ...this.logTabData.get(), ...partialData });

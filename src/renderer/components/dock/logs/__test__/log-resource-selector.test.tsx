@@ -37,10 +37,6 @@ jest.mock("electron", () => ({
   },
 }));
 
-const getComponent = (model: LogTabViewModel) => (
-  <LogResourceSelector model={model} />
-);
-
 function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependencies>): LogTabViewModel {
   return new LogTabViewModel(tabId, {
     getLogs: jest.fn(),
@@ -54,6 +50,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
     stopLoadingLogs: jest.fn(),
     getPodById: jest.fn(),
     getPodsByOwnerId: jest.fn(),
+    createSearchStore: jest.fn(),
     ...deps,
   });
 }
@@ -144,14 +141,14 @@ describe("<LogResourceSelector />", () => {
 
   it("renders w/o errors", () => {
     const model = getOnePodViewModel("foobar");
-    const { container } = render(getComponent(model));
+    const { container } = render(<LogResourceSelector model={model} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("renders proper namespace", async () => {
     const model = getOnePodViewModel("foobar");
-    const { findByTestId } = render(getComponent(model));
+    const { findByTestId } = render(<LogResourceSelector model={model} />);
     const ns = await findByTestId("namespace-badge");
 
     expect(ns).toHaveTextContent("default");
@@ -159,7 +156,7 @@ describe("<LogResourceSelector />", () => {
 
   it("renders proper selected items within dropdowns", async () => {
     const model = getOnePodViewModel("foobar");
-    const { findByText } = render(getComponent(model));
+    const { findByText } = render(<LogResourceSelector model={model} />);
 
     expect(await findByText("dockerExporter")).toBeInTheDocument();
     expect(await findByText("docker-exporter")).toBeInTheDocument();
@@ -167,7 +164,7 @@ describe("<LogResourceSelector />", () => {
 
   it("renders sibling pods in dropdown", async () => {
     const model = getFewPodsTabData("foobar");
-    const { container, findByText } = render(getComponent(model));
+    const { container, findByText } = render(<LogResourceSelector model={model} />);
 
     selectEvent.openMenu(container.querySelector(".pod-selector"));
     expect(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
@@ -176,7 +173,7 @@ describe("<LogResourceSelector />", () => {
 
   it("renders sibling containers in dropdown", async () => {
     const model = getFewPodsTabData("foobar");
-    const { findByText, container } = render(getComponent(model));
+    const { findByText, container } = render(<LogResourceSelector model={model} />);
 
     selectEvent.openMenu(container.querySelector(".container-selector"));
     expect(await findByText("node-exporter-1")).toBeInTheDocument();
@@ -186,7 +183,7 @@ describe("<LogResourceSelector />", () => {
 
   it("renders pod owner as dropdown title", async () => {
     const model = getFewPodsTabData("foobar");
-    const { findByText, container } = render(getComponent(model));
+    const { findByText, container } = render(<LogResourceSelector model={model} />);
 
     selectEvent.openMenu(container.querySelector(".pod-selector"));
     expect(await findByText("super-deployment")).toBeInTheDocument();
@@ -195,7 +192,7 @@ describe("<LogResourceSelector />", () => {
   it("updates tab name if selected pod changes", async () => {
     const updateTabName = jest.fn();
     const model = getFewPodsTabData("foobar", { updateTabName });
-    const { findByText, container } = render(getComponent(model));
+    const { findByText, container } = render(<LogResourceSelector model={model} />);
 
     selectEvent.openMenu(container.querySelector(".pod-selector"));
 
