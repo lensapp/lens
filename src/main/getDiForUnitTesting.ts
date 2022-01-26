@@ -12,8 +12,8 @@ import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
-import writeJsonFileInjectable from "../common/fs/write-json-file/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file/read-json-file.injectable";
+import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
+import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },

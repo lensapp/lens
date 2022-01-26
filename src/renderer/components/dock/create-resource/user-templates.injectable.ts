@@ -21,8 +21,8 @@ function groupTemplates(templates: Map<string, string>): RawTemplates[] {
   for (const [filePath, contents] of templates) {
     const rawRelative = path.dirname(path.relative(userTemplatesFolder, filePath));
     const title = rawRelative === "."
-    ? "ungrouped"
-    : rawRelative;
+      ? "ungrouped"
+      : rawRelative;
 
     getOrInsert(res, title, []).push([path.parse(filePath).name, contents]);
   }

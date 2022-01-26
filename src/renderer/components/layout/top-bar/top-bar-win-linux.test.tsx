@@ -12,8 +12,7 @@ import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
@@ -21,15 +20,14 @@ const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 jest.mock("../../../../common/ipc");
 
 jest.mock("../../../../common/vars", () => {
-  const SemVer = require("semver").SemVer;
-
-  const versionStub = new SemVer("1.0.0");
+  const { SemVer } = require("semver");
 
   return {
+    ...jest.requireActual<{}>("../../../../common/vars"),
     __esModule: true,
     isWindows: null,
     isLinux: null,
-    appSemVer: versionStub,
+    appSemVer: new SemVer("1.0.0"),
   };
 });
 

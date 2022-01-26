@@ -83,7 +83,11 @@ const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependenci
 
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
-      ownerId: "uuid",
+      owner: {
+        uid: "uuid",
+        kind: "Deployment",
+        name: "super-deployment",
+      },
       selectedPodId: selectedPod.getId(),
       selectedContainer: selectedPod.getContainers()[0].name,
       namespace: selectedPod.getNs(),
@@ -181,12 +185,13 @@ describe("<LogResourceSelector />", () => {
     expect(await findByText("init-node-exporter-1")).toBeInTheDocument();
   });
 
-  it("renders pod owner as dropdown title", async () => {
+  it("renders pod owner as badge", async () => {
     const model = getFewPodsTabData("foobar");
-    const { findByText, container } = render(<LogResourceSelector model={model} />);
+    const { findByText } = render(<LogResourceSelector model={model} />);
 
-    selectEvent.openMenu(container.querySelector(".pod-selector"));
-    expect(await findByText("super-deployment")).toBeInTheDocument();
+    expect(await findByText("super-deployment", {
+      exact: false,
+    })).toBeInTheDocument();
   });
 
   it("updates tab name if selected pod changes", async () => {
@@ -197,6 +202,6 @@ describe("<LogResourceSelector />", () => {
     selectEvent.openMenu(container.querySelector(".pod-selector"));
 
     userEvent.click(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" }));
-    expect(renameTab).toBeCalledWith("foobar", "Pod deploymentPod1");
+    expect(renameTab).toBeCalledWith("foobar", "Pod deploymentPod2");
   });
 });

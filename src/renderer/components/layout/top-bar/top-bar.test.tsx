@@ -12,18 +12,16 @@ import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injec
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 
 jest.mock("../../../../common/vars", () => {
-  const SemVer = require("semver").SemVer;
-
-  const versionStub = new SemVer("1.0.0");
+  const { SemVer } = require("semver");
 
   return {
+    ...jest.requireActual<{}>("../../../../common/vars"),
     isMac: true,
-    appSemVer: versionStub,
+    appSemVer: new SemVer("1.0.0"),
   };
 });
 
