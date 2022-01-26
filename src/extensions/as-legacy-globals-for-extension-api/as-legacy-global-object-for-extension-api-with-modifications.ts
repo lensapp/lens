@@ -7,12 +7,17 @@ import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extensi
 
 type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
+type MapInjectables<T> = {
+  [Key in keyof T]: T[Key] extends () => infer Res ? Res : never;
+};
+
 export const asLegacyGlobalObjectForExtensionApiWithModifications = <
   TInjectable extends Injectable<unknown, unknown, TInstantiationParameter>,
   TInstantiationParameter,
+  OtherFields extends Record<string, () => any>,
 >(
     injectableKey: TInjectable,
-    otherFields: Record<string | symbol, () => any>,
+    otherFields: OtherFields,
     ...instantiationParameter: TentativeTuple<TInstantiationParameter>
   ) =>
   new Proxy(
@@ -28,7 +33,7 @@ export const asLegacyGlobalObjectForExtensionApiWithModifications = <
           ...instantiationParameter,
         );
 
-        const propertyValue = instance[propertyName] ?? otherFields[propertyName]?.();
+        const propertyValue = instance[propertyName] ?? otherFields[propertyName as any];
 
         if (typeof propertyValue === "function") {
           return function (...args: any[]) {
@@ -39,4 +44,4 @@ export const asLegacyGlobalObjectForExtensionApiWithModifications = <
         return propertyValue;
       },
     },
-  ) as ReturnType<TInjectable["instantiate"]>;
+  ) as ReturnType<TInjectable["instantiate"]> & MapInjectables<OtherFields>;

@@ -212,8 +212,6 @@ export class LogList extends React.Component<LogListProps> {
   };
 
   render() {
-    const rowHeights = array.filled(this.logs.length, this.lineHeight);
-
     if (!this.logs.length) {
       return (
         <div className="LogList flex box grow align-center justify-center">
@@ -226,7 +224,7 @@ export class LogList extends React.Component<LogListProps> {
       <div className={cssNames("LogList flex" )}>
         <VirtualList
           items={this.logs}
-          rowHeights={rowHeights}
+          rowHeights={array.filled(this.logs.length, this.lineHeight)}
           getRow={this.getLogRow}
           onScroll={this.onScroll}
           outerRef={this.virtualListDiv}
