@@ -100,4 +100,47 @@ describe("LogSearch tests", () => {
     userEvent.click(await screen.findByText("keyboard_arrow_up"));
     expect(scrollToOverlay).toBeCalled();
   });
+
+  it("should scroll to new active overlay when clicking the next button", async () => {
+    const scrollToOverlay = jest.fn();
+    const model = getOnePodViewModel("foobar", {
+      getLogsWithoutTimestamps: () => [
+        "hello",
+        "world",
+      ],
+    });
+
+    render(
+      <LogSearch
+        model={model}
+        scrollToOverlay={scrollToOverlay}
+      />,
+    );
+
+    userEvent.click(await screen.findByPlaceholderText("Search..."));
+    userEvent.keyboard("o");
+    userEvent.click(await screen.findByText("keyboard_arrow_down"));
+    expect(scrollToOverlay).toBeCalled();
+  });
+
+  it("next and previous should be disabled initially", async () => {
+    const scrollToOverlay = jest.fn();
+    const model = getOnePodViewModel("foobar", {
+      getLogsWithoutTimestamps: () => [
+        "hello",
+        "world",
+      ],
+    });
+
+    render(
+      <LogSearch
+        model={model}
+        scrollToOverlay={scrollToOverlay}
+      />,
+    );
+
+    userEvent.click(await screen.findByText("keyboard_arrow_down"));
+    userEvent.click(await screen.findByText("keyboard_arrow_up"));
+    expect(scrollToOverlay).not.toBeCalled();
+  });
 });
