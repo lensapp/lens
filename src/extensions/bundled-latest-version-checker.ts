@@ -36,7 +36,7 @@ export class BundledVersionChecker implements LensExtensionLatestVersionChecker 
     const version = json[manifest.name];
 
     return {
-      input: `${extensionUpdateUrl}/${manifest.name}-${version}.tar`,
+      input: `${extensionUpdateUrl}/${manifest.name}-${version}.tgz`,
       version: new SemVer(version).version
     }
   }

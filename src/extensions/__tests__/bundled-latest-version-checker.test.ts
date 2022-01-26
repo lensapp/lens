@@ -87,7 +87,7 @@ describe("BundledExtensionsVersionChecker", () => {
     }, true);
 
     expect(version).toMatchObject({
-      input: `${process.env.BUNDLED_EXTENSIONS_URL}/sample-bar-1.0.1.tar`,
+      input: `${process.env.BUNDLED_EXTENSIONS_URL}/sample-bar-1.0.1.tgz`,
       version: "1.0.1"
     })
   })
