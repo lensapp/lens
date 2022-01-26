@@ -3,26 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { IComputedValue } from "mobx";
-import type { Pod } from "../../../../common/k8s-api/endpoints";
 import { bind } from "../../../utils";
+import type { TabId } from "../dock/store";
 import type { LogStore } from "./store";
 import logStoreInjectable from "./store.injectable";
-import type { LogTabData } from "./tab-store";
 
 interface Dependencies {
   logStore: LogStore;
 }
 
-function reloadLogs({ logStore }: Dependencies, tabId: string, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
-  return logStore.reload(tabId, pod, logTabData);
+function areLogsPresent({ logStore }: Dependencies, tabId: TabId) {
+  return logStore.areLogsPresent(tabId);
 }
 
-const reloadLogsInjectable = getInjectable({
-  instantiate: (di) => bind(reloadLogs, null, {
+const areLogsPresentInjectable = getInjectable({
+  instantiate: (di) => bind(areLogsPresent, null, {
     logStore: di.inject(logStoreInjectable),
   }),
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default reloadLogsInjectable;
+export default areLogsPresentInjectable;

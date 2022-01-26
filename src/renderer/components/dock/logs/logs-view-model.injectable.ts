@@ -16,6 +16,7 @@ import stopLoadingLogsInjectable from "./stop-loading-logs.injectable";
 import { podsStore } from "../../+workloads-pods/pods.store";
 import createSearchStoreInjectable from "../../../search-store/create-search-store.injectable";
 import renameTabInjectable from "../dock/rename-tab.injectable";
+import areLogsPresentInjectable from "./are-logs-present.injectable";
 
 export interface InstantiateArgs {
   tabId: TabId;
@@ -32,6 +33,7 @@ const logsViewModelInjectable = getInjectable({
     loadLogs: di.inject(loadLogsInjectable),
     renameTab: di.inject(renameTabInjectable),
     stopLoadingLogs: di.inject(stopLoadingLogsInjectable),
+    areLogsPresent: di.inject(areLogsPresentInjectable),
     getPodById: id => podsStore.getById(id),
     getPodsByOwnerId: id => podsStore.getPodsByOwnerId(id),
     createSearchStore: di.inject(createSearchStoreInjectable),

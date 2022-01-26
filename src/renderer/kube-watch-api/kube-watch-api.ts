@@ -27,7 +27,6 @@ class WrappedAbortController extends AbortController {
 interface SubscribeStoreParams {
   store: KubeObjectStore<KubeObject>;
   parent: AbortController;
-  watchChanges: boolean;
   namespaces: string[];
   onLoadFailure?: (err: any) => void;
 }
@@ -75,7 +74,7 @@ export interface KubeWatchSubscribeStoreOptions {
 
   /**
    * A function that is called when listing fails. If set then blocks errors
-   * being rejected with
+   * from rejecting promises
    */
   onLoadFailure?: (err: any) => void;
 }
@@ -89,11 +88,15 @@ export class KubeWatchApi {
 
   constructor(private dependencies: Dependencies) {}
 
-  private subscribeStore({ store, parent, watchChanges, namespaces, onLoadFailure }: SubscribeStoreParams): Disposer {
-    if (this.#watch.inc(store) > 1) {
+  private subscribeStore({ store, parent, namespaces, onLoadFailure }: SubscribeStoreParams): Disposer {
+    const isNamespaceFilterWatch = !namespaces;
+
+    if (isNamespaceFilterWatch && this.#watch.inc(store) > 1) {
       // don't load or subscribe to a store more than once
       return () => this.#watch.dec(store);
     }
+
+    namespaces ??= this.dependencies.clusterFrameContext?.contextNamespaces ?? [];
 
     let childController = new WrappedAbortController(parent);
     const unsubscribe = disposer();
@@ -117,7 +120,7 @@ export class KubeWatchApi {
      */
     loadThenSubscribe(namespaces).catch(noop);
 
-    const cancelReloading = watchChanges
+    const cancelReloading = isNamespaceFilterWatch && store.api.isNamespaced
       ? reaction(
         // Note: must slice because reaction won't fire if it isn't there
         () => [this.dependencies.clusterFrameContext.contextNamespaces.slice(), this.dependencies.clusterFrameContext.hasSelectedAll] as const,
@@ -141,7 +144,7 @@ export class KubeWatchApi {
       : noop; // don't watch namespaces if namespaces were provided
 
     return () => {
-      if (this.#watch.dec(store) === 0) {
+      if (isNamespaceFilterWatch && this.#watch.dec(store) === 0) {
         // only stop the subcribe if this is the last one
         cancelReloading();
         childController.abort();
@@ -156,8 +159,7 @@ export class KubeWatchApi {
       ...stores.map(store => this.subscribeStore({
         store,
         parent,
-        watchChanges: !namespaces && store.api.isNamespaced,
-        namespaces: namespaces ?? this.dependencies.clusterFrameContext?.contextNamespaces ?? [],
+        namespaces,
         onLoadFailure,
       })),
     );
