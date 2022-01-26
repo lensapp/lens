@@ -27,7 +27,7 @@ const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void
-  createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension, updateChecker: LensExtensionUpdateChecker) => LensExtension,
+  createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension,
 }
 
 export interface ExtensionLoading {
@@ -354,8 +354,10 @@ export class ExtensionLoader {
             // const instance = new LensExtensionClass(extension, this.extensionUpdateChecker);
             const instance = this.dependencies.createExtensionInstance(
               LensExtensionClass,
-              extension,
-              this.extensionUpdateChecker,
+              {
+                ...extension,
+                updateChecker: this.extensionUpdateChecker
+              }
             );
 
             this.instances.set(extId, instance);

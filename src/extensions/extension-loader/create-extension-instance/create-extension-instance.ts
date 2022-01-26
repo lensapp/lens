@@ -8,12 +8,11 @@ import {
   LensExtensionDependencies,
   setLensExtensionDependencies,
 } from "../../lens-extension-set-dependencies";
-import type { LensExtensionUpdateChecker } from "../../lens-extension-update-checker";
 
 export const createExtensionInstance =
   (dependencies: LensExtensionDependencies) =>
-    (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension, updateChecker?: LensExtensionUpdateChecker) => {
-      const instance = new ExtensionClass(extension, updateChecker);
+    (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => {
+      const instance = new ExtensionClass(extension);
 
       instance[setLensExtensionDependencies](dependencies);
 

@@ -24,6 +24,7 @@ import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
 import { isProduction } from "../../common/vars";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import type { PackageJson } from "type-fest";
+import type { LensExtensionUpdateChecker } from "../lens-extension-update-checker";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader;
@@ -57,6 +58,7 @@ export interface InstalledExtension {
     version: string;
     input: string;
   }
+  updateChecker?: LensExtensionUpdateChecker
 }
 
 const logModule = "[EXTENSION-DISCOVERY]";

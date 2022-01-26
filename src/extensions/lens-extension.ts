@@ -45,7 +45,7 @@ export class LensExtension {
 
   [Disposers] = disposer();
 
-  constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension, updateChecker?: LensExtensionUpdateChecker) {
+  constructor({ id, manifest, manifestPath, isBundled, updateChecker }: InstalledExtension) {
     makeObservable(this);
     this.id = id;
     this.manifest = manifest;
