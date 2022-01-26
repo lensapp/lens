@@ -86,14 +86,16 @@ export function webpackLensRenderer(): webpack.Configuration {
           test: /\.node$/,
           use: "node-loader",
         },
-        {
-          resourceQuery: /raw/,
-          type: "asset/source",
-        },
         getTSLoader(),
         cssModulesWebpackRule(),
         filesAndIconsWebpackRule(),
         fontsLoaderWebpackRule(),
+        {
+          // Allows to import/require() resource as plain text with suffix `?raw`
+          // To make it work must be listed in the end of `config.module.rules`
+          resourceQuery: /raw/,
+          type: "asset/source",
+        },
       ],
     },
 
@@ -133,7 +135,7 @@ export function webpackLensRenderer(): webpack.Configuration {
 export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
   return {
     test: /\.(jpg|png|svg|map|ico)$/,
-    type: "asset/resource",
+    type: "asset/resource", // https://webpack.js.org/guides/asset-modules/
   };
 }
 
@@ -143,7 +145,7 @@ export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
 export function fontsLoaderWebpackRule(): webpack.RuleSetRule {
   return {
     test: /\.(ttf|eot|woff2?)$/,
-    type: "asset",
+    type: "asset/resource",
   };
 }
 

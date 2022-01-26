@@ -25,7 +25,17 @@ declare module "*.scss" {
   const content: string;
   export = content;
 }
-declare module "*.ttf" {
-  const content: string;
-  export = content;
+
+// Declare everything what's bundled as webpack's type="asset/resource"
+declare module "*.svg?raw" {
+  export = "";
 }
+declare module "*.svg" {
+  export = "";
+}
+declare module "*.jpg";
+declare module "*.png";
+declare module "*.eot";
+declare module "*.woff";
+declare module "*.woff2";
+declare module "*.ttf";

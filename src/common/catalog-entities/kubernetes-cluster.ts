@@ -11,6 +11,7 @@ import { broadcastMessage, requestMain } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
+import KubeClusterCategoryIcon from "./icons/kubernetes.svg?raw";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -134,7 +135,7 @@ class KubernetesClusterCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Clusters",
-    icon: require(`./icons/kubernetes.svg?raw`).default, // eslint-disable-line
+    icon: KubeClusterCategoryIcon,
   };
   public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",

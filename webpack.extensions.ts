@@ -57,6 +57,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
         fontsLoaderWebpackRule(),
         filesAndIconsWebpackRule(),
         cssModulesWebpackRule({ styleLoader: "style-loader" }),
+        { resourceQuery: /raw/, type: "asset/source" }, // import with "?raw"
       ],
     },
     resolve: {

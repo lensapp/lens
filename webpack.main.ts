@@ -42,11 +42,12 @@ configs.push((): webpack.Configuration => {
           test: /\.node$/,
           use: "node-loader",
         },
+        getTSLoader({}, /\.ts$/),
         {
+          // import SvgRawTextFile from "./some-file.svg?raw"
           resourceQuery: /raw/,
           type: "asset/source",
         },
-        getTSLoader({}, /\.ts$/),
       ],
     },
     plugins: [

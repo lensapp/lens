@@ -100,7 +100,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as inline svg-icon
     if (typeof svg === "string") {
-      const svgIconText = svg.includes("<svg") ? svg : require(`./${svg}.svg?raw`).default;
+      const svgIconText = svg.includes("<svg") ? svg : require(`./${svg}.svg?raw`);
 
       iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
     }
