@@ -74,6 +74,7 @@ export class WindowManager extends Singleton {
           nodeIntegrationInSubFrames: true,
           webviewTag: true,
           contextIsolation: false,
+          nativeWindowOpen: true,
         },
       });
       this.windowState.manage(this.mainWindow);
@@ -131,7 +132,8 @@ export class WindowManager extends Singleton {
 
           // Always disable Node.js integration for all webviews
           webPreferences.nodeIntegration = false;
-        }).setWindowOpenHandler((details) => {
+        })
+        .setWindowOpenHandler((details) => {
           shell.openExternal(details.url);
 
           return { action: "deny" };
@@ -247,6 +249,7 @@ export class WindowManager extends Singleton {
           nodeIntegration: true,
           contextIsolation: false,
           nodeIntegrationInSubFrames: true,
+          nativeWindowOpen: true,
         },
       });
       await this.splashWindow.loadURL("static://splash.html");

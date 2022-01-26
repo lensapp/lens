@@ -150,13 +150,12 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
 
   ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
     const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
-    const options = {
+
+    menu.popup({
       ...BrowserWindow.fromWebContents(event.sender),
       // Center of the topbar menu icon
       x: 20,
       y: 20,
-    } as Electron.PopupOptions;
-
-    menu.popup(options);
+    });
   });
 };
