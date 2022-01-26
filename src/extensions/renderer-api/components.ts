@@ -12,8 +12,9 @@ import commandOverlayInjectable from "../../renderer/components/command-palette/
 import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
 import createPodLogsTabInjectable from "../../renderer/components/dock/logs/create-pod-logs-tab.injectable";
 import createWorkloadLogsTabInjectable from "../../renderer/components/dock/logs/create-workload-logs-tab.injectable";
-import updateTabNameInjectable from "../../renderer/components/dock/logs/update-tab-name.injectable";
 import sendCommandInjectable from "../../renderer/components/dock/terminal/send-command.injectable";
+import { podsStore } from "../../renderer/components/+workloads-pods/pods.store";
+import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -80,7 +81,13 @@ export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModification
 export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(logTabStoreInjectable, {
   createPodTab: () => asLegacyGlobalFunctionForExtensionApi(createPodLogsTabInjectable),
   createWorkloadTab: () => asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),
-  renameTab: () => asLegacyGlobalFunctionForExtensionApi(updateTabNameInjectable),
+  renameTab: () => (tabId: string): void => {
+    const renameTab = asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
+    const tabData = logTabStore.getData(tabId);
+    const pod = podsStore.getById(tabData.selectedPodId);
+
+    renameTab(tabId, `Pod ${pod.getName()}`);
+  },
   tabs: () => undefined,
 });
 

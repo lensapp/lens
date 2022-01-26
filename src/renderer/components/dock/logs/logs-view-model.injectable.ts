@@ -12,10 +12,10 @@ import reloadLogsInjectable from "./reload-logs.injectable";
 import getLogTabDataInjectable from "./get-log-tab-data.injectable";
 import loadLogsInjectable from "./load-logs.injectable";
 import setLogTabDataInjectable from "./set-log-tab-data.injectable";
-import updateTabNameInjectable from "./update-tab-name.injectable";
 import stopLoadingLogsInjectable from "./stop-loading-logs.injectable";
 import { podsStore } from "../../+workloads-pods/pods.store";
 import createSearchStoreInjectable from "../../../search-store/create-search-store.injectable";
+import renameTabInjectable from "../dock/rename-tab.injectable";
 
 export interface InstantiateArgs {
   tabId: TabId;
@@ -30,7 +30,7 @@ const logsViewModelInjectable = getInjectable({
     getLogTabData: di.inject(getLogTabDataInjectable),
     setLogTabData: di.inject(setLogTabDataInjectable),
     loadLogs: di.inject(loadLogsInjectable),
-    updateTabName: di.inject(updateTabNameInjectable),
+    renameTab: di.inject(renameTabInjectable),
     stopLoadingLogs: di.inject(stopLoadingLogsInjectable),
     getPodById: id => podsStore.getById(id),
     getPodsByOwnerId: id => podsStore.getPodsByOwnerId(id),

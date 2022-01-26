@@ -18,10 +18,8 @@ interface Dependencies {
 }
 
 function createPodLogsTab({ createLogsTab }: Dependencies, { selectedPod, selectedContainer }: PodLogsTabData): TabId {
-  const podOwner = selectedPod.getOwnerRefs()[0];
-
   return createLogsTab(`Pod ${selectedPod.getName()}`, {
-    ownerId: podOwner?.uid,
+    owner: selectedPod.getOwnerRefs()[0],
     namespace: selectedPod.getNs(),
     selectedContainer: selectedContainer.name,
     selectedPodId: selectedPod.getId(),

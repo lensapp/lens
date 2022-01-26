@@ -8,11 +8,26 @@ import type { StorageHelper } from "../../../utils";
 import type { TabId } from "../dock/store";
 import { logTabDataValidator } from "./log-tab-data.validator";
 
+export interface LogTabOwnerRef {
+  /**
+   * The uid of the owner
+   */
+  uid: string;
+  /**
+   * The name of the owner
+   */
+  name: string;
+  /**
+   * The kind of the owner
+   */
+  kind: string;
+}
+
 export interface LogTabData {
   /**
-   * The workload's uid for a workload logs tab
+   * The owning workload for this logging tab
    */
-  ownerId?: string;
+  owner?: LogTabOwnerRef;
 
   /**
    * The uid of the currently selected pod
