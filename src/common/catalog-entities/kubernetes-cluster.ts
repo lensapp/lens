@@ -134,7 +134,7 @@ class KubernetesClusterCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Clusters",
-    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default, // eslint-disable-line
+    icon: require(`./icons/kubernetes.svg?raw`).default, // eslint-disable-line
   };
   public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",

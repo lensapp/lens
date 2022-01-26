@@ -60,6 +60,7 @@ export function webpackLensRenderer(): webpack.Configuration {
       path: buildDir,
       filename: "[name].js",
       chunkFilename: "chunks/[name].js",
+      assetModuleFilename: "assets/[name][ext][query]",
     },
     stats: {
       warningsFilter: [
@@ -84,6 +85,10 @@ export function webpackLensRenderer(): webpack.Configuration {
         {
           test: /\.node$/,
           use: "node-loader",
+        },
+        {
+          resourceQuery: /raw/,
+          type: "asset/source",
         },
         getTSLoader(),
         cssModulesWebpackRule(),
@@ -128,13 +133,7 @@ export function webpackLensRenderer(): webpack.Configuration {
 export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
   return {
     test: /\.(jpg|png|svg|map|ico)$/,
-    use: {
-      loader: "file-loader",
-      options: {
-        name: "images/[name]-[hash:6].[ext]",
-        esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (vue/react?)
-      },
-    },
+    type: "asset/resource",
   };
 }
 
@@ -144,12 +143,7 @@ export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
 export function fontsLoaderWebpackRule(): webpack.RuleSetRule {
   return {
     test: /\.(ttf|eot|woff2?)$/,
-    use: {
-      loader: "url-loader",
-      options: {
-        name: "fonts/[name].[ext]",
-      },
-    },
+    type: "asset",
   };
 }
 

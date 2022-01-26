@@ -42,6 +42,10 @@ configs.push((): webpack.Configuration => {
           test: /\.node$/,
           use: "node-loader",
         },
+        {
+          resourceQuery: /raw/,
+          type: "asset/source",
+        },
         getTSLoader({}, /\.ts$/),
       ],
     },
