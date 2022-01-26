@@ -19,7 +19,7 @@ import dockStoreInjectable from "./dock/store.injectable";
 
 interface Props extends OptionalProps {
   tabId: TabId;
-  submit?: () => Promise<ReactNode | string>;
+  submit?: () => Promise<ReactNode | string | void>;
 }
 
 interface OptionalProps {
@@ -80,7 +80,7 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
     try {
       const result = await this.props.submit();
 
-      if (showNotifications) Notifications.ok(result);
+      if (showNotifications && result) Notifications.ok(result);
     } catch (error) {
       if (showNotifications) Notifications.error(error.toString());
     } finally {
