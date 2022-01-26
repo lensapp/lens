@@ -13,18 +13,21 @@ import { ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../../navigation";
 import { catalogRoute, catalogURL } from "../../../../common/routes";
-import { isLinux, isWindows } from "../../../../common/vars";
 import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
 import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc";
 import { WindowAction } from "../../../../common/ipc/window";
+import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
+import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 
-interface Props extends React.HTMLAttributes<any> {}
+export interface TopBarProps extends React.HTMLAttributes<any> {}
 
 interface Dependencies {
   items: IComputedValue<TopBarRegistration[]>;
+  isWindows: boolean;
+  isLinux: boolean;
 }
 
 const prevEnabled = observable.box(false);
@@ -38,7 +41,7 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-const NonInjectedTopBar = (({ items, children, ...rest }: Props & Dependencies) => {
+const NonInjectedTopBar = observer(({ items, children, isWindows, isLinux, ...rest }: TopBarProps & Dependencies) => {
   const elem = useRef<HTMLDivElement>();
 
   const openAppContextMenu = () => {
@@ -161,9 +164,11 @@ const renderRegisteredItems = (items: TopBarRegistration[]) => (
 
 
 
-export const TopBar = withInjectables(observer(NonInjectedTopBar), {
+export const TopBar = withInjectables<Dependencies, TopBarProps>(NonInjectedTopBar, {
   getProps: (di, props) => ({
     items: di.inject(topBarItemsInjectable),
+    isLinux: di.inject(isLinuxInjectable),
+    isWindows: di.inject(isWindowsInjectable),
     ...props,
   }),
 });
