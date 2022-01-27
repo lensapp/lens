@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import yaml, { YAMLException } from "js-yaml";
+import yaml from "js-yaml";
 
 export interface MonacoValidator {
   (value: string): void;
@@ -10,9 +10,9 @@ export interface MonacoValidator {
 
 export function yamlValidator(value: string) {
   try {
-    yaml.load(value);
+    yaml.loadAll(value);
   } catch (error) {
-    throw String(error as YAMLException);
+    throw String(error);
   }
 }
 
