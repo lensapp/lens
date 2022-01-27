@@ -308,7 +308,7 @@
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/react-window": "^1.8.5",
     "@types/readable-stream": "^2.3.12",
-    "@types/request": "^2.48.7",
+    "@types/request": "^2.48.8",
     "@types/request-promise-native": "^1.0.18",
     "@types/semver": "^7.3.9",
     "@types/sharp": "^0.29.4",
