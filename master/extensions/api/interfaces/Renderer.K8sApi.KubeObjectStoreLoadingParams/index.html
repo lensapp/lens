@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeStatus/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.KubeObjectStoreLoadingParams/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Class: KubeStatus - Lens Extension Development</title>
+        <title>Interface: KubeObjectStoreLoadingParams - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubestatus" class="md-skip">
+        <a href="#interface-kubeobjectstoreloadingparams" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: KubeStatus
+              Interface: KubeObjectStoreLoadingParams
             
           </span>
         </div>
@@ -720,35 +720,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constructors" class="md-nav__link">
-    Constructors
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
   </a>
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#constructors_1" class="md-nav__link">
-    Constructors
-  </a>
-  
-    <nav class="md-nav" aria-label="Constructors">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
-  <a href="#constructor" class="md-nav__link">
-    constructor
+  <a href="#methods" class="md-nav__link">
+    Methods
   </a>
   
 </li>
@@ -767,36 +747,35 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#apiversion" class="md-nav__link">
-    apiVersion
+  <a href="#namespaces" class="md-nav__link">
+    namespaces
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#code" class="md-nav__link">
-    code
+  <a href="#reqinit" class="md-nav__link">
+    reqInit
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#kind" class="md-nav__link">
-    kind
-  </a>
+      </ul>
+    </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#message" class="md-nav__link">
-    message
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reason" class="md-nav__link">
-    reason
+  <a href="#onloadfailure" class="md-nav__link">
+    onLoadFailure
   </a>
   
 </li>
@@ -820,24 +799,29 @@
                 
                 
                 
-                <h1 id="class-kubestatus">Class: KubeStatus<a class="headerlink" href="#class-kubestatus" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeStatus</p>
+                <h1 id="interface-kubeobjectstoreloadingparams">Interface: KubeObjectStoreLoadingParams<a class="headerlink" href="#interface-kubeobjectstoreloadingparams" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeObjectStoreLoadingParams</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#constructor">constructor</a></li>
-</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#apiversion">apiVersion</a></li>
-<li><a href="./#code">code</a></li>
-<li><a href="./#kind">kind</a></li>
-<li><a href="./#message">message</a></li>
-<li><a href="./#reason">reason</a></li>
+<li><a href="./#namespaces">namespaces</a></li>
+<li><a href="./#reqinit">reqInit</a></li>
 </ul>
-<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
-<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubeStatus</strong>(<code>data</code>)</p>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#onloadfailure">onLoadFailure</a></li>
+</ul>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="namespaces">namespaces<a class="headerlink" href="#namespaces" title="Permanent link">#</a></h3>
+<p>• <strong>namespaces</strong>: <code>string</code>[]</p>
+<hr />
+<h3 id="reqinit">reqInit<a class="headerlink" href="#reqinit" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>reqInit</strong>: <code>RequestInit</code></p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="onloadfailure">onLoadFailure<a class="headerlink" href="#onloadfailure" title="Permanent link">#</a></h3>
+<p>▸ <code>Optional</code> <strong>onLoadFailure</strong>(<code>err</code>): <code>void</code></p>
+<p>A function that is called when listing fails. If set then blocks errors
+being rejected with</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -848,26 +832,13 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>data</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeStatusData/"><code>KubeStatusData</code></a></td>
+<td align="left"><code>err</code></td>
+<td align="left"><code>any</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code></p>
-<hr />
-<h3 id="code">code<a class="headerlink" href="#code" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>code</strong>: <code>number</code></p>
-<hr />
-<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>kind</strong>: <code>"Status"</code></p>
-<hr />
-<h3 id="message">message<a class="headerlink" href="#message" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>message</strong>: <code>string</code></p>
-<hr />
-<h3 id="reason">reason<a class="headerlink" href="#reason" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>reason</strong>: <code>string</code></p>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
                 
               
               

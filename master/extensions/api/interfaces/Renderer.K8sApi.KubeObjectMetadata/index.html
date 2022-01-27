@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeStatus/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.KubeObjectMetadata/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Class: KubeStatus - Lens Extension Development</title>
+        <title>Interface: KubeObjectMetadata - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubestatus" class="md-skip">
+        <a href="#interface-kubeobjectmetadata" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: KubeStatus
+              Interface: KubeObjectMetadata
             
           </span>
         </div>
@@ -720,35 +720,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constructors" class="md-nav__link">
-    Constructors
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#constructors_1" class="md-nav__link">
-    Constructors
-  </a>
-  
-    <nav class="md-nav" aria-label="Constructors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#constructor" class="md-nav__link">
-    constructor
   </a>
   
 </li>
@@ -767,36 +740,85 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#apiversion" class="md-nav__link">
-    apiVersion
+  <a href="#annotations" class="md-nav__link">
+    annotations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#code" class="md-nav__link">
-    code
+  <a href="#continue" class="md-nav__link">
+    continue
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kind" class="md-nav__link">
-    kind
+  <a href="#creationtimestamp" class="md-nav__link">
+    creationTimestamp
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#message" class="md-nav__link">
-    message
+  <a href="#deletiontimestamp" class="md-nav__link">
+    deletionTimestamp
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#reason" class="md-nav__link">
-    reason
+  <a href="#finalizers" class="md-nav__link">
+    finalizers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labels" class="md-nav__link">
+    labels
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace" class="md-nav__link">
+    namespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ownerreferences" class="md-nav__link">
+    ownerReferences
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resourceversion" class="md-nav__link">
+    resourceVersion
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selflink" class="md-nav__link">
+    selfLink
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uid" class="md-nav__link">
+    uid
   </a>
   
 </li>
@@ -820,54 +842,64 @@
                 
                 
                 
-                <h1 id="class-kubestatus">Class: KubeStatus<a class="headerlink" href="#class-kubestatus" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeStatus</p>
+                <h1 id="interface-kubeobjectmetadata">Interface: KubeObjectMetadata<a class="headerlink" href="#interface-kubeobjectmetadata" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeObjectMetadata</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#constructor">constructor</a></li>
-</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#apiversion">apiVersion</a></li>
-<li><a href="./#code">code</a></li>
-<li><a href="./#kind">kind</a></li>
-<li><a href="./#message">message</a></li>
-<li><a href="./#reason">reason</a></li>
+<li><a href="./#annotations">annotations</a></li>
+<li><a href="./#continue">continue</a></li>
+<li><a href="./#creationtimestamp">creationTimestamp</a></li>
+<li><a href="./#deletiontimestamp">deletionTimestamp</a></li>
+<li><a href="./#finalizers">finalizers</a></li>
+<li><a href="./#labels">labels</a></li>
+<li><a href="./#name">name</a></li>
+<li><a href="./#namespace">namespace</a></li>
+<li><a href="./#ownerreferences">ownerReferences</a></li>
+<li><a href="./#resourceversion">resourceVersion</a></li>
+<li><a href="./#selflink">selfLink</a></li>
+<li><a href="./#uid">uid</a></li>
 </ul>
-<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
-<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubeStatus</strong>(<code>data</code>)</p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>data</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeStatusData/"><code>KubeStatusData</code></a></td>
-</tr>
-</tbody>
-</table>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code></p>
+<h3 id="annotations">annotations<a class="headerlink" href="#annotations" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>annotations</strong>: <code>Object</code></p>
+<h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">#</a></h4>
+<p>▪ [annotation: <code>string</code>]: <code>string</code></p>
 <hr />
-<h3 id="code">code<a class="headerlink" href="#code" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>code</strong>: <code>number</code></p>
+<h3 id="continue">continue<a class="headerlink" href="#continue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>continue</strong>: <code>string</code></p>
 <hr />
-<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>kind</strong>: <code>"Status"</code></p>
+<h3 id="creationtimestamp">creationTimestamp<a class="headerlink" href="#creationtimestamp" title="Permanent link">#</a></h3>
+<p>• <strong>creationTimestamp</strong>: <code>string</code></p>
 <hr />
-<h3 id="message">message<a class="headerlink" href="#message" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>message</strong>: <code>string</code></p>
+<h3 id="deletiontimestamp">deletionTimestamp<a class="headerlink" href="#deletiontimestamp" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>deletionTimestamp</strong>: <code>string</code></p>
 <hr />
-<h3 id="reason">reason<a class="headerlink" href="#reason" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>reason</strong>: <code>string</code></p>
+<h3 id="finalizers">finalizers<a class="headerlink" href="#finalizers" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>finalizers</strong>: <code>string</code>[]</p>
+<hr />
+<h3 id="labels">labels<a class="headerlink" href="#labels" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>labels</strong>: <code>Object</code></p>
+<h4 id="index-signature_1">Index signature<a class="headerlink" href="#index-signature_1" title="Permanent link">#</a></h4>
+<p>▪ [label: <code>string</code>]: <code>string</code></p>
+<hr />
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <strong>name</strong>: <code>string</code></p>
+<hr />
+<h3 id="namespace">namespace<a class="headerlink" href="#namespace" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>namespace</strong>: <code>string</code></p>
+<hr />
+<h3 id="ownerreferences">ownerReferences<a class="headerlink" href="#ownerreferences" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>ownerReferences</strong>: { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion</code>: <code>boolean</code> ; <code>controller</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
+<hr />
+<h3 id="resourceversion">resourceVersion<a class="headerlink" href="#resourceversion" title="Permanent link">#</a></h3>
+<p>• <strong>resourceVersion</strong>: <code>string</code></p>
+<hr />
+<h3 id="selflink">selfLink<a class="headerlink" href="#selflink" title="Permanent link">#</a></h3>
+<p>• <strong>selfLink</strong>: <code>string</code></p>
+<hr />
+<h3 id="uid">uid<a class="headerlink" href="#uid" title="Permanent link">#</a></h3>
+<p>• <strong>uid</strong>: <code>string</code></p>
                 
               
               
