@@ -5,12 +5,12 @@
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategory, CatalogCategorySpec } from "../catalog";
-import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store/cluster-store";
-import { broadcastMessage, requestMain } from "../ipc";
+import { broadcastMessage } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
+import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -69,7 +69,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     if (app) {
       await ClusterStore.getInstance().getById(this.getId())?.activate();
     } else {
-      await requestMain(clusterActivateHandler, this.getId(), false);
+      await requestClusterActivation(this.getId(), false);
     }
   }
 
@@ -77,7 +77,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     if (app) {
       ClusterStore.getInstance().getById(this.getId())?.disconnect();
     } else {
-      await requestMain(clusterDisconnectHandler, this.getId(), false);
+      await requestClusterDisconnection(this.getId(), false);
     }
   }
 
@@ -111,7 +111,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
-          onClick: () => requestMain(clusterDisconnectHandler, this.getId()),
+          onClick: () => requestClusterDisconnection(this.getId()),
         });
         break;
       case LensKubernetesClusterStatus.DISCONNECTED:

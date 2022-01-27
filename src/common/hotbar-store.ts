@@ -10,8 +10,9 @@ import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
 import { catalogEntity } from "../main/catalog-sources/general";
 import logger from "../main/logger";
-import { broadcastMessage, HotbarTooManyItems } from "./ipc";
+import { broadcastMessage } from "./ipc";
 import { defaultHotbarCells, getEmptyHotbar, Hotbar, CreateHotbarData, CreateHotbarOptions } from "./hotbar-types";
+import { hotbarTooManyItemsChannel } from "./ipc/hotbar";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
@@ -182,7 +183,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       if (emptyCellIndex != -1) {
         hotbar.items[emptyCellIndex] = newItem;
       } else {
-        broadcastMessage(HotbarTooManyItems);
+        broadcastMessage(hotbarTooManyItemsChannel);
       }
     } else if (0 <= cellIndex && cellIndex < hotbar.items.length) {
       hotbar.items[cellIndex] = newItem;

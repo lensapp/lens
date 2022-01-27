@@ -71,7 +71,6 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
       this.props.subscribeStores([
         this.props.namespaceStore,
       ]),
-
       watchHistoryState(),
     ]);
   }

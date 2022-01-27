@@ -6,7 +6,6 @@
 // Main process
 
 import { injectSystemCAs } from "../common/system-ca";
-import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
@@ -24,7 +23,7 @@ import type { InstalledExtension } from "../extensions/extension-discovery/exten
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
-import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
+import { ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
@@ -81,9 +80,6 @@ di.runSetups().then(() => {
     app.disableHardwareAcceleration();
   }
 
-  logger.debug("[APP-MAIN] initializing remote");
-  initializeRemote();
-
   logger.debug("[APP-MAIN] configuring packages");
   configurePackages();
 
@@ -130,8 +126,6 @@ di.runSetups().then(() => {
     logger.info(`🚀 Starting ${productName} from "${directoryForExes}"`);
     logger.info("🐚 Syncing shell environment");
     await shellSync();
-
-    bindBroadcastHandlers();
 
     powerMonitor.on("shutdown", () => app.exit());
 

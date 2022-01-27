@@ -1,0 +1,39 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { requestOpenFilePickingDialog } from "../../ipc";
+import { supportedExtensionFormats } from "./supported-extension-formats";
+import attemptInstallsInjectable from "./attempt-installs/attempt-installs.injectable";
+import directoryForDownloadsInjectable from "../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
+import { bind } from "../../utils";
+
+interface Dependencies {
+  attemptInstalls: (filePaths: string[]) => Promise<void>
+  directoryForDownloads: string
+}
+
+async function installFromSelectFileDialog({ attemptInstalls, directoryForDownloads }: Dependencies) {
+  const { canceled, filePaths } = await requestOpenFilePickingDialog({
+    defaultPath: directoryForDownloads,
+    properties: ["openFile", "multiSelections"],
+    message: `Select extensions to install (formats: ${supportedExtensionFormats.join(", ")}), `,
+    buttonLabel: "Use configuration",
+    filters: [{ name: "tarball", extensions: supportedExtensionFormats }],
+  });
+
+  if (!canceled) {
+    await attemptInstalls(filePaths);
+  }
+}
+
+const installFromSelectFileDialogInjectable = getInjectable({
+  instantiate: (di) => bind(installFromSelectFileDialog, null, {
+    attemptInstalls: di.inject(attemptInstallsInjectable),
+    directoryForDownloads: di.inject(directoryForDownloadsInjectable),
+  }),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default installFromSelectFileDialogInjectable;

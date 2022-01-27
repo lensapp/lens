@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
- 
+
 
 import { ipcMain, ipcRenderer, webFrame } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
@@ -11,15 +11,15 @@ import { Cluster } from "../cluster/cluster";
 import migrations from "../../migrations/cluster-store";
 import logger from "../../main/logger";
 import { appEventBus } from "../app-event-bus/event-bus";
-import { ipcMainHandle, requestMain } from "../ipc";
+import { ipcMainHandle } from "../ipc";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
+import { requestInitialClusterStates } from "../../renderer/ipc";
+import { clusterStates } from "../ipc/cluster";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
 }
-
-const initialStates = "cluster:states";
 
 interface Dependencies {
   createCluster: (model: ClusterModel) => Cluster
@@ -49,18 +49,18 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   async loadInitialOnRenderer() {
     logger.info("[CLUSTER-STORE] requesting initial state sync");
 
-    for (const { id, state } of await requestMain(initialStates)) {
+    for (const { id, state } of await requestInitialClusterStates()) {
       this.getById(id)?.setState(state);
     }
   }
 
   provideInitialFromMain() {
-    ipcMainHandle(initialStates, () => {
-      return this.clustersList.map(cluster => ({
+    ipcMainHandle(clusterStates, () => (
+      this.clustersList.map(cluster => ({
         id: cluster.id,
         state: cluster.getState(),
-      }));
-    });
+      }))
+    ));
   }
 
   protected pushStateToViewsAutomatically() {
