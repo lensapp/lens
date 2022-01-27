@@ -75,8 +75,8 @@ export class ClusterIconSetting extends React.Component<Props> {
               accept="image/*"
               label={
                 <Avatar
-                  colorHash={`${entity.metadata.name}-${entity.metadata.source}`}
-                  title={entity.metadata.name}
+                  colorHash={`${entity.getName()}-${entity.metadata.source}`}
+                  title={entity.getName()}
                   src={entity.spec.icon?.src}
                   size={53}
                 />

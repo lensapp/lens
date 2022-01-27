@@ -29,7 +29,7 @@ export class ClusterNameSetting extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this,
       autorun(() => {
-        this.name = this.props.cluster.preferences.clusterName || this.props.entity.metadata.name;
+        this.name = this.props.cluster.preferences.clusterName || this.props.entity.getName();
       }),
     );
   }
