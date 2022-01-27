@@ -73,7 +73,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
       ? "Remove from Hotbar"
       : "Add to Hotbar";
     const onClick = isAddedToActive
-      ? () => hotbarStore.removeFromHotbar(metadata.uid)
+      ? () => hotbarStore.removeFromHotbar(clusterEntity.getId())
       : () => hotbarStore.addToHotbar(clusterEntity);
 
     contextMenu.menuItems = [{ title, onClick }];
@@ -92,8 +92,7 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
     setOpened(!opened);
   };
 
-  const { metadata, spec } = clusterEntity;
-  const id = `cluster-${metadata.uid}`;
+  const id = `cluster-${clusterEntity.getId()}`;
   const tooltipId = `tooltip-${id}`;
 
   return (
@@ -106,17 +105,17 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
       data-testid="sidebar-cluster-dropdown"
     >
       <Avatar
-        title={metadata.name}
-        colorHash={`${metadata.name}-${metadata.source}`}
+        title={clusterEntity.getName()}
+        colorHash={`${clusterEntity.getName()}-${clusterEntity.metadata.source}`}
         size={40}
-        src={spec.icon?.src}
+        src={clusterEntity.spec.icon?.src}
         className={styles.avatar}
       />
       <div className={styles.clusterName} id={tooltipId}>
-        {metadata.name}
+        {clusterEntity.getName()}
       </div>
       <Tooltip targetId={tooltipId}>
-        {metadata.name}
+        {clusterEntity.getName()}
       </Tooltip>
       <Icon material="arrow_drop_down" className={styles.dropdown}/>
       <Menu

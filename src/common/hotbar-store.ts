@@ -154,27 +154,27 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @action
   addToHotbar(item: CatalogEntity, cellIndex?: number) {
     const hotbar = this.getActive();
-    const uid = item.metadata?.uid;
-    const name = item.metadata?.name;
+    const uid = item.getId();
+    const name = item.getName();
 
     if (typeof uid !== "string") {
-      throw new TypeError("CatalogEntity.metadata.uid must be a string");
+      throw new TypeError("CatalogEntity's ID must be a string");
     }
 
     if (typeof name !== "string") {
-      throw new TypeError("CatalogEntity.metadata.name must be a string");
+      throw new TypeError("CatalogEntity's NAME must be a string");
     }
-
-    const newItem = { entity: {
-      uid,
-      name,
-      source: item.metadata.source,
-    }};
-
 
     if (this.isAddedToActive(item)) {
       return;
     }
+
+    const entity = {
+      uid,
+      name,
+      source: item.metadata.source,
+    };
+    const newItem = { entity };
 
     if (cellIndex === undefined) {
       // Add item to empty cell
@@ -278,11 +278,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   /**
-   * Checks if entity already pinned to hotbar
-   * @returns boolean
+   * Checks if entity already pinned to the active hotbar
    */
-  isAddedToActive(entity: CatalogEntity) {
-    return !!this.getActive().items.find(item => item?.entity.uid === entity.metadata.uid);
+  isAddedToActive(entity: CatalogEntity | null | undefined): boolean {
+    if (!entity) {
+      return false;
+    }
+
+    return this.getActive().items.findIndex(item => item?.entity.uid === entity.getId()) >= 0;
   }
 
   getDisplayLabel(hotbar: Hotbar): string {

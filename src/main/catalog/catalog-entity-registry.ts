@@ -36,7 +36,7 @@ export class CatalogEntityRegistry {
   }
 
   getById<T extends CatalogEntity>(id: string): T | undefined {
-    return this.items.find((entity) => entity.metadata.uid === id) as T | undefined;
+    return this.items.find(entity => entity.getId() === id) as T | undefined;
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {

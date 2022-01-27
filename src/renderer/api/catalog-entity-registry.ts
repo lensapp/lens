@@ -120,7 +120,7 @@ export class CatalogEntityRegistry {
       const entity = this.categoryRegistry.getEntityForData(item);
 
       if (entity) {
-        this._entities.set(entity.metadata.uid, entity);
+        this._entities.set(entity.getId(), entity);
       } else {
         this.rawEntities.push(item);
       }
