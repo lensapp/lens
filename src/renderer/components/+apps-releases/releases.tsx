@@ -112,8 +112,10 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
         item.toggle();
       },
 
-      isSelectedAll: (visibleItems: RemovableHelmRelease[]) =>
-        visibleItems.every((release) => release.isSelected),
+      isSelectedAll: (visibleItems: RemovableHelmRelease[]) => (
+        visibleItems.length > 0
+        && visibleItems.every((release) => release.isSelected)
+      ),
 
       toggleSelectionAll: (visibleItems: RemovableHelmRelease[]) => {
         let selected = false;
@@ -210,7 +212,7 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
           })}
           onDetails={this.onDetails}
         />
-        
+
         <ReleaseDetails
           hideDetails={this.hideDetails}
         />
