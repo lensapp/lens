@@ -11,13 +11,10 @@ import path from "path";
  * @param filePath The file path to wait until it exists
  */
 export async function waitForPath(filePath: string): Promise<void> {
-  console.log("waiting for", filePath);
   const dirOfPath = path.dirname(filePath);
 
   if (dirOfPath === filePath) {
     // The root of this filesystem, assume it exists
-    console.log("found", filePath);
-
     return;
   } else {
     await waitForPath(dirOfPath);
@@ -28,7 +25,6 @@ export async function waitForPath(filePath: string): Promise<void> {
       depth: 0,
     }).on("all", (event, path) => {
       if ((event === "add" || event === "addDir") && path === filePath) {
-        console.log("found", filePath);
         resolve();
       }
     });
