@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed, IComputedValue, observable } from "mobx";
 import path from "path";
 import os from "os";
-import { getOrInsert, waitForPath } from "../../../utils";
+import { delay, getOrInsert, waitForPath } from "../../../utils";
 import { watch } from "chokidar";
 import { readFile } from "fs/promises";
 import logger from "../../../../common/logger";
@@ -58,24 +58,38 @@ function watchUserCreateResourceTemplates(): IComputedValue<RawTemplates[]> {
     templates.delete(filePath);
   };
 
-  waitForPath(userTemplatesFolder)
-    .then(() => {
-      console.log("watching", userTemplatesFolder);
-      watch(userTemplatesFolder, {
-        disableGlobbing: true,
-        ignorePermissionErrors: true,
-        usePolling: false,
-        awaitWriteFinish: {
-          pollInterval: 100,
-          stabilityThreshold: 1000,
-        },
-        ignoreInitial: false,
-        atomic: 150, // for "atomic writes"
-      })
-        .on("add", onAddOrChange)
-        .on("change", onAddOrChange)
-        .on("unlink", onUnlink);
-    });
+  (async () => {
+    for (let i = 1;; i *= 2) {
+      try {
+        await waitForPath(userTemplatesFolder);
+        break;
+      } catch (error) {
+        logger.warn(`[USER-CREATE-RESOURCE-TEMPLATES]: encountered error while waiting for ${userTemplatesFolder} to exist, waiting and trying again`, error);
+        await delay(i * 1000); // exponential backoff in seconds
+      }
+    }
+
+    /**
+     * NOTE: There is technically a race condition here of the form "time-of-check to time-of-use"
+     */
+    watch(userTemplatesFolder, {
+      disableGlobbing: true,
+      ignorePermissionErrors: true,
+      usePolling: false,
+      awaitWriteFinish: {
+        pollInterval: 100,
+        stabilityThreshold: 1000,
+      },
+      ignoreInitial: false,
+      atomic: 150, // for "atomic writes"
+    })
+      .on("add", onAddOrChange)
+      .on("change", onAddOrChange)
+      .on("unlink", onUnlink)
+      .on("error", error => {
+        logger.warn(`[USER-CREATE-RESOURCE-TEMPLATES]: encountered error while watching files under ${userTemplatesFolder}`, error);
+      });
+  })();
 
   return computed(() => groupTemplates(templates));
 }
