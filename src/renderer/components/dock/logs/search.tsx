@@ -52,7 +52,11 @@ export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabD
 
   const onKeyDown = (evt: React.KeyboardEvent<any>) => {
     if (evt.key === "Enter") {
-      onNextOverlay();
+      if (evt.shiftKey) {
+        onPrevOverlay();
+      } else {
+        onNextOverlay();
+      }
     }
   };
 
