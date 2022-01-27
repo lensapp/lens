@@ -67,22 +67,22 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
 
   async connect(): Promise<void> {
     if (app) {
-      await ClusterStore.getInstance().getById(this.metadata.uid)?.activate();
+      await ClusterStore.getInstance().getById(this.getId())?.activate();
     } else {
-      await requestMain(clusterActivateHandler, this.metadata.uid, false);
+      await requestMain(clusterActivateHandler, this.getId(), false);
     }
   }
 
   async disconnect(): Promise<void> {
     if (app) {
-      ClusterStore.getInstance().getById(this.metadata.uid)?.disconnect();
+      ClusterStore.getInstance().getById(this.getId())?.disconnect();
     } else {
-      await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
+      await requestMain(clusterDisconnectHandler, this.getId(), false);
     }
   }
 
   async onRun(context: CatalogEntityActionContext) {
-    context.navigate(`/cluster/${this.metadata.uid}`);
+    context.navigate(`/cluster/${this.getId()}`);
   }
 
   onDetailsOpen(): void {
@@ -100,7 +100,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
         icon: "settings",
         onClick: () => broadcastMessage(
           IpcRendererNavigationEvents.NAVIGATE_IN_APP,
-          `/entity/${this.metadata.uid}/settings`,
+          `/entity/${this.getId()}/settings`,
         ),
       });
     }
@@ -111,14 +111,14 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
-          onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid),
+          onClick: () => requestMain(clusterDisconnectHandler, this.getId()),
         });
         break;
       case LensKubernetesClusterStatus.DISCONNECTED:
         context.menuItems.push({
           title: "Connect",
           icon: "link",
-          onClick: () => context.navigate(`/cluster/${this.metadata.uid}`),
+          onClick: () => context.navigate(`/cluster/${this.getId()}`),
         });
         break;
     }

@@ -11,7 +11,7 @@ import type { CatalogEntity } from "../../api/catalog-entity";
 import * as components from "./components";
 
 function getClusterForEntity(entity: CatalogEntity) {
-  return ClusterStore.getInstance().getById(entity.metadata.uid);
+  return ClusterStore.getInstance().getById(entity.getId());
 }
 
 export function GeneralSettings({ entity }: EntitySettingViewProps) {

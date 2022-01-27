@@ -50,7 +50,7 @@ export function initCatalog({ openCommandDialog }: Dependencies) {
         context.menuItems.push({
           title: "Delete",
           icon: "delete",
-          onClick: () => onClusterDelete(entity.metadata.uid),
+          onClick: () => onClusterDelete(entity.getId()),
         });
       }
     });

@@ -41,7 +41,7 @@ export class ResourceStack {
   }
 
   protected async applyResources(resources: string[], extraArgs?: string[]): Promise<string> {
-    const clusterModel = ClusterStore.getInstance().getById(this.cluster.metadata.uid);
+    const clusterModel = ClusterStore.getInstance().getById(this.cluster.getId());
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);
@@ -54,7 +54,7 @@ export class ResourceStack {
     if (app) {
       return await new ResourceApplier(clusterModel).kubectlApplyAll(resources, kubectlArgs);
     } else {
-      const response = await requestMain(clusterKubectlApplyAllHandler, this.cluster.metadata.uid, resources, kubectlArgs);
+      const response = await requestMain(clusterKubectlApplyAllHandler, this.cluster.getId(), resources, kubectlArgs);
 
       if (response.stderr) {
         throw new Error(response.stderr);
@@ -65,7 +65,7 @@ export class ResourceStack {
   }
 
   protected async deleteResources(resources: string[], extraArgs?: string[]): Promise<string> {
-    const clusterModel = ClusterStore.getInstance().getById(this.cluster.metadata.uid);
+    const clusterModel = ClusterStore.getInstance().getById(this.cluster.getId());
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);
@@ -78,7 +78,7 @@ export class ResourceStack {
     if (app) {
       return await new ResourceApplier(clusterModel).kubectlDeleteAll(resources, kubectlArgs);
     } else {
-      const response = await requestMain(clusterKubectlDeleteAllHandler, this.cluster.metadata.uid, resources, kubectlArgs);
+      const response = await requestMain(clusterKubectlDeleteAllHandler, this.cluster.getId(), resources, kubectlArgs);
 
       if (response.stderr) {
         throw new Error(response.stderr);
