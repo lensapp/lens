@@ -858,6 +858,13 @@ It is possible to register custom views for specific categories by registering t
 </code></pre></div>
 <p>Will register a new view for the KubernetesCluster category, and because the priority is &lt; 50 it will be displayed above the default list view.</p>
 <p>The default list view has a priority of 50 and and custom views with priority (defaulting to 50) &gt;= 50 will be displayed afterwards.</p>
+<h4 id="styling-custom-views">Styling Custom Views<a class="headerlink" href="#styling-custom-views" title="Permanent link">#</a></h4>
+<p>By default, custom view blocks are styled with <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox">Flexbox</a>. Some details comes from this.</p>
+<ul>
+<li>To set fixed height of a custom block, use <code>max-height</code> css rule.</li>
+<li>To set flexible height, use <code>height</code>.</li>
+<li>Otherwise, custom view will have height of it's contents.</li>
+</ul>
 <h2 id="entities">Entities<a class="headerlink" href="#entities" title="Permanent link">#</a></h2>
 <p>An entity is the data within the catalog.
 All entities are typed and the class instances will be recreated on the renderer side by the catalog and the category registrations.</p>
