@@ -8,8 +8,7 @@ import styles from "./cluster-status.module.scss";
 import { computed, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import { clusterActivateHandler } from "../../../common/cluster-ipc";
-import { ipcRendererOn, requestMain } from "../../../common/ipc";
+import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Button } from "../button";
@@ -19,6 +18,7 @@ import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { requestClusterActivation } from "../../ipc";
 
 interface Props {
   className?: IClassName;
@@ -60,7 +60,7 @@ export class ClusterStatus extends React.Component<Props> {
     this.isReconnecting = true;
 
     try {
-      await requestMain(clusterActivateHandler, this.cluster.id, true);
+      await requestClusterActivation(this.cluster.id, true);
     } catch (error) {
       this.authOutput.push({
         message: error.toString(),

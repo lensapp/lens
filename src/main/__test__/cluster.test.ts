@@ -70,8 +70,7 @@ describe("create clusters", () => {
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-
-    const mockOpts = {
+    mockFs({
       "minikube-config.yml": JSON.stringify({
         apiVersion: "v1",
         clusters: [{
@@ -93,9 +92,7 @@ describe("create clusters", () => {
         kind: "Config",
         preferences: {},
       }),
-    };
-
-    mockFs(mockOpts);
+    });
 
     await di.runSetups();
 

@@ -19,7 +19,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
-import { dialog } from "../../remote-helpers";
+import { requestOpenFilePickingDialog } from "../../ipc";
 
 interface Props extends Partial<DialogProps> {
   onAddRepo: Function
@@ -73,7 +73,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   }
 
   async selectFileDialog(type: FileType, fileFilter: FileFilter) {
-    const { canceled, filePaths } = await dialog.showOpenDialog({
+    const { canceled, filePaths } = await requestOpenFilePickingDialog({
       defaultPath: this.getFilePath(type),
       properties: ["openFile", "showHiddenFiles"],
       message: `Select file`,

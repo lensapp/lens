@@ -4,14 +4,11 @@
  */
 
 .Catalog {
-  :global(.TableHead) .entityName {
-    /* offset for icon to align texts in the column */
-    padding-left: calc(21px + var(--padding) * 2.5);
-  }
-
   :global(.TableRow):hover .pinIcon {
     opacity: 1;
   }
+
+  flex-grow: 1;
 }
 
 .entityName {
@@ -127,4 +124,11 @@
 
 .catalogAvatar {
   font-size: 1.2ch;
+}
+
+.views {
+  padding: calc(var(--padding) * 2);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }

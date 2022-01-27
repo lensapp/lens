@@ -4,7 +4,7 @@
  */
 
 import { computed, observable, makeObservable, action } from "mobx";
-import { catalogEntityRunListener, ipcRendererOn } from "../../common/ipc";
+import { ipcRendererOn } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -14,7 +14,7 @@ import { once } from "lodash";
 import logger from "../../common/logger";
 import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
-import { CatalogIpcEvents } from "../../common/ipc/catalog";
+import { catalogInitChannel, catalogItemsChannel, catalogEntityRunListener } from "../../common/ipc/catalog";
 import { navigate } from "../navigation";
 import { isMainFrame } from "process";
 
@@ -79,12 +79,12 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    ipcRendererOn(CatalogIpcEvents.ITEMS, (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
+    ipcRendererOn(catalogItemsChannel, (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
       this.updateItems(items);
     });
 
     // Make sure that we get items ASAP and not the next time one of them changes
-    ipcRenderer.send(CatalogIpcEvents.INIT);
+    ipcRenderer.send(catalogInitChannel);
 
     if (isMainFrame) {
       ipcRendererOn(catalogEntityRunListener, (event, id: string) => {

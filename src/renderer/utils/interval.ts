@@ -5,9 +5,14 @@
 
 // Helper for working with time updates / data-polling callbacks
 
-type IntervalCallback = (count: number) => void;
+export interface IntervalFn {
+  start(runImmediately?: boolean): void;
+  stop(): void;
+  restart(runImmediately?: boolean): void;
+  readonly isRunning: boolean;
+}
 
-export function interval(timeSec = 1, callback: IntervalCallback, autoRun = false) {
+export function interval(timeSec = 1, callback: (count: number) => void, autoRun = false): IntervalFn {
   let count = 0;
   let timer = -1;
   let isRunning = false;

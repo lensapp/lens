@@ -3,13 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, observable, reaction, makeObservable } from "mobx";
-import type { DockStore } from "../components/dock/dock-store/dock.store";
+import { action, computed, observable, makeObservable } from "mobx";
 import { boundMethod } from "../utils";
-
-interface Dependencies {
-  dockStore: DockStore
-}
 
 export class SearchStore {
   /**
@@ -41,11 +36,8 @@ export class SearchStore {
    */
   @observable activeOverlayIndex = -1;
 
-  constructor(dependencies: Dependencies) {
+  constructor() {
     makeObservable(this);
-    reaction(() => dependencies.dockStore.selectedTabId, () => {
-      this.reset();
-    });
   }
 
   /**

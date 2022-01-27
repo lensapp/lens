@@ -18,7 +18,7 @@ import { DockTabs } from "./dock-tabs";
 import { DockStore, DockTab, TabKind } from "./dock-store/dock.store";
 import { EditResource } from "./edit-resource";
 import { InstallChart } from "./install-chart";
-import { Logs } from "./logs";
+import { LogsDockTab } from "./logs/dock-tab";
 import { TerminalWindow } from "./terminal-window";
 import { UpgradeChart } from "./upgrade-chart";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -85,7 +85,7 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
       case TabKind.UPGRADE_CHART:
         return <UpgradeChart tab={tab} />;
       case TabKind.POD_LOGS:
-        return <Logs />;
+        return <LogsDockTab tab={tab} />;
       case TabKind.TERMINAL:
         return <TerminalWindow tab={tab} />;
     }

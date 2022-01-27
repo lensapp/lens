@@ -353,6 +353,7 @@ export class Input extends React.Component<InputProps, State> {
       dirty: _dirty, // excluded from passing to input-element
       defaultValue,
       trim,
+      blurOnEnter,
       ...inputProps
     } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;

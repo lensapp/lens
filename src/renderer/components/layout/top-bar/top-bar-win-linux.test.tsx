@@ -7,18 +7,17 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import { IpcMainWindowEvents } from "../../../../main/window-manager";
-import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
+import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 
 jest.mock("../../../../common/ipc");
+jest.mock("../../../ipc");
 
 jest.mock("../../../../common/vars", () => {
   const SemVer = require("semver").SemVer;
@@ -30,23 +29,6 @@ jest.mock("../../../../common/vars", () => {
     isWindows: null,
     isLinux: null,
     appSemVer: versionStub,
-  };
-});
-
-const mockMinimize = jest.fn();
-const mockMaximize = jest.fn();
-const mockUnmaximize = jest.fn();
-const mockClose = jest.fn();
-
-jest.mock("@electron/remote", () => {
-  return {
-    getCurrentWindow: () => ({
-      minimize: () => mockMinimize(),
-      maximize: () => mockMaximize(),
-      unmaximize: () => mockUnmaximize(),
-      close: () => mockClose(),
-      isMaximized: () => false,
-    }),
   };
 });
 
@@ -104,15 +86,15 @@ describe("<TopBar/> in Windows and Linux", () => {
     const close = getByTestId("window-close");
 
     fireEvent.click(menu);
-    expect(broadcastMessage).toHaveBeenCalledWith(IpcMainWindowEvents.OPEN_CONTEXT_MENU);
+    expect(emitOpenAppMenuAsContextMenu).toHaveBeenCalledWith();
 
     fireEvent.click(minimize);
-    expect(mockMinimize).toHaveBeenCalled();
+    expect(requestWindowAction).toHaveBeenCalledWith("minimize");
 
     fireEvent.click(maximize);
-    expect(mockMaximize).toHaveBeenCalled();
+    expect(requestWindowAction).toHaveBeenCalledWith("toggle-maximize");
 
     fireEvent.click(close);
-    expect(mockClose).toHaveBeenCalled();
+    expect(requestWindowAction).toHaveBeenCalledWith("close");
   });
 });
