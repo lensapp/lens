@@ -11,13 +11,6 @@
   min-width: 220px;
 
   > label {
-    color: inherit;
-    background: none;
-    border: none;
-    border-radius: var(--border-radius);
-    box-shadow: 0 0 0 1px var(--halfGray);
-    padding: var(--spacing);
-
     .Icon {
       height: calc(var(--margin) * 2);
       width: calc(var(--margin) * 2);
