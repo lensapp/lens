@@ -10,8 +10,7 @@ import type { IToleration } from "../../../../common/k8s-api/workload-kube-objec
 import { PodTolerations } from "../pod-tolerations";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import directoryForLensLocalStorageInjectable
-  from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
+import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 
 jest.mock("electron", () => ({
   app: {

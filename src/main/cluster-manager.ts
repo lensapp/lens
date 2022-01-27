@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../common/cluster-ipc";
+import "../common/ipc/cluster";
 import type http from "http";
 import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import { Cluster } from "../common/cluster/cluster";

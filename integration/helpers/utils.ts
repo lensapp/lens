@@ -40,7 +40,7 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
   throw new Error(`Lens did not open the main window within ${timeout}ms`);
 }
 
-export async function start() {
+async function attemptStart() {
   const CICD = path.join(os.tmpdir(), "lens-integration-testing", uuid.v4());
 
   // Make sure that the directory is clear
@@ -73,6 +73,19 @@ export async function start() {
     await app.close();
     await remove(CICD).catch(noop);
     throw error;
+  }
+}
+
+export async function start() {
+  // this is an attempted workaround for an issue with playwright not always getting the main window when using Electron 14.2.4 (observed on windows)
+  for (let i = 0; ; i++) {
+    try {
+      return await attemptStart();
+    } catch (error) {
+      if (i === 4) {
+        throw error;
+      }
+    }
   }
 }
 

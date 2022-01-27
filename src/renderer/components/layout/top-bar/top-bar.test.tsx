@@ -12,8 +12,7 @@ import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injec
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 
 jest.mock("../../../../common/vars", () => {
@@ -26,6 +25,9 @@ jest.mock("../../../../common/vars", () => {
     appSemVer: versionStub,
   };
 });
+
+const goBack = jest.fn();
+const goForward = jest.fn();
 
 jest.mock(
   "electron",
@@ -42,6 +44,25 @@ jest.mock(
           }
         },
       ),
+      invoke: jest.fn(
+        (channel: string, action: string) => {
+          console.log("channel", channel, action);
+
+          if (channel !== "window:window-action") return;
+
+          switch(action) {
+            case "back": {
+              goBack();
+              break;
+            }
+
+            case "forward": {
+              goForward();
+              break;
+            }
+          }
+        },
+      ),
     },
   }),
 );
@@ -49,24 +70,6 @@ jest.mock(
 jest.mock("../../+catalog", () => ({
   previousActiveTab: jest.fn(),
 }));
-
-const goBack = jest.fn();
-const goForward = jest.fn();
-
-jest.mock("@electron/remote", () => {
-  return {
-    webContents: {
-      getAllWebContents: () => {
-        return [{
-          getType: () => "window",
-          goBack,
-          goForward,
-        }];
-      },
-    },
-    getCurrentWindow: () => jest.fn(),
-  };
-});
 
 describe("<TopBar/>", () => {
   let di: ConfigurableDependencyInjectionContainer;
