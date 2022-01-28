@@ -62,7 +62,6 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
       <section>
         <SubTitle title="Directory for binaries" />
         <Input
-          theme="round-black"
           value={downloadPath}
           placeholder={defaultPathForKubectlBinaries}
           validators={pathValidator}
@@ -78,7 +77,6 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
       <section>
         <SubTitle title="Path to kubectl binary" />
         <Input
-          theme="round-black"
           placeholder={bundledKubectlPath()}
           value={binariesPath}
           validators={pathValidator}

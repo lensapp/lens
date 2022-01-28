@@ -61,7 +61,6 @@ export const Editor = observer(() => {
       <section>
         <SubTitle title="Tab size"/>
         <Input
-          theme="round-black"
           type="number"
           min={1}
           validators={InputValidators.isNumber}
@@ -72,7 +71,6 @@ export const Editor = observer(() => {
       <section>
         <SubTitle title="Font size"/>
         <Input
-          theme="round-black"
           type="number"
           min={10}
           validators={InputValidators.isNumber}
@@ -83,7 +81,6 @@ export const Editor = observer(() => {
       <section>
         <SubTitle title="Font family"/>
         <Input
-          theme="round-black"
           type="text"
           validators={InputValidators.isNumber}
           value={editorConfiguration.fontFamily}

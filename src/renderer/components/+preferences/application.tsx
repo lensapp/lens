@@ -75,7 +75,6 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) 
         </p>
 
         <Input
-          theme="round-black"
           validators={isUrl}
           value={customUrl}
           onChange={setCustomUrl}

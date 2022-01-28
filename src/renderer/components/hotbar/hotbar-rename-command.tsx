@@ -55,7 +55,6 @@ const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarMa
           onChange={setHotbarName}
           placeholder="New hotbar name"
           autoFocus={true}
-          theme="round-black"
           validators={uniqueHotbarName}
           onSubmit={onSubmit}
           showValidationLine={true}

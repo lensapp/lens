@@ -90,7 +90,6 @@ export class SecretDetails extends React.Component<Props> {
         <div className="flex gaps align-center">
           <Input
             multiLine
-            theme="round-black"
             className="box grow"
             value={value || ""}
             onChange={value => this.editData(name, value, !revealSecret)}

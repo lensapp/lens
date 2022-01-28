@@ -134,7 +134,6 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
             <section>
               <SubTitle title="Prometheus service address" />
               <Input
-                theme="round-black"
                 value={this.path}
                 onChange={(value) => this.path = value}
                 onBlur={this.onSavePath}

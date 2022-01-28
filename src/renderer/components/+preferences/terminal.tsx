@@ -28,7 +28,6 @@ export const Terminal = observer(() => {
     <section id="shell">
       <SubTitle title="Terminal Shell Path"/>
       <Input
-        theme="round-black"
         placeholder={defaultShell}
         value={userStore.shell}
         onChange={(value) => userStore.shell = value}
@@ -61,7 +60,6 @@ export const Terminal = observer(() => {
     <section>
       <SubTitle title="Font size"/>
       <Input
-        theme="round-black"
         type="number"
         min={10}
         validators={InputValidators.isNumber}
@@ -72,7 +70,6 @@ export const Terminal = observer(() => {
     <section>
       <SubTitle title="Font family"/>
       <Input
-        theme="round-black"
         type="text"
         value={userStore.terminalConfig.fontFamily}
         onChange={(value) => userStore.terminalConfig.fontFamily=value}

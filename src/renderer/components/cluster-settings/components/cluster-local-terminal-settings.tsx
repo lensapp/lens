@@ -149,7 +149,6 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: Props) => {
       <section className="working-directory">
         <SubTitle title="Working Directory"/>
         <Input
-          theme="round-black"
           value={directory}
           data-testid="working-directory"
           onChange={setDirectory}
@@ -182,7 +181,6 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: Props) => {
       <section className="default-namespace">
         <SubTitle title="Default Namespace"/>
         <Input
-          theme="round-black"
           data-testid="default-namespace"
           value={defaultNamespace}
           onChange={setDefaultNamespaces}

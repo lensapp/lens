@@ -60,7 +60,6 @@ const NonInjectedInstall: React.FC<Dependencies & Props> = ({
       <div className="flex-1">
         <Input
           className="box grow mr-6"
-          theme="round-black"
           disabled={
             extensionInstallationStateStore.anyPreInstallingOrInstalling
           }

@@ -37,7 +37,7 @@ export interface IconDataFnArg {
 export type IconData = string | React.ReactNode | ((opt: IconDataFnArg) => React.ReactNode);
 
 export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
-  theme?: "round-black" | "round";
+  lightTheme?: boolean; // Forced light theme, may be used for dialogs which is always "bright"
   className?: string;
   value?: string;
   trim?: boolean;
@@ -313,20 +313,6 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  get themeSelection(): Record<string, boolean> {
-    const { theme } = this.props;
-
-    if (!theme) {
-      return {};
-    }
-
-    return {
-      theme: true,
-      round: true,
-      black: theme === "round-black",
-    };
-  }
-
   @boundMethod
   bindRef(elem: InputElement) {
     this.input = elem;
@@ -348,7 +334,7 @@ export class Input extends React.Component<InputProps, State> {
 
   render() {
     const {
-      multiLine, showValidationLine, validators, theme, maxRows, children, showErrorsAsTooltip,
+      multiLine, showValidationLine, validators, lightTheme, maxRows, children, showErrorsAsTooltip,
       maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
       dirty: _dirty, // excluded from passing to input-element
       defaultValue,
@@ -359,7 +345,7 @@ export class Input extends React.Component<InputProps, State> {
     const { focused, dirty, valid, validating, errors } = this.state;
 
     const className = cssNames("Input", this.props.className, {
-      ...this.themeSelection,
+      lightTheme,
       focused,
       disabled,
       invalid: !valid,

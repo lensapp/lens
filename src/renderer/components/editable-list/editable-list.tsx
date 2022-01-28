@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { Icon } from "../icon";
-import { Input, InputProps, InputValidator } from "../input";
+import { Input, InputValidator } from "../input";
 import { boundMethod } from "../../utils";
 
 export interface Props<T> {
@@ -22,13 +22,12 @@ export interface Props<T> {
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
   renderItem?: (item: T, index: number) => React.ReactNode,
-  inputTheme?: InputProps["theme"];
+  lightTheme?: boolean;
 }
 
 const defaultProps: Partial<Props<any>> = {
   placeholder: "Add new item...",
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>,
-  inputTheme: "round",
 };
 
 @observer
@@ -44,13 +43,13 @@ export class EditableList<T> extends React.Component<Props<T>> {
   }
 
   render() {
-    const { items, remove, renderItem, placeholder, validators, inputTheme } = this.props;
+    const { items, remove, renderItem, placeholder, validators, lightTheme } = this.props;
 
     return (
       <div className="EditableList">
         <div className="el-header">
           <Input
-            theme={inputTheme}
+            lightTheme={lightTheme}
             onSubmit={this.onSubmit}
             validators={validators}
             placeholder={placeholder}

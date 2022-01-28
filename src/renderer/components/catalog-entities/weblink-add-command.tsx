@@ -57,7 +57,6 @@ class NonInjectedWeblinkAddCommand extends React.Component<Dependencies> {
         <Input
           placeholder="Link URL"
           autoFocus={this.nameHidden}
-          theme="round-black"
           data-test-id="command-palette-weblink-add-url"
           validators={[isUrl]}
           dirty={this.dirty}
@@ -75,7 +74,6 @@ class NonInjectedWeblinkAddCommand extends React.Component<Dependencies> {
             <Input
               placeholder="Name (optional)"
               autoFocus={true}
-              theme="round-black"
               data-test-id="command-palette-weblink-add-name"
               onSubmit={(v) => this.onSubmit(v)}
               dirty={true}/>

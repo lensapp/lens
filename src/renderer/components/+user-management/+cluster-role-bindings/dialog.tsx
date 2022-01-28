@@ -215,6 +215,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
         <b>Users</b>
         <EditableList
+          lightTheme
           placeholder="Bind to User Account ..."
           add={(newUser) => this.selectedUsers.add(newUser)}
           items={Array.from(this.selectedUsers)}
@@ -223,6 +224,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
         <b>Groups</b>
         <EditableList
+          lightTheme
           placeholder="Bind to User Group ..."
           add={(newGroup) => this.selectedGroups.add(newGroup)}
           items={Array.from(this.selectedGroups)}

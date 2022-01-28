@@ -34,7 +34,6 @@ export function List({ columns, data, title, items, filters }: Props) {
         <div>
           <SearchInput
             value={search}
-            theme="round-black"
             onChange={setSearch}
             className={styles.searchInput}
           />

@@ -33,7 +33,6 @@ const NonInjectedHotbarAddCommand = observer(({ closeCommandOverlay, addHotbar, 
       <Input
         placeholder="Hotbar name"
         autoFocus={true}
-        theme="round-black"
         data-test-id="command-palette-hotbar-add-name"
         validators={uniqueHotbarName}
         onSubmit={onSubmit}

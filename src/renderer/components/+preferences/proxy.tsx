@@ -20,7 +20,6 @@ export const LensProxy = observer(() => {
         <h2 data-testid="proxy-header">Proxy</h2>
         <SubTitle title="HTTP Proxy"/>
         <Input
-          theme="round-black"
           placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
           value={proxy}
           onChange={v => setProxy(v)}

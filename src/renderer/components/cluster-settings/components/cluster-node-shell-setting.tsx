@@ -38,7 +38,6 @@ export class ClusterNodeShellSetting extends React.Component<Props> {
         <section>
           <SubTitle title="Node shell image" id="node-shell-image"/>
           <Input
-            theme="round-black"
             placeholder={`Default image: ${initialNodeShellImage}`}
             value={this.nodeShellImage}
             onChange={value => this.nodeShellImage = value}
@@ -63,7 +62,6 @@ export class ClusterNodeShellSetting extends React.Component<Props> {
           <SubTitle title="Image pull secret" id="image-pull-secret"/>
           <Input
             placeholder="Specify a secret name..."
-            theme="round-black"
             value={this.imagePullSecret}
             onChange={value => this.imagePullSecret = value}
             iconRight={

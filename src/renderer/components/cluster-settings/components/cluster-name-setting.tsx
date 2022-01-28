@@ -47,7 +47,6 @@ export class ClusterNameSetting extends React.Component<Props> {
       <>
         <SubTitle title="Cluster Name" />
         <Input
-          theme="round-black"
           validators={isRequired}
           value={this.name}
           onChange={this.onChange}

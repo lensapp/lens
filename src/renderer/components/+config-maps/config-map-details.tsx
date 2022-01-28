@@ -93,7 +93,6 @@ export class ConfigMapDetails extends React.Component<Props> {
                     <div className="flex gaps align-flex-start">
                       <Input
                         multiLine
-                        theme="round-black"
                         className="box grow"
                         value={value}
                         onChange={v => this.data.set(name, v)}

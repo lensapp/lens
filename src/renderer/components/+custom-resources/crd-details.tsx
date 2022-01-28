@@ -64,7 +64,6 @@ export class CRDDetails extends React.Component<Props> {
         <DrawerItem name="Conversion" className="flex gaps align-flex-start">
           <Input
             multiLine
-            theme="round-black"
             className="box grow"
             value={crd.getConversion()}
             readOnly

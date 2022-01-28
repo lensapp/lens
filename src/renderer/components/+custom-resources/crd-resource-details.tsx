@@ -33,7 +33,6 @@ function convertSpecValue(value: any): any {
       <Input
         readOnly
         multiLine
-        theme="round-black"
         className="box grow"
         value={JSON.stringify(value, null, 2)}
       />
