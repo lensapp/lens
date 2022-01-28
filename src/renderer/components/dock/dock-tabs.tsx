@@ -4,6 +4,7 @@
  */
 
 import React, { Fragment, useRef, useEffect, useState, UIEvent } from "react";
+import { reaction } from "mobx";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
@@ -109,9 +110,12 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab, dockStore 
     window.addEventListener("resize", onWindowResize);
 
     // update scroll state if tabs numbers has changed
-    dockStore.onTabsNumberChange(() => {
-      updateStateValues();
-    });
+    reaction(() => dockStore.tabsNumber, updateStateValues);
+
+    return () => {
+      window.removeEventListener("resize", onWindowResize);
+      elem.current.removeEventListener("scroll", updateScrollPosition);
+    };
   }, []);
 
   return (
