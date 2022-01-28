@@ -82,9 +82,6 @@ export class CronJobs extends React.Component<Props> {
           cronJob.getLastScheduleTime(),
           cronJob.getAge(),
         ]}
-        renderItemMenu={(item: CronJob) => {
-          return <CronJobMenu object={item}/>;
-        }}
       />
     );
   }

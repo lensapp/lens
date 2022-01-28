@@ -58,9 +58,6 @@ export class ServiceAccounts extends React.Component<Props> {
             account.getNs(),
             account.getAge(),
           ]}
-          renderItemMenu={(item: ServiceAccount) => {
-            return <ServiceAccountMenu object={item}/>;
-          }}
           addRemoveButtons={{
             onAdd: () => CreateServiceAccountDialog.open(),
             addTooltip: "Create new Service Account",
