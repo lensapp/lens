@@ -3,14 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export enum CatalogIpcEvents {
-  /**
-   * This is broadcast on whenever there is an update to any catalog item
-   */
-  ITEMS = "catalog:items",
+/**
+ * This is used to activate a specific entity in the renderer main frame
+ */
+export const catalogEntityRunListener = "catalog-entity:run";
 
-  /**
-   * This can be sent from renderer to main to initialize a broadcast of ITEMS
-   */
-  INIT = "catalog:init",
-}
+/**
+ * This is broadcast on whenever there is an update to any catalog item
+ */
+export const catalogItemsChannel = "catalog:items";
+
+/**
+ * This can be sent from renderer to main to initialize a broadcast of ITEMS
+ */
+export const catalogInitChannel = "catalog:init";

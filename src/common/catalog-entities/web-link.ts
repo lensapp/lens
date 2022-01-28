@@ -38,9 +38,9 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
       context.menuItems.push({
         title: "Delete",
         icon: "delete",
-        onClick: async () => WeblinkStore.getInstance().removeById(this.metadata.uid),
+        onClick: async () => WeblinkStore.getInstance().removeById(this.getId()),
         confirm: {
-          message: `Remove Web Link "${this.metadata.name}" from ${productName}?`,
+          message: `Remove Web Link "${this.getName()}" from ${productName}?`,
         },
       });
     }

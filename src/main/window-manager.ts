@@ -8,17 +8,14 @@ import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/app-event-bus/event-bus";
-import { BundledExtensionsLoaded, ipcMainOn } from "../common/ipc";
+import { ipcMainOn } from "../common/ipc";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { isMac, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
-
-export const enum IpcMainWindowEvents {
-  OPEN_CONTEXT_MENU = "window:open-context-menu",
-}
+import { bundledExtensionsLoaded } from "../common/ipc/extension-handling";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -75,9 +72,9 @@ export class WindowManager extends Singleton {
         webPreferences: {
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
-          enableRemoteModule: true,
           webviewTag: true,
           contextIsolation: false,
+          nativeWindowOpen: true,
         },
       });
       this.windowState.manage(this.mainWindow);
@@ -135,7 +132,8 @@ export class WindowManager extends Singleton {
 
           // Always disable Node.js integration for all webviews
           webPreferences.nodeIntegration = false;
-        }).setWindowOpenHandler((details) => {
+        })
+        .setWindowOpenHandler((details) => {
           shell.openExternal(details.url);
 
           return { action: "deny" };
@@ -165,7 +163,7 @@ export class WindowManager extends Singleton {
 
     if (!this.mainWindow) {
       viewHasLoaded = new Promise<void>(resolve => {
-        ipcMain.once(BundledExtensionsLoaded, () => resolve());
+        ipcMain.once(bundledExtensionsLoaded, () => resolve());
       });
       await this.initMainWindow(showSplash);
     }
@@ -249,9 +247,9 @@ export class WindowManager extends Singleton {
         show: false,
         webPreferences: {
           nodeIntegration: true,
-          enableRemoteModule: true,
           contextIsolation: false,
           nodeIntegrationInSubFrames: true,
+          nativeWindowOpen: true,
         },
       });
       await this.splashWindow.loadURL("static://splash.html");

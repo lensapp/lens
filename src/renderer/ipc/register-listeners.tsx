@@ -5,7 +5,7 @@
 
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs, HotbarTooManyItems, ipcRendererOn, AutoUpdateChecking, AutoUpdateNoUpdateAvailable } from "../../common/ipc";
+import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ipcRendererOn, AutoUpdateChecking, AutoUpdateNoUpdateAvailable } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
@@ -13,6 +13,8 @@ import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { navigate } from "../navigation";
 import { entitySettingsURL } from "../../common/routes";
 import { defaultHotbarCells } from "../../common/hotbar-types";
+import { type ListNamespaceForbiddenArgs, clusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
+import { hotbarTooManyItemsChannel } from "../../common/ipc/hotbar";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -127,13 +129,13 @@ export function registerIpcListeners() {
   });
   onCorrect({
     source: ipcRenderer,
-    channel: ClusterListNamespaceForbiddenChannel,
+    channel: clusterListNamespaceForbiddenChannel,
     listener: ListNamespacesForbiddenHandler,
     verifier: isListNamespaceForbiddenArgs,
   });
   onCorrect({
     source: ipcRenderer,
-    channel: HotbarTooManyItems,
+    channel: hotbarTooManyItemsChannel,
     listener: HotbarTooManyItemsHandler,
     verifier: (args: unknown[]): args is [] => args.length === 0,
   });

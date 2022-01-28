@@ -5,12 +5,12 @@
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategory, CatalogCategorySpec } from "../catalog";
-import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store/cluster-store";
-import { broadcastMessage, requestMain } from "../ipc";
+import { broadcastMessage } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
+import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg?raw";
 
 export interface KubernetesClusterPrometheusMetrics {
@@ -68,22 +68,22 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
 
   async connect(): Promise<void> {
     if (app) {
-      await ClusterStore.getInstance().getById(this.metadata.uid)?.activate();
+      await ClusterStore.getInstance().getById(this.getId())?.activate();
     } else {
-      await requestMain(clusterActivateHandler, this.metadata.uid, false);
+      await requestClusterActivation(this.getId(), false);
     }
   }
 
   async disconnect(): Promise<void> {
     if (app) {
-      ClusterStore.getInstance().getById(this.metadata.uid)?.disconnect();
+      ClusterStore.getInstance().getById(this.getId())?.disconnect();
     } else {
-      await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
+      await requestClusterDisconnection(this.getId(), false);
     }
   }
 
   async onRun(context: CatalogEntityActionContext) {
-    context.navigate(`/cluster/${this.metadata.uid}`);
+    context.navigate(`/cluster/${this.getId()}`);
   }
 
   onDetailsOpen(): void {
@@ -101,7 +101,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
         icon: "settings",
         onClick: () => broadcastMessage(
           IpcRendererNavigationEvents.NAVIGATE_IN_APP,
-          `/entity/${this.metadata.uid}/settings`,
+          `/entity/${this.getId()}/settings`,
         ),
       });
     }
@@ -112,14 +112,14 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
-          onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid),
+          onClick: () => requestClusterDisconnection(this.getId()),
         });
         break;
       case LensKubernetesClusterStatus.DISCONNECTED:
         context.menuItems.push({
           title: "Connect",
           icon: "link",
-          onClick: () => context.navigate(`/cluster/${this.metadata.uid}`),
+          onClick: () => context.navigate(`/cluster/${this.getId()}`),
         });
         break;
     }

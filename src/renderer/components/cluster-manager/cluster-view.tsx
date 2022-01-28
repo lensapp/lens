@@ -12,11 +12,10 @@ import { ClusterStatus } from "./cluster-status";
 import { ClusterFrameHandler } from "./lens-views";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import { requestMain } from "../../../common/ipc";
-import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
+import { requestClusterActivation } from "../../ipc";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -58,7 +57,7 @@ export class ClusterView extends React.Component<Props> {
       reaction(() => this.clusterId, async (clusterId) => {
         ClusterFrameHandler.getInstance().setVisibleCluster(clusterId);
         ClusterFrameHandler.getInstance().initView(clusterId);
-        requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
+        requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
         catalogEntityRegistry.activeEntity = clusterId;
       }, {
         fireImmediately: true,

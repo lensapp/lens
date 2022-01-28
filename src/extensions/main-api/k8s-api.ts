@@ -43,3 +43,5 @@ export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints
 export type { ILocalKubeApiConfig, IRemoteKubeApiConfig, IKubeApiCluster } from "../../common/k8s-api/kube-api";
 export type { IPodContainer, IPodContainerStatus } from "../../common/k8s-api/endpoints/pods.api";
 export type { ISecretRef } from "../../common/k8s-api/endpoints/secret.api";
+export type { KubeObjectMetadata, KubeStatusData } from "../../common/k8s-api/kube-object";
+export type { KubeObjectStoreLoadAllParams, KubeObjectStoreLoadingParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";

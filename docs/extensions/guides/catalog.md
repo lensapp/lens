@@ -57,6 +57,14 @@ Will register a new view for the KubernetesCluster category, and because the pri
 
 The default list view has a priority of 50 and and custom views with priority (defaulting to 50) >= 50 will be displayed afterwards.
 
+#### Styling Custom Views
+
+By default, custom view blocks are styled with [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox). Some details comes from this.
+
+- To set fixed height of a custom block, use `max-height` css rule.
+- To set flexible height, use `height`.
+- Otherwise, custom view will have height of it's contents.
+
 ## Entities
 
 An entity is the data within the catalog.

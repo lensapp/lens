@@ -4,45 +4,61 @@
  */
 
 import { anyObject } from "jest-mock-extended";
-import { merge } from "lodash";
 import mockFs from "mock-fs";
 import logger from "../../main/logger";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { HotbarStore } from "../hotbar-store";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import directoryForUserDataInjectable
-  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
     items: [
-      {
+      getMockCatalogEntity({
+        apiVersion: "v1",
+        kind: "Cluster",
+        status: {
+          phase: "Running",
+        },
         metadata: {
           uid: "1dfa26e2ebab15780a3547e9c7fa785c",
           name: "mycluster",
           source: "local",
+          labels: {},
         },
-      },
-      {
+      }),
+      getMockCatalogEntity({
+        apiVersion: "v1",
+        kind: "Cluster",
+        status: {
+          phase: "Running",
+        },
         metadata: {
           uid: "55b42c3c7ba3b04193416cda405269a5",
           name: "my_shiny_cluster",
           source: "remote",
+          labels: {},
         },
-      },
-      {
+      }),
+      getMockCatalogEntity({
+        apiVersion: "v1",
+        kind: "Cluster",
+        status: {
+          phase: "Running",
+        },
         metadata: {
           uid: "catalog-entity",
           name: "Catalog",
           source: "app",
+          labels: {},
         },
-      },
+      }),
     ],
   },
 }));
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
-  return merge(data, {
+  return {
     getName: jest.fn(() => data.metadata?.name),
     getId: jest.fn(() => data.metadata?.uid),
     getSource: jest.fn(() => data.metadata?.source ?? "unknown"),
@@ -52,7 +68,8 @@ function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKi
     metadata: {},
     spec: {},
     status: {},
-  }) as CatalogEntity;
+    ...data,
+  } as CatalogEntity;
 }
 
 const testCluster = getMockCatalogEntity({

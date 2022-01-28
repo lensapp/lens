@@ -10,15 +10,15 @@ import "../common/catalog-entities/kubernetes-cluster";
 import { disposer, toJS } from "../common/utils";
 import { debounce } from "lodash";
 import type { CatalogEntity } from "../common/catalog";
-import { CatalogIpcEvents } from "../common/ipc/catalog";
+import { catalogInitChannel, catalogItemsChannel } from "../common/ipc/catalog";
 
 const broadcaster = debounce((items: CatalogEntity[]) => {
-  broadcastMessage(CatalogIpcEvents.ITEMS, items);
+  broadcastMessage(catalogItemsChannel, items);
 }, 1_000, { leading: true, trailing: true });
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
   return disposer(
-    ipcMainOn(CatalogIpcEvents.INIT, () => broadcaster(toJS(catalog.items))),
+    ipcMainOn(catalogInitChannel, () => broadcaster(toJS(catalog.items))),
     reaction(() => toJS(catalog.items), (items) => {
       broadcaster(items);
     }, {

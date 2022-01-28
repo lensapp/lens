@@ -5,7 +5,7 @@
 
 import { ipcMain } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
-import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../ipc";
+import { broadcastMessage } from "../ipc";
 import type { ContextHandler } from "../../main/context-handler/context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import type { Kubectl } from "../../main/kubectl/kubectl";
@@ -20,6 +20,7 @@ import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, C
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../cluster-types";
 import { disposer, toJS } from "../utils";
 import type { Response } from "request";
+import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 
 interface Dependencies {
   directoryForKubeConfigs: string,
@@ -641,7 +642,7 @@ export class Cluster implements ClusterModel, ClusterState {
         const { response } = error as HttpError & { response: Response };
 
         logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error: response.body });
-        broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
+        broadcastMessage(clusterListNamespaceForbiddenChannel, this.id);
       }
 
       return namespaceList;

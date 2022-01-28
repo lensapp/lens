@@ -10,12 +10,7 @@ import fse from "fs-extra";
 import { makeObservable, observable, reaction, when } from "mobx";
 import os from "os";
 import path from "path";
-import {
-  broadcastMessage,
-  ipcMainHandle,
-  ipcRendererOn,
-  requestMain,
-} from "../../common/ipc";
+import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
 import { toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
@@ -24,6 +19,8 @@ import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
 import { isProduction } from "../../common/vars";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import type { PackageJson } from "type-fest";
+import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
+import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader;
@@ -96,9 +93,6 @@ export class ExtensionDiscovery {
     return when(() => this.isLoaded);
   }
 
-  // IPC channel to broadcast changes to extension-discovery from main
-  protected static readonly extensionDiscoveryChannel = "extension-discovery:main";
-
   public events = new EventEmitter();
 
   constructor(protected dependencies : Dependencies) {
@@ -141,14 +135,14 @@ export class ExtensionDiscovery {
       this.isLoaded = isLoaded;
     };
 
-    requestMain(ExtensionDiscovery.extensionDiscoveryChannel).then(onMessage);
-    ipcRendererOn(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
+    requestInitialExtensionDiscovery().then(onMessage);
+    ipcRendererOn(extensionDiscoveryStateChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
       onMessage(message);
     });
   }
 
   async initMain(): Promise<void> {
-    ipcMainHandle(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
+    ipcMainHandle(extensionDiscoveryStateChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
       this.broadcast();
@@ -492,6 +486,6 @@ export class ExtensionDiscovery {
   }
 
   broadcast(): void {
-    broadcastMessage(ExtensionDiscovery.extensionDiscoveryChannel, this.toJSON());
+    broadcastMessage(extensionDiscoveryStateChannel, this.toJSON());
   }
 }
