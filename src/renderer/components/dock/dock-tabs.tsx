@@ -8,17 +8,18 @@ import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
 import type { DockTab as DockTabModel } from "./dock-store/dock.store";
-import { TabKind } from "./dock-store/dock.store";
+import { TabKind, DockStore } from "./dock-store/dock.store";
 import { TerminalTab } from "./terminal-tab";
 
 interface Props {
   tabs: DockTabModel[]
+  dockStore: DockStore;
   autoFocus: boolean
   selectedTab: DockTabModel
   onChangeTab: (tab: DockTabModel) => void
 }
 
-export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
+export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab, dockStore }: Props) => {
   const elem = useRef(null);
   const contentElem = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
@@ -27,12 +28,20 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
   const scrollStep = 200;
 
   const scrollToRight = (): void => {
-    if(!elem || scrollPosition + scrollStep > contentWidth) return;
+    if(!elem || scrollPosition === contentWidth) return;
     const scroll = scrollPosition + scrollStep;
 
     setScrollPosition(scroll);
 
     elem.current.scrollLeft = scroll;
+  };
+
+  const updateStateValues = () => {
+    if(!elem || !contentElem) return;
+
+    setContentWidth(contentElem.current.clientWidth);
+    setContainerWidth(elem.current.clientWidth);
+    setScrollPosition(elem.current.scrollLeft);
   };
 
   const scrollToLeft = (): void => {
@@ -47,13 +56,15 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
   const  isScrollableRight = (): boolean => {
     if(!elem || !contentElem) return false;
 
-    return contentWidth > containerWidth && scrollPosition < contentWidth - containerWidth;
+    // check if element with tabs is wider than the parent element
+    // check if scroll at the end of scrollable area.
+    return contentElem.current?.clientWidth  > containerWidth && scrollPosition  < contentElem.current?.clientWidth - elem.current?.clientWidth;
   };
 
   const  isScrollableLeft = (): boolean => {
     if(!elem || !contentElem) return false;
 
-    return scrollPosition > scrollStep;
+    return scrollPosition > 0;
   };
 
   const updateScrollPosition = ( evt: UIEvent<HTMLDivElement>): void => {
@@ -65,11 +76,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
   };
 
   const onWindowResize = (): void => {
-    if(!elem || !contentElem) return;
-
-    setContentWidth(contentElem.current.clientWidth);
-    setContainerWidth(elem.current.clientWidth);
-    setScrollPosition(elem.current.scrollLeft);
+    updateStateValues();
   };
 
   const renderTab = (tab?: DockTabModel) => {
@@ -93,17 +100,18 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
 
 
   useEffect(() => {
-    if(!elem || !contentElem) return;
-
-    setContentWidth(contentElem.current.clientWidth);
-    setContainerWidth(elem.current.clientWidth);
-    setScrollPosition(elem.current.scrollLeft);
+    updateStateValues();
 
     // update values in store on scroll
     elem.current.addEventListener("scroll", updateScrollPosition);
 
     // update current values on resize to show/hide scroll
     window.addEventListener("resize", onWindowResize);
+
+    // update scroll state if tabs numbers has changed
+    dockStore.onTabsNumberChange(() => {
+      updateStateValues();
+    });
   }, []);
 
   return (
