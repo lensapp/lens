@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, makeObservable } from "mobx";
+import { action, makeObservable, when } from "mobx";
 import type { TabId } from "../dock/store";
 import { DockTabStorageState, DockTabStore } from "../dock-tab-store/dock-tab.store";
 import { getChartDetails, getChartValues } from "../../../../common/k8s-api/endpoints/helm-charts.api";
@@ -47,6 +47,8 @@ export class InstallChartTabStore extends DockTabStore<IChartInstallData> {
   @action
   async loadData(tabId: string) {
     const promises = [];
+
+    await when(() => this.isReady(tabId));
 
     if (!this.getData(tabId).values) {
       promises.push(this.loadValues(tabId));
