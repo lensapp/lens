@@ -97,6 +97,11 @@ export interface DockTabCloseEvent {
   tabId: TabId; // closed tab id
 }
 
+export interface DockTabsNumberEvent {
+  currentTabsNumber: number; // number of open tabs
+  previousTabsNumber: number;
+}
+
 interface Dependencies {
   storage: StorageHelper<DockStorageState>
 }
@@ -158,6 +163,10 @@ export class DockStore implements DockStorageState {
     if (tabId && !this.getTabById(tabId)) return; // skip invalid ids
 
     this.dependencies.storage.merge({ selectedTabId: tabId });
+  }
+
+  @computed get tabsNumber() : number {
+    return this.tabs.length;
   }
 
   @computed get selectedTab() {
@@ -222,6 +231,15 @@ export class DockStore implements DockStorageState {
         tabId: tab.id,
       });
     }), reactionOpts);
+  }
+
+  onTabsNumberChange(callback: (evt: DockTabsNumberEvent) => void) {
+    return reaction(() => this.tabsNumber, ((currentTabsNumber, previousTabsNumber) => {
+      callback({
+        currentTabsNumber,
+        previousTabsNumber,
+      });
+    }));
   }
 
   hasTabs() {

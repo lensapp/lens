@@ -157,6 +157,7 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
             selectedTab={selectedTab}
             autoFocus={isOpen}
             onChangeTab={this.onChangeTab}
+            dockStore={dockStore}
           />
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">

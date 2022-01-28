@@ -49,6 +49,7 @@ const getComponent = (dockStore: DockStore) => (
     selectedTab={dockStore.selectedTab}
     autoFocus={true}
     onChangeTab={noop}
+    dockStore={dockStore}
   />
 );
 
