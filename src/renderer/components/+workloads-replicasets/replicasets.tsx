@@ -70,9 +70,6 @@ export class ReplicaSets extends React.Component<Props> {
           replicaSet.getReady(),
           replicaSet.getAge(),
         ]}
-        renderItemMenu={(item: ReplicaSet) => {
-          return <ReplicaSetMenu object={item}/>;
-        }}
       />
     );
   }

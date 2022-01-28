@@ -91,7 +91,6 @@ export class Deployments extends React.Component<Props> {
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}
-        renderItemMenu={item => <DeploymentMenu object={item} />}
       />
     );
   }

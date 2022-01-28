@@ -72,7 +72,6 @@ export class StatefulSets extends React.Component<Props> {
           <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={item => <StatefulSetMenu object={item} />}
       />
     );
   }
