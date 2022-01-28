@@ -7,11 +7,18 @@ import styles from "./bottom-bar.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { StatusBarRegistration, StatusBarRegistry } from "../../../extensions/registries";
 import { cssNames } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import bottomBarItemsInjectable from "./bottom-bar-items.injectable";
+import type { IComputedValue } from "mobx";
+import type { StatusBarRegistration } from "./status-bar-registration";
+
+interface Dependencies {
+  items: IComputedValue<StatusBarRegistration[]>
+}
 
 @observer
-export class BottomBar extends React.Component {
+class NonInjectedBottomBar extends React.Component<Dependencies> {
   renderRegisteredItem(registration: StatusBarRegistration) {
     const { item } = registration;
 
@@ -23,19 +30,9 @@ export class BottomBar extends React.Component {
   }
 
   renderRegisteredItems() {
-    const items = StatusBarRegistry.getInstance().getItems();
-
-    if (!Array.isArray(items)) {
-      return null;
-    }
-
-    items.sort(function sortLeftPositionFirst(a, b) {
-      return a.components?.position?.localeCompare(b.components?.position);
-    });
-
     return (
       <>
-        {items.map((registration, index) => {
+        {this.props.items.get().map((registration, index) => {
           if (!registration?.item && !registration?.components?.Item) {
             return null;
           }
@@ -64,3 +61,14 @@ export class BottomBar extends React.Component {
     );
   }
 }
+
+export const BottomBar = withInjectables<Dependencies>(
+  NonInjectedBottomBar,
+
+  {
+    getProps: (di, props) => ({
+      items: di.inject(bottomBarItemsInjectable),
+      ...props,
+    }),
+  },
+);
