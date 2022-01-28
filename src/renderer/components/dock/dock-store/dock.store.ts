@@ -233,15 +233,6 @@ export class DockStore implements DockStorageState {
     }), reactionOpts);
   }
 
-  onTabsNumberChange(callback: (evt: DockTabsNumberEvent) => void) {
-    return reaction(() => this.tabsNumber, ((currentTabsNumber, previousTabsNumber) => {
-      callback({
-        currentTabsNumber,
-        previousTabsNumber,
-      });
-    }));
-  }
-
   hasTabs() {
     return this.tabs.length > 0;
   }
