@@ -8,13 +8,14 @@
 import "./select.scss";
 
 import React, { ReactNode } from "react";
-import { computed, makeObservable } from "mobx";
+import { computed, IComputedValue, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import ReactSelect, { ActionMeta, components, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
 import Creatable, { CreatableProps } from "react-select/creatable";
-
-import { ThemeStore } from "../../theme.store";
+import type { Theme } from "../../themes/store";
 import { boundMethod, cssNames } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import activeThemeInjectable from "../../themes/active-theme.injectable";
 
 const { Menu } = components;
 
@@ -37,21 +38,25 @@ export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, Crea
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
+interface Dependencies {
+  readonly activeTheme: IComputedValue<Theme>;
+}
+
 @observer
-export class Select extends React.Component<SelectProps> {
+class NonInjectedSelect extends React.Component<SelectProps & Dependencies> {
   static defaultProps: SelectProps = {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
     menuPlacement: "auto",
   };
 
-  constructor(props: SelectProps) {
+  constructor(props: SelectProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @computed get themeClass() {
-    const themeName = this.props.themeName || ThemeStore.getInstance().activeTheme.type;
+    const themeName = this.props.themeName || this.props.activeTheme.get().type;
 
     return `theme-${themeName}`;
   }
@@ -142,3 +147,10 @@ export class Select extends React.Component<SelectProps> {
       : <ReactSelect {...selectProps}/>;
   }
 }
+
+export const Select = withInjectables<Dependencies, SelectProps>(NonInjectedSelect, {
+  getProps: (di, props) => ({
+    activeTheme: di.inject(activeThemeInjectable),
+    ...props,
+  }),
+});

@@ -19,10 +19,9 @@ import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { FrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
@@ -37,7 +36,7 @@ const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
 };
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
+  clusterFrameContext: FrameContext
   subscribeToStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
 }
 

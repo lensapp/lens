@@ -6,13 +6,13 @@
 // Keeps window.localStorage state in external JSON-files.
 // Because app creates random port between restarts => storage session wiped out each time.
 import path from "path";
-import { comparer, observable, reaction, toJS, when } from "mobx";
+import { comparer, observable, reaction, toJS } from "mobx";
 import { StorageHelper } from "../storageHelper";
-import logger from "../../../main/logger";
-import { isTestEnv } from "../../../common/vars";
-
 import { getHostedClusterId } from "../../../common/utils";
-import type { JsonObject } from "type-fest";
+import type { JsonValue } from "type-fest";
+import { isTestEnv } from "../../../common/vars";
+import logger from "../../../common/logger";
+import type { StorageLayer } from "..";
 
 const storage = observable({
   initialized: false,
@@ -22,65 +22,61 @@ const storage = observable({
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
-  readJsonFile: (filePath: string) => Promise<JsonObject>;
-  writeJsonFile: (filePath: string, contentObject: JsonObject) => Promise<void>;
+  readJsonFile: (filePath: string) => Promise<JsonValue>;
+  writeJsonFile: (filePath: string, contentObject: JsonValue) => Promise<void>;
 }
 
 /**
  * Creates a helper for saving data under the "key" intended for window.localStorage
  */
-export const createStorage = ({ directoryForLensLocalStorage, readJsonFile, writeJsonFile }: Dependencies) => <T>(key: string, defaultValue: T) => {
+export async function createStorage<T>({ directoryForLensLocalStorage, readJsonFile, writeJsonFile }: Dependencies, key: string, defaultValue: T): Promise<StorageLayer<T>> {
   const { logPrefix } = StorageHelper;
 
   if (!storage.initialized) {
     storage.initialized = true;
 
-    (async () => {
-      const filePath = path.resolve(directoryForLensLocalStorage, `${getHostedClusterId() || "app"}.json`);
+    const filePath = path.resolve(directoryForLensLocalStorage, `${getHostedClusterId() || "app"}.json`);
+
+    try {
+      const data = await readJsonFile(filePath);
+
+      if (data && typeof data === "object") {
+        storage.data = data;
+      }
+    } catch {
+      // ignore error
+    } finally {
+      if (!isTestEnv) {
+        logger.info(`${logPrefix} loading finished for ${filePath}`);
+      }
+
+      storage.loaded = true;
+    }
+
+    const saveFile = async (state: Record<string, any> = {}) => {
+      logger.info(`${logPrefix} saving ${filePath}`);
 
       try {
-        storage.data = await readJsonFile(filePath);
+        await writeJsonFile(filePath, state);
+      } catch (error) {
+        logger.error(`${logPrefix} saving failed: ${error}`, {
+          json: state, jsonFilePath: filePath,
+        });
       }
+    };
 
-      // eslint-disable-next-line no-empty
-      catch {}
-
-      finally {
-        if (!isTestEnv) {
-          logger.info(`${logPrefix} loading finished for ${filePath}`);
-        }
-
-        storage.loaded = true;
-      }
-
-      // bind auto-saving data changes to %storage-file.json
-      reaction(() => toJS(storage.data), saveFile, {
-        delay: 250, // lazy, avoid excessive writes to fs
-        equals: comparer.structural, // save only when something really changed
-      });
-
-      async function saveFile(state: Record<string, any> = {}) {
-        logger.info(`${logPrefix} saving ${filePath}`);
-
-        try {
-          await writeJsonFile(filePath, state);
-        } catch (error) {
-          logger.error(`${logPrefix} saving failed: ${error}`, {
-            json: state, jsonFilePath: filePath,
-          });
-        }
-      }
-    })()
-      .catch(error => logger.error(`${logPrefix} Failed to initialize storage: ${error}`));
+    // bind auto-saving data changes to %storage-file.json
+    reaction(() => toJS(storage.data), saveFile, {
+      delay: 250, // lazy, avoid excessive writes to fs
+      equals: comparer.structural, // save only when something really changed
+    });
   }
 
   return new StorageHelper<T>(key, {
     autoInit: true,
     defaultValue,
     storage: {
-      async getItem(key: string) {
-        await when(() => storage.loaded);
-
+      getItem(key: string) {
         return storage.data[key];
       },
       setItem(key: string, value: any) {
@@ -91,4 +87,4 @@ export const createStorage = ({ directoryForLensLocalStorage, readJsonFile, writ
       },
     },
   });
-};
+}

@@ -2,9 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { kubernetesClusterCategory }  from "../kubernetes-cluster";
+import { KubernetesClusterCategory }  from "../kubernetes-cluster";
 
 describe("kubernetesClusterCategory", () => {
+  let kubernetesClusterCategory: KubernetesClusterCategory;
+
+  beforeEach(() => {
+    kubernetesClusterCategory = new KubernetesClusterCategory();
+  });
+
   describe("filteredItems", () => {
     const item1 = {
       icon: "Icon",

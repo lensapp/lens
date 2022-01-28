@@ -5,6 +5,6 @@
 
 import { dialogShowOpenDialogHandler, requestMain } from "../../common/ipc";
 
-export async function showOpenDialog(options: Electron.OpenDialogOptions): Promise<Electron.OpenDialogReturnValue> {
+export function showOpenDialog(options: Electron.OpenDialogOptions): Promise<Electron.OpenDialogReturnValue> {
   return requestMain(dialogShowOpenDialogHandler, options);
 }

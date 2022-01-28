@@ -63,7 +63,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
       title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()})`,
     });
 
-    terminalStore.sendCommand(commandParts.join(" "), {
+    await terminalStore.sendCommand(commandParts.join(" "), {
       enter: true,
       tabId: shell.id,
     });

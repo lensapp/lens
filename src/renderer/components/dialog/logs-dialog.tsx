@@ -43,7 +43,10 @@ export class LogsDialog extends React.Component<Props> {
     );
 
     return (
-      <Dialog {...dialogProps} className="LogsDialog">
+      <Dialog
+        {...dialogProps}
+        className="LogsDialog"
+      >
         <Wizard header={header} done={dialogProps.close}>
           <WizardStep scrollable={false} customButtons={customButtons}>
             <code className="block" ref={e => this.logsElem = e}>

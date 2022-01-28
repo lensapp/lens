@@ -42,7 +42,11 @@
   },
   "include": [
     "src/**/*",
-    "types/*.d.ts"
+    "types/*.d.ts",
+    "build",
+    "extensions/**/*",
+    "integration/**/*",
+    "webpack.*.ts",
   ],
   "exclude": [
     "node_modules",

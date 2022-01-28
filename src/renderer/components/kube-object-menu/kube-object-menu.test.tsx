@@ -9,22 +9,23 @@ import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
-import type { KubeObjectMenuRegistration } from "../../../extensions/registries";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
-import clusterInjectable from "./dependencies/cluster.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
-import editResourceTabInjectable from "../dock/edit-resource-tab/edit-resource-tab.injectable";
-import { TabKind } from "../dock/dock-store/dock.store";
+import { TabKind } from "../dock/store";
 import kubeObjectMenuRegistryInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-registry.injectable";
 import { DiRender, renderFor } from "../test-utils/renderFor";
-import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import apiManagerInjectable from "./dependencies/api-manager.injectable";
 import { KubeObjectMenu } from "./index";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager.injectable";
+import newEditResourceTabInjectable from "../dock/edit-resource/create-tab.injectable";
+import uniqueIdInjectable from "../../../common/utils/unique-id.injectable";
+import clusterNameInjectable from "./dependencies/cluster-name.injectable";
+
+jest.mock("lodash/uniqueId", () => (val?: string) => val);
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../tooltip");
@@ -37,24 +38,21 @@ describe("kube-object-menu", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     await di.runSetups();
+    render = renderFor(di);
 
     // TODO: Remove global shared state
     KubeObjectMenuRegistry.resetInstance();
     KubeObjectMenuRegistry.createInstance();
 
-    render = renderFor(di);
-
-    di.override(clusterInjectable, () => ({
-      name: "Some name",
-    }) as Cluster);
-
+    di.override(clusterNameInjectable, () => "Some name");
     di.override(apiManagerInjectable, () => ({
       getStore: api => void api,
     }) as ApiManager);
 
-    di.override(hideDetailsInjectable, () => () => {});
+    di.override(uniqueIdInjectable, () => val => val);
+    di.override(hideDetailsInjectable, () => () => { });
 
-    di.override(editResourceTabInjectable, () => () => ({
+    di.override(newEditResourceTabInjectable, () => () => ({
       id: "irrelevant",
       kind: TabKind.TERMINAL,
       pinned: false,
@@ -80,14 +78,6 @@ describe("kube-object-menu", () => {
     });
   });
 
-  it("given no cluster, does not crash", () => {
-    di.override(clusterInjectable, () => null);
-
-    expect(() => {
-      render(<KubeObjectMenu object={null} toolbar={true} />);
-    }).not.toThrow();
-  });
-
   it("given no kube object, renders", () => {
     const { baseElement } = render(
       <KubeObjectMenu object={null} toolbar={true} />,
@@ -100,7 +90,7 @@ describe("kube-object-menu", () => {
     let baseElement: Element;
     let removeActionMock: AsyncFnMock<() => void>;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       const objectStub = KubeObject.create({
         apiVersion: "some-api-version",
         kind: "some-kind",
@@ -136,33 +126,29 @@ describe("kube-object-menu", () => {
     });
 
     describe("when removing kube object", () => {
-      beforeEach(() => {
-        const menuItem = screen.getByTestId("menu-action-remove");
-
-        userEvent.click(menuItem);
+      beforeEach(async () => {
+        userEvent.click(await screen.findByTestId("menu-action-remove"));
       });
 
       it("renders", () => {
         expect(baseElement).toMatchSnapshot();
       });
 
-      it("opens a confirmation dialog", () => {
-        screen.getByTestId("confirmation-dialog");
+      it("opens a confirmation dialog", async () => {
+        await screen.findByTestId("confirmation-dialog");
       });
 
       describe("when remove is confirmed", () => {
-        beforeEach(() => {
-          const confirmRemovalButton = screen.getByTestId("confirm");
-
-          userEvent.click(confirmRemovalButton);
+        beforeEach(async () => {
+          userEvent.click(await screen.findByTestId("confirm"));
         });
 
         it("calls for removal of the kube object", () => {
           expect(removeActionMock).toHaveBeenCalledWith();
         });
 
-        it("does not close the confirmation dialog yet", () => {
-          screen.getByTestId("confirmation-dialog");
+        it("does not close the confirmation dialog yet", async () => {
+          await screen.findByTestId("confirmation-dialog");
         });
 
         it("when removal resolves, closes the confirmation dialog", async () => {
@@ -177,7 +163,7 @@ describe("kube-object-menu", () => {
   describe("given kube object with namespace", () => {
     let baseElement: Element;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       const objectStub = KubeObject.create({
         apiVersion: "some-api-version",
         kind: "some-kind",
@@ -196,16 +182,14 @@ describe("kube-object-menu", () => {
           <KubeObjectMenu
             object={objectStub}
             toolbar={true}
-            removeAction={() => {}}
+            removeAction={() => { }}
           />
         </div>,
       ));
     });
 
-    it("when removing kube object, renders confirmation dialog with namespace", () => {
-      const menuItem = screen.getByTestId("menu-action-remove");
-
-      userEvent.click(menuItem);
+    it("when removing kube object, renders confirmation dialog with namespace", async () => {
+      userEvent.click(await screen.findByTestId("menu-action-remove"));
 
       expect(baseElement).toMatchSnapshot();
     });
@@ -214,7 +198,7 @@ describe("kube-object-menu", () => {
   describe("given kube object without namespace", () => {
     let baseElement: Element;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       const objectStub = KubeObject.create({
         apiVersion: "some-api-version",
         kind: "some-kind",
@@ -233,40 +217,32 @@ describe("kube-object-menu", () => {
           <KubeObjectMenu
             object={objectStub}
             toolbar={true}
-            removeAction={() => {}}
+            removeAction={() => { }}
           />
         </div>,
       ));
     });
 
-    it("when removing kube object, renders confirmation dialog without namespace", () => {
-      const menuItem = screen.getByTestId("menu-action-remove");
-
-      userEvent.click(menuItem);
+    it("when removing kube object, renders confirmation dialog without namespace", async () => {
+      userEvent.click(await screen.findByTestId("menu-action-remove"));
 
       expect(baseElement).toMatchSnapshot();
     });
   });
 });
 
-const addDynamicMenuItem = ({
-  di,
-  apiVersions,
-  kind,
+function addDynamicMenuItem({
+  di, apiVersions, kind,
 }: {
   di: ConfigurableDependencyInjectionContainer;
   apiVersions: string[];
   kind: string;
-}) => {
-  const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
-
-  const dynamicMenuItemStub: KubeObjectMenuRegistration = {
+}) {
+  di.inject(kubeObjectMenuRegistryInjectable).add({
     apiVersions,
     kind,
-    components: { MenuItem: MenuItemComponent },
-  };
-
-  const kubeObjectMenuRegistry = di.inject(kubeObjectMenuRegistryInjectable);
-
-  kubeObjectMenuRegistry.add([dynamicMenuItemStub]);
-};
+    components: {
+      MenuItem: () => <li>Some menu item</li>,
+    },
+  });
+}

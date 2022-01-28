@@ -6,79 +6,82 @@
 import styles from "./sidebar-cluster.module.scss";
 import { observable } from "mobx";
 import React, { useState } from "react";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { broadcastMessage } from "../../../common/ipc";
-import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
 import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 import { navigate } from "../../navigation";
-import { Menu, MenuItem } from "../menu";
-import { ConfirmDialog } from "../confirm-dialog";
+import { Menu } from "../menu";
 import { Tooltip } from "../tooltip";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import { observer } from "mobx-react";
+import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
+import renderEntityContextMenuItemInjectable, { RenderEntityContextMenuItem } from "../../catalog/render-context-menu-item.injectable";
+import onEntityContextMenuOpenInjectable from "../../catalog/on-entity-context-menu-open.injectable";
+import addToActiveHotbarInjectable from "../../../common/hotbar-store/add-to-active-hotbar.injectable";
+import removeByIdFromActiveHotbarInjectable from "../../../common/hotbar-store/remove-from-active-hotbar.injectable";
+import isItemInActiveHotbarInjectable from "../../../common/hotbar-store/is-added-to-active-hotbar.injectable";
 
-const contextMenu: CatalogEntityContextMenuContext = observable({
-  menuItems: [],
-  navigate: (url: string, forceMainFrame = true) => {
-    if (forceMainFrame) {
-      broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
-    } else {
-      navigate(url);
-    }
-  },
-});
-
-function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-  if (menuItem.confirm) {
-    ConfirmDialog.open({
-      okButtonProps: {
-        primary: false,
-        accent: true,
-      },
-      ok: () => {
-        menuItem.onClick();
-      },
-      message: menuItem.confirm.message,
-    });
-  } else {
-    menuItem.onClick();
-  }
+export interface SidebarClusterProps {
+  clusterEntity: CatalogEntity | null | undefined;
 }
 
-function renderLoadingSidebarCluster() {
-  return (
-    <div className={styles.SidebarCluster}>
-      <Avatar
-        title="??"
-        background="var(--halfGray)"
-        size={40}
-        className={styles.loadingAvatar}
-      />
-      <div className={styles.loadingClusterName} />
-    </div>
-  );
+interface Dependencies {
+  renderEntityContextMenuItem: RenderEntityContextMenuItem;
+  onEntityContextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
+  isAddedToActiveHotbar: (entity: CatalogEntity) => boolean;
+  removeFromActiveHotbar: (entityId: string) => void;
+  addToActiveHotbar: (entity: CatalogEntity) => void;
 }
 
-export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity }) {
+const NonInjectedSidebarCluster = observer(({
+  clusterEntity,
+  renderEntityContextMenuItem,
+  onEntityContextMenuOpen,
+  isAddedToActiveHotbar,
+  removeFromActiveHotbar,
+  addToActiveHotbar,
+}: Dependencies & SidebarClusterProps) => {
   const [opened, setOpened] = useState(false);
+  const [contextMenuItems] = useState(observable.array<CatalogEntityContextMenu>());
 
   if (!clusterEntity) {
-    return renderLoadingSidebarCluster();
+    return (
+      <div className={styles.SidebarCluster}>
+        <Avatar
+          title="??"
+          background="var(--halfGray)"
+          size={40}
+          className={styles.loadingAvatar}
+        />
+        <div className={styles.loadingClusterName} />
+      </div>
+    );
   }
 
   const onMenuOpen = () => {
-    const hotbarStore = HotbarStore.getInstance();
-    const isAddedToActive = HotbarStore.getInstance().isAddedToActive(clusterEntity);
-    const title = isAddedToActive
-      ? "Remove from Hotbar"
-      : "Add to Hotbar";
-    const onClick = isAddedToActive
-      ? () => hotbarStore.removeFromHotbar(metadata.uid)
-      : () => hotbarStore.addToHotbar(clusterEntity);
+    contextMenuItems.replace([
+      isAddedToActiveHotbar(clusterEntity)
+        ? {
+          title:  "Remove from Hotbar",
+          onClick: () => removeFromActiveHotbar(metadata.uid),
+        }
+        : {
+          title:  "Add to Hotbar",
+          onClick: () => addToActiveHotbar(clusterEntity),
+        },
+    ]);
 
-    contextMenu.menuItems = [{ title, onClick }];
-    clusterEntity.onContextMenuOpen(contextMenu);
-
+    onEntityContextMenuOpen(clusterEntity, {
+      menuItems: contextMenuItems,
+      navigate: (url: string, forceMainFrame = true) => {
+        if (forceMainFrame) {
+          broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
+        } else {
+          navigate(url);
+        }
+      },
+    });
     toggle();
   };
 
@@ -129,14 +132,20 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
         close={toggle}
         className={styles.menu}
       >
-        {
-          contextMenu.menuItems.map((menuItem) => (
-            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem)}>
-              {menuItem.title}
-            </MenuItem>
-          ))
-        }
+        {contextMenuItems.map(renderEntityContextMenuItem("title"))}
       </Menu>
     </div>
   );
-}
+});
+
+export const SidebarCluster = withInjectables<Dependencies, SidebarClusterProps>(NonInjectedSidebarCluster, {
+  getProps: (di, props) => ({
+    renderEntityContextMenuItem: di.inject(renderEntityContextMenuItemInjectable),
+    onEntityContextMenuOpen: di.inject(onEntityContextMenuOpenInjectable),
+    addToActiveHotbar: di.inject(addToActiveHotbarInjectable),
+    removeFromActiveHotbar: di.inject(removeByIdFromActiveHotbarInjectable),
+    isAddedToActiveHotbar: di.inject(isItemInActiveHotbarInjectable),
+    ...props,
+  }),
+});
+

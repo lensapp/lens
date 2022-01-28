@@ -5,9 +5,8 @@
 
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { KubeApi } from "../kube-api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import { autoBind } from "../../utils";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface ConfigMap {
   data: {
@@ -32,17 +31,11 @@ export class ConfigMap extends KubeObject {
   }
 }
 
-/**
- * Only available within kubernetes cluster pages
- */
-let configMapApi: KubeApi<ConfigMap>;
-
-if (isClusterPageContext()) {
-  configMapApi = new KubeApi({
-    objectConstructor: ConfigMap,
-  });
+export class ConfigMapApi extends KubeApi<ConfigMap> {
+  constructor(args: SpecificApiOptions<ConfigMap> = {}) {
+    super({
+      ...args,
+      objectConstructor: ConfigMap,
+    });
+  }
 }
-
-export {
-  configMapApi,
-};

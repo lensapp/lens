@@ -5,39 +5,11 @@
 
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { IPodMetrics } from "./pods.api";
+import type { IPodMetrics } from "./pod.api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { LabelSelector } from "../kube-object";
-
-export class StatefulSetApi extends KubeApi<StatefulSet> {
-  protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return `${this.getUrl(params)}/scale`;
-  }
-
-  getReplicas(params: { namespace: string; name: string }): Promise<number> {
-    return this.request
-      .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status?.replicas);
-  }
-
-  scale(params: { namespace: string; name: string }, replicas: number) {
-    return this.request.patch(this.getScaleApiUrl(params), {
-      data: {
-        spec: {
-          replicas,
-        },
-      },
-    },
-    {
-      headers: {
-        "content-type": "application/merge-patch+json",
-      },
-    });
-  }
-}
 
 export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
   const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
@@ -136,14 +108,43 @@ export class StatefulSet extends WorkloadKubeObject {
   }
 }
 
-let statefulSetApi: StatefulSetApi;
 
-if (isClusterPageContext()) {
-  statefulSetApi = new StatefulSetApi({
-    objectConstructor: StatefulSet,
-  });
+interface ReplicasStatus {
+  status?: {
+    replicas: number;
+  }
 }
 
-export {
-  statefulSetApi,
-};
+export class StatefulSetApi extends KubeApi<StatefulSet> {
+  constructor(args: SpecificApiOptions<StatefulSet> = {}) {
+    super({
+      ...args,
+      objectConstructor: StatefulSet,
+    });
+  }
+
+  protected getScaleApiUrl(params: { namespace: string; name: string }) {
+    return `${this.getUrl(params)}/scale`;
+  }
+
+  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    const { status } = await this.request .get<ReplicasStatus>(this.getScaleApiUrl(params));
+
+    return status?.replicas ?? 0;
+  }
+
+  scale(params: { namespace: string; name: string }, replicas: number) {
+    return this.request.patch(this.getScaleApiUrl(params), {
+      data: {
+        spec: {
+          replicas,
+        },
+      },
+    },
+    {
+      headers: {
+        "content-type": "application/merge-patch+json",
+      },
+    });
+  }
+}

@@ -3,63 +3,62 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podsStore } from "../../+workloads-pods/pods.store";
-import { UserStore } from "../../../../common/user-store";
-import { Pod } from "../../../../common/k8s-api/endpoints";
-import { ThemeStore } from "../../../theme.store";
+import type { PodStore } from "../../+pods/store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
-import { mockWindow } from "../../../../../__mocks__/windowMock";
+import type { LogTabStore } from "../logs/tab-store";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import logTabStoreInjectable from "../log-tab-store/log-tab-store.injectable";
-import type { LogTabStore } from "../log-tab-store/log-tab.store";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
-import type { DockStore } from "../dock-store/dock.store";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import mockFs from "mock-fs";
-
-mockWindow();
-
-podsStore.items.push(new Pod(dockerPod));
-podsStore.items.push(new Pod(deploymentPod1));
-podsStore.items.push(new Pod(deploymentPod2));
+import logTabStoreInjectable from "../logs/tab-store.injectable";
+import podStoreInjectable from "../../+pods/store.injectable";
+import type { DockTabCreate, DockTabData, TabId } from "../dock/store";
+import createDockTabInjectable from "../dock/create-tab.injectable";
+import closeDockTabInjectable from "../dock/close-tab.injectable";
+import renameDockTabInjectable from "../rename-tab.injectable";
+import logTabStorageInjectable from "../logs/tab-storage.injectable";
+import createPodLogsTabInjectable, { PodLogsTabData } from "../logs/create-pod-tab.injectable";
 
 describe("log tab store", () => {
+  let di: ConfigurableDependencyInjectionContainer;
   let logTabStore: LogTabStore;
-  let dockStore: DockStore;
+  let podStore: PodStore;
+  let renameDockTab: jest.Mock<void, [tabId: TabId, name: string]>;
+  let createDockTab: jest.Mock<DockTabData, [rawTabDesc: DockTabCreate, addNumber?: boolean]>;
+  let closeDockTab: jest.Mock<void, [tabId: TabId]>;
+  let createPodLogsTab: (data: PodLogsTabData) => TabId;
 
-  beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(() => {
+    di = getDiForUnitTesting();
 
-    mockFs();
+    renameDockTab = jest.fn();
+    createDockTab = jest.fn();
+    closeDockTab = jest.fn();
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(renameDockTabInjectable, () => renameDockTab);
+    di.override(createDockTabInjectable, () => createDockTab);
+    di.override(closeDockTabInjectable, () => closeDockTab);
+    di.override(logTabStorageInjectable, () => undefined);
 
-    await di.runSetups();
-
-    dockStore = di.inject(dockStoreInjectable);
     logTabStore = di.inject(logTabStoreInjectable);
+    podStore = di.inject(podStoreInjectable);
+    createPodLogsTab = di.inject(createPodLogsTabInjectable);
 
-    UserStore.createInstance();
-    ThemeStore.createInstance();
-  });
-
-  afterEach(() => {
-    UserStore.resetInstance();
-    ThemeStore.resetInstance();
-    mockFs.restore();
+    podStore.items.replace([
+      dockerPod,
+      deploymentPod1,
+      deploymentPod2,
+    ]);
   });
 
   it("creates log tab without sibling pods", () => {
-    const selectedPod = new Pod(dockerPod);
+    const selectedPod = dockerPod;
     const selectedContainer = selectedPod.getAllContainers()[0];
 
-    logTabStore.createPodTab({
+    const id = createPodLogsTab({
       selectedPod,
       selectedContainer,
     });
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
+    expect(logTabStore.getData(id)).toEqual({
       pods: [selectedPod],
       selectedPod,
       selectedContainer,
@@ -69,16 +68,16 @@ describe("log tab store", () => {
   });
 
   it("creates log tab with sibling pods", () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const siblingPod = new Pod(deploymentPod2);
+    const selectedPod = deploymentPod1;
+    const siblingPod = deploymentPod2;
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    const id = createPodLogsTab({
       selectedPod,
       selectedContainer,
     });
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
+    expect(logTabStore.getData(id)).toEqual({
       pods: [selectedPod, siblingPod],
       selectedPod,
       selectedContainer,
@@ -88,17 +87,17 @@ describe("log tab store", () => {
   });
 
   it("removes item from pods list if pod deleted from store", () => {
-    const selectedPod = new Pod(deploymentPod1);
+    const selectedPod = deploymentPod1;
     const selectedContainer = selectedPod.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    const id = createPodLogsTab({
       selectedPod,
       selectedContainer,
     });
 
-    podsStore.items.pop();
+    podStore.items.pop();
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
+    expect(logTabStore.getData(id)).toEqual({
       pods: [selectedPod],
       selectedPod,
       selectedContainer,
@@ -108,39 +107,22 @@ describe("log tab store", () => {
   });
 
   it("adds item into pods list if new sibling pod added to store", () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const selectedContainer = selectedPod.getInitContainers()[0];
+    const selectedPod = deploymentPod1;
+    const selectedContainer = deploymentPod1.getInitContainers()[0];
 
-    logTabStore.createPodTab({
+    const id = createPodLogsTab({
       selectedPod,
       selectedContainer,
     });
 
-    podsStore.items.push(new Pod(deploymentPod3));
+    podStore.items.push(deploymentPod3);
 
-    expect(logTabStore.getData(dockStore.selectedTabId)).toEqual({
-      pods: [selectedPod, deploymentPod3],
+    expect(logTabStore.getData(id)).toEqual({
+      pods: [selectedPod, deploymentPod2, deploymentPod3],
       selectedPod,
       selectedContainer,
       showTimestamps: false,
       previous: false,
     });
-  });
-
-  // FIXME: this is failed when it's not .only == depends on something above
-  it.only("closes tab if no pods left in store", async () => {
-    const selectedPod = new Pod(deploymentPod1);
-    const selectedContainer = selectedPod.getInitContainers()[0];
-
-    const id = logTabStore.createPodTab({
-      selectedPod,
-      selectedContainer,
-    });
-
-    podsStore.items.clear();
-
-    expect(logTabStore.getData(dockStore.selectedTabId)).toBeUndefined();
-    expect(logTabStore.getData(id)).toBeUndefined();
-    expect(dockStore.getTabById(id)).toBeUndefined();
   });
 });

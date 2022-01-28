@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { UserStore } from "../../common/user-store";
 import type { ContextHandler } from "../context-handler/context-handler";
 import { PrometheusProvider, PrometheusProviderRegistry, PrometheusService } from "../prometheus";
 import mockFs from "mock-fs";
@@ -46,19 +45,19 @@ class TestProvider extends PrometheusProvider {
     throw new Error("getQuery is not implemented.");
   }
 
-  async getPrometheusService(): Promise<PrometheusService> {
+  getPrometheusService(): Promise<PrometheusService | undefined> {
     switch (this.alwaysFail) {
       case ServiceResult.Success:
-        return {
+        return Promise.resolve({
           id: this.id,
           namespace: "default",
           port: 7000,
           service: "",
-        };
+        });
       case ServiceResult.Failure:
         throw new Error("does fail");
       case ServiceResult.Undefined:
-        return undefined;
+        return Promise.resolve(undefined);
     }
   }
 }
@@ -89,7 +88,6 @@ describe("ContextHandler", () => {
 
   afterEach(() => {
     PrometheusProviderRegistry.resetInstance();
-    UserStore.resetInstance();
     mockFs.restore();
   });
 
@@ -99,7 +97,7 @@ describe("ContextHandler", () => {
       [0, 1],
       [0, 2],
       [0, 3],
-    ])("should throw from %d success(es) after %d failure(s)", async (successes, failures) => {
+    ])("should throw from %d success(es) after %d failure(s)", (successes, failures) => {
       const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 

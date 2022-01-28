@@ -2,17 +2,21 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import React from "react";
-
-import { UserStore } from "../../../common/user-store";
+import type { UserPreferencesStore } from "../../../common/user-preferences";
+import userPreferencesStoreInjectable from "../../../common/user-preferences/store.injectable";
 import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { Switch } from "../switch";
 
-export const LensProxy = observer(() => {
-  const [proxy, setProxy] = React.useState(UserStore.getInstance().httpsProxy || "");
-  const store = UserStore.getInstance();
+interface Dependencies {
+  userStore: UserPreferencesStore;
+}
+
+const NonInjectedLensProxy = observer(({ userStore }: Dependencies) => {
+  const [proxy, setProxy] = React.useState(userStore.httpsProxy || "");
 
   return (
     <section id="proxy">
@@ -23,8 +27,8 @@ export const LensProxy = observer(() => {
           theme="round-black"
           placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
           value={proxy}
-          onChange={v => setProxy(v)}
-          onBlur={() => UserStore.getInstance().httpsProxy = proxy}
+          onChange={setProxy}
+          onBlur={() => userStore.httpsProxy = proxy}
         />
         <small className="hint">
           Proxy is used only for non-cluster communication.
@@ -35,7 +39,10 @@ export const LensProxy = observer(() => {
 
       <section className="small">
         <SubTitle title="Certificate Trust"/>
-        <Switch checked={store.allowUntrustedCAs} onChange={() => store.allowUntrustedCAs = !store.allowUntrustedCAs}>
+        <Switch
+          checked={userStore.allowUntrustedCAs}
+          onChange={() => userStore.allowUntrustedCAs = !userStore.allowUntrustedCAs}
+        >
           Allow untrusted Certificate Authorities
         </Switch>
         <small className="hint">
@@ -46,4 +53,11 @@ export const LensProxy = observer(() => {
       </section>
     </section>
   );
+});
+
+export const LensProxy = withInjectables<Dependencies>(NonInjectedLensProxy, {
+  getProps: (di, props) => ({
+    userStore: di.inject(userPreferencesStoreInjectable),
+    ...props,
+  }),
 });

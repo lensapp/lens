@@ -5,24 +5,23 @@
 
 import type { RequestPromiseOptions } from "request-promise-native";
 import type { Cluster } from "../../common/cluster/cluster";
-import { k8sRequest } from "../k8s-request";
 
-export type ClusterDetectionResult = {
+export interface ClusterDetectionResult {
   value: string | number | boolean
   accuracy: number
-};
+}
 
-export class BaseClusterDetector {
-  key: string;
+export interface BaseClusterDetectorDependencies {
+  k8sRequest: (cluster: Cluster, path: string, options: RequestPromiseOptions) => Promise<any>;
+}
 
-  constructor(public cluster: Cluster) {
+export abstract class BaseClusterDetector {
+  constructor(public cluster: Cluster, protected readonly dependencies: BaseClusterDetectorDependencies) {
   }
 
-  detect(): Promise<ClusterDetectionResult> {
-    return null;
-  }
+  abstract detect(): Promise<ClusterDetectionResult>;
 
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
-    return k8sRequest(this.cluster, path, options);
+  protected k8sRequest(path: string, options: RequestPromiseOptions = {}): Promise<any> {
+    return this.dependencies.k8sRequest(this.cluster, path, options);
   }
 }

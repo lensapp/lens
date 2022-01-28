@@ -9,14 +9,12 @@ import { fireEvent } from "@testing-library/react";
 import React from "react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import { DiRender, renderFor } from "../../test-utils/renderFor";
-import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
-import { ThemeStore } from "../../../theme.store";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
+import hotbarStoreInjectable from "../../../../common/hotbar-store/store.injectable";
 import { ConfirmDialog } from "../../confirm-dialog";
-import type { HotbarStore } from "../../../../common/hotbar-store";
-import { UserStore } from "../../../../common/user-store";
+import type { HotbarStore } from "../../../../common/hotbar-store/store";
 import mockFs from "mock-fs";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
 
 const mockHotbars: { [id: string]: any } = {
   "1": {
@@ -38,19 +36,14 @@ describe("<HotbarRemoveCommand />", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     render = renderFor(di);
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
   });
 
   it("renders w/o errors", async () => {
-    di.override(hotbarManagerInjectable, () => ({
+    di.override(hotbarStoreInjectable, () => ({
       hotbars: [mockHotbars["1"]],
       getById: (id: string) => mockHotbars[id],
       remove: () => {
@@ -69,7 +62,7 @@ describe("<HotbarRemoveCommand />", () => {
   it("calls remove if you click on the entry", async () => {
     const removeMock = jest.fn();
 
-    di.override(hotbarManagerInjectable, () => ({
+    di.override(hotbarStoreInjectable, () => ({
       hotbars: [mockHotbars["1"]],
       getById: (id: string) => mockHotbars[id],
       remove: removeMock,

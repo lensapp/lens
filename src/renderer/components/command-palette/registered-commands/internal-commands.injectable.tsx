@@ -13,10 +13,8 @@ import { HotbarRenameCommand } from "../../hotbar/hotbar-rename-command";
 import { ActivateEntityCommand } from "../../activate-entity-command";
 import type { CommandContext, CommandRegistration } from "./commands";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import commandOverlayInjectable from "../command-overlay.injectable";
-import createTerminalTabInjectable
-  from "../../dock/create-terminal-tab/create-terminal-tab.injectable";
-import type { DockTabCreate } from "../../dock/dock-store/dock.store";
+import newTerminalTabInjectable from "../../dock/terminal/create-tab.injectable";
+import openCommandDialogInjectable from "../open-command-dialog.injectable";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -25,10 +23,10 @@ export function isKubernetesClusterActive(context: CommandContext): boolean {
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
   getEntitySettingItems: (kind: string, apiVersion: string, source?: string) => RegisteredEntitySetting[];
-  createTerminalTab: () => DockTabCreate
+  newTerminalTab: () => void;
 }
 
-function getInternalCommands({ openCommandDialog, getEntitySettingItems, createTerminalTab }: Dependencies): CommandRegistration[] {
+function getInternalCommands({ openCommandDialog, getEntitySettingItems, newTerminalTab }: Dependencies): CommandRegistration[] {
   return [
     {
       id: "app.showPreferences",
@@ -174,7 +172,7 @@ function getInternalCommands({ openCommandDialog, getEntitySettingItems, createT
     {
       id: "cluster.openTerminal",
       title: "Cluster: Open terminal",
-      action: () => createTerminalTab(),
+      action: newTerminalTab,
       isActive: isKubernetesClusterActive,
     },
     {
@@ -207,11 +205,11 @@ function getInternalCommands({ openCommandDialog, getEntitySettingItems, createT
 
 const internalCommandsInjectable = getInjectable({
   instantiate: (di) => getInternalCommands({
-    openCommandDialog: di.inject(commandOverlayInjectable).open,
+    openCommandDialog: di.inject(openCommandDialogInjectable),
     getEntitySettingItems: EntitySettingRegistry
       .getInstance()
       .getItemsForKind,
-    createTerminalTab: di.inject(createTerminalTabInjectable),
+    newTerminalTab: di.inject(newTerminalTabInjectable),
   }),
   lifecycle: lifecycleEnum.singleton,
 });

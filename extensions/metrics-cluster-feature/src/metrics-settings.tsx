@@ -156,17 +156,17 @@ export class MetricsSettings extends React.Component<Props> {
     }
   }
 
-  async togglePrometheus(enabled: boolean) {
+  togglePrometheus(enabled: boolean) {
     this.featureStates.prometheus = enabled;
     this.changed = true;
   }
 
-  async toggleKubeStateMetrics(enabled: boolean) {
+  toggleKubeStateMetrics(enabled: boolean) {
     this.featureStates.kubeStateMetrics = enabled;
     this.changed = true;
   }
 
-  async toggleNodeExporter(enabled: boolean) {
+  toggleNodeExporter(enabled: boolean) {
     this.featureStates.nodeExporter = enabled;
     this.changed = true;
   }

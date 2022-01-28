@@ -4,4 +4,4 @@
  */
 
 export * from "./events";
-export * from "./event-details";
+export * from "./details";

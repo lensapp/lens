@@ -3,12 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export {
-  KubernetesCluster,
-  kubernetesClusterCategory,
-  GeneralEntity,
-  WebLink,
-} from "../../common/catalog-entities";
+export { KubernetesCluster, GeneralEntity, WebLink } from "../../common/catalog-entities";
 
 export type {
   KubernetesClusterPrometheusMetrics,

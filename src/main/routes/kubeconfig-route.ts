@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router/router";
 import { respondJson } from "../utils/http-responses";
 import type { Cluster } from "../../common/cluster/cluster";
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node";

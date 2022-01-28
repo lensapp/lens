@@ -4,7 +4,7 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import path from "path";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 
 const directoryForLensLocalStorageInjectable = getInjectable({
   instantiate: (di) =>

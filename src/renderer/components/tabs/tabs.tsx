@@ -55,7 +55,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
   }
 }
 
-export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
+export interface TabProps<D> extends DOMAttributes<HTMLElement> {
   id?: string;
   className?: string;
   active?: boolean;
@@ -65,7 +65,7 @@ export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
   value: D;
 }
 
-export class Tab extends React.PureComponent<TabProps> {
+export class Tab<D> extends React.PureComponent<TabProps<D>> {
   static contextType = TabsContext;
   declare context: TabsContextValue;
   public ref = React.createRef<HTMLDivElement>();

@@ -5,176 +5,134 @@
 
 import styles from "./catalog.module.scss";
 
-import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
+import { action, IComputedValue, observable, reaction, when } from "mobx";
+import type { CatalogEntityStore } from "./entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
-import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
-import { HotbarStore } from "../../../common/hotbar-store";
-import { ConfirmDialog } from "../confirm-dialog";
-import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
+import type { CatalogCategory, CatalogEntity, CatalogEntityContextMenu } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import { prevDefault } from "../../utils";
+import { disposer, StorageLayer } from "../../utils";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";
-import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
-import { Avatar } from "../avatar";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
-import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
-import type { GetCategoryColumnsParams, CategoryColumns } from "./get-category-columns.injectable";
-import getCategoryColumnsInjectable from "./get-category-columns.injectable";
+import catalogEntityStoreInjectable from "./entity.store.injectable";
+import catalogPreviousActiveTabInjectable from "./catalog-previous-tab.injectable";
+import renderEntityContextMenuItemInjectable, { RenderEntityContextMenuItem } from "../../catalog/render-context-menu-item.injectable";
+import onRunInjectable from "../../catalog/on-run.injectable";
+import catalogCategoriesInjectable from "../../catalog/categories.injectable";
+import type { CategoryColumns, GetCategoryColumnsParams } from "./category-columns/get-category-columns.injectable";
+import getCategoryColumnsInjectable from "./category-columns/get-category-columns.injectable";
 
-interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
+export interface CatalogProps extends RouteComponentProps<CatalogViewRouteParam> {
+
+}
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { set: (value: string ) => void };
   catalogEntityStore: CatalogEntityStore;
+  categories: IComputedValue<CatalogCategory[]>;
+  onRun: (entity: CatalogEntity) => void;
+  previousActiveTab: StorageLayer<string>;
+  renderEntityContextMenuItem: RenderEntityContextMenuItem;
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
 }
 
-@observer
-class NonInjectedCatalog extends React.Component<Props & Dependencies> {
-  @observable private contextMenu: CatalogEntityContextMenuContext;
-  @observable activeTab?: string;
-
-  constructor(props: Props & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  get routeActiveTab(): string {
-    const { group, kind } = this.props.match.params ?? {};
+const NonInjectedCatalog = observer(({
+  renderEntityContextMenuItem,
+  catalogEntityStore,
+  match,
+  previousActiveTab,
+  onRun,
+  categories,
+  getCategoryColumns,
+}: Dependencies & CatalogProps) => {
+  const [contextMenuItems] = useState(observable.array<CatalogEntityContextMenu>());
+  const [activeTab, setActiveTab] = useState<string | undefined>();
+  const getRouteActiveTab = () => {
+    const { group, kind } = match.params ?? {};
 
     if (group && kind) {
       return `${group}/${kind}`;
     }
 
     return browseCatalogTab;
-  }
+  };
 
-  async componentDidMount() {
-    this.contextMenu = {
-      menuItems: observable.array([]),
-      navigate: (url: string) => navigate(url),
-    };
-    disposeOnUnmount(this, [
-      this.props.catalogEntityStore.watch(),
-      reaction(() => this.routeActiveTab, async (routeTab) => {
-        this.props.catalogPreviousActiveTabStorage.set(this.routeActiveTab);
+  const findCategory = (id: string) => categories.get().find(category => category.getId() === id);
+
+  useEffect(() => {
+    contextMenuItems.clear();
+
+    return disposer(
+      catalogEntityStore.watch(),
+      reaction(() => getRouteActiveTab(), async (routeTab, previousRouteTab) => {
+        previousActiveTab.set(previousRouteTab);
 
         try {
-          await when(() => (routeTab === browseCatalogTab || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
-          const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
+          await when(() => (routeTab === browseCatalogTab || !!findCategory(routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
+          const item = findCategory(routeTab);
 
-          runInAction(() => {
-            this.activeTab = routeTab;
-            this.props.catalogEntityStore.activeCategory = item;
-          });
+          setActiveTab(routeTab);
+          catalogEntityStore.activeCategory = item;
         } catch (error) {
           console.error(error);
           Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
       }, { fireImmediately: true }),
-    ]);
+      reaction(() => categories.get(), (categories) => {
+        if (!findCategory(catalogEntityStore.activeCategory.getId())) {
+          const item = categories[0];
 
-    // If active category is filtered out, automatically switch to the first category
-    disposeOnUnmount(this, reaction(() => catalogCategoryRegistry.filteredItems, () => {
-      if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === this.props.catalogEntityStore.activeCategory.getId())) {
-        const item = catalogCategoryRegistry.filteredItems[0];
-
-        runInAction(() => {
           if (item) {
-            this.activeTab = item.getId();
-            this.props.catalogEntityStore.activeCategory = item;
+            setActiveTab(item.getId());
+            catalogEntityStore.activeCategory = item;
           }
-        });
-      }
-    }));
-  }
+        }
+      }),
+    );
+  }, []);
 
-  addToHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().addToHotbar(entity);
-  }
-
-  removeFromHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().removeFromHotbar(entity.getId());
-  }
-
-  onDetails = (entity: CatalogEntity) => {
-    if (this.props.catalogEntityStore.selectedItemId) {
-      this.props.catalogEntityStore.selectedItemId = null;
-    } else {
-      this.props.catalogEntityStore.onRun(entity);
-    }
-  };
-
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message,
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
-  get categories() {
-    return catalogCategoryRegistry.items;
-  }
-
-  @action
-  onTabChange = (tabId: string | null) => {
-    const activeCategory = this.categories.find(category => category.getId() === tabId);
+  const onTabChange = action((tabId: string | null) => {
+    const activeCategory = findCategory(tabId);
 
     if (activeCategory) {
       navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
     } else {
       navigate(catalogURL({ params: { group: browseCatalogTab }}));
     }
+  });
+
+  const onDetails = (entity: CatalogEntity) => {
+    if (catalogEntityStore.selectedItemId) {
+      catalogEntityStore.selectedItemId = null;
+    } else {
+      onRun(entity);
+    }
   };
 
-  renderNavigation() {
-    return (
-      <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange} />
-    );
-  }
-
-  renderItemMenu = (entity: CatalogEntity) => {
+  const renderItemMenu = (entity: CatalogEntity) => {
     const onOpen = () => {
-      this.contextMenu.menuItems = [];
-
-      entity.onContextMenuOpen(this.contextMenu);
+      contextMenuItems.clear();
+      entity.onContextMenuOpen({
+        menuItems: contextMenuItems,
+        navigate,
+      });
     };
 
     return (
       <MenuActions onOpen={onOpen}>
-        <MenuItem key="open-details" onClick={() => this.props.catalogEntityStore.selectedItemId = entity.getId()}>
+        <MenuItem key="open-details" onClick={() => catalogEntityStore.selectedItemId = entity.getId()}>
           View Details
         </MenuItem>
-        {
-          this.contextMenu.menuItems.map((menuItem, index) => (
-            <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              {menuItem.title}
-            </MenuItem>
-          ))
-        }
+        {contextMenuItems.map(renderEntityContextMenuItem("title"))}
         <HotbarToggleMenuItem
           key="hotbar-toggle"
           entity={entity}
@@ -185,43 +143,15 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
     );
   };
 
-  renderName(entity: CatalogEntity) {
-    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(entity);
-
-    return (
-      <>
-        <Avatar
-          title={entity.getName()}
-          colorHash={`${entity.getName()}-${entity.getSource()}`}
-          src={entity.spec.icon?.src}
-          background={entity.spec.icon?.background}
-          className={styles.catalogAvatar}
-          size={24}
-        >
-          {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
-        </Avatar>
-        <span>{entity.getName()}</span>
-        <Icon
-          small
-          className={styles.pinIcon}
-          material={!isItemInHotbar && "push_pin"}
-          svg={isItemInHotbar ? "push_off" : "push_pin"}
-          tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
-          onClick={prevDefault(() => isItemInHotbar ? this.removeFromHotbar(entity) : this.addToHotbar(entity))}
-        />
-      </>
-    );
-  }
-
-  renderList() {
-    const { activeCategory } = this.props.catalogEntityStore;
+  const renderList = () => {
+    const { activeCategory } = catalogEntityStore;
     const tableId = activeCategory ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}` : "catalog-items";
 
-    if (this.activeTab === undefined) {
+    if (activeTab === undefined) {
       return null;
     }
 
-    const { sortingCallbacks, searchFilters, renderTableContents, renderTableHeader } = this.props.getCategoryColumns({ activeCategory });
+    const { sortingCallbacks, searchFilters, renderTableContents, renderTableHeader } = getCategoryColumns({ activeCategory });
 
     return (
       <ItemListLayout
@@ -230,7 +160,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
         renderHeaderTitle={activeCategory?.metadata.name ?? "Browse All"}
         isSelectable={false}
         isConfigurable={true}
-        store={this.props.catalogEntityStore}
+        store={catalogEntityStore}
         sortingCallbacks={sortingCallbacks}
         searchFilters={searchFilters}
         renderTableHeader={renderTableHeader}
@@ -238,48 +168,51 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
           disabled: !entity.isEnabled(),
         })}
         renderTableContents={renderTableContents}
-        onDetails={this.onDetails}
-        renderItemMenu={this.renderItemMenu}
+        onDetails={onDetails}
+        renderItemMenu={renderItemMenu}
       />
     );
-  }
+  };
 
-  render() {
-    if (!this.props.catalogEntityStore) {
-      return null;
-    }
+  const selectedEntity = catalogEntityStore.selectedItem;
 
-    const selectedEntity = this.props.catalogEntityStore.selectedItem;
+  return (
+    <MainLayout
+      sidebar={(
+        <CatalogMenu
+          activeItem={activeTab}
+          onItemClick={onTabChange}
+        />
+      )}
+    >
+      <div className="p-6 h-full">
+        {renderList()}
+      </div>
+      {
+        selectedEntity
+          ? <CatalogEntityDetails
+            entity={selectedEntity}
+            hideDetails={() => catalogEntityStore.selectedItemId = null}
+          />
+          : (
+            <RenderDelay>
+              <CatalogAddButton
+                category={catalogEntityStore.activeCategory}
+              />
+            </RenderDelay>
+          )
+      }
+    </MainLayout>
+  );
+});
 
-    return (
-      <MainLayout sidebar={this.renderNavigation()}>
-        <div className="p-6 h-full">
-          {this.renderList()}
-        </div>
-        {
-          selectedEntity
-            ? <CatalogEntityDetails
-              entity={selectedEntity}
-              hideDetails={() => this.props.catalogEntityStore.selectedItemId = null}
-              onRun={() => this.props.catalogEntityStore.onRun(selectedEntity)}
-            />
-            : (
-              <RenderDelay>
-                <CatalogAddButton
-                  category={this.props.catalogEntityStore.activeCategory}
-                />
-              </RenderDelay>
-            )
-        }
-      </MainLayout>
-    );
-  }
-}
-
-export const Catalog = withInjectables<Dependencies, Props>( NonInjectedCatalog, {
+export const Catalog = withInjectables<Dependencies, CatalogProps>(NonInjectedCatalog, {
   getProps: (di, props) => ({
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
-    catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
+    previousActiveTab: di.inject(catalogPreviousActiveTabInjectable),
+    categories: di.inject(catalogCategoriesInjectable),
+    onRun: di.inject(onRunInjectable),
+    renderEntityContextMenuItem: di.inject(renderEntityContextMenuItemInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
     ...props,
   }),

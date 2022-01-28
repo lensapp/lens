@@ -3,20 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { PortForward, PortForwardArgs } from "./port-forward";
-import bundledKubectlInjectable from "../../kubectl/bundled-kubectl.injectable";
+import { PortForward } from "./port-forward";
+import { bind } from "../../../common/utils";
+import bundledKubectlPathInjectable from "../../kubectl/get-bundled-path.injectable";
 
 const createPortForwardInjectable = getInjectable({
-  instantiate: (di) => {
-    const bundledKubectl = di.inject(bundledKubectlInjectable);
-
-    const dependencies = {
-      getKubectlBinPath: bundledKubectl.getPath,
-    };
-
-    return (pathToKubeConfig: string, args: PortForwardArgs) =>
-      new PortForward(dependencies, pathToKubeConfig, args);
-  },
+  instantiate: (di) => bind(PortForward.create, null, {
+    bundledKubectlPath: di.inject(bundledKubectlPathInjectable),
+  }),
 
   lifecycle: lifecycleEnum.singleton,
 });

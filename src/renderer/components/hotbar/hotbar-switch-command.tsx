@@ -6,12 +6,12 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbar-store/store.injectable";
 import type { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
 import { HotbarRemoveCommand } from "./hotbar-remove-command";
 import { HotbarRenameCommand } from "./hotbar-rename-command";
-import type { Hotbar } from "../../../common/hotbar-types";
+import type { Hotbar } from "../../../common/hotbar-store/hotbar";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 
@@ -80,7 +80,7 @@ const NonInjectedHotbarSwitchCommand = observer(({ hotbarManager, commandOverlay
 
 export const HotbarSwitchCommand = withInjectables<Dependencies>(NonInjectedHotbarSwitchCommand, {
   getProps: (di, props) => ({
-    hotbarManager: di.inject(hotbarManagerInjectable),
+    hotbarManager: di.inject(hotbarStoreInjectable),
     commandOverlay: di.inject(commandOverlayInjectable),
     ...props,
   }),

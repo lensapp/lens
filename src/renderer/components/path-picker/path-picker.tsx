@@ -42,7 +42,7 @@ export class PathPicker extends React.Component<PathPickerProps> {
     }
   }
 
-  async onClick() {
+  onClick() {
     const { className, disabled, ...pickOpts } = this.props;
 
     return PathPicker.pick(pickOpts);

@@ -71,7 +71,7 @@ export class MetricsFeature {
     return this.stack.kubectlApplyFolder(this.resourceFolder, config, ["--prune"]);
   }
 
-  async upgrade(config: MetricsConfiguration): Promise<string> {
+  upgrade(config: MetricsConfiguration): Promise<string> {
     return this.install(config);
   }
 
@@ -101,7 +101,7 @@ export class MetricsFeature {
     return status;
   }
 
-  async uninstall(config: MetricsConfiguration): Promise<string> {
+  uninstall(config: MetricsConfiguration): Promise<string> {
     return this.stack.kubectlDeleteFolder(this.resourceFolder, config);
   }
 }

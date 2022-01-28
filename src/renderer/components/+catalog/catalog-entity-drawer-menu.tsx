@@ -3,108 +3,67 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { cssNames } from "../../utils";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
-import { makeObservable, observable } from "mobx";
+import { observable } from "mobx";
 import { navigate } from "../../navigation";
-import { MenuItem } from "../menu";
-import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
+import renderEntityContextMenuItemInjectable, { RenderEntityContextMenuItem } from "../../catalog/render-context-menu-item.injectable";
+import onEntityContextMenuOpenInjectable from "../../catalog/on-entity-context-menu-open.injectable";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
-  entity: T;
+  entity: T | null | undefined;
 }
 
-@observer
-export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Component<CatalogEntityDrawerMenuProps<T>> {
-  @observable private contextMenu: CatalogEntityContextMenuContext;
+interface Dependencies {
+  renderEntityContextMenuItem: RenderEntityContextMenuItem;
+  onEntityContextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
+}
 
-  constructor(props: CatalogEntityDrawerMenuProps<T>) {
-    super(props);
-    makeObservable(this);
-  }
+const NonInjectedCatalogEntityDrawerMenu = observer(({ renderEntityContextMenuItem, onEntityContextMenuOpen, entity, className, ...menuProps }: Dependencies & CatalogEntityDrawerMenuProps<CatalogEntity>) => {
+  const [contextMenuItems] = useState(observable.array<CatalogEntityContextMenu>());
 
-  componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
+  useEffect(() => {
+    contextMenuItems.clear();
+    onEntityContextMenuOpen(entity, {
       navigate: (url: string) => navigate(url),
-    };
-    this.props.entity?.onContextMenuOpen(this.contextMenu);
+      menuItems: contextMenuItems,
+    });
+  }, []);
+
+  if (contextMenuItems.length === 0 || !entity?.isEnabled()) {
+    return null;
   }
 
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message,
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
-  getMenuItems(entity: T): React.ReactChild[] {
-    if (!entity) {
-      return [];
-    }
-
-    const items: React.ReactChild[] = [];
-
-    for (const menuItem of this.contextMenu.menuItems) {
-      if (!menuItem.icon) {
-        continue;
-      }
-
-      const key = menuItem.icon.includes("<svg") ? "svg" : "material";
-
-      items.push(
-        <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem)}>
-          <Icon
-            interactive
-            tooltip={menuItem.title}
-            {...{ [key]: menuItem.icon }}
-          />
-        </MenuItem>,
-      );
-    }
-
-    items.push(
+  return (
+    <MenuActions
+      className={cssNames("CatalogEntityDrawerMenu", className)}
+      toolbar
+      {...menuProps}
+    >
+      {contextMenuItems.map(renderEntityContextMenuItem("icon"))}
       <HotbarToggleMenuItem
-        key="hotbar-toggle"
         entity={entity}
         addContent={<Icon material="push_pin" interactive small tooltip="Add to Hotbar"/>}
         removeContent={<Icon svg="push_off" interactive small tooltip="Remove from Hotbar"/>}
-      />,
-    );
+      />
+    </MenuActions>
+  );
+});
 
-    return items;
-  }
+const InjectedCatalogEntityDrawerMenu = withInjectables<Dependencies, CatalogEntityDrawerMenuProps<CatalogEntity>>(NonInjectedCatalogEntityDrawerMenu, {
+  getProps: (di, props) => ({
+    renderEntityContextMenuItem: di.inject(renderEntityContextMenuItemInjectable),
+    onEntityContextMenuOpen: di.inject(onEntityContextMenuOpenInjectable),
+    ...props,
+  }),
+});
 
-  render() {
-    const { className, entity, ...menuProps } = this.props;
-
-    if (!this.contextMenu || !entity.isEnabled()) {
-      return null;
-    }
-
-    return (
-      <MenuActions
-        className={cssNames("CatalogEntityDrawerMenu", className)}
-        toolbar
-        {...menuProps}
-      >
-        {this.getMenuItems(entity)}
-      </MenuActions>
-    );
-  }
+export function CatalogEntityDrawerMenu<T extends CatalogEntity>(props: CatalogEntityDrawerMenuProps<T>) {
+  return <InjectedCatalogEntityDrawerMenu {...props} />;
 }

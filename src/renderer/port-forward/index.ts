@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export * from "./port-forward-store/port-forward-store";
-export * from "./port-forward-item";
-export * from "./port-forward-dialog";
-export * from "./port-forward-notify";
-export * from "./port-forward-utils";
+export * from "./store";
+export * from "./port-forward";
+export * from "./dialog";
+export * from "./notify";
+export * from "./utils";

@@ -6,8 +6,7 @@
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 
 export enum SecretType {
   Opaque = "Opaque",
@@ -25,9 +24,9 @@ export interface ISecretRef {
   name: string;
 }
 
-export interface SecretData extends KubeJsonApiData {
-  type: SecretType;
+export interface SecretData {
   data?: Record<string, string>;
+  type: SecretType;
 }
 
 export class Secret extends KubeObject {
@@ -38,7 +37,7 @@ export class Secret extends KubeObject {
   declare type: SecretType;
   declare data: Record<string, string>;
 
-  constructor(data: SecretData) {
+  constructor(data: SecretData & KubeJsonApiData) {
     super(data);
     autoBind(this);
 
@@ -54,14 +53,11 @@ export class Secret extends KubeObject {
   }
 }
 
-let secretsApi: KubeApi<Secret>;
-
-if (isClusterPageContext()) {
-  secretsApi = new KubeApi({
-    objectConstructor: Secret,
-  });
+export class SecretApi extends KubeApi<Secret> {
+  constructor(args: SpecificApiOptions<Secret> = {}) {
+    super({
+      ...args,
+      objectConstructor: Secret,
+    });
+  }
 }
-
-export {
-  secretsApi,
-};

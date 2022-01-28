@@ -15,7 +15,7 @@ import { makeObservable, observable, when } from "mobx";
 const startingServeRegex = /^starting to serve on (?<address>.+)/i;
 
 interface Dependencies {
-  getProxyBinPath: () => Promise<string>;
+  bundledKubectlPath: string;
 }
 
 export class KubeAuthProxy {
@@ -29,6 +29,10 @@ export class KubeAuthProxy {
   protected proxyProcess?: ChildProcess;
   protected readonly acceptHosts: string;
   @observable protected ready = false;
+
+  static create(...args: ConstructorParameters<typeof KubeAuthProxy>) {
+    return new KubeAuthProxy(...args);
+  }
 
   constructor(private dependencies: Dependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
@@ -45,7 +49,6 @@ export class KubeAuthProxy {
       return this.whenReady;
     }
 
-    const proxyBin = await this.dependencies.getProxyBinPath();
     const args = [
       "proxy",
       "-p", "0",
@@ -61,7 +64,7 @@ export class KubeAuthProxy {
     }
     logger.debug(`spawning kubectl proxy with args: ${args}`);
 
-    this.proxyProcess = spawn(proxyBin, args, { env: this.env });
+    this.proxyProcess = spawn(this.dependencies.bundledKubectlPath, args, { env: this.env });
     this.proxyProcess.on("error", (error) => {
       this.cluster.broadcastConnectUpdate(error.message, true);
       this.exit();

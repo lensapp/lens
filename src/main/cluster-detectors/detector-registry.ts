@@ -5,37 +5,42 @@
 
 import { observable } from "mobx";
 import type { ClusterMetadata } from "../../common/cluster-types";
-import { Singleton } from "../../common/utils";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
+import type { BaseClusterDetector, BaseClusterDetectorDependencies, ClusterDetectionResult } from "./base-cluster-detector";
 
-export class DetectorRegistry extends Singleton {
-  registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
+export interface DetectorRegistryDependencies extends BaseClusterDetectorDependencies {
+}
 
-  add(detectorClass: typeof BaseClusterDetector): this {
-    this.registry.push(detectorClass);
+export class DetectorRegistry {
+  registry = observable.map<string, new (cluster: Cluster, deps: BaseClusterDetectorDependencies) => BaseClusterDetector>([], { deep: false });
 
-    return this;
+  constructor(protected readonly dependencies: DetectorRegistryDependencies) {}
+
+  add(key: string, detectorClass: new (cluster: Cluster, deps: BaseClusterDetectorDependencies) => BaseClusterDetector) {
+    this.registry.set(key, detectorClass);
   }
 
-  async detectForCluster(cluster: Cluster): Promise<ClusterMetadata> {
+  detectForCluster = async (cluster: Cluster): Promise<ClusterMetadata> => {
     const results: { [key: string]: ClusterDetectionResult } = {};
 
-    for (const detectorClass of this.registry) {
-      const detector = new detectorClass(cluster);
+    for (const [key, detectorClass] of this.registry) {
+      const detector = new detectorClass(cluster, this.dependencies);
 
       try {
         const data = await detector.detect();
 
-        if (!data) continue;
-        const existingValue = results[detector.key];
+        if (data) {
+          const existingValue = results[key];
 
-        if (existingValue && existingValue.accuracy > data.accuracy) continue; // previous value exists and is more accurate
-        results[detector.key] = data;
+          if (!existingValue || existingValue.accuracy <= data.accuracy) {
+            results[key] = data;
+          }
+        }
       } catch (e) {
         // detector raised error, do nothing
       }
     }
+
     const metadata: ClusterMetadata = {};
 
     for (const [key, result] of Object.entries(results)) {
@@ -43,5 +48,11 @@ export class DetectorRegistry extends Singleton {
     }
 
     return metadata;
-  }
+  };
+
+  detectSpecificForCluster = (key: string, cluster: Cluster) => {
+    const detector = new (this.registry.get(key))(cluster, this.dependencies);
+
+    return detector.detect();
+  };
 }

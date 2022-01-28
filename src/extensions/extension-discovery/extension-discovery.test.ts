@@ -14,7 +14,7 @@ import type { ExtensionDiscovery } from "../extension-discovery/extension-discov
 import installExtensionInjectable
   from "../extension-installer/install-extension/install-extension.injectable";
 import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+  from "../../common/app-paths/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 
 jest.setTimeout(60_000);

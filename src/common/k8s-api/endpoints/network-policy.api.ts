@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject, LabelSelector } from "../kube-object";
+import { KubeObject, KubeObjectMetadata, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface IPolicyIpBlock {
   cidr: string;
@@ -100,16 +99,12 @@ export interface NetworkPolicySpec {
   egress?: IPolicyEgress[];
 }
 
-export interface NetworkPolicy {
-  spec: NetworkPolicySpec;
-}
-
-export class NetworkPolicy extends KubeObject {
+export class NetworkPolicy extends KubeObject<KubeObjectMetadata, KubeObjectStatus, NetworkPolicySpec> {
   static kind = "NetworkPolicy";
   static namespaced = true;
   static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
 
-  constructor(data: KubeJsonApiData) {
+  constructor(data: KubeJsonApiData<KubeObjectMetadata, KubeObjectStatus, NetworkPolicySpec>) {
     super(data);
     autoBind(this);
   }
@@ -129,14 +124,11 @@ export class NetworkPolicy extends KubeObject {
   }
 }
 
-let networkPolicyApi: KubeApi<NetworkPolicy>;
-
-if (isClusterPageContext()) {
-  networkPolicyApi = new KubeApi<NetworkPolicy>({
-    objectConstructor: NetworkPolicy,
-  });
+export class NetworkPolicyApi extends KubeApi<NetworkPolicy> {
+  constructor(args: SpecificApiOptions<NetworkPolicy> = {}) {
+    super({
+      ...args,
+      objectConstructor: NetworkPolicy,
+    });
+  }
 }
-
-export {
-  networkPolicyApi,
-};

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { Cluster } from "../../../../common/cluster/cluster";
-import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../../catalog/entity-registry";
 import logger from "../../../../main/logger";
 import { Terminal } from "../../../components/dock/terminal/terminal";
 import { requestMain } from "../../../../common/ipc";
@@ -14,7 +14,7 @@ import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
 import type { CatalogEntity } from "../../../../common/catalog";
 import { when } from "mobx";
 import { unmountComponentAtNode } from "react-dom";
-import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
+import type { FrameContext } from "../../../cluster-frame-context/cluster-frame-context";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 
 interface Dependencies {
@@ -25,7 +25,7 @@ interface Dependencies {
   emitEvent: (event: AppEvent) => void;
 
   // TODO: This dependency belongs to KubeObjectStore
-  clusterFrameContext: ClusterFrameContext
+  clusterFrameContext: FrameContext
 }
 
 const logPrefix = "[CLUSTER-FRAME]:";

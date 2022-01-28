@@ -4,13 +4,13 @@
  */
 
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
+import type { CatalogEntity } from "../../../common/catalog";
 import { broadcastMessage, catalogEntityRunListener } from "../../../common/ipc";
-import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
+import entitiesInjectable from "../../catalog/entities.injectable";
+import closeCommandDialogInjectable from "../command-palette/close-command-dialog.injectable";
 import { Select } from "../select";
 
 interface Dependencies {
@@ -45,7 +45,7 @@ const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entiti
 
 export const ActivateEntityCommand = withInjectables<Dependencies>(NonInjectedActivateEntityCommand, {
   getProps: di => ({
-    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    entities: computed(() => [...catalogEntityRegistry.items]),
+    closeCommandOverlay: di.inject(closeCommandDialogInjectable),
+    entities: di.inject(entitiesInjectable),
   }),
 });

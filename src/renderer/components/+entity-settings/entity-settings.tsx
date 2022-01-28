@@ -5,70 +5,50 @@
 
 import styles from "./entity-settings.module.scss";
 
-import React from "react";
-import { observable, makeObservable } from "mobx";
+import React, { useEffect, useState } from "react";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
-import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { EntitySettingRegistry } from "../../../extensions/registries";
+import { EntitySettingRegistry, RegisteredEntitySetting } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
 import logger from "../../../common/logger";
 import { Avatar } from "../avatar";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { CatalogEntity } from "../../../common/catalog";
+import getEntityByIdInjectable from "../../catalog/get-entity-by-id.injectable";
 
-interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
+export interface EntitySettingsProps extends RouteComponentProps<EntitySettingsRouteParams> {
 }
 
-@observer
-export class EntitySettings extends React.Component<Props> {
-  @observable activeTab: string;
+interface Dependencies {
+  getEntityById: (id: string) => CatalogEntity;
+  getSettingsForEntity: (entity: CatalogEntity) => RegisteredEntitySetting[];
+}
 
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
+const NonInjectedEntitySettings = observer(({ getEntityById, match, getSettingsForEntity }: Dependencies & EntitySettingsProps) => {
+  const { entityId } = match.params;
+  const entity = getEntityById(entityId);
+  const menuItems = getSettingsForEntity(entity);
+  const [activeTab, setActiveTab] = useState(menuItems[0]?.id);
 
+  useEffect(() => {
     const { hash } = navigation.location;
 
     if (hash) {
       const menuId = hash.slice(1);
-      const item = this.menuItems.find((item) => item.id === menuId);
+      const item = menuItems.find((item) => item.id === menuId);
 
       if (item) {
-        this.activeTab = item.id;
+        setActiveTab(item.id);
       }
     }
-  }
+  }, []);
 
-  get entityId() {
-    return this.props.match.params.entityId;
-  }
-
-  get entity(): CatalogEntity {
-    return catalogEntityRegistry.getById(this.entityId);
-  }
-
-  get menuItems() {
-    if (!this.entity) return [];
-
-    return EntitySettingRegistry.getInstance().getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
-  }
-
-  get activeSetting() {
-    this.activeTab ||= this.menuItems[0]?.id;
-
-    return this.menuItems.find((setting) => setting.id === this.activeTab);
-  }
-
-  onTabChange = (tabId: string) => {
-    this.activeTab = tabId;
-  };
-
-  renderNavigation() {
-    const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
+  const renderNavigation = () => {
+    const groups = Object.entries(groupBy(menuItems, (item) => item.group || "Extensions"));
 
     groups.sort((a, b) => {
       if (a[0] === "Settings") return -1;
@@ -81,17 +61,22 @@ export class EntitySettings extends React.Component<Props> {
       <>
         <div className="flex items-center pb-8">
           <Avatar
-            title={this.entity.metadata.name}
-            colorHash={`${this.entity.metadata.name}-${this.entity.metadata.source}`}
-            src={this.entity.spec.icon?.src}
+            title={entity.metadata.name}
+            colorHash={`${entity.metadata.name}-${entity.metadata.source}`}
+            src={entity.spec.icon?.src}
             className={styles.settingsAvatar}
             size={40}
           />
           <div className={styles.entityName}>
-            {this.entity.metadata.name}
+            {entity.metadata.name}
           </div>
         </div>
-        <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+        <Tabs
+          className="flex column"
+          scrollable={false}
+          onChange={setActiveTab}
+          value={activeTab}
+        >
           { groups.map((group, groupIndex) => (
             <React.Fragment key={`group-${groupIndex}`}>
               <hr/>
@@ -109,34 +94,39 @@ export class EntitySettings extends React.Component<Props> {
         </Tabs>
       </>
     );
+  };
+
+  if (!entity) {
+    logger.error("[ENTITY-SETTINGS]: entity not found", entityId);
+
+    return null;
   }
 
-  render() {
-    if (!this.entity) {
-      logger.error("[ENTITY-SETTINGS]: entity not found", this.entityId);
+  const activeSetting = menuItems.find(item => item.id === activeTab);
 
-      return null;
-    }
-
-    const { activeSetting } = this;
-
-
-    return (
-      <SettingLayout
-        navigation={this.renderNavigation()}
-        contentGaps={false}
-      >
-        {
-          activeSetting && (
+  return (
+    <SettingLayout
+      navigation={renderNavigation()}
+      contentGaps={false}
+    >
+      {
+        activeSetting && (
+          <section>
+            <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
             <section>
-              <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
-              <section>
-                <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
-              </section>
+              <activeSetting.components.View entity={entity} key={activeSetting.title} />
             </section>
-          )
-        }
-      </SettingLayout>
-    );
-  }
-}
+          </section>
+        )
+      }
+    </SettingLayout>
+  );
+});
+
+export const EntitySettings = withInjectables<Dependencies, EntitySettingsProps>(NonInjectedEntitySettings, {
+  getProps: (di, props) => ({
+    getEntityById: di.inject(getEntityByIdInjectable),
+    getSettingsForEntity: (entity) => EntitySettingRegistry.getInstance().getItemsForKind(entity.kind, entity.apiVersion, entity.metadata.source),
+    ...props,
+  }),
+});

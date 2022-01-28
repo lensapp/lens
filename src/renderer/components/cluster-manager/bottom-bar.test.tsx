@@ -4,19 +4,21 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { BottomBar } from "./bottom-bar";
 import { StatusBarRegistry } from "../../../extensions/registries";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { DiRender, renderFor } from "../test-utils/renderFor";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "/foo",
-  },
-}));
 
 describe("<BottomBar />", () => {
+  let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
+
   beforeEach(() => {
+    di = getDiForUnitTesting();
+    render = renderFor(di);
     StatusBarRegistry.createInstance();
   });
 

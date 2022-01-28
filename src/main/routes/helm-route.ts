@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router/router";
 import { helmService } from "../helm/helm-service";
 import logger from "../logger";
 import { respondJson, respondText } from "../utils/http-responses";

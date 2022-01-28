@@ -4,7 +4,12 @@
  */
 
 import { EntitySettingRegistry } from "../../extensions/registries";
-import * as clusterSettings from "../components/cluster-settings";
+import { ClusterSettingsGeneral } from "../components/cluster-settings/general";
+import { ClusterSettingsMetrics } from "../components/cluster-settings/metrics";
+import { ClusterSettingsNamespaces } from "../components/cluster-settings/namespaces";
+import { ClusterSettingsNodeShell } from "../components/cluster-settings/node-shell";
+import { ClusterSettingsProxy } from "../components/cluster-settings/proxy";
+import { ClusterSettingsTerminal } from "../components/cluster-settings/terminal";
 
 export function initEntitySettingsRegistry() {
   EntitySettingRegistry.getInstance()
@@ -16,7 +21,7 @@ export function initEntitySettingsRegistry() {
         title: "General",
         group: "Settings",
         components: {
-          View: clusterSettings.GeneralSettings,
+          View: ClusterSettingsGeneral,
         },
       },
       {
@@ -25,7 +30,7 @@ export function initEntitySettingsRegistry() {
         title: "Proxy",
         group: "Settings",
         components: {
-          View: clusterSettings.ProxySettings,
+          View: ClusterSettingsProxy,
         },
       },
       {
@@ -34,7 +39,7 @@ export function initEntitySettingsRegistry() {
         title: "Terminal",
         group: "Settings",
         components: {
-          View: clusterSettings.TerminalSettings,
+          View: ClusterSettingsTerminal,
         },
       },
       {
@@ -43,7 +48,7 @@ export function initEntitySettingsRegistry() {
         title: "Namespaces",
         group: "Settings",
         components: {
-          View: clusterSettings.NamespacesSettings,
+          View: ClusterSettingsNamespaces,
         },
       },
       {
@@ -52,7 +57,7 @@ export function initEntitySettingsRegistry() {
         title: "Metrics",
         group: "Settings",
         components: {
-          View: clusterSettings.MetricsSettings,
+          View: ClusterSettingsMetrics,
         },
       },
       {
@@ -61,7 +66,7 @@ export function initEntitySettingsRegistry() {
         title: "Node Shell",
         group: "Settings",
         components: {
-          View: clusterSettings.NodeShellSettings,
+          View: ClusterSettingsNodeShell,
         },
       },
     ]);

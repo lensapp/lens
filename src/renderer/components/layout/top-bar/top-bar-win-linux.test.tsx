@@ -7,14 +7,12 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import { IpcMainWindowEvents } from "../../../../main/window-manager";
+import { IpcMainWindowEvents } from "../../../../main/windows/manager";
 import { broadcastMessage } from "../../../../common/ipc";
 import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import mockFs from "mock-fs";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 
 const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
 
@@ -52,21 +50,12 @@ jest.mock("@electron/remote", () => {
 
 describe("<TopBar/> in Windows and Linux", () => {
   let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    mockFs();
-
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
     await di.runSetups();
-
     render = renderFor(di);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("shows window controls on Windows", () => {

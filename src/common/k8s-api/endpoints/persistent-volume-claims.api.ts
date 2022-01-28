@@ -6,13 +6,9 @@
 import { KubeObject, LabelSelector } from "../kube-object";
 import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
-import type { Pod } from "./pods.api";
-import { KubeApi } from "../kube-api";
+import type { Pod } from "./pod.api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-
-export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
-}
 
 export function getMetricsForPvc(pvc: PersistentVolumeClaim): Promise<IPvcMetrics> {
   const opts = { category: "pvc", pvc: pvc.getName(), namespace: pvc.getNs() };
@@ -94,14 +90,11 @@ export class PersistentVolumeClaim extends KubeObject {
   }
 }
 
-let pvcApi: PersistentVolumeClaimsApi;
-
-if (isClusterPageContext()) {
-  pvcApi = new PersistentVolumeClaimsApi({
-    objectConstructor: PersistentVolumeClaim,
-  });
+export class PersistentVolumeClaimApi extends KubeApi<PersistentVolumeClaim> {
+  constructor(args: SpecificApiOptions<PersistentVolumeClaim> = {}) {
+    super({
+      ...args,
+      objectConstructor: PersistentVolumeClaim,
+    });
+  }
 }
-
-export {
-  pvcApi,
-};

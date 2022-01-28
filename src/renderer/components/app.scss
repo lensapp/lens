@@ -9,14 +9,14 @@
 
 @import "~flex.box"; // todo: replace with tailwind's flexbox classes
 @import "./fonts";
-@import "../themes/theme-vars";
+@import "../internal-themes/theme-vars";
 
 :root {
   --unit: 8px;
   --padding: var(--unit);
   --margin: var(--unit);
   --border-radius: 3px;
-  --font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --font-main: "Roboto", "Helvetica", "Arial", sans-serif;
   --font-monospace: Lucida Console, Monaco, Consolas, monospace;
   --font-size-small: calc(1.5 * var(--unit));
   --font-size: calc(1.75 * var(--unit));
@@ -27,7 +27,9 @@
   --main-layout-header: 40px;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -70,7 +72,8 @@ html {
   --flex-gap: #{$padding};
 }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
 }
@@ -107,7 +110,8 @@ label {
   color: var(--textColorSecondary);
 }
 
-ol, ul {
+ol,
+ul {
   margin: 0;
   list-style: none;
 }
@@ -116,7 +120,7 @@ h1 {
   color: var(--textColorPrimary);
   font-size: 28px;
   font-weight: normal;
-  letter-spacing: -.010em;
+  letter-spacing: -0.01em;
   margin: 0;
 }
 
@@ -156,7 +160,7 @@ code {
   vertical-align: middle;
   border-radius: $radius;
   font-family: $font-monospace;
-  font-size: calc(var(--font-size) * .9);
+  font-size: calc(var(--font-size) * 0.9);
   color: #b4b5b4;
 
   &.block {

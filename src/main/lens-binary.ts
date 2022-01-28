@@ -133,7 +133,7 @@ export class LensBinary {
     }
   }
 
-  protected async untarBinary() {
+  protected untarBinary() {
     return new Promise<void>(resolve => {
       this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
       tar.x({
@@ -145,7 +145,7 @@ export class LensBinary {
     });
   }
 
-  protected async renameBinary() {
+  protected renameBinary() {
     return new Promise<void>((resolve, reject) => {
       this.logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`);
       fs.rename(this.getOriginalBinaryPath(), this.getBinaryPath(), (err) => {

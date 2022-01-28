@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { installFromSelectFileDialog } from "./install-from-select-file-dialog";
 import attemptInstallsInjectable from "../attempt-installs/attempt-installs.injectable";
-import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
+import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads.injectable";
 
 const installFromSelectFileDialogInjectable = getInjectable({
   instantiate: (di) =>

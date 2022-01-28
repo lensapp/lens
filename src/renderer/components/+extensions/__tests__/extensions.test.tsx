@@ -7,7 +7,6 @@ import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
-import { UserStore } from "../../../../common/user-store";
 import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
@@ -18,8 +17,8 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
+import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads.injectable";
 
 mockWindow();
 
@@ -78,13 +77,10 @@ describe("Extensions", () => {
     });
 
     extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
-
-    UserStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    UserStore.resetInstance();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
@@ -114,7 +110,7 @@ describe("Extensions", () => {
     });
   });
 
-  it("disables install button while installing", async () => {
+  it("disables install button while installing", () => {
     const res = render(<Extensions />);
 
     (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
@@ -138,7 +134,7 @@ describe("Extensions", () => {
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
   });
 
-  it("does not display the spinner while extensions are not loading", async () => {
+  it("does not display the spinner while extensions are not loading", () => {
     extensionDiscovery.isLoaded = true;
     const { container } = render(<Extensions />);
 

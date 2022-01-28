@@ -13,7 +13,7 @@ export class PrometheusOperator extends PrometheusProvider {
   readonly name: string = "Prometheus Operator";
   readonly isConfigurable: boolean = true;
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+  public getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
     return this.getFirstNamespacedService(client, "operated-prometheus=true", "self-monitor=true");
   }
 

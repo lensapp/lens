@@ -7,20 +7,21 @@ import "./table.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
-import { createPageParam } from "../../navigation";
-import { computed, makeObservable } from "mobx";
-import { getSorted } from "./sorting";
-import type { TableModel } from "./table-model/table-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import tableModelInjectable from "./table-model/table-model.injectable";
+import type { PageParam } from "../../navigation";
+import getTableSortParamsInjectable from "./get-sort-params.injectable";
+import setTableSortParamsInjectable from "./set-sort-params.injectable";
+import orderByUrlParamInjectable from "./order-by-param.injectable";
+import sortByUrlParamInjectable from "./sort-by-param.injectable";
+import { getSorted } from "./sorting";
 
 export type TableSortBy = string;
-export type TableOrderBy = "asc" | "desc" | string;
+export type TableOrderBy = "asc" | "desc";
 export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
 export type TableSortCallback<Item> = (data: Item) => string | number | (string | number)[];
 export type TableSortCallbacks<Item> = Record<string, TableSortCallback<Item>>;
@@ -64,66 +65,57 @@ export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
    */
   rowLineHeight?: number;
   customRowHeights?: (item: Item, lineHeight: number, paddings: number) => number;
-  getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
-  renderRow?: (item: Item) => React.ReactElement<TableRowProps>;
+  getTableRow?: (uid: string) => React.ReactElement<TableRowProps<Item>>;
+  renderRow?: (item: Item) => React.ReactElement<TableRowProps<Item>>;
+  "data-testid"?: string;
 }
-
-export const sortByUrlParam = createPageParam({
-  name: "sort",
-});
-
-export const orderByUrlParam = createPageParam({
-  name: "order",
-});
 
 interface Dependencies {
-  model: TableModel
+  getSortParams: (tableId: string) => Partial<TableSortParams>;
+  setSortParams: (tableId: string, data: Partial<TableSortParams>) => void;
+  sortByUrlParam: PageParam<string>;
+  orderByUrlParam: PageParam<string>;
 }
 
-@observer
-class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependencies> {
-  static defaultProps: TableProps<any> = {
-    scrollable: true,
-    autoSize: true,
-    rowPadding: 8,
-    rowLineHeight: 17,
-    sortSyncWithUrl: true,
-    customRowHeights: (item, lineHeight, paddings) => lineHeight + paddings,
+const NonInjectedTable = observer(({ getSortParams, setSortParams, sortByUrlParam, orderByUrlParam, ...props }: Dependencies & TableProps<any>) => {
+  const {
+    scrollable = true,
+    autoSize = true,
+    rowPadding = 8,
+    rowLineHeight = 17,
+    sortSyncWithUrl = true,
+    customRowHeights = (item, lineHeight, paddings) => lineHeight + paddings,
+    sortable,
+    tableId,
+    sortByDefault,
+    children,
+    onSort,
+    items,
+    renderRow,
+    noItems,
+    virtual,
+    getTableRow,
+    selectedItemId,
+    className,
+    virtualHeight,
+    selectable,
+    "data-testid": dataTestId,
+  } = props;
+  const isSortable = Boolean(sortable && tableId);
+  const sortParams = {
+    ...sortByDefault,
+    ...getSortParams(tableId),
   };
 
-  constructor(props: TableProps<Item> & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    const { sortable, tableId } = this.props;
-
-    if (sortable && !tableId) {
-      console.error("Table must have props.tableId if props.sortable is specified");
-    }
-  }
-
-  @computed get isSortable() {
-    const { sortable, tableId } = this.props;
-
-    return Boolean(sortable && tableId);
-  }
-
-  @computed get sortParams() {
-    return Object.assign({}, this.props.sortByDefault, this.props.model.getSortParams(this.props.tableId));
-  }
-
-  renderHead() {
-    const { children } = this.props;
-    const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
+  const renderHead = () => {
+    const content = React.Children.toArray(children) as (TableRowElem<any> | TableHeadElem)[];
     const headElem: React.ReactElement<TableHeadProps> = content.find(elem => elem.type === TableHead);
 
     if (!headElem) {
       return null;
     }
 
-    if (this.isSortable) {
+    if (isSortable) {
       const columns = React.Children.toArray(headElem.props.children) as TableCellElem[];
 
       return React.cloneElement(headElem, {
@@ -139,8 +131,8 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
 
           return React.cloneElement(elem, {
             title,
-            _sort: this.sort,
-            _sorting: this.sortParams,
+            _sort: sort,
+            _sorting: sortParams,
             _nowrap: headElem.props.nowrap,
           });
         }),
@@ -148,17 +140,10 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
     }
 
     return headElem;
-  }
+  };
 
-  getSorted(rawItems: Item[]) {
-    const { sortBy, orderBy: orderByRaw } = this.sortParams;
-
-    return getSorted(rawItems, this.props.sortable[sortBy], orderByRaw);
-  }
-
-  protected onSort({ sortBy, orderBy }: TableSortParams) {
-    this.props.model.setSortParams(this.props.tableId, { sortBy, orderBy });
-    const { sortSyncWithUrl, onSort } = this.props;
+  const onSortWrapped = ({ sortBy, orderBy }: TableSortParams) => {
+    setSortParams(tableId, { sortBy, orderBy });
 
     if (sortSyncWithUrl) {
       sortByUrlParam.set(sortBy);
@@ -166,43 +151,39 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
     }
 
     onSort?.({ sortBy, orderBy });
-  }
+  };
 
-  @boundMethod
-  sort(colName: TableSortBy) {
-    const { sortBy, orderBy } = this.sortParams;
+  const sort = (colName: TableSortBy) => {
+    const { sortBy, orderBy } = sortParams;
     const sameColumn = sortBy == colName;
     const newSortBy: TableSortBy = colName;
     const newOrderBy: TableOrderBy = (!orderBy || !sameColumn || orderBy === "desc") ? "asc" : "desc";
 
-    this.onSort({
+    onSortWrapped({
       sortBy: String(newSortBy),
       orderBy: newOrderBy,
     });
-  }
+  };
 
-  private getContent() {
-    const { items, renderRow, children } = this.props;
-    const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
+  const getContent = () => {
+    const content = React.Children.toArray(children) as (TableRowElem<any> | TableHeadElem)[];
 
     if (renderRow) {
       content.push(...items.map(renderRow));
     }
 
     return content;
-  }
+  };
 
-  renderRows() {
-    const {
-      noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items,
-      getTableRow, selectedItemId, className, virtualHeight,
-    } = this.props;
-    const content = this.getContent();
-    let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);
+  const renderRows = () => {
+    const content = getContent();
+    let rows: React.ReactElement<TableRowProps<any>>[] = content.filter(elem => elem.type === TableRow);
     let sortedItems = rows.length ? rows.map(row => row.props.sortItem) : [...items];
 
-    if (this.isSortable) {
-      sortedItems = this.getSorted(sortedItems);
+    if (isSortable) {
+      const { sortBy, orderBy } = sortParams;
+
+      sortedItems = getSorted(sortedItems, sortable[sortBy], orderBy);
 
       if (rows.length) {
         rows = sortedItems.map(item => rows.find(row => item == row.props.sortItem));
@@ -229,35 +210,31 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
     }
 
     return rows;
-  }
+  };
 
-  render() {
-    const { selectable, scrollable, autoSize, virtual, className } = this.props;
-    const classNames = cssNames("Table flex column", className, {
-      selectable, scrollable, sortable: this.isSortable, autoSize, virtual,
-    });
+  return (
+    <div
+      className={cssNames("Table flex column", className, {
+        selectable, scrollable, sortable: isSortable, autoSize, virtual,
+      })}
+      data-testid={dataTestId}
+    >
+      {renderHead()}
+      {renderRows()}
+    </div>
+  );
+});
 
-    return (
-      <div className={classNames}>
-        {this.renderHead()}
-        {this.renderRows()}
-      </div>
-    );
-  }
-}
+const InjectedTable = withInjectables<Dependencies, TableProps<any>>(NonInjectedTable, {
+  getProps: (di, props) => ({
+    getSortParams: di.inject(getTableSortParamsInjectable),
+    setSortParams: di.inject(setTableSortParamsInjectable),
+    sortByUrlParam: di.inject(sortByUrlParamInjectable),
+    orderByUrlParam: di.inject(orderByUrlParamInjectable),
+    ...props,
+  }),
+});
 
 export function Table<Item>(props: TableProps<Item>) {
-  const InjectedTable = withInjectables<Dependencies, TableProps<Item>>(
-    NonInjectedTable,
-
-    {
-      getProps: (di, props) => ({
-        model: di.inject(tableModelInjectable),
-        ...props,
-      }),
-    },
-  );
-
   return <InjectedTable {...props} />;
 }
-

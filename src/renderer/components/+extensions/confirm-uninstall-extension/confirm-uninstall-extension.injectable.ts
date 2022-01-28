@@ -5,13 +5,14 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { confirmUninstallExtension } from "./confirm-uninstall-extension";
 import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
+import { bind } from "../../../utils";
+import confirmWithDialogInjectable from "../../confirm-dialog/dialog-confirm.injectable";
 
 const confirmUninstallExtensionInjectable = getInjectable({
-  instantiate: (di) =>
-    confirmUninstallExtension({
-      uninstallExtension: di.inject(uninstallExtensionInjectable),
-    }),
-
+  instantiate: (di) => bind(confirmUninstallExtension, null, {
+    uninstallExtension: di.inject(uninstallExtensionInjectable),
+    confirmWithDialog: di.inject(confirmWithDialogInjectable),
+  }),
   lifecycle: lifecycleEnum.singleton,
 });
 

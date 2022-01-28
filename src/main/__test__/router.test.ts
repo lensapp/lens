@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Router } from "../router";
+import { Router } from "../router/router";
 
 jest.mock("electron", () => ({
   app: {

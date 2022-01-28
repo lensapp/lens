@@ -4,11 +4,11 @@
  */
 
 import { KubeObjectMenuRegistry } from "../../extensions/registries";
-import { ServiceAccountMenu } from "../components/+user-management/+service-accounts";
-import { CronJobMenu } from "../components/+workloads-cronjobs";
-import { DeploymentMenu } from "../components/+workloads-deployments";
-import { ReplicaSetMenu } from "../components/+workloads-replicasets";
-import { StatefulSetMenu } from "../components/+workloads-statefulsets";
+import { ServiceAccountMenu } from "../components/+service-accounts/item-menu";
+import { CronJobMenu } from "../components/+cronjobs/item-menu";
+import { DeploymentMenu } from "../components/+deployments/item-menu";
+import { ReplicaSetMenu } from "../components/+replica-sets/item-menu";
+import { StatefulSetMenu } from "../components/+stateful-sets/item-menu";
 
 export function initKubeObjectMenuRegistry() {
   KubeObjectMenuRegistry.getInstance()

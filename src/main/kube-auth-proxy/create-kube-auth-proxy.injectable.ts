@@ -4,20 +4,13 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { KubeAuthProxy } from "./kube-auth-proxy";
-import type { Cluster } from "../../common/cluster/cluster";
-import bundledKubectlInjectable from "../kubectl/bundled-kubectl.injectable";
+import bundledKubectlPathInjectable from "../kubectl/get-bundled-path.injectable";
+import { bind } from "../../common/utils";
 
 const createKubeAuthProxyInjectable = getInjectable({
-  instantiate: (di) => {
-    const bundledKubectl = di.inject(bundledKubectlInjectable);
-
-    const dependencies = {
-      getProxyBinPath: bundledKubectl.getPath,
-    };
-
-    return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) =>
-      new KubeAuthProxy(dependencies, cluster, environmentVariables);
-  },
+  instantiate: (di) => bind(KubeAuthProxy.create, null, {
+    bundledKubectlPath: di.inject(bundledKubectlPathInjectable),
+  }),
 
   lifecycle: lifecycleEnum.singleton,
 });

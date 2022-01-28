@@ -9,7 +9,6 @@ import { isFunction, merge } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
-import { apiManager } from "./api-manager";
 import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
@@ -24,6 +23,14 @@ import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
+import { makeObservable, observable } from "mobx";
+
+export type SpecificApiOptions<T extends KubeObject> = Omit<IKubeApiOptions<T>, "objectConstructor"> & {
+  /**
+   * @deprecated A specific objectConstructor should not be passed in and will be overridden
+   */
+  objectConstructor?: any;
+};
 
 /**
  * The options used for creating a `KubeApi`
@@ -135,7 +142,14 @@ export interface IRemoteKubeApiConfig {
   }
 }
 
-export function forCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): KubeApi<T> {
+export function forCluster<
+  T extends KubeObject,
+  Y extends KubeApi<T> = KubeApi<T>,
+>(
+  cluster: ILocalKubeApiConfig,
+  kubeClass: KubeObjectConstructor<T>,
+  apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y,
+): KubeApi<T> {
   const url = new URL(apiBase.config.serverAddress);
   const request = new KubeJsonApi({
     serverAddress: apiBase.config.serverAddress,
@@ -147,17 +161,20 @@ export function forCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<
     },
   });
 
-  if (!apiClass) {
-    apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y;
-  }
-
   return new apiClass({
     objectConstructor: kubeClass,
     request,
   });
 }
 
-export function forRemoteCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): Y {
+export function forRemoteCluster<
+  T extends KubeObject,
+  Y extends KubeApi<T> = KubeApi<T>,
+>(
+  config: IRemoteKubeApiConfig,
+  kubeClass: KubeObjectConstructor<T>,
+  apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y,
+): Y {
   const reqInit: RequestInit = {};
   const agentOptions: AgentOptions = {};
 
@@ -194,10 +211,6 @@ export function forRemoteCluster<T extends KubeObject, Y extends KubeApi<T> = Ku
       }),
     } : {}),
   }, reqInit);
-
-  if (!apiClass) {
-    apiClass = KubeApi as new (apiOpts: IKubeApiOptions<T>) => Y;
-  }
 
   return new apiClass({
     objectConstructor: kubeClass as KubeObjectConstructor<T>,
@@ -264,7 +277,7 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
 export class KubeApi<T extends KubeObject> {
   readonly kind: string;
   readonly apiVersion: string;
-  apiBase: string;
+  @observable apiBase: string; // This needs to be observable so that the registry works
   apiPrefix: string;
   apiGroup: string;
   apiVersionPreferred?: string;
@@ -278,6 +291,7 @@ export class KubeApi<T extends KubeObject> {
   private watchId = 1;
 
   constructor(protected options: IKubeApiOptions<T>) {
+    makeObservable(this);
     const { objectConstructor, request, kind, isNamespaced } = options;
     const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase || objectConstructor.apiBase);
 
@@ -291,9 +305,6 @@ export class KubeApi<T extends KubeObject> {
     this.apiResource = resource;
     this.request = request ?? apiKube;
     this.objectConstructor = objectConstructor;
-
-    this.parseResponse = this.parseResponse.bind(this);
-    apiManager.registerApi(apiBase, this);
   }
 
   get apiVersionWithGroup() {
@@ -372,7 +383,6 @@ export class KubeApi<T extends KubeObject> {
 
       if (this.apiVersionPreferred) {
         this.apiBase = this.computeApiBase();
-        apiManager.registerApi(this.apiBase, this);
       }
     }
   }
@@ -385,7 +395,7 @@ export class KubeApi<T extends KubeObject> {
     return this.resourceVersions.get(namespace);
   }
 
-  async refreshResourceVersion(params?: KubeApiListOptions) {
+  refreshResourceVersion(params?: KubeApiListOptions) {
     return this.list(params, { limit: 1 });
   }
 

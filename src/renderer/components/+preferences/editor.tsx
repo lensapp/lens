@@ -4,12 +4,14 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import { UserStore } from "../../../common/user-store";
+import type { UserPreferencesStore } from "../../../common/user-preferences";
 import { Switch } from "../switch";
 import { Select } from "../select";
 import { SubTitle } from "../layout/sub-title";
 import { SubHeader } from "../layout/sub-header";
 import { Input, InputValidators } from "../input";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import userPreferencesStoreInjectable from "../../../common/user-preferences/store.injectable";
 
 enum EditorLineNumbersStyles {
   on = "On",
@@ -18,8 +20,14 @@ enum EditorLineNumbersStyles {
   interval = "Interval",
 }
 
-export const Editor = observer(() => {
-  const editorConfiguration = UserStore.getInstance().editorConfiguration;
+export interface EditorProps {}
+
+interface Dependencies {
+  userStore: UserPreferencesStore;
+}
+
+const NonInjectedEditor = observer(({ userStore }: Dependencies & EditorProps) => {
+  const { editorConfiguration } = userStore;
 
   return (
     <section id="editor">
@@ -69,7 +77,35 @@ export const Editor = observer(() => {
           onChange={value => editorConfiguration.tabSize = Number(value)}
         />
       </section>
+      <section>
+        <SubTitle title="Font size"/>
+        <Input
+          theme="round-black"
+          type="number"
+          min={10}
+          validators={InputValidators.isNumber}
+          value={editorConfiguration.fontSize.toString()}
+          onChange={value => editorConfiguration.fontSize = Number(value)}
+        />
+      </section>
+      <section>
+        <SubTitle title="Font family"/>
+        <Input
+          theme="round-black"
+          type="text"
+          validators={InputValidators.isNumber}
+          value={editorConfiguration.fontFamily}
+          onChange={value => editorConfiguration.fontFamily = value}
+        />
+      </section>
     </section>
   );
+});
+
+export const Editor = withInjectables<Dependencies, EditorProps>(NonInjectedEditor, {
+  getProps: (di, props) => ({
+    userStore: di.inject(userPreferencesStoreInjectable),
+    ...props,
+  }),
 });
 

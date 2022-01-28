@@ -14,7 +14,7 @@ import { broadcastMessage, ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../../navigation";
 import { catalogRoute, catalogURL } from "../../../../common/routes";
-import { IpcMainWindowEvents } from "../../../../main/window-manager";
+import { IpcMainWindowEvents } from "../../../../main/windows/manager";
 import { isLinux, isWindows } from "../../../../common/vars";
 import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";

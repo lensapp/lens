@@ -10,9 +10,7 @@ const bundledKubectlInjectable = getInjectable({
   instantiate: (di) => {
     const createKubectl = di.inject(createKubectlInjectable);
 
-    const bundledKubectlVersion = getBundledKubectlVersion();
-
-    return createKubectl(bundledKubectlVersion);
+    return createKubectl(getBundledKubectlVersion());
   },
 
   lifecycle: lifecycleEnum.singleton,

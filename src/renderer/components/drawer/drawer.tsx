@@ -5,20 +5,29 @@
 
 import "./drawer.scss";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import { cssNames, noop, StorageHelper } from "../../utils";
+import { cssNames, disposer, Disposer, noop, StorageLayer } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
-import { history } from "../../navigation";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
-import drawerStorageInjectable, {
-  defaultDrawerWidth,
-} from "./drawer-storage/drawer-storage.injectable";
+import drawerStorageInjectable, { defaultDrawerWidth, DrawerState } from "./storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import { observer } from "mobx-react";
+import addWindowEventListenerInjectable from "../../event-listeners/add-window-event-listener.injectable";
+import { observable } from "mobx";
+import historyInjectable from "../../navigation/history.injectable";
+import type { History } from "history";
 
 export type DrawerPosition = "top" | "left" | "right" | "bottom";
+
+const resizingAnchorProps = new Map<DrawerPosition, [ResizeDirection, ResizeSide, ResizeGrowthDirection]>();
+
+resizingAnchorProps.set("right", [ResizeDirection.HORIZONTAL, ResizeSide.LEADING, ResizeGrowthDirection.RIGHT_TO_LEFT]);
+resizingAnchorProps.set("left", [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING, ResizeGrowthDirection.LEFT_TO_RIGHT]);
+resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM]);
+resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
 
 export interface DrawerProps {
   open: boolean;
@@ -37,70 +46,43 @@ export interface DrawerProps {
   animation?: AnimateName;
   onClose?: () => void;
   toolbar?: React.ReactNode;
+  children?: React.ReactChild | React.ReactChild[];
 }
-
-const defaultProps: Partial<DrawerProps> = {
-  position: "right",
-  animation: "slide-right",
-  usePortal: false,
-  onClose: noop,
-};
-
-interface State {
-  isCopied: boolean;
-  width: number;
-}
-
-const resizingAnchorProps = new Map<DrawerPosition, [ResizeDirection, ResizeSide, ResizeGrowthDirection]>();
-
-resizingAnchorProps.set("right", [ResizeDirection.HORIZONTAL, ResizeSide.LEADING, ResizeGrowthDirection.RIGHT_TO_LEFT]);
-resizingAnchorProps.set("left", [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING, ResizeGrowthDirection.LEFT_TO_RIGHT]);
-resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM]);
-resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
 
 interface Dependencies {
-  drawerStorage: StorageHelper<{ width: number }>;
+  history: History;
+  state: StorageLayer<DrawerState>;
+  addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
 }
 
-class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, State> {
-  static defaultProps = defaultProps as object;
+const NonInjectedDrawer = observer(({
+  history,
+  state,
+  addWindowEventListener,
+  className,
+  contentClass,
+  animation = "slide-right",
+  open,
+  position = "right",
+  title,
+  children,
+  toolbar,
+  size,
+  usePortal = false,
+  onClose = noop,
+}: Dependencies & DrawerProps) => {
+  const contentElem = useRef<HTMLDivElement | undefined>();
+  const scrollElem = useRef<HTMLDivElement | undefined>();
+  const [mouseDownTarget, setMouseDownTarget] = useState<HTMLElement | undefined>();
+  const [isCopied, setIsCopied] = useState(false);
+  const [scrollPos] = useState(observable.map<string, number>());
+  const { width } = state.get();
 
-  private mouseDownTarget: HTMLElement;
-  private contentElem: HTMLElement;
-  private scrollElem: HTMLElement;
-  private scrollPos = new Map<string, number>();
-
-  private stopListenLocation = history.listen(() => {
-    this.restoreScrollPos();
-  });
-
-  public state = {
-    isCopied: false,
-    width: this.props.drawerStorage.get().width,
+  const resizeWidth = (width: number) => {
+    state.merge({ width });
   };
 
-  componentDidMount() {
-    // Using window target for events to make sure they will be catched after other places (e.g. Dialog)
-    window.addEventListener("mousedown", this.onMouseDown);
-    window.addEventListener("click", this.onClickOutside);
-    window.addEventListener("keydown", this.onEscapeKey);
-    window.addEventListener("click", this.fixUpTripleClick);
-  }
-
-  componentWillUnmount() {
-    this.stopListenLocation();
-    window.removeEventListener("mousedown", this.onMouseDown);
-    window.removeEventListener("click", this.onClickOutside);
-    window.removeEventListener("click", this.fixUpTripleClick);
-    window.removeEventListener("keydown", this.onEscapeKey);
-  }
-
-  resizeWidth = (width: number) => {
-    this.setState({ width });
-    this.props.drawerStorage.merge({ width });
-  };
-
-  fixUpTripleClick = (ev: MouseEvent) => {
+  const fixUpTripleClick = (ev: MouseEvent) => {
     // detail: A count of consecutive clicks that happened in a short amount of time
     if (ev.detail === 3) {
       const selection = window.getSelection();
@@ -109,132 +91,132 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
     }
   };
 
-  saveScrollPos = () => {
-    if (!this.scrollElem) return;
-    const key = history.location.key;
+  const saveScrollPos = () => {
+    if (scrollElem.current) {
+      const { key } = history.location;
 
-    this.scrollPos.set(key, this.scrollElem.scrollTop);
+      scrollPos.set(key, scrollElem.current.scrollTop);
+    }
   };
 
-  restoreScrollPos = () => {
-    if (!this.scrollElem) return;
-    const key = history.location.key;
+  const restoreScrollPos = () => {
+    if (scrollElem.current) {
+      const { key } = history.location;
 
-    this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
+      scrollElem.current.scrollTop = scrollPos.get(key) || 0;
+    }
   };
 
-  onEscapeKey = (evt: KeyboardEvent) => {
-    if (!this.props.open) {
+  const onEscapeKey = (evt: KeyboardEvent) => {
+    if (!open) {
       return;
     }
 
     if (evt.code === "Escape") {
-      this.close();
+      close();
     }
   };
 
-  onClickOutside = (evt: MouseEvent) => {
-    const { contentElem, mouseDownTarget, close, props: { open }} = this;
-
-    if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
+  const onClickOutside = (evt: MouseEvent) => {
+    if (!open || evt.defaultPrevented || contentElem.current.contains(mouseDownTarget)) {
       return;
     }
+
     const clickedElem = evt.target as HTMLElement;
     const isOutsideAnyDrawer = !clickedElem.closest(".Drawer");
 
     if (isOutsideAnyDrawer) {
       close();
     }
-    this.mouseDownTarget = null;
+    setMouseDownTarget(undefined);
   };
 
-  onMouseDown = (evt: MouseEvent) => {
-    if (this.props.open) {
-      this.mouseDownTarget = evt.target as HTMLElement;
+  const onMouseDown = (evt: MouseEvent) => {
+    if (open) {
+      setMouseDownTarget(evt.target as HTMLElement);
     }
   };
 
-  close = () => {
-    const { open, onClose } = this.props;
-
-    if (open) onClose();
+  const close = () => {
+    if (open) {
+      onClose();
+    }
   };
 
-  copyTitle = (title: string) => {
+  const copyTitle = (title: string) => {
     const itemName = title.split(":").splice(1).join(":") || title; // copy whole if no :
 
     clipboard.writeText(itemName.trim());
-    this.setState({ isCopied: true });
-    setTimeout(() => {
-      this.setState({ isCopied: false });
-    }, 3000);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 3000);
   };
 
-  render() {
-    const { className, contentClass, animation, open, position, title, children, toolbar, size, usePortal } = this.props;
-    const { isCopied, width } = this.state;
-    const copyTooltip = isCopied ? "Copied!" : "Copy";
-    const copyIcon = isCopied ? "done" : "content_copy";
-    const canCopyTitle = typeof title === "string" && title.length > 0;
-    const [direction, placement, growthDirection] = resizingAnchorProps.get(position);
-    const drawerSize = size || `${width}px`;
+  useEffect(() => disposer(
+    history.listen(restoreScrollPos),
+    addWindowEventListener("mousedown", onMouseDown),
+    addWindowEventListener("click", onClickOutside),
+    addWindowEventListener("keydown", onEscapeKey),
+    addWindowEventListener("click", fixUpTripleClick),
+  ), []);
 
-    const drawer = (
-      <Animate name={animation} enter={open}>
-        <div
-          className={cssNames("Drawer", className, position)}
-          style={{ "--size": drawerSize } as React.CSSProperties}
-          ref={e => this.contentElem = e}
-        >
-          <div className="drawer-wrapper flex column">
-            <div className="drawer-title flex align-center">
-              <div className="drawer-title-text flex gaps align-center">
-                {title}
-                {canCopyTitle && (
-                  <Icon material={copyIcon} tooltip={copyTooltip} onClick={() => this.copyTitle(title)}/>
-                )}
-              </div>
-              {toolbar}
-              <Icon material="close" onClick={this.close}/>
+  const copyTooltip = isCopied ? "Copied!" : "Copy";
+  const copyIcon = isCopied ? "done" : "content_copy";
+  const canCopyTitle = typeof title === "string" && title.length > 0;
+  const [direction, placement, growthDirection] = resizingAnchorProps.get(position);
+  const drawerSize = size || `${width}px`;
+
+  const drawer = (
+    <Animate name={animation} enter={open}>
+      <div
+        className={cssNames("Drawer", className, position)}
+        style={{ "--size": drawerSize } as React.CSSProperties}
+        ref={contentElem}
+      >
+        <div className="drawer-wrapper flex column">
+          <div className="drawer-title flex align-center">
+            <div className="drawer-title-text flex gaps align-center">
+              {title}
+              {canCopyTitle && (
+                <Icon material={copyIcon} tooltip={copyTooltip} onClick={() => copyTitle(title)}/>
+              )}
             </div>
-            <div
-              className={cssNames("drawer-content flex column box grow", contentClass)}
-              onScroll={this.saveScrollPos}
-              ref={e => this.scrollElem = e}
-            >
-              {children}
-            </div>
+            {toolbar}
+            <Icon material="close" onClick={close}/>
           </div>
-          {
-            !size && (
-              <ResizingAnchor
-                direction={direction}
-                placement={placement}
-                growthDirection={growthDirection}
-                getCurrentExtent={() => width}
-                onDrag={this.resizeWidth}
-                onDoubleClick={() => this.resizeWidth(defaultDrawerWidth)}
-                minExtent={300}
-                maxExtent={window.innerWidth * 0.9}
-              />
-            )
-          }
+          <div
+            className={cssNames("drawer-content flex column box grow", contentClass)}
+            onScroll={saveScrollPos}
+            ref={scrollElem}
+          >
+            {children}
+          </div>
         </div>
-      </Animate>
-    );
+        {
+          !size && (
+            <ResizingAnchor
+              direction={direction}
+              placement={placement}
+              growthDirection={growthDirection}
+              getCurrentExtent={() => width}
+              onDrag={resizeWidth}
+              onDoubleClick={() => resizeWidth(defaultDrawerWidth)}
+              minExtent={300}
+              maxExtent={window.innerWidth * 0.9}
+            />
+          )
+        }
+      </div>
+    </Animate>
+  );
 
-    return usePortal ? createPortal(drawer, document.body) : drawer;
-  }
-}
+  return usePortal ? createPortal(drawer, document.body) : drawer;
+});
 
-export const Drawer = withInjectables<Dependencies, DrawerProps>(
-  NonInjectedDrawer,
-
-  {
-    getProps: (di, props) => ({
-      drawerStorage: di.inject(drawerStorageInjectable),
-      ...props,
-    }),
-  },
-);
-
+export const Drawer = withInjectables<Dependencies, DrawerProps>(NonInjectedDrawer, {
+  getProps: (di, props) => ({
+    history: di.inject(historyInjectable),
+    state: di.inject(drawerStorageInjectable),
+    addWindowEventListener: di.inject(addWindowEventListenerInjectable),
+    ...props,
+  }),
+});

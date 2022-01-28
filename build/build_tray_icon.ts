@@ -38,7 +38,7 @@ export async function generateTrayIcon(
     await fs.writeFile(pngIconDestPath, pngIconBuffer);
     console.info(`[DONE]: Tray icon saved at "${pngIconDestPath}"`);
   } catch (err) {
-    console.error(`[ERROR]: ${err}`);
+    console.error(`[ERROR]: ${String(err)}`);
   }
 }
 
@@ -49,7 +49,9 @@ const iconSizes: Record<string, number> = {
   "3x": 48,
 };
 
-Object.entries(iconSizes).forEach(([dpiSuffix, pixelSize]) => {
+for (const dpiSuffix in iconSizes) {
+  const pixelSize = iconSizes[dpiSuffix];
+
   generateTrayIcon({ dpiSuffix, pixelSize, shouldUseDarkColors: false });
   generateTrayIcon({ dpiSuffix, pixelSize, shouldUseDarkColors: true });
-});
+}

@@ -18,7 +18,7 @@ describe("Helm Service tests", () => {
   it("list charts with deprecated entries", async () => {
     mockHelmRepoManager.mockReturnValue({
       init: jest.fn(),
-      repositories: jest.fn().mockImplementation(async () => {
+      repositories: jest.fn().mockImplementation(() => {
         return [
           { name: "stable", url: "stableurl" },
           { name: "experiment", url: "experimenturl" },
@@ -128,7 +128,7 @@ describe("Helm Service tests", () => {
   it("list charts sorted by version in descending order", async () => {
     mockHelmRepoManager.mockReturnValue({
       init: jest.fn(),
-      repositories: jest.fn().mockImplementation(async () => {
+      repositories: jest.fn().mockImplementation(() => {
         return [
           { name: "bitnami", url: "bitnamiurl" },
         ];

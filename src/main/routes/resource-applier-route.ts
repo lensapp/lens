@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router/router";
 import { respondJson, respondText } from "../utils/http-responses";
 import { ResourceApplier } from "../resource-applier";
 

@@ -59,7 +59,7 @@ export interface KubeObjectStoreSubscribeParams {
 export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
   static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
-  public api: KubeApi<T>;
+  public abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
@@ -72,10 +72,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return when(() => Boolean(this.loadedNamespaces));
   }
 
-  constructor(api?: KubeApi<T>) {
+  constructor() {
     super();
-    if (api) this.api = api;
-
     makeObservable(this);
     autoBind(this);
     this.bindWatchEventsUpdater();
@@ -247,11 +245,11 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
+  reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
     const { force = false, ...loadingOptions } = opts;
 
     if (this.isLoading || (this.isLoaded && !force)) {
-      return;
+      return Promise.resolve();
     }
 
     return this.loadAll(loadingOptions);
@@ -282,7 +280,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     if (error) this.reset();
   }
 
-  protected async loadItem(params: { name: string; namespace?: string }): Promise<T> {
+  protected loadItem(params: { name: string; namespace?: string }): Promise<T> {
     return this.api.get(params);
   }
 
@@ -302,13 +300,13 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async loadFromPath(resourcePath: string) {
+  loadFromPath(resourcePath: string) {
     const { namespace, name } = parseKubeApi(resourcePath);
 
     return this.load({ name, namespace });
   }
 
-  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
+  protected createItem(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
     return this.api.create(params, data);
   }
 
@@ -365,7 +363,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     this.selectedItemsIds.delete(item.getId());
   }
 
-  async removeSelectedItems() {
+  removeSelectedItems() {
     return Promise.all(this.selectedItems.map(this.remove));
   }
 

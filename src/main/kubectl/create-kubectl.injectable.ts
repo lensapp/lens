@@ -4,22 +4,15 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { Kubectl } from "./kubectl";
-import directoryForKubectlBinariesInjectable from "./directory-for-kubectl-binaries/directory-for-kubectl-binaries.injectable";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
+import directoryForKubectlBinariesInjectable from "./directory-for-kubectl-binaries.injectable";
+import userPreferencesStoreInjectable from "../../common/user-preferences/store.injectable";
+import { bind } from "../../common/utils";
 
 const createKubectlInjectable = getInjectable({
-  instantiate: (di) => {
-    const dependencies = {
-      userStore: di.inject(userStoreInjectable),
-
-      directoryForKubectlBinaries: di.inject(
-        directoryForKubectlBinariesInjectable,
-      ),
-    };
-
-    return (clusterVersion: string) =>
-      new Kubectl(dependencies, clusterVersion);
-  },
+  instantiate: (di) => bind(Kubectl.create, null, {
+    userStore: di.inject(userPreferencesStoreInjectable),
+    directoryForKubectlBinaries: di.inject(directoryForKubectlBinariesInjectable),
+  }),
 
   lifecycle: lifecycleEnum.singleton,
 });

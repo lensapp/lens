@@ -17,7 +17,7 @@ import { navigation } from "../../navigation";
 
 export interface DialogProps {
   className?: string;
-  isOpen?: boolean;
+  isOpen: boolean;
   open?: () => void;
   close?: () => void;
   onOpen?: () => void;
@@ -37,7 +37,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   private contentElem: HTMLElement;
   ref = React.createRef<HTMLDivElement>();
 
-  static defaultProps: DialogProps = {
+  static defaultProps = {
     isOpen: false,
     open: noop,
     close: noop,
@@ -46,7 +46,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     modal: true,
     animated: true,
     pinned: false,
-  };
+  } as object;
 
   @disposeOnUnmount
   closeOnNavigate = reaction(() => navigation.toString(), () => this.close());

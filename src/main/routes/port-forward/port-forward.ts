@@ -19,7 +19,7 @@ export interface PortForwardArgs {
 }
 
 interface Dependencies {
-  getKubectlBinPath: (bundled: boolean) => Promise<string>
+  readonly bundledKubectlPath: string;
 }
 
 export class PortForward {
@@ -43,7 +43,11 @@ export class PortForward {
   public port: number;
   public forwardPort: number;
 
-  constructor(private dependencies: Dependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
+  static create(...args: ConstructorParameters<typeof PortForward>) {
+    return new PortForward(...args);
+  }
+
+  constructor(private readonly dependencies: Dependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
     this.kind = args.kind;
     this.namespace = args.namespace;
@@ -53,16 +57,13 @@ export class PortForward {
   }
 
   public async start() {
-    const kubectlBin = await this.dependencies.getKubectlBinPath(true);
-    const args = [
+    this.process = spawn(this.dependencies.bundledKubectlPath, [
       "--kubeconfig", this.pathToKubeConfig,
       "port-forward",
       "-n", this.namespace,
       `${this.kind}/${this.name}`,
       `${this.forwardPort ?? ""}:${this.port}`,
-    ];
-
-    this.process = spawn(kubectlBin, args, {
+    ], {
       env: process.env,
     });
     PortForward.portForwards.push(this);
@@ -96,7 +97,7 @@ export class PortForward {
     }
   }
 
-  public async stop() {
+  public stop() {
     this.process.kill();
   }
 }

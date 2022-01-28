@@ -12,9 +12,6 @@ import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injec
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import mockFs from "mock-fs";
 
 jest.mock("../../../../common/vars", () => {
   const SemVer = require("semver").SemVer;
@@ -74,18 +71,8 @@ describe("<TopBar/>", () => {
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    mockFs();
-
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
     await di.runSetups();
-
     render = renderFor(di);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("renders w/o errors", () => {
@@ -95,30 +82,30 @@ describe("<TopBar/>", () => {
   });
 
   it("renders home button", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("home-button")).toBeInTheDocument();
+    expect(await findByTestId("home-button")).toBeInTheDocument();
   });
 
   it("renders history arrows", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("history-back")).toBeInTheDocument();
-    expect(await getByTestId("history-forward")).toBeInTheDocument();
+    expect(await findByTestId("history-back")).toBeInTheDocument();
+    expect(await findByTestId("history-forward")).toBeInTheDocument();
   });
 
   it("enables arrow by ipc event", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("history-back")).not.toHaveClass("disabled");
-    expect(await getByTestId("history-forward")).not.toHaveClass("disabled");
+    expect(await findByTestId("history-back")).not.toHaveClass("disabled");
+    expect(await findByTestId("history-forward")).not.toHaveClass("disabled");
   });
 
   it("triggers browser history back and forward", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    const prevButton = await getByTestId("history-back");
-    const nextButton = await getByTestId("history-forward");
+    const prevButton = await findByTestId("history-back");
+    const nextButton = await findByTestId("history-forward");
 
     fireEvent.click(prevButton);
 
@@ -141,9 +128,9 @@ describe("<TopBar/>", () => {
       },
     ]));
 
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId(testId)).toHaveTextContent(text);
+    expect(await findByTestId(testId)).toHaveTextContent(text);
   });
 
   it("doesn't show windows title buttons", () => {

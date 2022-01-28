@@ -4,7 +4,7 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import { UserStore } from "../../../common/user-store";
+import type { UserPreferencesStore } from "../../../common/user-preferences";
 import { sentryDsn } from "../../../common/vars";
 import { Checkbox } from "../checkbox";
 import { SubTitle } from "../layout/sub-title";
@@ -13,12 +13,14 @@ import type { RegisteredAppPreference } from "./app-preferences/app-preference-r
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import userPreferencesStoreInjectable from "../../../common/user-preferences/store.injectable";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
+  userStore: UserPreferencesStore;
 }
 
-const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) => {
+const NonInjectedTelemetry = observer(({ appPreferenceItems, userStore }: Dependencies) => {
   const extensions = appPreferenceItems.get();
   const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == "telemetry");
 
@@ -32,9 +34,9 @@ const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) =>
             <SubTitle title='Automatic Error Reporting' />
             <Checkbox
               label="Allow automatic error reporting"
-              value={UserStore.getInstance().allowErrorReporting}
+              value={userStore.allowErrorReporting}
               onChange={value => {
-                UserStore.getInstance().allowErrorReporting = value;
+                userStore.allowErrorReporting = value;
               }}
             />
             <div className="hint">
@@ -51,14 +53,11 @@ const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) =>
       }
     </section>
   );
-};
+});
 
-export const Telemetry = withInjectables<Dependencies>(
-  observer(NonInjectedTelemetry),
-
-  {
-    getProps: (di) => ({
-      appPreferenceItems: di.inject(appPreferencesInjectable),
-    }),
-  },
-);
+export const Telemetry = withInjectables<Dependencies>(NonInjectedTelemetry, {
+  getProps: (di) => ({
+    appPreferenceItems: di.inject(appPreferencesInjectable),
+    userStore: di.inject(userPreferencesStoreInjectable),
+  }),
+});

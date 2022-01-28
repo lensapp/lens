@@ -5,11 +5,8 @@
 
 import { BaseClusterDetector } from "./base-cluster-detector";
 import { createHash } from "crypto";
-import { ClusterMetadataKey } from "../../common/cluster-types";
 
 export class ClusterIdDetector extends BaseClusterDetector {
-  key = ClusterMetadataKey.CLUSTER_ID;
-
   public async detect() {
     let id: string;
 

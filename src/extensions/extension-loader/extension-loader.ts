@@ -132,9 +132,9 @@ export class ExtensionLoader {
   @action
   async init() {
     if (ipcRenderer) {
-      await this.initRenderer();
+      this.initRenderer();
     } else {
-      await this.initMain();
+      this.initMain();
     }
 
     await Promise.all([this.whenLoaded]);
@@ -192,7 +192,7 @@ export class ExtensionLoader {
     this.extensions.get(lensExtensionId).isEnabled = isEnabled;
   }
 
-  protected async initMain() {
+  protected initMain() {
     this.isLoaded = true;
     this.loadOnMain();
 
@@ -205,7 +205,7 @@ export class ExtensionLoader {
     });
   }
 
-  protected async initRenderer() {
+  protected initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
       this.syncExtensions(extensions);
@@ -249,12 +249,11 @@ export class ExtensionLoader {
   loadOnClusterManagerRenderer = () => {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
 
-    return this.autoInitExtensions(async (extension: LensRendererExtension) => {
+    return this.autoInitExtensions((extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
-        registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -265,7 +264,7 @@ export class ExtensionLoader {
         }
       });
 
-      return removeItems;
+      return  Promise.resolve(removeItems);
     });
   };
 
@@ -282,8 +281,6 @@ export class ExtensionLoader {
         registries.ClusterPageRegistry.getInstance().add(extension.clusterPages, extension),
         registries.ClusterPageMenuRegistry.getInstance().add(extension.clusterPageMenus, extension),
         registries.KubeObjectMenuRegistry.getInstance().add(extension.kubeObjectMenuItems),
-        registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
-        registries.KubeObjectStatusRegistry.getInstance().add(extension.kubeObjectStatusTexts),
         registries.WorkloadsOverviewDetailRegistry.getInstance().add(extension.kubeWorkloadsOverviewItems),
       ];
 

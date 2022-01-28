@@ -25,6 +25,13 @@ describe("renderer/utils/StorageHelper", () => {
         message: "saved-before", // pretending as previously saved data
       });
 
+      const getItem = (key: string): StorageModel => {
+        return Object.assign(
+          storageHelper.defaultValue,
+          remoteStorageMock.get(key),
+        );
+      };
+
       storageHelper = new StorageHelper<StorageModel>(storageKey, {
         autoInit: false,
         defaultValue: {
@@ -32,12 +39,7 @@ describe("renderer/utils/StorageHelper", () => {
           description: "default",
         },
         storage: {
-          getItem(key: string): StorageModel {
-            return Object.assign(
-              storageHelper.defaultValue,
-              remoteStorageMock.get(key),
-            );
-          },
+          getItem,
           setItem(key: string, value: StorageModel) {
             remoteStorageMock.set(key, value);
           },
@@ -51,17 +53,22 @@ describe("renderer/utils/StorageHelper", () => {
         autoInit: false,
         defaultValue: storageHelper.defaultValue,
         storage: {
-          ...storageHelper.storage,
           async getItem(key: string): Promise<StorageModel> {
             await delay(500); // fake loading timeout
 
-            return storageHelper.storage.getItem(key);
+            return getItem(key);
+          },
+          setItem(key: string, value: StorageModel) {
+            remoteStorageMock.set(key, value);
+          },
+          removeItem(key: string) {
+            remoteStorageMock.delete(key);
           },
         },
       });
     });
 
-    it("initialized with default value", async () => {
+    it("initialized with default value", () => {
       storageHelper.init();
       expect(storageHelper.key).toBe(storageKey);
       expect(storageHelper.get()).toEqual(storageHelper.defaultValue);

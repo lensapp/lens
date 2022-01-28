@@ -11,9 +11,13 @@ import logger from "../../main/logger";
 import { app } from "electron";
 import { requestMain } from "../ipc";
 import { clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../cluster-ipc";
-import { ClusterStore } from "../cluster-store/cluster-store";
 import yaml from "js-yaml";
 import { productName } from "../vars";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import getClusterByIdInjectable from "../cluster-store/get-cluster-by-id.injectable";
+
+// TODO: fix over a major version bump
+const getClusterById = asLegacyGlobalFunctionForExtensionApi(getClusterByIdInjectable);
 
 export class ResourceStack {
   constructor(protected cluster: KubernetesCluster, protected name: string) {}
@@ -41,7 +45,7 @@ export class ResourceStack {
   }
 
   protected async applyResources(resources: string[], extraArgs?: string[]): Promise<string> {
-    const clusterModel = ClusterStore.getInstance().getById(this.cluster.metadata.uid);
+    const clusterModel = getClusterById(this.cluster.metadata.uid);
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);
@@ -65,7 +69,7 @@ export class ResourceStack {
   }
 
   protected async deleteResources(resources: string[], extraArgs?: string[]): Promise<string> {
-    const clusterModel = ClusterStore.getInstance().getById(this.cluster.metadata.uid);
+    const clusterModel = getClusterById(this.cluster.metadata.uid);
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);

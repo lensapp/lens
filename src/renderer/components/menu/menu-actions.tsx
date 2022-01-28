@@ -5,15 +5,16 @@
 
 import "./menu-actions.scss";
 
-import React, { isValidElement } from "react";
-import { observable, makeObservable } from "mobx";
+import React, { isValidElement, useState } from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../utils";
-import { ConfirmDialog } from "../confirm-dialog";
+import { cssNames, noop } from "../../utils";
+import type { ConfirmDialogParams } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "./menu";
-import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import openConfirmDialogInjectable from "../confirm-dialog/dialog-open.injectable";
+import uniqueIdInjectable from "../../../common/utils/unique-id.injectable";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
@@ -21,119 +22,120 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   autoCloseOnSelect?: boolean;
   triggerIcon?: string | IconProps | React.ReactNode;
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
-  updateAction?(): void;
-  removeAction?(): void;
+  updateAction?: () => void | Promise<void>;
+  removeAction?: () => void | Promise<void>;
   onOpen?(): void;
 }
 
-@observer
-export class MenuActions extends React.Component<MenuActionsProps> {
-  static defaultProps: MenuActionsProps = {
-    get removeConfirmationMessage() {
-      return `Remove item?`;
-    },
+interface Dependencies {
+  openConfirmDialog: (params: ConfirmDialogParams) => void;
+  uniqueId: (prefix: string) => string;
+}
+
+const NonInjectedMenuActions = observer(({ openConfirmDialog, uniqueId, ...props }: Dependencies & MenuActionsProps) => {
+  const {
+    className,
+    autoCloseOnSelect = false,
+    triggerIcon = "more_vert",
+    removeConfirmationMessage = "Remove item?",
+    updateAction,
+    removeAction,
+    onOpen = noop,
+    toolbar,
+    children,
+    ...menuProps
+  } = props;
+  const autoClose = !toolbar;
+  const [id] = useState(uniqueId("menu_actions_"));
+  const [isOpen, setIsOpen] = useState(toolbar);
+
+  const toggle = () => {
+    setIsOpen(toolbar ||!isOpen);
   };
 
-  public id = uniqueId("menu_actions_");
+  const remove = () => {
+    const { removeAction } = props;
+    const message = typeof removeConfirmationMessage === "function"
+      ? removeConfirmationMessage()
+      : removeConfirmationMessage;
 
-  @observable isOpen = !!this.props.toolbar;
-
-  toggle = () => {
-    if (this.props.toolbar) return;
-    this.isOpen = !this.isOpen;
-  };
-
-  constructor(props: MenuActionsProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  @boundMethod
-  remove() {
-    const { removeAction } = this.props;
-    let { removeConfirmationMessage } = this.props;
-
-    if (typeof removeConfirmationMessage === "function") {
-      removeConfirmationMessage = removeConfirmationMessage();
-    }
-    ConfirmDialog.open({
+    openConfirmDialog({
       ok: removeAction,
-      labelOk: `Remove`,
-      message: <div>{removeConfirmationMessage}</div>,
+      labelOk: "Remove",
+      message,
     });
-  }
+  };
 
-  renderTriggerIcon() {
-    if (this.props.toolbar) return null;
-    const { triggerIcon = "more_vert" } = this.props;
+  const renderTriggerIcon = () => {
     let className: string;
 
     if (isValidElement<HTMLElement>(triggerIcon)) {
-      className = cssNames(triggerIcon.props.className, { active: this.isOpen });
+      className = cssNames(triggerIcon.props.className, { active: isOpen });
 
-      return React.cloneElement(triggerIcon, { id: this.id, className } as any);
+      return React.cloneElement(triggerIcon, { id, className } as any);
     }
     const iconProps: Partial<IconProps> = {
-      id: this.id,
+      id,
       interactive: true,
       material: isString(triggerIcon) ? triggerIcon : undefined,
-      active: this.isOpen,
+      active: isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
     };
 
-    if (this.props.onOpen) {
-      iconProps.onClick = this.props.onOpen;
+    if (onOpen) {
+      iconProps.onClick = onOpen;
     }
 
-    if (iconProps.tooltip && this.isOpen) {
+    if (iconProps.tooltip && isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open
     }
 
     return (
       <Icon {...iconProps}/>
     );
-  }
+  };
 
-  render() {
-    const {
-      className, toolbar, autoCloseOnSelect, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
-      ...menuProps
-    } = this.props;
-    const menuClassName = cssNames("MenuActions flex", className, {
-      toolbar,
-      gaps: toolbar, // add spacing for .flex
-    });
-    const autoClose = !toolbar;
+  return (
+    <>
+      {!toolbar && renderTriggerIcon()}
 
-    return (
-      <>
-        {this.renderTriggerIcon()}
+      <Menu
+        htmlFor={id}
+        isOpen={isOpen}
+        open={toggle}
+        close={toggle}
+        className={cssNames("MenuActions flex", className, {
+          toolbar,
+          gaps: toolbar, // add spacing for .flex
+        })}
+        usePortal={autoClose}
+        closeOnScroll={autoClose}
+        closeOnClickItem={autoCloseOnSelect ?? autoClose }
+        closeOnClickOutside={autoClose}
+        {...menuProps}
+      >
+        {children}
+        {updateAction && (
+          <MenuItem onClick={updateAction}>
+            <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
+            <span className="title">Edit</span>
+          </MenuItem>
+        )}
+        {removeAction && (
+          <MenuItem onClick={remove} data-testid="menu-action-remove">
+            <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
+            <span className="title">Delete</span>
+          </MenuItem>
+        )}
+      </Menu>
+    </>
+  );
+});
 
-        <Menu
-          htmlFor={this.id}
-          isOpen={this.isOpen} open={this.toggle} close={this.toggle}
-          className={menuClassName}
-          usePortal={autoClose}
-          closeOnScroll={autoClose}
-          closeOnClickItem={autoCloseOnSelect ?? autoClose }
-          closeOnClickOutside={autoClose}
-          {...menuProps}
-        >
-          {children}
-          {updateAction && (
-            <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
-              <span className="title">Edit</span>
-            </MenuItem>
-          )}
-          {removeAction && (
-            <MenuItem onClick={this.remove} data-testid="menu-action-remove">
-              <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
-              <span className="title">Delete</span>
-            </MenuItem>
-          )}
-        </Menu>
-      </>
-    );
-  }
-}
+export const MenuActions = withInjectables<Dependencies, MenuActionsProps>(NonInjectedMenuActions, {
+  getProps: (di, props) => ({
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    uniqueId: di.inject(uniqueIdInjectable),
+    ...props,
+  }),
+});

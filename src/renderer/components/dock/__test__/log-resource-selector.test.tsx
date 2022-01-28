@@ -6,18 +6,19 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import * as selectEvent from "react-select-event";
-import { Pod } from "../../../../common/k8s-api/endpoints";
-import { LogResourceSelector } from "../log-resource-selector";
-import type { LogTabData } from "../log-tab-store/log-tab.store";
+
+import { Pod, PodApi } from "../../../../common/k8s-api/endpoints";
+import { LogResourceSelector } from "../logs/log-resource-selector";
+import type { LogTabData } from "../log-tab/store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
-import { ThemeStore } from "../../../theme.store";
-import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import type { DiRender } from "../../test-utils/renderFor";
-import { renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import callForLogsInjectable from "../log-store/call-for-logs/call-for-logs.injectable";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
+import podStoreInjectable from "../../+pods/store.injectable";
+import { PodStore } from "../../+pods/store";
+import type { TabId } from "../dock/store";
+import logTabManagerInjectable from "../logs/log-tab-manager.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -67,29 +68,29 @@ const getFewPodsTabData = (): LogTabData => {
 };
 
 describe("<LogResourceSelector />", () => {
+  let di: ConfigurableDependencyInjectionContainer;
   let render: DiRender;
+  let renameTab: jest.Mock<(tabId: TabId) => void>;
 
-  beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
-
+  beforeEach(() => {
+    di = getDiForUnitTesting();
     render = renderFor(di);
 
-    await di.runSetups();
+    renameTab = jest.fn();
 
+    di.override(podStoreInjectable, () => new PodStore(new PodApi()));
+    di.override(logTabManagerInjectable, () => ({
+      renameTab,
+    }));
+  });
+
+  beforeEach(() => {
     mockFs({
       "tmp": {},
     });
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
-    UserStore.resetInstance();
-    ThemeStore.resetInstance();
     mockFs.restore();
   });
 

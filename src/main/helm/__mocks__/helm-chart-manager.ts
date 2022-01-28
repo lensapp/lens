@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { RawHelmChart } from "../../../common/k8s-api/endpoints";
 import { sortCharts } from "../../../common/utils";
 import type { HelmRepo } from "../helm-repo-manager";
 
-const charts = new Map([
+const charts: Map<string, Record<string, RawHelmChart[]>> = new Map([
   ["stable", {
     "invalid-semver": sortCharts([
       {
@@ -147,7 +148,7 @@ export class HelmChartManager {
     return new this(repo);
   }
 
-  public async charts(): Promise<any> {
+  public charts() {
     return charts.get(this.repo.name) ?? {};
   }
 }

@@ -6,11 +6,12 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
-import { ConfirmDialog } from "../confirm-dialog";
+import hotbarStoreInjectable from "../../../common/hotbar-store/store.injectable";
+import type { ConfirmDialogParams } from "../confirm-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import type { Hotbar } from "../../../common/hotbar-types";
+import type { Hotbar } from "../../../common/hotbar-store/hotbar";
+import openConfirmDialogInjectable from "../confirm-dialog/dialog-open.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
@@ -20,9 +21,10 @@ interface Dependencies {
     remove: (hotbar: Hotbar) => void;
     getDisplayLabel: (hotbar: Hotbar) => string;
   };
+  openConfirmDialog: (params: ConfirmDialogParams) => void;
 }
 
-const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarManager }: Dependencies) => {
+const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarManager, openConfirmDialog }: Dependencies) => {
   const options = hotbarManager.hotbars.map(hotbar => ({
     value: hotbar.id,
     label: hotbarManager.getDisplayLabel(hotbar),
@@ -36,8 +38,7 @@ const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarMa
     }
 
     closeCommandOverlay();
-    // TODO: make confirm dialog injectable
-    ConfirmDialog.open({
+    openConfirmDialog({
       okButtonProps: {
         label: "Remove Hotbar",
         primary: false,
@@ -71,7 +72,8 @@ const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarMa
 export const HotbarRemoveCommand = withInjectables<Dependencies>(NonInjectedHotbarRemoveCommand, {
   getProps: (di, props) => ({
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    hotbarManager: di.inject(hotbarManagerInjectable),
+    hotbarManager: di.inject(hotbarStoreInjectable),
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
     ...props,
   }),
 });

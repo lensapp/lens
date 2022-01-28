@@ -9,10 +9,11 @@ import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, Upda
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
-import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { navigate } from "../navigation";
 import { entitySettingsURL } from "../../common/routes";
-import { defaultHotbarCells } from "../../common/hotbar-types";
+import { defaultHotbarCells } from "../../common/hotbar-store/hotbar-types";
+import type { Cluster } from "../../common/cluster/cluster";
+import { bind } from "../utils";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -64,7 +65,11 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
 const notificationLastDisplayedAt = new Map<string, number>();
 const intervalBetweenNotifications = 1000 * 60; // 60s
 
-function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ListNamespaceForbiddenArgs): void {
+interface Dependencies {
+  getClusterById: (clusterId: string) => Cluster | null;
+}
+
+function ListNamespacesForbiddenHandler({ getClusterById }: Dependencies, event: IpcRendererEvent, ...[clusterId]: ListNamespaceForbiddenArgs): void {
   const lastDisplayedAt = notificationLastDisplayedAt.get(clusterId);
   const now = Date.now();
 
@@ -87,7 +92,7 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
       <div className="flex column gaps">
         <b>Add Accessible Namespaces</b>
         <p>
-          Cluster <b>{ClusterStore.getInstance().getById(clusterId).name}</b> does not have permissions to list namespaces.{" "}
+          Cluster <b>{getClusterById(clusterId).name}</b> does not have permissions to list namespaces.{" "}
           Please add the namespaces you have access to.
         </p>
         <div className="flex gaps row align-left box grow">
@@ -118,7 +123,7 @@ function HotbarTooManyItemsHandler(): void {
   Notifications.error(`Cannot have more than ${defaultHotbarCells} items pinned to a hotbar`);
 }
 
-export function registerIpcListeners() {
+export function registerIpcListeners({ getClusterById }: Dependencies) {
   onCorrect({
     source: ipcRenderer,
     channel: UpdateAvailableChannel,
@@ -128,7 +133,9 @@ export function registerIpcListeners() {
   onCorrect({
     source: ipcRenderer,
     channel: ClusterListNamespaceForbiddenChannel,
-    listener: ListNamespacesForbiddenHandler,
+    listener: bind(ListNamespacesForbiddenHandler, null, {
+      getClusterById,
+    }),
     verifier: isListNamespaceForbiddenArgs,
   });
   onCorrect({

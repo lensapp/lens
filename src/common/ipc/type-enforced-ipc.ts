@@ -38,7 +38,7 @@ export function onceCorrect<
     if (verifier(args)) {
       source.removeListener(channel, wrappedListener); // remove immediately
 
-      (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
+      (async () => await listener(event, ...args))() // might return a promise, or throw, or reject
         .catch((error: any) => logger.error("[IPC]: channel once handler threw error", { channel, error }));
     } else {
       logger.error("[IPC]: channel was emitted with invalid data", { channel, args });
@@ -70,7 +70,7 @@ export function onCorrect<
 }): Disposer {
   function wrappedListener(event: ListenerEvent<IPC>, ...args: unknown[]) {
     if (verifier(args)) {
-      (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
+      (async () => await listener(event, ...args))() // might return a promise, or throw, or reject
         .catch(error => logger.error("[IPC]: channel on handler threw error", { channel, error }));
     } else {
       logger.error("[IPC]: channel was emitted with invalid data", { channel, args });

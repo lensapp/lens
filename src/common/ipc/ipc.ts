@@ -28,7 +28,7 @@ const electronRemote = (() => {
 
 const subFramesChannel = "ipc:get-sub-frames";
 
-export async function requestMain(channel: string, ...args: any[]) {
+export function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args.map(sanitizePayload));
 }
 

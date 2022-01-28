@@ -10,7 +10,7 @@ import { readFileSync } from "fs";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 
 import directoryForUserDataInjectable
-  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+  from "../app-paths/directory-for-user-data.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -59,7 +59,7 @@ class TestStore extends BaseStore<TestStoreModel> {
     super.onSync(data);
   }
 
-  async saveToFile(model: TestStoreModel) {
+  saveToFile(model: TestStoreModel) {
     return super.saveToFile(model);
   }
 
@@ -85,7 +85,6 @@ describe("BaseStore", () => {
     await dis.runSetups();
 
     store = undefined;
-    TestStore.resetInstance();
 
     const mockOpts = {
       "some-user-data-directory": {
@@ -95,12 +94,11 @@ describe("BaseStore", () => {
 
     mockFs(mockOpts);
 
-    store = TestStore.createInstance();
+    store = new TestStore();
   });
 
   afterEach(() => {
     store.disableSync();
-    TestStore.resetInstance();
     mockFs.restore();
   });
 

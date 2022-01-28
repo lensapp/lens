@@ -4,7 +4,7 @@
  */
 import { downloadFile, downloadJson, ExtendableDisposer } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
-import { ConfirmDialog } from "../../confirm-dialog";
+import type { ConfirmDialogBooleanParams } from "../../confirm-dialog";
 import React from "react";
 import path from "path";
 import { SemVer } from "semver";
@@ -22,14 +22,14 @@ export interface ExtensionInfo {
 interface Dependencies {
   attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>;
   getBaseRegistryUrl: () => Promise<string>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  confirmWithDialog: (params: ConfirmDialogBooleanParams) => Promise<boolean>;
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
-export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, extensionInstallationStateStore }: Dependencies) => async ({
-  name,
-  version,
-  requireConfirmation = false,
-}: ExtensionInfo) => {
+export async function attemptInstallByInfo(
+  { attemptInstall, getBaseRegistryUrl, confirmWithDialog, extensionInstallationStateStore }: Dependencies,
+  { name, version, requireConfirmation = false }: ExtensionInfo,
+) {
   const disposer = extensionInstallationStateStore.startPreInstall();
   const baseUrl = await getBaseRegistryUrl();
   const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
@@ -65,7 +65,7 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, exten
       } else {
         Notifications.error(
           <p>
-            The <em>{name}</em> extension does not have a version or tag{" "}
+              The <em>{name}</em> extension does not have a version or tag{" "}
             <code>{version}</code>.
           </p>,
         );
@@ -76,28 +76,18 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, exten
   } else {
     const versions = Object.keys(json.versions)
       .map(
-        version =>
-          new SemVer(version, { loose: true, includePrerelease: true }),
+        version => new SemVer(version, { loose: true, includePrerelease: true }),
       )
       // ignore pre-releases for auto picking the version
       .filter(version => version.prerelease.length === 0);
 
-    version = lodash.reduce(versions, (prev, curr) =>
-      prev.compareMain(curr) === -1 ? curr : prev,
+    version = lodash.reduce(versions, (prev, curr) => prev.compareMain(curr) === -1 ? curr : prev,
     ).format();
   }
 
   if (requireConfirmation) {
-    const proceed = await ConfirmDialog.confirm({
-      message: (
-        <p>
-          Are you sure you want to install{" "}
-          <b>
-            {name}@{version}
-          </b>
-          ?
-        </p>
-      ),
+    const proceed = await confirmWithDialog({
+      message: <p>Are you sure you want to install <b>{name}@{version}</b>?</p>,
       labelCancel: "Cancel",
       labelOk: "Install",
     });
@@ -112,4 +102,4 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, exten
   const { promise: dataP } = downloadFile({ url, timeout: 10 * 60 * 1000 });
 
   return attemptInstall({ fileName, dataP }, disposer);
-};
+}

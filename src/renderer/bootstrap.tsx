@@ -20,26 +20,18 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
-import { HotbarStore } from "../common/hotbar-store";
-import { WeblinkStore } from "../common/weblink-store";
-import { ThemeStore } from "./theme.store";
-import { SentryInit } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import userStoreInjectable from "../common/user-store/user-store.injectable";
+import clusterStoreInjectable from "../common/cluster-store/store.injectable";
+import userPreferencesStoreInjectable from "../common/user-preferences/store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
-import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
-
-if (process.isMainFrame) {
-  SentryInit();
-}
+import isAllowedResourceInjectable from "./utils/allowed-resource.injectable";
+import initializeSentryReportingInjectable from "../common/sentry.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -55,14 +47,19 @@ async function attachChromeDebugger() {
   }
 }
 
-export async function bootstrap(di: DependencyInjectionContainer) {
-  await di.runSetups();
-
+async function bootstrap() {
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
+  const di = getDi();
+
+  await di.runSetups();
 
   // TODO: Remove temporal dependencies to make timing of initialization not important
-  di.inject(userStoreInjectable);
+  di.inject(userPreferencesStoreInjectable);
+
+  if (process.isMainFrame) {
+    di.inject(initializeSentryReportingInjectable);
+  }
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
@@ -76,22 +73,8 @@ export async function bootstrap(di: DependencyInjectionContainer) {
   logger.info(`${logPrefix} initializing KubeObjectMenuRegistry`);
   initializers.initKubeObjectMenuRegistry();
 
-  logger.info(`${logPrefix} initializing KubeObjectDetailRegistry`);
-  initializers.initKubeObjectDetailRegistry();
-
   logger.info(`${logPrefix} initializing WorkloadsOverviewDetailRegistry`);
-  initializers.initWorkloadsOverviewDetailRegistry();
-
-  logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
-  initializers.initCatalogEntityDetailRegistry();
-
-  logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
-  initializers.initCatalogCategoryRegistryEntries();
-
-  logger.info(`${logPrefix} initializing Catalog`);
-  initializers.initCatalog({
-    openCommandDialog: di.inject(commandOverlayInjectable).open,
-  });
+  initializers.initWorkloadsOverviewDetailRegistry(di.inject(isAllowedResourceInjectable));
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
 
@@ -109,14 +92,6 @@ export async function bootstrap(di: DependencyInjectionContainer) {
 
   await clusterStore.loadInitialOnRenderer();
 
-  // HotbarStore depends on: ClusterStore
-  HotbarStore.createInstance();
-
-  // ThemeStore depends on: UserStore
-  ThemeStore.createInstance();
-
-  WeblinkStore.createInstance();
-
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
   extensionInstallationStateStore.bindIpcListeners();
@@ -126,18 +101,16 @@ export async function bootstrap(di: DependencyInjectionContainer) {
   // Register additional store listeners
   clusterStore.registerIpcListener();
 
-  let App;
-  let initializeApp;
-
-  // TODO: Introduce proper architectural boundaries between root and cluster iframes
-  if (process.isMainFrame) {
-    initializeApp = di.inject(initRootFrameInjectable);
-
-    App = (await import("./frames/root-frame/root-frame")).RootFrame;
-  } else {
-    initializeApp = di.inject(initClusterFrameInjectable);
-    App = (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame;
-  }
+  // TODO: Remove iframes
+  const [App, initializeApp] = process.isMainFrame
+    ? [
+      (await import("./frames/root-frame/root-frame")).RootFrame,
+      di.inject(initRootFrameInjectable),
+    ]
+    : [
+      (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame,
+      di.inject(initClusterFrameInjectable),
+    ];
 
   await initializeApp(rootElem);
 
@@ -150,17 +123,15 @@ export async function bootstrap(di: DependencyInjectionContainer) {
   );
 }
 
-const di = getDi();
-
 // run
-bootstrap(di);
+bootstrap();
 
 /**
  * Exports for virtual package "@k8slens/extensions" for renderer-process.
  * All exporting names available in global runtime scope:
  * e.g. Devtools -> Console -> window.LensExtensions (renderer)
  */
-const LensExtensions = {
+export const LensExtensions = {
   Common: LensExtensionsCommonApi,
   Renderer: LensExtensionsRendererApi,
 };
@@ -171,5 +142,4 @@ export {
   ReactRouterDom,
   Mobx,
   MobxReact,
-  LensExtensions,
 };

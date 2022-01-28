@@ -6,35 +6,11 @@
 import get from "lodash/get";
 import { autoBind } from "../../../renderer/utils";
 import { WorkloadKubeObject } from "../workload-kube-object";
-import { KubeApi } from "../kube-api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { IPodContainer, IPodMetrics, Pod } from "./pods.api";
+import type { IPodContainer, IPodMetrics, Pod } from "./pod.api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { LabelSelector } from "../kube-object";
-
-export class ReplicaSetApi extends KubeApi<ReplicaSet> {
-  protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return `${this.getUrl(params)}/scale`;
-  }
-
-  getReplicas(params: { namespace: string; name: string }): Promise<number> {
-    return this.request
-      .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status?.replicas);
-  }
-
-  scale(params: { namespace: string; name: string }, replicas: number) {
-    return this.request.put(this.getScaleApiUrl(params), {
-      data: {
-        metadata: params,
-        spec: {
-          replicas,
-        },
-      },
-    });
-  }
-}
 
 export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
   const podSelector = replicasets.map(replicaset => `${replicaset.getName()}-[[:alnum:]]{5}`).join("|");
@@ -111,14 +87,38 @@ export class ReplicaSet extends WorkloadKubeObject {
   }
 }
 
-let replicaSetApi: ReplicaSetApi;
-
-if (isClusterPageContext()) {
-  replicaSetApi = new ReplicaSetApi({
-    objectConstructor: ReplicaSet,
-  });
+interface ReplicasStatus {
+  status?: {
+    replicas: number;
+  }
 }
 
-export {
-  replicaSetApi,
-};
+export class ReplicaSetApi extends KubeApi<ReplicaSet> {
+  constructor(args: SpecificApiOptions<ReplicaSet> = {}) {
+    super({
+      ...args,
+      objectConstructor: ReplicaSet,
+    });
+  }
+
+  protected getScaleApiUrl(params: { namespace: string; name: string }) {
+    return `${this.getUrl(params)}/scale`;
+  }
+
+  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    const { status } = await this.request.get<ReplicasStatus>(this.getScaleApiUrl(params));
+
+    return status?.replicas ?? 0;
+  }
+
+  scale(params: { namespace: string; name: string }, replicas: number) {
+    return this.request.put(this.getScaleApiUrl(params), {
+      data: {
+        metadata: params,
+        spec: {
+          replicas,
+        },
+      },
+    });
+  }
+}

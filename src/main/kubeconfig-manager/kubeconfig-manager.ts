@@ -10,10 +10,11 @@ import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../../common/kube-helpers";
 import logger from "../logger";
-import { LensProxy } from "../lens-proxy";
+import type { IComputedValue } from "mobx";
 
 interface Dependencies {
-  directoryForTemp: string
+  directoryForTemp: string;
+  proxyPort: IComputedValue<number>;
 }
 
 export class KubeconfigManager {
@@ -27,6 +28,10 @@ export class KubeconfigManager {
   protected tempFilePath: string | null | undefined = null;
 
   protected contextHandler: ContextHandler;
+
+  static create(...args: ConstructorParameters<typeof KubeconfigManager>) {
+    return new KubeconfigManager(...args);
+  }
 
   constructor(private dependencies: Dependencies, protected cluster: Cluster) {
     this.contextHandler = cluster.contextHandler;
@@ -78,15 +83,12 @@ export class KubeconfigManager {
     }
   }
 
-  get resolveProxyUrl() {
-    return `http://127.0.0.1:${LensProxy.getInstance().port}/${this.cluster.id}`;
-  }
-
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected async createProxyKubeconfig(): Promise<string> {
+    const resolveProxyUrl = `http://127.0.0.1:${this.dependencies.proxyPort.get()}/${this.cluster.id}`;
     const { cluster } = this;
     const { contextName, id } = cluster;
     const tempFile = path.join(
@@ -99,7 +101,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl,
+          server: resolveProxyUrl,
           skipTLSVerify: undefined,
         },
       ],

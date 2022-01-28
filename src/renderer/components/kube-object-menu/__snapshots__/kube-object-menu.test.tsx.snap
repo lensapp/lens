@@ -18,6 +18,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
         >
           <i
             class="Icon material interactive focusable"
+            id="tooltip_target_"
             tabindex="0"
             tooltip="Delete"
           >
@@ -38,9 +39,10 @@ exports[`kube-object-menu given kube object renders 1`] = `
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
-  />
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
+  </div>
 </body>
 `;
 
@@ -62,6 +64,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         >
           <i
             class="Icon material interactive focusable"
+            id="tooltip_target_"
             tabindex="0"
             tooltip="Delete"
           >
@@ -80,6 +83,11 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         </li>
       </ul>
     </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
   </div>
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
@@ -102,22 +110,20 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
             warning
           </span>
         </i>
-         
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-namespace/some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+
+        <p>
+          Remove
+          some-kind
+
+          <b>
+            some-namespace/some-name
+          </b>
+           from
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -159,6 +165,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         >
           <i
             class="Icon material interactive focusable"
+            id="tooltip_target_"
             tabindex="0"
             tooltip="Delete"
           >
@@ -177,6 +184,11 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         </li>
       </ul>
     </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
   </div>
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
@@ -199,22 +211,20 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
             warning
           </span>
         </i>
-         
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-namespace/some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+
+        <p>
+          Remove
+          some-kind
+
+          <b>
+            some-namespace/some-name
+          </b>
+           from
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -243,7 +253,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
@@ -256,6 +266,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         >
           <i
             class="Icon material interactive focusable"
+            id="tooltip_target_"
             tabindex="0"
             tooltip="Delete"
           >
@@ -274,6 +285,11 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         </li>
       </ul>
     </div>
+  </div>
+  <div
+    class="Tooltip narrow invisible formatter"
+  >
+    Delete
   </div>
   <div
     class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
@@ -296,22 +312,20 @@ exports[`kube-object-menu given kube object without namespace when removing kube
             warning
           </span>
         </i>
-         
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+
+        <p>
+          Remove
+          some-kind
+
+          <b>
+            some-name
+          </b>
+           from
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"

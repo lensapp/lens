@@ -75,12 +75,12 @@ export class LensExtension {
    * Note: there is no security done on this folder, only obfuscation of the
    * folder name.
    */
-  async getExtensionFileFolder(): Promise<string> {
+  getExtensionFileFolder(): Promise<string> {
     return this.dependencies.fileSystemProvisionerStore.requestDirectory(this.id);
   }
 
   @action
-  async enable(register: (ext: LensExtension) => Promise<Disposer[]>) {
+  async enable(register: (ext: LensExtension) => Disposer[] | Promise<Disposer[]>) {
     if (this._isEnabled) {
       return;
     }

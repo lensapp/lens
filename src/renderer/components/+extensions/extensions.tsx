@@ -31,8 +31,7 @@ import installFromSelectFileDialogInjectable from "./install-from-select-file-di
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
@@ -107,22 +106,15 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
   }
 }
 
-export const Extensions = withInjectables<Dependencies>(
-  NonInjectedExtensions,
-  {
-    getProps: (di) => ({
-      userExtensions: di.inject(userExtensionsInjectable),
-      enableExtension: di.inject(enableExtensionInjectable),
-      disableExtension: di.inject(disableExtensionInjectable),
-      confirmUninstallExtension: di.inject(confirmUninstallExtensionInjectable),
-      installFromInput: di.inject(installFromInputInjectable),
-      installOnDrop: di.inject(installOnDropInjectable),
-
-      installFromSelectFileDialog: di.inject(
-        installFromSelectFileDialogInjectable,
-      ),
-
-      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
-    }),
-  },
-);
+export const Extensions = withInjectables<Dependencies>(NonInjectedExtensions, {
+  getProps: (di) => ({
+    userExtensions: di.inject(userExtensionsInjectable),
+    enableExtension: di.inject(enableExtensionInjectable),
+    disableExtension: di.inject(disableExtensionInjectable),
+    confirmUninstallExtension: di.inject(confirmUninstallExtensionInjectable),
+    installFromInput: di.inject(installFromInputInjectable),
+    installOnDrop: di.inject(installOnDropInjectable),
+    installFromSelectFileDialog: di.inject(installFromSelectFileDialogInjectable),
+    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+  }),
+});

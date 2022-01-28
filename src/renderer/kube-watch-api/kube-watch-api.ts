@@ -7,7 +7,7 @@ import { disposer, Disposer, noop } from "../../common/utils";
 import type { KubeObject } from "../../common/k8s-api/kube-object";
 import AbortController from "abort-controller";
 import { once } from "lodash";
-import type { ClusterFrameContext } from "../cluster-frame-context/cluster-frame-context";
+import type { FrameContext } from "../cluster-frame-context/cluster-frame-context";
 import type { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 import logger from "../../common/logger";
 
@@ -81,7 +81,7 @@ export interface KubeWatchSubscribeStoreOptions {
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
+  clusterFrameContext: FrameContext;
 }
 
 export class KubeWatchApi {

@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { observable } from "mobx";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { Job, Pod } from "../../../common/k8s-api/endpoints";
+import { JobStore } from "../+jobs/store";
+import { PodStore } from "../+pods/store";
+import { Job, JobApi, Pod, PodApi } from "../../../common/k8s-api/endpoints";
 
 const runningJob = new Job({
   apiVersion: "foo",
@@ -61,6 +60,11 @@ const runningPod = new Pod({
     uid: "foobar",
     ownerReferences: [{
       uid: "runningJob",
+      apiVersion: "",
+      blockOwnerDeletion: false,
+      controller: false,
+      kind: "",
+      name: "bar",
     }],
     namespace: "default",
   },
@@ -98,6 +102,11 @@ const pendingPod = new Pod({
     uid: "foobar-pending",
     ownerReferences: [{
       uid: "pendingJob",
+      apiVersion: "",
+      blockOwnerDeletion: false,
+      controller: false,
+      kind: "",
+      name: "bar",
     }],
     namespace: "default",
   },
@@ -112,6 +121,11 @@ const failedPod = new Pod({
     uid: "foobar-failed",
     ownerReferences: [{
       uid: "failedJob",
+      apiVersion: "",
+      blockOwnerDeletion: false,
+      controller: false,
+      kind: "",
+      name: "bar",
     }],
     namespace: "default",
   },
@@ -134,6 +148,11 @@ const succeededPod = new Pod({
     uid: "foobar-succeeded",
     ownerReferences: [{
       uid: "succeededJob",
+      apiVersion: "",
+      blockOwnerDeletion: false,
+      controller: false,
+      kind: "",
+      name: "bar",
     }],
   },
 });
@@ -147,12 +166,19 @@ succeededPod.status = {
 };
 
 describe("Job Store tests", () => {
-  beforeAll(() => {
-    podsStore.items = observable.array([
+  let podStore: PodStore;
+  let jobStore: JobStore;
+
+  beforeEach(() => {
+    podStore = new PodStore(new PodApi());
+    jobStore = new JobStore(new JobApi(), {
+      podStore,
+    });
+
+    podStore.items.replace([
       runningPod,
       failedPod,
       pendingPod,
-      succeededPod,
     ]);
   });
 

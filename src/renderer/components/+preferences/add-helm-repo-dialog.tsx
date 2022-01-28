@@ -20,6 +20,7 @@ import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { dialog } from "../../remote-helpers";
+import { cssNames } from "../../utils";
 
 interface Props extends Partial<DialogProps> {
   onAddRepo: Function
@@ -144,18 +145,16 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   }
 
   render() {
-    const { ...dialogProps } = this.props;
-
-    const header = <h5>Add custom Helm Repo</h5>;
+    const { className, ...dialogProps } = this.props;
 
     return (
       <Dialog
         {...dialogProps}
-        className="AddHelmRepoDialog"
         isOpen={dialogState.isOpen}
+        className={cssNames("AddHelmRepoDialog", className)}
         close={this.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={<h5>Add custom Helm Repo</h5>} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel="Add" next={() => this.addCustomRepo()}>
             <div className="flex column gaps">
               <Input

@@ -12,7 +12,7 @@ export const annotations = [
   "kubectl.kubernetes.io/last-applied-configuration",
 ];
 
-export async function update(resource: object | string): Promise<KubeJsonApiData> {
+export function update(resource: object | string): Promise<KubeJsonApiData> {
   if (typeof resource === "string") {
     const parsed = yaml.load(resource);
 
@@ -26,7 +26,7 @@ export async function update(resource: object | string): Promise<KubeJsonApiData
   return apiBase.post<KubeJsonApiData>("/stack", { data: resource });
 }
 
-export async function patch(name: string, kind: string, ns: string, patch: Patch): Promise<KubeJsonApiData> {
+export function patch(name: string, kind: string, ns: string, patch: Patch): Promise<KubeJsonApiData> {
   return apiBase.patch<KubeJsonApiData>("/stack", {
     data: {
       name,

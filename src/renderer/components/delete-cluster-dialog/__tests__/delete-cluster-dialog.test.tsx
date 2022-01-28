@@ -4,7 +4,7 @@
  */
 import "@testing-library/jest-dom/extend-expect";
 import { KubeConfig } from "@kubernetes/client-node";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
@@ -15,6 +15,9 @@ import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
+import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
+import deleteClusterDialogStateInjectable from "../state.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -87,6 +90,8 @@ let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
   let createCluster: (model: ClusterModel) => Cluster;
+  let di: DependencyInjectionContainer;
+  let render: DiRender;
 
   beforeEach(async () => {
     const { mainDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
@@ -96,6 +101,7 @@ describe("<DeleteClusterDialog />", () => {
     await runSetups();
 
     createCluster = mainDi.inject(createClusterInjectionToken);
+    render = renderFor(di);
   });
 
   afterEach(() => {
@@ -103,7 +109,7 @@ describe("<DeleteClusterDialog />", () => {
   });
 
   describe("Kubeconfig with different clusters", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const mockOpts = {
         "temp-kube-config": kubeconfig,
       };
@@ -134,7 +140,8 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      DeleteClusterDialog.open({ cluster, config });
+      di.override(deleteClusterDialogStateInjectable, () => ({ cluster, config }));
+
       const { getByText } = render(<DeleteClusterDialog />);
 
       const message = "The contents of kubeconfig file will be changed!";
@@ -152,7 +159,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      DeleteClusterDialog.open({ cluster, config });
+      di.override(deleteClusterDialogStateInjectable, () => ({ cluster, config }));
 
       const { getByTestId } = render(<DeleteClusterDialog />);
 
@@ -169,15 +176,15 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      DeleteClusterDialog.open({ cluster, config });
+      di.override(deleteClusterDialogStateInjectable, () => ({ cluster, config }));
 
-      const { getByText } = render(<DeleteClusterDialog />);
+      const { findByText } = render(<DeleteClusterDialog />);
 
-      expect(getByText("Select...")).toBeInTheDocument();
-      selectEvent.openMenu(getByText("Select..."));
+      expect(await findByText("Select...")).toBeInTheDocument();
+      selectEvent.openMenu(await findByText("Select..."));
 
-      expect(getByText("test")).toBeInTheDocument();
-      expect(getByText("test2")).toBeInTheDocument();
+      expect(await findByText("test")).toBeInTheDocument();
+      expect(await findByText("test2")).toBeInTheDocument();
     });
 
     it("shows context switcher after checkbox click", async () => {
@@ -190,19 +197,20 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      DeleteClusterDialog.open({ cluster, config });
+      di.override(deleteClusterDialogStateInjectable, () => ({ cluster, config }));
 
-      const { getByText, getByTestId } = render(<DeleteClusterDialog />);
-      const link = getByTestId("context-switch");
+
+      const { findByText, findByTestId } = render(<DeleteClusterDialog />);
+      const link = await findByTestId("context-switch");
 
       expect(link).toBeInstanceOf(HTMLElement);
       fireEvent.click(link);
 
-      expect(getByText("Select...")).toBeInTheDocument();
-      selectEvent.openMenu(getByText("Select..."));
+      expect(await findByText("Select...")).toBeInTheDocument();
+      selectEvent.openMenu(await findByText("Select..."));
 
-      expect(getByText("test")).toBeInTheDocument();
-      expect(getByText("test2")).toBeInTheDocument();
+      expect(await findByText("test")).toBeInTheDocument();
+      expect(await findByText("test2")).toBeInTheDocument();
     });
 
     it("shows warning for internal kubeconfig cluster", () => {
@@ -217,7 +225,7 @@ describe("<DeleteClusterDialog />", () => {
 
       const spy = jest.spyOn(cluster, "isInLocalKubeconfig").mockImplementation(() => true);
 
-      DeleteClusterDialog.open({ cluster, config });
+      di.override(deleteClusterDialogStateInjectable, () => ({ cluster, config }));
 
       const { getByTestId } = render(<DeleteClusterDialog />);
 
@@ -228,7 +236,7 @@ describe("<DeleteClusterDialog />", () => {
   });
 
   describe("Kubeconfig with single cluster", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const mockOpts = {
         "temp-kube-config": singleClusterConfig,
       };
@@ -253,7 +261,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      DeleteClusterDialog.open({ cluster, config });
+      di.override(deleteClusterDialogStateInjectable, () => ({ cluster, config }));
 
       const { getByTestId } = render(<DeleteClusterDialog />);
 

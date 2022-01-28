@@ -49,6 +49,7 @@ export * from "./toggle-set";
 export * from "./toJS";
 export * from "./type-narrowing";
 export * from "./types";
+export * from "./wait-for-path";
 
 import * as iter from "./iter";
 import * as array from "./array";

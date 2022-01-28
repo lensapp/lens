@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { defaultExtensionRegistryUrl, ExtensionRegistry, ExtensionRegistryLocation } from "../../../../common/user-store/preferences-helpers";
+import { defaultExtensionRegistryUrl, ExtensionRegistry, ExtensionRegistryLocation } from "../../../../common/user-preferences/preferences-helpers";
 import { promiseExecFile } from "../../../utils";
 import { Notifications } from "../../notifications";
 

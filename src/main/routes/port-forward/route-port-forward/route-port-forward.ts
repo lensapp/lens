@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { LensApiRequest } from "../../../router";
+import type { LensApiRequest } from "../../../router/router";
 import logger from "../../../logger";
 import { respondJson } from "../../../utils/http-responses";
 import { PortForward, PortForwardArgs } from "../port-forward";

@@ -18,16 +18,17 @@ import { iter } from "../../utils";
 import { orderBy } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import registeredCommandsInjectable from "./registered-commands/registered-commands.injectable";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import activeEntityInjectable from "../../catalog/active-entity.injectable";
 
 interface Dependencies {
   commands: IComputedValue<Map<string, RegisteredCommand>>;
-  activeEntity?: CatalogEntity;
+  activeEntity: IComputedValue<CatalogEntity>;
   closeCommandOverlay: () => void;
 }
 
 const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeCommandOverlay }: Dependencies) => {
   const [searchValue, setSearchValue] = useState("");
+  const entity = activeEntity.get();
 
   const executeAction = (commandId: string) => {
     const command = commands.get().get(commandId);
@@ -39,7 +40,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
     try {
       closeCommandOverlay();
       command.action({
-        entity: activeEntity,
+        entity,
         navigate: (url, opts = {}) => {
           const { forceRootFrame = false } = opts;
 
@@ -55,12 +56,9 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
     }
   };
 
-  const context = {
-    entity: activeEntity,
-  };
   const activeCommands = iter.filter(commands.get().values(), command => {
     try {
-      return command.isActive(context);
+      return command.isActive({ entity });
     } catch (error) {
       console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
     }
@@ -70,7 +68,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
   const options = Array.from(activeCommands, ({ id, title }) => ({
     value: id,
     label: typeof title === "function"
-      ? title(context)
+      ? title({ entity })
       : title,
   }));
 
@@ -104,8 +102,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
 export const CommandDialog = withInjectables<Dependencies>(NonInjectedCommandDialog, {
   getProps: di => ({
     commands: di.inject(registeredCommandsInjectable),
-    // TODO: replace with injection
-    activeEntity: catalogEntityRegistry.activeEntity,
+    activeEntity: di.inject(activeEntityInjectable),
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
   }),
 });

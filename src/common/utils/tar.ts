@@ -47,6 +47,8 @@ export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: Re
 export async function listTarEntries(filePath: string): Promise<string[]> {
   const entries: string[] = [];
 
+  // The typings of this is wrong, we do need to await
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   await tar.list({
     file: filePath,
     onentry: (entry: FileStat) => {

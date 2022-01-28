@@ -3,49 +3,54 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
-import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity, CatalogEntityConstructor } from "../../common/catalog";
-import { iter } from "../../common/utils";
+import { once } from "lodash";
+import { action, computed, IComputedValue, IObservableArray, observable } from "mobx";
+import type { CatalogCategory, CatalogEntity, CatalogEntityConstructor } from "../../common/catalog";
+import { Disposer, iter } from "../../common/utils";
+
+export interface CatalogEntityRegistryDependencies {
+  readonly getCategoryForEntity: (entity: CatalogEntity) => CatalogCategory;
+  readonly extensionSourcedEntities: IComputedValue<CatalogEntity[]>;
+}
 
 export class CatalogEntityRegistry {
-  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
+  protected localSources = observable.set<IComputedValue<CatalogEntity[]>>();
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {
-    makeObservable(this);
+  constructor(protected readonly dependencies: CatalogEntityRegistryDependencies) {
   }
 
-  @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
-    this.sources.set(id, computed(() => source));
+  addObservableSource = action((source: IObservableArray<CatalogEntity>): Disposer => {
+    return this.addComputedSource(computed(() => [...source]));
+  });
+
+  addComputedSource = action((source: IComputedValue<CatalogEntity[]>) => {
+    this.localSources.add(source);
+
+    return once(() => this.localSources.delete(source));
+  });
+
+  private get combinedItems(): CatalogEntity[] {
+    return [
+      ...iter.flatMap(this.localSources.values(), source => source.get()),
+      ...this.dependencies.extensionSourcedEntities.get(),
+    ];
   }
 
-  @action addComputedSource(id: string, source: IComputedValue<CatalogEntity[]>) {
-    this.sources.set(id, source);
+  #items = computed(() => this.combinedItems.filter(entity => this.dependencies.getCategoryForEntity(entity)));
+
+  get items(): CatalogEntity[] {
+    return this.#items.get();
   }
 
-  @action removeSource(id: string) {
-    this.sources.delete(id);
+  getById(id: string): CatalogEntity | undefined {
+    return this.items.find((entity) => entity.metadata.uid === id) as CatalogEntity | undefined;
   }
 
-  @computed get items(): CatalogEntity[] {
-    return Array.from(
-      iter.filter(
-        iter.flatMap(this.sources.values(), source => source.get()),
-        entity => this.categoryRegistry.getCategoryForEntity(entity),
-      ),
-    );
-  }
-
-  getById<T extends CatalogEntity>(id: string): T | undefined {
-    return this.items.find((entity) => entity.metadata.uid === id) as T | undefined;
-  }
-
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as T[];
+  getItemsForApiKind(apiVersion: string, kind: string): CatalogEntity[] {
+    return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as CatalogEntity[];
   }
 
   getItemsByEntityClass<T extends CatalogEntity>(constructor: CatalogEntityConstructor<T>): T[] {
     return this.items.filter((item) => item instanceof constructor) as T[];
   }
 }
-
-export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);

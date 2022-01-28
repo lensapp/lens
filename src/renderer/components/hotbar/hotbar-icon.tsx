@@ -9,14 +9,16 @@ import React, { useState } from "react";
 
 import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames } from "../../utils";
-import { ConfirmDialog } from "../confirm-dialog";
-import { Menu, MenuItem } from "../menu";
+import { Menu } from "../menu";
 import { observer } from "mobx-react";
 import { Avatar, AvatarProps } from "../avatar";
 import { Icon } from "../icon";
 import { Tooltip } from "../tooltip";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { RenderEntityContextMenuItem } from "../../catalog/render-context-menu-item.injectable";
+import renderEntityContextMenuItemInjectable from "../../catalog/render-context-menu-item.injectable";
 
-export interface Props extends AvatarProps {
+export interface HotbarIconProps extends AvatarProps {
   uid: string;
   source: string;
   material?: string;
@@ -27,25 +29,28 @@ export interface Props extends AvatarProps {
   tooltip?: string;
 }
 
-function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-  if (menuItem.confirm) {
-    ConfirmDialog.open({
-      okButtonProps: {
-        primary: false,
-        accent: true,
-      },
-      ok: () => {
-        menuItem.onClick();
-      },
-      message: menuItem.confirm.message,
-    });
-  } else {
-    menuItem.onClick();
-  }
+interface Dependencies {
+  renderEntityContextMenuItem: RenderEntityContextMenuItem;
 }
 
-export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...props }: Props) => {
-  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
+const NonInjectedHotbarIcon = observer(({
+  renderEntityContextMenuItem,
+  menuItems = [],
+  size = 40,
+  tooltip,
+  uid,
+  title,
+  src,
+  material,
+  active,
+  className,
+  source,
+  disabled,
+  onMenuOpen,
+  onClick,
+  children,
+  ...rest
+}: Dependencies & HotbarIconProps) => {
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -80,15 +85,17 @@ export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...pro
           onMenuOpen?.();
           toggleMenu();
         }}
-        close={() => toggleMenu()}>
-        {
-          menuItems.map((menuItem) => (
-            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem)}>
-              {menuItem.title}
-            </MenuItem>
-          ))
-        }
+        close={() => toggleMenu()}
+      >
+        {menuItems.map(renderEntityContextMenuItem("title"))}
       </Menu>
     </div>
   );
+});
+
+export const HotbarIcon = withInjectables<Dependencies, HotbarIconProps>(NonInjectedHotbarIcon, {
+  getProps: (di, props) => ({
+    renderEntityContextMenuItem: di.inject(renderEntityContextMenuItemInjectable),
+    ...props,
+  }),
 });

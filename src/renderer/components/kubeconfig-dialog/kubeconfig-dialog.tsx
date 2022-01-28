@@ -82,37 +82,35 @@ export class KubeConfigDialog extends React.Component<Props> {
   };
 
   render() {
-    const { ...dialogProps } = this.props;
-    const yamlConfig = this.config;
-    const header = <h5>{this.data?.title || "Kubeconfig File"}</h5>;
-    const buttons = (
-      <div className="actions flex gaps">
-        <Button plain onClick={this.copyToClipboard}>
-          <Icon material="assignment"/> Copy to clipboard
-        </Button>
-        <Button plain onClick={this.download}>
-          <Icon material="cloud_download"/> Download file
-        </Button>
-        <Button plain className="box right" onClick={this.close}>
-          Close
-        </Button>
-      </div>
-    );
-
     return (
       <Dialog
-        {...dialogProps}
+        {...this.props}
         className={styles.KubeConfigDialog}
         isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >
-        <Wizard header={header}>
-          <WizardStep customButtons={buttons} prev={this.close}>
+        <Wizard header={<h5>{this.data?.title || "Kubeconfig File"}</h5>}>
+          <WizardStep
+            customButtons={(
+              <div className="actions flex gaps">
+                <Button plain onClick={this.copyToClipboard}>
+                  <Icon material="assignment"/> Copy to clipboard
+                </Button>
+                <Button plain onClick={this.download}>
+                  <Icon material="cloud_download"/> Download file
+                </Button>
+                <Button plain className="box right" onClick={this.close}>
+                  Close
+                </Button>
+              </div>
+            )}
+            prev={this.close}
+          >
             <MonacoEditor
               readOnly
               className={styles.editor}
-              value={yamlConfig}
+              value={this.config}
             />
           </WizardStep>
         </Wizard>

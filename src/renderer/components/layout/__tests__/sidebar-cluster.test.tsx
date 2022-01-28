@@ -5,17 +5,16 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { SidebarCluster } from "../sidebar-cluster";
 import { KubernetesCluster } from "../../../../common/catalog-entities";
-
-jest.mock("../../../../common/hotbar-store", () => ({
-  HotbarStore: {
-    getInstance: () => ({
-      isAddedToActive: jest.fn(),
-    }),
-  },
-}));
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import { noop } from "lodash";
+import addToActiveHotbarInjectable from "../../../../common/hotbar-store/add-to-active-hotbar.injectable";
+import removeByIdFromActiveHotbarInjectable from "../../../../common/hotbar-store/remove-from-active-hotbar.injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
+import isItemInActiveHotbarInjectable from "../../../../common/hotbar-store/is-added-to-active-hotbar.injectable";
 
 const clusterEntity = new KubernetesCluster({
   metadata: {
@@ -34,18 +33,30 @@ const clusterEntity = new KubernetesCluster({
 });
 
 describe("<SidebarCluster/>", () => {
+  let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
+
+  beforeAll(() => {
+    di = getDiForUnitTesting();
+    render = renderFor(di);
+
+    di.override(addToActiveHotbarInjectable, () => noop);
+    di.override(removeByIdFromActiveHotbarInjectable, () => noop);
+    di.override(isItemInActiveHotbarInjectable, () => () => false);
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("renders cluster avatar and name", () => {
-    const { getByText, getAllByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
+  it("renders cluster avatar and name", async () => {
+    const { findByText, findAllByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
 
-    expect(getByText("tc")).toBeInTheDocument();
+    expect(await findByText("tc")).toBeInTheDocument();
 
-    const v = getAllByText("test-cluster");
+    const v = await findAllByText("test-cluster");
 
     expect(v.length).toBeGreaterThan(0);
 
@@ -54,12 +65,11 @@ describe("<SidebarCluster/>", () => {
     }
   });
 
-  it("renders cluster menu", () => {
-    const { getByTestId, getByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
-    const link = getByTestId("sidebar-cluster-dropdown");
+  it("renders cluster menu", async () => {
+    const { findByTestId, findByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
 
-    fireEvent.click(link);
-    expect(getByText("Add to Hotbar")).toBeInTheDocument();
+    fireEvent.click(await findByTestId("sidebar-cluster-dropdown"));
+    expect(await findByText("Add to Hotbar")).toBeInTheDocument();
   });
 });
 

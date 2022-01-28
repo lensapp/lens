@@ -4,12 +4,12 @@
  */
 
 //-- Mixins
-@import "+workloads/workloads-mixins";
-@import "+storage/storage-mixins";
-@import "+nodes/nodes-mixins";
-@import "+namespaces/namespaces-mixins";
-@import "table/table.mixins";
-@import "+network/network-mixins";
+@import "+workloads/mixins";
+@import "+storage/mixins";
+@import "+nodes/mixins";
+@import "+namespaces/mixins";
+@import "table/mixins";
+@import "+network/mixins";
 
 // Hide scrollbar but keep the element scrollable
 @mixin hidden-scrollbar {
@@ -22,8 +22,19 @@
   }
 }
 
-@mixin stripeLinesAnimation($color1: #ccc, $color2: transparent, $spacing: 1rem) {
-  background: repeating-linear-gradient(-45deg, $color2, $color2, $spacing, $color1 $spacing, $color1 $spacing * 2);
+@mixin stripeLinesAnimation(
+  $color1: #ccc,
+  $color2: transparent,
+  $spacing: 1rem
+) {
+  background: repeating-linear-gradient(
+    -45deg,
+    $color2,
+    $color2,
+    $spacing,
+    $color1 $spacing,
+    $color1 $spacing * 2
+  );
   background-size: 200% 200%;
   animation: stripeLines 10s linear infinite;
 

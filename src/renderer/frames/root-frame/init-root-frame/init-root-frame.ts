@@ -8,7 +8,9 @@ import { registerIpcListeners } from "../../../ipc";
 import logger from "../../../../common/logger";
 import { unmountComponentAtNode } from "react-dom";
 import type { ExtensionLoading } from "../../../../extensions/extension-loader";
-import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../../catalog/entity-registry";
+import { injectSystemCAs } from "../../../../common/system-ca";
+import type { Cluster } from "../../../../common/cluster/cluster";
 
 interface Dependencies {
   loadExtensions: () => Promise<ExtensionLoading[]>;
@@ -20,54 +22,49 @@ interface Dependencies {
   bindProtocolAddRouteHandlers: () => void;
   lensProtocolRouterRenderer: { init: () => void };
   catalogEntityRegistry: CatalogEntityRegistry;
+  getClusterById: (clusterId: string) => Cluster | null;
 }
 
 const logPrefix = "[ROOT-FRAME]:";
 
-export const initRootFrame =
-  ({
-    loadExtensions,
-    bindProtocolAddRouteHandlers,
-    lensProtocolRouterRenderer,
-    ipcRenderer,
+export async function initRootFrame(
+  { loadExtensions, bindProtocolAddRouteHandlers, lensProtocolRouterRenderer, ipcRenderer, catalogEntityRegistry, getClusterById }: Dependencies,
+  rootElem: HTMLElement,
+) {
+  injectSystemCAs();
+  catalogEntityRegistry.init();
 
-    catalogEntityRegistry,
-  }: Dependencies) =>
-    async (rootElem: HTMLElement) => {
-      catalogEntityRegistry.init();
+  try {
+    // maximum time to let bundled extensions finish loading
+    const timeout = delay(10000);
 
-      try {
-      // maximum time to let bundled extensions finish loading
-        const timeout = delay(10000);
+    const loadingExtensions = await loadExtensions();
 
-        const loadingExtensions = await loadExtensions();
+    const loadingBundledExtensions = loadingExtensions
+      .filter((e) => e.isBundled)
+      .map((e) => e.loaded);
 
-        const loadingBundledExtensions = loadingExtensions
-          .filter((e) => e.isBundled)
-          .map((e) => e.loaded);
+    const bundledExtensionsFinished = Promise.all(loadingBundledExtensions);
 
-        const bundledExtensionsFinished = Promise.all(loadingBundledExtensions);
+    await Promise.race([bundledExtensionsFinished, timeout]);
+  } finally {
+    ipcRenderer.send(BundledExtensionsLoaded);
+  }
 
-        await Promise.race([bundledExtensionsFinished, timeout]);
-      } finally {
-        ipcRenderer.send(BundledExtensionsLoaded);
-      }
+  lensProtocolRouterRenderer.init();
 
-      lensProtocolRouterRenderer.init();
+  bindProtocolAddRouteHandlers();
 
-      bindProtocolAddRouteHandlers();
+  window.addEventListener("offline", () => broadcastMessage("network:offline"),
+  );
 
-      window.addEventListener("offline", () =>
-        broadcastMessage("network:offline"),
-      );
+  window.addEventListener("online", () => broadcastMessage("network:online"));
 
-      window.addEventListener("online", () => broadcastMessage("network:online"));
+  registerIpcListeners({ getClusterById });
 
-      registerIpcListeners();
+  window.addEventListener("beforeunload", () => {
+    logger.info(`${logPrefix} Unload app`);
 
-      window.addEventListener("beforeunload", () => {
-        logger.info(`${logPrefix} Unload app`);
-
-        unmountComponentAtNode(rootElem);
-      });
-    };
+    unmountComponentAtNode(rootElem);
+  });
+}

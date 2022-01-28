@@ -30,7 +30,7 @@ jest.mock("winston", () => ({
 }));
 
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
+import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import mockFs from "mock-fs";
 import type { Cluster } from "../../common/cluster/cluster";
 import fse from "fs-extra";
@@ -39,7 +39,9 @@ import { Console } from "console";
 import * as path from "path";
 import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
-import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp.injectable";
+import getProxyPortInjectable from "../lens-proxy/get-proxy-port.injectable";
+import { computed } from "mobx";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -78,6 +80,8 @@ describe("kubeconfig manager tests", () => {
 
     await di.runSetups();
 
+    di.override(getProxyPortInjectable, () => computed(() => 9191));
+
     const createCluster = di.inject(createClusterInjectionToken);
 
     createKubeconfigManager = di.inject(createKubeconfigManagerInjectable);
@@ -91,8 +95,6 @@ describe("kubeconfig manager tests", () => {
     cluster.contextHandler = {
       ensureServer: () => Promise.resolve(),
     } as any;
-
-    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
   afterEach(() => {

@@ -2,19 +2,23 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
 import type { Cluster } from "../../common/cluster/cluster";
-import type { NamespaceStore } from "../components/+namespaces/namespace-store/namespace.store";
 import type { ClusterContext } from "../../common/k8s-api/cluster-context";
-import { computed, makeObservable } from "mobx";
+import { computed, IComputedValue, makeObservable } from "mobx";
 
-interface Dependencies {
-  namespaceStore: NamespaceStore
+export interface FrameContextDependencies {
+  readonly cluster: Cluster;
+  readonly namespaces: IComputedValue<string[]>;
+  readonly selectedNamespaces: IComputedValue<string[]>;
 }
 
-export class ClusterFrameContext implements ClusterContext {
-  constructor(public cluster: Cluster, private dependencies: Dependencies) {
+export class FrameContext implements ClusterContext {
+  constructor(protected readonly dependencies: FrameContextDependencies) {
     makeObservable(this);
+  }
+
+  get cluster() {
+    return this.dependencies.cluster;
   }
 
   @computed get allNamespaces(): string[] {
@@ -23,17 +27,19 @@ export class ClusterFrameContext implements ClusterContext {
       return this.cluster.accessibleNamespaces;
     }
 
-    if (this.dependencies.namespaceStore.items.length > 0) {
+    const namespaces = this.dependencies.namespaces.get();
+
+    if (namespaces.length > 0) {
       // namespaces from kubernetes api
-      return this.dependencies.namespaceStore.items.map((namespace) => namespace.getName());
+      return namespaces;
     } else {
       // fallback to cluster resolved namespaces because we could not load list
       return this.cluster.allowedNamespaces || [];
     }
   }
 
-  @computed get contextNamespaces(): string[] {
-    return this.dependencies.namespaceStore.contextNamespaces;
+  get contextNamespaces(): string[] {
+    return this.dependencies.selectedNamespaces.get();
   }
 
   @computed get hasSelectedAll(): boolean {

@@ -12,8 +12,7 @@ const electronMenuItemsInjectable = getInjectable({
   instantiate: (di) => {
     const extensions = di.inject(mainExtensionsInjectable);
 
-    return computed(() =>
-      extensions.get().flatMap((extension) => extension.appMenus));
+    return computed(() => extensions.get().flatMap((extension) => extension.appMenus));
   },
 });
 

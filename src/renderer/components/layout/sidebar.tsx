@@ -7,107 +7,48 @@ import styles from "./sidebar.module.scss";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames, Disposer } from "../../utils";
+import { observer } from "mobx-react";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { Workloads } from "../+workloads";
-import { UserManagement } from "../+user-management";
-import { Storage } from "../+storage";
-import { Network } from "../+network";
-import { crdStore } from "../+custom-resources/crd.store";
-import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
-import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
-import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
-import { Config } from "../+config";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { SidebarCluster } from "./sidebar-cluster";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
+import activeEntityInjectable from "../../catalog/active-entity.injectable";
+import type { IComputedValue } from "mobx";
+import type { KubeResource } from "../../../common/rbac";
+import { UserManagementSidebarItem } from "../+user-management/sidebar-item";
+import { ConfigSidebarItem } from "../+config/sidebar-item";
+import { NetworkSidebarItem } from "../+network/sidebar-item";
+import { TabRouteTree } from "./tab-route-tree";
+import isAllowedResourceInjectable from "../../utils/allowed-resource.injectable";
+import { StorageSidebarItem } from "../+storage/sidebar-item";
+import { WorkloadsSidebarItem } from "../+workloads/sidebar-item";
+import { HelmAppsSidebarItem } from "../+helm-apps/sidebar-item";
+import { CustomResourcesSidebarItem } from "../+custom-resource/sidebar-item";
 
-interface Props {
+export interface SidebarProps {
   className?: string;
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  clusterEntity: IComputedValue<KubernetesCluster>;
+  clusterPageMenuRegistry: ClusterPageMenuRegistry;
+  clusterPageRegistry: ClusterPageRegistry;
+  isAllowedResource: (resource: KubeResource | KubeResource[]) => boolean;
 }
 
-@observer
-class NonInjectedSidebar extends React.Component<Props & Dependencies> {
-  static displayName = "Sidebar";
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      this.props.subscribeStores([
-        crdStore,
-      ]),
-    ]);
-  }
-
-  renderCustomResources() {
-    if (crdStore.isLoading) {
-      return (
-        <div className="flex justify-center">
-          <Spinner/>
-        </div>
-      );
-    }
-
-    return Object.entries(crdStore.groups).map(([group, crds]) => {
-      const id = `crd-group:${group}`;
-      const crdGroupsPageUrl = routes.crdURL({ query: { groups: group }});
-
-      return (
-        <SidebarItem key={id} id={id} text={group} url={crdGroupsPageUrl}>
-          {crds.map((crd) => (
-            <SidebarItem
-              key={crd.getResourceApiBase()}
-              id={`crd-resource:${crd.getResourceApiBase()}`}
-              url={crd.getResourceUrl()}
-              text={crd.getResourceKind()}
-            />
-          ))}
-        </SidebarItem>
-      );
-    });
-  }
-
-  renderTreeFromTabRoutes(tabRoutes: TabLayoutRoute[] = []): React.ReactNode {
-    if (!tabRoutes.length) {
-      return null;
-    }
-
-    return tabRoutes.map(({ title, routePath, url = routePath, exact = true }) => {
-      const subMenuItemId = `tab-route-item-${url}`;
-
-      return (
-        <SidebarItem
-          key={subMenuItemId}
-          id={subMenuItemId}
-          url={url}
-          text={title}
-          isActive={isActiveRoute({ path: routePath, exact })}
-        />
-      );
-    });
-  }
-
-  getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
+const NonInjectedSidebar = observer(({ isAllowedResource, clusterEntity, className, clusterPageMenuRegistry, clusterPageRegistry }: Dependencies & SidebarProps) => {
+  const getTabLayoutRoutes = (menu: ClusterPageMenuRegistration): TabLayoutRoute[] => {
     if (!menu.id) {
       return [];
     }
 
     const routes: TabLayoutRoute[] = [];
-    const subMenus = ClusterPageMenuRegistry.getInstance().getSubItems(menu);
-    const clusterPageRegistry = ClusterPageRegistry.getInstance();
+    const subMenus = clusterPageMenuRegistry.getSubItems(menu);
 
     for (const subMenu of subMenus) {
       const page = clusterPageRegistry.getByPageTarget(subMenu.target);
@@ -138,12 +79,12 @@ class NonInjectedSidebar extends React.Component<Props & Dependencies> {
     }
 
     return routes;
-  }
+  };
 
-  renderRegisteredMenus() {
-    return ClusterPageMenuRegistry.getInstance().getRootItems().map((menuItem, index) => {
-      const registeredPage = ClusterPageRegistry.getInstance().getByPageTarget(menuItem.target);
-      const tabRoutes = this.getTabLayoutRoutes(menuItem);
+  const renderRegisteredMenus = () => {
+    return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
+      const registeredPage = clusterPageRegistry.getByPageTarget(menuItem.target);
+      const tabRoutes = getTabLayoutRoutes(menuItem);
       const id = `registered-item-${index}`;
       let pageUrl: string;
       let isActive = false;
@@ -169,139 +110,67 @@ class NonInjectedSidebar extends React.Component<Props & Dependencies> {
           text={menuItem.title}
           icon={<menuItem.components.Icon/>}
         >
-          {this.renderTreeFromTabRoutes(tabRoutes)}
+          <TabRouteTree tabRoutes={tabRoutes} />
         </SidebarItem>
       );
     });
-  }
+  };
 
-  get clusterEntity() {
-    return catalogEntityRegistry.activeEntity;
-  }
-
-  render() {
-    const { className } = this.props;
-
-    return (
-      <div className={cssNames("flex flex-col", className)} data-testid="cluster-sidebar">
-        <SidebarCluster clusterEntity={this.clusterEntity}/>
-        <div className={styles.sidebarNav}>
-          <SidebarItem
-            id="cluster"
-            text="Cluster"
-            isActive={isActiveRoute(routes.clusterRoute)}
-            isHidden={!isAllowedResource("nodes")}
-            url={routes.clusterURL()}
-            icon={<Icon svg="kube"/>}
-          />
-          <SidebarItem
-            id="nodes"
-            text="Nodes"
-            isActive={isActiveRoute(routes.nodesRoute)}
-            isHidden={!isAllowedResource("nodes")}
-            url={routes.nodesURL()}
-            icon={<Icon svg="nodes"/>}
-          />
-          <SidebarItem
-            id="workloads"
-            text="Workloads"
-            isActive={isActiveRoute(routes.workloadsRoute)}
-            isHidden={Workloads.tabRoutes.length == 0}
-            url={routes.workloadsURL()}
-            icon={<Icon svg="workloads"/>}
-          >
-            {this.renderTreeFromTabRoutes(Workloads.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="config"
-            text="Configuration"
-            isActive={isActiveRoute(routes.configRoute)}
-            isHidden={Config.tabRoutes.length == 0}
-            url={routes.configURL()}
-            icon={<Icon material="list"/>}
-          >
-            {this.renderTreeFromTabRoutes(Config.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="networks"
-            text="Network"
-            isActive={isActiveRoute(routes.networkRoute)}
-            isHidden={Network.tabRoutes.length == 0}
-            url={routes.networkURL()}
-            icon={<Icon material="device_hub"/>}
-          >
-            {this.renderTreeFromTabRoutes(Network.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="storage"
-            text="Storage"
-            isActive={isActiveRoute(routes.storageRoute)}
-            isHidden={Storage.tabRoutes.length == 0}
-            url={routes.storageURL()}
-            icon={<Icon svg="storage"/>}
-          >
-            {this.renderTreeFromTabRoutes(Storage.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="namespaces"
-            text="Namespaces"
-            isActive={isActiveRoute(routes.namespacesRoute)}
-            isHidden={!isAllowedResource("namespaces")}
-            url={routes.namespacesURL()}
-            icon={<Icon material="layers"/>}
-          />
-          <SidebarItem
-            id="events"
-            text="Events"
-            isActive={isActiveRoute(routes.eventRoute)}
-            isHidden={!isAllowedResource("events")}
-            url={routes.eventsURL()}
-            icon={<Icon material="access_time"/>}
-          />
-          <SidebarItem
-            id="apps"
-            text="Apps" // helm charts
-            isActive={isActiveRoute(routes.appsRoute)}
-            url={routes.appsURL()}
-            icon={<Icon material="apps"/>}
-          >
-            {this.renderTreeFromTabRoutes(Apps.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="users"
-            text="Access Control"
-            isActive={isActiveRoute(routes.usersManagementRoute)}
-            isHidden={UserManagement.tabRoutes.length === 0}
-            url={routes.usersManagementURL()}
-            icon={<Icon material="security"/>}
-          >
-            {this.renderTreeFromTabRoutes(UserManagement.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="custom-resources"
-            text="Custom Resources"
-            url={routes.crdURL()}
-            isActive={isActiveRoute(routes.crdRoute)}
-            isHidden={!isAllowedResource("customresourcedefinitions")}
-            icon={<Icon material="extension"/>}
-          >
-            {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
-            {this.renderCustomResources()}
-          </SidebarItem>
-          {this.renderRegisteredMenus()}
-        </div>
+  return (
+    <div className={cssNames("flex flex-col", className)} data-testid="cluster-sidebar">
+      <SidebarCluster clusterEntity={clusterEntity.get()}/>
+      <div className={styles.sidebarNav}>
+        <SidebarItem
+          id="cluster"
+          text="Cluster"
+          isActive={isActiveRoute(routes.clusterRoute)}
+          isHidden={!isAllowedResource("nodes")}
+          url={routes.clusterURL()}
+          icon={<Icon svg="kube"/>}
+        />
+        <SidebarItem
+          id="nodes"
+          text="Nodes"
+          isActive={isActiveRoute(routes.nodesRoute)}
+          isHidden={!isAllowedResource("nodes")}
+          url={routes.nodesURL()}
+          icon={<Icon svg="nodes"/>}
+        />
+        <WorkloadsSidebarItem />
+        <ConfigSidebarItem />
+        <NetworkSidebarItem />
+        <StorageSidebarItem />
+        <SidebarItem
+          id="namespaces"
+          text="Namespaces"
+          isActive={isActiveRoute(routes.namespacesRoute)}
+          isHidden={!isAllowedResource("namespaces")}
+          url={routes.namespacesURL()}
+          icon={<Icon material="layers"/>}
+        />
+        <SidebarItem
+          id="events"
+          text="Events"
+          isActive={isActiveRoute(routes.eventRoute)}
+          isHidden={!isAllowedResource("events")}
+          url={routes.eventsURL()}
+          icon={<Icon material="access_time"/>}
+        />
+        <HelmAppsSidebarItem />
+        <UserManagementSidebarItem />
+        <CustomResourcesSidebarItem />
+        {renderRegisteredMenus()}
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
 
-export const Sidebar = withInjectables<Dependencies, Props>(
-  NonInjectedSidebar,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const Sidebar = withInjectables<Dependencies, SidebarProps>(NonInjectedSidebar, {
+  getProps: (di, props) => ({
+    clusterEntity: di.inject(activeEntityInjectable) as IComputedValue<KubernetesCluster>,
+    clusterPageMenuRegistry: ClusterPageMenuRegistry.getInstance(),
+    clusterPageRegistry: ClusterPageRegistry.getInstance(),
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
+    ...props,
+  }),
+});

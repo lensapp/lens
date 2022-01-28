@@ -128,15 +128,15 @@ export class ExtensionDiscovery {
   /**
    * Initializes the class and setups the file watcher for added/removed local extensions.
    */
-  async init(): Promise<void> {
+  init() {
     if (ipcRenderer) {
-      await this.initRenderer();
+      this.initRenderer();
     } else {
-      await this.initMain();
+      this.initMain();
     }
   }
 
-  async initRenderer(): Promise<void> {
+  initRenderer() {
     const onMessage = ({ isLoaded }: ExtensionDiscoveryChannelMessage) => {
       this.isLoaded = isLoaded;
     };
@@ -147,7 +147,7 @@ export class ExtensionDiscovery {
     });
   }
 
-  async initMain(): Promise<void> {
+  initMain() {
     ipcMainHandle(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
@@ -479,10 +479,8 @@ export class ExtensionDiscovery {
    * Loads extension from absolute path, updates this.packagesJson to include it and returns the extension.
    * @param folderPath Folder path to extension
    */
-  async loadExtensionFromFolder(folderPath: string, { isBundled = false }: LoadFromFolderOptions = {}): Promise<InstalledExtension | null> {
-    const manifestPath = path.resolve(folderPath, manifestFilename);
-
-    return this.getByManifest(manifestPath, { isBundled });
+  loadExtensionFromFolder(folderPath: string, { isBundled = false }: LoadFromFolderOptions = {}): Promise<InstalledExtension | null> {
+    return this.getByManifest(path.resolve(folderPath, manifestFilename), { isBundled });
   }
 
   toJSON(): ExtensionDiscoveryChannelMessage {

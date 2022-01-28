@@ -5,9 +5,9 @@
 
 import styles from "./cluster-status.module.scss";
 
-import { computed, observable, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-import React from "react";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+import React, { useEffect, useState } from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { ipcRendererOn, requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
@@ -18,84 +18,69 @@ import { Spinner } from "../spinner";
 import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { CatalogEntity } from "../../../common/catalog";
+import getEntityByIdInjectable from "../../catalog/get-entity-by-id.injectable";
 
-interface Props {
+export interface ClusterStatusProps {
   className?: IClassName;
   cluster: Cluster;
 }
 
-@observer
-export class ClusterStatus extends React.Component<Props> {
-  @observable authOutput: KubeAuthUpdate[] = [];
-  @observable isReconnecting = false;
+interface Dependencies {
+  getEntityById: (id: string) => CatalogEntity;
+}
 
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
+const NonInjectedClusterStatus = observer(({ getEntityById, cluster, className }: Dependencies & ClusterStatusProps) => {
+  const [authOutput] = useState(observable.array<KubeAuthUpdate>());
+  const [isReconnecting, setIsReconnecting] = useState(false);
 
-  get cluster(): Cluster {
-    return this.props.cluster;
-  }
+  useEffect(() => (
+    ipcRendererOn(`cluster:${cluster.id}:connection-update`, (evt, res: KubeAuthUpdate) => {
+      authOutput.push(res);
+    })
+  ), []);
 
-  @computed get entity() {
-    return catalogEntityRegistry.getById(this.cluster.id);
-  }
+  const entity = getEntityById(cluster.id);
+  const hasErrors = authOutput.some(({ isError }) => isError);
 
-  @computed get hasErrors(): boolean {
-    return this.authOutput.some(({ isError }) => isError);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: KubeAuthUpdate) => {
-        this.authOutput.push(res);
-      }),
-    ]);
-  }
-
-  reconnect = async () => {
-    this.authOutput = [];
-    this.isReconnecting = true;
+  const reconnect = async () => {
+    authOutput.clear();
+    setIsReconnecting(true);
 
     try {
-      await requestMain(clusterActivateHandler, this.cluster.id, true);
+      await requestMain(clusterActivateHandler, cluster.id, true);
     } catch (error) {
-      this.authOutput.push({
+      authOutput.push({
         message: error.toString(),
         isError: true,
       });
     } finally {
-      this.isReconnecting = false;
+      setIsReconnecting(false);
     }
   };
 
-  manageProxySettings = () => {
+  const manageProxySettings = () => {
     navigate(entitySettingsURL({
       params: {
-        entityId: this.cluster.id,
+        entityId: cluster.id,
       },
       fragment: "proxy",
     }));
   };
 
-  renderAuthenticationOutput() {
-    return (
-      <pre>
-        {
-          this.authOutput.map(({ message, isError }, index) => (
-            <p key={index} className={cssNames({ error: isError })}>
-              {message.trim()}
-            </p>
-          ))
-        }
-      </pre>
-    );
-  }
+  const renderAuthenticationOutput = () => (
+    <pre>
+      {authOutput.map(({ message, isError }, index) => (
+        <p key={index} className={cssNames({ error: isError })}>
+          {message.trim()}
+        </p>
+      ))}
+    </pre>
+  );
 
-  renderStatusIcon() {
-    if (this.hasErrors) {
+  const renderStatusIcon = () => {
+    if (hasErrors) {
       return <Icon material="cloud_off" className={styles.icon} />;
     }
 
@@ -103,46 +88,45 @@ export class ClusterStatus extends React.Component<Props> {
       <>
         <Spinner singleColor={false} className={styles.spinner} />
         <pre className="kube-auth-out">
-          <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
+          <p>{isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
         </pre>
       </>
     );
-  }
+  };
 
-  renderReconnectionHelp() {
-    if (this.hasErrors && !this.isReconnecting) {
-      return (
-        <>
-          <Button
-            primary
-            label="Reconnect"
-            className="box center"
-            onClick={this.reconnect}
-            waiting={this.isReconnecting}
-          />
-          <a
-            className="box center interactive"
-            onClick={this.manageProxySettings}
-          >
-            Manage Proxy Settings
-          </a>
-        </>
-      );
-    }
+  const renderReconnectionHelp = () => (
+    <>
+      <Button
+        primary
+        label="Reconnect"
+        className="box center"
+        onClick={reconnect}
+        waiting={isReconnecting}
+      />
+      <a
+        className="box center interactive"
+        onClick={manageProxySettings}
+      >
+          Manage Proxy Settings
+      </a>
+    </>
+  );
 
-    return undefined;
-  }
-
-  render() {
-    return (
-      <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
-        <div className="flex items-center column gaps">
-          <h2>{this.entity?.getName() ?? this.cluster.name}</h2>
-          {this.renderStatusIcon()}
-          {this.renderAuthenticationOutput()}
-          {this.renderReconnectionHelp()}
-        </div>
+  return (
+    <div className={cssNames(styles.status, "flex column box center align-center justify-center", className)}>
+      <div className="flex items-center column gaps">
+        <h2>{entity?.getName() ?? cluster.name}</h2>
+        {renderStatusIcon()}
+        {renderAuthenticationOutput()}
+        {(!hasErrors || isReconnecting) && renderReconnectionHelp()}
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
+
+export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(NonInjectedClusterStatus, {
+  getProps: (di, props) => ({
+    getEntityById: di.inject(getEntityByIdInjectable),
+    ...props,
+  }),
+});

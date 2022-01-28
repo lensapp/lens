@@ -64,26 +64,26 @@ describe("CatalogCategoryRegistry", () => {
     registry.add(new TestCatalogCategory2());
 
     expect(registry.items.length).toBe(2);
-    expect(registry.filteredItems.length).toBe(2);
+    expect(registry.filteredItems.get().length).toBe(2);
 
     const disposer = registry.addCatalogCategoryFilter(category => category.metadata.name === "Test Category");
 
     expect(registry.items.length).toBe(2);
-    expect(registry.filteredItems.length).toBe(1);
+    expect(registry.filteredItems.get().length).toBe(1);
 
     const disposer2 = registry.addCatalogCategoryFilter(category => category.metadata.name === "foo");
 
     expect(registry.items.length).toBe(2);
-    expect(registry.filteredItems.length).toBe(0);
+    expect(registry.filteredItems.get().length).toBe(0);
 
     disposer();
 
     expect(registry.items.length).toBe(2);
-    expect(registry.filteredItems.length).toBe(0);
+    expect(registry.filteredItems.get().length).toBe(0);
 
     disposer2();
 
     expect(registry.items.length).toBe(2);
-    expect(registry.filteredItems.length).toBe(2);
+    expect(registry.filteredItems.get().length).toBe(2);
   });
 });

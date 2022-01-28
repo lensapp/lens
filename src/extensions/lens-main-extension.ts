@@ -4,25 +4,35 @@
  */
 
 import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
 import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
+import { computed, IComputedValue, IObservableArray, observable } from "mobx";
 import type { MenuRegistration } from "../main/menu/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
+import windowManagerInjectable from "../main/windows/manager.injectable";
+import { asLegacyGlobalObjectForExtensionApi } from "./as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+
+const windowManager = asLegacyGlobalObjectForExtensionApi(windowManagerInjectable);
+
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
   trayMenus: TrayMenuRegistration[] = [];
+  sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
 
-  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
+  navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
+    return windowManager.navigateExtension(this.id, pageId, params, frameId);
   }
 
+  /**
+   * @deprecated Just call `set()` on `.sources` directly
+   */
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
+    this.sources.set(id, computed(() => [...source]));
   }
 
+  /**
+   * @deprecated Just call `delete()` on `.sources` directly
+   */
   removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
+    this.sources.delete(id);
   }
 }

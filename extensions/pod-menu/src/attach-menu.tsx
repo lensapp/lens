@@ -55,7 +55,7 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
       title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()}) [Attached]`,
     });
 
-    terminalStore.sendCommand(commandParts.join(" "), {
+    await terminalStore.sendCommand(commandParts.join(" "), {
       enter: true,
       tabId: shell.id,
     });

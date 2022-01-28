@@ -32,7 +32,7 @@ class KubectlDownloader {
       method: "HEAD",
       uri: this.url,
       resolveWithFullResponse: true,
-    }).catch(console.error);
+    });
 
     if (response.headers["etag"]) {
       return response.headers["etag"].replace(/"/g, "");

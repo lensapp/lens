@@ -5,13 +5,12 @@
 
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import type { CatalogCategorySpec } from "../../../../common/catalog";
+import { CatalogCategory, CatalogCategorySpec } from "../../../../common/catalog";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
-import { CatalogCategory } from "../../../api/catalog-entity";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { AdditionalCategoryColumnRegistration, CategoryColumnRegistration } from "../custom-category-columns";
-import getCategoryColumnsInjectable, { CategoryColumns, GetCategoryColumnsParams } from "../get-category-columns.injectable";
+import getCategoryColumnsInjectable, { CategoryColumns, GetCategoryColumnsParams } from "../category-columns/get-category-columns.injectable";
 
 class TestCategory extends CatalogCategory {
   apiVersion = "catalog.k8slens.dev/v1alpha1";

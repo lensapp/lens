@@ -4,15 +4,10 @@
  */
 
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import clusterInjectable from "./cluster.injectable";
+import activeClusterEntityInjectable from "../../../catalog/active-cluster-entity.injectable";
 
 const clusterNameInjectable = getInjectable({
-  instantiate: (di) => {
-    const cluster = di.inject(clusterInjectable);
-
-    return cluster?.name;
-  },
-
+  instantiate: (di) => di.inject(activeClusterEntityInjectable)?.name,
   lifecycle: lifecycleEnum.transient,
 });
 

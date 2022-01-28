@@ -10,8 +10,6 @@ import React from "react";
 import fse from "fs-extra";
 import { Console } from "console";
 import { stderr, stdout } from "process";
-import { ThemeStore } from "../../../renderer/theme.store";
-import { UserStore } from "../../../common/user-store";
 import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 import mockFs from "mock-fs";
 
@@ -55,8 +53,6 @@ describe("page registry tests", () => {
       isEnabled: true,
       isCompatible: true,
     });
-    UserStore.createInstance();
-    ThemeStore.createInstance();
     ClusterPageRegistry.createInstance();
     GlobalPageRegistry.createInstance().add({
       id: "page-with-params",
@@ -92,8 +88,6 @@ describe("page registry tests", () => {
   afterEach(() => {
     GlobalPageRegistry.resetInstance();
     ClusterPageRegistry.resetInstance();
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
     fse.remove("tmp");
     mockFs.restore();
   });

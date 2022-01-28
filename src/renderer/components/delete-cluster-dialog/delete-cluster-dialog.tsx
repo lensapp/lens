@@ -9,51 +9,35 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { Button } from "../button";
-import type { KubeConfig } from "@kubernetes/client-node";
-import type { Cluster } from "../../../common/cluster/cluster";
 import { saveKubeconfig } from "./save-config";
 import { requestMain } from "../../../common/ipc";
 import { clusterClearDeletingHandler, clusterDeleteHandler, clusterSetDeletingHandler } from "../../../common/cluster-ipc";
 import { Notifications } from "../notifications";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { boundMethod } from "autobind-decorator";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Select } from "../select";
 import { Checkbox } from "../checkbox";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import removeAllHotbarItemsInjectable from "../../../common/hotbar-store/remove-all-hotbar-items.injectable";
+import type { DeleteClusterDialogState } from "./state.injectable";
+import deleteClusterDialogStateInjectable from "./state.injectable";
+import closeDeleteClusterDialogInjectable from "./close-delete-cluster-dialog.injectable";
 
-type DialogState = {
-  isOpen: boolean,
-  config?: KubeConfig,
-  cluster?: Cluster
-};
-
-const dialogState: DialogState = observable({
-  isOpen: false,
-});
-
-type Props = {};
+interface Dependencies {
+  removeAllHotbarItems: (id: string) => void;
+  readonly state: DeleteClusterDialogState;
+  closeDeleteClusterDialog: () => void;
+}
 
 @observer
-export class DeleteClusterDialog extends React.Component {
+class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   @observable showContextSwitch = false;
   @observable newCurrentContext = "";
 
-  constructor(props: Props) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
-  }
-
-  static open({ config, cluster }: Partial<DialogState>) {
-    dialogState.isOpen = true;
-    dialogState.config = config;
-    dialogState.cluster = cluster;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
-    dialogState.cluster = null;
-    dialogState.config = null;
   }
 
   @boundMethod
@@ -67,25 +51,25 @@ export class DeleteClusterDialog extends React.Component {
 
   @boundMethod
   onClose() {
-    DeleteClusterDialog.close();
+    this.props.closeDeleteClusterDialog();
     this.showContextSwitch = false;
   }
 
   removeContext() {
-    dialogState.config.contexts = dialogState.config.contexts.filter(item =>
-      item.name !== dialogState.cluster.contextName,
+    this.props.state.config.contexts = this.props.state.config.contexts.filter(item =>
+      item.name !== this.props.state.cluster.contextName,
     );
   }
 
   changeCurrentContext() {
     if (this.newCurrentContext && this.showContextSwitch) {
-      dialogState.config.currentContext = this.newCurrentContext;
+      this.props.state.config.currentContext = this.newCurrentContext;
     }
   }
 
   @boundMethod
   async onDelete() {
-    const { cluster, config } = dialogState;
+    const { cluster, config } = this.props.state;
 
     await requestMain(clusterSetDeletingHandler, cluster.id);
     this.removeContext();
@@ -93,7 +77,7 @@ export class DeleteClusterDialog extends React.Component {
 
     try {
       await saveKubeconfig(config, cluster.kubeConfigPath);
-      HotbarStore.getInstance().removeAllHotbarItems(cluster.id);
+      this.props.removeAllHotbarItems(cluster.id);
       await requestMain(clusterDeleteHandler, cluster.id);
     } catch(error) {
       Notifications.error(`Cannot remove cluster, failed to process config file. ${error}`);
@@ -105,7 +89,7 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   @computed get disableDelete() {
-    const { cluster, config } = dialogState;
+    const { cluster, config } = this.props.state;
     const noContextsAvailable = config.contexts.filter(context => context.name !== cluster.contextName).length == 0;
     const newContextNotSelected = this.newCurrentContext === "";
 
@@ -117,12 +101,12 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   isCurrentContext() {
-    return dialogState.config.currentContext == dialogState.cluster.contextName;
+    return this.props.state.config.currentContext == this.props.state.cluster.contextName;
   }
 
   renderCurrentContextSwitch() {
     if (!this.showContextSwitch) return null;
-    const { cluster, config } = dialogState;
+    const { cluster, config } = this.props.state;
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
     const options = [
@@ -146,7 +130,7 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   renderDeleteMessage() {
-    const { cluster } = dialogState;
+    const { cluster } = this.props.state;
 
     if (cluster.isInLocalKubeconfig()) {
       return (
@@ -164,7 +148,7 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   getWarningMessage() {
-    const { cluster, config } = dialogState;
+    const { cluster, config } = this.props.state;
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
     if (!contexts.length) {
@@ -206,9 +190,8 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   render() {
-    const { cluster, config, isOpen } = dialogState;
-
-    if (!cluster || !config) return null;
+    const { cluster, config } = this.props.state;
+    const isOpen = Boolean(cluster && config);
 
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
@@ -258,3 +241,12 @@ export class DeleteClusterDialog extends React.Component {
     );
   }
 }
+
+export const DeleteClusterDialog = withInjectables<Dependencies>(NonInjectedDeleteClusterDialog, {
+  getProps: (di, props) => ({
+    removeAllHotbarItems: di.inject(removeAllHotbarItemsInjectable),
+    state: di.inject(deleteClusterDialogStateInjectable),
+    closeDeleteClusterDialog: di.inject(closeDeleteClusterDialogInjectable),
+    ...props,
+  }),
+});

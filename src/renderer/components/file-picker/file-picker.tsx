@@ -176,7 +176,7 @@ export class FilePicker extends React.Component<Props> {
         this.status = FileInputStatus.PROCESSING;
 
         const paths: string[] = [];
-        const promises = totalSizeLimitedFiles.map(async file => {
+        const promises = totalSizeLimitedFiles.map(file => {
           const destinationPath = path.join(uploadDir, file.name);
 
           paths.push(destinationPath);

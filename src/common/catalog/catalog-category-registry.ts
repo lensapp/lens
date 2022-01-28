@@ -5,7 +5,7 @@
 
 import { action, computed, observable, makeObservable } from "mobx";
 import { Disposer, ExtendedMap, iter } from "../utils";
-import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
+import { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 import { once } from "lodash";
 
 export type CategoryFilter = (category: CatalogCategory) => any;
@@ -37,22 +37,19 @@ export class CatalogCategoryRegistry {
     return Array.from(this.categories);
   }
 
-  @computed get filteredItems() {
-    return Array.from(
-      iter.reduce(
-        this.filters,
-        iter.filter,
-        this.items.values(),
-      ),
-    );
+  readonly filteredItems = computed(() => Array.from(
+    iter.reduce(
+      this.filters,
+      iter.filter,
+      this.categories.values(),
+    ),
+  ));
+
+  getForGroupKind(group: string, kind: string): CatalogCategory | undefined {
+    return this.groupKinds.get(group)?.get(kind);
   }
 
-
-  getForGroupKind<T extends CatalogCategory>(group: string, kind: string): T | undefined {
-    return this.groupKinds.get(group)?.get(kind) as T;
-  }
-
-  getEntityForData(data: CatalogEntityData & CatalogEntityKindData) {
+  getEntityForData = (data: CatalogEntityData & CatalogEntityKindData): CatalogEntity | null => {
     const category = this.getCategoryForEntity(data);
 
     if (!category) {
@@ -69,18 +66,23 @@ export class CatalogCategoryRegistry {
     }
 
     return new specVersion.entityClass(data);
-  }
+  };
 
-  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData): T | undefined {
-    const splitApiVersion = data.apiVersion.split("/");
-    const group = splitApiVersion[0];
+  getCategoryForEntity = <T extends CatalogCategory>({ kind, apiVersion }: CatalogEntityData & CatalogEntityKindData): T => {
+    const group = apiVersion.split("/")[0];
+    const category = this.getForGroupKind(group, kind);
 
-    return this.getForGroupKind(group, data.kind);
-  }
+    if (!category) {
+      // Throw here because it is very important that this is always true
+      throw new Error(`Unable to find a category for group=${group} kind=${kind}`);
+    }
 
-  getByName(name: string) {
+    return category as T;
+  };
+
+  getByName = (name: string) => {
     return this.items.find(category => category.metadata?.name == name);
-  }
+  };
 
   /**
    * Add a new filter to the set of category filters
@@ -93,5 +95,3 @@ export class CatalogCategoryRegistry {
     return once(() => void this.filters.delete(fn));
   }
 }
-
-export const catalogCategoryRegistry = new CatalogCategoryRegistry();

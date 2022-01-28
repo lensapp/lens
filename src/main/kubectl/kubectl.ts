@@ -13,7 +13,7 @@ import { helmCli } from "../helm/helm-cli";
 import { getBundledKubectlVersion } from "../../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../../common/vars";
 import { SemVer } from "semver";
-import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
+import { defaultPackageMirror, packageMirrors } from "../../common/user-preferences/preferences-helpers";
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
@@ -37,11 +37,10 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.20", "1.20.8"],
   ["1.21", bundledVersion],
 ]);
-let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3";
 
-export function bundledKubectlPath(): string {
-  if (bundledPath) { return bundledPath; }
+export const bundledKubectlPath = (() => {
+  let bundledPath: string;
 
   if (isDevelopment || isTestEnv) {
     const platformName = isWindows ? "windows" : process.platform;
@@ -56,7 +55,7 @@ export function bundledKubectlPath(): string {
   }
 
   return bundledPath;
-}
+})();
 
 interface Dependencies {
   directoryForKubectlBinaries: string;
@@ -78,6 +77,10 @@ export class Kubectl {
 
   public static readonly bundledKubectlVersion: string = bundledVersion;
   public static invalidBundle = false;
+
+  static create(...args: ConstructorParameters<typeof Kubectl>) {
+    return new Kubectl(...args);
+  }
 
   constructor(private dependencies: Dependencies, clusterVersion: string) {
     let version: SemVer;
@@ -119,12 +122,8 @@ export class Kubectl {
     this.path = path.join(this.dirname, binaryName);
   }
 
-  public getBundledPath() {
-    return bundledKubectlPath();
-  }
-
   public getPathFromPreferences() {
-    return this.dependencies.userStore.kubectlBinariesPath || this.getBundledPath();
+    return this.dependencies.userStore.kubectlBinariesPath || bundledKubectlPath;
   }
 
   protected getDownloadDir() {
@@ -137,7 +136,7 @@ export class Kubectl {
 
   public getPath = async (bundled = false): Promise<string> => {
     if (bundled) {
-      return this.getBundledPath();
+      return bundledKubectlPath;
     }
 
     if (this.dependencies.userStore.downloadKubectlBinaries === false) {
@@ -145,17 +144,17 @@ export class Kubectl {
     }
 
     // return binary name if bundled path is not functional
-    if (!await this.checkBinary(this.getBundledPath(), false)) {
+    if (!await this.checkBinary(bundledKubectlPath, false)) {
       Kubectl.invalidBundle = true;
 
-      return path.basename(this.getBundledPath());
+      return path.basename(bundledKubectlPath);
     }
 
     try {
       if (!await this.ensureKubectl()) {
         logger.error("Failed to ensure kubectl, fallback to the bundled version");
 
-        return this.getBundledPath();
+        return bundledKubectlPath;
       }
 
       return this.path;
@@ -163,7 +162,7 @@ export class Kubectl {
       logger.error("Failed to ensure kubectl, fallback to the bundled version");
       logger.error(err);
 
-      return this.getBundledPath();
+      return bundledKubectlPath;
     }
   };
 
@@ -223,7 +222,7 @@ export class Kubectl {
         const exist = await pathExists(this.path);
 
         if (!exist) {
-          await fs.promises.copyFile(this.getBundledPath(), this.path);
+          await fs.promises.copyFile(bundledKubectlPath, this.path);
           await fs.promises.chmod(this.path, 0o755);
         }
 

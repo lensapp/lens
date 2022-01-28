@@ -4,15 +4,10 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { getHostedClusterId } from "../../utils";
-import clusterStoreInjectable from "../cluster-store.injectable";
+import clusterStoreInjectable from "../store.injectable";
 
 const hostedClusterInjectable = getInjectable({
-  instantiate: (di) => {
-    const hostedClusterId = getHostedClusterId();
-
-    return di.inject(clusterStoreInjectable).getById(hostedClusterId);
-  },
-
+  instantiate: (di) => di.inject(clusterStoreInjectable).getById(getHostedClusterId()),
   lifecycle: lifecycleEnum.singleton,
 });
 

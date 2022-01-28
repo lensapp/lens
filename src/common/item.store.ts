@@ -28,6 +28,8 @@ export abstract class ItemStore<Item extends ItemObject> {
     autoBind(this);
   }
 
+  readonly computedItems = computed(() => [...this.items]);
+
   @computed get selectedItems(): Item[] {
     return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
   }

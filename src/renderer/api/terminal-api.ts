@@ -59,6 +59,16 @@ export interface TerminalEvents extends WebSocketEvents {
   connected: () => void;
 }
 
+export interface TerminalSizes {
+  cols: number;
+  rows: number;
+}
+
+interface EmitStatusOptions {
+  color?: TerminalColor;
+  showTime?: boolean;
+}
+
 export class TerminalApi extends WebSocketApi<TerminalEvents> {
   protected size: { width: number; height: number };
 
@@ -132,7 +142,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     return this.send(serialize(message));
   }
 
-  sendTerminalSize(cols: number, rows: number) {
+  sendTerminalSize({ cols, rows }: TerminalSizes) {
     const newSize = { width: cols, height: rows };
 
     if (!isEqual(this.size, newSize)) {
@@ -172,7 +182,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
   protected _onOpen(evt: Event) {
     // Client should send terminal size in special channel 4,
     // But this size will be changed by terminal.fit()
-    this.sendTerminalSize(120, 80);
+    this.sendTerminalSize({ cols: 120, rows: 80 });
     super._onOpen(evt);
   }
 
@@ -181,7 +191,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     this.isReady = false;
   }
 
-  protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}) {
+  protected emitStatus(data: string, options: EmitStatusOptions = {}) {
     const { color, showTime } = options;
     const time = showTime ? `${(new Date()).toLocaleString()} ` : "";
 

@@ -6,7 +6,6 @@
 import { observable } from "mobx";
 import { GeneralEntity } from "../../common/catalog-entities/general";
 import { catalogURL, preferencesURL, welcomeURL } from "../../common/routes";
-import { catalogEntityRegistry } from "../catalog";
 
 export const catalogEntity = new GeneralEntity({
   metadata: {
@@ -65,12 +64,8 @@ const welcomePageEntity = new GeneralEntity({
   },
 });
 
-const generalEntities = observable([
+export const generalEntities = observable([
   catalogEntity,
   preferencesEntity,
   welcomePageEntity,
 ]);
-
-export function syncGeneralEntities() {
-  catalogEntityRegistry.addObservableSource("lens:general", generalEntities);
-}

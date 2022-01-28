@@ -69,6 +69,7 @@ export class Menu extends React.Component<MenuProps, State> {
   public elem: HTMLUListElement;
   protected items: { [index: number]: MenuItem } = {};
   public state: State = {};
+  protected willUnmount = false;
 
   get isOpen() {
     return !!this.props.isOpen;
@@ -110,6 +111,7 @@ export class Menu extends React.Component<MenuProps, State> {
     window.removeEventListener("resize", this.onWindowResize);
     window.removeEventListener("click", this.onClickOutside, true);
     window.removeEventListener("scroll", this.onScrollOutside, true);
+    this.willUnmount = true;
   }
 
   componentDidUpdate(prevProps: MenuProps) {
@@ -203,7 +205,7 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   close() {
-    if (this.isClosed) {
+    if (this.isClosed || this.willUnmount) {
       return;
     }
 

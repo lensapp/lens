@@ -10,9 +10,7 @@ let syncAppPaths: AppPaths;
 
 const appPathsInjectable = getInjectable({
   setup: async (di) => {
-    const getValueFromRegisteredChannel = di.inject(
-      getValueFromRegisteredChannelInjectable,
-    );
+    const getValueFromRegisteredChannel = di.inject(getValueFromRegisteredChannelInjectable);
 
     syncAppPaths = await getValueFromRegisteredChannel(appPathsIpcChannel);
   },

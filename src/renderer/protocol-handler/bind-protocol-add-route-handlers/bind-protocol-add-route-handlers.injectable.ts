@@ -4,19 +4,21 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import attemptInstallByInfoInjectable from "../../components/+extensions/attempt-install-by-info/attempt-install-by-info.injectable";
-import { bindProtocolAddRouteHandlers } from "./bind-protocol-add-route-handlers";
+import { addInternalProtocolRouteHandlers } from "./bind-protocol-add-route-handlers";
 import lensProtocolRouterRendererInjectable from "../lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
+import getEntityByIdInjectable from "../../catalog/get-entity-by-id.injectable";
+import { bind } from "../../utils";
+import getClusterByIdInjectable from "../../../common/cluster-store/get-cluster-by-id.injectable";
 
-const bindProtocolAddRouteHandlersInjectable = getInjectable({
-  instantiate: (di) =>
-    bindProtocolAddRouteHandlers({
-      attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
-      lensProtocolRouterRenderer: di.inject(
-        lensProtocolRouterRendererInjectable,
-      ),
-    }),
+const addInternalProtocolRouteHandlersInjectable = getInjectable({
+  instantiate: (di) => bind(addInternalProtocolRouteHandlers, null, {
+    attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
+    lensProtocolRouterRenderer: di.inject(lensProtocolRouterRendererInjectable),
+    getEntityById: di.inject(getEntityByIdInjectable),
+    getClusterById: di.inject(getClusterByIdInjectable),
+  }),
 
   lifecycle: lifecycleEnum.singleton,
 });
 
-export default bindProtocolAddRouteHandlersInjectable;
+export default addInternalProtocolRouteHandlersInjectable;

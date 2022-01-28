@@ -4,14 +4,14 @@
  */
 import styles from "./catalog.module.scss";
 import React from "react";
-import { action, computed } from "mobx";
-import { CatalogEntity } from "../../api/catalog-entity";
+import { computed } from "mobx";
 import type { ItemObject } from "../../../common/item.store";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
 import { searchUrlParam } from "../input";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../catalog/entity-registry";
+import { CatalogEntity } from "../../../common/catalog";
 
 export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
   constructor(public entity: T, private registry: CatalogEntityRegistry) {
@@ -91,10 +91,5 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
 
   onRun() {
     this.registry.onRun(this.entity);
-  }
-
-  @action
-  async onContextMenuOpen(ctx: any) {
-    return this.entity.onContextMenuOpen(ctx);
   }
 }

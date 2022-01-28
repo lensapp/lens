@@ -4,12 +4,12 @@
  */
 
 import React from "react";
-import { isAllowedResource } from "../../common/utils/allowed-resource";
 import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
 import { Events } from "../components/+events";
-import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
+import { OverviewStatuses } from "../components/+workloads-overview/statuses";
+import type { KubeResource } from "../../common/rbac";
 
-export function initWorkloadsOverviewDetailRegistry() {
+export function initWorkloadsOverviewDetailRegistry(isAllowedResource: (resource: KubeResource) => boolean) {
   WorkloadsOverviewDetailRegistry.getInstance()
     .add([
       {

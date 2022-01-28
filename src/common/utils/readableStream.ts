@@ -88,6 +88,6 @@ export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
   private async syncAndRelease() {
     this.released = true;
     await this.waitForReadToComplete();
-    await this.reader.releaseLock();
+    this.reader.releaseLock();
   }
 }

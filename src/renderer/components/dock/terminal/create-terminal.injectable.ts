@@ -4,20 +4,21 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { Terminal } from "./terminal";
-import type { TabId } from "../dock-store/dock.store";
-import type { TerminalApi } from "../../../api/terminal-api";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
+import { bind } from "../../../utils";
+import addElementEventListenerInjectable from "../../../event-listeners/add-element-event-listener.injectable";
+import addWindowEventListenerInjectable from "../../../event-listeners/add-window-event-listener.injectable";
+import terminalColorsInjectable from "../../../themes/terminal-colors.injectable";
+import terminalConfigInjectable from "../../../../common/user-preferences/terminal-config.injectable";
+import terminalCopyOnSelectInjectable from "../../../../common/user-preferences/terminal-copy-on-select.injectable";
 
 const createTerminalInjectable = getInjectable({
-  instantiate: (di) => {
-    const dependencies = {
-      dockStore: di.inject(dockStoreInjectable),
-    };
-
-    return (tabId: TabId, api: TerminalApi) =>
-      new Terminal(dependencies, tabId, api);
-  },
-
+  instantiate: (di) => bind(Terminal.create, null, {
+    addElementEventListener: di.inject(addElementEventListenerInjectable),
+    addWindowEventListener: di.inject(addWindowEventListenerInjectable),
+    terminalColors: di.inject(terminalColorsInjectable),
+    terminalConfig: di.inject(terminalConfigInjectable),
+    terminalCopyOnSelect: di.inject(terminalCopyOnSelectInjectable),
+  }),
   lifecycle: lifecycleEnum.singleton,
 });
 

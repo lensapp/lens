@@ -5,7 +5,7 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, render } from "@testing-library/react";
-import { ToBottom } from "../to-bottom";
+import { ToBottom } from "../logs/to-bottom";
 import { noop } from "../../../utils";
 
 describe("<ToBottom/>", () => {

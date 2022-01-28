@@ -8,15 +8,14 @@ import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { ipcMain, ipcRenderer } from "electron";
 import { IEqualsComparer, makeObservable, reaction, runInAction } from "mobx";
-import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
+import { getAppVersion, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "./app-paths/directory-for-user-data.injectable";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
@@ -28,14 +27,13 @@ export interface BaseStoreParams<T> extends ConfOptions<T> {
 /**
  * Note: T should only contain base JSON serializable types.
  */
-export abstract class BaseStore<T> extends Singleton {
+export abstract class BaseStore<T> {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
   readonly displayName: string = this.constructor.name;
 
   protected constructor(protected params: BaseStoreParams<T>) {
-    super();
     makeObservable(this);
 
     if (ipcRenderer) {

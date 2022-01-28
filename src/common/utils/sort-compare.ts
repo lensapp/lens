@@ -5,7 +5,7 @@
 
 import semver, { coerce, SemVer } from "semver";
 import * as iter from "./iter";
-import type { RawHelmChart } from "../k8s-api/endpoints/helm-charts.api";
+import type { RawHelmChart } from "../k8s-api/endpoints/helm-chart.api";
 import logger from "../logger";
 
 export enum Ordering {

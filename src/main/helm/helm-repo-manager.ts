@@ -8,8 +8,6 @@ import { BaseEncodingOptions, readFile } from "fs-extra";
 import { promiseExecFile } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
 import { Singleton } from "../../common/utils/singleton";
-import { customRequestPromise } from "../../common/request";
-import orderBy from "lodash/orderBy";
 import logger from "../logger";
 import type { ExecFileOptions } from "child_process";
 
@@ -50,17 +48,6 @@ export class HelmRepoManager extends Singleton {
   protected repos: HelmRepo[];
   protected helmEnv: HelmEnv;
   protected initialized: boolean;
-
-  public static async loadAvailableRepos(): Promise<HelmRepo[]> {
-    const res = await customRequestPromise({
-      uri: "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json",
-      json: true,
-      resolveWithFullResponse: true,
-      timeout: 10000,
-    });
-
-    return orderBy<HelmRepo>(res.body, repo => repo.name);
-  }
 
   private async init() {
     helmCli.setLogger(logger);
@@ -137,14 +124,14 @@ export class HelmRepoManager extends Singleton {
     }
   }
 
-  public static async update() {
+  public static update() {
     return execHelm([
       "repo",
       "update",
     ]);
   }
 
-  public static async addRepo({ name, url }: HelmRepo) {
+  public static addRepo({ name, url }: HelmRepo) {
     logger.info(`[HELM]: adding repo "${name}" from ${url}`);
 
     return execHelm([
@@ -155,7 +142,7 @@ export class HelmRepoManager extends Singleton {
     ]);
   }
 
-  public static async addCustomRepo({ name, url, insecureSkipTlsVerify, username, password, caFile, keyFile, certFile }: HelmRepo) {
+  public static addCustomRepo({ name, url, insecureSkipTlsVerify, username, password, caFile, keyFile, certFile }: HelmRepo) {
     logger.info(`[HELM]: adding repo ${name} from ${url}`);
     const args = [
       "repo",
@@ -191,7 +178,7 @@ export class HelmRepoManager extends Singleton {
     return execHelm(args);
   }
 
-  public static async removeRepo({ name, url }: HelmRepo): Promise<string> {
+  public static removeRepo({ name, url }: HelmRepo): Promise<string> {
     logger.info(`[HELM]: removing repo ${name} (${url})`);
 
     return execHelm([

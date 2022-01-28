@@ -4,21 +4,27 @@
  */
 
 import debounce from "lodash/debounce";
-import { reaction } from "mobx";
-import { Terminal as XTerm } from "xterm";
+import { IComputedValue, reaction } from "mobx";
+import { ITheme, Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import type { DockStore, TabId } from "../dock-store/dock.store";
+import type { TabId } from "../dock/store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
-import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
-import { isMac } from "../../../../common/vars";
+import { isMac, defaultTerminalFontFamily } from "../../../../common/vars";
 import { once } from "lodash";
-import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
+import type { TerminalConfig } from "../../../../common/user-preferences/preferences-helpers";
+import font from "../../fonts/roboto-mono-nerd.ttf";
+import type { AddElementEventListener } from "../../../event-listeners/add-element-event-listener.injectable";
+import type { AddWindowEventListener } from "../../../event-listeners/add-window-event-listener.injectable";
 
-interface Dependencies {
-  dockStore: DockStore
+export interface TerminalDependencies {
+  readonly terminalColors: IComputedValue<ITheme>;
+  readonly terminalCopyOnSelect: IComputedValue<boolean>;
+  readonly terminalConfig: IComputedValue<TerminalConfig>;
+  addWindowEventListener: AddWindowEventListener;
+  addElementEventListener: AddElementEventListener;
 }
 
 export class Terminal {
@@ -27,35 +33,23 @@ export class Terminal {
   }
 
   static async preloadFonts() {
-    const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
-    const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+    const fontFace = new FontFace(defaultTerminalFontFamily, `url(${font})`);
 
     await fontFace.load();
     document.fonts.add(fontFace);
   }
 
-  private xterm: XTerm | null = new XTerm({
-    cursorBlink: true,
-    cursorStyle: "bar",
-    fontSize: 13,
-    fontFamily: "RobotoMono",
-  });
+  private xterm: XTerm | null;
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;
   private disposer = disposer();
 
-  get elem() {
+  protected get elem() {
     return this.xterm?.element;
   }
 
-  get viewport() {
-    return this.xterm.element.querySelector(".xterm-viewport");
-  }
-
-  get isActive() {
-    const { isOpen, selectedTabId } = this.dependencies.dockStore;
-
-    return isOpen && selectedTabId === this.tabId;
+  protected get viewport() {
+    return this.xterm.element.querySelector(".xterm-viewport") as HTMLElement;
   }
 
   attachTo(parentElem: HTMLElement) {
@@ -71,38 +65,58 @@ export class Terminal {
     }
   }
 
-  constructor(private dependencies: Dependencies, public tabId: TabId, protected api: TerminalApi) {
+  static create(...args: ConstructorParameters<typeof Terminal>) {
+    return new Terminal(...args);
+  }
+
+  constructor({ terminalColors, terminalConfig, terminalCopyOnSelect, addWindowEventListener, addElementEventListener }: TerminalDependencies, public tabId: TabId, protected api: TerminalApi) {
+    this.xterm = new XTerm({
+      cursorBlink: true,
+      cursorStyle: "bar",
+      ...terminalConfig.get(),
+      theme: terminalColors.get(),
+    });
+
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
 
     this.xterm.open(Terminal.spawningPool);
     this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
-    this.xterm.onSelectionChange(this.onSelectionChange);
+    this.xterm.onSelectionChange(() => {
+      const selection = this.xterm.getSelection().trim();
+
+      if (terminalCopyOnSelect.get() && selection) {
+        clipboard.writeText(selection);
+      }
+    });
 
     // bind events
     const onDataHandler = this.xterm.onData(this.onData);
     const clearOnce = once(this.onClear);
 
-    this.viewport.addEventListener("scroll", this.onScroll);
-    this.elem.addEventListener("contextmenu", this.onContextMenu);
-    this.api.once("ready", clearOnce);
-    this.api.once("connected", clearOnce);
-    this.api.on("data", this.onApiData);
-    window.addEventListener("resize", this.onResize);
+    const onContextMenu = () => {
+      // don't paste if the clipboard doesn't have text
+      if (terminalCopyOnSelect.get() && clipboard.has("text/plain")) {
+        this.xterm.paste(clipboard.readText());
+      }
+    };
+
+    this.api
+      .once("ready", clearOnce)
+      .once("connected", clearOnce)
+      .on("data", data => this.xterm.write(data));
 
     this.disposer.push(
-      reaction(() => ThemeStore.getInstance().xtermColors, colors => {
-        this.xterm?.setOption("theme", colors);
-      }, {
-        fireImmediately: true,
-      }),
-      dependencies.dockStore.onResize(this.onResize),
+      addElementEventListener(this.viewport, "scroll", () => this.scrollPos = this.viewport.scrollTop),
+      addElementEventListener(this.elem, "contextmenu", onContextMenu),
+      addWindowEventListener("resize", this.onResize),
+      reaction(() => terminalColors.get(), theme => this.xterm.options.theme = theme),
+      reaction(() => terminalConfig.get().fontFamily, fontFamily => this.xterm.options.fontFamily = fontFamily),
+      reaction(() => terminalConfig.get().fontSize, fontSize => this.xterm.options.fontSize = fontSize),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
-      () => window.removeEventListener("resize", this.onResize),
-      () => this.elem.removeEventListener("contextmenu", this.onContextMenu),
     );
   }
 
@@ -114,17 +128,15 @@ export class Terminal {
     }
   }
 
-  fit = () => {
+  protected fit = () => {
     // Since this function is debounced we need to read this value as late as possible
-    if (!this.isActive || !this.xterm) {
+    if (!this.xterm) {
       return;
     }
 
     try {
       this.fitAddon.fit();
-      const { cols, rows } = this.xterm;
-
-      this.api.sendTerminalSize(cols, rows);
+      this.api.sendTerminalSize(this.xterm);
     } catch (error) {
       // see https://github.com/lensapp/lens/issues/1891
       logger.error(`[TERMINAL]: failed to resize terminal to fit`, error);
@@ -137,62 +149,35 @@ export class Terminal {
     this.xterm.focus();
   };
 
-  onApiData = (data: string) => {
-    this.xterm.write(data);
+  protected onData = (data: string) => {
+    if (this.api.isReady) {
+      this.api.sendMessage({
+        type: TerminalChannels.STDIN,
+        data,
+      });
+    }
   };
 
-  onData = (data: string) => {
-    if (!this.api.isReady) return;
-    this.api.sendMessage({
-      type: TerminalChannels.STDIN,
-      data,
-    });
-  };
-
-  onScroll = () => {
-    this.scrollPos = this.viewport.scrollTop;
-  };
-
-  onClear = () => {
+  protected onClear = () => {
     this.xterm.clear();
   };
 
-  onResize = () => {
+  protected onResize = () => {
     this.fitLazy();
     this.focus();
   };
 
-  onActivate = () => {
+  protected onActivate = () => {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
   };
 
-  onClickLink = (evt: MouseEvent, link: string) => {
+  protected onClickLink = (evt: MouseEvent, link: string) => {
     window.open(link, "_blank");
   };
 
-  onContextMenu = () => {
-    if (
-      // don't paste if user hasn't turned on the feature
-      UserStore.getInstance().terminalCopyOnSelect
-
-      // don't paste if the clipboard doesn't have text
-      && clipboard.availableFormats().includes("text/plain")
-    ) {
-      this.xterm.paste(clipboard.readText());
-    }
-  };
-
-  onSelectionChange = () => {
-    const selection = this.xterm.getSelection().trim();
-
-    if (UserStore.getInstance().terminalCopyOnSelect && selection) {
-      clipboard.writeText(selection);
-    }
-  };
-
-  keyHandler = (evt: KeyboardEvent): boolean => {
+  protected keyHandler = (evt: KeyboardEvent): boolean => {
     const { code, ctrlKey, metaKey } = evt;
 
     // Handle custom hotkey bindings

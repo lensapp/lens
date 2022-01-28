@@ -36,6 +36,10 @@ export class ContextHandler {
   protected prometheusProvider?: string;
   protected prometheus?: PrometheusServicePreferences;
 
+  static create(...args: ConstructorParameters<typeof ContextHandler>) {
+    return new ContextHandler(...args);
+  }
+
   constructor(private dependencies: Dependencies, protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
     this.setupPrometheus(cluster.preferences);

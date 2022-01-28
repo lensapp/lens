@@ -25,18 +25,14 @@ export interface KubeObjectMetadata {
   uid: string;
   name: string;
   namespace?: string;
-  creationTimestamp: string;
+  creationTimestamp?: string;
   resourceVersion: string;
-  selfLink: string;
+  selfLink?: string;
   deletionTimestamp?: string;
   finalizers?: string[];
   continue?: string; // provided when used "?limit=" query param to fetch objects list
-  labels?: {
-    [label: string]: string;
-  };
-  annotations?: {
-    [annotation: string]: string;
-  };
+  labels?: Record<string, string | undefined>;
+  annotations?: Record<string, string | undefined>;
   ownerReferences?: {
     apiVersion: string;
     kind: string;
@@ -70,15 +66,19 @@ export class KubeStatus {
   }
 }
 
-export interface KubeObjectStatus {
-  conditions?: {
-    lastTransitionTime: string;
-    message: string;
-    reason: string;
-    status: string;
-    type?: string;
-  }[];
+export interface KubeObjectCondition {
+  lastTransitionTime: string;
+  message: string;
+  reason: string;
+  status: string;
+  type?: string;
 }
+
+export interface KubeObjectStatus<Condition = KubeObjectCondition> {
+  conditions?: Condition[];
+}
+
+export interface KubeObjectSpec {}
 
 export type KubeMetaField = keyof KubeObjectMetadata;
 
@@ -116,7 +116,7 @@ export interface LabelSelector {
   matchExpressions?: LabelMatchExpression[];
 }
 
-export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
+export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status extends KubeObjectStatus = {}, Spec = {}> implements ItemObject {
   static readonly kind?: string;
   static readonly namespaced?: boolean;
   static readonly apiBase?: string;
@@ -128,7 +128,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   spec?: Spec;
   managedFields?: any;
 
-  static create(data: KubeJsonApiData) {
+  static create<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status extends KubeObjectStatus = {}, Spec = {}>(data: KubeJsonApiData<Metadata, Status, Spec>) {
     return new KubeObject(data);
   }
 
@@ -227,7 +227,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     ...KubeObject.nonEditablePathPrefixes,
   ]);
 
-  constructor(data: KubeJsonApiData) {
+  constructor(data: KubeJsonApiData<Metadata, Status, Spec>) {
     if (typeof data !== "object") {
       throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
     }
@@ -322,7 +322,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   /**
    * @deprecated use KubeApi.patch instead
    */
-  async patch(patch: Patch): Promise<KubeJsonApiData | null> {
+  patch(patch: Patch): Promise<KubeJsonApiData | null> {
     for (const op of patch) {
       if (KubeObject.nonEditablePaths.has(op.path)) {
         throw new Error(`Failed to update ${this.kind}: JSON pointer ${op.path} has been modified`);
@@ -347,7 +347,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
    *
    * @deprecated use KubeApi.update instead
    */
-  async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
+  update(data: Partial<this>): Promise<KubeJsonApiData | null> {
     // use unified resource-applier api for updating all k8s objects
     return resourceApplierApi.update({
       ...this.toPlainObject(),

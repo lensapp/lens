@@ -18,14 +18,20 @@ import { observer } from "mobx-react";
 import { RemovableItem } from "./removable-item";
 import { Notice } from "../+extensions/notice";
 import { Spinner } from "../spinner";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loadAvailableHelmReposInjectable from "../../../main/helm/load-available-repos.injectable";
+
+interface Dependencies {
+  loadAvailableHelmRepos: () => Promise<HelmRepo[]>;
+}
 
 @observer
-export class HelmCharts extends React.Component {
+class NonInjectedHelmCharts extends React.Component<Dependencies> {
   @observable loading = false;
   @observable repos: HelmRepo[] = [];
   @observable addedRepos = observable.map<string, HelmRepo>();
 
-  constructor(props: {}) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -47,7 +53,7 @@ export class HelmCharts extends React.Component {
 
     try {
       if (!this.repos.length) {
-        this.repos = await HelmRepoManager.loadAvailableRepos();
+        this.repos = await this.props.loadAvailableHelmRepos();
       }
       const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
 
@@ -160,3 +166,10 @@ export class HelmCharts extends React.Component {
     );
   }
 }
+
+export const HelmCharts = withInjectables<Dependencies>(NonInjectedHelmCharts, {
+  getProps: (di, props) => ({
+    loadAvailableHelmRepos: di.inject(loadAvailableHelmReposInjectable),
+    ...props,
+  }),
+});

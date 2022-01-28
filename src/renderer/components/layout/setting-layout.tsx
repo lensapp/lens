@@ -40,7 +40,7 @@ const defaultProps: Partial<SettingLayoutProps> = {
 export class SettingLayout extends React.Component<SettingLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  async componentDidMount() {
+  componentDidMount() {
     const { hash } = window.location;
 
     if (hash) {

@@ -58,7 +58,7 @@ describe("<Welcome/>", () => {
 
     const { container } = render(<Welcome />);
 
-    expect(screen.queryByTestId(testId)).toBeInTheDocument();
+    expect(await screen.findByTestId(testId)).toBeInTheDocument();
     expect(container.getElementsByClassName("logo").length).toBe(0);
   });
 
@@ -75,14 +75,14 @@ describe("<Welcome/>", () => {
 
     render(<Welcome />);
 
-    expect(screen.queryByTestId("welcome-banner-container")).toHaveStyle({
+    expect(await screen.findByTestId("welcome-banner-container")).toHaveStyle({
       // should take the max width of the banners (if > defaultWidth)
       width: `800px`,
     });
-    expect(screen.queryByTestId("welcome-text-container")).toHaveStyle({
+    expect(await screen.findByTestId("welcome-text-container")).toHaveStyle({
       width: `${defaultWidth}px`,
     });
-    expect(screen.queryByTestId("welcome-menu-container")).toHaveStyle({
+    expect(await screen.findByTestId("welcome-menu-container")).toHaveStyle({
       width: `${defaultWidth}px`,
     });
   });

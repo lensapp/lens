@@ -58,7 +58,7 @@ export class ResourceApplier {
     }
   }
 
-  async apply(resource: KubernetesObject | any): Promise<string> {
+  apply(resource: KubernetesObject | any): Promise<string> {
     resource = this.sanitizeObject(resource);
     appEventBus.emit({ name: "resource", action: "apply" });
 
@@ -98,11 +98,11 @@ export class ResourceApplier {
     }
   }
 
-  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
+  public kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
     return this.kubectlCmdAll("apply", resources, extraArgs);
   }
 
-  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<string> {
+  public kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<string> {
     return this.kubectlCmdAll("delete", resources, extraArgs);
   }
 

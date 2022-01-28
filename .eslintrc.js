@@ -11,6 +11,7 @@ module.exports = {
     "**/dist/**/*",
     "**/static/**/*",
     "**/site/**/*",
+    "**/__mocks__/**/*",
   ],
   settings: {
     react: {
@@ -109,12 +110,15 @@ module.exports = {
       ],
       parserOptions: {
         ecmaVersion: 2018,
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.json"],
         sourceType: "module",
       },
       rules: {
         "no-constant-condition": ["error", { "checkLoops": false }],
         "header/header": [2, "./license-header"],
         "no-invalid-this": "off",
+        "@typescript-eslint/await-thenable": "error",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -129,6 +133,7 @@ module.exports = {
           "named": "never",
           "asyncArrow": "always",
         }],
+        "require-await": "error",
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
@@ -193,7 +198,9 @@ module.exports = {
       ],
       parserOptions: {
         ecmaVersion: 2018,
+        tsconfigRootDir: __dirname,
         sourceType: "module",
+        project: ["./tsconfig.json"],
         jsx: true,
       },
       rules: {
@@ -201,6 +208,7 @@ module.exports = {
         "header/header": [2, "./license-header"],
         "react/prop-types": "off",
         "no-invalid-this": "off",
+        "@typescript-eslint/await-thenable": "error",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -220,6 +228,7 @@ module.exports = {
           "named": "never",
           "asyncArrow": "always",
         }],
+        "require-await": "error",
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {

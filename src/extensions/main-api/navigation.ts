@@ -3,8 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { WindowManager } from "../../main/window-manager";
+import windowManagerInjectable from "../../main/windows/manager.injectable";
+import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
 export function navigate(url: string) {
-  return WindowManager.getInstance().navigate(url);
+  asLegacyGlobalObjectForExtensionApi(windowManagerInjectable).navigate(url);
 }

@@ -7,7 +7,7 @@
 
 import moment from "moment";
 import { apiBase } from "../index";
-import type { IMetricsQuery } from "../../../main/routes/metrics-route";
+import type { IMetricsQuery } from "../../../main/routes/metrics/route";
 
 export interface IMetrics {
   status: string;
@@ -56,7 +56,7 @@ export interface IResourceMetrics<T extends IMetrics> {
 }
 
 export const metricsApi = {
-  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
+  getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
     const { range = 3600, step = 60, namespace } = reqParams;
     let { start, end } = reqParams;
 
@@ -77,7 +77,7 @@ export const metricsApi = {
     });
   },
 
-  async getMetricProviders(): Promise<MetricProviderInfo[]> {
+  getMetricProviders(): Promise<MetricProviderInfo[]> {
     return apiBase.get("/metrics/providers");
   },
 };
@@ -141,8 +141,8 @@ export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | void {
-  if (!metrics) return;
+export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | null {
+  if (!metrics) return null;
   const itemMetrics = { ...metrics };
 
   for (const metric in metrics) {
@@ -159,7 +159,7 @@ export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: stri
 }
 
 export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
-  const result: Partial<{ [metric: string]: number }> = {};
+  const result: Partial<Record<string, number>> = {};
 
   Object.keys(metrics).forEach(metricName => {
     try {

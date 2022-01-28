@@ -6,11 +6,11 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Input, InputValidator } from "../input";
-import type { CreateHotbarData, CreateHotbarOptions } from "../../../common/hotbar-types";
+import type { CreateHotbarData, CreateHotbarOptions } from "../../../common/hotbar-store/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
 import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
+import createNewHotbarInjectable from "../../../common/hotbar-store/create-new-hotbar.injectable";
+import closeCommandDialogInjectable from "../command-palette/close-command-dialog.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
@@ -49,8 +49,8 @@ const NonInjectedHotbarAddCommand = observer(({ closeCommandOverlay, addHotbar, 
 
 export const HotbarAddCommand = withInjectables<Dependencies>(NonInjectedHotbarAddCommand, {
   getProps: (di, props) => ({
-    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    addHotbar: di.inject(hotbarManagerInjectable).add,
+    closeCommandOverlay: di.inject(closeCommandDialogInjectable),
+    addHotbar: di.inject(createNewHotbarInjectable),
     uniqueHotbarName: di.inject(uniqueHotbarNameInjectable),
     ...props,
   }),

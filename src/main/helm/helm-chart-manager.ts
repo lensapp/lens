@@ -10,7 +10,7 @@ import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
 import { promiseExecFile } from "../../common/utils/promise-exec";
 import { helmCli } from "./helm-cli";
-import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
+import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-chart.api";
 import { iter, sortCharts } from "../../common/utils";
 
 interface ChartCacheEntry {
@@ -66,11 +66,11 @@ export class HelmChartManager {
     }
   }
 
-  public async getReadme(name: string, version?: string) {
+  public getReadme(name: string, version?: string) {
     return this.executeCommand(["show", "readme"], name, version);
   }
 
-  public async getValues(name: string, version?: string) {
+  public getValues(name: string, version?: string) {
     return this.executeCommand(["show", "values"], name, version);
   }
 

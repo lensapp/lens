@@ -1,0 +1,30 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+$service-status-color-list: (
+  active: var(--colorOk),
+  pending: var(--colorWarning),
+);
+
+@mixin service-status-colors {
+  @each $status, $color in $service-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}
+
+$port-forward-status-color-list: (
+  active: var(--colorOk),
+  disabled: var(--colorSoftError),
+);
+
+@mixin port-forward-status-colors {
+  @each $status, $color in $port-forward-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}

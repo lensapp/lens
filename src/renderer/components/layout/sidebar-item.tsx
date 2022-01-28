@@ -6,16 +6,15 @@
 import "./sidebar-item.scss";
 
 import React from "react";
-import { computed, makeObservable } from "mobx";
-import { cssNames, prevDefault, StorageHelper } from "../../utils";
+import { cssNames, prevDefault, StorageLayer } from "../../utils";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { Icon } from "../icon";
 import { isActiveRoute } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import sidebarStorageInjectable, { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
+import sidebarStorageInjectable, { SidebarStorageState } from "./sidebar-storage.injectable";
 
-interface SidebarItemProps {
+export interface SidebarItemProps {
   /**
    * Unique id, used in storage and integration tests
    */
@@ -32,95 +31,76 @@ interface SidebarItemProps {
    * this item should be shown as active
    */
   isActive?: boolean;
+  children?: React.ReactNode | React.ReactChild | React.ReactChild[];
 }
 
 interface Dependencies {
-  sidebarStorage: StorageHelper<SidebarStorageState>
+  sidebarStorage: StorageLayer<SidebarStorageState>;
 }
 
-@observer
-class NonInjectedSidebarItem extends React.Component<SidebarItemProps & Dependencies> {
-  static displayName = "SidebarItem";
+const NonInjectedSidebarItem = observer(({
+  id,
+  url,
+  className,
+  text,
+  icon,
+  isHidden,
+  sidebarStorage,
+  isActive: forcedActive,
+  children,
+}: Dependencies & SidebarItemProps) => {
+  const expanded = Boolean(sidebarStorage.get().expanded[id]);
+  const isActive = forcedActive || isActiveRoute({
+    path: url,
+    exact: true,
+  });
+  const isExpandable = Boolean(children);
 
-  constructor(props: SidebarItemProps & Dependencies) {
-    super(props);
-    makeObservable(this);
+  if (isHidden) {
+    return null;
   }
 
-  get id(): string {
-    return this.props.id;
-  }
-
-  @computed get expanded(): boolean {
-    return Boolean(this.props.sidebarStorage.get().expanded[this.id]);
-  }
-
-  @computed get isActive(): boolean {
-    return this.props.isActive ?? isActiveRoute({
-      path: this.props.url,
-      exact: true,
-    });
-  }
-
-  @computed get isExpandable(): boolean {
-    return Boolean(this.props.children);
-  }
-
-  toggleExpand = () => {
-    this.props.sidebarStorage.merge(draft => {
-      draft.expanded[this.id] = !draft.expanded[this.id];
+  const toggleExpand = () => {
+    sidebarStorage.merge(draft => {
+      draft.expanded[id] = !draft.expanded[id];
     });
   };
-
-  renderSubMenu() {
-    const { isExpandable, expanded, isActive } = this;
-
+  const renderSubMenu = () => {
     if (!isExpandable || !expanded) {
       return null;
     }
 
     return (
       <ul className={cssNames("sub-menu", { active: isActive })}>
-        {this.props.children}
+        {children}
       </ul>
     );
-  }
+  };
 
-  render() {
-    const { isHidden, icon, text, url, className } = this.props;
+  return (
+    <div className={cssNames(SidebarItem.displayName, className)} data-test-id={id}>
+      <NavLink
+        to={url}
+        isActive={() => isActive}
+        className={cssNames("nav-item flex gaps align-center", { expandable: isExpandable })}
+        onClick={isExpandable ? prevDefault(toggleExpand) : undefined}>
+        {icon}
+        <span className="link-text box grow">{text}</span>
+        {isExpandable && <Icon
+          className="expand-icon box right"
+          material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+        />}
+      </NavLink>
+      {renderSubMenu()}
+    </div>
+  );
+});
 
-    if (isHidden) return null;
+export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(NonInjectedSidebarItem, {
+  getProps: (di, props) => ({
+    sidebarStorage: di.inject(sidebarStorageInjectable),
+    ...props,
+  }),
+});
 
-    const { isActive, id, expanded, isExpandable, toggleExpand } = this;
-    const classNames = cssNames("SidebarItem", className);
-
-    return (
-      <div className={classNames} data-test-id={id}>
-        <NavLink
-          to={url}
-          isActive={() => isActive}
-          className={cssNames("nav-item flex gaps align-center", { expandable: isExpandable })}
-          onClick={isExpandable ? prevDefault(toggleExpand) : undefined}>
-          {icon}
-          <span className="link-text box grow">{text}</span>
-          {isExpandable && <Icon
-            className="expand-icon box right"
-            material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-          />}
-        </NavLink>
-        {this.renderSubMenu()}
-      </div>
-    );
-  }
-}
-
-export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(
-  NonInjectedSidebarItem,
-
-  {
-    getProps: (di, props) => ({
-      sidebarStorage: di.inject(sidebarStorageInjectable),
-      ...props,
-    }),
-  },
-);
+SidebarItem.displayName = "SidebarItem";

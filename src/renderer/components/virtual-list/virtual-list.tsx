@@ -132,17 +132,16 @@ export class VirtualList extends Component<Props, State> {
   }
 }
 
-interface RowData {
+interface RowData<T> {
   items: ItemObject[];
-  getRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
+  getRow?: (uid: string | number) => React.ReactElement<TableRowProps<T>>;
 }
 
-interface RowProps extends ListChildComponentProps {
-  data: RowData;
+interface RowProps<T> extends ListChildComponentProps {
+  data: RowData<T>;
 }
 
-const Row = observer((props: RowProps) => {
-  const { index, style, data } = props;
+const NonGenericRow = observer(({ index, style, data }: RowProps<any>) => {
   const { items, getRow } = data;
   const item = items[index];
   const uid = typeof item == "string" ? index : items[index].getId();
@@ -154,3 +153,7 @@ const Row = observer((props: RowProps) => {
     style: Object.assign({}, row.props.style, style),
   });
 });
+
+function Row<T>(props: RowProps<T>) {
+  return <NonGenericRow {...props}/>;
+}

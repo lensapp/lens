@@ -12,7 +12,7 @@ console = new Console(stdout, stderr);
 let ext: LensExtension = null;
 
 describe("lens extension", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     ext = new LensExtension({
       manifest: {
         name: "foo-bar",

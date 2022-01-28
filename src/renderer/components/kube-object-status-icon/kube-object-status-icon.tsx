@@ -8,8 +8,11 @@ import "./kube-object-status-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { cssNames, formatDuration } from "../../utils";
-import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
-import { KubeObjectStatusRegistry } from "../../../extensions/registries";
+import { KubeObjectStatus, KubeObjectStatusLevel } from "../../../extensions/renderer-api/kube-object-status";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { observer } from "mobx-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import getStatusItemsForKubeObjectInjectable from "./status-items-for-object.injectable";
 
 function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {
@@ -64,53 +67,63 @@ function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
   return { maxLevel, criticals, warnings, infos };
 }
 
-interface Props {
+function renderStatuses(statuses: KubeObjectStatus[], level: number) {
+  const filteredStatuses = statuses.filter((item) => item.level == level);
+
+  return filteredStatuses.length > 0 && (
+    <div className={cssNames("level", statusClassName(level))}>
+      <span className="title">
+        {statusTitle(level)}
+      </span>
+      {
+        filteredStatuses.map((status, index) => (
+          <div key={`kube-resource-status-${level}-${index}`} className={cssNames("status", "msg")}>
+            - {status.text} <span className="age"> · {getAge(status.timestamp)}</span>
+          </div>
+        ))
+      }
+    </div>
+  );
+}
+
+export interface KubeObjectStatusIconProps {
   object: KubeObject;
 }
 
-export class KubeObjectStatusIcon extends React.Component<Props> {
-  renderStatuses(statuses: KubeObjectStatus[], level: number) {
-    const filteredStatuses = statuses.filter((item) => item.level == level);
-
-    return filteredStatuses.length > 0 && (
-      <div className={cssNames("level", statusClassName(level))}>
-        <span className="title">
-          {statusTitle(level)}
-        </span>
-        {
-          filteredStatuses.map((status, index) => (
-            <div key={`kube-resource-status-${level}-${index}`} className={cssNames("status", "msg")}>
-              - {status.text} <span className="age"> · {getAge(status.timestamp)}</span>
-            </div>
-          ))
-        }
-      </div>
-    );
-  }
-
-  render() {
-    const statuses = KubeObjectStatusRegistry.getInstance().getItemsForObject(this.props.object);
-
-    if (statuses.length === 0) {
-      return null;
-    }
-
-    const { maxLevel, criticals, warnings, infos } = splitByLevel(statuses);
-
-    return (
-      <Icon
-        material={maxLevel}
-        className={cssNames("KubeObjectStatusIcon", maxLevel)}
-        tooltip={{
-          children: (
-            <div className="KubeObjectStatusTooltip">
-              {this.renderStatuses(criticals, KubeObjectStatusLevel.CRITICAL)}
-              {this.renderStatuses(warnings, KubeObjectStatusLevel.WARNING)}
-              {this.renderStatuses(infos, KubeObjectStatusLevel.INFO)}
-            </div>
-          ),
-        }}
-      />
-    );
-  }
+interface Dependencies {
+  getStatusItemsForKubeObject: (src: KubeObject) => KubeObjectStatus[];
 }
+
+const NonInjectedKubeObjectStatusIcon = observer(({ getStatusItemsForKubeObject, object }: Dependencies & KubeObjectStatusIconProps) => {
+  const statuses = getStatusItemsForKubeObject(object);
+
+  if (statuses.length === 0) {
+    return null;
+  }
+
+  const { maxLevel, criticals, warnings, infos } = splitByLevel(statuses);
+
+  return (
+    <Icon
+      material={maxLevel}
+      className={cssNames("KubeObjectStatusIcon", maxLevel)}
+      tooltip={{
+        children: (
+          <div className="KubeObjectStatusTooltip">
+            {renderStatuses(criticals, KubeObjectStatusLevel.CRITICAL)}
+            {renderStatuses(warnings, KubeObjectStatusLevel.WARNING)}
+            {renderStatuses(infos, KubeObjectStatusLevel.INFO)}
+          </div>
+        ),
+      }}
+    />
+  );
+});
+
+export const KubeObjectStatusIcon = withInjectables<Dependencies, KubeObjectStatusIconProps>(NonInjectedKubeObjectStatusIcon, {
+  getProps: (di, props) => ({
+    getStatusItemsForKubeObject: di.inject(getStatusItemsForKubeObjectInjectable),
+    ...props,
+  }),
+});
+

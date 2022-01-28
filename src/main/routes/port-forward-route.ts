@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router/router";
 import logger from "../logger";
 import { respondJson } from "../utils/http-responses";
 import { PortForward } from "./port-forward/port-forward";
 
 export class PortForwardRoute {
-  static async routeCurrentPortForward(request: LensApiRequest) {
+  static routeCurrentPortForward(request: LensApiRequest) {
     const { params, query, response, cluster } = request;
     const { namespace, resourceType, resourceName } = params;
     const port = Number(query.get("port"));
@@ -23,7 +23,7 @@ export class PortForwardRoute {
     respondJson(response, { port: portForward?.forwardPort ?? null });
   }
 
-  static async routeCurrentPortForwardStop(request: LensApiRequest) {
+  static routeCurrentPortForwardStop(request: LensApiRequest) {
     const { params, query, response, cluster } = request;
     const { namespace, resourceType, resourceName } = params;
     const port = Number(query.get("port"));
@@ -35,7 +35,7 @@ export class PortForwardRoute {
     });
 
     try {
-      await portForward.stop();
+      portForward.stop();
       respondJson(response, { status: true });
     } catch (error) {
       logger.error("[PORT-FORWARD-ROUTE]: error stopping a port-forward", { namespace, port, forwardPort, resourceType, resourceName });

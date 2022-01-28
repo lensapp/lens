@@ -4,4 +4,4 @@
  */
 
 export * from "./nodes";
-export * from "./node-details";
+export * from "./details";

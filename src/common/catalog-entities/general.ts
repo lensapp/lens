@@ -5,7 +5,6 @@
 
 import { navigate } from "../../renderer/navigation";
 import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
@@ -19,20 +18,8 @@ export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogE
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "General";
 
-  async onRun() {
+  onRun() {
     navigate(this.spec.path);
-  }
-
-  public onSettingsOpen(): void {
-    return;
-  }
-
-  public onDetailsOpen(): void {
-    return;
-  }
-
-  public onContextMenuOpen(): void {
-    return;
   }
 }
 
@@ -56,5 +43,3 @@ export class GeneralCategory extends CatalogCategory {
     },
   };
 }
-
-catalogCategoryRegistry.add(new GeneralCategory());

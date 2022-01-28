@@ -5,13 +5,7 @@
 
 import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-
-export class ClusterApi extends KubeApi<Cluster> {
-  static kind = "Cluster";
-  static namespaced = true;
-}
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 
 export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
   const nodes = nodeNames.join("|");
@@ -97,6 +91,7 @@ export interface Cluster {
 export class Cluster extends KubeObject {
   static kind = "Cluster";
   static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
+  static namespaced = true;
 
   getStatus() {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;
@@ -107,17 +102,11 @@ export class Cluster extends KubeObject {
   }
 }
 
-/**
- * Only available within kubernetes cluster pages
- */
-let clusterApi: ClusterApi;
-
-if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
-  clusterApi = new ClusterApi({
-    objectConstructor: Cluster,
-  });
+export class ClusterApi extends KubeApi<Cluster> {
+  constructor(args: SpecificApiOptions<Cluster> = {}) {
+    super({
+      ...args,
+      objectConstructor: Cluster,
+    });
+  }
 }
-
-export {
-  clusterApi,
-};

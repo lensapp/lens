@@ -2,13 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { withInjectables } from "@ogre-tools/injectable-react";
 import fse from "fs-extra";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Notice } from "../+extensions/notice";
-
-import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
+import type { KubeconfigSyncEntry, KubeconfigSyncValue, UserPreferencesStore } from "../../../common/user-preferences";
+import userPreferencesStoreInjectable from "../../../common/user-preferences/store.injectable";
 import { isWindows } from "../../../common/vars";
 import logger from "../../../main/logger";
 import { iter, multiSet } from "../../utils";
@@ -53,16 +54,20 @@ async function getMapEntry({ filePath, ...data }: KubeconfigSyncEntry): Promise<
   }
 }
 
-export async function getAllEntries(filePaths: string[]): Promise<[string, Value][]> {
+export function getAllEntries(filePaths: string[]): Promise<[string, Value][]> {
   return Promise.all(filePaths.map(filePath => getMapEntry({ filePath })));
 }
 
+interface Dependencies {
+  userStore: UserPreferencesStore;
+}
+
 @observer
-export class KubeconfigSyncs extends React.Component {
+class NonInjectedKubeconfigSyncs extends React.Component<Dependencies> {
   syncs = observable.map<string, Value>();
   @observable loaded = false;
 
-  constructor(props: {}) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -70,7 +75,7 @@ export class KubeconfigSyncs extends React.Component {
   async componentDidMount() {
     const mapEntries = await Promise.all(
       iter.map(
-        UserStore.getInstance().syncKubeconfigEntries,
+        this.props.userStore.syncKubeconfigEntries,
         ([filePath, ...value]) => getMapEntry({ filePath, ...value }),
       ),
     );
@@ -80,7 +85,7 @@ export class KubeconfigSyncs extends React.Component {
 
     disposeOnUnmount(this, [
       reaction(() => Array.from(this.syncs.entries(), ([filePath, { data }]) => [filePath, data]), syncs => {
-        UserStore.getInstance().syncKubeconfigEntries.replace(syncs);
+        this.props.userStore.syncKubeconfigEntries.replace(syncs);
       }),
     ]);
   }
@@ -191,3 +196,10 @@ export class KubeconfigSyncs extends React.Component {
     );
   }
 }
+
+export const KubeconfigSyncs = withInjectables<Dependencies>(NonInjectedKubeconfigSyncs, {
+  getProps: (di, props) => ({
+    userStore: di.inject(userPreferencesStoreInjectable),
+    ...props,
+  }),
+});

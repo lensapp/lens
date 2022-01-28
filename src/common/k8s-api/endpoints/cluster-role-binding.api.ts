@@ -2,8 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import { KubeApi } from "../kube-api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
 export type ClusterRoleBindingSubjectKind = "Group" | "ServiceAccount" | "User";
@@ -38,17 +37,11 @@ export class ClusterRoleBinding extends KubeObject {
   }
 }
 
-/**
- * Only available within kubernetes cluster pages
- */
-let clusterRoleBindingApi: KubeApi<ClusterRoleBinding>;
-
-if (isClusterPageContext()) {
-  clusterRoleBindingApi = new KubeApi({
-    objectConstructor: ClusterRoleBinding,
-  });
+export class ClusterRoleBindingApi extends KubeApi<ClusterRoleBinding> {
+  constructor(args: SpecificApiOptions<ClusterRoleBinding> = {}) {
+    super({
+      ...args,
+      objectConstructor: ClusterRoleBinding,
+    });
+  }
 }
-
-export {
-  clusterRoleBindingApi,
-};

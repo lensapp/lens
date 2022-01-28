@@ -1,0 +1,30 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ContainerPort {
+  &.waiting {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: $margin;
+  }
+
+  span {
+    cursor: pointer;
+    color: var(--primary);
+    text-decoration: underline;
+    position: relative;
+    padding-right: 1em;
+  }
+
+  .portInput {
+    display: inline-block !important;
+    width: 70px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}

@@ -4,7 +4,7 @@
  */
 
 import get from "lodash/get";
-import { KubeObject } from "./kube-object";
+import { KubeObject, KubeObjectMetadata, KubeObjectStatus, LabelSelector } from "./kube-object";
 
 export interface IToleration {
   key?: string;
@@ -52,7 +52,15 @@ export interface IAffinity {
   };
 }
 
-export class WorkloadKubeObject extends KubeObject {
+export interface WorkloadSpec {
+  selector?: LabelSelector;
+}
+
+export class WorkloadKubeObject<
+  Metadata extends KubeObjectMetadata = KubeObjectMetadata,
+  Status extends KubeObjectStatus<any> = {},
+  Spec extends WorkloadSpec = WorkloadSpec,
+> extends KubeObject<Metadata, Status, Spec> {
   getSelectors(): string[] {
     const selector = this.spec.selector;
 

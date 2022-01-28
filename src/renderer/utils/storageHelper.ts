@@ -4,14 +4,14 @@
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-import { action, comparer, computed, makeObservable, observable, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, observe, toJS, when } from "mobx";
 import { produce, Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
-  getItem(key: string): T | Promise<T>;
+  getItem(key: string): T;
   setItem(key: string, value: T): void;
   removeItem(key: string): void;
   onChange?(change: { key: string, value: T, oldValue?: T }): void;
@@ -23,9 +23,19 @@ export interface StorageHelperOptions<T> {
   defaultValue: T;
 }
 
-export class StorageHelper<T> {
+export interface StorageLayer<T> {
+  key: string;
+  defaultValue: T;
+  isDefaultValue: (value: T) => boolean;
+  get: () => T;
+  set: (value: T) => void;
+  reset: () => void;
+  merge: (value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) => void;
+  toJSON: () => T;
+}
+
+export class StorageHelper<T> implements StorageLayer<T> {
   static logPrefix = "[StorageHelper]:";
-  readonly storage: StorageAdapter<T>;
 
   private data = observable.box<T>(undefined, {
     deep: true,
@@ -43,19 +53,18 @@ export class StorageHelper<T> {
     return this.options.defaultValue;
   }
 
-  constructor(readonly key: string, private options: StorageHelperOptions<T>) {
+  private get storage() {
+    return this.options.storage;
+  }
+
+  constructor(readonly key: string, protected options: StorageHelperOptions<T>) {
     makeObservable(this);
 
-    const { storage, autoInit = true } = options;
-
-    this.storage = storage;
-
-    // TODO: This code uses undocumented MobX internal to criminally permit exotic mutations without encapsulation.
-    this.data.observe_(({ newValue, oldValue }) => {
+    observe(this.data, ({ newValue, oldValue }) => {
       this.onChange(newValue as T, oldValue as T);
     });
 
-    if (autoInit) {
+    if (options.autoInit ?? true) {
       this.init();
     }
   }

@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import { KubeApi } from "../kube-api";
+import { KubeApi, SpecificApiOptions } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
 export interface ClusterRole {
@@ -26,17 +25,11 @@ export class ClusterRole extends KubeObject {
   }
 }
 
-/**
- * Only available within kubernetes cluster pages
- */
-let clusterRoleApi: KubeApi<ClusterRole>;
-
-if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
-  clusterRoleApi = new KubeApi({
-    objectConstructor: ClusterRole,
-  });
+export class ClusterRoleApi extends KubeApi<ClusterRole> {
+  constructor(args: SpecificApiOptions<ClusterRole> = {}) {
+    super({
+      ...args,
+      objectConstructor: ClusterRole,
+    });
+  }
 }
-
-export {
-  clusterRoleApi,
-};

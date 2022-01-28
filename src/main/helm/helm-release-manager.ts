@@ -133,7 +133,7 @@ export async function getRelease(name: string, namespace: string, kubeconfigPath
   return release;
 }
 
-export async function deleteRelease(name: string, namespace: string, kubeconfigPath: string) {
+export function deleteRelease(name: string, namespace: string, kubeconfigPath: string) {
   return execHelm([
     "delete",
     name,
@@ -148,7 +148,7 @@ interface GetValuesOptions {
   kubeconfigPath: string;
 }
 
-export async function getValues(name: string, { namespace, all = false, kubeconfigPath }: GetValuesOptions) {
+export function getValues(name: string, { namespace, all = false, kubeconfigPath }: GetValuesOptions) {
   const args = [
     "get",
     "values",

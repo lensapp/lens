@@ -3,10 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CatalogCategory, CatalogCategorySpec } from "../../../../common/catalog";
 import { CatalogAddButton } from "../catalog-add-button";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
 
 class TestCatalogCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
@@ -25,6 +28,14 @@ class TestCatalogCategory extends CatalogCategory {
 }
 
 describe("CatalogAddButton", () => {
+  let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
+
+  beforeAll(() => {
+    di = getDiForUnitTesting();
+    render = renderFor(di);
+  });
+
   it("opens Add menu", async () => {
     const category = new TestCatalogCategory();
 
@@ -40,7 +51,7 @@ describe("CatalogAddButton", () => {
 
     render(<CatalogAddButton category={category}/>);
 
-    userEvent.hover(screen.getByLabelText("SpeedDial CatalogAddButton"));
+    userEvent.hover(await screen.findByLabelText("SpeedDial CatalogAddButton"));
     await screen.findByTitle("Add from kubeconfig");
   });
 
@@ -68,7 +79,7 @@ describe("CatalogAddButton", () => {
 
     render(<CatalogAddButton category={category}/>);
 
-    userEvent.hover(screen.getByLabelText("SpeedDial CatalogAddButton"));
+    userEvent.hover(await screen.findByLabelText("SpeedDial CatalogAddButton"));
 
     await expect(screen.findByTitle("Add from kubeconfig"))
       .rejects

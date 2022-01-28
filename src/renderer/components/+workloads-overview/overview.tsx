@@ -8,14 +8,6 @@ import "./overview.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { eventStore } from "../+events/event.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 import { makeObservable, observable, reaction } from "mobx";
@@ -24,19 +16,43 @@ import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
-import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { FrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { Disposer } from "../../../common/utils";
 import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
+import type { CronJobStore } from "../+cronjobs/store";
+import type { DaemonSetStore } from "../+daemonsets/store";
+import type { DeploymentStore } from "../+deployments/store";
+import type { EventStore } from "../+events/store";
+import type { JobStore } from "../+jobs/store";
+import type { PodStore } from "../+pods/store";
+import type { ReplicaSetStore } from "../+replica-sets/store";
+import type { StatefulSetStore } from "../+stateful-sets/store";
+import cronJobStoreInjectable from "../+cronjobs/store.injectable";
+import daemonSetStoreInjectable from "../+daemonsets/store.injectable";
+import deploymentStoreInjectable from "../+deployments/store.injectable";
+import eventStoreInjectable from "../+events/store.injectable";
+import jobStoreInjectable from "../+jobs/store.injectable";
+import podStoreInjectable from "../+pods/store.injectable";
+import replicaSetStoreInjectable from "../+replica-sets/store.injectable";
+import statefulSetStoreInjectable from "../+stateful-sets/store.injectable";
 
 interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
+  clusterFrameContext: FrameContext;
   subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+  cronJobStore: CronJobStore;
+  daemonSetStore: DaemonSetStore;
+  deploymentStore: DeploymentStore;
+  eventStore: EventStore;
+  jobStore: JobStore;
+  podStore: PodStore;
+  replicaSetStore: ReplicaSetStore;
+  statefulSetStore: StatefulSetStore;
 }
 
 @observer
@@ -51,14 +67,14 @@ class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies>
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
-        cronJobStore,
-        daemonSetStore,
-        deploymentStore,
-        eventStore,
-        jobStore,
-        podsStore,
-        replicaSetStore,
-        statefulSetStore,
+        this.props.cronJobStore,
+        this.props.daemonSetStore,
+        this.props.deploymentStore,
+        this.props.eventStore,
+        this.props.jobStore,
+        this.props.podStore,
+        this.props.replicaSetStore,
+        this.props.statefulSetStore,
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
       }),
@@ -118,6 +134,14 @@ export const WorkloadsOverview = withInjectables<Dependencies, Props>(
     getProps: (di, props) => ({
       clusterFrameContext: di.inject(clusterFrameContextInjectable),
       subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+      cronJobStore: di.inject(cronJobStoreInjectable),
+      daemonSetStore: di.inject(daemonSetStoreInjectable),
+      deploymentStore: di.inject(deploymentStoreInjectable),
+      eventStore: di.inject(eventStoreInjectable),
+      jobStore: di.inject(jobStoreInjectable),
+      podStore: di.inject(podStoreInjectable),
+      replicaSetStore: di.inject(replicaSetStoreInjectable),
+      statefulSetStore: di.inject(statefulSetStoreInjectable),
       ...props,
     }),
   },

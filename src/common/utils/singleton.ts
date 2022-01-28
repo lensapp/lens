@@ -5,6 +5,9 @@
 
 type StaticThis<T, R extends any[]> = { new(...args: R): T };
 
+/**
+ * @deprecated Try and remove all uses of this
+ */
 export class Singleton {
   private static instances = new WeakMap<object, Singleton>();
   private static creating = "";
