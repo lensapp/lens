@@ -24,9 +24,13 @@ export interface SearchInputUrlProps extends InputProps {
 export class SearchInputUrl extends React.Component<SearchInputUrlProps> {
   @observable inputVal = ""; // fix: use empty string on init to avoid react warnings
 
-  @disposeOnUnmount
-  updateInput = autorun(() => this.inputVal = searchUrlParam.get());
   updateUrl = debounce((val: string) => searchUrlParam.set(val), 250);
+
+  componentDidMount(): void {
+    disposeOnUnmount(this, [
+      autorun(() => this.inputVal = searchUrlParam.get()),
+    ]);
+  }
 
   setValue = (value: string) => {
     this.inputVal = value;
