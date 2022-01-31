@@ -120,7 +120,7 @@ export class ExtensionDiscovery {
   }
 
   get bundledUpdatesFolderPath(): string {
-    return path.resolve(__static, "../extension-updates");
+    return path.resolve(this.dependencies.extensionPackageRootDirectory, "extension-updates");
   }
 
   /**
@@ -387,6 +387,8 @@ export class ExtensionDiscovery {
   async getBundledExtensions(): Promise<InstalledExtension[]> {
     const bundledExtensions = await this.loadBundledExtensions();
     const bundedUpdates = await this.loadExtensionUpdates();
+
+    console.log("DATA: ", bundledExtensions, bundedUpdates);
 
     return bundledExtensions.map(extension => {
       const updated = bundedUpdates.find(update => update.manifest.name === extension.manifest.name);
