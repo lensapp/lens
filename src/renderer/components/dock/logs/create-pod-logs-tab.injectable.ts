@@ -14,7 +14,7 @@ export interface PodLogsTabData {
 
 const createPodLogsTabInjectable = getInjectable({
   instantiate: (di) => {
-    let createLogsTab = di.inject(createLogsTabInjectable);
+    const createLogsTab = di.inject(createLogsTabInjectable);
 
     return ({ selectedPod, selectedContainer }: PodLogsTabData): TabId =>
       createLogsTab(`Pod ${selectedPod.getName()}`, {
