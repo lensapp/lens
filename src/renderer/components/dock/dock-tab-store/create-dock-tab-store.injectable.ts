@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { DockTabStore, DockTabStoreDependencies, DockTabStoreOptions } from "./dock-tab.store";
+import { DockTabStore, DockTabStoreOptions } from "./dock-tab.store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const createDockTabStoreInjectable = getInjectable({
   instantiate: (di) => {
-    const dependencies: DockTabStoreDependencies = {
+    const dependencies = {
       createStorage: di.inject(createStorageInjectable),
     };
 
