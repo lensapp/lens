@@ -33,7 +33,9 @@ export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverride
   if (doGeneralOverrides) {
     di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
 
-    di.override(readDirInjectable, () => () => Promise.resolve([]));
+    di.override(readDirInjectable, () => () => {
+      throw new Error("Tried to read contents of a directory from file system without specifying explicit override.");
+    });
 
     di.override(readFileInjectable, () => () => {
       throw new Error("Tried to read a file from file system without specifying explicit override.");
