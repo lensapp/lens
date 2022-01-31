@@ -15,7 +15,6 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { StatefulSetsRouteParams } from "../../../common/routes";
-import { StatefulSetMenu } from "./stateful-set-menu";
 
 enum columnId {
   name = "name",

@@ -7,14 +7,12 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { ReplicaSet } from "../../../common/k8s-api/endpoints";
 import { replicaSetStore } from "./replicasets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { ReplicaSetsRouteParams } from "../../../common/routes";
 import { eventStore } from "../+events/event.store";
-import { ReplicaSetMenu } from "./replica-set-menu";
 
 enum columnId {
   name = "name",

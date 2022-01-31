@@ -8,13 +8,11 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { ServiceAccount } from "../../../../common/k8s-api/endpoints/service-accounts.api";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { CreateServiceAccountDialog } from "./create-dialog";
 import { serviceAccountsStore } from "./store";
 import type { ServiceAccountsRouteParams } from "../../../../common/routes";
-import { ServiceAccountMenu } from "./service-account-menu";
 
 enum columnId {
   name = "name",

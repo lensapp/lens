@@ -17,7 +17,6 @@ import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { DeploymentsRouteParams } from "../../../common/routes";
-import { DeploymentMenu } from "./deployment-menu";
 
 enum columnId {
   name = "name",

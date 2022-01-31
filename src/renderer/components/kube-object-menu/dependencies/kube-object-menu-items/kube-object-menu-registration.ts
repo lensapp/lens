@@ -4,6 +4,7 @@
  */
 
 import type React from "react";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 
 export interface KubeObjectMenuItemProps {
   object: KubeObject;
