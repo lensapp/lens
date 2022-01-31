@@ -15,13 +15,13 @@ const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
   console.info("WEBPACK:main", vars);
-  const { isProduction, mainDir, buildDir, isDevelopment } = vars;
+  const { mainDir, buildDir, isDevelopment } = vars;
 
   return {
     context: __dirname,
     target: "electron-main",
-    mode: isProduction ? "production" : "development",
-    devtool: isDevelopment ? "eval-cheap-module-source-map" : "source-map",
+    mode: isDevelopment ? "development" : "production",
+    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),

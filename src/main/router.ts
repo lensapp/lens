@@ -9,13 +9,7 @@ import type http from "http";
 import path from "path";
 import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
-import {
-  apiPrefix,
-  appName,
-  isDevelopment,
-  publicPath,
-  webpackDevServerPort,
-} from "../common/vars";
+import { apiPrefix, appName, publicPath } from "../common/vars";
 import {
   HelmApiRoute,
   KubeconfigRoute,
@@ -147,26 +141,6 @@ export class Router {
       }
 
       try {
-        // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-        const filename = path.basename(req.url);
-        const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
-
-        if (isDevelopment) {
-          logger.info(`[ROUTER]: handling request`, {
-            url: req.url,
-            toWebpackDevServer,
-          });
-
-          if (toWebpackDevServer) {
-            const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
-
-            response.statusCode = 307;
-            response.setHeader("Location", redirectLocation);
-
-            return response.end();
-          }
-        }
-
         const data = await readFile(asset);
 
         response.setHeader("Content-Type", getMimeType(asset));

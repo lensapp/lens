@@ -13,7 +13,7 @@ import type { Options as TSLoaderOptions } from "ts-loader";
  */
 const getTSLoader = (options: Partial<TSLoaderOptions> = {}, testRegExp?: RegExp) => {
   testRegExp ??= /\.tsx?$/; // by default covers react/jsx-stuff
-  options.transpileOnly ??= true; // requirement for "react-refresh-typescript"
+  options.transpileOnly ??= true;
 
   if (process.env.LENS_DEV_USE_ESBUILD_LOADER === "true") {
     console.info(`\n🚀 using esbuild-loader for ts(x)`);

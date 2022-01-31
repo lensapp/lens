@@ -21,34 +21,16 @@ export function webpackLensRenderer(): webpack.Configuration {
     buildDir,
     htmlTemplate,
     isDevelopment,
-    isProduction,
     publicPath,
     rendererDir,
-    webpackDevServerPort,
   } = vars;
 
   return {
     context: __dirname,
     target: "electron-renderer",
-    devtool: isDevelopment ? "eval-cheap-module-source-map" : "source-map",
-    // @ts-ignore: seems like types from "webpack-dev-server@4.7" not properly merged with "webpack@5"
-    // API: https://webpack.js.org/configuration/dev-server/#usage-via-api
-    devServer: {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-      allowedHosts: "all",
-      host: "localhost",
-      port: webpackDevServerPort,
-      static: buildDir, // aka `devServer.contentBase` in webpack@4
-      hot: true,
-      client: {
-        overlay: false, // don't show warnings and errors on top of rendered app view
-        logging: isDevelopment ? "verbose" : "error",
-      },
-    },
     name: "lens-app",
-    mode: isProduction ? "production" : "development",
+    mode: isDevelopment ? "development" : "production",
+    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
@@ -62,12 +44,10 @@ export function webpackLensRenderer(): webpack.Configuration {
       chunkFilename: "chunks/[name].js",
       assetModuleFilename: "assets/[name][ext][query]",
     },
-    stats: {
-      warningsFilter: [
-        /Critical dependency: the request of a dependency is an expression/,
-        /export '.*' was not found in/,
-      ],
-    },
+    ignoreWarnings: [
+      /Critical dependency: the request of a dependency is an expression/,
+      /export '.*' was not found in/,
+    ],
     resolve: {
       extensions: [
         ".js", ".jsx", ".json",
@@ -114,6 +94,7 @@ export function webpackLensRenderer(): webpack.Configuration {
         filename: `${appName}.html`,
         template: htmlTemplate,
         inject: true,
+        hash: true,
       }),
 
       new CircularDependencyPlugin({
@@ -157,7 +138,7 @@ export function cssModulesWebpackRule(
   {
     styleLoader = vars.isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
   } = {}): webpack.RuleSetRule {
-  const { isDevelopment, sassCommonVars } = vars;
+  const { /*isDevelopment,*/ sassCommonVars } = vars;
 
   return {
     test: /\.s?css$/,
@@ -166,7 +147,7 @@ export function cssModulesWebpackRule(
       {
         loader: "css-loader",
         options: {
-          sourceMap: isDevelopment,
+          // sourceMap: isDevelopment,
           modules: {
             auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
             mode: "local", // :local(.selector) by default
@@ -177,7 +158,7 @@ export function cssModulesWebpackRule(
       {
         loader: "postcss-loader",
         options: {
-          sourceMap: isDevelopment,
+          // sourceMap: isDevelopment,
           postcssOptions: {
             plugins: [
               "tailwindcss",
@@ -188,7 +169,7 @@ export function cssModulesWebpackRule(
       {
         loader: "sass-loader",
         options: {
-          sourceMap: isDevelopment,
+          // sourceMap: isDevelopment,
           additionalData: `@import "${path.basename(sassCommonVars)}";`,
           sassOptions: {
             includePaths: [
