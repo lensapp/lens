@@ -10,14 +10,7 @@ import path from "path";
 import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
 import { apiPrefix, appName, publicPath } from "../common/vars";
-import {
-  HelmApiRoute,
-  KubeconfigRoute,
-  MetricsRoute,
-  PortForwardRoute,
-  ResourceApplierApiRoute,
-  VersionRoute,
-} from "./routes";
+import { HelmApiRoute, KubeconfigRoute, MetricsRoute, PortForwardRoute, ResourceApplierApiRoute, VersionRoute } from "./routes";
 import logger from "./logger";
 
 export interface RouterRequestOpts {
@@ -87,13 +80,7 @@ export class Router {
     const routeFound = !matchingRoute.isBoom;
 
     if (routeFound) {
-      const request = await this.getRequest({
-        req,
-        res,
-        cluster,
-        url,
-        params: matchingRoute.params,
-      });
+      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
 
       await matchingRoute.route(request);
 
@@ -123,11 +110,7 @@ export class Router {
     };
   }
 
-  protected static async handleStaticFile({
-    params,
-    response,
-    raw: { req },
-  }: LensApiRequest): Promise<void> {
+  protected static async handleStaticFile({ params, response }: LensApiRequest): Promise<void> {
     let filePath = params.path;
 
     for (let retryCount = 0; retryCount < 5; retryCount += 1) {
@@ -165,84 +148,33 @@ export class Router {
     this.router.add({ method: "get", path: "/{path*}" }, Router.handleStaticFile);
 
     this.router.add({ method: "get", path: "/version" }, VersionRoute.getVersion);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}`,
-    }, KubeconfigRoute.routeServiceAccountRoute);
+    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, KubeconfigRoute.routeServiceAccountRoute);
 
     // Metrics API
     this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, MetricsRoute.routeMetrics);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/metrics/providers`,
-    }, MetricsRoute.routeMetricsProviders);
+    this.router.add({ method: "get", path: `${apiPrefix}/metrics/providers` }, MetricsRoute.routeMetricsProviders);
 
     // Port-forward API (the container port and local forwarding port are obtained from the query parameters)
-    this.router.add({
-      method: "post",
-      path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
-    }, this.dependencies.routePortForward);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
-    }, PortForwardRoute.routeCurrentPortForward);
-    this.router.add({
-      method: "delete",
-      path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
-    }, PortForwardRoute.routeCurrentPortForwardStop);
+    this.router.add({ method: "post", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, this.dependencies.routePortForward);
+    this.router.add({ method: "get", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForward);
+    this.router.add({ method: "delete", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForwardStop);
 
     // Helm API
     this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, HelmApiRoute.listCharts);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/v2/charts/{repo}/{chart}`,
-    }, HelmApiRoute.getChart);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/v2/charts/{repo}/{chart}/values`,
-    }, HelmApiRoute.getChartValues);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, HelmApiRoute.getChart);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, HelmApiRoute.getChartValues);
 
-    this.router.add({
-      method: "post",
-      path: `${apiPrefix}/v2/releases`,
-    }, HelmApiRoute.installChart);
-    this.router.add({
-      method: `put`,
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
-    }, HelmApiRoute.updateRelease);
-    this.router.add({
-      method: `put`,
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback`,
-    }, HelmApiRoute.rollbackRelease);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/v2/releases/{namespace?}`,
-    }, HelmApiRoute.listReleases);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
-    }, HelmApiRoute.getRelease);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}/values`,
-    }, HelmApiRoute.getReleaseValues);
-    this.router.add({
-      method: "get",
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}/history`,
-    }, HelmApiRoute.getReleaseHistory);
-    this.router.add({
-      method: "delete",
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
-    }, HelmApiRoute.deleteRelease);
+    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, HelmApiRoute.installChart);
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, HelmApiRoute.updateRelease);
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, HelmApiRoute.rollbackRelease);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, HelmApiRoute.listReleases);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, HelmApiRoute.getRelease);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, HelmApiRoute.getReleaseValues);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, HelmApiRoute.getReleaseHistory);
+    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, HelmApiRoute.deleteRelease);
 
     // Resource Applier API
-    this.router.add({
-      method: "post",
-      path: `${apiPrefix}/stack`,
-    }, ResourceApplierApiRoute.applyResource);
-    this.router.add({
-      method: "patch",
-      path: `${apiPrefix}/stack`,
-    }, ResourceApplierApiRoute.patchResource);
+    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.applyResource);
+    this.router.add({ method: "patch", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.patchResource);
   }
 }
