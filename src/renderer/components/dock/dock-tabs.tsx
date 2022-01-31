@@ -101,8 +101,6 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab, dockStore 
 
 
   useEffect(() => {
-    updateStateValues();
-
     // update values in store on scroll
     elem.current.addEventListener("scroll", updateScrollPosition);
 
@@ -110,11 +108,12 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab, dockStore 
     window.addEventListener("resize", onWindowResize);
 
     // update scroll state if tabs numbers has changed
-    reaction(() => dockStore.tabsNumber, updateStateValues, { fireImmediately: true });
+    const tabsNumberChangeDisposer = reaction(() => dockStore.tabsNumber, updateStateValues, { fireImmediately: true });
 
     return () => {
       window.removeEventListener("resize", onWindowResize);
       elem.current.removeEventListener("scroll", updateScrollPosition);
+      tabsNumberChangeDisposer();
     };
   }, []);
 
