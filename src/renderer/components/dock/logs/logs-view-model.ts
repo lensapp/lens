@@ -21,11 +21,15 @@ export interface LogTabViewModelDependencies {
   getPodById: (id: string) => Pod | undefined;
   getPodsByOwnerId: (id: string) => Pod[];
   areLogsPresent: (tabId: TabId) => boolean;
-  createSearchStore: () => SearchStore;
+  searchStore: SearchStore;
 }
 
 export class LogTabViewModel {
   constructor(protected readonly tabId: TabId, private readonly dependencies: LogTabViewModelDependencies) {}
+
+  get searchStore() {
+    return this.dependencies.searchStore;
+  }
 
   readonly isLoading = computed(() => this.dependencies.areLogsPresent(this.tabId));
   readonly logs = computed(() => this.dependencies.getLogs(this.tabId));
@@ -54,7 +58,6 @@ export class LogTabViewModel {
 
     return this.dependencies.getPodById(data.selectedPodId);
   });
-  readonly searchStore = this.dependencies.createSearchStore();
 
   updateLogTabData = (partialData: Partial<LogTabData>) => {
     this.dependencies.setLogTabData(this.tabId, { ...this.logTabData.get(), ...partialData });

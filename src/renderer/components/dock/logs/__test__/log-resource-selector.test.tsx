@@ -20,6 +20,7 @@ import callForLogsInjectable from "../call-for-logs.injectable";
 import { LogTabViewModel, LogTabViewModelDependencies } from "../logs-view-model";
 import type { TabId } from "../../dock/store";
 import userEvent from "@testing-library/user-event";
+import { SearchStore } from "../../../../search-store/search-store";
 
 jest.mock("electron", () => ({
   app: {
@@ -50,7 +51,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
     stopLoadingLogs: jest.fn(),
     getPodById: jest.fn(),
     getPodsByOwnerId: jest.fn(),
-    createSearchStore: jest.fn(),
+    searchStore: new SearchStore(),
     areLogsPresent: jest.fn(),
     ...deps,
   });

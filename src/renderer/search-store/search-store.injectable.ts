@@ -5,9 +5,9 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { SearchStore } from "./search-store";
 
-const createSearchStoreInjectable = getInjectable({
-  instantiate: () => () => new SearchStore(),
-  lifecycle: lifecycleEnum.singleton,
+const searchStoreInjectable = getInjectable({
+  instantiate: () => new SearchStore(),
+  lifecycle: lifecycleEnum.transient,
 });
 
-export default createSearchStoreInjectable;
+export default searchStoreInjectable;
