@@ -22,6 +22,8 @@
 
 .content {
   min-height: 26px;
+  line-height: 1.3;
+  padding: 2px var(--padding) 2px 0;
 
   &:hover {
     background-color: var(--sidebarItemHoverBackground);
@@ -39,6 +41,8 @@
 
   .iconContainer {
     margin-left: 28px;
+    margin-top: 2px;
+    align-self: flex-start;
   }
 }
 
