@@ -12,12 +12,8 @@ import type { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { eventStore } from "../+events/event.store";
-import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
-import { MenuItem } from "../menu/menu";
-import { Icon } from "../icon/icon";
 import type { StatefulSetsRouteParams } from "../../../common/routes";
 
 enum columnId {
@@ -75,17 +71,4 @@ export class StatefulSets extends React.Component<Props> {
       />
     );
   }
-}
-
-export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
-  const { object, toolbar } = props;
-
-  return (
-    <>
-      <MenuItem onClick={() => StatefulSetScaleDialog.open(object)}>
-        <Icon material="open_with" tooltip="Scale" interactive={toolbar}/>
-        <span className="title">Scale</span>
-      </MenuItem>
-    </>
-  );
 }

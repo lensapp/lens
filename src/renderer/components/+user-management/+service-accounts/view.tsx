@@ -8,13 +8,8 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { ServiceAccount } from "../../../../common/k8s-api/endpoints/service-accounts.api";
-import { Icon } from "../../icon";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import type { KubeObjectMenuProps } from "../../kube-object-menu";
-import { openServiceAccountKubeConfig } from "../../kubeconfig-dialog";
-import { MenuItem } from "../../menu";
 import { CreateServiceAccountDialog } from "./create-dialog";
 import { serviceAccountsStore } from "./store";
 import type { ServiceAccountsRouteParams } from "../../../../common/routes";
@@ -69,13 +64,3 @@ export class ServiceAccounts extends React.Component<Props> {
   }
 }
 
-export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
-  const { object, toolbar } = props;
-
-  return (
-    <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
-      <Icon material="insert_drive_file" tooltip="Kubeconfig File" interactive={toolbar} />
-      <span className="title">Kubeconfig</span>
-    </MenuItem>
-  );
-}

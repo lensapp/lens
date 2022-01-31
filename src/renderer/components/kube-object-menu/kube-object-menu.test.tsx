@@ -2,76 +2,108 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
 import React from "react";
 import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
 import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
-import type { KubeObjectMenuRegistration } from "../../../extensions/registries";
-import { KubeObjectMenuRegistry } from "../../../extensions/registries";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
-import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
-import kubeObjectMenuRegistryInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-registry.injectable";
 import { DiRender, renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
 import { KubeObjectMenu } from "./index";
+import type { KubeObjectMenuRegistration } from "./dependencies/kube-object-menu-items/kube-object-menu-registration";
+import { computed } from "mobx";
+import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
+import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
+import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../tooltip");
+
+class SomeTestExtension extends LensRendererExtension {
+  constructor(
+    kubeObjectMenuItems: KubeObjectMenuRegistration[],
+  ) {
+    super({
+      id: "some-id",
+      absolutePath: "irrelevant",
+      isBundled: false,
+      isCompatible: false,
+      isEnabled: false,
+      manifest: { name: "some-id", version: "some-version" },
+      manifestPath: "irrelevant",
+    });
+
+    this.kubeObjectMenuItems = kubeObjectMenuItems;
+  }
+}
 
 describe("kube-object-menu", () => {
   let di: ConfigurableDependencyInjectionContainer;
   let render: DiRender;
 
   beforeEach(async () => {
+    const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
+
+    const kubeObjectMenuItems = [
+      {
+        apiVersions: ["some-api-version"],
+        kind: "some-kind",
+        components: { MenuItem: MenuItemComponent },
+      },
+
+      {
+        apiVersions: ["some-unrelated-api-version"],
+        kind: "some-kind",
+        components: { MenuItem: MenuItemComponent },
+      },
+
+      {
+        apiVersions: ["some-api-version"],
+        kind: "some-unrelated-kind",
+        components: { MenuItem: MenuItemComponent },
+      },
+    ];
+
+    const someTestExtension = new SomeTestExtension(kubeObjectMenuItems);
+
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    await di.runSetups();
-
-    // TODO: Remove global shared state
-    KubeObjectMenuRegistry.resetInstance();
-    KubeObjectMenuRegistry.createInstance();
 
     render = renderFor(di);
 
-    di.override(clusterInjectable, () => ({
-      name: "Some name",
-    }) as Cluster);
+    di.override(rendererExtensionsInjectable, () =>
+      computed(() => [someTestExtension]),
+    );
 
-    di.override(apiManagerInjectable, () => ({
-      getStore: api => void api,
-    }) as ApiManager);
+    await di.runSetups();
+
+    di.override(
+      clusterInjectable,
+      () =>
+        ({
+          name: "Some name",
+        } as Cluster),
+    );
+
+    di.override(
+      apiManagerInjectable,
+      () =>
+        ({
+          getStore: (api) => void api,
+        } as ApiManager),
+    );
 
     di.override(hideDetailsInjectable, () => () => {});
 
     di.override(createEditResourceTabInjectable, () => () => "irrelevant");
-
-    addDynamicMenuItem({
-      di,
-      apiVersions: ["some-api-version"],
-      kind: "some-kind",
-    });
-
-    addDynamicMenuItem({
-      di,
-      apiVersions: ["some-unrelated-api-version"],
-      kind: "some-kind",
-    });
-
-    addDynamicMenuItem({
-      di,
-      apiVersions: ["some-api-version"],
-      kind: "some-unrelated-kind",
-    });
   });
 
   it("given no cluster, does not crash", () => {
@@ -242,25 +274,3 @@ describe("kube-object-menu", () => {
     });
   });
 });
-
-const addDynamicMenuItem = ({
-  di,
-  apiVersions,
-  kind,
-}: {
-  di: ConfigurableDependencyInjectionContainer;
-  apiVersions: string[];
-  kind: string;
-}) => {
-  const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
-
-  const dynamicMenuItemStub: KubeObjectMenuRegistration = {
-    apiVersions,
-    kind,
-    components: { MenuItem: MenuItemComponent },
-  };
-
-  const kubeObjectMenuRegistry = di.inject(kubeObjectMenuRegistryInjectable);
-
-  kubeObjectMenuRegistry.add([dynamicMenuItemStub]);
-};
