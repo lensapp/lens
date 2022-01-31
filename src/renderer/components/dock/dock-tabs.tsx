@@ -4,23 +4,21 @@
  */
 
 import React, { Fragment, useRef, useEffect, useState, UIEvent } from "react";
-import { reaction } from "mobx";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
 import type { DockTab as DockTabModel } from "./dock/store";
-import { TabKind, DockStore } from "./dock/store";
+import { TabKind } from "./dock/store";
 import { TerminalTab } from "./terminal/dock-tab";
 
 interface Props {
   tabs: DockTabModel[]
-  dockStore: DockStore;
   autoFocus: boolean
   selectedTab: DockTabModel
   onChangeTab: (tab: DockTabModel) => void
 }
 
-export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab, dockStore }: Props) => {
+export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
   const elem = useRef(null);
   const contentElem = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
@@ -102,20 +100,21 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab, dockStore 
 
   useEffect(() => {
     // update values in store on scroll
-    elem.current.addEventListener("scroll", updateScrollPosition);
+    elem?.current.addEventListener("scroll", updateScrollPosition);
 
     // update current values on resize to show/hide scroll
     window.addEventListener("resize", onWindowResize);
 
-    // update scroll state if tabs numbers has changed
-    const tabsNumberChangeDisposer = reaction(() => dockStore.tabsNumber, updateStateValues, { fireImmediately: true });
-
     return () => {
       window.removeEventListener("resize", onWindowResize);
-      elem.current.removeEventListener("scroll", updateScrollPosition);
-      tabsNumberChangeDisposer();
+      elem?.current.removeEventListener("scroll", updateScrollPosition);
     };
   }, []);
+
+  useEffect(() => {
+    // update scroll state if tabs numbers has changed
+    updateStateValues();
+  }, [tabs]);
 
   return (
     <div className={"tabs-wrapper flex gaps align-center"}>

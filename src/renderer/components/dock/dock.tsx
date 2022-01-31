@@ -4,10 +4,8 @@
  */
 
 import "./dock.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
-
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
@@ -37,7 +35,10 @@ interface Dependencies {
   dockStore: DockStore
 }
 
-type Direction = 1 | -1;
+enum Direction {
+  NEXT = 1,
+  PREV = -1,
+}
 
 @observer
 class NonInjectedDock extends React.Component<Props & Dependencies> {
@@ -70,11 +71,11 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     }
 
     if(ctrlKey && code === "Period") {
-      this.nextTab();
+      this.switchToNextTab();
     }
 
     if(ctrlKey && code === "Comma") {
-      this.nextTab(-1);
+      this.switchToNextTab(Direction.PREV);
     }
   };
 
@@ -86,16 +87,13 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     this.element?.current.focus();
   };
 
-  nextTab = (direction: Direction = 1) => {
+  switchToNextTab = (direction: Direction = Direction.NEXT) => {
     const { tabs, selectedTab } = this.props.dockStore;
     const currentIndex = tabs.indexOf(selectedTab);
     const nextIndex = currentIndex + direction;
 
-    // check if moving to the next tab is possible.
-    if (direction === 1 && currentIndex!== -1 && nextIndex >= tabs.length) return;
-
-    // check if moving to the previous tab is possible
-    if (direction === -1 && currentIndex!== -1 && nextIndex < 0) return;
+    // check if moving to the next or previous tab is possible.
+    if (currentIndex!== -1 && (nextIndex >= tabs.length || nextIndex < 0)) return;
 
     const nextElement = tabs[nextIndex];
 
@@ -158,7 +156,6 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
             selectedTab={selectedTab}
             autoFocus={isOpen}
             onChangeTab={this.onChangeTab}
-            dockStore={dockStore}
           />
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
