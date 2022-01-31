@@ -3,12 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, ObservableMap } from "mobx";
+import { action, ObservableMap, runInAction } from "mobx";
 
 export function multiSet<T, V>(map: Map<T, V>, newEntries: [T, V][]): void {
-  for (const [key, val] of newEntries) {
-    map.set(key, val);
-  }
+  runInAction(() => {
+    for (const [key, val] of newEntries) {
+      map.set(key, val);
+    }
+  });
 }
 
 export class ExtendedMap<K, V> extends Map<K, V> {

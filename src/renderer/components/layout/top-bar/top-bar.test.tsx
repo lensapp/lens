@@ -14,15 +14,15 @@ import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
+import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
+import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 
 jest.mock("../../../../common/vars", () => {
-  const SemVer = require("semver").SemVer;
-
-  const versionStub = new SemVer("1.0.0");
+  const { SemVer } = require("semver");
 
   return {
-    isMac: true,
-    appSemVer: versionStub,
+    ...jest.requireActual<{}>("../../../../common/vars"),
+    appSemVer: new SemVer("1.0.0"),
   };
 });
 
@@ -98,30 +98,30 @@ describe("<TopBar/>", () => {
   });
 
   it("renders home button", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("home-button")).toBeInTheDocument();
+    expect(await findByTestId("home-button")).toBeInTheDocument();
   });
 
   it("renders history arrows", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("history-back")).toBeInTheDocument();
-    expect(await getByTestId("history-forward")).toBeInTheDocument();
+    expect(await findByTestId("history-back")).toBeInTheDocument();
+    expect(await findByTestId("history-forward")).toBeInTheDocument();
   });
 
   it("enables arrow by ipc event", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("history-back")).not.toHaveClass("disabled");
-    expect(await getByTestId("history-forward")).not.toHaveClass("disabled");
+    expect(await findByTestId("history-back")).not.toHaveClass("disabled");
+    expect(await findByTestId("history-forward")).not.toHaveClass("disabled");
   });
 
   it("triggers browser history back and forward", async () => {
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    const prevButton = await getByTestId("history-back");
-    const nextButton = await getByTestId("history-forward");
+    const prevButton = await findByTestId("history-back");
+    const nextButton = await findByTestId("history-forward");
 
     fireEvent.click(prevButton);
 
@@ -144,17 +144,32 @@ describe("<TopBar/>", () => {
       },
     ]));
 
-    const { getByTestId } = render(<TopBar/>);
+    const { findByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId(testId)).toHaveTextContent(text);
+    expect(await findByTestId(testId)).toHaveTextContent(text);
   });
 
-  it("doesn't show windows title buttons", () => {
+  it("doesn't show windows title buttons on macos", () => {
+    di.override(isLinuxInjectable, () => false);
+    di.override(isWindowsInjectable, () => false);
+
     const { queryByTestId } = render(<TopBar/>);
 
     expect(queryByTestId("window-menu")).not.toBeInTheDocument();
     expect(queryByTestId("window-minimize")).not.toBeInTheDocument();
     expect(queryByTestId("window-maximize")).not.toBeInTheDocument();
     expect(queryByTestId("window-close")).not.toBeInTheDocument();
+  });
+
+  it("does show windows title buttons on linux", () => {
+    di.override(isLinuxInjectable, () => true);
+    di.override(isWindowsInjectable, () => false);
+
+    const { queryByTestId } = render(<TopBar/>);
+
+    expect(queryByTestId("window-menu")).toBeInTheDocument();
+    expect(queryByTestId("window-minimize")).toBeInTheDocument();
+    expect(queryByTestId("window-maximize")).toBeInTheDocument();
+    expect(queryByTestId("window-close")).toBeInTheDocument();
   });
 });

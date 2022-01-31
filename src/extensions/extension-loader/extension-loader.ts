@@ -249,7 +249,6 @@ export class ExtensionLoader {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
-        registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
       ];
 
@@ -277,7 +276,6 @@ export class ExtensionLoader {
       const removeItems = [
         registries.ClusterPageRegistry.getInstance().add(extension.clusterPages, extension),
         registries.ClusterPageMenuRegistry.getInstance().add(extension.clusterPageMenus, extension),
-        registries.KubeObjectMenuRegistry.getInstance().add(extension.kubeObjectMenuItems),
         registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
         registries.KubeObjectStatusRegistry.getInstance().add(extension.kubeObjectStatusTexts),
         registries.WorkloadsOverviewDetailRegistry.getInstance().add(extension.kubeWorkloadsOverviewItems),

@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autorun, observable, reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { autoBind, StorageHelper, toJS } from "../../../utils";
-import type { DockStore, TabId } from "../dock-store/dock.store";
+import type { TabId } from "../dock/store";
 
 export interface DockTabStoreOptions {
   autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
@@ -14,16 +14,15 @@ export interface DockTabStoreOptions {
 
 export type DockTabStorageState<T> = Record<TabId, T>;
 
-interface Dependencies {
-  dockStore: DockStore
+interface DockTabStoreDependencies {
   createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>
 }
 
 export class DockTabStore<T> {
   protected storage?: StorageHelper<DockTabStorageState<T>>;
-  protected data = observable.map<TabId, T>();
+  private data = observable.map<TabId, T>();
 
-  constructor(protected dependencies: Dependencies, protected options: DockTabStoreOptions) {
+  constructor(protected dependencies: DockTabStoreDependencies, protected options: DockTabStoreOptions) {
     autoBind(this);
 
     this.options = {
@@ -48,17 +47,6 @@ export class DockTabStore<T> {
         reaction(() => this.toJSON(), data => this.storage.set(data));
       });
     }
-
-    // clear data for closed tabs
-    autorun(() => {
-      const currentTabs = this.dependencies.dockStore.tabs.map(tab => tab.id);
-
-      Array.from(this.data.keys()).forEach(tabId => {
-        if (!currentTabs.includes(tabId)) {
-          this.clearData(tabId);
-        }
-      });
-    });
   }
 
   protected finalizeDataForSave(data: T): T {
@@ -75,8 +63,22 @@ export class DockTabStore<T> {
     return Object.fromEntries<T>(deepCopy);
   }
 
+  protected getAllData() {
+    return this.data.toJSON();
+  }
+
+  findTabIdFromData(inspecter: (val: T) => any): TabId | undefined {
+    for (const [tabId, data] of this.data) {
+      if (inspecter(data)) {
+        return tabId;
+      }
+    }
+
+    return undefined;
+  }
+
   isReady(tabId: TabId): boolean {
-    return Boolean(this.getData(tabId) !== undefined);
+    return this.getData(tabId) !== undefined;
   }
 
   getData(tabId: TabId) {
@@ -91,8 +93,11 @@ export class DockTabStore<T> {
     this.data.delete(tabId);
   }
 
+  @action
   reset() {
-    this.data.clear();
+    for (const tabId of this.data.keys()) {
+      this.clearData(tabId);
+    }
     this.storage?.reset();
   }
 }

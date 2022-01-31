@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import fse from "fs-extra";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Notice } from "../+extensions/notice";
@@ -93,7 +93,6 @@ export class KubeconfigSyncs extends React.Component {
     return Array.from(this.syncs.entries(), ([filePath, value]) => ({ filePath, ...value }));
   }
 
-  @action
   onPick = async (filePaths: string[]) => multiSet(this.syncs, await getAllEntries(filePaths));
 
   getIconName(entry: Entry) {

@@ -10,7 +10,7 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames, Disposer } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
+import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/list-layout";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
@@ -99,14 +99,14 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
   }
 
   render() {
-    const { className, customizeHeader, store, items = store.contextItems, ...layoutProps } = this.props;
+    const { className, customizeHeader, store, items, ...layoutProps } = this.props;
     const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
 
     return (
       <ItemListLayout
         className={cssNames("KubeObjectListLayout", className)}
         store={store}
-        items={items}
+        getItems={() => this.props.items || store.contextItems}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
         customizeHeader={[

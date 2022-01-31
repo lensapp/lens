@@ -28,27 +28,30 @@ export class ServiceAccountsDetails extends React.Component<Props> {
   @observable secrets: Secret[];
   @observable imagePullSecrets: Secret[];
 
-  @disposeOnUnmount
-  loadSecrets = autorun(async () => {
-    this.secrets = null;
-    this.imagePullSecrets = null;
-    const { object: serviceAccount } = this.props;
+  componentDidMount(): void {
+    disposeOnUnmount(this, [
+      autorun(async () => {
+        this.secrets = null;
+        this.imagePullSecrets = null;
+        const { object: serviceAccount } = this.props;
 
-    if (!serviceAccount) {
-      return;
-    }
-    const namespace = serviceAccount.getNs();
-    const secrets = serviceAccount.getSecrets().map(({ name }) => {
-      return secretsStore.load({ name, namespace });
-    });
+        if (!serviceAccount) {
+          return;
+        }
+        const namespace = serviceAccount.getNs();
+        const secrets = serviceAccount.getSecrets().map(({ name }) => {
+          return secretsStore.load({ name, namespace });
+        });
 
-    this.secrets = await Promise.all(secrets);
-    const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async ({ name }) => {
-      return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
-    });
+        this.secrets = await Promise.all(secrets);
+        const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async ({ name }) => {
+          return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
+        });
 
-    this.imagePullSecrets = await Promise.all(imagePullSecrets);
-  });
+        this.imagePullSecrets = await Promise.all(imagePullSecrets);
+      }),
+    ]);
+  }
 
   constructor(props: Props) {
     super(props);

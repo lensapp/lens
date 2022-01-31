@@ -57,8 +57,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     }
   }
 
-  @action
-  updateCategoryItems = (category: CatalogCategory) => {
+  updateCategoryItems = action((category: CatalogCategory) => {
     if (category instanceof EventEmitter) {
       const menuItems: CatalogEntityAddMenu[] = [];
       const context: CatalogEntityAddMenuContext = {
@@ -69,7 +68,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
       category.emit("catalogAddMenu", context);
       this.menuItems.set(category.getId(), menuItems);
     }
-  };
+  });
 
   getCategoryFilteredItems = (category: CatalogCategory) => {
     return category.filteredItems(this.menuItems.get(category.getId()) || []);

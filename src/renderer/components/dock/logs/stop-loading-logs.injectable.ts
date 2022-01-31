@@ -6,7 +6,12 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import logStoreInjectable from "./store.injectable";
 
 const stopLoadingLogsInjectable = getInjectable({
-  instantiate: (di) => di.inject(logStoreInjectable).stopLoadingLogs,
+  instantiate: (di) => {
+    const logStore = di.inject(logStoreInjectable);
+
+    return (tabId: string): void => logStore.stopLoadingLogs(tabId);
+  },
+
   lifecycle: lifecycleEnum.singleton,
 });
 

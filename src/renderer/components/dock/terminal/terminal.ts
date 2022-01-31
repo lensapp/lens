@@ -7,7 +7,7 @@ import debounce from "lodash/debounce";
 import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import type { DockStore, TabId } from "../dock-store/dock.store";
+import type { TabId } from "../dock/store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
@@ -18,12 +18,7 @@ import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 
-interface Dependencies {
-  dockStore: DockStore
-}
-
 export class Terminal {
-
   private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
 
   public static get spawningPool() {
@@ -56,12 +51,6 @@ export class Terminal {
     return this.xterm.element.querySelector(".xterm-viewport");
   }
 
-  get isActive() {
-    const { isOpen, selectedTabId } = this.dependencies.dockStore;
-
-    return isOpen && selectedTabId === this.tabId;
-  }
-
   attachTo(parentElem: HTMLElement) {
     parentElem.appendChild(this.elem);
     this.onActivate();
@@ -75,7 +64,7 @@ export class Terminal {
     }
   }
 
-  constructor(private dependencies: Dependencies, public tabId: TabId, protected api: TerminalApi) {
+  constructor(public tabId: TabId, protected api: TerminalApi) {
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
 
@@ -107,7 +96,6 @@ export class Terminal {
       reaction(() => UserStore.getInstance().terminalConfig.fontFamily, this.setFontFamily, {
         fireImmediately: true,
       }),
-      dependencies.dockStore.onResize(this.onResize),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
@@ -126,7 +114,7 @@ export class Terminal {
 
   fit = () => {
     // Since this function is debounced we need to read this value as late as possible
-    if (!this.isActive || !this.xterm) {
+    if (!this.xterm) {
       return;
     }
 

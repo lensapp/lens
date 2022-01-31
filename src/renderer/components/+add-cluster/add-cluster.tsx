@@ -70,8 +70,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
     ].filter(Boolean);
   }
 
-  @action
-  refreshContexts = debounce(() => {
+  readonly refreshContexts = debounce(action(() => {
     const { config, error } = loadConfigFromString(this.customConfig.trim() || "{}");
 
     this.kubeContexts.replace(getContexts(config));
@@ -83,10 +82,9 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
     if (config.contexts.length === 0) {
       this.errors.push('No contexts defined, either missing the "contexts" field, or it is empty.');
     }
-  }, 500);
+  }), 500);
 
-  @action
-  addClusters = async () => {
+  addClusters = action(async () => {
     this.isWaiting = true;
     appEventBus.emit({ name: "cluster-add", action: "click" });
 
@@ -102,7 +100,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
     } catch (error) {
       Notifications.error(`Failed to add clusters: ${error}`);
     }
-  };
+  });
 
   render() {
     return (

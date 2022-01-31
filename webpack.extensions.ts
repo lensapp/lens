@@ -41,6 +41,10 @@ export default function generateExtensionTypes(): webpack.Configuration {
     module: {
       rules: [
         {
+          test: /\.node$/,
+          loader: "ignore-loader",
+        },
+        {
           test: /\.tsx?$/,
           loader: "ts-loader",
           options: {

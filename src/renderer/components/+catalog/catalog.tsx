@@ -143,8 +143,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
     return catalogCategoryRegistry.items;
   }
 
-  @action
-  onTabChange = (tabId: string | null) => {
+  onTabChange = action((tabId: string | null) => {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     if (activeCategory) {
@@ -152,7 +151,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
     } else {
       navigate(catalogURL({ params: { group: browseCatalogTab }}));
     }
-  };
+  });
 
   renderNavigation() {
     return (
