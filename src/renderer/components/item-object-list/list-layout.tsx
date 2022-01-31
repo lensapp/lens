@@ -8,31 +8,17 @@ import "./item-list-layout.scss";
 import React, { ReactNode } from "react";
 import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
-import type {
-  TableCellProps,
-  TableProps,
-  TableRowProps,
-  TableSortCallbacks,
-} from "../table";
-import {
-  boundMethod,
-  cssNames,
-  IClassName,
-  noop,
-  ObservableToggleSet,
-  StorageHelper,
-} from "../../utils";
+import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
+import { boundMethod, cssNames, IClassName, noop, StorageHelper } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
-import { UserStore } from "../../../common/user-store";
 import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import itemListLayoutStorageInjectable
-  from "./storage.injectable";
+import itemListLayoutStorageInjectable from "./storage.injectable";
 import { ItemListLayoutContent } from "./content";
 import { ItemListLayoutHeader } from "./header";
 import groupBy from "lodash/groupBy";
@@ -140,10 +126,6 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
 
     if (isConfigurable && !tableId) {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
-    }
-
-    if (isConfigurable && !UserStore.getInstance().hiddenTableColumns.has(tableId)) {
-      UserStore.getInstance().hiddenTableColumns.set(tableId, new ObservableToggleSet());
     }
 
     if (preloadStores) {
