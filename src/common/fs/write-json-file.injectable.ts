@@ -13,19 +13,12 @@ interface Dependencies {
   ensureDir: (dir: string, options?: EnsureOptions | number) => Promise<void>;
 }
 
-const writeJsonFile = ({ writeJson, ensureDir }: Dependencies) => async (filePath: string, content: JsonValue, options?: WriteOptions | BufferEncoding) => {
+const writeJsonFile = ({ writeJson, ensureDir }: Dependencies) => async (filePath: string, content: JsonValue) => {
   await ensureDir(path.dirname(filePath), { mode: 0o755 });
-
-  const resolvedOptions = typeof options === "string"
-    ? {
-      encoding: options,
-    }
-    : options;
 
   await writeJson(filePath, content, {
     encoding: "utf-8",
     spaces: 2,
-    ...resolvedOptions,
   });
 };
 
