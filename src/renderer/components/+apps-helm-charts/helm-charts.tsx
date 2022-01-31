@@ -12,7 +12,7 @@ import { helmChartStore } from "./helm-chart.store";
 import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
-import { ItemListLayout } from "../item-object-list/item-list-layout";
+import { ItemListLayout } from "../item-object-list/list-layout";
 import { helmChartsURL } from "../../../common/routes";
 import type { HelmChartsRouteParams } from "../../../common/routes";
 

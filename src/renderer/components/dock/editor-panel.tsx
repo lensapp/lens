@@ -8,11 +8,11 @@ import throttle from "lodash/throttle";
 import React from "react";
 import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { DockStore, TabId } from "./dock-store/dock.store";
+import type { DockStore, TabId } from "./dock/store";
 import { cssNames } from "../../utils";
 import { MonacoEditor, MonacoEditorProps } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import dockStoreInjectable from "./dock/store.injectable";
 
 export interface EditorPanelProps {
   tabId: TabId;

@@ -20,15 +20,14 @@ jest.mock("../../../../common/ipc");
 jest.mock("../../../ipc");
 
 jest.mock("../../../../common/vars", () => {
-  const SemVer = require("semver").SemVer;
-
-  const versionStub = new SemVer("1.0.0");
+  const { SemVer } = require("semver");
 
   return {
+    ...jest.requireActual<{}>("../../../../common/vars"),
     __esModule: true,
     isWindows: null,
     isLinux: null,
-    appSemVer: versionStub,
+    appSemVer: new SemVer("1.0.0"),
   };
 });
 

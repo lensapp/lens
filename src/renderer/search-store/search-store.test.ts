@@ -9,6 +9,7 @@ import { stdout, stderr } from "process";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import searchStoreInjectable from "./search-store.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -34,7 +35,7 @@ describe("search store tests", () => {
 
     await di.runSetups();
 
-    searchStore = new SearchStore();
+    searchStore = di.inject(searchStoreInjectable);
   });
 
   it("does nothing with empty search query", () => {

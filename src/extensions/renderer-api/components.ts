@@ -3,14 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
-import createTerminalTabInjectable from "../../renderer/components/dock/create-terminal-tab/create-terminal-tab.injectable";
-import terminalStoreInjectable from "../../renderer/components/dock/terminal-store/terminal-store.injectable";
+import createTerminalTabInjectable from "../../renderer/components/dock/terminal/create-terminal-tab.injectable";
+import terminalStoreInjectable from "../../renderer/components/dock/terminal/store.injectable";
 import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import logTabStoreInjectable from "../../renderer/components/dock/logs/tab-store.injectable";
-import { asLegacyGlobalSingletonForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-singleton-for-extension-api";
-import { TerminalStore as TerminalStoreClass } from "../../renderer/components/dock/terminal-store/terminal.store";
 
 import commandOverlayInjectable from "../../renderer/components/command-palette/command-overlay.injectable";
+import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
+import createPodLogsTabInjectable from "../../renderer/components/dock/logs/create-pod-logs-tab.injectable";
+import createWorkloadLogsTabInjectable from "../../renderer/components/dock/logs/create-workload-logs-tab.injectable";
+import sendCommandInjectable from "../../renderer/components/dock/terminal/send-command.injectable";
+import { podsStore } from "../../renderer/components/+workloads-pods/pods.store";
+import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -71,7 +75,30 @@ export * from "../../renderer/components/+events/kube-event-details";
 export * from "../../renderer/components/status-brick";
 
 export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(createTerminalTabInjectable);
-export const TerminalStore = asLegacyGlobalSingletonForExtensionApi(TerminalStoreClass, terminalStoreInjectable);
-export const terminalStore = asLegacyGlobalObjectForExtensionApi(terminalStoreInjectable);
-export const logTabStore = asLegacyGlobalObjectForExtensionApi(logTabStoreInjectable);
+export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModifications(terminalStoreInjectable, {
+  sendCommand: () => asLegacyGlobalFunctionForExtensionApi(sendCommandInjectable),
+});
+export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(logTabStoreInjectable, {
+  createPodTab: () => asLegacyGlobalFunctionForExtensionApi(createPodLogsTabInjectable),
+  createWorkloadTab: () => asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),
+  renameTab: () => (tabId: string): void => {
+    const renameTab = asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
+    const tabData = logTabStore.getData(tabId);
+    const pod = podsStore.getById(tabData.selectedPodId);
 
+    renameTab(tabId, `Pod ${pod.getName()}`);
+  },
+  tabs: () => undefined,
+});
+
+export class TerminalStore {
+  static getInstance() {
+    return terminalStore;
+  }
+  static createInstance() {
+    return terminalStore;
+  }
+  static resetInstance() {
+    console.warn("TerminalStore.resetInstance() does nothing");
+  }
+}

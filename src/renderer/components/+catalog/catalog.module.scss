@@ -20,6 +20,7 @@
   padding: 0 var(--padding);
   padding-bottom: 0;
   padding-right: 24px; // + reserved space for .pinIcon
+  flex-grow: 2.5!important;
 
   > span {
     overflow: hidden;

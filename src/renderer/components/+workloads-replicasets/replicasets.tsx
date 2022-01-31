@@ -7,15 +7,10 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { ReplicaSet } from "../../../common/k8s-api/endpoints";
-import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { MenuItem } from "../menu/menu";
-import { Icon } from "../icon/icon";
-import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import type { ReplicaSetsRouteParams } from "../../../common/routes";
 import { eventStore } from "../+events/event.store";
 
@@ -75,15 +70,3 @@ export class ReplicaSets extends React.Component<Props> {
   }
 }
 
-export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
-  const { object, toolbar } = props;
-
-  return (
-    <>
-      <MenuItem onClick={() => ReplicaSetScaleDialog.open(object)}>
-        <Icon material="open_with" tooltip="Scale" interactive={toolbar}/>
-        <span className="title">Scale</span>
-      </MenuItem>
-    </>
-  );
-}

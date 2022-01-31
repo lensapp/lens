@@ -8,12 +8,12 @@ import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import fse from "fs-extra";
 import { DockTabs } from "../dock-tabs";
-import { DockStore, DockTab, TabKind } from "../dock-store/dock.store";
+import { DockStore, DockTab, TabKind } from "../dock/store";
 import { noop } from "../../../utils";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
+import dockStoreInjectable from "../dock/store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable

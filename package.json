@@ -349,6 +349,7 @@
     "fork-ts-checker-webpack-plugin": "^5.2.1",
     "hoist-non-react-statics": "^3.3.2",
     "html-webpack-plugin": "^4.5.2",
+    "ignore-loader": "^0.1.2",
     "include-media": "^1.4.9",
     "jest": "26.6.3",
     "jest-canvas-mock": "^2.3.1",

@@ -8,17 +8,22 @@ import "./controls.scss";
 import React from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../../common/k8s-api/endpoints";
-import { cssNames, saveFileDialog } from "../../../utils";
+import { cssNames } from "../../../utils";
 import { Checkbox } from "../../checkbox";
 import { Icon } from "../../icon";
 import type { LogTabViewModel } from "./logs-view-model";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
 }
 
-export const LogControls = observer(({ model }: LogControlsProps) => {
+interface Dependencies {
+  openSaveFileDialog: (filename: string, contents: BlobPart | BlobPart[], type: string) => void;
+}
+
+const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependencies & LogControlsProps) => {
   const tabData = model.logTabData.get();
 
   if (!tabData) {
@@ -26,26 +31,25 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
   }
 
   const logs = model.timestampSplitLogs.get();
-  const { showTimestamps, previous } = tabData;
+  const { showTimestamps, showPrevious: previous } = tabData;
   const since = logs.length ? logs[0][0] : null;
-  const pod = new Pod(tabData.selectedPod);
 
   const toggleTimestamps = () => {
     model.updateLogTabData({ showTimestamps: !showTimestamps });
   };
 
   const togglePrevious = () => {
-    model.updateLogTabData({ previous: !previous });
+    model.updateLogTabData({ showPrevious: !previous });
     model.reloadLogs();
   };
 
   const downloadLogs = () => {
-    const fileName = pod.getName();
+    const fileName = model.pod.get().getName();
     const logsToDownload: string[] = showTimestamps
       ? model.logs.get()
       : model.logsWithoutTimestamps.get();
 
-    saveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
+    openSaveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
   };
 
   return (
@@ -80,4 +84,11 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
       </div>
     </div>
   );
+});
+
+export const LogControls = withInjectables<Dependencies, LogControlsProps>(NonInjectedLogControls, {
+  getProps: (di, props) => ({
+    openSaveFileDialog: di.inject(openSaveFileDialogInjectable),
+    ...props,
+  }),
 });

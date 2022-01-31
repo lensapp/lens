@@ -12,15 +12,13 @@ import { Icon } from "../../icon";
 import type { LogTabViewModel } from "./logs-view-model";
 
 export interface PodLogSearchProps {
-  onSearch: (query: string) => void;
-  toPrevOverlay: () => void;
-  toNextOverlay: () => void;
+  onSearch?: (query: string) => void;
+  scrollToOverlay: (lineNumber: number | undefined) => void;
   model: LogTabViewModel;
 }
 
-
-export const LogSearch = observer(({ onSearch, toPrevOverlay, toNextOverlay, model }: PodLogSearchProps) => {
-  const tabData = model.logTabData.get();
+export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
+  const tabData = logTabData.get();
 
   if (!tabData) {
     return null;
@@ -29,27 +27,23 @@ export const LogSearch = observer(({ onSearch, toPrevOverlay, toNextOverlay, mod
   const logs = tabData.showTimestamps
     ? model.logs.get()
     : model.logsWithoutTimestamps.get();
-  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = model.searchStore;
+  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
-  const findCounts = (
-    <div className="find-count">
-      {activeFind}/{totalFinds}
-    </div>
-  );
 
   const setSearch = (query: string) => {
-    model.searchStore.onSearch(logs, query);
-    onSearch(query);
+    searchStore.onSearch(logs, query);
+    onSearch?.(query);
+    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onPrevOverlay = () => {
     setPrevOverlayActive();
-    toPrevOverlay();
+    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onNextOverlay = () => {
     setNextOverlayActive();
-    toNextOverlay();
+    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onClear = () => {
@@ -58,13 +52,17 @@ export const LogSearch = observer(({ onSearch, toPrevOverlay, toNextOverlay, mod
 
   const onKeyDown = (evt: React.KeyboardEvent<any>) => {
     if (evt.key === "Enter") {
-      onNextOverlay();
+      if (evt.shiftKey) {
+        onPrevOverlay();
+      } else {
+        onNextOverlay();
+      }
     }
   };
 
   useEffect(() => {
     // Refresh search when logs changed
-    model.searchStore.onSearch(logs);
+    searchStore.onSearch(logs);
   }, [logs]);
 
   return (
@@ -73,7 +71,11 @@ export const LogSearch = observer(({ onSearch, toPrevOverlay, toNextOverlay, mod
         value={searchQuery}
         onChange={setSearch}
         showClearIcon={true}
-        contentRight={totalFinds > 0 && findCounts}
+        contentRight={totalFinds > 0 && (
+          <div className="find-count">
+            {activeFind}/{totalFinds}
+          </div>
+        )}
         onClear={onClear}
         onKeyDown={onKeyDown}
       />

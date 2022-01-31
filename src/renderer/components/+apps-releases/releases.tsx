@@ -23,10 +23,8 @@ import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { ReleaseDetails } from "./release-details/release-details";
 import removableReleasesInjectable from "./removable-releases.injectable";
 import type { RemovableHelmRelease } from "./removable-releases";
-import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import releasesInjectable from "./releases.injectable";
-import { Spinner } from "../spinner";
 
 enum columnId {
   name = "name",
@@ -48,7 +46,6 @@ interface Dependencies {
   selectNamespace: (namespace: string) => void
 }
 
-@observer
 class NonInjectedHelmReleases extends Component<Dependencies & Props> {
   componentDidMount() {
     const { match: { params: { namespace }}} = this.props;
@@ -89,12 +86,8 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
   }
 
   render() {
-    if (this.props.releasesArePending.get()) {
-      // TODO: Make Spinner "center" work properly
-      return <div className="flex center" style={{ height: "100%" }}><Spinner /></div>;
-    }
-
     const releases = this.props.releases;
+    const releasesArePending = this.props.releasesArePending;
 
     // TODO: Implement ItemListLayout without stateful stores
     const legacyReleaseStore = {
@@ -103,7 +96,11 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
       },
 
       loadAll: () => Promise.resolve(),
-      isLoaded: true,
+
+      get isLoaded() {
+        return !releasesArePending.get();
+      },
+
       failedLoading: false,
 
       getTotalCount: () => releases.get().length,
