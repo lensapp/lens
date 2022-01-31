@@ -38,7 +38,6 @@ export * from "./singleton";
 export * from "./sort-compare";
 export * from "./splitArray";
 export * from "./tar";
-export * from "./toggle-set";
 export * from "./toJS";
 export * from "./type-narrowing";
 export * from "./types";
