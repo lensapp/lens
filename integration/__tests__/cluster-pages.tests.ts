@@ -354,8 +354,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     }
   }, 10*60*1000);
 
-  // TODO: Make re-rendering of KubeObjectListLayout not cause namespaceSelector to be closed
-  xit("show logs and highlight the log search entries", async () => {
+  it("show logs and highlight the log search entries", async () => {
     await frame.click(`a[href="/workloads"]`);
     await frame.click(`a[href="/pods"]`);
 
@@ -400,8 +399,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await frame.waitForSelector("div.TableCell >> text='kube-system'");
   }, 10*60*1000);
 
-  // TODO: Make re-rendering of KubeObjectListLayout not cause namespaceSelector to be closed
-  xit(`should create the ${TEST_NAMESPACE} and a pod in the namespace`, async () => {
+  it(`should create the ${TEST_NAMESPACE} and a pod in the namespace`, async () => {
     await frame.click('a[href="/namespaces"]');
     await frame.click("button.add-button");
     await frame.waitForSelector("div.AddNamespaceDialog >> text='Create Namespace'");
