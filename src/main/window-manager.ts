@@ -74,7 +74,7 @@ export class WindowManager extends Singleton {
           nodeIntegrationInSubFrames: true,
           webviewTag: true,
           contextIsolation: false,
-          nativeWindowOpen: true,
+          nativeWindowOpen: false,
         },
       });
       this.windowState.manage(this.mainWindow);
