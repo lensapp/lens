@@ -119,6 +119,10 @@ export class ExtensionDiscovery {
     return path.join(this.dependencies.extensionPackageRootDirectory, "node_modules");
   }
 
+  get bundledUpdatesFolderPath(): string {
+    return path.resolve(__static, "../extension-updates");
+  }
+
   /**
    * Initializes the class and setups the file watcher for added/removed local extensions.
    */
@@ -380,9 +384,19 @@ export class ExtensionDiscovery {
     }
   }
 
-  async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
+  async getBundledExtensions(): Promise<InstalledExtension[]> {
     const bundledExtensions = await this.loadBundledExtensions();
+    const bundedUpdates = await this.loadExtensionUpdates();
 
+    return bundledExtensions.map(extension => {
+      const updated = bundedUpdates.find(update => update.manifest.name === extension.manifest.name);
+
+      return updated || extension;
+    });
+  }
+
+  async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
+    const bundledExtensions = await this.getBundledExtensions();
     await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
 
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
@@ -416,9 +430,15 @@ export class ExtensionDiscovery {
     return this.dependencies.installExtensions(packageJsonPath, { dependencies });
   }
 
-  async loadBundledExtensions(): Promise<InstalledExtension[]> {
+  /**
+   * Checks ./extension-updates folder and loads founded extensions
+   */
+  loadExtensionUpdates(): Promise<InstalledExtension[]> {
+    return this.loadBundledExtensions(this.bundledUpdatesFolderPath);
+  }
+
+  async loadBundledExtensions(folderPath = this.bundledFolderPath): Promise<InstalledExtension[]> {
     const extensions: InstalledExtension[] = [];
-    const folderPath = this.bundledFolderPath;
     const paths = await fse.readdir(folderPath);
 
     for (const fileName of paths) {
