@@ -4,25 +4,19 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import dockStoreInjectable from "../dock/store.injectable";
-import { DockStore, DockTabCreateSpecific, TabKind } from "../dock/store";
-import { bind } from "../../../utils";
-
-interface Dependencies {
-  dockStore: DockStore;
-}
-
-export function createTerminalTab({ dockStore }: Dependencies, tabParams: DockTabCreateSpecific = {}) {
-  return dockStore.createTab({
-    title: `Terminal`,
-    ...tabParams,
-    kind: TabKind.TERMINAL,
-  });
-}
+import { DockTabCreateSpecific, TabKind } from "../dock/store";
 
 const createTerminalTabInjectable = getInjectable({
-  instantiate: (di) => bind(createTerminalTab, null, {
-    dockStore: di.inject(dockStoreInjectable),
-  }),
+  instantiate: (di) => {
+    const dockStore = di.inject(dockStoreInjectable);
+
+    return (tabParams: DockTabCreateSpecific = {}) =>
+      dockStore.createTab({
+        title: `Terminal`,
+        ...tabParams,
+        kind: TabKind.TERMINAL,
+      });
+  },
 
   lifecycle: lifecycleEnum.singleton,
 });

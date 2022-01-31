@@ -3,33 +3,28 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { Pod, IPodContainer } from "../../../../common/k8s-api/endpoints";
-import { bind } from "../../../utils";
+import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
 import type { TabId } from "../dock/store";
-import createLogsTabInjectable, { CreateLogsTabData } from "./create-logs-tab.injectable";
+import createLogsTabInjectable from "./create-logs-tab.injectable";
 
 export interface PodLogsTabData {
   selectedPod: Pod;
   selectedContainer: IPodContainer;
 }
 
-interface Dependencies {
-  createLogsTab: (title: string, data: CreateLogsTabData) => TabId;
-}
-
-function createPodLogsTab({ createLogsTab }: Dependencies, { selectedPod, selectedContainer }: PodLogsTabData): TabId {
-  return createLogsTab(`Pod ${selectedPod.getName()}`, {
-    owner: selectedPod.getOwnerRefs()[0],
-    namespace: selectedPod.getNs(),
-    selectedContainer: selectedContainer.name,
-    selectedPodId: selectedPod.getId(),
-  });
-}
-
 const createPodLogsTabInjectable = getInjectable({
-  instantiate: (di) => bind(createPodLogsTab, null, {
-    createLogsTab: di.inject(createLogsTabInjectable),
-  }),
+  instantiate: (di) => {
+    let createLogsTab = di.inject(createLogsTabInjectable);
+
+    return ({ selectedPod, selectedContainer }: PodLogsTabData): TabId =>
+      createLogsTab(`Pod ${selectedPod.getName()}`, {
+        owner: selectedPod.getOwnerRefs()[0],
+        namespace: selectedPod.getNs(),
+        selectedContainer: selectedContainer.name,
+        selectedPodId: selectedPod.getId(),
+      });
+  },
+
   lifecycle: lifecycleEnum.singleton,
 });
 

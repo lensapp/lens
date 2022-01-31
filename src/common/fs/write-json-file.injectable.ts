@@ -6,7 +6,6 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { EnsureOptions, WriteOptions } from "fs-extra";
 import path from "path";
 import type { JsonValue } from "type-fest";
-import { bind } from "../utils";
 import fsInjectable from "./fs.injectable";
 
 interface Dependencies {
@@ -14,7 +13,7 @@ interface Dependencies {
   ensureDir: (dir: string, options?: EnsureOptions | number) => Promise<void>;
 }
 
-async function writeJsonFile({ writeJson, ensureDir }: Dependencies, filePath: string, content: JsonValue, options?: WriteOptions | BufferEncoding) {
+const writeJsonFile = ({ writeJson, ensureDir }: Dependencies) => async (filePath: string, content: JsonValue, options?: WriteOptions | BufferEncoding) => {
   await ensureDir(path.dirname(filePath), { mode: 0o755 });
 
   const resolvedOptions = typeof options === "string"
@@ -28,17 +27,18 @@ async function writeJsonFile({ writeJson, ensureDir }: Dependencies, filePath: s
     spaces: 2,
     ...resolvedOptions,
   });
-}
+};
 
 const writeJsonFileInjectable = getInjectable({
   instantiate: (di) => {
     const { writeJson, ensureDir } = di.inject(fsInjectable);
 
-    return bind(writeJsonFile, null, {
+    return writeJsonFile({
       writeJson,
       ensureDir,
     });
   },
+
   lifecycle: lifecycleEnum.singleton,
 });
 

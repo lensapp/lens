@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { bind } from "../../../utils";
 import { DockTabCreate, DockTab, TabKind, TabId } from "../dock/store";
 import type { LogTabData } from "./tab-store";
 import * as uuid from "uuid";
@@ -18,7 +17,7 @@ interface Dependencies {
   setLogTabData: (tabId: string, data: LogTabData) => void;
 }
 
-function createLogsTab({ createDockTab, setLogTabData }: Dependencies, title: string, data: CreateLogsTabData): TabId {
+const createLogsTab = ({ createDockTab, setLogTabData }: Dependencies) => (title: string, data: CreateLogsTabData): TabId => {
   const id = `log-tab-${uuid.v4()}`;
 
   runInAction(() => {
@@ -35,13 +34,14 @@ function createLogsTab({ createDockTab, setLogTabData }: Dependencies, title: st
   });
 
   return id;
-}
+};
 
 const createLogsTabInjectable = getInjectable({
-  instantiate: (di) => bind(createLogsTab, null, {
+  instantiate: (di) => createLogsTab({
     createDockTab: di.inject(createDockTabInjectable),
     setLogTabData: di.inject(setLogTabDataInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

@@ -5,7 +5,6 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { podsStore } from "../../+workloads-pods/pods.store";
 import type { WorkloadKubeObject } from "../../../../common/k8s-api/workload-kube-object";
-import { bind } from "../../../utils";
 import type { TabId } from "../dock/store";
 import createLogsTabInjectable, { CreateLogsTabData } from "./create-logs-tab.injectable";
 
@@ -17,7 +16,7 @@ interface Dependencies {
   createLogsTab: (title: string, data: CreateLogsTabData) => TabId;
 }
 
-function createWorkloadLogsTab({ createLogsTab }: Dependencies, { workload }: WorkloadLogsTabData): TabId | undefined {
+const createWorkloadLogsTab = ({ createLogsTab }: Dependencies) => ({ workload }: WorkloadLogsTabData): TabId | undefined => {
   const pods = podsStore.getPodsByOwnerId(workload.getId());
 
   if (pods.length === 0) {
@@ -36,12 +35,13 @@ function createWorkloadLogsTab({ createLogsTab }: Dependencies, { workload }: Wo
       uid: workload.getId(),
     },
   });
-}
+};
 
 const createWorkloadLogsTabInjectable = getInjectable({
-  instantiate: (di) => bind(createWorkloadLogsTab, null, {
+  instantiate: (di) => createWorkloadLogsTab({
     createLogsTab: di.inject(createLogsTabInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

@@ -8,7 +8,6 @@ import dockStoreInjectable from "../dock/store.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { DockStore, DockTabCreateSpecific, TabId, TabKind } from "../dock/store";
 import type { UpgradeChartTabStore } from "./store";
-import { bind } from "../../../utils";
 import { runInAction } from "mobx";
 
 interface Dependencies {
@@ -16,7 +15,7 @@ interface Dependencies {
   dockStore: DockStore
 }
 
-function createUpgradeChartTab({ upgradeChartStore, dockStore }: Dependencies, release: HelmRelease, tabParams: DockTabCreateSpecific = {}): TabId {
+const createUpgradeChartTab = ({ upgradeChartStore, dockStore }: Dependencies) => (release: HelmRelease, tabParams: DockTabCreateSpecific = {}): TabId => {
   const tabId = upgradeChartStore.getTabIdByRelease(release.getName());
 
   if (tabId) {
@@ -43,10 +42,10 @@ function createUpgradeChartTab({ upgradeChartStore, dockStore }: Dependencies, r
 
     return tab.id;
   });
-}
+};
 
 const createUpgradeChartTabInjectable = getInjectable({
-  instantiate: (di) => bind(createUpgradeChartTab, null, {
+  instantiate: (di) => createUpgradeChartTab({
     upgradeChartStore: di.inject(upgradeChartTabStoreInjectable),
     dockStore: di.inject(dockStoreInjectable),
   }),

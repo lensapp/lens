@@ -8,7 +8,6 @@ import dockStoreInjectable from "../dock/store.injectable";
 import type { KubeObject } from "../../../../common/k8s-api/kube-object";
 import { DockStore, DockTabCreateSpecific, TabId, TabKind } from "../dock/store";
 import type { EditResourceTabStore } from "./store";
-import { bind } from "../../../utils";
 import { runInAction } from "mobx";
 
 interface Dependencies {
@@ -16,7 +15,7 @@ interface Dependencies {
   editResourceStore: EditResourceTabStore;
 }
 
-function createEditResourceTab({ dockStore, editResourceStore }: Dependencies, object: KubeObject, tabParams: DockTabCreateSpecific = {}): TabId {
+const createEditResourceTab = ({ dockStore, editResourceStore }: Dependencies) => (object: KubeObject, tabParams: DockTabCreateSpecific = {}): TabId => {
   // use existing tab if already opened
   const tabId = editResourceStore.getTabIdByResource(object);
 
@@ -43,10 +42,10 @@ function createEditResourceTab({ dockStore, editResourceStore }: Dependencies, o
 
     return tab.id;
   });
-}
+};
 
 const createEditResourceTabInjectable = getInjectable({
-  instantiate: (di) => bind(createEditResourceTab, null, {
+  instantiate: (di) => createEditResourceTab({
     dockStore: di.inject(dockStoreInjectable),
     editResourceStore: di.inject(editResourceTabStoreInjectable),
   }),

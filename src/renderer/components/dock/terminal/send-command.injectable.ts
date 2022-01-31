@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { when } from "mobx";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
-import { bind, noop } from "../../../utils";
+import { noop } from "../../../utils";
 import { Notifications } from "../../notifications";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";
 import type { DockTab, TabId } from "../dock/store";
@@ -35,7 +35,7 @@ export interface SendCommandOptions {
   tabId?: TabId;
 }
 
-async function sendCommand({ selectTab, createTerminalTab, getTerminalApi }: Dependencies, command: string, options: SendCommandOptions = {}): Promise<void> {
+const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependencies) => async (command: string, options: SendCommandOptions = {}): Promise<void> => {
   let { tabId } = options;
 
   if (tabId) {
@@ -76,14 +76,15 @@ async function sendCommand({ selectTab, createTerminalTab, getTerminalApi }: Dep
       { tabId, command },
     );
   }
-}
+};
 
 const sendCommandInjectable = getInjectable({
-  instantiate: (di) => bind(sendCommand, null, {
+  instantiate: (di) => sendCommand({
     createTerminalTab: di.inject(createTerminalTabInjectable),
     selectTab: di.inject(selectDockTabInjectable),
     getTerminalApi: di.inject(getTerminalApiInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

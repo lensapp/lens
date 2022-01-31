@@ -7,14 +7,13 @@ import { requestOpenFilePickingDialog } from "../../ipc";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import attemptInstallsInjectable from "./attempt-installs/attempt-installs.injectable";
 import directoryForDownloadsInjectable from "../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
-import { bind } from "../../utils";
 
 interface Dependencies {
   attemptInstalls: (filePaths: string[]) => Promise<void>
   directoryForDownloads: string
 }
 
-async function installFromSelectFileDialog({ attemptInstalls, directoryForDownloads }: Dependencies) {
+const installFromSelectFileDialog = ({ attemptInstalls, directoryForDownloads }: Dependencies) => async () => {
   const { canceled, filePaths } = await requestOpenFilePickingDialog({
     defaultPath: directoryForDownloads,
     properties: ["openFile", "multiSelections"],
@@ -26,13 +25,14 @@ async function installFromSelectFileDialog({ attemptInstalls, directoryForDownlo
   if (!canceled) {
     await attemptInstalls(filePaths);
   }
-}
+};
 
 const installFromSelectFileDialogInjectable = getInjectable({
-  instantiate: (di) => bind(installFromSelectFileDialog, null, {
+  instantiate: (di) => installFromSelectFileDialog({
     attemptInstalls: di.inject(attemptInstallsInjectable),
     directoryForDownloads: di.inject(directoryForDownloadsInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

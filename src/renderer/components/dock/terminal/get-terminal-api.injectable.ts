@@ -4,23 +4,16 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { TerminalApi } from "../../../api/terminal-api";
-import { bind } from "../../../utils";
 import type { TabId } from "../dock/store";
-import type { TerminalStore } from "./store";
 import terminalStoreInjectable from "./store.injectable";
 
-interface Dependencies {
-  terminalStore: TerminalStore;
-}
-
-function getTerminalApi({ terminalStore }: Dependencies, tabId: TabId): TerminalApi {
-  return terminalStore.getTerminalApi(tabId);
-}
-
 const getTerminalApiInjectable = getInjectable({
-  instantiate: (di) => bind(getTerminalApi, null, {
-    terminalStore: di.inject(terminalStoreInjectable),
-  }),
+  instantiate: (di) => {
+    const terminalStore = di.inject(terminalStoreInjectable);
+
+    return (tabId: TabId): TerminalApi => terminalStore.getTerminalApi(tabId);
+  },
+
   lifecycle: lifecycleEnum.singleton,
 });
 

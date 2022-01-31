@@ -3,22 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { bind } from "../../../utils";
-import type { LogStore } from "./store";
 import logStoreInjectable from "./store.injectable";
 
-interface Dependencies {
-  logStore: LogStore;
-}
-
-function getLogsWithoutTimestamps({ logStore }: Dependencies, tabId: string): string[] {
-  return logStore.getLogsWithoutTimestamps(tabId);
-}
-
 const getLogsWithoutTimestampsInjectable = getInjectable({
-  instantiate: (di) => bind(getLogsWithoutTimestamps, null, {
-    logStore: di.inject(logStoreInjectable),
-  }),
+  instantiate: (di) => {
+    const logStore = di.inject(logStoreInjectable);
+
+    return (tabId: string): string[] =>
+      logStore.getLogsWithoutTimestamps(tabId);
+  },
+
   lifecycle: lifecycleEnum.singleton,
 });
 

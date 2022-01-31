@@ -5,9 +5,13 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import installChartTabStoreInjectable from "./store.injectable";
 import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
-import { DockTab, DockTabCreate, DockTabCreateSpecific, TabKind } from "../dock/store";
+import {
+  DockTab,
+  DockTabCreate,
+  DockTabCreateSpecific,
+  TabKind,
+} from "../dock/store";
 import type { InstallChartTabStore } from "./store";
-import { bind } from "../../../utils";
 import createDockTabInjectable from "../dock/create-dock-tab.injectable";
 
 interface Dependencies {
@@ -15,7 +19,7 @@ interface Dependencies {
   installChartStore: InstallChartTabStore;
 }
 
-function createInstallChartTab({ createDockTab, installChartStore }: Dependencies, chart: HelmChart, tabParams: DockTabCreateSpecific = {}) {
+const createInstallChartTab = ({ createDockTab, installChartStore }: Dependencies) => (chart: HelmChart, tabParams: DockTabCreateSpecific = {}) => {
   const { name, repo, version } = chart;
 
   const tab = createDockTab(
@@ -37,10 +41,10 @@ function createInstallChartTab({ createDockTab, installChartStore }: Dependencie
   });
 
   return tab;
-}
+};
 
 const createInstallChartTabInjectable = getInjectable({
-  instantiate: (di) => bind(createInstallChartTab, null, {
+  instantiate: (di) => createInstallChartTab({
     installChartStore: di.inject(installChartTabStoreInjectable),
     createDockTab: di.inject(createDockTabInjectable),
   }),

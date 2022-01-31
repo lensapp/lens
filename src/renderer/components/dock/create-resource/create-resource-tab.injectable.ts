@@ -3,26 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { bind } from "../../../utils";
 import dockStoreInjectable from "../dock/store.injectable";
-import { DockStore, DockTabCreateSpecific, TabKind } from "../dock/store";
-
-interface Dependencies {
-  dockStore: DockStore
-}
-
-function createResourceTab({ dockStore }: Dependencies, tabParams: DockTabCreateSpecific = {}) {
-  return dockStore.createTab({
-    title: "Create resource",
-    ...tabParams,
-    kind: TabKind.CREATE_RESOURCE,
-  });
-}
+import { DockTabCreateSpecific, TabKind } from "../dock/store";
 
 const createResourceTabInjectable = getInjectable({
-  instantiate: (di) => bind(createResourceTab, null, {
-    dockStore: di.inject(dockStoreInjectable),
-  }),
+  instantiate: (di) => {
+    const dockStore = di.inject(dockStoreInjectable);
+
+    return (tabParams: DockTabCreateSpecific = {}) =>
+      dockStore.createTab({
+        title: "Create resource",
+        ...tabParams,
+        kind: TabKind.CREATE_RESOURCE,
+      });
+  },
 
   lifecycle: lifecycleEnum.singleton,
 });
