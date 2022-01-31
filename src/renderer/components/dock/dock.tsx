@@ -36,10 +36,7 @@ interface Dependencies {
   dockStore: DockStore
 }
 
-enum Direction {
-  next = "next",
-  prev = "prev",
-}
+type Direction = 1 | -1;
 
 @observer
 class NonInjectedDock extends React.Component<Props & Dependencies> {
@@ -72,11 +69,11 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     }
 
     if(ctrlKey && code === "Period") {
-      this.nextTab(Direction.next);
+      this.nextTab();
     }
 
     if(ctrlKey && code === "Comma") {
-      this.nextTab(Direction.prev);
+      this.nextTab(-1);
     }
   };
 
@@ -88,13 +85,16 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     this.element?.current.focus();
   };
 
-  nextTab = (direction: Direction) => {
+  nextTab = (direction: Direction = 1) => {
     const { tabs, selectedTab } = this.props.dockStore;
     const currentIndex = tabs.indexOf(selectedTab);
-    const nextIndex = direction === Direction.next ? currentIndex + 1 : currentIndex - 1;
+    const nextIndex = currentIndex + direction;
 
-    if (direction === Direction.next && currentIndex!== -1 && nextIndex >= tabs.length) return;
-    if (direction === Direction.prev && currentIndex!== -1 && nextIndex < 0) return;
+    // check if moving to the next tab is possible.
+    if (direction === 1 && currentIndex!== -1 && nextIndex >= tabs.length) return;
+
+    // check if moving to the previous tab is possible
+    if (direction === -1 && currentIndex!== -1 && nextIndex < 0) return;
 
     const nextElement = tabs[nextIndex];
 

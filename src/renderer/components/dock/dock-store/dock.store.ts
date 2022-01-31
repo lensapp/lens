@@ -97,11 +97,6 @@ export interface DockTabCloseEvent {
   tabId: TabId; // closed tab id
 }
 
-export interface DockTabsNumberEvent {
-  currentTabsNumber: number; // number of open tabs
-  previousTabsNumber: number;
-}
-
 interface Dependencies {
   storage: StorageHelper<DockStorageState>
 }
