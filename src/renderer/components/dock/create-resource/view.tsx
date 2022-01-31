@@ -23,6 +23,7 @@ import { navigate } from "../../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
+import { Spinner } from "../../spinner";
 
 interface Props {
   tab: DockTab;
@@ -143,9 +144,11 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
 }
 
 export const CreateResource = withInjectables<Dependencies, Props>(NonInjectedCreateResource, {
-  getProps: (di, props) => ({
+  getPlaceholder: () => <Spinner center />,
+
+  getProps: async (di, props) => ({
     createResourceTabStore: di.inject(createResourceTabStoreInjectable),
-    createResourceTemplates: di.inject(createResourceTemplatesInjectable),
+    createResourceTemplates: await di.inject(createResourceTemplatesInjectable),
     ...props,
   }),
 });

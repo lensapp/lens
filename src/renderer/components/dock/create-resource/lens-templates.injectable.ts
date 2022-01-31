@@ -5,10 +5,10 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import path from "path";
 import { hasCorrectExtension } from "./has-correct-extension";
-import type { RawTemplates } from "./create-resource-templates.injectable";
 import "../../../../common/vars";
 import readFileInjectable from "../../../../common/fs/read-file.injectable";
 import readDirInjectable from "../../../../common/fs/read-dir.injectable";
+import type { RawTemplates } from "./create-resource-templates.injectable";
 
 interface Dependencies {
   readDir: (dirPath: string) => Promise<string[]>;
@@ -32,16 +32,16 @@ async function getTemplates({ readDir, readFile }: Dependencies) {
   return templates;
 }
 
-let lensTemplatePaths: RawTemplates;
-
 const lensCreateResourceTemplatesInjectable = getInjectable({
-  setup: async (di) => {
-    lensTemplatePaths = ["lens", await getTemplates({
+  instantiate: async (di): Promise<RawTemplates> => {
+    const templates = await getTemplates({
       readFile: di.inject(readFileInjectable),
       readDir: di.inject(readDirInjectable),
-    })];
+    });
+
+    return ["lens", templates];
   },
-  instantiate: () => lensTemplatePaths,
+
   lifecycle: lifecycleEnum.singleton,
 });
 

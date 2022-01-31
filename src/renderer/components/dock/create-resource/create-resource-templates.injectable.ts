@@ -5,14 +5,14 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { GroupSelectOption, SelectOption } from "../../select";
-import lensCreateResourceTemplatesInjectable from "./lens-templates.injectable";
 import userCreateResourceTemplatesInjectable from "./user-templates.injectable";
+import lensCreateResourceTemplatesInjectable from "./lens-templates.injectable";
 
 export type RawTemplates = [group: string, items: [file: string, contents: string][]];
 
 const createResourceTemplatesInjectable = getInjectable({
-  instantiate: (di) => {
-    const lensResourceTemplates = di.inject(lensCreateResourceTemplatesInjectable);
+  instantiate: async (di) => {
+    const lensResourceTemplates = await di.inject(lensCreateResourceTemplatesInjectable);
     const userResourceTemplates = di.inject(userCreateResourceTemplatesInjectable);
 
     return computed(() => {
@@ -27,6 +27,7 @@ const createResourceTemplatesInjectable = getInjectable({
       }) as GroupSelectOption<SelectOption<string>>);
     });
   },
+
   lifecycle: lifecycleEnum.singleton,
 });
 
