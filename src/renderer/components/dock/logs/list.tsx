@@ -19,6 +19,7 @@ import { array, boundMethod, cssNames } from "../../../utils";
 import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
+import { Spinner } from "../../spinner";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -210,12 +211,18 @@ export class LogList extends React.Component<LogListProps> {
   };
 
   render() {
-    const rowHeights = array.filled(this.logs.length, this.lineHeight);
+    if (this.props.model.isLoading.get()) {
+      return (
+        <div className="LogList flex box grow align-center justify-center">
+          <Spinner />
+        </div>
+      );
+    }
 
     if (!this.logs.length) {
       return (
         <div className="LogList flex box grow align-center justify-center">
-          There are no logs available for container
+          There are no logs available for container {this.props.model.logTabData.get()?.selectedContainer}
         </div>
       );
     }
@@ -224,7 +231,7 @@ export class LogList extends React.Component<LogListProps> {
       <div className={cssNames("LogList flex" )}>
         <VirtualList
           items={this.logs}
-          rowHeights={rowHeights}
+          rowHeights={array.filled(this.logs.length, this.lineHeight)}
           getRow={this.getLogRow}
           onScroll={this.onScroll}
           outerRef={this.virtualListDiv}

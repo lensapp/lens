@@ -50,13 +50,9 @@ export class SearchInput extends React.Component<Props> {
 
   @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(evt);
-    }
-    // clear on escape-key
-    const escapeKey = evt.nativeEvent.code === "Escape";
+    this.props.onKeyDown?.(evt);
 
-    if (escapeKey) {
+    if (evt.nativeEvent.code === "Escape") {
       this.clear();
       evt.stopPropagation();
     }
@@ -87,6 +83,7 @@ export class SearchInput extends React.Component<Props> {
         onKeyDown={this.onKeyDown}
         iconRight={rightIcon}
         ref={this.inputRef}
+        blurOnEnter={false}
       />
     );
   }

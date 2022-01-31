@@ -6,7 +6,6 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { orderBy } from "lodash";
 import type { IComputedValue } from "mobx";
 import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
-import { bind } from "../../utils";
 import type { ItemListLayoutProps } from "../item-object-list";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
 import categoryColumnsInjectable from "./custom-category-columns.injectable";
@@ -50,7 +49,7 @@ function getBrowseAllColumns(): RegisteredAdditionalCategoryColumn[] {
   ];
 }
 
-function getCategoryColumns({ extensionColumns }: Dependencies, { activeCategory }: GetCategoryColumnsParams): CategoryColumns {
+const getCategoryColumns = ({ extensionColumns }: Dependencies) => ({ activeCategory }: GetCategoryColumnsParams): CategoryColumns => {
   const allRegistrations = orderBy(
     activeCategory
       ? getSpecificCategoryColumns(activeCategory, extensionColumns)
@@ -83,12 +82,13 @@ function getCategoryColumns({ extensionColumns }: Dependencies, { activeCategory
     renderTableContents: entity => tableRowRenderers.map(fn => fn(entity)),
     searchFilters,
   };
-}
+};
 
 const getCategoryColumnsInjectable = getInjectable({
-  instantiate: (di) => bind(getCategoryColumns, null, {
+  instantiate: (di) => getCategoryColumns({
     extensionColumns: di.inject(categoryColumnsInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

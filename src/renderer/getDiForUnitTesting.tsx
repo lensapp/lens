@@ -8,8 +8,10 @@ import { memoize } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
-import writeJsonFileInjectable from "../common/fs/write-json-file/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file/read-json-file.injectable";
+import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
+import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
+import readDirInjectable from "../common/fs/read-dir.injectable";
+import readFileInjectable from "../common/fs/read-file.injectable";
 
 export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverrides: false }) => {
   const di = createContainer();
@@ -30,6 +32,14 @@ export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverride
 
   if (doGeneralOverrides) {
     di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
+
+    di.override(readDirInjectable, () => () => {
+      throw new Error("Tried to read contents of a directory from file system without specifying explicit override.");
+    });
+
+    di.override(readFileInjectable, () => () => {
+      throw new Error("Tried to read a file from file system without specifying explicit override.");
+    });
 
     di.override(writeJsonFileInjectable, () => () => {
       throw new Error("Tried to write JSON file to file system without specifying explicit override.");

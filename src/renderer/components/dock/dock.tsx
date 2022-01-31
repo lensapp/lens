@@ -13,18 +13,19 @@ import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
-import { CreateResource } from "./create-resource";
+import { CreateResource } from "./create-resource/view";
 import { DockTabs } from "./dock-tabs";
-import { DockStore, DockTab, TabKind } from "./dock-store/dock.store";
-import { EditResource } from "./edit-resource";
-import { InstallChart } from "./install-chart";
-import { LogsDockTab } from "./logs/dock-tab";
-import { TerminalWindow } from "./terminal-window";
-import { UpgradeChart } from "./upgrade-chart";
+import { DockStore, DockTab, TabKind } from "./dock/store";
+import { EditResource } from "./edit-resource/view";
+import { InstallChart } from "./install-chart/view";
+import { LogsDockTab } from "./logs/view";
+import { TerminalWindow } from "./terminal/view";
+import { UpgradeChart } from "./upgrade-chart/view";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import createResourceTabInjectable from "./create-resource-tab/create-resource-tab.injectable";
-import dockStoreInjectable from "./dock-store/dock-store.injectable";
-import createTerminalTabInjectable from "./create-terminal-tab/create-terminal-tab.injectable";
+import createResourceTabInjectable from "./create-resource/create-resource-tab.injectable";
+import dockStoreInjectable from "./dock/store.injectable";
+import createTerminalTabInjectable from "./terminal/create-terminal-tab.injectable";
+import { ErrorBoundary } from "../error-boundary";
 
 interface Props {
   className?: string;
@@ -160,7 +161,9 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
             )}
           </div>
         </div>
-        {this.renderTabContent()}
+        <ErrorBoundary>
+          {this.renderTabContent()}
+        </ErrorBoundary>
       </div>
     );
   }

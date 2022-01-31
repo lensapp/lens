@@ -3,10 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import type { LogTabData } from "./tab-store";
 import logTabStoreInjectable from "./tab-store.injectable";
 
 const setLogTabDataInjectable = getInjectable({
-  instantiate: (di) => di.inject(logTabStoreInjectable).setData,
+  instantiate: (di) => {
+    const logTabStore = di.inject(logTabStoreInjectable);
+
+    return (tabId: string, data: LogTabData): void => logTabStore.setData(tabId, data);
+  },
+
   lifecycle: lifecycleEnum.singleton,
 });
 

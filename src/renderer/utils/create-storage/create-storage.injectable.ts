@@ -5,8 +5,8 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { createStorage } from "./create-storage";
-import readJsonFileInjectable from "../../../common/fs/read-json-file/read-json-file.injectable";
-import writeJsonFileInjectable from "../../../common/fs/write-json-file/write-json-file.injectable";
+import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
+import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 
 const createStorageInjectable = getInjectable({
   instantiate: (di) =>
