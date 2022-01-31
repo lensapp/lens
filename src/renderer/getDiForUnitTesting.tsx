@@ -36,7 +36,7 @@ export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverride
     di.override(readDirInjectable, () => () => Promise.resolve([]));
 
     di.override(readFileInjectable, () => () => {
-      throw new Error("Tried to read a file from file system without specifying explicit overrride");
+      throw new Error("Tried to read a file from file system without specifying explicit override.");
     });
 
     di.override(writeJsonFileInjectable, () => () => {
