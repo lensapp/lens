@@ -138,7 +138,7 @@ export function cssModulesWebpackRule(
   {
     styleLoader = vars.isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
   } = {}): webpack.RuleSetRule {
-  const { /*isDevelopment,*/ sassCommonVars } = vars;
+  const { isDevelopment, sassCommonVars } = vars;
 
   return {
     test: /\.s?css$/,
@@ -147,7 +147,7 @@ export function cssModulesWebpackRule(
       {
         loader: "css-loader",
         options: {
-          // sourceMap: isDevelopment,
+          sourceMap: isDevelopment,
           modules: {
             auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
             mode: "local", // :local(.selector) by default
@@ -158,7 +158,7 @@ export function cssModulesWebpackRule(
       {
         loader: "postcss-loader",
         options: {
-          // sourceMap: isDevelopment,
+          sourceMap: isDevelopment,
           postcssOptions: {
             plugins: [
               "tailwindcss",
@@ -169,7 +169,7 @@ export function cssModulesWebpackRule(
       {
         loader: "sass-loader",
         options: {
-          // sourceMap: isDevelopment,
+          sourceMap: isDevelopment,
           additionalData: `@import "${path.basename(sassCommonVars)}";`,
           sassOptions: {
             includePaths: [
