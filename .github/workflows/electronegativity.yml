@@ -3,9 +3,7 @@ on:
 
 name: Electronegativity
 on:
-  push:
-    branches:
-      - electronegativity
+  - pull_request
 jobs:
   build_job:
     runs-on: ubuntu-latest
