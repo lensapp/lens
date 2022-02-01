@@ -1,13 +1,11 @@
-@include theme-light {
-  .NamespaceSelectFilter {
-    --gradientColor: white;
-  }
-}
-
 .NamespaceSelectFilter {
-  --gradientColor: var(--select-menu-bgc);
-
   .Select {
+    &.lightTheme {
+      &__value-container {
+        --gradientColor: #f6f6f7;
+      }
+    }
+
     &__placeholder {
       width: 100%;
       white-space: nowrap;
@@ -25,6 +23,7 @@
 
     &__value-container {
       position: relative;
+      --gradientColor: var(--inputControlBackground);
 
       &::before, &::after {
         content: ' ';
