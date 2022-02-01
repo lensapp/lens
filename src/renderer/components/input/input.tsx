@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./input.scss";
+import styles from "./input.module.scss";
 
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { boundMethod, cssNames, debouncePromise, getRandId } from "../../utils";
@@ -342,16 +342,15 @@ export class Input extends React.Component<InputProps, State> {
       blurOnEnter,
       ...inputProps
     } = this.props;
-    const { focused, dirty, valid, validating, errors } = this.state;
+    const { dirty, valid, validating, errors } = this.state;
 
-    const className = cssNames("Input", this.props.className, {
-      lightTheme,
-      focused,
-      disabled,
-      invalid: !valid,
-      dirty,
-      validating,
-      validatingLine: validating && showValidationLine,
+    const className = cssNames(styles.Input, this.props.className, {
+      [styles.lightTheme]: lightTheme,
+      [styles.disabled]: disabled,
+      [styles.invalid]: !valid,
+      [styles.dirty]: dirty,
+      [styles.validating]: validating,
+      [styles.validatingLine]: validating && showValidationLine,
     });
 
     // prepare input props
@@ -368,7 +367,7 @@ export class Input extends React.Component<InputProps, State> {
     });
     const showErrors = errors.length > 0 && !valid && dirty;
     const errorsInfo = (
-      <div className="errors box grow">
+      <div className={styles.errors}>
         {errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
@@ -392,16 +391,16 @@ export class Input extends React.Component<InputProps, State> {
     return (
       <div id={componentId} className={className}>
         {tooltipError}
-        <label className="input-area flex gaps align-center" id="">
+        <label className={styles.InputArea} id="">
           {this.renderIcon(iconLeft)}
           {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
           {this.renderIcon(iconRight)}
           {contentRight}
         </label>
-        <div className="input-info flex gaps">
+        <div className={styles.InputInfo}>
           {!showErrorsAsTooltip && showErrors && errorsInfo}
           {this.showMaxLenIndicator && (
-            <div className="maxLengthIndicator box right">
+            <div className={styles.maxLengthIndicator}>
               {this.getValue().length} / {maxLength}
             </div>
           )}
