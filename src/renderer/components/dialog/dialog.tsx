@@ -12,6 +12,7 @@ import { reaction } from "mobx";
 import { Animate } from "../animate";
 import { cssNames, noop, stopPropagation } from "../../utils";
 import { navigation } from "../../navigation";
+import { InputThemeContext } from "../input";
 
 // todo: refactor + handle animation-end in props.onClose()?
 
@@ -139,16 +140,18 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
     className = cssNames("Dialog flex center", className, { modal, pinned });
     let dialog = (
-      <div
-        className={className}
-        onClick={stopPropagation}
-        ref={this.ref}
-        data-testid={testId}
-      >
-        <div className="box" ref={e => this.contentElem = e}>
-          {this.props.children}
+      <InputThemeContext.Provider value="light">
+        <div
+          className={className}
+          onClick={stopPropagation}
+          ref={this.ref}
+          data-testid={testId}
+        >
+          <div className="box" ref={e => this.contentElem = e}>
+            {this.props.children}
+          </div>
         </div>
-      </div>
+      </InputThemeContext.Provider>
     );
 
     if (animated) {

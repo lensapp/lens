@@ -70,6 +70,8 @@ interface State {
   submitted: boolean;
 }
 
+export const InputThemeContext = React.createContext("dark");
+
 const defaultProps: Partial<InputProps> = {
   rows: 1,
   maxRows: 10000,
@@ -347,9 +349,10 @@ export class Input extends React.Component<InputProps, State> {
       ...inputProps
     } = this.props;
     const { dirty, valid, validating, errors } = this.state;
+    const theme = this.context;
 
     const className = cssNames(styles.Input, this.props.className, {
-      [styles.lightTheme]: lightTheme,
+      [styles.lightTheme]: lightTheme || theme == "light",
       [styles.disabled]: disabled,
       [styles.invalid]: !valid,
       [styles.dirty]: dirty,
@@ -413,3 +416,5 @@ export class Input extends React.Component<InputProps, State> {
     );
   }
 }
+
+Input.contextType = InputThemeContext;
