@@ -162,6 +162,7 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: Props) => {
                     material="close"
                     title="Clear"
                     onClick={() => setAndCommitDirectory("")}
+                    smallest
                   />
                 )
               }
@@ -169,6 +170,7 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: Props) => {
                 material="folder"
                 title="Pick from filesystem"
                 onClick={openFilePicker}
+                smallest
               />
             </>
           }

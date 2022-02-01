@@ -75,6 +75,7 @@ export class AddClusterRoleDialog extends React.Component<Props> {
           >
             <SubTitle title="ClusterRole Name" />
             <Input
+              lightTheme
               required autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"

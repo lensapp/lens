@@ -203,6 +203,7 @@ export class RoleBindingDialog extends React.Component<Props> {
 
         <SubTitle title="Binding Name" />
         <Input
+          lightTheme
           disabled={this.isEditing}
           value={this.bindingName}
           onChange={value => this.bindingName = value}

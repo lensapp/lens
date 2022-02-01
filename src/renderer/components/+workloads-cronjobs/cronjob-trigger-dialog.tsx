@@ -105,6 +105,7 @@ export class CronJobTriggerDialog extends Component<Props> {
         </div>
         <div className="flex gaps">
           <Input
+            lightTheme
             required autoFocus
             placeholder={this.jobName}
             trim

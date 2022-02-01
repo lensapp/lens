@@ -205,6 +205,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
         <SubTitle title="Binding Name" />
         <Input
+          lightTheme
           placeholder="Name of ClusterRoleBinding ..."
           disabled={this.isEditing}
           value={this.bindingName}

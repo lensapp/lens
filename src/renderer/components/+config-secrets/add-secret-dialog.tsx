@@ -157,6 +157,7 @@ export class AddSecretDialog extends React.Component<Props> {
             return (
               <div key={index} className="secret-field flex gaps auto align-center">
                 <Input
+                  lightTheme
                   className="key"
                   placeholder="Name"
                   title={key}
@@ -165,6 +166,7 @@ export class AddSecretDialog extends React.Component<Props> {
                   value={key} onChange={v => item.key = v}
                 />
                 <Input
+                  lightTheme
                   multiLine maxRows={5}
                   required={required}
                   className="value"
@@ -205,6 +207,7 @@ export class AddSecretDialog extends React.Component<Props> {
             <div className="secret-name">
               <SubTitle title="Secret name" />
               <Input
+                lightTheme
                 autoFocus required
                 placeholder="Name"
                 trim

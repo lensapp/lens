@@ -109,6 +109,7 @@ class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
               value={this.desiredPort === 0 ? "" : String(this.desiredPort)}
               placeholder={"Random"}
               onChange={this.changePort}
+              lightTheme
             />
           </div>
           <Checkbox

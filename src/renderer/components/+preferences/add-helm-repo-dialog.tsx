@@ -104,6 +104,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
     return(
       <div className="flex gaps align-center">
         <Input
+          lightTheme
           placeholder={placeholder}
           validators={isPath}
           className="box grow"
@@ -132,10 +133,12 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         {this.renderFileInput(`Certificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
         <SubTitle title="Chart Repository Credentials" />
         <Input
+          lightTheme
           placeholder="Username"
           value={this.helmRepo.username} onChange= {v => this.helmRepo.username = v}
         />
         <Input
+          lightTheme
           type="password"
           placeholder="Password"
           value={this.helmRepo.password} onChange={v => this.helmRepo.password = v}
@@ -159,6 +162,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
           <WizardStep contentClass="flow column" nextLabel="Add" next={() => this.addCustomRepo()}>
             <div className="flex column gaps">
               <Input
+                lightTheme
                 autoFocus required
                 placeholder="Helm repo name"
                 trim
@@ -166,6 +170,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
                 value={this.helmRepo.name} onChange={v => this.helmRepo.name = v}
               />
               <Input
+                lightTheme 
                 required
                 placeholder="URL"
                 validators={isUrl}

@@ -72,6 +72,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
           <WizardStep nextLabel="Create" next={this.createAccount}>
             <SubTitle title="Account Name" />
             <Input
+              lightTheme
               autoFocus
               required
               placeholder="Enter a name"
