@@ -189,6 +189,7 @@ class NonInjectedInstallChart extends Component<Props & Dependencies> {
           maxLength={50}
           value={releaseName}
           onChange={this.onReleaseNameChange}
+          className="Input"
         />
       </div>
     );

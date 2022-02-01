@@ -13,6 +13,18 @@
       min-width: 130px;
     }
   }
+
+  .install-controls {
+    .Select {
+      &__value-container {
+        margin-bottom: 0;
+      }
+    }
+
+    .Input label {
+      padding: 6px 8px;
+    }
+  }
 }
 
 .InstallChartDone {
