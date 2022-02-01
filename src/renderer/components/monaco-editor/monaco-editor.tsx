@@ -249,8 +249,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.editor?.focus();
   }
 
-  @action
-  validate = (value = this.getValue()) => {
+  validate = action((value = this.getValue()) => {
     const validators: MonacoValidator[] = [
       monacoValidators[this.props.language], // parsing syntax check
     ].filter(Boolean);
@@ -262,7 +261,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
         this.props.onError?.(error); // emit error outside
       }
     }
-  };
+  });
 
   // avoid excessive validations during typing
   validateLazy = debounce(this.validate, 250);

@@ -111,7 +111,7 @@ export abstract class ItemStore<Item extends ItemObject> {
     }
   }
 
-  protected async loadItem(...args: any[]): Promise<Item>
+  protected async loadItem(...args: any[]): Promise<Item>;
   @action
   protected async loadItem(request: () => Promise<Item>, sortItems = true) {
     const item = await Promise.resolve(request()).catch(() => null);

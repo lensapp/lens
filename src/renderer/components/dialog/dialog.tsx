@@ -49,9 +49,6 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     pinned: false,
   };
 
-  @disposeOnUnmount
-  closeOnNavigate = reaction(() => navigation.toString(), () => this.close());
-
   public state: DialogState = {
     isOpen: this.props.isOpen,
   };
@@ -65,7 +62,13 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   }
 
   componentDidMount() {
-    if (this.isOpen) this.onOpen();
+    if (this.isOpen) {
+      this.onOpen();
+    }
+
+    disposeOnUnmount(this, [
+      reaction(() => navigation.toString(), () => this.close()),
+    ]);
   }
 
   componentDidUpdate(prevProps: DialogProps) {

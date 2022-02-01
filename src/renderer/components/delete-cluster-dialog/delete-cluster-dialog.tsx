@@ -12,8 +12,6 @@ import { Button } from "../button";
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { saveKubeconfig } from "./save-config";
-import { requestMain } from "../../../common/ipc";
-import { clusterClearDeletingHandler, clusterDeleteHandler, clusterSetDeletingHandler } from "../../../common/cluster-ipc";
 import { Notifications } from "../notifications";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { boundMethod } from "autobind-decorator";
@@ -21,6 +19,7 @@ import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Select } from "../select";
 import { Checkbox } from "../checkbox";
+import { requestClearClusterAsDeleting, requestDeleteCluster, requestSetClusterAsDeleting } from "../../ipc";
 
 type DialogState = {
   isOpen: boolean,
@@ -87,18 +86,18 @@ export class DeleteClusterDialog extends React.Component {
   async onDelete() {
     const { cluster, config } = dialogState;
 
-    await requestMain(clusterSetDeletingHandler, cluster.id);
+    await requestSetClusterAsDeleting(cluster.id);
     this.removeContext();
     this.changeCurrentContext();
 
     try {
       await saveKubeconfig(config, cluster.kubeConfigPath);
       HotbarStore.getInstance().removeAllHotbarItems(cluster.id);
-      await requestMain(clusterDeleteHandler, cluster.id);
+      await requestDeleteCluster(cluster.id);
     } catch(error) {
       Notifications.error(`Cannot remove cluster, failed to process config file. ${error}`);
     } finally {
-      await requestMain(clusterClearDeletingHandler, cluster.id);
+      await requestClearClusterAsDeleting(cluster.id);
     }
 
     this.onClose();

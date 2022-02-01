@@ -8,8 +8,7 @@ import { Console } from "console";
 import { stdout, stderr } from "process";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { runInAction } from "mobx";
-import updateExtensionsStateInjectable
-  from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
+import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import mockFs from "mock-fs";
 
@@ -24,7 +23,7 @@ jest.mock(
   () => ({
     ipcRenderer: {
       invoke: jest.fn(async (channel: string) => {
-        if (channel === "extensions:main") {
+        if (channel === "extension-loader:main:state") {
           return [
             [
               manifestPath,
@@ -61,7 +60,7 @@ jest.mock(
       }),
       on: jest.fn(
         (channel: string, listener: (event: any, ...args: any[]) => void) => {
-          if (channel === "extensions:main") {
+          if (channel === "extension-loader:main:state") {
             // First initialize with extensions 1 and 2
             // and then broadcast event to remove extension 2 and add extension number 3
             setTimeout(() => {

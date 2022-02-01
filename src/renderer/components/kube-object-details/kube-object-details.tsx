@@ -51,31 +51,34 @@ export class KubeObjectDetails extends React.Component {
     }
   }
 
-  @disposeOnUnmount
-  loader = reaction(() => [
-    this.path,
-    this.object, // resource might be updated via watch-event or from already opened details
-    crdStore.items.length, // crd stores initialized after loading
-  ], async () => {
-    this.loadingError = "";
-    const { path, object } = this;
+  componentDidMount(): void {
+    disposeOnUnmount(this, [
+      reaction(() => [
+        this.path,
+        this.object, // resource might be updated via watch-event or from already opened details
+        crdStore.items.length, // crd stores initialized after loading
+      ], async () => {
+        this.loadingError = "";
+        const { path, object } = this;
 
-    if (!object) {
-      const store = apiManager.getStore(path);
+        if (!object) {
+          const store = apiManager.getStore(path);
 
-      if (store) {
-        this.isLoading = true;
+          if (store) {
+            this.isLoading = true;
 
-        try {
-          await store.loadFromPath(path);
-        } catch (err) {
-          this.loadingError = <>Resource loading has failed: <b>{err.toString()}</b></>;
-        } finally {
-          this.isLoading = false;
+            try {
+              await store.loadFromPath(path);
+            } catch (err) {
+              this.loadingError = <>Resource loading has failed: <b>{err.toString()}</b></>;
+            } finally {
+              this.isLoading = false;
+            }
+          }
         }
-      }
-    }
-  });
+      }),
+    ]);
+  }
 
   render() {
     const { object, isLoading, loadingError } = this;

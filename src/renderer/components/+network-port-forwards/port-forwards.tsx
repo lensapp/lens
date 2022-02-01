@@ -8,7 +8,7 @@ import "./port-forwards.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import { ItemListLayout } from "../item-object-list/item-list-layout";
+import { ItemListLayout } from "../item-object-list/list-layout";
 import type { PortForwardItem, PortForwardStore } from "../../port-forward";
 import { PortForwardMenu } from "./port-forward-menu";
 import { PortForwardsRouteParams, portForwardsURL } from "../../../common/routes";

@@ -73,7 +73,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
 
     menuItems.unshift({
       title: "Remove from Hotbar",
-      onClick: () => this.props.remove(this.props.entity.metadata.uid),
+      onClick: () => this.props.remove(this.props.entity.getId()),
     });
 
     this.contextMenu.menuItems = menuItems;
@@ -90,8 +90,8 @@ export class HotbarEntityIcon extends React.Component<Props> {
 
     return (
       <HotbarIcon
-        uid={entity.metadata.uid}
-        title={entity.metadata.name}
+        uid={entity.getId()}
+        title={entity.getName()}
         source={entity.metadata.source}
         src={entity.spec.icon?.src}
         material={entity.spec.icon?.material}
@@ -101,7 +101,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
         onMenuOpen={() => this.onMenuOpen()}
         disabled={!entity}
         menuItems={this.contextMenu.menuItems}
-        tooltip={`${entity.metadata.name} (${entity.metadata.source})`}
+        tooltip={`${entity.getName()} (${entity.metadata.source})`}
         {...elemProps}
       >
         { this.ledIcon }

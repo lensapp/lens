@@ -11,7 +11,7 @@ import identity from "lodash/identity";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterNameInjectable from "./dependencies/cluster-name.injectable";
-import editResourceTabInjectable from "../dock/edit-resource-tab/edit-resource-tab.injectable";
+import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
@@ -27,7 +27,7 @@ interface Dependencies {
   kubeObjectMenuItems: React.ElementType[];
   clusterName: string;
   hideDetails: () => void;
-  editResourceTab: (kubeObject: KubeObject) => void;
+  createEditResourceTab: (kubeObject: KubeObject) => void;
 }
 
 class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Component<KubeObjectMenuProps<TKubeObject> & Dependencies> {
@@ -51,7 +51,7 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Co
   @boundMethod
   async update() {
     this.props.hideDetails();
-    this.props.editResourceTab(this.props.object);
+    this.props.createEditResourceTab(this.props.object);
   }
 
   @boundMethod
@@ -117,7 +117,7 @@ export function KubeObjectMenu<T extends KubeObject>(
       getProps: (di, props) => ({
         clusterName: di.inject(clusterNameInjectable),
         apiManager: di.inject(apiManagerInjectable),
-        editResourceTab: di.inject(editResourceTabInjectable),
+        createEditResourceTab: di.inject(createEditResourceTabInjectable),
         hideDetails: di.inject(hideDetailsInjectable),
 
         kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {

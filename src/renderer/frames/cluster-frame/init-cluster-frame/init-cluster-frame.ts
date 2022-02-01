@@ -6,8 +6,6 @@ import type { Cluster } from "../../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
 import logger from "../../../../main/logger";
 import { Terminal } from "../../../components/dock/terminal/terminal";
-import { requestMain } from "../../../../common/ipc";
-import { clusterSetFrameIdHandler } from "../../../../common/cluster-ipc";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { Notifications } from "../../../components/notifications";
 import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
@@ -16,6 +14,7 @@ import { when } from "mobx";
 import { unmountComponentAtNode } from "react-dom";
 import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
+import { requestSetClusterFrameId } from "../../../ipc";
 
 interface Dependencies {
   hostedCluster: Cluster;
@@ -42,7 +41,7 @@ export const initClusterFrame =
       );
 
       await Terminal.preloadFonts();
-      await requestMain(clusterSetFrameIdHandler, hostedCluster.id);
+      await requestSetClusterFrameId(hostedCluster.id);
       await hostedCluster.whenReady; // cluster.activate() is done at this point
 
       catalogEntityRegistry.activeEntity = hostedCluster.id;

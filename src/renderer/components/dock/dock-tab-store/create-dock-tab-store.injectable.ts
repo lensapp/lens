@@ -4,13 +4,11 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { DockTabStore, DockTabStoreOptions } from "./dock-tab.store";
-import dockStoreInjectable from "../dock-store/dock-store.injectable";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const createDockTabStoreInjectable = getInjectable({
   instantiate: (di) => {
     const dependencies = {
-      dockStore: di.inject(dockStoreInjectable),
       createStorage: di.inject(createStorageInjectable),
     };
 

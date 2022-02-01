@@ -6,7 +6,7 @@
 import moment from "moment-timezone";
 import path from "path";
 import os from "os";
-import { getAppVersion, ObservableToggleSet } from "../utils";
+import { getAppVersion } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
@@ -236,10 +236,10 @@ const terminalCopyOnSelect: PreferenceDescription<boolean> = {
   },
 };
 
-const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, ObservableToggleSet<string>>> = {
+const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, Set<string>>> = {
   fromStore(val) {
     return new Map(
-      (val ?? []).map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)]),
+      (val ?? []).map(([tableId, columnIds]) => [tableId, new Set(columnIds)]),
     );
   },
   toStore(val) {

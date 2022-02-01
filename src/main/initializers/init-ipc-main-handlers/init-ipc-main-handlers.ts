@@ -3,23 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BrowserWindow, dialog, IpcMainInvokeEvent, Menu } from "electron";
+import { BrowserWindow, IpcMainInvokeEvent, Menu } from "electron";
 import { clusterFrameMap } from "../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../common/cluster-ipc";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../common/ipc/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../common/app-event-bus/event-bus";
-import { dialogShowOpenDialogHandler, ipcMainHandle, ipcMainOn } from "../../../common/ipc";
+import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../common/ipc";
 import { catalogEntityRegistry } from "../../catalog";
 import { pushCatalogToRenderer } from "../../catalog-pusher";
 import { ClusterManager } from "../../cluster-manager";
 import { ResourceApplier } from "../../resource-applier";
-import { IpcMainWindowEvents, WindowManager } from "../../window-manager";
+import { WindowManager } from "../../window-manager";
 import path from "path";
 import { remove } from "fs-extra";
 import { getAppMenu } from "../../menu/menu";
 import type { MenuRegistration } from "../../menu/menu-registration";
 import type { IComputedValue } from "mobx";
+import { onLocationChange, handleWindowAction } from "../../ipc/window";
+import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
+import { showOpenDialog } from "../../ipc/dialog";
+import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
 
 interface Dependencies {
   electronMenuItems: IComputedValue<MenuRegistration[]>,
@@ -136,21 +140,22 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
     }
   });
 
-  ipcMainHandle(dialogShowOpenDialogHandler, async (event, dialogOpts: Electron.OpenDialogOptions) => {
-    await WindowManager.getInstance().ensureMainWindow();
+  ipcMainHandle(windowActionHandleChannel, (event, action) => handleWindowAction(action));
 
-    return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
-  });
+  ipcMainOn(windowLocationChangedChannel, () => onLocationChange());
 
-  ipcMainOn(IpcMainWindowEvents.OPEN_CONTEXT_MENU, async (event) => {
+  ipcMainHandle(openFilePickingDialogChannel, (event, opts) => showOpenDialog(opts));
+
+  ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
+
+  ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
     const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
-    const options = {
+
+    menu.popup({
       ...BrowserWindow.fromWebContents(event.sender),
       // Center of the topbar menu icon
       x: 20,
       y: 20,
-    } as Electron.PopupOptions;
-
-    menu.popup(options);
+    });
   });
 };

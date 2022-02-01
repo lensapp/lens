@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../common/cluster-ipc";
+import "../common/ipc/cluster";
 import type http from "http";
 import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import { Cluster } from "../common/cluster/cluster";
@@ -85,7 +85,7 @@ export class ClusterManager extends Singleton {
   }
 
   protected updateEntityFromCluster(cluster: Cluster) {
-    const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
+    const index = catalogEntityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
 
     if (index === -1) {
       return;
@@ -169,11 +169,11 @@ export class ClusterManager extends Singleton {
   @action
   protected syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
-      const cluster = this.store.getById(entity.metadata.uid);
+      const cluster = this.store.getById(entity.getId());
 
       if (!cluster) {
         const model = {
-          id: entity.metadata.uid,
+          id: entity.getId(),
           kubeConfigPath: entity.spec.kubeconfigPath,
           contextName: entity.spec.kubeconfigContext,
           accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],

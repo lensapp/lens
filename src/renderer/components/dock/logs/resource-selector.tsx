@@ -5,17 +5,23 @@
 
 import "./resource-selector.scss";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../../../common/k8s-api/endpoints";
 import { Badge } from "../../badge";
 import { Select, SelectOption } from "../../select";
-import { podsStore } from "../../+workloads-pods/pods.store";
 import type { LogTabViewModel } from "./logs-view-model";
+import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
 
 export interface LogResourceSelectorProps {
   model: LogTabViewModel;
+}
+
+function getSelectOptions(containers: IPodContainer[]): SelectOption<string>[] {
+  return containers.map(container => ({
+    value: container.name,
+    label: container.name,
+  }));
 }
 
 export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps) => {
@@ -25,66 +31,61 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     return null;
   }
 
-  const { selectedPod, selectedContainer, pods } = tabData;
-  const pod = new Pod(selectedPod);
-  const containers = pod.getContainers();
-  const initContainers = pod.getInitContainers();
+  const { selectedContainer, owner } = tabData;
+  const pods = model.pods.get();
+  const pod = model.pod.get();
 
-  const onContainerChange = (option: SelectOption) => {
+  if (!pod) {
+    return null;
+  }
+
+  const onContainerChange = (option: SelectOption<string>) => {
     model.updateLogTabData({
-      selectedContainer: containers
-        .concat(initContainers)
-        .find(container => container.name === option.value),
+      selectedContainer: option.value,
     });
-
     model.reloadLogs();
   };
 
-  const onPodChange = (option: SelectOption) => {
-    const selectedPod = podsStore.getByName(option.value, pod.getNs());
-
-    model.updateLogTabData({ selectedPod });
-    model.updateTabName();
-  };
-
-  const getSelectOptions = (items: string[]) => {
-    return items.map(item => {
-      return {
-        value: item,
-        label: item,
-      };
+  const onPodChange = ({ value }: SelectOption<Pod>) => {
+    model.updateLogTabData({
+      selectedPodId: value.getId(),
+      selectedContainer: value.getAllContainers()[0]?.name,
     });
+    model.renameTab(`Pod ${value.getName()}`);
+    model.reloadLogs();
   };
 
   const containerSelectOptions = [
     {
-      label: `Containers`,
-      options: getSelectOptions(containers.map(container => container.name)),
+      label: "Containers",
+      options: getSelectOptions(pod.getContainers()),
     },
     {
-      label: `Init Containers`,
-      options: getSelectOptions(initContainers.map(container => container.name)),
+      label: "Init Containers",
+      options: getSelectOptions(pod.getInitContainers()),
     },
   ];
 
-  const podSelectOptions = [
-    {
-      label: pod.getOwnerRefs()[0]?.name,
-      options: getSelectOptions(pods.map(pod => pod.metadata.name)),
-    },
-  ];
-
-  useEffect(() => {
-    model.reloadLogs();
-  }, [selectedPod]);
+  const podSelectOptions = pods.map(pod => ({
+    label: pod.getName(),
+    value: pod,
+  }));
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
       <span>Namespace</span> <Badge data-testid="namespace-badge" label={pod.getNs()}/>
+      {
+        owner && (
+          <>
+            <span>Owner</span> <Badge data-testid="namespace-badge" label={`${owner.kind} ${owner.name}`}/>
+          </>
+        )
+      }
       <span>Pod</span>
       <Select
         options={podSelectOptions}
-        value={{ label: pod.getName(), value: pod.getName() }}
+        value={podSelectOptions.find(opt => opt.value === pod)}
+        formatOptionLabel={option => option.label}
         onChange={onPodChange}
         autoConvertOptions={false}
         className="pod-selector"
@@ -93,7 +94,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       <span>Container</span>
       <Select
         options={containerSelectOptions}
-        value={{ label: selectedContainer.name, value: selectedContainer.name }}
+        value={{ label: selectedContainer, value: selectedContainer }}
         onChange={onContainerChange}
         autoConvertOptions={false}
         className="container-selector"

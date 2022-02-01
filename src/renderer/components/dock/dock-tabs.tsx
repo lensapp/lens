@@ -8,9 +8,9 @@ import React, { Fragment } from "react";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
-import type { DockTab as DockTabModel } from "./dock-store/dock.store";
-import { TabKind } from "./dock-store/dock.store";
-import { TerminalTab } from "./terminal-tab";
+import type { DockTab as DockTabModel } from "./dock/store";
+import { TabKind } from "./dock/store";
+import { TerminalTab } from "./terminal/dock-tab";
 
 interface Props {
   tabs: DockTabModel[]

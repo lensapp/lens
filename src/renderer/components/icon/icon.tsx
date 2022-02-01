@@ -5,8 +5,7 @@
 
 import "./icon.scss";
 
-import React, { ReactNode } from "react";
-import { findDOMNode } from "react-dom";
+import React, { createRef, ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { boundMethod, cssNames } from "../../utils";
@@ -31,6 +30,8 @@ export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorPr
 
 @withTooltip
 export class Icon extends React.PureComponent<IconProps> {
+  private readonly ref = createRef<HTMLAnchorElement>();
+
   static defaultProps: IconProps = {
     focusable: true,
   };
@@ -59,10 +60,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
         // fallthrough
       case "Enter": {
-        // eslint-disable-next-line react/no-find-dom-node
-        const icon = findDOMNode(this) as HTMLElement;
-
-        setTimeout(() => icon.click());
+        this.ref.current?.click();
         evt.preventDefault();
         break;
       }
@@ -123,16 +121,16 @@ export class Icon extends React.PureComponent<IconProps> {
       const { className, children } = iconProps;
 
       return (
-        <NavLink className={className} to={link}>
+        <NavLink className={className} to={link} ref={this.ref}>
           {children}
         </NavLink>
       );
     }
 
     if (href) {
-      return <a {...iconProps} href={href}/>;
+      return <a {...iconProps} href={href} ref={this.ref}/>;
     }
 
-    return <i {...iconProps} />;
+    return <i {...iconProps} ref={this.ref} />;
   }
 }

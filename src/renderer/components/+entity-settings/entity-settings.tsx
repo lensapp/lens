@@ -81,14 +81,14 @@ export class EntitySettings extends React.Component<Props> {
       <>
         <div className="flex items-center pb-8">
           <Avatar
-            title={this.entity.metadata.name}
-            colorHash={`${this.entity.metadata.name}-${this.entity.metadata.source}`}
+            title={this.entity.getName()}
+            colorHash={`${this.entity.getName()}-${this.entity.metadata.source}`}
             src={this.entity.spec.icon?.src}
             className={styles.settingsAvatar}
             size={40}
           />
           <div className={styles.entityName}>
-            {this.entity.metadata.name}
+            {this.entity.getName()}
           </div>
         </div>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>

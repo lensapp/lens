@@ -194,8 +194,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     document.removeEventListener("mouseup", this.onDragEnd);
   }
 
-  @action
-  onDragInit = (event: React.MouseEvent) => {
+  onDragInit = action((event: React.MouseEvent) => {
     const { onStart, onlyButtons } = this.props;
 
     if (typeof onlyButtons === "number" && onlyButtons !== event.buttons) {
@@ -209,7 +208,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     this.lastMouseEvent = undefined;
     onStart();
-  };
+  });
 
   calculateDelta(from: Position, to: Position): number | false {
     const node = this.ref.current;
@@ -285,8 +284,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     }
   }, 100);
 
-  @action
-  onDragEnd = () => {
+  onDragEnd = action(() => {
     this.props.onEnd();
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onDragEnd);
@@ -295,7 +293,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     this.wasDragging = true;
 
     setTimeout(() => this.wasDragging = false, 200);
-  };
+  });
 
   render() {
     const { disabled, direction, placement, onDoubleClick } = this.props;

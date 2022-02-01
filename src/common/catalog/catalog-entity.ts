@@ -315,11 +315,24 @@ export abstract class CatalogEntity<
   @observable status: Status;
   @observable spec: Spec;
 
-  constructor(data: CatalogEntityData<Metadata, Status, Spec>) {
+  constructor({ metadata, status, spec }: CatalogEntityData<Metadata, Status, Spec>) {
     makeObservable(this);
-    this.metadata = data.metadata;
-    this.status = data.status;
-    this.spec = data.spec;
+
+    if (!metadata || typeof metadata !== "object") {
+      throw new TypeError("CatalogEntity's metadata must be a defined object");
+    }
+
+    if (!status || typeof status !== "object") {
+      throw new TypeError("CatalogEntity's status must be a defined object");
+    }
+
+    if (!spec || typeof spec !== "object") {
+      throw new TypeError("CatalogEntity's spec must be a defined object");
+    }
+
+    this.metadata = metadata;
+    this.status = status;
+    this.spec = spec;
   }
 
   /**

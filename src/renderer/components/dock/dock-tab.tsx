@@ -8,14 +8,14 @@ import "./dock-tab.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames, prevDefault, isMiddleClick } from "../../utils";
-import type { DockStore, DockTab as DockTabModel } from "./dock-store/dock.store";
+import type { DockStore, DockTab as DockTabModel } from "./dock/store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { observable, makeObservable } from "mobx";
 import { isMac } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import dockStoreInjectable from "./dock-store/dock-store.injectable";
+import dockStoreInjectable from "./dock/store.injectable";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;

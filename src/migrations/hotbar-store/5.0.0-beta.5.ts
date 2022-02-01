@@ -16,7 +16,7 @@ export default {
     for (const hotbar of hotbars) {
       for (let i = 0; i < hotbar.items.length; i += 1) {
         const item = hotbar.items[i];
-        const entity = catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item?.entity.uid);
+        const entity = catalogEntityRegistry.items.find((entity) => entity.getId() === item?.entity.uid);
 
         if (!entity) {
           // Clear disabled item
