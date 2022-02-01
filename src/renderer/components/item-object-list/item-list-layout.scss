@@ -23,7 +23,8 @@
     .NamespaceSelect {
       .Select {
         &__value-container {
-          margin-bottom: 0;
+          margin-bottom: 0px;
+          padding-bottom: 2px;
         }
       }
     }
