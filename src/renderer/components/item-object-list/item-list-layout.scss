@@ -20,17 +20,8 @@
       white-space: nowrap;
     }
 
-    .NamespaceSelect {
-      .Select {
-        &__value-container {
-          margin-bottom: 0px;
-          padding-bottom: 2px;
-        }
-      }
-    }
-
     .SearchInput label {
-      padding: 6px 8px;
+      padding: 7px; // Align with sibling selector
     }
   }
 
