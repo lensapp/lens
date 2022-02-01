@@ -11,6 +11,7 @@ import type { LocationDescriptor } from "history";
 import { boundMethod, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
+import { decode } from "../../../common/utils/base64";
 
 export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   material?: string;          // material-icon, see available names at https://material.io/icons/
@@ -98,7 +99,9 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as inline svg-icon
     if (typeof svg === "string") {
-      const svgIconText = svg.includes("<svg") ? svg : require(`./${svg}.svg?raw`);
+      const dataUrlPrefix = "data:image/svg+xml;base64,";
+      const svgIconDataUrl: string = svg.startsWith(dataUrlPrefix) ? svg : require(`./${svg}.svg`);
+      const svgIconText = decode(svgIconDataUrl.replace(dataUrlPrefix, "")); // get raw xml
 
       iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
     }

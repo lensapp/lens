@@ -30,7 +30,7 @@ export function webpackLensRenderer(): webpack.Configuration {
     target: "electron-renderer",
     name: "lens-app",
     mode: isDevelopment ? "development" : "production",
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+    devtool: isDevelopment ? "eval-cheap-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
@@ -68,14 +68,8 @@ export function webpackLensRenderer(): webpack.Configuration {
         },
         getTSLoader(),
         cssModulesWebpackRule(),
-        filesAndIconsWebpackRule(),
-        fontsLoaderWebpackRule(),
-        {
-          // Allows to import/require() resource as plain text with suffix `?raw`
-          // To make it work must be listed in the end of `config.module.rules`
-          resourceQuery: /raw/,
-          type: "asset/source",
-        },
+        ...iconsAndImagesWebpackRules(),
+        ...fontsLoaderWebpackRules(),
       ],
     },
 
@@ -111,23 +105,32 @@ export function webpackLensRenderer(): webpack.Configuration {
 }
 
 /**
- * Import content of svg-icons, images and text files
+ * Import icons and image files.
+ * Read more about asset types: https://webpack.js.org/guides/asset-modules/
  */
-export function filesAndIconsWebpackRule(): webpack.RuleSetRule {
-  return {
-    test: /\.(jpg|png|svg|map|ico)$/,
-    type: "asset/resource", // https://webpack.js.org/guides/asset-modules/
-  };
+export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
+  return [
+    {
+      test: /\.svg$/,
+      type: "asset/inline", // data:image/svg+xml;base64,...
+    },
+    {
+      test: /\.(jpg|png|ico)$/,
+      type: "asset/resource", // path to file, e.g. "/static/assets/*"
+    },
+  ];
 }
 
 /**
- * Import custom fonts as URL
+ * Import custom fonts as URL.
  */
-export function fontsLoaderWebpackRule(): webpack.RuleSetRule {
-  return {
-    test: /\.(ttf|eot|woff2?)$/,
-    type: "asset/resource",
-  };
+export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
+  return [
+    {
+      test: /\.(ttf|eot|woff2?)$/,
+      type: "asset/resource",
+    }
+  ];
 }
 
 /**

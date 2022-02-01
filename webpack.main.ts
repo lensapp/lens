@@ -10,6 +10,7 @@ import nodeExternals from "webpack-node-externals";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
+import { iconsAndImagesWebpackRules } from "./webpack.renderer";
 
 const configs: { (): webpack.Configuration }[] = [];
 
@@ -21,7 +22,7 @@ configs.push((): webpack.Configuration => {
     context: __dirname,
     target: "electron-main",
     mode: isDevelopment ? "development" : "production",
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+    devtool: isDevelopment ? "eval-cheap-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
@@ -43,10 +44,7 @@ configs.push((): webpack.Configuration => {
           use: "node-loader",
         },
         getTSLoader({}, /\.ts$/),
-        {
-          resourceQuery: /raw/, // embed file as plain-text, e.g. require("./some-file.svg?raw")
-          type: "asset/source",
-        },
+        ...iconsAndImagesWebpackRules(),
       ],
     },
     plugins: [

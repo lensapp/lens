@@ -7,11 +7,7 @@
 import path from "path";
 import type webpack from "webpack";
 import * as vars from "./src/common/vars";
-import {
-  cssModulesWebpackRule,
-  filesAndIconsWebpackRule,
-  fontsLoaderWebpackRule,
-} from "./webpack.renderer";
+import { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./webpack.renderer";
 
 export default function generateExtensionTypes(): webpack.Configuration {
   const { isDevelopment, isProduction } = vars;
@@ -58,10 +54,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
             },
           },
         },
-        fontsLoaderWebpackRule(),
-        filesAndIconsWebpackRule(),
         cssModulesWebpackRule({ styleLoader: "style-loader" }),
-        { resourceQuery: /raw/, type: "asset/source" },
+        ...fontsLoaderWebpackRules(),
+        ...iconsAndImagesWebpackRules(),
       ],
     },
     resolve: {

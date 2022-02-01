@@ -27,12 +27,7 @@ declare module "*.scss" {
 }
 
 // Declare everything what's bundled as webpack's type="asset/resource"
-declare module "*.svg?raw" {
-  export = "";
-}
-declare module "*.svg" {
-  export = "";
-}
+declare module "*.svg";
 declare module "*.jpg";
 declare module "*.png";
 declare module "*.eot";
