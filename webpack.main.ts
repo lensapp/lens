@@ -44,8 +44,7 @@ configs.push((): webpack.Configuration => {
         },
         getTSLoader({}, /\.ts$/),
         {
-          // import SvgRawTextFile from "./some-file.svg?raw"
-          resourceQuery: /raw/,
+          resourceQuery: /raw/, // embed file as plain-text, e.g. require("./some-file.svg?raw")
           type: "asset/source",
         },
       ],
