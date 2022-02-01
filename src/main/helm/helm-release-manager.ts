@@ -182,6 +182,7 @@ export async function rollback(name: string, namespace: string, revision: number
   return JSON.parse(await execHelm([
     "rollback",
     name,
+    `${revision}`,
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
   ]));
