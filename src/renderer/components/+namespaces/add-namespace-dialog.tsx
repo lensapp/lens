@@ -83,6 +83,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
               placeholder="Namespace"
               trim
               validators={systemName}
+              lightTheme
               value={namespace} onChange={v => this.namespace = v.toLowerCase()}
             />
           </WizardStep>

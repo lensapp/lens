@@ -39,7 +39,6 @@ export const Editor = observer(() => {
           <div className="flex gaps align-center">
             <SubHeader compact>Position</SubHeader>
             <Select
-              themeName="lens"
               options={["left", "right"]}
               value={editorConfiguration.minimap.side}
               onChange={({ value }) => editorConfiguration.minimap.side = value}
@@ -54,7 +53,6 @@ export const Editor = observer(() => {
           options={Object.entries(EditorLineNumbersStyles).map(([value, label]) => ({ label, value }))}
           value={editorConfiguration.lineNumbers}
           onChange={({ value }) => editorConfiguration.lineNumbers = value}
-          themeName="lens"
         />
       </section>
 

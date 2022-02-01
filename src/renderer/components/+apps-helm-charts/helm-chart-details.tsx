@@ -118,7 +118,6 @@ class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
           </div>
           <DrawerItem name="Version" className="version" onClick={stopPropagation}>
             <Select
-              themeName="outlined"
               menuPortalTarget={null}
               options={chartVersions.map(chart => ({
                 label: (

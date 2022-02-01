@@ -140,7 +140,6 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
         <Select
           className="chart-version"
           menuPlacement="top"
-          themeName="outlined"
           value={version}
           options={versions}
           formatOptionLabel={this.formatVersionLabel}

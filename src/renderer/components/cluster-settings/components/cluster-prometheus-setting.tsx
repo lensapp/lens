@@ -122,7 +122,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
                     this.onSaveProvider();
                   }}
                   options={this.options}
-                  themeName="lens"
+                  lightTheme
                 />
                 <small className="hint">What query format is used to fetch metrics from Prometheus</small>
               </>

@@ -174,7 +174,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
       <>
         <SubTitle title="Cluster Role Reference" />
         <Select
-          themeName="light"
+          lightTheme
           placeholder="Select cluster role ..."
           isDisabled={this.isEditing}
           options={this.clusterRoleRefoptions}
@@ -234,7 +234,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
         <b>Service Accounts</b>
         <Select
           isMulti
-          themeName="light"
+          lightTheme
           placeholder="Select service accounts ..."
           autoConvertOptions={false}
           options={this.serviceAccountOptions}

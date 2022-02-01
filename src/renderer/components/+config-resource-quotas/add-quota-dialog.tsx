@@ -157,6 +157,7 @@ export class AddQuotaDialog extends React.Component<Props> {
           >
             <div className="flex gaps">
               <Input
+                lightTheme
                 required autoFocus
                 placeholder="ResourceQuota name"
                 trim
@@ -170,7 +171,7 @@ export class AddQuotaDialog extends React.Component<Props> {
             <NamespaceSelect
               value={this.namespace}
               placeholder="Namespace"
-              themeName="light"
+              lightTheme
               className="box grow"
               onChange={({ value }) => this.namespace = value}
             />
@@ -179,13 +180,14 @@ export class AddQuotaDialog extends React.Component<Props> {
             <div className="flex gaps align-center">
               <Select
                 className="quota-select"
-                themeName="light"
+                lightTheme
                 placeholder="Select a quota.."
                 options={this.quotaOptions}
                 value={this.quotaSelectValue}
                 onChange={({ value }) => this.quotaSelectValue = value}
               />
               <Input
+                lightTheme
                 maxLength={10}
                 placeholder="Value"
                 value={this.quotaInputValue}

@@ -178,7 +178,7 @@ export class RoleBindingDialog extends React.Component<Props> {
       <>
         <SubTitle title="Namespace" />
         <NamespaceSelect
-          themeName="light"
+          lightTheme
           isDisabled={this.isEditing}
           value={this.bindingNamespace}
           autoFocus={!this.isEditing}
@@ -187,7 +187,7 @@ export class RoleBindingDialog extends React.Component<Props> {
 
         <SubTitle title="Role Reference" />
         <Select
-          themeName="light"
+          lightTheme
           placeholder="Select role or cluster role ..."
           isDisabled={this.isEditing}
           options={this.roleRefOptions}
@@ -231,7 +231,7 @@ export class RoleBindingDialog extends React.Component<Props> {
         <b>Service Accounts</b>
         <Select
           isMulti
-          themeName="light"
+          lightTheme
           placeholder="Select service accounts ..."
           autoConvertOptions={false}
           options={this.serviceAccountOptions}

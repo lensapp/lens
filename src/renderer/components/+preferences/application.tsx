@@ -48,7 +48,6 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) 
           options={themeStore.themeOptions}
           value={userStore.colorTheme}
           onChange={({ value }) => userStore.colorTheme = value}
-          themeName="lens"
         />
       </section>
 
@@ -66,7 +65,6 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) 
               userStore.extensionRegistryUrl.customUrl = "";
             }
           })}
-          themeName="lens"
         />
         <p className="mt-4 mb-5 leading-relaxed">
           This setting is to change the registry URL for installing extensions by name.{" "}
@@ -105,7 +103,6 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) 
           options={updateChannelOptions}
           value={userStore.updateChannel}
           onChange={({ value }) => userStore.updateChannel = value}
-          themeName="lens"
         />
       </section>
 
@@ -117,7 +114,6 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) 
           options={timezoneOptions}
           value={userStore.localeTimezone}
           onChange={({ value }) => userStore.setLocaleTimezone(value)}
-          themeName="lens"
         />
       </section>
     </section>

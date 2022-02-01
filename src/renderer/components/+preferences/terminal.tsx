@@ -47,7 +47,6 @@ export const Terminal = observer(() => {
     <section id="terminalTheme">
       <SubTitle title="Terminal theme" />
       <Select
-        themeName="lens"
         options={[
           { label: "Match theme", value: "" },
           ...themeStore.themeOptions,

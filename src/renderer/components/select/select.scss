@@ -7,13 +7,18 @@
 // Docs: https://react-select.com/styles
 
 html {
-  $menuBackgroundColor: var(--contentColor);
-
-  --select-menu-bgc: #{$menuBackgroundColor};
-  --select-menu-border-color: var(--halfGray);
-  --select-option-selected-color: var(--inputOptionHoverColor);
+  --select-menu-bgc: var(--inputControlBackground);
+  --select-menu-border-color: var(--inputControlBorder);
+  --select-option-selected-bgcolor: var(--menuSelectedOptionBgc);
+  --select-option-selected-color: var(--textColorAccent);
   --select-option-focused-bgc: var(--colorInfo);
-  --select-option-focused-color: var(--textColorAccent);
+  --select-option-focused-color: #ffffff; // Same for both themes until bg color is contrast enough
+
+  // Custom light values to override theme ones (e. g. for dialogs)
+  --light-select-menu-bgc: #f6f6f7;
+  --light-select-menu-border-color: #cccdcf;
+  --light-select-option-selected-bgcolor: #e8e8e8;
+  --light-select-option-selected-color: var(--textColorTertiary);
 
   .Select {
     position: relative;
@@ -31,10 +36,10 @@ html {
 
     &__control {
       border: none;
-      border-radius: $radius;
+      border-radius: 4px;
       background: var(--select-menu-bgc);
       min-height: 0;
-      box-shadow: 0 0 0 1px var(--halfGray);
+      box-shadow: 0 0 0 1px var(--select-menu-border-color);
       cursor: pointer;
       line-height: 1;
 
@@ -45,10 +50,6 @@ html {
 
     &__value-container {
       margin-bottom: 1px;
-    }
-
-    &__single-value {
-      color: var(--textColorSecondary);
     }
 
     &__indicator {
@@ -92,13 +93,14 @@ html {
     &__option {
       white-space: nowrap;
       cursor: pointer;
+      border-radius: 4px;
 
       &:active {
         background: var(--primary);
       }
 
       &--is-selected {
-        background: var(--menuSelectedOptionBgc);
+        background: var(--select-option-selected-bgcolor);
         color: var(--select-option-selected-color);
       }
 
@@ -119,14 +121,6 @@ html {
       }
     }
 
-    &__value-container {
-      &--is-multi {
-      }
-
-      &--has-value {
-      }
-    }
-
     &__multi-value {
       background: var(--layoutBackground);
 
@@ -139,118 +133,53 @@ html {
         }
       }
     }
-  }
 
-  //-- Themes
+    &__value-container {
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    &__single-value {
+      color: var(--textColorTertiary);
+      overflow: visible;
+    }
+
+    &.lightTheme {
+      --select-menu-bgc: var(--light-select-menu-bgc);
+      --select-menu-border-color: var(--light-select-menu-border-color);
+
+      &__control {
+        background: var(--select-menu-bgc);
+      }
+
+      &__option {
+        &:active {
+          color: white;
+        }
+
+        &:hover {
+          color: white;
+        }
+
+        &--is-focused {
+          color: white;
+        }
+
+        &--is-disabled:hover {
+          color: inherit;
+        }
+      }
+    }
+  }
 
   .Select__menu {
     z-index: $zIndex-select-portal; // render at the top when used inside dialog
-  }
 
-  .Select, .Select__menu {
-    &.theme-light {
-      --select-menu-bgc: white;
-      --select-option-selected-color: var(--textColorSecondary);
-
-      .Select {
-        &__multi-value {
-          background: none;
-          box-shadow: 0 0 0 1px var(--textColorSecondary);
-        }
-
-        &__option {
-          &:active {
-            color: white;
-          }
-
-          &:hover {
-            color: white;
-          }
-
-          &--is-focused {
-            color: white;
-          }
-
-          &--is-disabled:hover {
-            color: inherit;
-          }
-        }
-      }
-    }
-
-    &.theme-outlined {
-      .Select__control {
-        box-shadow: 0 0 0 1px var(--colorVague);
-        color: var(--primary);
-
-        .Select__value-container {
-          padding: 0 $padding * 0.5;
-        }
-
-        .Select__dropdown-indicator {
-          padding: 3px;
-        }
-      }
-    }
-
-    &.theme-lens {
-      :hover {
-        &.Select__control {
-          box-shadow: 0 0 0 1px var(--inputControlHoverBorder);
-          transition: box-shadow 0.1s;
-        }
-      }
-
-      :focus-within {
-        &.Select__control {
-          box-shadow: 0 0 0 1px var(--colorInfo);
-        }
-      }
-
-      &.Select__menu {
-        box-shadow: inset 0 0 0 1px var(--inputControlBorder);
-      }
-
-      .Select {
-        &__value-container {
-          margin-top: 2px;
-          margin-bottom: 2px;
-        }
-
-        &__control {
-          box-shadow: 0 0 0 1px var(--inputControlBorder);
-          background: var(--inputControlBackground);
-          border-radius: var(--border-radius);
-        }
-
-        &__single-value {
-          color: var(--textColorTertiary);
-        }
-
-        &__menu {
-          &-list {
-            padding: 6px;
-          }
-        }
-
-        &__option {
-          border-radius: 4px;
-
-          &:active {
-            background: var(--inputControlBackground);
-          }
-
-          &--is-selected {
-            background: var(--inputControlBackground);
-            color: var(--textColorAccent);
-          }
-
-          &--is-focused {
-            color: var(--textColorPrimary);
-            background: var(--inputControlBackground);
-          }
-        }
-      }
+    &.lightTheme {
+      --select-menu-bgc: var(--light-select-menu-bgc);
+      --select-menu-border-color: var(--light-select-menu-border-color);
+      --select-option-selected-bgcolor: var(--light-select-option-selected-bgcolor);
+      --select-option-selected-color: var(--light-select-option-selected-color);
     }
   }
 }

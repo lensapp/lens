@@ -175,13 +175,11 @@ class NonInjectedInstallChart extends Component<Props & Dependencies> {
           options={versions}
           onChange={this.onVersionChange}
           menuPlacement="top"
-          themeName="outlined"
         />
         <span>Namespace</span>
         <NamespaceSelect
           showIcons={false}
           menuPlacement="top"
-          themeName="outlined"
           value={namespace}
           onChange={this.onNamespaceChange}
         />

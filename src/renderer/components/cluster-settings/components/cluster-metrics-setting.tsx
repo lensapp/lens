@@ -85,7 +85,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
           options={Object.values(ClusterMetricsResourceType)}
           onChange={this.onChangeSelect}
           formatOptionLabel={this.formatOptionLabel}
-          themeName="lens"
+          lightTheme
         />
         <Button
           primary

@@ -55,7 +55,6 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
           onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
           disabled={!userStore.downloadKubectlBinaries}
           isOptionDisabled={({ platforms }) => !platforms.has(process.platform)}
-          themeName="lens"
         />
       </section>
 

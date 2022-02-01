@@ -81,7 +81,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
-              themeName="light"
+              lightTheme
               value={namespace}
               onChange={({ value }) => this.namespace = value}
             />

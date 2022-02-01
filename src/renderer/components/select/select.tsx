@@ -30,7 +30,7 @@ export interface SelectOption<T = any> {
 
 export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
   value?: T;
-  themeName?: "dark" | "light" | "outlined" | "lens";
+  lightTheme?: boolean; // Forced light theme, may be used for dialogs which is always "bright"
   menuClass?: string;
   isCreatable?: boolean;
   autoConvertOptions?: boolean; // to internal format (i.e. {value: T, label: string}[]), not working with groups
@@ -50,10 +50,8 @@ export class Select extends React.Component<SelectProps> {
     makeObservable(this);
   }
 
-  @computed get themeClass() {
-    const themeName = this.props.themeName || ThemeStore.getInstance().activeTheme.type;
-
-    return `theme-${themeName}`;
+  @computed get lightTheme() {
+    return this.props.lightTheme || ThemeStore.getInstance().activeTheme.type == "light";
   }
 
   private styles: Styles<OptionTypeBase, boolean> = {
@@ -124,14 +122,14 @@ export class Select extends React.Component<SelectProps> {
       options: autoConvertOptions ? this.options : options,
       onChange: this.onChange,
       onKeyDown: this.onKeyDown,
-      className: cssNames("Select", this.themeClass, className),
+      className: cssNames("Select", className, { lightTheme: this.lightTheme }),
       classNamePrefix: "Select",
       components: {
         ...components,
         Menu: props => (
           <WrappedMenu
             {...props}
-            className={cssNames(menuClass, this.themeClass, props.className)}
+            className={cssNames(menuClass, { lightTheme: this.lightTheme }, props.className)}
           />
         ),
       },

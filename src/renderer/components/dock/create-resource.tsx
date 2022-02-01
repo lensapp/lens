@@ -140,7 +140,6 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
           placeholder="Select Template ..."
           options={this.templates}
           menuPlacement="top"
-          themeName="outlined"
           onChange={v => this.onSelectTemplate(v)}
           value={this.currentTemplate}
         />

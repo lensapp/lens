@@ -75,7 +75,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<Props & Dependenc
       <div className="flex gaps align-center">
         <b>Revision</b>
         <Select
-          themeName="light"
+          lightTheme
           value={revision}
           options={revisions}
           formatOptionLabel={({ value }: SelectOption<IReleaseRevision>) => `${value.revision} - ${value.chart}

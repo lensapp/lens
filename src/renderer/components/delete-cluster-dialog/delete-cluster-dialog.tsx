@@ -138,7 +138,7 @@ export class DeleteClusterDialog extends React.Component {
           options={options}
           value={this.newCurrentContext}
           onChange={({ value }) => this.newCurrentContext = value}
-          themeName="light"
+          lightTheme
           className="ml-[1px] mr-[1px]"
         />
       </div>

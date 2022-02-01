@@ -144,7 +144,6 @@ export class HelmCharts extends React.Component {
             formatOptionLabel={this.formatOptionLabel}
             controlShouldRenderValue={false}
             className="box grow"
-            themeName="lens"
           />
           <Button
             primary
