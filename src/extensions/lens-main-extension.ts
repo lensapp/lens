@@ -10,9 +10,11 @@ import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "../main/menu/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
+import type { ShellEnvVarRegistration } from "../main/shell-session/env-var/env-var-registration";
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
   trayMenus: TrayMenuRegistration[] = [];
+  shellEnvVars: ShellEnvVarRegistration[] = [];
 
   async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
     return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
