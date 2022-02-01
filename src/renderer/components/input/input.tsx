@@ -37,6 +37,10 @@ export interface IconDataFnArg {
 export type IconData = string | React.ReactNode | ((opt: IconDataFnArg) => React.ReactNode);
 
 export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
+  /**
+ * @deprecated
+ */
+  theme?: "round-black" | "round";
   lightTheme?: boolean; // Forced light theme, may be used for dialogs which is always "bright"
   className?: string;
   value?: string;
