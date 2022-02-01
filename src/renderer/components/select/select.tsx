@@ -29,6 +29,10 @@ export interface SelectOption<T = any> {
 }
 
 export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
+  /**
+   * @deprecated
+   */
+  themeName?: "dark" | "light" | "outlined" | "lens";
   value?: T;
   lightTheme?: boolean; // Forced light theme, may be used for dialogs which is always "bright"
   menuClass?: string;
@@ -51,7 +55,7 @@ export class Select extends React.Component<SelectProps> {
   }
 
   @computed get lightTheme() {
-    return this.props.lightTheme || ThemeStore.getInstance().activeTheme.type == "light";
+    return this.props.lightTheme || this.props.themeName == "light" || ThemeStore.getInstance().activeTheme.type == "light";
   }
 
   private styles: Styles<OptionTypeBase, boolean> = {
