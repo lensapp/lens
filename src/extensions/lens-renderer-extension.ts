@@ -18,7 +18,7 @@ import type { CommandRegistration } from "../renderer/components/command-palette
 import type { AppPreferenceRegistration } from "../renderer/components/+preferences/app-preferences/app-preference-registration";
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
-import type { StatusBarRegistration } from "../renderer/components/cluster-manager/status-bar-registration";
+import type { StatusBarRegistration } from "../renderer/components/status-bar/status-bar-registration";
 import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
 
 export class LensRendererExtension extends LensExtension {
