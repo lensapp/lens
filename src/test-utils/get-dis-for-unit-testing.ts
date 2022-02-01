@@ -6,15 +6,28 @@ import { getDiForUnitTesting as getRendererDi } from "../renderer/getDiForUnitTe
 import { getDiForUnitTesting as getMainDi } from "../main/getDiForUnitTesting";
 import { overrideIpcBridge } from "./override-ipc-bridge";
 
-export const getDisForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverrides: false }) => {
-  const rendererDi = getRendererDi({ doGeneralOverrides });
-  const mainDi = getMainDi({ doGeneralOverrides });
+interface DiForTestingOptions {
+  doGeneralOverrides?: boolean;
+}
+
+export async function getDisForUnitTesting({ doGeneralOverrides = false }: DiForTestingOptions = {}) {
+  const rendererDi = await getRendererDi({
+    doGeneralOverrides,
+    doIpcOverrides: false,
+  });
+  const mainDi = await getMainDi({
+    doGeneralOverrides,
+    doIpcOverrides: false,
+  });
 
   overrideIpcBridge({ rendererDi, mainDi });
 
   return {
     rendererDi,
     mainDi,
-    runSetups: () => Promise.all([rendererDi.runSetups(), mainDi.runSetups()]),
+    runSetups: async () => {
+      await mainDi.runSetups();
+      await rendererDi.runSetups();
+    },
   };
-};
+}

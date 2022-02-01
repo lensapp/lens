@@ -35,7 +35,7 @@ describe("<TopBar/> in Windows and Linux", () => {
   let render: DiRender;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

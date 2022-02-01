@@ -76,7 +76,7 @@ describe("<TopBar/>", () => {
   let render: DiRender;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

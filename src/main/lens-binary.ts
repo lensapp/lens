@@ -9,7 +9,7 @@ import request from "request";
 import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
-import type winston from "winston";
+import type { LensLogger } from "../common/logger";
 
 export type LensBinaryOpts = {
   version: string;
@@ -32,7 +32,7 @@ export class LensBinary {
   protected arch: string;
   protected originalBinaryName: string;
   protected requestOpts: request.Options;
-  protected logger: Console | winston.Logger;
+  protected logger: Omit<LensLogger, "silly" | "verbose">;
 
   constructor(opts: LensBinaryOpts) {
     const baseDir = opts.baseDir;
@@ -68,7 +68,7 @@ export class LensBinary {
     }
   }
 
-  public setLogger(logger: Console | winston.Logger) {
+  public setLogger(logger: LensLogger) {
     this.logger = logger;
   }
 

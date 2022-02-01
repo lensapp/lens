@@ -38,7 +38,7 @@ describe("kubeconfig-sync.source tests", () => {
   let computeDiff: ReturnType<typeof computeDiffFor>;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

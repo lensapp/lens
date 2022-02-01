@@ -7,8 +7,7 @@ import path from "path";
 import directoryForUserDataInjectable from "../directory-for-user-data/directory-for-user-data.injectable";
 
 const directoryForBinariesInjectable = getInjectable({
-  instantiate: (di) =>
-    path.join(di.inject(directoryForUserDataInjectable), "binaries"),
+  instantiate: (di) => path.join(di.inject(directoryForUserDataInjectable), "binaries"),
 
   lifecycle: lifecycleEnum.singleton,
 });

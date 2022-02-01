@@ -48,7 +48,7 @@ describe("kubeconfig manager tests", () => {
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 

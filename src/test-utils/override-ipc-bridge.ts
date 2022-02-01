@@ -3,64 +3,39 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
-import type { Channel } from "../common/ipc-channel/channel";
-import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
-import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
-import asyncFn from "@async-fn/jest";
+import EventEmitter from "events";
+import ipcHandleInjectable from "../main/communication/ipc-handle.injectable";
+import ipcMainOnInjectable from "../main/communication/ipc-on.injectable";
+import ipcRendererOnInjectable from "../renderer/communication/ipc-on.injectable";
+import ipcInvokeInjectable from "../renderer/communication/ipc-invoke.injectable";
+import broadcastInjectable from "../common/communication/broadcast.injectable";
 
-export const overrideIpcBridge = ({
-  rendererDi,
-  mainDi,
-}: {
+interface OverrideIpcBridgeContainers {
   rendererDi: DependencyInjectionContainer;
   mainDi: DependencyInjectionContainer;
-}) => {
-  const fakeChannelMap = new Map<
-    Channel<any>,
-    { promise: Promise<any>; resolve: (arg0: any) => Promise<void> }
-  >();
+}
 
-  const mainIpcRegistrations = {
-    set: <TChannel extends Channel<TInstance>, TInstance>(
-      key: TChannel,
-      callback: () => TChannel["_template"],
-    ) => {
-      if (!fakeChannelMap.has(key)) {
-        const mockInstance = asyncFn();
+export function overrideIpcBridge({ rendererDi, mainDi }: OverrideIpcBridgeContainers) {
+  const fakeChannelMap = new Map<string, (...args: any[]) => Promise<any>>();
+  const fakeEmitter = new EventEmitter();
 
-        fakeChannelMap.set(key, {
-          promise: mockInstance(),
-          resolve: mockInstance.resolve,
-        });
-      }
-
-      return fakeChannelMap.get(key).resolve(callback);
-    },
-
-    get: <TChannel extends Channel<TInstance>, TInstance>(key: TChannel) => {
-      if (!fakeChannelMap.has(key)) {
-        const mockInstance = asyncFn();
-
-        fakeChannelMap.set(key, {
-          promise: mockInstance(),
-          resolve: mockInstance.resolve,
-        });
-      }
-
-      return fakeChannelMap.get(key).promise;
-    },
-  };
-
-  rendererDi.override(
-    getValueFromRegisteredChannelInjectable,
-    () => async (channel) => {
-      const callback = await mainIpcRegistrations.get(channel);
-
-      return callback();
-    },
-  );
-
-  mainDi.override(registerChannelInjectable, () => (channel, callback) => {
-    mainIpcRegistrations.set(channel, callback);
+  rendererDi.override(ipcInvokeInjectable, () => (name, ...args) => {
+    if (fakeChannelMap.has(name)) {
+      return fakeChannelMap.get(name)(...args);
+    } else {
+      throw new Error(`Channel ${name} has not been handled`);
+    }
   });
-};
+  rendererDi.override(broadcastInjectable, () => (channel, ...args) => fakeEmitter.emit(channel, ...args));
+  rendererDi.override(ipcRendererOnInjectable, () => (name, listener) => fakeEmitter.on(name, listener));
+
+  mainDi.override(broadcastInjectable, () => (channel, ...args) => fakeEmitter.emit(channel, ...args));
+  mainDi.override(ipcMainOnInjectable, () => (name, listener) => fakeEmitter.on(name, listener));
+  mainDi.override(ipcHandleInjectable, () => (name, callback) => {
+    if (fakeChannelMap.has(name)) {
+      throw new Error(`Channel ${name} has already been handled`);
+    } else {
+      fakeChannelMap.set(name, async (...args: Parameters<typeof callback>) => await callback(...args));
+    }
+  });
+}

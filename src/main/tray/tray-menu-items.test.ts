@@ -17,7 +17,7 @@ describe("tray-menu-items", () => {
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     await di.runSetups();
 

@@ -7,51 +7,47 @@ import glob from "glob";
 import { memoize } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
-import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
-import readDirInjectable from "../common/fs/read-dir.injectable";
-import readFileInjectable from "../common/fs/read-file.injectable";
+import registerEventSinkInjectable from "../common/communication/register-event-sink.injectable";
+import registerChannelInjectable from "./communication/register-channel.injectable";
+import { overrideFsFunctions } from "../test-utils/override-fs-functions";
 
-export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverrides: false }) => {
+interface DiForTestingOptions {
+  doGeneralOverrides?: boolean;
+  doIpcOverrides?: boolean;
+}
+
+export async function getDiForUnitTesting({ doGeneralOverrides = false, doIpcOverrides = true }: DiForTestingOptions = {}) {
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di);
 
   for (const filePath of getInjectableFilePaths()) {
-    const injectableInstance = require(filePath).default;
+    const { default: injectableInstance } = await import(filePath);
 
-    di.register({
-      id: filePath,
-      ...injectableInstance,
-      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
-    });
+    try {
+      di.register({
+        id: filePath,
+        ...injectableInstance,
+        aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
+      });
+    } catch (error) {
+      throw new Error(`Failed to register ${filePath}: ${error}`);
+    }
   }
 
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
-    di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
+    overrideFsFunctions(di);
+  }
 
-    di.override(readDirInjectable, () => () => {
-      throw new Error("Tried to read contents of a directory from file system without specifying explicit override.");
-    });
-
-    di.override(readFileInjectable, () => () => {
-      throw new Error("Tried to read a file from file system without specifying explicit override.");
-    });
-
-    di.override(writeJsonFileInjectable, () => () => {
-      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
-    });
-
-    di.override(readJsonFileInjectable, () => () => {
-      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
-    });
+  if (doIpcOverrides) {
+    di.override(registerEventSinkInjectable, () => () => () => undefined);
+    di.override(registerChannelInjectable, () => () => () => undefined);
   }
 
   return di;
-};
+}
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),

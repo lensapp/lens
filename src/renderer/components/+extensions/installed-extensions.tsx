@@ -5,10 +5,7 @@
 
 import styles from "./installed-extensions.module.scss";
 import React, { useMemo } from "react";
-import type {
-  ExtensionDiscovery,
-  InstalledExtension,
-} from "../../../extensions/extension-discovery/extension-discovery";
+import type { ExtensionDiscovery, InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
 import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
@@ -17,15 +14,13 @@ import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
-import extensionDiscoveryInjectable
-  from "../../../extensions/extension-discovery/extension-discovery.injectable";
-
+import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import type { IComputedValue } from "mobx";
+import isUninstallingInjectable from "../../extensions/installation-state/is-uninstalling.injectable";
+import anyExtensionsUninstallingInjectable from "../../extensions/installation-state/any-uninstalling.injectable";
 
-interface Props {
+export interface InstalledExtensionsProps {
   extensions: InstalledExtension[];
   enable: (id: LensExtensionId) => void;
   disable: (id: LensExtensionId) => void;
@@ -34,7 +29,8 @@ interface Props {
 
 interface Dependencies {
   extensionDiscovery: ExtensionDiscovery;
-  extensionInstallationStateStore: ExtensionInstallationStateStore;
+  isUninstalling: (extId: string) => boolean;
+  anyUninstalling: IComputedValue<boolean>;
 }
 
 function getStatus(extension: InstalledExtension) {
@@ -45,7 +41,7 @@ function getStatus(extension: InstalledExtension) {
   return extension.isEnabled ? "Enabled" : "Disabled";
 }
 
-const NonInjectedInstalledExtensions : React.FC<Dependencies & Props> = (({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }) => {
+const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, isUninstalling, anyUninstalling, extensions, uninstall, enable, disable }: Dependencies & InstalledExtensionsProps) => {
   const filters = [
     (extension: InstalledExtension) => extension.manifest.name,
     (extension: InstalledExtension) => getStatus(extension),
@@ -86,65 +82,61 @@ const NonInjectedInstalledExtensions : React.FC<Dependencies & Props> = (({ exte
     ], [],
   );
 
-  const data = useMemo(
-    () => {
-      return extensions.map(extension => {
-        const { id, isEnabled, isCompatible, manifest } = extension;
-        const { name, description, version } = manifest;
-        const isUninstalling = extensionInstallationStateStore.isExtensionUninstalling(id);
+  const data = useMemo(() => extensions.map(extension => {
+    const { id, isEnabled, isCompatible, manifest } = extension;
+    const { name, description, version } = manifest;
+    const uninstalling = isUninstalling(id);
 
-        return {
-          extension: (
-            <div className={"flex items-start"}>
-              <div>
-                <div className={styles.extensionName}>{name}</div>
-                <div className={styles.extensionDescription}>{description}</div>
-              </div>
-            </div>
-          ),
-          version,
-          status: (
-            <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
-              {getStatus(extension)}
-            </div>
-          ),
-          actions: (
-            <MenuActions usePortal toolbar={false}>
-              { isCompatible && (
-                <>
-                  {isEnabled ? (
-                    <MenuItem
-                      disabled={isUninstalling}
-                      onClick={() => disable(id)}
-                    >
-                      <Icon material="unpublished"/>
-                      <span className="title" aria-disabled={isUninstalling}>Disable</span>
-                    </MenuItem>
-                  ) : (
-                    <MenuItem
-                      disabled={isUninstalling}
-                      onClick={() => enable(id)}
-                    >
-                      <Icon material="check_circle"/>
-                      <span className="title" aria-disabled={isUninstalling}>Enable</span>
-                    </MenuItem>
-                  )}
-                </>
+    return {
+      extension: (
+        <div className={"flex items-start"}>
+          <div>
+            <div className={styles.extensionName}>{name}</div>
+            <div className={styles.extensionDescription}>{description}</div>
+          </div>
+        </div>
+      ),
+      version,
+      status: (
+        <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
+          {getStatus(extension)}
+        </div>
+      ),
+      actions: (
+        <MenuActions usePortal toolbar={false}>
+          {isCompatible && (
+            <>
+              {isEnabled ? (
+                <MenuItem
+                  disabled={uninstalling}
+                  onClick={() => disable(id)}
+                >
+                  <Icon material="unpublished" />
+                  <span className="title" aria-disabled={uninstalling}>Disable</span>
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  disabled={uninstalling}
+                  onClick={() => enable(id)}
+                >
+                  <Icon material="check_circle" />
+                  <span className="title" aria-disabled={uninstalling}>Enable</span>
+                </MenuItem>
               )}
+            </>
+          )}
 
-              <MenuItem
-                disabled={isUninstalling}
-                onClick={() => uninstall(extension)}
-              >
-                <Icon material="delete"/>
-                <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
-              </MenuItem>
-            </MenuActions>
-          ),
-        };
-      });
-    }, [extensions, extensionInstallationStateStore.anyUninstalling],
-  );
+          <MenuItem
+            disabled={uninstalling}
+            onClick={() => uninstall(extension)}
+          >
+            <Icon material="delete" />
+            <span className="title" aria-disabled={uninstalling}>Uninstall</span>
+          </MenuItem>
+        </MenuActions>
+      ),
+    };
+  }), [extensions, anyUninstalling.get()]);
 
   if (!extensionDiscovery.isLoaded) {
     return <div><Spinner center /></div>;
@@ -175,15 +167,11 @@ const NonInjectedInstalledExtensions : React.FC<Dependencies & Props> = (({ exte
   );
 });
 
-export const InstalledExtensions = withInjectables<Dependencies, Props>(
-  observer(NonInjectedInstalledExtensions),
-
-  {
-    getProps: (di, props) => ({
-      extensionDiscovery: di.inject(extensionDiscoveryInjectable),
-      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
-
-      ...props,
-    }),
-  },
-);
+export const InstalledExtensions = withInjectables<Dependencies, InstalledExtensionsProps>(NonInjectedInstalledExtensions, {
+  getProps: (di, props) => ({
+    extensionDiscovery: di.inject(extensionDiscoveryInjectable),
+    isUninstalling: di.inject(isUninstallingInjectable),
+    anyUninstalling: di.inject(anyExtensionsUninstallingInjectable),
+    ...props,
+  }),
+});

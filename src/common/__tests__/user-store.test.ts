@@ -40,7 +40,7 @@ describe("user store tests", () => {
   let mainDi: DependencyInjectionContainer;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const dis = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

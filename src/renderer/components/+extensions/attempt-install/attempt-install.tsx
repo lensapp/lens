@@ -2,70 +2,51 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import {
-  Disposer,
-  disposer,
-  ExtendableDisposer,
-} from "../../../../common/utils";
+import type { Disposer } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { Button } from "../../button";
-import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import React from "react";
-import { remove as removeDir } from "fs-extra";
 import { shell } from "electron";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate/create-temp-files-and-validate";
 import type { InstallRequest } from "./install-request";
-import {
-  ExtensionInstallationState,
-  ExtensionInstallationStateStore,
-} from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import { InstallationState } from "../../../../extensions/installation-state/state";
+import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
 
 interface Dependencies {
-  extensionLoader: ExtensionLoader;
+  getInstalledExtension: (extId: string) => InstalledExtension | undefined;
   uninstallExtension: (id: LensExtensionId) => Promise<boolean>;
-
-  unpackExtension: (
-    request: InstallRequestValidated,
-    disposeDownloading: Disposer,
-  ) => Promise<void>;
-
-  createTempFilesAndValidate: (
-    installRequest: InstallRequest,
-  ) => Promise<InstallRequestValidated | null>;
-
-  getExtensionDestFolder: (name: string) => string
-
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  unpackExtension: (request: InstallRequestValidated, disposeDownloading: Disposer) => Promise<void>;
+  createTempFilesAndValidate: (installRequest: InstallRequest) => Promise<InstallRequestValidated | null>;
+  getExtensionDestFolder: (name: string) => string;
+  getInstallationState: (extId: string) => InstallationState;
+  removeDir: (dir: string) => Promise<void>;
 }
 
 export const attemptInstall =
   ({
-    extensionLoader,
+    getInstalledExtension,
     uninstallExtension,
     unpackExtension,
     createTempFilesAndValidate,
     getExtensionDestFolder,
-    extensionInstallationStateStore,
+    getInstallationState,
+    removeDir,
   }: Dependencies) =>
-    async (request: InstallRequest, d?: ExtendableDisposer): Promise<void> => {
-      const dispose = disposer(
-        extensionInstallationStateStore.startPreInstall(),
-        d,
-      );
-
+    async (request: InstallRequest, dispose: Disposer): Promise<void> => {
       const validatedRequest = await createTempFilesAndValidate(request);
 
       if (!validatedRequest) {
         return dispose();
       }
 
-      const { name, version, description } = validatedRequest.manifest;
-      const curState = extensionInstallationStateStore.getInstallationState(
-        validatedRequest.id,
-      );
+      const {
+        id,
+        manifest: { name, version, description },
+      } = validatedRequest;
+      const curState = getInstallationState(id);
 
-      if (curState !== ExtensionInstallationState.IDLE) {
+      if (curState !== InstallationState.IDLE) {
         dispose();
 
         return void Notifications.error(
@@ -80,31 +61,26 @@ export const attemptInstall =
       }
 
       const extensionFolder = getExtensionDestFolder(name);
-      const installedExtension = extensionLoader.getExtension(validatedRequest.id);
+      const installedExtension = getInstalledExtension(id);
 
       if (installedExtension) {
-        const { version: oldVersion } = installedExtension.manifest;
+        const { manifest: { version: oldVersion }} = installedExtension;
 
-        // confirm to uninstall old version before installing new version
+        // confirm uninstall and then install new version
         const removeNotification = Notifications.info(
           <div className="InstallingExtensionNotification flex gaps align-center">
             <div className="flex column gaps">
               <p>
-              Install extension{" "}
-                <b>
-                  {name}@{version}
-                </b>
-              ?
+                Install extension<b>{name}@{version}</b>?
               </p>
               <p>
-              Description: <em>{description}</em>
+                Description: <em>{description}</em>
               </p>
               <div
                 className="remove-folder-warning"
                 onClick={() => shell.openPath(extensionFolder)}
               >
-                <b>Warning:</b> {name}@{oldVersion} will be removed before
-              installation.
+                <b>Warning:</b> {name}@{oldVersion} will be removed before installation.
               </div>
             </div>
             <Button
@@ -113,7 +89,7 @@ export const attemptInstall =
               onClick={async () => {
                 removeNotification();
 
-                if (await uninstallExtension(validatedRequest.id)) {
+                if (await uninstallExtension(id)) {
                   await unpackExtension(validatedRequest, dispose);
                 } else {
                   dispose();
@@ -126,10 +102,8 @@ export const attemptInstall =
           },
         );
       } else {
-        // clean up old data if still around
+        // Remove the old dir because it isn't a valid extension anyway
         await removeDir(extensionFolder);
-
-        // install extension if not yet exists
         await unpackExtension(validatedRequest, dispose);
       }
     };

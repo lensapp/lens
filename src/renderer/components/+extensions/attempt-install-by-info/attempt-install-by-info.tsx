@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { downloadFile, downloadJson, ExtendableDisposer } from "../../../../common/utils";
+import { Disposer, downloadFile, downloadJson } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { ConfirmDialog } from "../../confirm-dialog";
 import React from "react";
@@ -11,7 +11,6 @@ import { SemVer } from "semver";
 import URLParse from "url-parse";
 import type { InstallRequest } from "../attempt-install/install-request";
 import lodash from "lodash";
-import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 export interface ExtensionInfo {
   name: string;
@@ -20,17 +19,19 @@ export interface ExtensionInfo {
 }
 
 interface Dependencies {
-  attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>;
+  attemptInstall: (request: InstallRequest, d: Disposer) => Promise<void>;
   getBaseRegistryUrl: () => Promise<string>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  startPreInstall: () => Disposer;
 }
 
-export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, extensionInstallationStateStore }: Dependencies) => async ({
-  name,
-  version,
-  requireConfirmation = false,
-}: ExtensionInfo) => {
-  const disposer = extensionInstallationStateStore.startPreInstall();
+export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, startPreInstall }: Dependencies) => async (
+  {
+    name,
+    version,
+    requireConfirmation = false,
+  }: ExtensionInfo,
+  disposer = startPreInstall(),
+) => {
   const baseUrl = await getBaseRegistryUrl();
   const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
   let json: any;

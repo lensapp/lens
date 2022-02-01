@@ -31,7 +31,7 @@ describe("<Welcome/>", () => {
   let welcomeBannersStub: WelcomeBannerRegistration[];
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     await di.runSetups();
 

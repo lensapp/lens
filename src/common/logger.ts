@@ -10,6 +10,15 @@ import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
 
+export interface LensLogger {
+  error: (...args: any[]) => void;
+  warn: (...args: any[]) => void;
+  info: (...args: any[]) => void;
+  debug: (...args: any[]) => void;
+  verbose: (...args: any[]) => void;
+  silly: (...args: any[]) => void;
+}
+
 const logLevel = process.env.LOG_LEVEL
   ? process.env.LOG_LEVEL
   : isDebugging
@@ -67,4 +76,4 @@ if (ipcMain) {
 export default winston.createLogger({
   format: format.simple(),
   transports,
-});
+}) as LensLogger;

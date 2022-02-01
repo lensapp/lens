@@ -113,7 +113,7 @@ const awsCluster = getMockCatalogEntity({
 
 describe("HotbarStore", () => {
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 

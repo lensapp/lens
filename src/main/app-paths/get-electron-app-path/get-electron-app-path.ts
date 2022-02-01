@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { App } from "electron";
-import type { PathName } from "../../../common/app-paths/app-path-names";
+import type { PathName } from "../../../common/app-paths/app-paths";
 
 interface Dependencies {
   app: App;

@@ -36,7 +36,7 @@ describe("protocol router tests", () => {
   let extensionsStore: ExtensionsStore;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
       "tmp": {},

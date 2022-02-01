@@ -110,7 +110,7 @@ describe("ExtensionLoader", () => {
   let updateExtensionStateMock: jest.Mock;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const dis = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

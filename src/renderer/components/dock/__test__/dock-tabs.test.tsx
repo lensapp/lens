@@ -59,7 +59,7 @@ describe("<DockTabs />", () => {
   let render: DiRender;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
 
     render = renderFor(di);

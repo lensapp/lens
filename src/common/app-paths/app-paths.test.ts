@@ -3,22 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
-import { AppPaths, appPathsInjectionToken } from "./app-path-injection-token";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
-import type { PathName } from "./app-path-names";
+import type { AppPaths, PathName } from "./app-paths";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "../../main/app-paths/app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
 import path from "path";
+import { appPathsInjectionToken } from "./app-path-injection-token";
 
 describe("app-paths", () => {
   let mainDi: DependencyInjectionContainer;
   let rendererDi: DependencyInjectionContainer;
-  let runSetups: () => Promise<void[]>;
+  let runSetups: () => Promise<void>;
 
-  beforeEach(() => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(async () => {
+    const dis = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     mainDi = dis.mainDi;
     rendererDi = dis.rendererDi;
@@ -45,17 +45,14 @@ describe("app-paths", () => {
 
     mainDi.override(
       getElectronAppPathInjectable,
-      () =>
-        (key: PathName): string | null =>
-          defaultAppPathsStub[key],
+      () => (key: PathName): string | null => defaultAppPathsStub[key],
     );
 
     mainDi.override(
       setElectronAppPathInjectable,
-      () =>
-        (key: PathName, path: string): void => {
-          defaultAppPathsStub[key] = path;
-        },
+      () => (key: PathName, path: string): void => {
+        defaultAppPathsStub[key] = path;
+      },
     );
 
     mainDi.override(appNameInjectable, () => "some-app-name");
@@ -123,7 +120,7 @@ describe("app-paths", () => {
       await runSetups();
     });
 
-    it("given in renderer, when injecting path for app data, has integration specific app data path", () => {
+    it("when in renderer, when injecting path for app data, has integration specific app data path", () => {
       const { appData, userData } = rendererDi.inject(appPathsInjectionToken);
 
       expect({ appData, userData }).toEqual({
@@ -132,8 +129,8 @@ describe("app-paths", () => {
       });
     });
 
-    it("given in main, when injecting path for app data, has integration specific app data path", () => {
-      const { appData, userData } = rendererDi.inject(appPathsInjectionToken);
+    it("when in main, when injecting path for app data, has integration specific app data path", () => {
+      const { appData, userData } = mainDi.inject(appPathsInjectionToken);
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",

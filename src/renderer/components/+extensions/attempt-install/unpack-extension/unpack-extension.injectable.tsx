@@ -5,17 +5,17 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { unpackExtension } from "./unpack-extension";
 import extensionLoaderInjectable from "../../../../../extensions/extension-loader/extension-loader.injectable";
-import getExtensionDestFolderInjectable
-  from "../get-extension-dest-folder/get-extension-dest-folder.injectable";
-import extensionInstallationStateStoreInjectable
-  from "../../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import getExtensionDestFolderInjectable from "../get-extension-dest-folder/get-extension-dest-folder.injectable";
+import setInstallingInjectable from "../../../../extensions/installation-state/set-installing.injectable";
+import clearInstallingInjectable from "../../../../extensions/installation-state/clear-installing.injectable";
 
 const unpackExtensionInjectable = getInjectable({
   instantiate: (di) =>
     unpackExtension({
       extensionLoader: di.inject(extensionLoaderInjectable),
       getExtensionDestFolder: di.inject(getExtensionDestFolderInjectable),
-      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+      setInstalling: di.inject(setInstallingInjectable),
+      clearInstalling: di.inject(clearInstallingInjectable),
     }),
 
   lifecycle: lifecycleEnum.singleton,

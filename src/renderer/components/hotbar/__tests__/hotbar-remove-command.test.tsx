@@ -30,8 +30,8 @@ describe("<HotbarRemoveCommand />", () => {
   let di: DependencyInjectionContainer;
   let render: DiRender;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(async () => {
+    di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

@@ -89,7 +89,7 @@ describe("<DeleteClusterDialog />", () => {
   let createCluster: (model: ClusterModel) => Cluster;
 
   beforeEach(async () => {
-    const { mainDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
+    const { mainDi, runSetups } = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

@@ -37,7 +37,7 @@ describe("<PodTolerations />", () => {
   let render: DiRender;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(
       directoryForLensLocalStorageInjectable,

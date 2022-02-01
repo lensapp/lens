@@ -74,7 +74,7 @@ describe("ContextHandler", () => {
   let createContextHandler: (cluster: Cluster) => ContextHandler;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
       "tmp": {},

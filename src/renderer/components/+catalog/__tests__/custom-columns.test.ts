@@ -37,8 +37,8 @@ class TestCategory extends CatalogCategory {
 describe("Custom Category Columns", () => {
   let di: ConfigurableDependencyInjectionContainer;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = await getDiForUnitTesting();
   });
 
   describe("without extensions", () => {

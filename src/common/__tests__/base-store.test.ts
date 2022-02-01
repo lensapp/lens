@@ -78,7 +78,7 @@ describe("BaseStore", () => {
   let store: TestStore;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const dis = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     dis.mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
 

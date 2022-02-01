@@ -3,12 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { PathName } from "../../../common/app-paths/app-path-names";
+import type { PathName } from "../../../common/app-paths/app-paths";
 import electronAppInjectable from "../get-electron-app-path/electron-app/electron-app.injectable";
 
 const setElectronAppPathInjectable = getInjectable({
-  instantiate: (di) => (name: PathName, path: string) : void =>
-    di.inject(electronAppInjectable).setPath(name, path),
+  instantiate: (di) => {
+    const app = di.inject(electronAppInjectable);
+
+    return (name: PathName, path: string): void => {
+      app.setPath(name, path);
+    };
+  },
 
   lifecycle: lifecycleEnum.singleton,
 });

@@ -80,7 +80,7 @@ describe("cluster-store", () => {
   let createCluster: (model: ClusterModel) => Cluster;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const dis = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

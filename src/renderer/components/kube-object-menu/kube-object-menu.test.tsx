@@ -75,7 +75,7 @@ describe("kube-object-menu", () => {
 
     const someTestExtension = new SomeTestExtension(kubeObjectMenuItems);
 
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     render = renderFor(di);
 

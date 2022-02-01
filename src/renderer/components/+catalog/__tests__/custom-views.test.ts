@@ -15,8 +15,8 @@ import customCategoryViewsInjectable from "../custom-views.injectable";
 describe("Custom Category Views", () => {
   let di: ConfigurableDependencyInjectionContainer;
 
-  beforeEach(() => {
-    di = getDiForUnitTesting();
+  beforeEach(async () => {
+    di = await getDiForUnitTesting();
   });
 
   it("should order items correctly over all extensions", () => {

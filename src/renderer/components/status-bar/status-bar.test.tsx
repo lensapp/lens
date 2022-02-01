@@ -40,7 +40,7 @@ describe("<StatusBar />", () => {
 
   beforeEach(async () => {
     statusBarItems = observable.array([]);
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = await getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");

@@ -4,13 +4,7 @@
  */
 
 import "./extensions.scss";
-import {
-  IComputedValue,
-  makeObservable,
-  observable,
-  reaction,
-  when,
-} from "mobx";
+import { IComputedValue, makeObservable, observable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
@@ -26,30 +20,25 @@ import userExtensionsInjectable from "./user-extensions/user-extensions.injectab
 import enableExtensionInjectable from "./enable-extension/enable-extension.injectable";
 import disableExtensionInjectable from "./disable-extension/disable-extension.injectable";
 import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension/confirm-uninstall-extension.injectable";
-import installFromInputInjectable from "./install-from-input/install-from-input.injectable";
-import installFromSelectFileDialogInjectable from "./install-from-select-file-dialog.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
-import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
+import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
-import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import anyExtensionsInstallingInjectable from "../../extensions/installation-state/any-installing.injectable";
 
 interface Dependencies {
-  userExtensions: IComputedValue<InstalledExtension[]>;
+  readonly userExtensions: IComputedValue<InstalledExtension[]>;
   enableExtension: (id: LensExtensionId) => void;
   disableExtension: (id: LensExtensionId) => void;
   confirmUninstallExtension: (extension: InstalledExtension) => Promise<void>;
-  installFromInput: (input: string) => Promise<void>;
-  installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: (files: File[]) => Promise<void>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  readonly anyExtensionsInstalling: IComputedValue<boolean>;
 }
 
 @observer
 class NonInjectedExtensions extends React.Component<Dependencies> {
   @observable installPath = "";
 
-  constructor(props: Dependencies) {
+  constructor(readonly props: Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -59,7 +48,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
       reaction(() => this.props.userExtensions.get().length, (curSize, prevSize) => {
         if (curSize > prevSize) {
           disposeOnUnmount(this, [
-            when(() => !this.props.extensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
+            when(() => !this.props.anyExtensionsInstalling.get(), () => this.installPath = ""),
           ]);
         }
       }),
@@ -86,8 +75,6 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
             <Install
               supportedFormats={supportedExtensionFormats}
               onChange={value => (this.installPath = value)}
-              installFromInput={() => this.props.installFromInput(this.installPath)}
-              installFromSelectFileDialog={this.props.installFromSelectFileDialog}
               installPath={this.installPath}
             />
 
@@ -112,9 +99,7 @@ export const Extensions = withInjectables<Dependencies>(NonInjectedExtensions, {
     enableExtension: di.inject(enableExtensionInjectable),
     disableExtension: di.inject(disableExtensionInjectable),
     confirmUninstallExtension: di.inject(confirmUninstallExtensionInjectable),
-    installFromInput: di.inject(installFromInputInjectable),
     installOnDrop: di.inject(installOnDropInjectable),
-    installFromSelectFileDialog: di.inject(installFromSelectFileDialogInjectable),
-    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+    anyExtensionsInstalling: di.inject(anyExtensionsInstallingInjectable),
   }),
 });

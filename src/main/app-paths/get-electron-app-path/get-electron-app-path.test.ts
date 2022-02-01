@@ -6,13 +6,13 @@ import electronAppInjectable from "./electron-app/electron-app.injectable";
 import getElectronAppPathInjectable from "./get-electron-app-path.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { App } from "electron";
-import registerChannelInjectable from "../register-channel/register-channel.injectable";
+import registerChannelInjectable from "../../communication/register-channel.injectable";
 
 describe("get-electron-app-path", () => {
   let getElectronAppPath: (name: string) => string | null;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: false });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: false });
 
     const appStub = {
       name: "some-app-name",

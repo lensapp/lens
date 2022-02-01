@@ -11,10 +11,8 @@ import * as fse from "fs-extra";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
-import installExtensionInjectable
-  from "../extension-installer/install-extension/install-extension.injectable";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 
 jest.setTimeout(60_000);
@@ -49,16 +47,15 @@ describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
 
-    mockFs();
-
     await di.runSetups();
 
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+    mockFs();
   });
 
   afterEach(() => {

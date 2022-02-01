@@ -89,7 +89,7 @@ describe("kube auth proxy tests", () => {
       "tmp": {},
     };
 
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs(mockMinikubeConfig);
 

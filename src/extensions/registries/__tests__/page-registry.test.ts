@@ -37,7 +37,7 @@ let ext: LensExtension = null;
 
 describe("page registry tests", () => {
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const dis = await getDisForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 

@@ -51,7 +51,7 @@ describe("create clusters", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = await getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
       "minikube-config.yml": JSON.stringify({

@@ -11,20 +11,22 @@ import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-global
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
-import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
-import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
+import registerEventSinkInjectable from "../common/communication/register-event-sink.injectable";
+import registerChannelInjectable from "./communication/register-channel.injectable";
+import { overrideFsFunctions } from "../test-utils/override-fs-functions";
 
-export const getDiForUnitTesting = (
-  { doGeneralOverrides } = { doGeneralOverrides: false },
-) => {
+interface DiForTestingOptions {
+  doGeneralOverrides?: boolean;
+  doIpcOverrides?: boolean;
+}
+
+export async function getDiForUnitTesting({ doGeneralOverrides = false, doIpcOverrides = true }: DiForTestingOptions = {}) {
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di);
 
   for (const filePath of getInjectableFilePaths()) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const injectableInstance = require(filePath).default;
+    const { default: injectableInstance } = await import(filePath);
 
     di.register({
       id: filePath,
@@ -36,26 +38,21 @@ export const getDiForUnitTesting = (
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
-    di.override(
-      getElectronAppPathInjectable,
-      () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`,
-    );
+    di.override(getElectronAppPathInjectable, () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`);
 
     di.override(setElectronAppPathInjectable, () => () => undefined);
     di.override(appNameInjectable, () => "some-electron-app-name");
-    di.override(registerChannelInjectable, () => () => undefined);
 
-    di.override(writeJsonFileInjectable, () => () => {
-      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
-    });
+    overrideFsFunctions(di);
+  }
 
-    di.override(readJsonFileInjectable, () => () => {
-      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
-    });
+  if (doIpcOverrides) {
+    di.override(registerEventSinkInjectable, () => () => () => undefined);
+    di.override(registerChannelInjectable, () => () => () => undefined);
   }
 
   return di;
-};
+}
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),

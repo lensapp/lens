@@ -17,7 +17,6 @@ import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
 import { isProduction } from "../../common/vars";
-import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import type { PackageJson } from "type-fest";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
@@ -25,12 +24,10 @@ import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
 interface Dependencies {
   extensionLoader: ExtensionLoader;
   extensionsStore: ExtensionsStore;
-
-  extensionInstallationStateStore: ExtensionInstallationStateStore;
-
+  setInstalling: (extId: string) => void;
+  clearInstalling: (extId: string) => void;
   isCompatibleBundledExtension: (manifest: LensExtensionManifest) => boolean;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
-
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>
   extensionPackageRootDirectory: string;
@@ -191,7 +188,7 @@ export class ExtensionDiscovery {
 
     if (path.basename(manifestPath) === manifestFilename && isUnderLocalFolderPath) {
       try {
-        this.dependencies.extensionInstallationStateStore.setInstallingFromMain(manifestPath);
+        this.dependencies.setInstalling(manifestPath);
         const absPath = path.dirname(manifestPath);
 
         // this.loadExtensionFromPath updates this.packagesJson
@@ -211,7 +208,7 @@ export class ExtensionDiscovery {
       } catch (error) {
         logger.error(`${logModule}: failed to add extension: ${error}`, { error });
       } finally {
-        this.dependencies.extensionInstallationStateStore.clearInstallingFromMain(manifestPath);
+        this.dependencies.clearInstalling(manifestPath);
       }
     }
   };
