@@ -66,6 +66,11 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         {extensions.filter(e => !e.showInPreferencesTab).length > 0 &&
           <Tab value={extensionURL()} label="Extensions" data-testid="extensions-tab" active={isActive(extensionRoute)}/>
         }
+
+        <hr />
+
+        <Tab value={"/installed-extensions"} label="Extensions"/>
+        <Tab value={"/install"} label="Install"/>
       </Tabs>
     );
   }
