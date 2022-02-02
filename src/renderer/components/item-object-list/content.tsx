@@ -203,31 +203,43 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   }
 
   renderTableHeader() {
-    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+    const { renderTableHeader } = this.props;
 
     if (!renderTableHeader) {
       return null;
     }
 
-    const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps(item).disabled);
-
     return (
       <TableHead showTopLine nowrap>
-        {isSelectable && (
-          <TableCell
-            checkbox
-            isChecked={store.isSelectedAll(enabledItems)}
-            onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
-          />
-        )}
-        {renderTableHeader.map((cellProps, index) => (
-          this.showColumn(cellProps) && (
-            <TableCell key={cellProps.id ?? index} {...cellProps} />
-          )
-        ))}
-        <TableCell className="menu">
-          {isConfigurable && this.renderColumnVisibilityMenu()}
-        </TableCell>
+        <Observer>
+          {() => {
+            const { store, isConfigurable, isSelectable, customizeTableRowProps } = this.props;
+            const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps(item).disabled);
+
+            return (
+              <>
+                {isSelectable && (
+                  <TableCell
+                    checkbox
+                    isChecked={store.isSelectedAll(enabledItems)}
+                    onClick={prevDefault(() =>
+                      store.toggleSelectionAll(enabledItems),
+                    )}
+                  />
+                )}
+                {renderTableHeader.map(
+                  (cellProps, index) =>
+                    this.showColumn(cellProps) && (
+                      <TableCell key={cellProps.id ?? index} {...cellProps} />
+                    ),
+                )}
+                <TableCell className="menu">
+                  {isConfigurable && this.renderColumnVisibilityMenu()}
+                </TableCell>
+              </>
+            );
+          }}
+        </Observer>
       </TableHead>
     );
   }
