@@ -71,7 +71,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   @boundMethod
   getRow(uid: string) {
     return (
-      <div>
+      <div key={uid}>
         <Observer>
           {() => {
             const {
@@ -87,7 +87,6 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
 
             return (
               <TableRow
-                key={itemId}
                 nowrap
                 searchItem={item}
                 sortItem={item}
