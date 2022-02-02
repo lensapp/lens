@@ -12,8 +12,9 @@ import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-sho
 const releaseValuesInjectable = getInjectable({
   instantiate: (di) =>
     asyncComputed(async () => {
-      const release = di.inject(releaseInjectable).value.get();
+      const release = di.inject(releaseInjectable).get();
 
+      // TODO: Figure out way to get rid of defensive code
       if (!release) {
         return "";
       }

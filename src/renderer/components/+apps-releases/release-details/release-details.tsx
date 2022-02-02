@@ -7,7 +7,7 @@ import "./release-details.scss";
 
 import React, { Component } from "react";
 import groupBy from "lodash/groupBy";
-import { computed, makeObservable, observable } from "mobx";
+import { computed, IComputedValue, makeObservable, observable } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
 import type { HelmRelease, IReleaseDetails, IReleaseUpdateDetails, IReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
@@ -39,7 +39,7 @@ interface Props {
 }
 
 interface Dependencies {
-  release: IAsyncComputed<HelmRelease>
+  release: IComputedValue<HelmRelease>
   releaseDetails: IAsyncComputed<IReleaseDetails>
   releaseValues: IAsyncComputed<string>
   updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>
@@ -59,7 +59,7 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
   }
 
   @computed get release() {
-    return this.props.release.value.get();
+    return this.props.release.get();
   }
 
   @computed get details() {
