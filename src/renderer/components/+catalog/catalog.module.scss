@@ -43,6 +43,8 @@
   }
 
   .pinIcon {
+    --color-active: var(--textColorAccent);
+
     transition: none;
     opacity: 0;
     margin-left: var(--padding);
