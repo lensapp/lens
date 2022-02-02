@@ -237,7 +237,6 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId,
     } = this.props;
-    const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
 
@@ -258,11 +257,18 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           {this.renderTableHeader()}
           {this.renderItems()}
         </Table>
-        <AddRemoveButtons
-          onRemove={selectedItems.length ? this.removeItemsDialog : null}
-          removeTooltip={`Remove selected items (${selectedItems.length})`}
-          {...addRemoveButtons}
-        />
+
+        <Observer>
+          {() => (
+            <AddRemoveButtons
+              onRemove={
+                store.selectedItems.length ? this.removeItemsDialog : null
+              }
+              removeTooltip={`Remove selected items (${store.selectedItems.length})`}
+              {...addRemoveButtons}
+            />
+          )}
+        </Observer>
       </div>
     );
   }
