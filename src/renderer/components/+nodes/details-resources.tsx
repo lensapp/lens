@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./node-details-resources.scss";
+import "./details-resources.scss";
 
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";

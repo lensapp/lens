@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./node-details.scss";
+import "./details.scss";
 
 import React from "react";
 import upperFirst from "lodash/upperFirst";
@@ -21,7 +21,7 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { NodeDetailsResources } from "./node-details-resources";
+import { NodeDetailsResources } from "./details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { boundMethod, Disposer } from "../../utils";
 import logger from "../../../common/logger";

@@ -15,13 +15,13 @@ import type { UpgradeChartTabStore } from "./store";
 import { Spinner } from "../../spinner";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
-import { helmChartStore, IChartVersion } from "../../+apps-helm-charts/helm-chart.store";
+import { helmChartStore, IChartVersion } from "../../+helm-charts/helm-chart.store";
 import type { HelmRelease, IReleaseUpdateDetails, IReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../../select";
 import { IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";
 import upgradeChartTabStoreInjectable from "./store.injectable";
-import updateReleaseInjectable from "../../+apps-releases/update-release/update-release.injectable";
-import releasesInjectable from "../../+apps-releases/releases.injectable";
+import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
+import releasesInjectable from "../../+helm-releases/releases.injectable";
 
 interface Props {
   className?: string;

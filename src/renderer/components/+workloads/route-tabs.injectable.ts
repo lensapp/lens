@@ -2,11 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import "./workloads.scss";
-
-import React from "react";
-import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import type { TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -14,12 +12,17 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { ReplicaSets } from "../+workloads-replicasets";
 import * as routes from "../../../common/routes";
+import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
+import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
 
-export class Workloads extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+interface Dependencies {
+  isAllowedResource: IsAllowedResource;
+}
+
+function getRouteTabs({ isAllowedResource }: Dependencies) {
+  return computed(() => {
     const tabs: TabLayoutRoute[] = [
       {
         title: "Overview",
@@ -93,11 +96,14 @@ export class Workloads extends React.Component {
     }
 
     return tabs;
-  }
-
-  render() {
-    return (
-      <TabLayout className="Workloads" tabs={Workloads.tabRoutes}/>
-    );
-  }
+  });
 }
+
+const workloadsRouteTabsInjectable = getInjectable({
+  instantiate: (di) => getRouteTabs({
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
+  }),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default workloadsRouteTabsInjectable;

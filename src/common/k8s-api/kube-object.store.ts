@@ -6,7 +6,7 @@
 import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
-import { autoBind, noop, rejectPromiseBy } from "../utils";
+import { autoBind, Disposer, noop, rejectPromiseBy } from "../utils";
 import { KubeObject, KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
@@ -378,7 +378,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     });
   }
 
-  subscribe({ onLoadFailure, abortController = new AbortController() }: KubeObjectStoreSubscribeParams = {}) {
+  subscribe({ onLoadFailure, abortController = new AbortController() }: KubeObjectStoreSubscribeParams = {}): Disposer {
     if (this.api.isNamespaced) {
       Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
         .then(() => {
@@ -414,6 +414,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
     const callback = (data: IKubeWatchEvent<T>, error: any) => {
       if (!this.isLoaded || error?.type === "aborted") return;
+
+      console.log(error);
 
       if (error instanceof Response) {
         if (error.status === 404 || error.status === 401) {

@@ -6,8 +6,8 @@
 import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
 
-export const appsRoute: RouteProps = {
-  path: "/apps",
+export const helmRoute: RouteProps = {
+  path: "/helm",
 };
 
-export const appsURL = buildURL(appsRoute.path);
+export const helmURL = buildURL(helmRoute.path);

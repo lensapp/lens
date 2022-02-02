@@ -27,7 +27,7 @@ import type { IReleaseCreatePayload, IReleaseUpdateDetails } from "../../../../c
 import { withInjectables } from "@ogre-tools/injectable-react";
 import installChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
-import createReleaseInjectable from "../../+apps-releases/create-release/create-release.injectable";
+import createReleaseInjectable from "../../+helm-releases/create-release/create-release.injectable";
 import { Notifications } from "../../notifications";
 
 interface Props {

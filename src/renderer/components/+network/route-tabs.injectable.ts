@@ -2,23 +2,24 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import "./network.scss";
-
-import React from "react";
-import { observer } from "mobx-react";
-import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import type { TabLayoutRoute } from "../layout/tab-layout";
 import { Services } from "../+network-services";
 import { Endpoints } from "../+network-endpoints";
 import { Ingresses } from "../+network-ingresses";
 import { NetworkPolicies } from "../+network-policies";
 import { PortForwards } from "../+network-port-forwards";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import * as routes from "../../../common/routes";
+import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
+import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
 
-@observer
-export class Network extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+interface Dependencies {
+  isAllowedResource: IsAllowedResource;
+}
+
+function getRouteTabs({ isAllowedResource }: Dependencies) {
+  return computed(() => {
     const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource("services")) {
@@ -65,11 +66,14 @@ export class Network extends React.Component {
     });
 
     return tabs;
-  }
-
-  render() {
-    return (
-      <TabLayout className="Network" tabs={Network.tabRoutes}/>
-    );
-  }
+  });
 }
+
+const networkRouteTabsInjectable = getInjectable({
+  instantiate: (di) => getRouteTabs({
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
+  }),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default networkRouteTabsInjectable;
