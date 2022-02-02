@@ -46,7 +46,6 @@ export function hideDetails() {
 }
 
 export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
-  console.debug("getDetailsUrl", { selfLink, resetSelected, mergeGlobals });
   const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
 
   params.set(kubeDetailsUrlParam.name, selfLink);
