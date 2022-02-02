@@ -134,6 +134,10 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
         return releases.get().filter((release) => release.isSelected);
       },
 
+      pickOnlySelected: (releases) => {
+        return releases.filter(release => release.isSelected);
+      },
+
       removeItems: async (releases) => {
         await Promise.all(releases.map(release => release.delete()));
       },
