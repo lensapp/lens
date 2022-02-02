@@ -75,21 +75,12 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
         <Observer>
           {() => {
             const {
-              isSelectable,
-              renderTableHeader,
-              renderTableContents,
-              renderItemMenu,
-              store,
-              hasDetailsView,
-              onDetails,
-              copyClassNameFromHeadCells,
-              customizeTableRowProps,
-              detailsItem,
+              isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
+              store, hasDetailsView, onDetails,
+              copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
             } = this.props;
             const { isSelected } = store;
-            const item = this.props
-              .getItems()
-              .find((item) => item.getId() == uid);
+            const item = this.props.getItems().find(item => item.getId() == uid);
 
             if (!item) return null;
             const itemId = item.getId();
@@ -101,11 +92,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
                 searchItem={item}
                 sortItem={item}
                 selected={detailsItem && detailsItem.getId() === itemId}
-                onClick={
-                  hasDetailsView
-                    ? prevDefault(() => onDetails(item))
-                    : undefined
-                }
+                onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
                 {...customizeTableRowProps(item)}
               >
                 {isSelectable && (
@@ -203,17 +190,13 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   }
 
   renderTableHeader() {
-    const { renderTableHeader } = this.props;
+    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
 
     if (!renderTableHeader) {
       return null;
     }
 
-    const { store, isConfigurable, isSelectable, customizeTableRowProps } = this.props;
-
-    const enabledItems = this.props
-      .getItems()
-      .filter((item) => !customizeTableRowProps(item).disabled);
+    const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps(item).disabled);
 
     return (
       <TableHead showTopLine nowrap>
@@ -227,14 +210,12 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
               />
             )}
           </Observer>
-
         )}
-        {renderTableHeader.map(
-          (cellProps, index) =>
-            this.showColumn(cellProps) && (
-              <TableCell key={cellProps.id ?? index} {...cellProps} />
-            ),
-        )}
+        {renderTableHeader.map((cellProps, index) => (
+          this.showColumn(cellProps) && (
+            <TableCell key={cellProps.id ?? index} {...cellProps} />
+          )
+        ))}
         <TableCell className="menu">
           {isConfigurable && this.renderColumnVisibilityMenu()}
         </TableCell>
