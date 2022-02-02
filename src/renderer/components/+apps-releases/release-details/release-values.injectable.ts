@@ -13,6 +13,11 @@ const releaseValuesInjectable = getInjectable({
   instantiate: (di) =>
     asyncComputed(async () => {
       const release = di.inject(releaseInjectable).value.get();
+
+      if (!release) {
+        return "";
+      }
+
       const userSuppliedValuesAreShown = di.inject(userSuppliedValuesAreShownInjectable).value;
 
       try {
