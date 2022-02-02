@@ -13,7 +13,7 @@ import { boundMethod, cssNames, IClassName, noop, StorageHelper } from "../../ut
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";
-import { Filter, FilterType, pageFilters } from "./page-filters.store";
+import { FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
@@ -202,19 +202,18 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
   };
 
   @computed get items() {
-    const filterGroups = groupBy<Filter>(this.filters, ({ type }) => type);
-
+    const filterGroups = groupBy(this.filters, ({ type }) => type);
     const filterItems: ItemsFilter<I>[] = [];
 
-    Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
+    for (const [type, filtersGroup] of Object.entries(filterGroups)) {
       const filterCallback = this.filterCallbacks[type] ?? this.props.filterCallbacks?.[type];
 
       if (filterCallback && filtersGroup.length > 0) {
         filterItems.push(filterCallback);
       }
-    });
+    }
 
-    const items = this.props.getItems ? this.props.getItems() : (this.props.items ?? this.props.store.items);
+    const items = this.props.getItems?.() ?? this.props.items ?? this.props.store.items;
 
     return applyFilters(filterItems.concat(this.props.filterItems), items);
   }

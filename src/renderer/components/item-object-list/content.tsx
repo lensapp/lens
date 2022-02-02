@@ -136,19 +136,27 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   }
 
   @boundMethod
-  removeItemsDialog() {
+  removeItemsDialog(selectedItems: I[]) {
     const { customizeRemoveDialog, store } = this.props;
-    const { selectedItems, removeSelectedItems } = store;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
     const selectedCount = selectedItems.length;
-    const tailCount = selectedCount > visibleMaxNamesCount ? selectedCount - visibleMaxNamesCount : 0;
-    const tail = tailCount > 0 ? <>, and <b>{tailCount}</b> more</> : null;
-    const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
+    const tailCount = selectedCount > visibleMaxNamesCount
+      ? selectedCount - visibleMaxNamesCount
+      : 0;
+    const tail = tailCount > 0
+      ? <>, and <b>{tailCount}</b> more</>
+      : null;
+    const message = selectedCount <= 1
+      ? <p>Remove item <b>{selectedNames}</b>?</p>
+      : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
+    const onConfirm = store.removeItems
+      ? () => store.removeItems(selectedItems)
+      : store.removeSelectedItems;
 
     ConfirmDialog.open({
-      ok: removeSelectedItems,
+      ok: onConfirm,
       labelOk: "Remove",
       message,
       ...dialogCustomProps,
@@ -225,10 +233,12 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   render() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
-      detailsItem, className, tableProps = {}, tableId,
+      detailsItem, className, tableProps = {}, tableId, getItems,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
+    const items = getItems();
+    const selectedItems = store.pickOnlySelected(items);
 
     return (
       <div className="items box grow flex column">
@@ -238,7 +248,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           selectable={hasDetailsView}
           sortable={sortingCallbacks}
           getTableRow={this.getRow}
-          items={this.props.getItems()}
+          items={items}
           selectedItemId={selectedItemId}
           noItems={this.renderNoItems()}
           className={classNames}
@@ -252,9 +262,11 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           {() => (
             <AddRemoveButtons
               onRemove={
-                store.selectedItems.length ? this.removeItemsDialog : null
+                (store.removeItems || store.removeSelectedItems) && selectedItems.length > 0
+                  ? () => this.removeItemsDialog(selectedItems)
+                  : null
               }
-              removeTooltip={`Remove selected items (${store.selectedItems.length})`}
+              removeTooltip={`Remove selected items (${selectedItems.length})`}
               {...addRemoveButtons}
             />
           )}

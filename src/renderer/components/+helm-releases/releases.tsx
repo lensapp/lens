@@ -134,10 +134,8 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
         return releases.get().filter((release) => release.isSelected);
       },
 
-      removeSelectedItems() {
-        return Promise.all(
-          releases.get().filter((release) => release.isSelected).map((release) => release.delete()),
-        );
+      removeItems: async (releases) => {
+        await Promise.all(releases.map(release => release.delete()));
       },
     } as ItemStore<RemovableHelmRelease>;
 
