@@ -24,6 +24,8 @@ import {
   telemetryURL,
   terminalRoute,
   terminalURL,
+  installURL,
+  installRoute,
 } from "../../../common/routes";
 import { navigateWithoutHistoryChange, navigation } from "../../navigation";
 import { SettingLayout } from "../layout/setting-layout";
@@ -39,6 +41,7 @@ import { sentryDsn } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
+import { Install } from "./install";
 
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
@@ -70,7 +73,7 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         <hr />
 
         <Tab value={"/installed-extensions"} label="Extensions"/>
-        <Tab value={"/install"} label="Install"/>
+        <Tab value={installURL()} label="Install" active={isActive(installRoute)}/>
       </Tabs>
     );
   }
@@ -89,6 +92,7 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         <Route path={terminalURL()} component={Terminal}/>
         <Route path={telemetryURL()} component={Telemetry}/>
         <Route path={extensionURL()} component={Extensions}/>
+        <Route path={installURL()} component={Install}/>
         <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
       </Switch>
     </SettingLayout>
