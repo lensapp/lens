@@ -209,37 +209,35 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       return null;
     }
 
+    const { store, isConfigurable, isSelectable, customizeTableRowProps } = this.props;
+
+    const enabledItems = this.props
+      .getItems()
+      .filter((item) => !customizeTableRowProps(item).disabled);
+
     return (
       <TableHead showTopLine nowrap>
-        <Observer>
-          {() => {
-            const { store, isConfigurable, isSelectable, customizeTableRowProps } = this.props;
-            const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps(item).disabled);
+        {isSelectable && (
+          <Observer>
+            {() => (
+              <TableCell
+                checkbox
+                isChecked={store.isSelectedAll(enabledItems)}
+                onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
+              />
+            )}
+          </Observer>
 
-            return (
-              <>
-                {isSelectable && (
-                  <TableCell
-                    checkbox
-                    isChecked={store.isSelectedAll(enabledItems)}
-                    onClick={prevDefault(() =>
-                      store.toggleSelectionAll(enabledItems),
-                    )}
-                  />
-                )}
-                {renderTableHeader.map(
-                  (cellProps, index) =>
-                    this.showColumn(cellProps) && (
-                      <TableCell key={cellProps.id ?? index} {...cellProps} />
-                    ),
-                )}
-                <TableCell className="menu">
-                  {isConfigurable && this.renderColumnVisibilityMenu()}
-                </TableCell>
-              </>
-            );
-          }}
-        </Observer>
+        )}
+        {renderTableHeader.map(
+          (cellProps, index) =>
+            this.showColumn(cellProps) && (
+              <TableCell key={cellProps.id ?? index} {...cellProps} />
+            ),
+        )}
+        <TableCell className="menu">
+          {isConfigurable && this.renderColumnVisibilityMenu()}
+        </TableCell>
       </TableHead>
     );
   }
