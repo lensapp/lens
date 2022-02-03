@@ -6,6 +6,9 @@ on:
   release:
     types:
       - published
+concurrency:
+  group: publish-docs
+  cancel-in-progress: true
 jobs:
   verify-docs:
     name: Verify docs
@@ -17,7 +20,7 @@ jobs:
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Checkout Release from lens
         uses: actions/checkout@v2
@@ -31,8 +34,8 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-           yarn install
-           yarn typedocs-extensions-api
+          yarn install
+          yarn typedocs-extensions-api
 
       - name: Verify that the markdown is valid
         run: |
@@ -49,7 +52,7 @@ jobs:
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install dependencies
         run: |
@@ -64,8 +67,8 @@ jobs:
 
       - name: git config
         run: |
-           git config --local user.email "action@github.com"
-           git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
 
       - name: Using Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -74,13 +77,13 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-           yarn install
-           yarn typedocs-extensions-api
+          yarn install
+          yarn typedocs-extensions-api
 
       - name: mkdocs deploy master
         if: contains(github.ref, 'refs/heads/master')
         run: |
-           mike deploy --push master
+          mike deploy --push master
 
       - name: Get the release version
         if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
@@ -90,5 +93,5 @@ jobs:
       - name: mkdocs deploy new release
         if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
         run: |
-           mike deploy --push --update-aliases ${{ steps.get_version.outputs.VERSION }} latest
-           mike set-default --push ${{ steps.get_version.outputs.VERSION }}
+          mike deploy --push --update-aliases ${{ steps.get_version.outputs.VERSION }} latest
+          mike set-default --push ${{ steps.get_version.outputs.VERSION }}
