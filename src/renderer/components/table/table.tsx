@@ -246,18 +246,18 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
   }
 }
 
+const InjectedTable = withInjectables<Dependencies, TableProps<any>>(
+  NonInjectedTable,
+
+  {
+    getProps: (di, props) => ({
+      model: di.inject(tableModelInjectable),
+      ...props,
+    }),
+  },
+);
+
 export function Table<Item>(props: TableProps<Item>) {
-  const InjectedTable = withInjectables<Dependencies, TableProps<Item>>(
-    NonInjectedTable,
-
-    {
-      getProps: (di, props) => ({
-        model: di.inject(tableModelInjectable),
-        ...props,
-      }),
-    },
-  );
-
   return <InjectedTable {...props} />;
 }
 
