@@ -80,10 +80,10 @@ export const attemptInstall =
       }
 
       const extensionFolder = getExtensionDestFolder(name);
-      const installedExtensionsion = extensionLoader.getExtension(validatedRequest.id);
+      const installedExtension = extensionLoader.getExtension(validatedRequest.id);
 
-      if (installedExtensionsion) {
-        const { version: oldVersion } = installedExtensionsion.manifest;
+      if (installedExtension) {
+        const { version: oldVersion } = installedExtension.manifest;
 
         // confirm to uninstall old version before installing new version
         const removeNotification = Notifications.info(
