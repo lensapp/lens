@@ -4,7 +4,6 @@
  */
 
 export * from "./add-cluster";
-export * from "./apps";
 export * from "./catalog";
 export * from "./cluster-view";
 export * from "./cluster";
@@ -16,6 +15,7 @@ export * from "./entity-settings";
 export * from "./events";
 export * from "./extensions";
 export * from "./helm-charts";
+export * from "./helm";
 export * from "./hpa";
 export * from "./ingresses";
 export * from "./limit-ranges";

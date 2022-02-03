@@ -19,7 +19,7 @@ import { EndpointDetails } from "../components/+network-endpoints";
 import { IngressDetails } from "../components/+network-ingresses";
 import { NetworkPolicyDetails } from "../components/+network-policies";
 import { ServiceDetails } from "../components/+network-services";
-import { NodeDetails } from "../components/+nodes";
+import { NodeDetails } from "../components/+nodes/details";
 import { PodSecurityPolicyDetails } from "../components/+pod-security-policies";
 import { StorageClassDetails } from "../components/+storage-classes";
 import { PersistentVolumeClaimDetails } from "../components/+storage-volume-claims";

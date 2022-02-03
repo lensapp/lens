@@ -2,22 +2,24 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import React from "react";
-import { observer } from "mobx-react";
-import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { ConfigMaps } from "../+config-maps";
-import { Secrets } from "../+config-secrets";
-import { ResourceQuotas } from "../+config-resource-quotas";
-import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 import { HorizontalPodAutoscalers } from "../+config-autoscalers";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { LimitRanges } from "../+config-limit-ranges";
+import { ConfigMaps } from "../+config-maps";
+import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
+import { ResourceQuotas } from "../+config-resource-quotas";
+import { Secrets } from "../+config-secrets";
+import isAllowedResourceInjectable, { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
+import type { TabLayoutRoute } from "../layout/tab-layout";
 import * as routes from "../../../common/routes";
 
-@observer
-export class Config extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+interface Dependencies {
+  isAllowedResource: IsAllowedResource;
+}
+
+function getRouteTabs({ isAllowedResource }: Dependencies) {
+  return computed(() => {
     const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource("configmaps")) {
@@ -75,11 +77,14 @@ export class Config extends React.Component {
     }
 
     return tabs;
-  }
-
-  render() {
-    return (
-      <TabLayout className="Config" tabs={Config.tabRoutes}/>
-    );
-  }
+  });
 }
+
+const configRoutesInjectable = getInjectable({
+  instantiate: (di) => getRouteTabs({
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
+  }),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default configRoutesInjectable;

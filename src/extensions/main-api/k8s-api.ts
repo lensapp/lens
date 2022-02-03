@@ -3,7 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export { isAllowedResource } from "../../common/utils/allowed-resource";
+/**
+ * @deprecated This function never works
+ * @returns false
+ */
+export function isAllowedResource(...args: any[]) {
+  return Boolean(void args);
+}
+
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
 export { KubeApi, forCluster, forRemoteCluster } from "../../common/k8s-api/kube-api";

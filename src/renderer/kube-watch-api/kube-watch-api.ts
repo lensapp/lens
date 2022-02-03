@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { comparer, reaction } from "mobx";
-import { disposer, Disposer, noop } from "../../common/utils";
+import { disposer, Disposer, noop, WrappedAbortController } from "../../common/utils";
 import type { KubeObject } from "../../common/k8s-api/kube-object";
 import AbortController from "abort-controller";
 import { once } from "lodash";
@@ -13,16 +13,6 @@ import logger from "../../common/logger";
 
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
-
-class WrappedAbortController extends AbortController {
-  constructor(protected parent: AbortController) {
-    super();
-
-    parent.signal.addEventListener("abort", () => {
-      this.abort();
-    });
-  }
-}
 
 interface SubscribeStoreParams {
   store: KubeObjectStore<KubeObject>;
@@ -58,7 +48,7 @@ class WatchCount {
       throw new Error(`Cannot dec count more times than it has been inc: ${store.api.objectConstructor.kind}`);
     }
 
-    logger.debug(`[KUBE-WATCH-API]: dec() count for ${store.api.objectConstructor.apiBase} is now ${newCount}`);
+    logger.info(`[KUBE-WATCH-API]: dec() count for ${store.api.objectConstructor.apiBase} is now ${newCount}`);
     this.#data.set(store, newCount);
 
     return newCount;
@@ -82,6 +72,8 @@ export interface KubeWatchSubscribeStoreOptions {
 interface Dependencies {
   clusterFrameContext: ClusterFrameContext
 }
+
+export type SubscribeStores = (stores: KubeObjectStore<KubeObject>[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;
 
 export class KubeWatchApi {
   #watch = new WatchCount();
@@ -153,7 +145,7 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores = (stores: KubeObjectStore<KubeObject>[], { namespaces, onLoadFailure }: KubeWatchSubscribeStoreOptions = {}): Disposer => {
+  subscribeStores: SubscribeStores = (stores, { namespaces, onLoadFailure } = {}) => {
     const parent = new AbortController();
     const unsubscribe = disposer(
       ...stores.map(store => this.subscribeStore({

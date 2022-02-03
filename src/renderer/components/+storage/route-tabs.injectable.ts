@@ -2,21 +2,22 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import "./storage.scss";
-
-import React from "react";
-import { observer } from "mobx-react";
-import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import type { TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes } from "../+storage-volumes";
 import { StorageClasses } from "../+storage-classes";
 import { PersistentVolumeClaims } from "../+storage-volume-claims";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
+import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
+import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
 import * as routes from "../../../common/routes";
 
-@observer
-export class Storage extends React.Component {
-  static get tabRoutes() {
+interface Dependencies {
+  isAllowedResource: IsAllowedResource;
+}
+
+function getRouteTabs({ isAllowedResource }: Dependencies) {
+  return computed(() => {
     const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource("persistentvolumeclaims")) {
@@ -47,11 +48,14 @@ export class Storage extends React.Component {
     }
 
     return tabs;
-  }
-
-  render() {
-    return (
-      <TabLayout className="Storage" tabs={Storage.tabRoutes}/>
-    );
-  }
+  });
 }
+
+const storageRouteTabsInjectable = getInjectable({
+  instantiate: (di) => getRouteTabs({
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
+  }),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default storageRouteTabsInjectable;

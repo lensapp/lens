@@ -9,73 +9,49 @@ import React from "react";
 import { observer } from "mobx-react";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { workloadStores } from "../+workloads";
-import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
 import type { KubeResource } from "../../../common/rbac";
-import { ResourceNames } from "../../utils/rbac";
-import { boundMethod } from "../../utils";
-import { workloadURL } from "../../../common/routes";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import type { IComputedValue } from "mobx";
+import workloadsInjectable from "./workloads.injectable";
 
-const resources: KubeResource[] = [
-  "pods",
-  "deployments",
-  "statefulsets",
-  "daemonsets",
-  "replicasets",
-  "jobs",
-  "cronjobs",
-];
+export interface OverviewStatusesProps {}
+
+interface Workload {
+  resource: KubeResource;
+  amountOfItems: number;
+  href: string;
+  status: Record<string, number>;
+  title: string
+}
 
 interface Dependencies {
-  namespaceStore: NamespaceStore
+  workloads: IComputedValue<Workload[]>;
 }
 
-@observer
-class NonInjectedOverviewStatuses extends React.Component<Dependencies> {
-  @boundMethod
-  renderWorkload(resource: KubeResource): React.ReactElement {
-    const store = workloadStores.get(resource);
+const NonInjectedOverviewStatuses = observer(
+  ({ workloads }: Dependencies & OverviewStatusesProps) => (
+    <div className="OverviewStatuses">
+      <div className="workloads">
+        {workloads.get()
+          .map(({ resource, title, href, status, amountOfItems }) => (
+            <div className="workload" key={resource}>
+              <div className="title">
+                <Link to={href}>
+                  {title} ({amountOfItems})
+                </Link>
+              </div>
 
-    if (!store) {
-      return null;
-    }
-
-    const items = store.getAllByNs(this.props.namespaceStore.contextNamespaces);
-
-    return (
-      <div className="workload" key={resource}>
-        <div className="title">
-          <Link to={workloadURL[resource]()}>{ResourceNames[resource]} ({items.length})</Link>
-        </div>
-        <OverviewWorkloadStatus status={store.getStatuses(items)} />
+              <OverviewWorkloadStatus status={status} />
+            </div>
+          ))}
       </div>
-    );
-  }
-
-  render() {
-    const workloads = resources
-      .filter(isAllowedResource)
-      .map(this.renderWorkload);
-
-    return (
-      <div className="OverviewStatuses">
-        <div className="workloads">
-          {workloads}
-        </div>
-      </div>
-    );
-  }
-}
-
-export const OverviewStatuses = withInjectables<Dependencies>(
-  NonInjectedOverviewStatuses,
-
-  {
-    getProps: (di) => ({
-      namespaceStore: di.inject(namespaceStoreInjectable),
-    }),
-  },
+    </div>
+  ),
 );
+
+export const OverviewStatuses = withInjectables<Dependencies, OverviewStatusesProps>(NonInjectedOverviewStatuses, {
+  getProps: (di, props) => ({
+    workloads: di.inject(workloadsInjectable),
+    ...props,
+  }),
+});

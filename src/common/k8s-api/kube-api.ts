@@ -16,12 +16,9 @@ import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
-import { noop } from "../utils";
+import { noop, WrappedAbortController } from "../utils";
 import type { RequestInit } from "node-fetch";
-
-// BUG: https://github.com/mysticatea/abort-controller/pull/22
-// eslint-disable-next-line import/no-named-as-default
-import AbortController from "abort-controller";
+import type AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
 
@@ -582,14 +579,7 @@ export class KubeApi<T extends KubeObject> {
     const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
 
     // Create AbortController for this request
-    const abortController = new AbortController();
-
-    // If caller aborts, abort using request's abortController
-    if (opts.abortController) {
-      opts.abortController.signal.addEventListener("abort", () => {
-        abortController.abort();
-      });
-    }
+    const abortController = new WrappedAbortController(opts.abortController);
 
     abortController.signal.addEventListener("abort", () => {
       logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
@@ -687,7 +677,6 @@ export class KubeApi<T extends KubeObject> {
   protected modifyWatchEvent(event: IKubeWatchEvent<KubeJsonApiData>) {
     if (event.type === "ERROR") {
       return;
-
     }
 
     ensureObjectSelfLink(this, event.object);

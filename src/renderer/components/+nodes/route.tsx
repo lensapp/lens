@@ -50,7 +50,7 @@ interface UsageArgs {
 }
 
 @observer
-export class Nodes extends React.Component<Props> {
+export class NodesRoute extends React.Component<Props> {
   @observable.ref metrics: Partial<INodeMetrics> = {};
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 

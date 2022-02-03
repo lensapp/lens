@@ -2,28 +2,29 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import "./user-management.scss";
-
-import React from "react";
-import { observer } from "mobx-react";
-import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { PodSecurityPolicies } from "../+pod-security-policies";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import type { TabLayoutRoute } from "../layout/tab-layout";
+import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
+import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
 import * as routes from "../../../common/routes";
+import { PodSecurityPolicies } from "../+pod-security-policies";
 import { ClusterRoleBindings } from "./+cluster-role-bindings";
-import { ServiceAccounts } from "./+service-accounts";
-import { Roles } from "./+roles";
-import { RoleBindings } from "./+role-bindings";
 import { ClusterRoles } from "./+cluster-roles";
+import { RoleBindings } from "./+role-bindings";
+import { Roles } from "./+roles";
+import { ServiceAccounts } from "./+service-accounts";
 
-@observer
-export class UserManagement extends React.Component {
-  static get tabRoutes() {
-    const tabRoutes: TabLayoutRoute[] = [];
+interface Dependencies {
+  isAllowedResource: IsAllowedResource;
+}
+
+function getRouteTabs({ isAllowedResource }: Dependencies) {
+  return computed(() => {
+    const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource("serviceaccounts")) {
-      tabRoutes.push({
+      tabs.push({
         title: "Service Accounts",
         component: ServiceAccounts,
         url: routes.serviceAccountsURL(),
@@ -32,7 +33,7 @@ export class UserManagement extends React.Component {
     }
 
     if (isAllowedResource("clusterroles")) {
-      tabRoutes.push({
+      tabs.push({
         title: "Cluster Roles",
         component: ClusterRoles,
         url: routes.clusterRolesURL(),
@@ -41,7 +42,7 @@ export class UserManagement extends React.Component {
     }
 
     if (isAllowedResource("roles")) {
-      tabRoutes.push({
+      tabs.push({
         title: "Roles",
         component: Roles,
         url: routes.rolesURL(),
@@ -50,7 +51,7 @@ export class UserManagement extends React.Component {
     }
 
     if (isAllowedResource("clusterrolebindings")) {
-      tabRoutes.push({
+      tabs.push({
         title: "Cluster Role Bindings",
         component: ClusterRoleBindings,
         url: routes.clusterRoleBindingsURL(),
@@ -59,7 +60,7 @@ export class UserManagement extends React.Component {
     }
 
     if (isAllowedResource("rolebindings")) {
-      tabRoutes.push({
+      tabs.push({
         title: "Role Bindings",
         component: RoleBindings,
         url: routes.roleBindingsURL(),
@@ -68,7 +69,7 @@ export class UserManagement extends React.Component {
     }
 
     if (isAllowedResource("podsecuritypolicies")) {
-      tabRoutes.push({
+      tabs.push({
         title: "Pod Security Policies",
         component: PodSecurityPolicies,
         url: routes.podSecurityPoliciesURL(),
@@ -76,12 +77,15 @@ export class UserManagement extends React.Component {
       });
     }
 
-    return tabRoutes;
-  }
-
-  render() {
-    return (
-      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes}/>
-    );
-  }
+    return tabs;
+  });
 }
+
+const userManagementRouteTabsInjectable = getInjectable({
+  instantiate: (di) => getRouteTabs({
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
+  }),
+  lifecycle: lifecycleEnum.singleton,
+});
+
+export default userManagementRouteTabsInjectable;
