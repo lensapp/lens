@@ -19,6 +19,7 @@ import logger from "../logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";
+import type { ShellEnvModifier } from "./shell-env-modifier/shell-env-modifier-registration";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -155,7 +156,7 @@ export abstract class ShellSession {
     return { shellProcess, resume };
   }
 
-  constructor(protected kubectl: Kubectl, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
+  constructor(protected kubectl: Kubectl, protected shellEnvModifiers: ShellEnvModifier[], protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
@@ -311,7 +312,7 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
+    let env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
     const shell = UserStore.getInstance().resolvedShell;
 
@@ -341,8 +342,10 @@ export abstract class ShellSession {
       env.DISABLE_AUTO_UPDATE = "true";
     }
 
+    const kubeconfigPath = await this.kubeconfigPathP;
+
     env.PTYPID = process.pid.toString();
-    env.KUBECONFIG = await this.kubeconfigPathP;
+    env.KUBECONFIG = kubeconfigPath;
     env.TERM_PROGRAM = app.getName();
     env.TERM_PROGRAM_VERSION = app.getVersion();
 
@@ -357,6 +360,8 @@ export abstract class ShellSession {
     ]
       .filter(Boolean)
       .join();
+
+    this.shellEnvModifiers.map(modifier => env = { ...env, ...modifier({ context: this.cluster.contextName,  kubeconfigPath, id: this.cluster.id }, env) });
 
     return env;
   }

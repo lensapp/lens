@@ -10,9 +10,9 @@ interface Dependencies {
   extensions: IComputedValue<LensMainExtension[]>;
 }
  
-export const getShellEnvVars = ({ extensions }: Dependencies) => {
+export const shellEnvModifiers = ({ extensions }: Dependencies) => {
   return computed(() => (
     extensions.get()
-      .flatMap((extension) => extension.shellEnvVars)
+      .flatMap((extension) => extension.shellEnvModifier)
   ));
 };
