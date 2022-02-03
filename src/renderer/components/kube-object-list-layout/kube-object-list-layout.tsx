@@ -67,7 +67,6 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
     ];
 
     if (subscribeStores) {
-      console.log("subscribing stores", stores);
       reactions.push(
         this.props.subscribeToStores(stores, {
           onLoadFailure: error => this.loadErrors.push(String(error)),

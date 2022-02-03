@@ -415,8 +415,6 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     const callback = (data: IKubeWatchEvent<T>, error: any) => {
       if (!this.isLoaded || error?.type === "aborted") return;
 
-      console.log(error);
-
       if (error instanceof Response) {
         if (error.status === 404 || error.status === 401) {
           // api has gone, or credentials are not permitted, let's not retry
