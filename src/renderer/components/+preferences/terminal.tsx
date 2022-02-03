@@ -24,7 +24,9 @@ export const Terminal = observer(() => {
       : "System default shell"
   );
 
-  return (<div>
+  return (<section>
+    <h2>Terminal</h2>
+
     <section id="shell">
       <SubTitle title="Terminal Shell Path"/>
       <Input
@@ -78,5 +80,5 @@ export const Terminal = observer(() => {
         onChange={(value) => userStore.terminalConfig.fontFamily=value}
       />
     </section>
-  </div>);
+  </section>);
 });
