@@ -50,6 +50,7 @@ import type { History } from "history";
 import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
 import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
 import { HelmRoute } from "../../components/+helm/route";
+import type { KubeResource } from "../../../common/rbac";
 
 interface Dependencies {
   history: History;
@@ -78,7 +79,9 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
   }
 
   @computed get startUrl() {
-    return this.props.isAllowedResource("events", "nodes", "pods")
+    const resources : KubeResource[] = ["events", "nodes", "pods"];
+
+    return resources.every(x => this.props.isAllowedResource(x))
       ? routes.clusterURL()
       : routes.workloadsURL();
   }

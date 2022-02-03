@@ -5,11 +5,14 @@
 import type { KubeResource } from "../../common/rbac";
 import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import { castArray } from "lodash/fp";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const _isAllowedResource = asLegacyGlobalFunctionForExtensionApi(isAllowedResourceInjectable);
 
-  return _isAllowedResource(...[resource].flat());
+  const resources = castArray(resource);
+
+  return resources.every(x => _isAllowedResource(x));
 }
 
 export { ResourceStack } from "../../common/k8s/resource-stack";

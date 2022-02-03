@@ -9,10 +9,11 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { workloadURL } from "../../../common/routes";
 import { ResourceNames } from "../../utils/rbac";
 import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
+import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
 
 interface Dependencies {
   workloadStores: Map<KubeResource, KubeObjectStore<KubeObject>>;
-  isAllowedResource: (resource: KubeResource) => boolean;
+  isAllowedResource: IsAllowedResource;
   namespaceStore: NamespaceStore;
 }
 
