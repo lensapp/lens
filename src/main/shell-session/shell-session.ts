@@ -20,6 +20,7 @@ import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-a
 import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";
 import type { ShellEnvModifier } from "./shell-env-modifier/shell-env-modifier-registration";
+import type { CatalogEntity } from "../../common/catalog";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -156,7 +157,7 @@ export abstract class ShellSession {
     return { shellProcess, resume };
   }
 
-  constructor(protected kubectl: Kubectl, protected shellEnvModifiers: ShellEnvModifier[], protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
+  constructor(protected kubectl: Kubectl, protected shellEnvModifiers: ShellEnvModifier[], protected entity: CatalogEntity, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
@@ -361,8 +362,12 @@ export abstract class ShellSession {
       .filter(Boolean)
       .join();
 
-    const ctx = { context: this.cluster.contextName,  kubeconfigPath, id: this.cluster.id };
+    console.log("entity in shell-session", this.entity);
+    console.log(this.entity.spec.kubeconfigPath);
+    console.log(this.entity.spec.kubeconfigContext);
+    console.log(this.entity.getId());
 
+    const ctx = { catalogEntity: this.entity };
     const modifiedEnv = this.shellEnvModifiers.reduce((env, modifier) => modifier(ctx, env), env);
 
     return modifiedEnv;

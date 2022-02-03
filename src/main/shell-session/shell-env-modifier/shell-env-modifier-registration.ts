@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { CatalogEntity } from "../../../common/catalog";
+
 export interface ShellEnvContext {
-  context: string;
-  kubeconfigPath: string;
-  id: string;
+  catalogEntity: CatalogEntity;
 }
 
-export type ShellEnvModifier = (cluster: ShellEnvContext, env: Record<string, string | undefined>) => Record<string, string | undefined>;
+export type ShellEnvModifier = (ctx: ShellEnvContext, env: Record<string, string | undefined>) => Record<string, string | undefined>;
