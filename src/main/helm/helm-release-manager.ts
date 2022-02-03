@@ -179,12 +179,13 @@ export async function getHistory(name: string, namespace: string, kubeconfigPath
 }
 
 export async function rollback(name: string, namespace: string, revision: number, kubeconfigPath: string) {
-  return JSON.parse(await execHelm([
+  await execHelm([
     "rollback",
     name,
+    `${revision}`,
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
-  ]));
+  ]);
 }
 
 async function getResources(name: string, namespace: string, kubeconfigPath: string, kubectlPath: string) {

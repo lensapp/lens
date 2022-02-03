@@ -124,7 +124,7 @@ export class Events extends React.Component<Props> {
   };
 
   render() {
-    const { store, visibleItems } = this;
+    const { store } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
@@ -137,7 +137,7 @@ export class Events extends React.Component<Props> {
         renderHeaderTitle="Events"
         customizeHeader={this.customizeHeader}
         isSelectable={false}
-        items={visibleItems}
+        getItems={() => this.visibleItems}
         virtual={!compact}
         tableProps={{
           sortSyncWithUrl: false,

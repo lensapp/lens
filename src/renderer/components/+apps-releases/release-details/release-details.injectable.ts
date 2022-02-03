@@ -10,7 +10,7 @@ import releaseInjectable from "./release.injectable";
 const releaseDetailsInjectable = getInjectable({
   instantiate: (di) =>
     asyncComputed(async () => {
-      const release = di.inject(releaseInjectable).value.get();
+      const release = di.inject(releaseInjectable).get();
 
       return await getRelease(release.name, release.namespace);
     }),

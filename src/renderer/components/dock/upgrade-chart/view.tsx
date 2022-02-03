@@ -136,8 +136,8 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
     const { tabId, release, value, error, onChange, onError, upgrade, versions, version } = this;
     const { className } = this.props;
 
-    if (!release || this.props.upgradeChartTabStore.isReady(tabId) || !version) {
-      return <Spinner center/>;
+    if (!release || !this.props.upgradeChartTabStore.isReady(tabId) || !version) {
+      return <Spinner center />;
     }
     const currentVersion = release.getVersion();
     const controlsAndInfo = (
