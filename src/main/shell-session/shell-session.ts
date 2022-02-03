@@ -312,7 +312,7 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    let env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
     const shell = UserStore.getInstance().resolvedShell;
 
@@ -361,9 +361,11 @@ export abstract class ShellSession {
       .filter(Boolean)
       .join();
 
-    this.shellEnvModifiers.map(modifier => env = { ...env, ...modifier({ context: this.cluster.contextName,  kubeconfigPath, id: this.cluster.id }, env) });
+    const ctx = { context: this.cluster.contextName,  kubeconfigPath, id: this.cluster.id };
 
-    return env;
+    const modifiedEnv = this.shellEnvModifiers.reduce((env, modifier) => modifier(ctx, env), env);
+
+    return modifiedEnv;
   }
 
   protected exit(code = WebSocketCloseEvent.NormalClosure) {

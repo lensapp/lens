@@ -13,6 +13,7 @@ interface Dependencies {
 export const shellEnvModifiers = ({ extensions }: Dependencies) => {
   return computed(() => (
     extensions.get()
-      .flatMap((extension) => extension.shellEnvModifier)
+      .map((extension) => extension.shellEnvModifier)
+      .filter(Boolean)
   ));
 };
