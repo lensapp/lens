@@ -37,10 +37,6 @@ exports[`kube-object-menu given kube object renders 1`] = `
       </ul>
     </div>
   </div>
-  <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
-  />
 </body>
 `;
 
@@ -82,9 +78,8 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -179,9 +174,8 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -276,9 +270,8 @@ exports[`kube-object-menu given kube object without namespace when removing kube
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
