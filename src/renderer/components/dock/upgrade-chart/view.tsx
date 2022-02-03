@@ -23,7 +23,7 @@ import upgradeChartTabStoreInjectable from "./store.injectable";
 import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
 import releasesInjectable from "../../+helm-releases/releases.injectable";
 
-interface Props {
+export interface UpgradeChartProps {
   className?: string;
   tab: DockTab;
 }
@@ -35,12 +35,12 @@ interface Dependencies {
 }
 
 @observer
-export class NonInjectedUpgradeChart extends React.Component<Props & Dependencies> {
+export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps & Dependencies> {
   @observable error: string;
   @observable versions = observable.array<IChartVersion>();
   @observable version: IChartVersion;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: UpgradeChartProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -179,7 +179,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
   }
 }
 
-export const UpgradeChart = withInjectables<Dependencies, Props>(NonInjectedUpgradeChart, {
+export const UpgradeChart = withInjectables<Dependencies, UpgradeChartProps>(NonInjectedUpgradeChart, {
   getProps: (di, props) => ({
     releases: di.inject(releasesInjectable),
     updateRelease: di.inject(updateReleaseInjectable),

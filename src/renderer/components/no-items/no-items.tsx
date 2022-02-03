@@ -8,12 +8,12 @@ import "./no-items.scss";
 import React from "react";
 import { cssNames, IClassName } from "../../utils";
 
-interface Props {
+export interface NoItemsProps {
   className?: IClassName;
   children?: React.ReactNode;
 }
 
-export function NoItems(props: Props) {
+export function NoItems(props: NoItemsProps) {
   const { className, children } = props;
 
   return (

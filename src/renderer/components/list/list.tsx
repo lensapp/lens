@@ -11,13 +11,13 @@ import type { UseTableOptions } from "react-table";
 import { ReactTable } from "../table/react-table";
 export type SearchFilter = (item: object) => string | number;
 
-interface Props extends UseTableOptions<any> {
+export interface ListProps extends UseTableOptions<any> {
   items: object[];
   filters: SearchFilter[];
   title?: React.ReactNode;
 }
 
-export function List({ columns, data, title, items, filters }: Props) {
+export function List({ columns, data, title, items, filters }: ListProps) {
   const [search, setSearch] = useState<string>("");
   const query = search.toLowerCase();
 

@@ -8,16 +8,16 @@ import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { boundMethod } from "../../utils";
 
-interface Props {
+export interface RenderDelayProps {
   placeholder?: React.ReactNode;
   children: unknown;
 }
 
 @observer
-export class RenderDelay extends React.Component<Props> {
+export class RenderDelay extends React.Component<RenderDelayProps> {
   @observable isVisible = false;
 
-  constructor(props: Props) {
+  constructor(props: RenderDelayProps) {
     super(props);
     makeObservable(this);
   }

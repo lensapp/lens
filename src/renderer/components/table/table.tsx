@@ -21,7 +21,10 @@ import tableModelInjectable from "./table-model/table-model.injectable";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
-export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
+export interface TableSortParams {
+  sortBy: TableSortBy;
+  orderBy: TableOrderBy;
+}
 export type TableSortCallback<Item> = (data: Item) => string | number | (string | number)[];
 export type TableSortCallbacks<Item> = Record<string, TableSortCallback<Item>>;
 

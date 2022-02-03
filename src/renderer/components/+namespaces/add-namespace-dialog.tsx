@@ -20,7 +20,7 @@ import type { AddNamespaceDialogModel } from "./add-namespace-dialog-model/add-n
 import addNamespaceDialogModelInjectable
   from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
 
-interface Props extends DialogProps {
+export interface AddNamespaceDialogProps extends DialogProps {
   onSuccess?(ns: Namespace): void;
   onError?(error: any): void;
 }
@@ -31,10 +31,10 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies> {
+class NonInjectedAddNamespaceDialog extends React.Component<AddNamespaceDialogProps & Dependencies> {
   @observable namespace = "";
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: AddNamespaceDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -92,7 +92,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
   }
 }
 
-export const AddNamespaceDialog = withInjectables<Dependencies, Props>(
+export const AddNamespaceDialog = withInjectables<Dependencies, AddNamespaceDialogProps>(
   NonInjectedAddNamespaceDialog,
 
   {

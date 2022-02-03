@@ -20,11 +20,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ResourceQuotaRouteParams> {
+export interface ResourceQuotasProps extends RouteComponentProps<ResourceQuotaRouteParams> {
 }
 
 @observer
-export class ResourceQuotas extends React.Component<Props> {
+export class ResourceQuotas extends React.Component<ResourceQuotasProps> {
   render() {
     return (
       <>

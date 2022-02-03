@@ -29,15 +29,15 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Pod> {
+export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }
 
 @observer
-export class PodDetails extends React.Component<Props> {
+export class PodDetails extends React.Component<PodDetailsProps> {
   @observable metrics: IPodMetrics;
   @observable containerMetrics: IPodMetrics;
 
-  constructor(props: Props) {
+  constructor(props: PodDetailsProps) {
     super(props);
     makeObservable(this);
   }

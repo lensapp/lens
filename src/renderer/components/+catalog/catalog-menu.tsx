@@ -15,10 +15,10 @@ import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 
-type Props = {
+export interface CatalogMenuProps {
   activeItem: string;
   onItemClick: (id: string) => void;
-};
+}
 
 function getCategories() {
   return catalogCategoryRegistry.filteredItems;
@@ -42,7 +42,7 @@ function Item(props: TreeItemProps) {
   );
 }
 
-export const CatalogMenu = observer((props: Props) => {
+export const CatalogMenu = observer((props: CatalogMenuProps) => {
   return (
     // Overwrite Material UI styles with injectFirst https://material-ui.com/guides/interoperability/#controlling-priority-4
     <StylesProvider injectFirst>

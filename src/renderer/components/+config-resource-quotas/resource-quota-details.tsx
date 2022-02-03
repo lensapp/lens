@@ -16,7 +16,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<ResourceQuota> {
+export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }
 
 function transformUnit(name: string, value: string): number {
@@ -58,7 +58,7 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
 }
 
 @observer
-export class ResourceQuotaDetails extends React.Component<Props> {
+export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsProps> {
   render() {
     const { object: quota } = this.props;
 

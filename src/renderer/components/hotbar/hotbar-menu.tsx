@@ -19,15 +19,15 @@ import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
 import { action, makeObservable, observable } from "mobx";
 
-interface Props {
+export interface HotbarMenuProps {
   className?: IClassName;
 }
 
 @observer
-export class HotbarMenu extends React.Component<Props> {
+export class HotbarMenu extends React.Component<HotbarMenuProps> {
   @observable draggingOver = false;
 
-  constructor(props: Props) {
+  constructor(props: HotbarMenuProps) {
     super(props);
     makeObservable(this);
   }

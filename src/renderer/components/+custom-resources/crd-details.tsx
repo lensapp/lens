@@ -18,11 +18,11 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { MonacoEditor } from "../monaco-editor";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
+export interface CRDDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
 
 @observer
-export class CRDDetails extends React.Component<Props> {
+export class CRDDetails extends React.Component<CRDDetailsProps> {
   render() {
     const { object: crd } = this.props;
 

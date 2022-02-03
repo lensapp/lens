@@ -17,14 +17,14 @@ import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
 import { requestClusterActivation } from "../../ipc";
 
-interface Props extends RouteComponentProps<ClusterViewRouteParams> {
+export interface ClusterViewProps extends RouteComponentProps<ClusterViewRouteParams> {
 }
 
 @observer
-export class ClusterView extends React.Component<Props> {
+export class ClusterView extends React.Component<ClusterViewProps> {
   private store = ClusterStore.getInstance();
 
-  constructor(props: Props) {
+  constructor(props: ClusterViewProps) {
     super(props);
     makeObservable(this);
   }

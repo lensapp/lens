@@ -12,17 +12,18 @@ import { eventStore } from "./event.store";
 import { cssNames } from "../../utils";
 import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 
-interface Props {
+export interface KubeEventIconProps {
   object: KubeObject;
   showWarningsOnly?: boolean;
   filterEvents?: (events: KubeEvent[]) => KubeEvent[];
 }
 
-const defaultProps: Partial<Props> = {
+
+const defaultProps: Partial<KubeEventIconProps> = {
   showWarningsOnly: true,
 };
 
-export class KubeEventIcon extends React.Component<Props> {
+export class KubeEventIcon extends React.Component<KubeEventIconProps> {
   static defaultProps = defaultProps as object;
 
   render() {

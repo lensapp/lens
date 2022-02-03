@@ -16,7 +16,7 @@ import { Slider } from "../slider";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 
-interface Props extends Partial<DialogProps> {
+export interface DeploymentScaleDialogProps extends Partial<DialogProps> {
   deploymentApi: DeploymentApi;
 }
 
@@ -26,7 +26,7 @@ const dialogState = observable.object({
 });
 
 @observer
-export class DeploymentScaleDialog extends Component<Props> {
+export class DeploymentScaleDialog extends Component<DeploymentScaleDialogProps> {
   static defaultProps = {
     deploymentApi,
   };
@@ -35,7 +35,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  constructor(props: Props) {
+  constructor(props: DeploymentScaleDialogProps) {
     super(props);
     makeObservable(this);
   }

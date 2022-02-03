@@ -19,17 +19,17 @@ import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
 import { serviceAccountsStore } from "./store";
 
-interface Props extends Partial<DialogProps> {
+export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
 }
 
 @observer
-export class CreateServiceAccountDialog extends React.Component<Props> {
+export class CreateServiceAccountDialog extends React.Component<CreateServiceAccountDialogProps> {
   static isOpen = observable.box(false);
 
   @observable name = "";
   @observable namespace = "default";
 
-  constructor(props: Props) {
+  constructor(props: CreateServiceAccountDialogProps) {
     super(props);
     makeObservable(this);
   }

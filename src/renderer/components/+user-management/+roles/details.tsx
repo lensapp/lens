@@ -13,11 +13,11 @@ import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 
-interface Props extends KubeObjectDetailsProps<Role> {
+export interface RoleDetailsProps extends KubeObjectDetailsProps<Role> {
 }
 
 @observer
-export class RoleDetails extends React.Component<Props> {
+export class RoleDetails extends React.Component<RoleDetailsProps> {
   render() {
     const { object: role } = this.props;
 

@@ -17,7 +17,7 @@ import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import AutoSizer from "react-virtualized-auto-sizer";
 
-interface Props<T extends ItemObject = any> {
+export interface VirtualListProps<T extends ItemObject = any> {
   items: T[];
   rowHeights: number[];
   className?: string;
@@ -40,14 +40,14 @@ interface State {
   overscanCount: number;
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<VirtualListProps> = {
   width: "100%",
   initialOffset: 1,
   readyOffset: 10,
   onScroll: noop,
 };
 
-export class VirtualList extends Component<Props, State> {
+export class VirtualList extends Component<VirtualListProps, State> {
   static defaultProps = defaultProps as object;
 
   private listRef = React.createRef<VariableSizeList>();
@@ -61,7 +61,7 @@ export class VirtualList extends Component<Props, State> {
     this.setState({ overscanCount: this.props.readyOffset });
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: VirtualListProps) {
     const { items, rowHeights } = this.props;
 
     if (prevProps.items.length !== items.length || !isEqual(prevProps.rowHeights, rowHeights)) {
@@ -137,7 +137,7 @@ interface RowData {
   getRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
 }
 
-interface RowProps extends ListChildComponentProps {
+export interface RowProps extends ListChildComponentProps {
   data: RowData;
 }
 

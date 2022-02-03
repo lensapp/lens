@@ -13,15 +13,15 @@ import type { Cluster } from "../../../../common/cluster/cluster";
 import { observable, reaction, makeObservable } from "mobx";
 import { ClusterMetricsResourceType } from "../../../../common/cluster-types";
 
-interface Props {
+export interface ClusterMetricsSettingProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterMetricsSetting extends React.Component<Props> {
+export class ClusterMetricsSetting extends React.Component<ClusterMetricsSettingProps> {
   @observable hiddenMetrics = observable.set<string>();
 
-  constructor(props: Props) {
+  constructor(props: ClusterMetricsSettingProps) {
     super(props);
     makeObservable(this);
   }

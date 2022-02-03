@@ -24,7 +24,7 @@ export interface NavigationTree {
   children?: NavigationTree[];
 }
 
-interface Props {
+export interface RecursiveTreeViewProps {
   data: NavigationTree[];
 }
 
@@ -36,7 +36,7 @@ function getSelectedNode(data: NavigationTree[]) {
   return deepDash.findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
 }
 
-export function RecursiveTreeView({ data }: Props) {
+export function RecursiveTreeView({ data }: RecursiveTreeViewProps) {
   const [expanded, setExpanded] = React.useState<string[]>([]);
   const prevData = useRef<NavigationTree[]>(data);
 

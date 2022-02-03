@@ -14,7 +14,7 @@ import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<LimitRange> {
+export interface LimitRangeDetailsProps extends KubeObjectDetailsProps<LimitRange> {
 }
 
 function renderLimit(limit: LimitRangeItem, part: LimitPart, resource: Resource) {
@@ -52,7 +52,7 @@ function renderLimitDetails(limits: LimitRangeItem[], resources: Resource[]) {
 }
 
 @observer
-export class LimitRangeDetails extends React.Component<Props> {
+export class LimitRangeDetails extends React.Component<LimitRangeDetailsProps> {
   render() {
     const { object: limitRange } = this.props;
 

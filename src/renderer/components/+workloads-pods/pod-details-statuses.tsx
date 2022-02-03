@@ -9,11 +9,11 @@ import countBy from "lodash/countBy";
 import kebabCase from "lodash/kebabCase";
 import type { Pod } from "../../../common/k8s-api/endpoints";
 
-interface Props {
+export interface PodDetailsStatusesProps {
   pods: Pod[];
 }
 
-export class PodDetailsStatuses extends React.Component<Props> {
+export class PodDetailsStatuses extends React.Component<PodDetailsStatusesProps> {
   render() {
     const { pods } = this.props;
 

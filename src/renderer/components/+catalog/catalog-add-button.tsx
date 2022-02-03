@@ -15,9 +15,9 @@ import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 
-export type CatalogAddButtonProps = {
+export interface CatalogAddButtonProps {
   category: CatalogCategory;
-};
+}
 
 type CategoryId = string;
 

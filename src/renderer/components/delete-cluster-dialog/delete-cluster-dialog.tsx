@@ -21,24 +21,24 @@ import { Select } from "../select";
 import { Checkbox } from "../checkbox";
 import { requestClearClusterAsDeleting, requestDeleteCluster, requestSetClusterAsDeleting } from "../../ipc";
 
-type DialogState = {
+interface DialogState {
   isOpen: boolean;
   config?: KubeConfig;
   cluster?: Cluster;
-};
+}
 
 const dialogState: DialogState = observable({
   isOpen: false,
 });
 
-type Props = {};
+export interface DeleteClusterDialogProps {}
 
 @observer
-export class DeleteClusterDialog extends React.Component {
+export class DeleteClusterDialog extends React.Component<DeleteClusterDialogProps> {
   @observable showContextSwitch = false;
   @observable newCurrentContext = "";
 
-  constructor(props: Props) {
+  constructor(props: DeleteClusterDialogProps) {
     super(props);
     makeObservable(this);
   }

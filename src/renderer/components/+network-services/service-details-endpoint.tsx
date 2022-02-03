@@ -12,12 +12,12 @@ import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { Spinner } from "../spinner";
 import { showDetails } from "../kube-detail-params";
 
-interface Props {
+export interface ServiceDetailsEndpointProps {
   endpoint: KubeObject;
 }
 
 @observer
-export class ServiceDetailsEndpoint extends React.Component<Props> {
+export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpointProps> {
   render() {
     const { endpoint } = this.props;
 

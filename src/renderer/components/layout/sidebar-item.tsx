@@ -15,7 +15,7 @@ import { isActiveRoute } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import sidebarStorageInjectable, { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 
-interface SidebarItemProps {
+export interface SidebarItemProps {
   /**
    * Unique id, used in storage and integration tests
    */

@@ -21,11 +21,11 @@ import { roleBindingsStore } from "./store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
 import { hashRoleBindingSubject } from "./hashers";
 
-interface Props extends KubeObjectDetailsProps<RoleBinding> {
+export interface RoleBindingDetailsProps extends KubeObjectDetailsProps<RoleBinding> {
 }
 
 @observer
-export class RoleBindingDetails extends React.Component<Props> {
+export class RoleBindingDetails extends React.Component<RoleBindingDetailsProps> {
   selectedSubjects = new ObservableHashSet<RoleBindingSubject>([], hashRoleBindingSubject);
 
   async componentDidMount() {

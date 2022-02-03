@@ -17,11 +17,11 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<PersistentVolume> {
+export interface PersistentVolumeDetailsProps extends KubeObjectDetailsProps<PersistentVolume> {
 }
 
 @observer
-export class PersistentVolumeDetails extends React.Component<Props> {
+export class PersistentVolumeDetails extends React.Component<PersistentVolumeDetailsProps> {
   render() {
     const { object: volume } = this.props;
 

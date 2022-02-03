@@ -31,7 +31,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<Node> {
+export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
 
 interface Dependencies {
@@ -39,10 +39,10 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedNodeDetails extends React.Component<Props & Dependencies> {
+class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependencies> {
   @observable metrics: Partial<IClusterMetrics>;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: NodeDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -184,7 +184,7 @@ class NonInjectedNodeDetails extends React.Component<Props & Dependencies> {
   }
 }
 
-export const NodeDetails = withInjectables<Dependencies, Props>(
+export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(
   NonInjectedNodeDetails,
 
   {

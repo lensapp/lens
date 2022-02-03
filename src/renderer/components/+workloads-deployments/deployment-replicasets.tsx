@@ -25,12 +25,12 @@ enum sortBy {
   age = "age",
 }
 
-interface Props {
+export interface DeploymentReplicaSetsProps {
   replicaSets: ReplicaSet[];
 }
 
 @observer
-export class DeploymentReplicaSets extends React.Component<Props> {
+export class DeploymentReplicaSets extends React.Component<DeploymentReplicaSetsProps> {
   private sortingCallbacks = {
     [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
     [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
