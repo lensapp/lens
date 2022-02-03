@@ -114,7 +114,7 @@ export class LensExtension {
 
   @action
   activate() {
-    return this.onActivate();
+    return Promise.resolve(this.onActivate());
   }
 
   protected onActivate(): Promise<void> | void {

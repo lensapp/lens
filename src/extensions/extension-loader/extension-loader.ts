@@ -324,11 +324,13 @@ export class ExtensionLoader {
             return {
               extId,
               instance,
+              installedExtension: extension,
               isBundled: extension.isBundled,
               activated: instance.activate(),
+              activationError: null,
             };
           } catch (err) {
-            logger.error(`${logModule}: activation extension error`, { ext: extension, err });
+            logger.error(`${logModule}: error loading extension`, { ext: extension, err });
           }
         } else if (!extension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
@@ -339,21 +341,32 @@ export class ExtensionLoader {
       // Remove null values
       .filter(extension => Boolean(extension));
 
-    // We first need to wait until each extension's `onActivate` is resolved,
+    // We first need to wait until each extension's `onActivate` is resolved or rejected,
     // as this might register new catalog categories. Afterwards we can safely .enable the extension.
-    await Promise.all(extensions.map(extension => extension.activated));
+    await Promise.all(
+      extensions.map(extension =>
+        // If extension activation fails, log error
+        extension.activated.catch((error) => {
+          extension.activationError = error;
+          logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
+          this.instances.delete(extension.extId);
+        }),
+      ),
+    );
 
     // Return ExtensionLoading[]
-    return extensions.map(extension => {
-      const loaded = extension.instance.enable(register).catch((err) => {
-        logger.error(`${logModule}: failed to enable`, { ext: extension, err });
-      });
+    return extensions
+      .filter(extension =>!extension.activationError)
+      .map(extension => {
+        const loaded = extension.instance.enable(register).catch((err) => {
+          logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+        });
 
-      return {
-        isBundled: extension.isBundled,
-        loaded,
-      };
-    });
+        return {
+          isBundled: extension.isBundled,
+          loaded,
+        };
+      });
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
