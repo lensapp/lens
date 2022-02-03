@@ -77,13 +77,15 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
                     <TableRow key={index}>
                       <TableCell className="path">{path}</TableCell>
                       <TableCell className="link">
-                        <a
-                          href={link}
-                          rel="noreferrer"
-                          target="_blank"
-                        >
-                          {link}
-                        </a>
+                        {
+                          rule.host
+                            ? (
+                              <a href={link} rel="noreferrer" target="_blank">
+                                {link}
+                              </a>
+                            )
+                            : link
+                        }
                       </TableCell>
                       <TableCell className="backends">{getBackendServiceNamePort(backend)}</TableCell>
                     </TableRow>
