@@ -3,24 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { ClusterModel } from "../../common/cluster-types";
-import { Cluster } from "../../common/cluster/cluster";
+import { Cluster, ClusterDependencies } from "../../common/cluster/cluster";
 import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
 import createKubectlInjectable from "../kubectl/create-kubectl.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
+import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 
 const createClusterInjectable = getInjectable({
   instantiate: (di) => {
-    const dependencies = {
+    const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
       createKubeconfigManager: di.inject(createKubeconfigManagerInjectable),
       createKubectl: di.inject(createKubectlInjectable),
       createContextHandler: di.inject(createContextHandlerInjectable),
+      createAuthorizationReview: di.inject(authorizationReviewInjectable),
+      createListNamespaces: di.inject(listNamespacesInjectable),
     };
 
-    return (model: ClusterModel) => new Cluster(dependencies, model);
+    return (model) => new Cluster(dependencies, model);
   },
 
   injectionToken: createClusterInjectionToken,
