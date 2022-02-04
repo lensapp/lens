@@ -112,7 +112,6 @@ export class LensExtension {
     }
   }
 
-  @action
   async activate(): Promise<void> {
     return this.onActivate();
   }

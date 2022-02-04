@@ -322,10 +322,8 @@ export class ExtensionLoader {
             this.instances.set(extId, instance);
 
             return {
-              extId,
               instance,
               installedExtension: extension,
-              isBundled: extension.isBundled,
               activated: instance.activate(),
             };
           } catch (err) {
@@ -358,7 +356,7 @@ export class ExtensionLoader {
       });
 
       return {
-        isBundled: extension.isBundled,
+        isBundled: extension.installedExtension.isBundled,
         loaded,
       };
     });
