@@ -20,12 +20,13 @@ import type { AdditionalCategoryColumnRegistration } from "../renderer/component
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
 import type { StatusBarRegistration } from "../renderer/components/status-bar/status-bar-registration";
 import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
+import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
   clusterPages: registries.PageRegistration[] = [];
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
-  kubeObjectStatusTexts: registries.KubeObjectStatusRegistration[] = [];
+  kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];
