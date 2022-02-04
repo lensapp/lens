@@ -327,7 +327,6 @@ export class ExtensionLoader {
               installedExtension: extension,
               isBundled: extension.isBundled,
               activated: instance.activate(),
-              activationError: null,
             };
           } catch (err) {
             logger.error(`${logModule}: error loading extension`, { ext: extension, err });
@@ -347,7 +346,6 @@ export class ExtensionLoader {
       extensions.map(extension =>
         // If extension activation fails, log error
         extension.activated.catch((error) => {
-          extension.activationError = error;
           logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
         }),
       ),
@@ -355,7 +353,6 @@ export class ExtensionLoader {
 
     // Return ExtensionLoading[]
     return extensions
-      .filter(extension =>!extension.activationError)
       .map(extension => {
         const loaded = extension.instance.enable(register).catch((err) => {
           logger.error(`${logModule}: failed to enable`, { ext: extension, err });
