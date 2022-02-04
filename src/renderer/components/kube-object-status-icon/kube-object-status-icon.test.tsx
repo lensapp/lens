@@ -39,16 +39,7 @@ describe("kube-object-status-icon", () => {
   });
 
   it("given no statuses, when rendered, renders as empty", () => {
-    const kubeObject = KubeObject.create({
-      apiVersion: "irrelevant",
-      kind: "irrelevant",
-      metadata: {
-        uid: "some-uid",
-        name: "some-name",
-        resourceVersion: "some-resource-version",
-        namespace: "some-namespace",
-      },
-    });
+    const kubeObject = getKubeObjectStub("irrelevant", "irrelevant");
 
     const { container } = render(<KubeObjectStatusIcon object={kubeObject} />);
 
