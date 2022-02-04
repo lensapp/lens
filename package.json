@@ -318,6 +318,7 @@
     "@types/url-parse": "^1.4.5",
     "@types/uuid": "^8.3.3",
     "@types/webpack": "^5.28.0",
+    "@types/webpack-dev-server": "^4.7.2",
     "@types/webpack-env": "^1.16.3",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
@@ -383,6 +384,7 @@
     "typescript-plugin-css-modules": "^3.4.0",
     "webpack": "^5.67.0",
     "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.4",
     "webpack-node-externals": "^3.0.0",
     "xterm": "^4.15.0",
     "xterm-addon-fit": "^0.5.0"

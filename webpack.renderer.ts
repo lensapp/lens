@@ -26,7 +26,6 @@ export function webpackLensRenderer(): webpack.Configuration {
   } = vars;
 
   return {
-    context: __dirname,
     target: "electron-renderer",
     name: "lens-app",
     mode: isDevelopment ? "development" : "production",
@@ -116,7 +115,7 @@ export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
     },
     {
       test: /\.(jpg|png|ico)$/,
-      type: "asset/resource", // path to file, e.g. "/static/assets/*"
+      type: "asset/resource", // path to file, e.g. "/static/build/assets/*"
     },
   ];
 }

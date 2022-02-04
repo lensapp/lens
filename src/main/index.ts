@@ -10,7 +10,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName, isDevelopment } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -55,6 +55,7 @@ import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
+import { createDevServer } from "../../webpack.dev-server";
 
 const di = getDi();
 
@@ -177,6 +178,10 @@ di.runSetups().then(() => {
     try {
       logger.info("🔌 Starting LensProxy");
       await lensProxy.listen();
+
+      if (isDevelopment) {
+        await createDevServer(lensProxy.port).start();
+      }
     } catch (error) {
       dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
