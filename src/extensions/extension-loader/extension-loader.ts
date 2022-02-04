@@ -349,7 +349,6 @@ export class ExtensionLoader {
         extension.activated.catch((error) => {
           extension.activationError = error;
           logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
-          this.instances.delete(extension.extId);
         }),
       ),
     );
