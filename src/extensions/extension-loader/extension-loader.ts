@@ -352,17 +352,16 @@ export class ExtensionLoader {
     );
 
     // Return ExtensionLoading[]
-    return extensions
-      .map(extension => {
-        const loaded = extension.instance.enable(register).catch((err) => {
-          logger.error(`${logModule}: failed to enable`, { ext: extension, err });
-        });
-
-        return {
-          isBundled: extension.isBundled,
-          loaded,
-        };
+    return extensions.map(extension => {
+      const loaded = extension.instance.enable(register).catch((err) => {
+        logger.error(`${logModule}: failed to enable`, { ext: extension, err });
       });
+
+      return {
+        isBundled: extension.isBundled,
+        loaded,
+      };
+    });
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
