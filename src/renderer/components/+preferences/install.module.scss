@@ -1,0 +1,16 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ExtensionCard {
+  margin-bottom: 10px;
+  list-style-type: none;
+  font-size: 1.2em;
+  border-radius: 6px;
+  border: 1px solid #181a1f;
+  background-color: #333842;
+  overflow: hidden;
+  cursor: pointer;
+  padding: var(--padding);
+}
