@@ -357,6 +357,7 @@
     "jest-mock-extended": "^1.0.18",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^1.6.2",
+    "nock": "^13.2.4",
     "node-gyp": "7.1.2",
     "node-loader": "^1.0.3",
     "nodemon": "^2.0.15",
