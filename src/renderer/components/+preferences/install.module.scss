@@ -3,14 +3,94 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-.ExtensionCard {
-  margin-bottom: 10px;
-  list-style-type: none;
-  font-size: 1.2em;
-  border-radius: 6px;
+ .hr {
+   padding: 80px 0;
+ }
+
+.extensionCard {
+  margin-bottom: 16px;
+  border-radius: 4px;
   border: 1px solid #181a1f;
   background-color: #333842;
   overflow: hidden;
   cursor: pointer;
-  padding: var(--padding);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+
+  &:hover {
+    background-color: #373d48;
+  }
+}
+
+.contents {
+  flex: 1;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.nameAndVersion {
+  display: flex;
+  gap: var(--padding);
+  margin-bottom: var(--padding);
+
+  .name {
+    font-weight: bolder;
+    color: #d7dae0;
+    font-size: larger;
+  }
+
+  .version {
+    font-size: .8em;
+  }
+}
+
+.downloads {
+  display: flex;
+  align-items: center;
+  gap: var(--padding);
+}
+
+.description {
+  line-height: 1.4;
+  margin-bottom: var(--padding);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.author a {
+  color: rgba(157, 165, 180, 0.6)!important;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.icon {
+  height: 50px;
+  border-radius: 4px;
+  min-width: 50px;
+  background-repeat: no-repeat;
+  background-clip: content-box;
+  background-color: #3a404c;
+}
+
+.install button {
+  display: flex;
+  align-items: center;
+}
+
+.installButtonIco {
+  margin-right: var(--margin);
 }
