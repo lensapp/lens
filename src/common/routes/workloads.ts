@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RouteProps } from "react-router";
-import { buildURL, URLParams } from "../utils/buildUrl";
+import type { RouteProps as RouterProps } from "react-router";
+import { buildURL, RouteProps, URLParams } from "../utils/buildUrl";
 import type { KubeResource } from "../rbac";
 
 // Routes
@@ -33,17 +33,17 @@ export const cronJobsRoute: RouteProps = {
   path: "/cronjobs",
 };
 
-export const workloadsRoute: RouteProps = {
+export const workloadsRoute: RouterProps = {
   path: [
-    overviewRoute,
-    podsRoute,
-    deploymentsRoute,
-    daemonSetsRoute,
-    statefulSetsRoute,
-    replicaSetsRoute,
-    jobsRoute,
-    cronJobsRoute,
-  ].map(route => route.path.toString()),
+    overviewRoute.path,
+    podsRoute.path,
+    deploymentsRoute.path,
+    daemonSetsRoute.path,
+    statefulSetsRoute.path,
+    replicaSetsRoute.path,
+    jobsRoute.path,
+    cronJobsRoute.path,
+  ],
 };
 
 // Route params

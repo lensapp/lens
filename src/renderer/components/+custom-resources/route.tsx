@@ -7,7 +7,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { TabLayout } from "../layout/tab-layout";
-import { crdURL } from "../../../common/routes";
+import { customResourceDefinitionsURL } from "../../../common/routes";
 import type { IComputedValue } from "mobx";
 import type { CustomResourceGroupTabLayoutRoute } from "./route-tabs.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -21,16 +21,26 @@ const NonInjectedCustomResourcesRoute = observer(({ routes }: Dependencies) => (
   <TabLayout>
     <Switch>
       {
-        routes.get().map(({ id, component, routePath, exact }) => (
-          <Route
-            key={id}
-            component={component}
-            path={routePath}
-            exact={exact}
-          />
-        ))
+        routes.get()
+          .flatMap(({ id, component, routePath, exact, subRoutes }) => (
+            subRoutes?.map(({ id, component, routePath, exact }) => (
+              <Route
+                key={id}
+                component={component}
+                path={routePath}
+                exact={exact}
+              />
+            )) ?? (
+              <Route
+                key={id}
+                component={component}
+                path={routePath}
+                exact={exact}
+              />
+            )
+          ))
       }
-      <Redirect to={crdURL()}/>
+      <Redirect to={customResourceDefinitionsURL()}/>
     </Switch>
   </TabLayout>
 ));

@@ -3,29 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RouteProps } from "react-router";
-import { buildURL } from "../utils/buildUrl";
+import { buildURL, RouteProps } from "../utils/buildUrl";
 
-export const crdRoute: RouteProps = {
-  path: "/crd",
+export const customResourcesRoute = "/crd";
+
+export const customResourceDefinitionsRoute: RouteProps = {
+  path: `${customResourcesRoute}/definitions/:group?/:name?`,
 };
 
-export const crdDefinitionsRoute: RouteProps = {
-  path: `${crdRoute.path}/definitions`,
-};
-
-export const crdResourcesRoute: RouteProps = {
-  path: `${crdRoute.path}/:group/:name`,
-};
-
-export interface CRDListQuery {
-  groups?: string;
+export interface CustomResourceDefinitionsRouteParams {
+  group?: string;
+  name?: string;
 }
 
-export interface CRDRouteParams {
-  group: string;
-  name: string;
-}
-
-export const crdURL = buildURL<{}, CRDListQuery>(crdDefinitionsRoute.path);
-export const crdResourcesURL = buildURL<CRDRouteParams>(crdResourcesRoute.path);
+export const customResourceDefinitionsURL = buildURL<CustomResourceDefinitionsRouteParams>(customResourceDefinitionsRoute.path);

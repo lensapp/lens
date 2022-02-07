@@ -4,7 +4,6 @@
  */
 
 import type { RouteProps } from "react-router";
-import type { URLParams } from "../utils/buildUrl";
 import { storageClassesRoute } from "./storage-classes";
 import { volumeClaimsRoute, volumeClaimsURL } from "./volume-claims";
 import { volumesRoute } from "./volumes";
@@ -17,4 +16,4 @@ export const storageRoute: RouteProps = {
   ].map(route => route.path.toString()),
 };
 
-export const storageURL = (params?: URLParams) => volumeClaimsURL(params);
+export const storageURL = volumeClaimsURL;

@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import customResourcesRouteTabsInjectable, { type CustomResourceGroupTabLayoutRoute } from "./route-tabs.injectable";
 import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
 import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
-import { crdURL, crdRoute } from "../../../common/routes";
+import { customResourceDefinitionsURL, customResourcesRoute } from "../../../common/routes";
 import { isActiveRoute } from "../../navigation";
 import { Icon } from "../icon";
 import { SidebarItem } from "../layout/sidebar-item";
@@ -35,8 +35,8 @@ const NonInjectedCustomResourcesSidebarItem = observer(({ routes, isAllowedResou
     <SidebarItem
       id="custom-resources"
       text="Custom Resources"
-      url={crdURL()}
-      isActive={isActiveRoute(crdRoute)}
+      url={customResourceDefinitionsURL()}
+      isActive={isActiveRoute(customResourcesRoute)}
       isHidden={!isAllowedResource("customresourcedefinitions")}
       icon={<Icon material="extension"/>}
     >
@@ -45,13 +45,13 @@ const NonInjectedCustomResourcesSidebarItem = observer(({ routes, isAllowedResou
           key={route.id}
           id={route.id}
           text={route.title}
-          url={route.routePath}
+          url={route.url}
         >
           {route.subRoutes?.map((subRoute) => (
             <SidebarItem
               key={subRoute.id}
               id={subRoute.id}
-              url={subRoute.routePath}
+              url={subRoute.url}
               text={subRoute.title}
             />
           ))}

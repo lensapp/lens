@@ -11,7 +11,7 @@ import { helmChartStore } from "../../../renderer/components/+helm-charts/helm-c
 import type { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
 import type { JsonApiData } from "../json-api";
-import { buildURLPositional } from "../../utils/buildUrl";
+import { buildURL } from "../../utils/buildUrl";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 interface IReleasePayload {
@@ -77,16 +77,16 @@ interface EndpointQuery {
   all?: boolean;
 }
 
-const endpoint = buildURLPositional<EndpointParams, EndpointQuery>("/v2/releases/:namespace?/:name?/:route?");
+const endpoint = buildURL<EndpointParams, EndpointQuery>("/v2/releases/:namespace?/:name?/:route?");
 
 export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
-  const releases = await apiBase.get<HelmReleaseDto[]>(endpoint({ namespace }));
+  const releases = await apiBase.get<HelmReleaseDto[]>(endpoint({ params: { namespace }}));
 
   return releases.map(toHelmRelease);
 }
 
 export async function getRelease(name: string, namespace: string): Promise<IReleaseDetails> {
-  const path = endpoint({ name, namespace });
+  const path = endpoint({ params: { name, namespace }});
   const { resources: rawResources, ...details } = await apiBase.get<IReleaseRawDetails>(path);
   const resources = rawResources.map(KubeObject.create);
 
@@ -115,7 +115,7 @@ export async function updateRelease(name: string, namespace: string, payload: IR
   const chart = `${repo}/${rawChart}`;
   const values = yaml.load(rawValues);
 
-  return apiBase.put(endpoint({ name, namespace }), {
+  return apiBase.put(endpoint({ params: { name, namespace }}), {
     data: {
       chart,
       values,
@@ -125,28 +125,28 @@ export async function updateRelease(name: string, namespace: string, payload: IR
 }
 
 export async function deleteRelease(name: string, namespace: string): Promise<JsonApiData> {
-  const path = endpoint({ name, namespace });
+  const path = endpoint({ params: { name, namespace }});
 
   return apiBase.del(path);
 }
 
 export async function getReleaseValues(name: string, namespace: string, all?: boolean): Promise<string> {
   const route = "values";
-  const path = endpoint({ name, namespace, route }, { all });
+  const path = endpoint({ params: { name, namespace, route }, query: { all }});
 
   return apiBase.get<string>(path);
 }
 
 export async function getReleaseHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
   const route = "history";
-  const path = endpoint({ name, namespace, route });
+  const path = endpoint({ params: { name, namespace, route }});
 
   return apiBase.get(path);
 }
 
 export async function rollbackRelease(name: string, namespace: string, revision: number): Promise<JsonApiData> {
   const route = "rollback";
-  const path = endpoint({ name, namespace, route });
+  const path = endpoint({ params: { name, namespace, route }});
   const data = { revision };
 
   return apiBase.put(path, { data });

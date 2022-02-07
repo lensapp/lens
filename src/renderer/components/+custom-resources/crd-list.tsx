@@ -32,7 +32,7 @@ enum columnId {
 }
 
 @observer
-export class CrdList extends React.Component {
+export class CustomResourceDefinitions extends React.Component {
   constructor(props: {}) {
     super(props);
     makeObservable(this);

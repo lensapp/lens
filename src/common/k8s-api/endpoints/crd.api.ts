@@ -5,7 +5,7 @@
 
 import { KubeCreationError, KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { crdResourcesURL } from "../../routes";
+import { customResourceDefinitionsURL } from "../../routes";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeJsonApiData } from "../kube-json-api";
 
@@ -99,7 +99,7 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getResourceUrl() {
-    return crdResourcesURL({
+    return customResourceDefinitionsURL({
       params: {
         group: this.getGroup(),
         name: this.getPluralName(),

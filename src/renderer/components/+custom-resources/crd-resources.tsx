@@ -16,9 +16,9 @@ import { crdStore } from "./crd.store";
 import type { TableSortCallbacks } from "../table";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { parseJsonPath } from "../../utils/jsonPath";
-import type { CRDRouteParams } from "../../../common/routes";
+import type { CustomResourceDefinitionsRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<CRDRouteParams> {
+interface Props extends RouteComponentProps<CustomResourceDefinitionsRouteParams> {
 }
 
 enum columnId {
@@ -28,7 +28,7 @@ enum columnId {
 }
 
 @observer
-export class CrdResources extends React.Component<Props> {
+export class CustomResourceDefinitionObjectList extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
@@ -93,16 +93,12 @@ export class CrdResources extends React.Component<Props> {
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
           isNamespaced && { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
-          ...extraColumns.map(column => {
-            const { name } = column;
-
-            return {
-              title: name,
-              className: name.toLowerCase(),
-              sortBy: name,
-              id: name,
-            };
-          }),
+          ...extraColumns.map(({ name }) => ({
+            title: name,
+            className: name.toLowerCase(),
+            sortBy: name,
+            id: name,
+          })),
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={crdInstance => [

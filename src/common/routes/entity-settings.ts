@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RouteProps } from "react-router";
-import { buildURL } from "../utils/buildUrl";
+import { buildURL, RouteProps } from "../utils/buildUrl";
 
 export interface EntitySettingsRouteParams {
   entityId: string;

@@ -4,7 +4,6 @@
  */
 
 import type { RouteProps } from "react-router";
-import type { URLParams } from "../utils/buildUrl";
 import { endpointRoute } from "./endpoints";
 import { ingressRoute } from "./ingresses";
 import { networkPoliciesRoute } from "./network-policies";
@@ -21,4 +20,4 @@ export const networkRoute: RouteProps = {
   ].map(route => route.path.toString()),
 };
 
-export const networkURL = (params?: URLParams) => servicesURL(params);
+export const networkURL = servicesURL;

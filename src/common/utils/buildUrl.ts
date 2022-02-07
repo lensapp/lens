@@ -4,32 +4,37 @@
  */
 
 import { compile } from "path-to-regexp";
+import type { RouteProps as RouterProps } from "react-router";
+import { format } from "url";
 
-export interface URLParams<P extends object = {}, Q extends object = {}> {
+export interface RouteProps extends RouterProps {
+  path?: string;
+}
+
+type MaybeIfRecord<FieldName extends string, Type> = Type extends object
+  ? { [field in FieldName]?: Type }
+  : {};
+
+export type URLParams<P = unknown, Q = unknown> = {
+  fragment?: string;
+} & MaybeIfRecord<"params", P> & MaybeIfRecord<"query", Q>;
+
+interface InternalURLParams<P, Q> {
+  fragment?: string;
   params?: P;
   query?: Q;
-  fragment?: string;
 }
 
-export function buildURL<P extends object = {}, Q extends object = {}>(path: string | any) {
-  const pathBuilder = compile(String(path));
+export function buildURL<P = unknown, Q = unknown>(path: string): (urlParams?: URLParams<P, Q>) => string {
+  const pathBuilder = compile(path);
 
-  return function ({ params, query, fragment }: URLParams<P, Q> = {}): string {
-    const queryParams = query ? new URLSearchParams(Object.entries(query)).toString() : "";
-    const parts = [
-      pathBuilder(params),
-      queryParams && `?${queryParams}`,
-      fragment && `#${fragment}`,
-    ];
+  return (urlParams) => {
+    const { params = {}, query = {}, fragment } = urlParams as InternalURLParams<P, Q> ?? {};
 
-    return parts.filter(Boolean).join("");
-  };
-}
-
-export function buildURLPositional<P extends object = {}, Q extends object = {}>(path: string | any) {
-  const builder = buildURL(path);
-
-  return function (params?: P, query?: Q, fragment?: string): string {
-    return builder({ params, query, fragment });
+    return format({
+      pathname: pathBuilder(params),
+      query: new URLSearchParams(query).toString(),
+      search: fragment,
+    });
   };
 }

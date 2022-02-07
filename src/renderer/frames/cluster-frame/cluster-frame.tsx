@@ -155,7 +155,7 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
               <Route component={StorageRoute} {...routes.storageRoute}/>
               <Route component={NamespacesRoute} {...routes.namespacesRoute}/>
               <Route component={Events} {...routes.eventRoute}/>
-              <Route component={CustomResourcesRoute} {...routes.crdRoute}/>
+              <Route component={CustomResourcesRoute} {...routes.customResourcesRoute}/>
               <Route component={UserManagementRoute} {...routes.usersManagementRoute}/>
               <Route component={HelmRoute} {...routes.helmRoute}/>
               {this.renderExtensionTabLayoutRoutes()}

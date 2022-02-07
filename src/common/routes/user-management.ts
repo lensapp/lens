@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RouteProps } from "react-router";
-import { buildURL, URLParams } from "../utils/buildUrl";
+import type { RouteProps as RouterProps } from "react-router";
+import { buildURL, RouteProps, URLParams } from "../utils/buildUrl";
 
 // Routes
 export const serviceAccountsRoute: RouteProps = {
@@ -26,15 +26,15 @@ export const clusterRoleBindingsRoute: RouteProps = {
   path: "/cluster-role-bindings",
 };
 
-export const usersManagementRoute: RouteProps = {
+export const usersManagementRoute: RouterProps = {
   path: [
-    serviceAccountsRoute,
-    podSecurityPoliciesRoute,
-    roleBindingsRoute,
-    clusterRoleBindingsRoute,
-    rolesRoute,
-    clusterRolesRoute,
-  ].map(route => route.path.toString()),
+    serviceAccountsRoute.path,
+    podSecurityPoliciesRoute.path,
+    roleBindingsRoute.path,
+    clusterRoleBindingsRoute.path,
+    rolesRoute.path,
+    clusterRolesRoute.path,
+  ],
 };
 
 // Route params

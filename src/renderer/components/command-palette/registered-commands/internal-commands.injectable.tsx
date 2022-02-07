@@ -154,7 +154,7 @@ function getInternalCommands({ openCommandDialog, getEntitySettingItems, createT
       id: "cluster.viewCustomResourceDefinitions",
       title: "Cluster: View Custom Resource Definitions",
       isActive: isKubernetesClusterActive,
-      action: ({ navigate }) => navigate(routes.crdURL()),
+      action: ({ navigate }) => navigate(routes.customResourceDefinitionsURL()),
     },
     {
       id: "entity.viewSettings",
