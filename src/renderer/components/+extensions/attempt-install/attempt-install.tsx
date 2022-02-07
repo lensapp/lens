@@ -12,7 +12,7 @@ import { Button } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import React from "react";
-import fse from "fs-extra";
+import { remove as removeDir } from "fs-extra";
 import { shell } from "electron";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate/create-temp-files-and-validate";
 import type { InstallRequest } from "./install-request";
@@ -80,17 +80,12 @@ export const attemptInstall =
       }
 
       const extensionFolder = getExtensionDestFolder(name);
-      const folderExists = await fse.pathExists(extensionFolder);
+      const installedExtension = extensionLoader.getExtension(validatedRequest.id);
 
-      if (!folderExists) {
-      // install extension if not yet exists
-        await unpackExtension(validatedRequest, dispose);
-      } else {
-        const {
-          manifest: { version: oldVersion },
-        } = extensionLoader.getExtension(validatedRequest.id);
+      if (installedExtension) {
+        const { version: oldVersion } = installedExtension.manifest;
 
-        // otherwise confirmation required (re-install / update)
+        // confirm to uninstall old version before installing new version
         const removeNotification = Notifications.info(
           <div className="InstallingExtensionNotification flex gaps align-center">
             <div className="flex column gaps">
@@ -130,5 +125,11 @@ export const attemptInstall =
             onClose: dispose,
           },
         );
+      } else {
+        // clean up old data if still around
+        await removeDir(extensionFolder);
+
+        // install extension if not yet exists
+        await unpackExtension(validatedRequest, dispose);
       }
     };
