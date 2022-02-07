@@ -369,6 +369,10 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return Promise.all(this.selectedItems.map(this.remove));
   }
 
+  async removeItems(items: T[]) {
+    await Promise.all(items.map(this.remove));
+  }
+
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
