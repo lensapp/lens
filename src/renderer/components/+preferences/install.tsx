@@ -3,29 +3,38 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
+import styles from "./install.module.scss";
+
+import React, { useEffect, useState } from "react";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { SearchInput } from "../input";
-
-interface Extension {
-  id: string;
-  name: string;
-  description: string;
-  version: string;
-  downloads: number;
-  author: string;
-  iconUrl?: string;
-}
+import { Spinner } from "../spinner";
+import { Extension, getExtensions } from "./extension-list";
 
 export function Install() {
-  const extension: Extension = {
-    id: "resourcemap",
-    name: "Lens Resource Map",
-    description: "Lens Resource Map is an extension for Lens - The Kubernetes IDE that displays Kubernetes resources and their relations as a real-time force-directed graph.",
-    version: "1.0.1",
-    downloads: 12400,
-    author: "nevalla",
+  const [extensions, setExtensions] = useState([]);
+
+  useEffect(() => {
+    async function fetchExtensions() {
+      try {
+        const response = await getExtensions();
+
+        setExtensions(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchExtensions();
+  }, []);
+
+  const renderExtensionsOrSpinner = () => {
+    if (!extensions.length) {
+      return <Spinner/>;
+    }
+
+    return <ExtensionList extensions={extensions}/>;
   };
 
   return (
@@ -41,8 +50,7 @@ export function Install() {
       </div>
 
       <h2><Icon material="star"/> Featured Extensions</h2>
-
-      <ExtensionList extensions={[extension]}/>
+      {renderExtensionsOrSpinner()}
     </section>
   );
 }
@@ -56,10 +64,10 @@ function ExtensionList({ extensions }: { extensions: Extension[] }) {
 }
 
 function ExtensionCard({ extension }: { extension: Extension }) {
-  const { name, version, downloads, description, author } = extension;
+  const { name, version, totalNumberOfInstallations, shortDescription, publisher } = extension;
 
   return (
-    <div className="ExtensionCard">
+    <div className={styles.ExtensionCard}>
       <div className="head">
         <div className="nameAndVersion">
           <div className="name">{name}</div>
@@ -67,17 +75,17 @@ function ExtensionCard({ extension }: { extension: Extension }) {
         </div>
 
         <div className="downloads">
-          <Icon material="cloud_download"/> {downloads}
+          <Icon material="cloud_download"/> {totalNumberOfInstallations}
         </div>
       </div>
 
       <div className="description">
-        {description}
+        {shortDescription}
       </div>
 
       <div className="footer">
         <div className="author">
-          <img src="https://avatars.githubusercontent.com/u/455844?v=4"/> {author}
+          <img src="https://avatars.githubusercontent.com/u/455844?v=4"/> {publisher.username}
         </div>
         <div className="install">
           <Button primary><Icon material="cloud_download"/> Install</Button>
