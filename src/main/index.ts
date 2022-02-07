@@ -178,10 +178,6 @@ di.runSetups().then(() => {
     try {
       logger.info("🔌 Starting LensProxy");
       await lensProxy.listen();
-
-      if (isDevelopment) {
-        await createDevServer(lensProxy.port).start();
-      }
     } catch (error) {
       dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
@@ -232,6 +228,12 @@ di.runSetups().then(() => {
 
     logger.info("🖥️  Starting WindowManager");
     const windowManager = WindowManager.createInstance();
+
+    if (isDevelopment) {
+      const devServer = createDevServer(lensProxy.port);
+      await devServer.start(); // waiting dev-server to start
+      windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
+    }
 
     const menuItems = di.inject(electronMenuItemsInjectable);
     const trayMenuItems = di.inject(trayMenuItemsInjectable);

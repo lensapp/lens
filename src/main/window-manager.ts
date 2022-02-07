@@ -34,15 +34,12 @@ export class WindowManager extends Singleton {
   protected disposers: Record<string, Function> = {};
 
   @observable activeClusterId: ClusterId;
+  @observable mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
 
   constructor() {
     super();
     makeObservable(this);
     this.bindEvents();
-  }
-
-  get mainUrl() {
-    return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
   private async initMainWindow(showSplash: boolean) {
@@ -142,8 +139,8 @@ export class WindowManager extends Singleton {
 
     try {
       if (showSplash) await this.showSplash();
-      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
-      await this.mainWindow.loadURL(this.mainUrl);
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainContentUrl} ...`);
+      await this.mainWindow.loadURL(this.mainContentUrl);
     } catch (error) {
       logger.error("Loading main window failed", { error });
       dialog.showErrorBox("ERROR!", error.toString());

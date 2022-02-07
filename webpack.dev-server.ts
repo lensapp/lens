@@ -18,18 +18,19 @@ export function createDevServer(lensProxyPort: number): WebpackDevServer {
     },
     allowedHosts: "all",
     host: "localhost",
-    // static: buildDir, // aka `devServer.contentBase` in webpack@4
-    hot: true, // enable HMR when supported by modules
+    static: buildDir, // aka `devServer.contentBase` in webpack@4
+    hot: true, // enable HMR when supported by modules or page refresh by default {liveReload:true}
     proxy: {
-      // https://webpack.js.org/configuration/dev-server/#devserverproxy
-      "*": `//:localhost:${lensProxyPort}`,
-      secure: false, // allow http connections
-      changeOrigin: true,
-      context: [buildDir],
-      bypass: function (req, res, proxyOptions) {
-        console.log(`[PROXY]: path ${req.path}`);
-        return null; // continue with proxy, return false for "404"-error
-      },
+      '*': {
+        // https://webpack.js.org/configuration/dev-server/#devserverproxy
+        target: `http://localhost:${lensProxyPort}`,
+        secure: false, // allow http connections
+        changeOrigin: true,
+        bypass: function (req, res, proxyOptions) {
+          // console.log(`[PROXY]: path bypass ${req.path}`);
+          return null; // continue with proxy, return false for "404"-error
+        },
+      }
     },
     client: {
       // don't show warnings and errors on top of rendered app view

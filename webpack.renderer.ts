@@ -29,7 +29,7 @@ export function webpackLensRenderer(): webpack.Configuration {
     target: "electron-renderer",
     name: "lens-app",
     mode: isDevelopment ? "development" : "production",
-    devtool: isDevelopment ? "eval-cheap-source-map" : "source-map",
+    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),

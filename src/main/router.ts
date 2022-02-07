@@ -124,21 +124,6 @@ export class Router {
       }
 
       try {
-        // const filename = path.basename(req.url);
-        // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-        // const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
-        //
-        // if (isDevelopment /*&& toWebpackDevServer*/) {
-        //   const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
-        //
-        //   logger.info(`[ROUTER]: redirecting to dev-server url: ${redirectLocation}`);
-        //
-        //   response.statusCode = 307;
-        //   response.setHeader("Location", redirectLocation);
-        //
-        //   return response.end();
-        // }
-
         const data = await readFile(asset);
 
         response.setHeader("Content-Type", getMimeType(asset));
