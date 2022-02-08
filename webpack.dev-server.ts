@@ -33,8 +33,8 @@ export function createDevServer(lensProxyPort: number): WebpackDevServer {
       }
     },
     client: {
-      // don't show warnings and errors on top of rendered app view
-      overlay: false,
+      overlay: false, // don't show warnings and errors on top of rendered app view
+      logging: "error",
     },
   }, compiler);
 }

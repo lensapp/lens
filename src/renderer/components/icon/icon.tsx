@@ -37,6 +37,10 @@ export class Icon extends React.PureComponent<IconProps> {
     focusable: true,
   };
 
+  static isSvg(content: string){
+    return String(content).includes("svg+xml"); // data-url for raw svg-icon
+  }
+
   get isInteractive() {
     const { interactive, onClick, href, link } = this.props;
 
