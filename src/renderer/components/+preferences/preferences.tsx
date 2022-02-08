@@ -26,6 +26,7 @@ import {
   terminalURL,
   installURL,
   installRoute,
+  extensionPageURL,
 } from "../../../common/routes";
 import { navigateWithoutHistoryChange, navigation } from "../../navigation";
 import { SettingLayout } from "../layout/setting-layout";
@@ -42,6 +43,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import { Install } from "./install";
+import { ExtensionPage } from "./extension-page";
 
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
@@ -93,6 +95,7 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         <Route path={telemetryURL()} component={Telemetry}/>
         <Route path={extensionURL()} component={Extensions}/>
         <Route path={installURL()} component={Install}/>
+        <Route path={extensionPageURL()} component={ExtensionPage}/>
         <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
       </Switch>
     </SettingLayout>

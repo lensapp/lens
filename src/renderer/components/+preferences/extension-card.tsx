@@ -20,10 +20,11 @@ interface Dependencies {
 }
 
 interface Props {
-  extension: Extension
+  extension: Extension;
+  onClick?: () => void;
 }
 
-function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, installFromInput }: Props & Dependencies) {
+function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, installFromInput, onClick }: Props & Dependencies) {
   const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
 
   function onInstall() {
@@ -31,7 +32,7 @@ function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, 
   }
 
   return (
-    <div className={styles.extensionCard}>
+    <div className={styles.extensionCard} onClick={onClick}>
       <div className={styles.icon} style={{ backgroundImage: `url(${appIconUrl})` }}/>
       <div className={styles.contents}>
         <div className={styles.head}>
@@ -60,7 +61,7 @@ function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, 
               waiting={extensionInstallationStateStore.anyPreInstallingOrInstalling}
               onClick={onInstall}
             >
-              <Icon className={styles.installButtonIco} material="cloud_download"/> 
+              <Icon className={styles.installButtonIco} material="cloud_download"/>
               Install
             </Button>
           </div>

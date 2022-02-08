@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Icon } from "../icon";
 import { SearchInput } from "../input";
 import { Spinner } from "../spinner";
@@ -45,16 +46,24 @@ export function Install() {
 
       <hr />
 
-      <h2 style={{ marginTop: "30px", display: "flex", alignItems: "center" }}><Icon material="star" small style={{ opacity: ".3" }}/> Featured Extensions</h2>
+      <h2 style={{ marginTop: "30px", display: "flex", alignItems: "center" }}><Icon material="star" small style={{ opacity: ".3" }}/>&nbsp;Featured Extensions</h2>
       {renderExtensionsOrSpinner()}
     </section>
   );
 }
 
 function ExtensionList({ extensions }: { extensions: Extension[] }) {
+  const history = useHistory();
+
+  function handleClick(extensionId: string) {
+    history.push(`extension/${extensionId}`);
+  }
+
   return (
     <>
-      {extensions.map(extension => <ExtensionCard key={extension.id} extension={extension}/>)}
+      {extensions.map(extension => (
+        <ExtensionCard key={extension.id} extension={extension} onClick={() => handleClick(extension.id)}/>
+      ))}
     </>
   );
 }
