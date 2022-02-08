@@ -5,7 +5,7 @@
 import styles from "./extension-card.module.scss";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import installFromInputInjectable from "../+extensions/install-from-input/install-from-input.injectable";
 import { Button } from "../button";
@@ -24,10 +24,19 @@ interface Props {
   onClick?: () => void;
 }
 
-function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, installFromInput, onClick }: Props & Dependencies) {
+function NonInjectedExtensionCard({ extension, extensionInstallationStateStore: store, installFromInput, onClick }: Props & Dependencies) {
   const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
+  const [waiting, setWaiting] = useState(false);
 
-  function onInstall() {
+  useEffect(() => {
+    if (!store.anyPreInstallingOrInstalling) {
+      setWaiting(false);
+    }
+  }, [store.anyPreInstallingOrInstalling]);
+
+  function onInstall(evt: React.MouseEvent) {
+    evt.stopPropagation();
+    setWaiting(true);
     installFromInput(extension.binaryUrl);
   }
 
@@ -57,8 +66,8 @@ function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, 
           <div className={styles.install}>
             <Button
               primary
-              disabled={extensionInstallationStateStore.anyPreInstallingOrInstalling}
-              waiting={extensionInstallationStateStore.anyPreInstallingOrInstalling}
+              waiting={waiting}
+              disabled={store.anyPreInstallingOrInstalling}
               onClick={onInstall}
             >
               <Icon className={styles.installButtonIco} material="cloud_download"/>
