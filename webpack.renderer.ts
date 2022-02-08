@@ -184,6 +184,4 @@ export function cssModulesWebpackRule(
   };
 }
 
-export default [
-  webpackLensRenderer,
-];
+export default webpackLensRenderer;

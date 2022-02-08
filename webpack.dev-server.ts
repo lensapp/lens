@@ -6,7 +6,7 @@
 import Webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import { webpackLensRenderer } from "./webpack.renderer";
-import { buildDir, isDevelopment, webpackDevServerPort } from "./src/common/vars";
+import { buildDir, webpackDevServerPort } from "./src/common/vars";
 import logger from "./src/common/logger";
 
 export interface DevServer extends WebpackDevServer {
@@ -18,11 +18,7 @@ export interface DevServer extends WebpackDevServer {
  * @url https://webpack.js.org/configuration/dev-server/
  * @url https://github.com/chimurai/http-proxy-middleware
  */
-export function createDevServer(lensProxyPort: number): DevServer | undefined {
-  if (!isDevelopment) {
-    return undefined;
-  }
-
+export function createDevServer(lensProxyPort: number): DevServer {
   const config = webpackLensRenderer();
   const compiler = Webpack(config);
 

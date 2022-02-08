@@ -10,7 +10,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName, isDevelopment } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -177,7 +177,6 @@ di.runSetups().then(() => {
       kubeApiRequest,
       shellApiRequest,
     });
-    const devServer = createDevServer(lensProxy.port);
 
     ClusterManager.createInstance().init();
 
@@ -185,10 +184,7 @@ di.runSetups().then(() => {
 
     try {
       logger.info("🔌 Starting LensProxy");
-      await Promise.all([
-        lensProxy.listen(),
-        devServer?.start(),
-      ]);
+      await lensProxy.listen(); // lensProxy.port available
     } catch (error) {
       dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
@@ -239,8 +235,11 @@ di.runSetups().then(() => {
 
     logger.info("🖥️  Starting WindowManager");
     const windowManager = WindowManager.createInstance();
-    if (devServer) {
-      // override main content view url to local webpack-dev-server to support HMR / live-reload
+
+    // Override main content view url to local webpack-dev-server to support HMR / live-reload
+    if (isDevelopment) {
+      const devServer = createDevServer(lensProxy.port);
+      await devServer.start();
       windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
     }
 
