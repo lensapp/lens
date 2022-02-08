@@ -17,6 +17,7 @@ import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
+import RobotoMonoFontUrl from "../../fonts/roboto-mono-nerd.ttf";
 
 export class Terminal {
   private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
@@ -26,11 +27,14 @@ export class Terminal {
   }
 
   static async preloadFonts() {
-    const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
-    const fontFace = new FontFace(defaultTerminalFontFamily, `url(${fontPath})`);
+    try {
+      const fontFace = new FontFace(defaultTerminalFontFamily, `url(${RobotoMonoFontUrl})`);
 
-    await fontFace.load();
-    document.fonts.add(fontFace);
+      await fontFace.load();
+      document.fonts.add(fontFace);
+    } catch (error) {
+      logger.error(`[TERMINAL]: preloading default font failed`, error);
+    }
   }
 
   private xterm: XTerm | null = new XTerm({

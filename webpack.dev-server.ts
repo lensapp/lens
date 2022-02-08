@@ -6,9 +6,11 @@
 import Webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import { webpackLensRenderer } from "./webpack.renderer";
-import { buildDir, webpackDevServerPort } from "./src/common/vars";
+import { buildDir, isDevelopment, webpackDevServerPort } from "./src/common/vars";
 import logger from "./src/common/logger";
-import { getClusterIdFromHost } from "./src/common/utils";
+
+export interface DevServer extends WebpackDevServer {
+}
 
 /**
  * Creates `webpack-dev-server`
@@ -16,11 +18,18 @@ import { getClusterIdFromHost } from "./src/common/utils";
  * @url https://webpack.js.org/configuration/dev-server/
  * @url https://github.com/chimurai/http-proxy-middleware
  */
-export function createDevServer(lensProxyPort: number): WebpackDevServer {
+export function createDevServer(lensProxyPort: number): DevServer | undefined {
+  if (!isDevelopment) {
+    return undefined;
+  }
+
   const config = webpackLensRenderer();
   const compiler = Webpack(config);
 
   const server = new WebpackDevServer({
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
     allowedHosts: "all",
     host: "localhost",
     port: webpackDevServerPort,
@@ -29,17 +38,13 @@ export function createDevServer(lensProxyPort: number): WebpackDevServer {
     proxy: {
       '*': {
         router(req) {
-          logger.info(`[WEBPACK-DEV-SERVER]: proxy path ${req.path}`, req.headers);
-
-          const clusterId = getClusterIdFromHost(req.headers.host);
-          if (clusterId) {
-            return `http://${clusterId}.localhost:${lensProxyPort}`;
-          }
+          logger.silly(`[WEBPACK-DEV-SERVER]: proxy path ${req.path}`, req.headers);
 
           return `http://localhost:${lensProxyPort}`;
         },
         secure: false, // allow http connections
-        logLevel: "debug",
+        ws: true, // proxy websockets, e.g. terminal
+        logLevel: "error",
       }
     },
     client: {

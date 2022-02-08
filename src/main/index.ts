@@ -10,7 +10,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName, isDevelopment } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -43,16 +43,23 @@ import { initTray } from "./tray/tray";
 import { ShellSession } from "./shell-session/shell-session";
 import { getDi } from "./getDi";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
-import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
-import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
-import directoryForExesInjectable from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
-import initIpcMainHandlersInjectable from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
+import lensProtocolRouterMainInjectable
+  from "./protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
+import extensionDiscoveryInjectable
+  from "../extensions/extension-discovery/extension-discovery.injectable";
+import directoryForExesInjectable
+  from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
+import initIpcMainHandlersInjectable
+  from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
 import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
-import directoryForKubeConfigsInjectable from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
+import directoryForKubeConfigsInjectable
+  from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import kubeconfigSyncManagerInjectable
+  from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import routerInjectable from "./router/router.injectable";
-import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
+import shellApiRequestInjectable
+  from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 import { createDevServer } from "../../webpack.dev-server";
@@ -170,6 +177,7 @@ di.runSetups().then(() => {
       kubeApiRequest,
       shellApiRequest,
     });
+    const devServer = createDevServer(lensProxy.port);
 
     ClusterManager.createInstance().init();
 
@@ -177,7 +185,10 @@ di.runSetups().then(() => {
 
     try {
       logger.info("🔌 Starting LensProxy");
-      await lensProxy.listen();
+      await Promise.all([
+        lensProxy.listen(),
+        devServer?.start(),
+      ]);
     } catch (error) {
       dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
@@ -228,10 +239,8 @@ di.runSetups().then(() => {
 
     logger.info("🖥️  Starting WindowManager");
     const windowManager = WindowManager.createInstance();
-
-    if (isDevelopment) {
-      const devServer = createDevServer(lensProxy.port);
-      await devServer.start(); // waiting dev-server to start
+    if (devServer) {
+      // override main content view url to local webpack-dev-server to support HMR / live-reload
       windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
     }
 
