@@ -12,7 +12,7 @@ import type { TableCellProps } from "../table";
  */
 export interface TitleCellProps {
   className?: string;
-  title: React.ReactNode;
+  title: string;
 }
 
 export interface CategoryColumnRegistration {
