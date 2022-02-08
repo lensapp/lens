@@ -94,6 +94,7 @@ export class NodeShellSession extends ShellSession {
           tolerations: [{
             operator: "Exists",
           }],
+          priorityClassName: "system-node-critical",
           containers: [{
             name: "shell",
             image: this.cluster.nodeShellImage,

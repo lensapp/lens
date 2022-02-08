@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from "react";
+import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { UserStore } from "../../../common/user-store";
@@ -19,7 +20,7 @@ interface Dependencies {
   defaultPathForKubectlBinaries: string
 }
 
-const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKubectlBinaries }) => {
+const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPathForKubectlBinaries }) => {
   const userStore = UserStore.getInstance();
   const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");

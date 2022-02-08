@@ -7,7 +7,7 @@ import "./item-list-layout.scss";
 
 import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
-import { observer } from "mobx-react";
+import { Observer, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
 import { boundMethod, cssNames, IClassName, isReactNode, prevDefault, stopPropagation } from "../../utils";
@@ -70,75 +70,93 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
 
   @boundMethod
   getRow(uid: string) {
-    const {
-      isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
-      store, hasDetailsView, onDetails,
-      copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
-    } = this.props;
-    const { isSelected } = store;
-    const item = this.props.getItems().find(item => item.getId() == uid);
-
-    if (!item) return null;
-    const itemId = item.getId();
-
     return (
-      <TableRow
-        key={itemId}
-        nowrap
-        searchItem={item}
-        sortItem={item}
-        selected={detailsItem && detailsItem.getId() === itemId}
-        onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-        {...customizeTableRowProps(item)}
-      >
-        {isSelectable && (
-          <TableCell
-            checkbox
-            isChecked={isSelected(item)}
-            onClick={prevDefault(() => store.toggleSelection(item))}
-          />
-        )}
-        {
-          renderTableContents(item).map((content, index) => {
-            const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
-            const headCell = renderTableHeader?.[index];
+      <div key={uid}>
+        <Observer>
+          {() => {
+            const {
+              isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
+              store, hasDetailsView, onDetails,
+              copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
+            } = this.props;
+            const { isSelected } = store;
+            const item = this.props.getItems().find(item => item.getId() == uid);
 
-            if (copyClassNameFromHeadCells && headCell) {
-              cellProps.className = cssNames(cellProps.className, headCell.className);
-            }
+            if (!item) return null;
+            const itemId = item.getId();
 
-            if (!headCell || this.showColumn(headCell)) {
-              return <TableCell key={index} {...cellProps} />;
-            }
+            return (
+              <TableRow
+                nowrap
+                searchItem={item}
+                sortItem={item}
+                selected={detailsItem && detailsItem.getId() === itemId}
+                onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
+                {...customizeTableRowProps(item)}
+              >
+                {isSelectable && (
+                  <TableCell
+                    checkbox
+                    isChecked={isSelected(item)}
+                    onClick={prevDefault(() => store.toggleSelection(item))}
+                  />
+                )}
+                {renderTableContents(item).map((content, index) => {
+                  const cellProps: TableCellProps = isReactNode(content)
+                    ? { children: content }
+                    : content;
+                  const headCell = renderTableHeader?.[index];
 
-            return null;
-          })
-        }
-        {renderItemMenu && (
-          <TableCell className="menu">
-            <div onClick={stopPropagation}>
-              {renderItemMenu(item, store)}
-            </div>
-          </TableCell>
-        )}
-      </TableRow>
+                  if (copyClassNameFromHeadCells && headCell) {
+                    cellProps.className = cssNames(
+                      cellProps.className,
+                      headCell.className,
+                    );
+                  }
+
+                  if (!headCell || this.showColumn(headCell)) {
+                    return <TableCell key={index} {...cellProps} />;
+                  }
+
+                  return null;
+                })}
+                {renderItemMenu && (
+                  <TableCell className="menu">
+                    <div onClick={stopPropagation}>
+                      {renderItemMenu(item, store)}
+                    </div>
+                  </TableCell>
+                )}
+              </TableRow>
+            );
+          }}
+        </Observer>
+      </div>
     );
   }
 
   @boundMethod
-  removeItemsDialog() {
+  removeItemsDialog(selectedItems: I[]) {
     const { customizeRemoveDialog, store } = this.props;
-    const { selectedItems, removeSelectedItems } = store;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
     const selectedCount = selectedItems.length;
-    const tailCount = selectedCount > visibleMaxNamesCount ? selectedCount - visibleMaxNamesCount : 0;
-    const tail = tailCount > 0 ? <>, and <b>{tailCount}</b> more</> : null;
-    const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
+    const tailCount = selectedCount > visibleMaxNamesCount
+      ? selectedCount - visibleMaxNamesCount
+      : 0;
+    const tail = tailCount > 0
+      ? <>, and <b>{tailCount}</b> more</>
+      : null;
+    const message = selectedCount <= 1
+      ? <p>Remove item <b>{selectedNames}</b>?</p>
+      : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
+    const onConfirm = store.removeItems
+      ? () => store.removeItems(selectedItems)
+      : store.removeSelectedItems;
 
     ConfirmDialog.open({
-      ok: removeSelectedItems,
+      ok: onConfirm,
       labelOk: "Remove",
       message,
       ...dialogCustomProps,
@@ -190,11 +208,15 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     return (
       <TableHead showTopLine nowrap>
         {isSelectable && (
-          <TableCell
-            checkbox
-            isChecked={store.isSelectedAll(enabledItems)}
-            onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
-          />
+          <Observer>
+            {() => (
+              <TableCell
+                checkbox
+                isChecked={store.isSelectedAll(enabledItems)}
+                onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
+              />
+            )}
+          </Observer>
         )}
         {renderTableHeader.map((cellProps, index) => (
           this.showColumn(cellProps) && (
@@ -211,11 +233,12 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   render() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
-      detailsItem, className, tableProps = {}, tableId,
+      detailsItem, className, tableProps = {}, tableId, getItems,
     } = this.props;
-    const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
+    const items = getItems();
+    const selectedItems = store.pickOnlySelected(items);
 
     return (
       <div className="items box grow flex column">
@@ -225,7 +248,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           selectable={hasDetailsView}
           sortable={sortingCallbacks}
           getTableRow={this.getRow}
-          items={this.props.getItems()}
+          items={items}
           selectedItemId={selectedItemId}
           noItems={this.renderNoItems()}
           className={classNames}
@@ -234,11 +257,20 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           {this.renderTableHeader()}
           {this.renderItems()}
         </Table>
-        <AddRemoveButtons
-          onRemove={selectedItems.length ? this.removeItemsDialog : null}
-          removeTooltip={`Remove selected items (${selectedItems.length})`}
-          {...addRemoveButtons}
-        />
+
+        <Observer>
+          {() => (
+            <AddRemoveButtons
+              onRemove={
+                (store.removeItems || store.removeSelectedItems) && selectedItems.length > 0
+                  ? () => this.removeItemsDialog(selectedItems)
+                  : null
+              }
+              removeTooltip={`Remove selected items (${selectedItems.length})`}
+              {...addRemoveButtons}
+            />
+          )}
+        </Observer>
       </div>
     );
   }

@@ -71,9 +71,9 @@ export class HelmApiRoute {
     const { cluster, params, payload, response } = request;
 
     try {
-      const result = await helmService.rollback(cluster, params.release, params.namespace, payload.revision);
+      await helmService.rollback(cluster, params.release, params.namespace, payload.revision);
 
-      respondJson(response, result);
+      response.end();
     } catch (error) {
       logger.debug(error);
       respondText(response, error?.toString() || "Error rolling back chart", 422);

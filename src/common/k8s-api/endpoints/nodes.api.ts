@@ -140,6 +140,12 @@ function* getTrueConditionTypes(conditions: IterableIterator<NodeCondition> | It
   }
 }
 
+/**
+ * This regex is used in the `getRoleLabels()` method bellow, but placed here
+ * as factoring out regexes is best practice.
+ */
+const nodeRoleLabelKeyMatcher = /^.*node-role.kubernetes.io\/+(?<role>.+)$/;
+
 export class Node extends KubeObject {
   static kind = "Node";
   static namespaced = false;
@@ -165,17 +171,29 @@ export class Node extends KubeObject {
     return this.spec.taints || [];
   }
 
-  getRoleLabels() {
-    if (!this.metadata?.labels || typeof this.metadata.labels !== "object") {
+  getRoleLabels(): string {
+    const { labels } = this.metadata;
+
+    if (!labels || typeof labels !== "object") {
       return "";
     }
 
-    const roleLabels = Object.keys(this.metadata.labels)
-      .filter(key => key.includes("node-role.kubernetes.io"))
-      .map(key => key.match(/([^/]+$)/)[0]); // all after last slash
+    const roleLabels: string[] = [];
 
-    if (this.metadata.labels["kubernetes.io/role"] != undefined) {
-      roleLabels.push(this.metadata.labels["kubernetes.io/role"]);
+    for (const labelKey of Object.keys(labels)) {
+      const match = nodeRoleLabelKeyMatcher.exec(labelKey);
+
+      if (match) {
+        roleLabels.push(match.groups.role);
+      }
+    }
+
+    if (typeof labels["kubernetes.io/role"] === "string") {
+      roleLabels.push(labels["kubernetes.io/role"]);
+    }
+
+    if (typeof labels["node.kubernetes.io/role"] === "string") {
+      roleLabels.push(labels["node.kubernetes.io/role"]);
     }
 
     return roleLabels.join(", ");

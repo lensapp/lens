@@ -5,10 +5,10 @@
 
 import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
-import { appsRoute } from "./apps";
+import { helmRoute } from "./helm";
 
 export const helmChartsRoute: RouteProps = {
-  path: `${appsRoute.path}/charts/:repo?/:chartName?`,
+  path: `${helmRoute.path}/charts/:repo?/:chartName?`,
 };
 
 export interface HelmChartsRouteParams {

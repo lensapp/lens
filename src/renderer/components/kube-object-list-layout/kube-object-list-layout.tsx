@@ -138,23 +138,14 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
   }
 }
 
-export function KubeObjectListLayout<K extends KubeObject>(
-  props: KubeObjectListLayoutProps<K>,
-) {
-  const InjectedKubeObjectListLayout = withInjectables<
-    Dependencies,
-    KubeObjectListLayoutProps<K>
-  >(
-    NonInjectedKubeObjectListLayout,
+const InjectedKubeObjectListLayout = withInjectables<Dependencies, KubeObjectListLayoutProps<KubeObject>>(NonInjectedKubeObjectListLayout, {
+  getProps: (di, props) => ({
+    clusterFrameContext: di.inject(clusterFrameContextInjectable),
+    subscribeToStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+    ...props,
+  }),
+});
 
-    {
-      getProps: (di, props) => ({
-        clusterFrameContext: di.inject(clusterFrameContextInjectable),
-        subscribeToStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-        ...props,
-      }),
-    },
-  );
-
+export function KubeObjectListLayout<K extends KubeObject>(props: KubeObjectListLayoutProps<K>) {
   return <InjectedKubeObjectListLayout {...props} />;
 }

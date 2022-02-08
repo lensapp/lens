@@ -233,16 +233,16 @@ const commonPageTests: CommonPageTest[] = [{
   },
 },
 {
-  drawerId: "apps",
+  drawerId: "helm",
   pages: [
     {
       name: "Charts",
-      href: "/apps/charts",
+      href: "/helm/charts",
       expectedSelector: "div.HelmCharts input",
     },
     {
       name: "Releases",
-      href: "/apps/releases",
+      href: "/helm/releases",
       expectedSelector: "h5.title",
       expectedText: "Releases",
     },

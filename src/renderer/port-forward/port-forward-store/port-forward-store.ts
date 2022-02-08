@@ -73,8 +73,8 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     });
   }
 
-  async removeSelectedItems() {
-    return Promise.all(this.selectedItems.map(this.remove));
+  async removeItems(items: PortForwardItem[]) {
+    await Promise.all(items.map(this.remove));
   }
 
   getById(id: string) {

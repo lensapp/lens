@@ -5,10 +5,10 @@
 
 import type { RouteProps } from "react-router";
 import { buildURL } from "../utils/buildUrl";
-import { appsRoute } from "./apps";
+import { helmRoute } from "./helm";
 
 export const releaseRoute: RouteProps = {
-  path: `${appsRoute.path}/releases/:namespace?/:name?`,
+  path: `${helmRoute.path}/releases/:namespace?/:name?`,
 };
 
 export interface ReleaseRouteParams {

@@ -102,9 +102,7 @@ class HelmService {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
     logger.debug("Rollback release");
-    const output = rollback(releaseName, namespace, revision, proxyKubeconfig);
-
-    return { message: output };
+    await rollback(releaseName, namespace, revision, proxyKubeconfig);
   }
 }
 
