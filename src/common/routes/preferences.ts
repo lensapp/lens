@@ -42,6 +42,10 @@ export const installRoute: RouteProps = {
   path: `${preferencesRoute.path}/install`,
 };
 
+export const extensionPageRoute: RouteProps = {
+  path: `${preferencesRoute.path}/extension/:extensionId?`,
+};
+
 export const preferencesURL = buildURL(preferencesRoute.path);
 export const appURL = buildURL(appRoute.path);
 export const proxyURL = buildURL(proxyRoute.path);
@@ -51,3 +55,4 @@ export const telemetryURL = buildURL(telemetryRoute.path);
 export const extensionURL = buildURL(extensionRoute.path);
 export const terminalURL = buildURL(terminalRoute.path);
 export const installURL = buildURL(installRoute.path);
+export const extensionPageURL = buildURL<{ extensionId?: string }>(extensionPageRoute.path);

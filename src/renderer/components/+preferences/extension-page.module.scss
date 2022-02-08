@@ -1,0 +1,32 @@
+.contents {
+  display: grid;
+  grid-template-columns: 1fr 30%;
+}
+
+.metadata {
+  h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    a {
+      border: 1px solid rgb(72, 72, 72);
+      padding: 4px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+      color: #333;
+      margin: 0 6px 4px 0;
+      display: inline-block;
+
+      &:hover {
+        background-color: var(--blue);
+      }
+    }
+  }
+}
