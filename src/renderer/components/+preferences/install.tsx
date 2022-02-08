@@ -11,6 +11,11 @@ import { Icon } from "../icon";
 import { SearchInput } from "../input";
 import { Spinner } from "../spinner";
 import { Extension, getExtensions } from "./extension-list";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import installFromInputInjectable from "../+extensions/install-from-input/install-from-input.injectable";
+import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import { observer } from "mobx-react";
 
 export function Install() {
   const [extensions, setExtensions] = useState([]);
@@ -39,15 +44,15 @@ export function Install() {
 
   return (
     <section>
-      <h2><Icon material="add" style={{ opacity: ".3" }}/> Install Extensions</h2>
+      <h2>Install Extensions</h2>
 
       <div className="mt-4">
-        <SearchInput/>
+        <SearchInput theme="round-black"/>
       </div>
 
       <hr />
 
-      <h2 style={{ marginTop: "30px" }}><Icon material="star" small style={{ opacity: ".3" }}/> Featured Extensions</h2>
+      <h2 style={{ marginTop: "30px", display: "flex", alignItems: "center" }}><Icon material="star" small style={{ opacity: ".3" }}/> Featured Extensions</h2>
       {renderExtensionsOrSpinner()}
     </section>
   );
@@ -61,8 +66,23 @@ function ExtensionList({ extensions }: { extensions: Extension[] }) {
   );
 }
 
-function ExtensionCard({ extension }: { extension: Extension }) {
+
+
+interface Dependencies {
+  installFromInput: (input: string) => Promise<void>;
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
+}
+
+interface CardProps {
+  extension: Extension
+}
+
+function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, installFromInput }: CardProps & Dependencies) {
   const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
+
+  function onInstall() {
+    installFromInput(extension.binaryUrl);
+  }
 
   return (
     <div className={styles.extensionCard}>
@@ -88,10 +108,30 @@ function ExtensionCard({ extension }: { extension: Extension }) {
             <a href={githubRepositoryUrl} rel="noreferrer" target="_blank">{publisher.username}</a>
           </div>
           <div className={styles.install}>
-            <Button primary><Icon className={styles.installButtonIco} material="cloud_download"/> Install</Button>
+            <Button
+              primary
+              disabled={extensionInstallationStateStore.anyPreInstallingOrInstalling}
+              waiting={extensionInstallationStateStore.anyPreInstallingOrInstalling}
+              onClick={onInstall}
+            >
+              <Icon className={styles.installButtonIco} material="cloud_download"/> 
+              Install
+            </Button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export const ExtensionCard = withInjectables<Dependencies, CardProps>(
+  observer(NonInjectedExtensionCard),
+  {
+    getProps: (di, props) => ({
+      installFromInput: di.inject(installFromInputInjectable),
+      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+
+      ...props,
+    }),
+  },
+);
