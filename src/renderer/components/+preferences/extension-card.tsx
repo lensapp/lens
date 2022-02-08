@@ -13,10 +13,21 @@ import { Icon } from "../icon";
 import type { Extension } from "./extension-list";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import type { IComputedValue } from "mobx";
+import confirmUninstallExtensionInjectable from "../+extensions/confirm-uninstall-extension/confirm-uninstall-extension.injectable";
+import disableExtensionInjectable from "../+extensions/disable-extension/disable-extension.injectable";
+import enableExtensionInjectable from "../+extensions/enable-extension/enable-extension.injectable";
+import userExtensionsInjectable from "../+extensions/user-extensions/user-extensions.injectable";
+import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
+import type { LensExtensionId } from "../../../extensions/lens-extension";
 
 interface Dependencies {
   installFromInput: (input: string) => Promise<void>;
   extensionInstallationStateStore: ExtensionInstallationStateStore;
+  userExtensions: IComputedValue<InstalledExtension[]>;
+  enableExtension: (id: LensExtensionId) => void;
+  disableExtension: (id: LensExtensionId) => void;
+  confirmUninstallExtension: (extension: InstalledExtension) => Promise<void>;
 }
 
 interface Props {
@@ -24,8 +35,15 @@ interface Props {
   onClick?: () => void;
 }
 
-function NonInjectedExtensionCard({ extension, extensionInstallationStateStore: store, installFromInput, onClick }: Props & Dependencies) {
+function NonInjectedExtensionCard({
+  extension,
+  extensionInstallationStateStore: store,
+  installFromInput,
+  onClick,
+  userExtensions,
+}: Props & Dependencies) {
   const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
+  const installedExtension = userExtensions.get().find(installed => installed.manifest.name == name);
   const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
@@ -86,6 +104,10 @@ export const ExtensionCard = withInjectables<Dependencies, Props>(
     getProps: (di, props) => ({
       installFromInput: di.inject(installFromInputInjectable),
       extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+      userExtensions: di.inject(userExtensionsInjectable),
+      enableExtension: di.inject(enableExtensionInjectable),
+      disableExtension: di.inject(disableExtensionInjectable),
+      confirmUninstallExtension: di.inject(confirmUninstallExtensionInjectable),
 
       ...props,
     }),
