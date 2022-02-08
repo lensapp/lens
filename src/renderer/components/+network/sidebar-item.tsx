@@ -10,7 +10,7 @@ import { isActiveRoute } from "../../navigation";
 import { Icon } from "../icon";
 import { SidebarItem } from "../layout/sidebar-item";
 import type { TabLayoutRoute } from "../layout/tab-layout";
-import { TabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
+import { renderTabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
 import { networkRoute, networkURL } from "../../../common/routes";
 import networkRouteTabsInjectable from "./route-tabs.injectable";
 
@@ -32,7 +32,7 @@ const NonInjectedNetworkSidebarItem = observer(({ routes }: Dependencies & Netwo
       url={networkURL()}
       icon={<Icon material="device_hub"/>}
     >
-      <TabRoutesSidebarItems routes={tabRoutes} />
+      {renderTabRoutesSidebarItems(tabRoutes)}
     </SidebarItem>
   );
 });
