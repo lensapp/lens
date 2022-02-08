@@ -7,11 +7,9 @@ import { computed, IComputedValue } from "mobx";
 import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints";
 import { crdURL, crdDefinitionsRoute } from "../../../common/routes";
 import type { TabLayoutRoute } from "../layout/tab-layout";
-import { CrdList } from "./crd-list";
-import { CrdResources } from "./crd-resources";
 import groupedCustomResourceDefinitionsInjectable from "./grouped-custom-resources.injectable";
 
-export interface CustomResourceTabLayoutRoute extends TabLayoutRoute {
+export interface CustomResourceTabLayoutRoute extends Omit<TabLayoutRoute, "component"> {
   id: string;
 }
 
@@ -29,7 +27,6 @@ function getRouteTabs({ customResourcesDefinitions }: Dependencies) {
       {
         id: "definitions",
         title: "Definitions",
-        component: CrdList,
         url: crdURL(),
         routePath: String(crdDefinitionsRoute.path),
         exact: true,
@@ -41,12 +38,10 @@ function getRouteTabs({ customResourcesDefinitions }: Dependencies) {
         id: `crd-group:${group}`,
         title: group,
         routePath: crdURL({ query: { groups: group }}),
-        component: CrdResources,
         subRoutes: definitions.map(crd => ({
           id: `crd-resource:${crd.getResourceApiBase()}`,
           title: crd.getResourceKind(),
           routePath: crd.getResourceUrl(),
-          component: CrdResources,
         })),
       });
     }
