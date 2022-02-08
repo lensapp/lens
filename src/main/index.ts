@@ -239,6 +239,7 @@ di.runSetups().then(() => {
     // Override main content view url to local webpack-dev-server to support HMR / live-reload
     if (isDevelopment) {
       const devServer = createDevServer(lensProxy.port);
+
       await devServer.start();
       windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
     }

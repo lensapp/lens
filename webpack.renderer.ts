@@ -128,7 +128,7 @@ export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
     {
       test: /\.(ttf|eot|woff2?)$/,
       type: "asset/resource",
-    }
+    },
   ];
 }
 

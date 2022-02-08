@@ -32,7 +32,7 @@ export function createDevServer(lensProxyPort: number): DevServer {
     static: buildDir, // aka `devServer.contentBase` in webpack@4
     hot: true, // enable HMR when supported by modules or page refresh by default {liveReload:true}
     proxy: {
-      '*': {
+      "*": {
         router(req) {
           logger.silly(`[WEBPACK-DEV-SERVER]: proxy path ${req.path}`, req.headers);
 
@@ -41,7 +41,7 @@ export function createDevServer(lensProxyPort: number): DevServer {
         secure: false, // allow http connections
         ws: true, // proxy websockets, e.g. terminal
         logLevel: "error",
-      }
+      },
     },
     client: {
       overlay: false, // don't show warnings and errors on top of rendered app view
