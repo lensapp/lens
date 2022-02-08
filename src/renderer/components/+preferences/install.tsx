@@ -3,19 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import styles from "./install.module.scss";
-
 import React, { useEffect, useState } from "react";
-import { Button } from "../button";
 import { Icon } from "../icon";
 import { SearchInput } from "../input";
 import { Spinner } from "../spinner";
+import { ExtensionCard } from "./extension-card";
 import { Extension, getExtensions } from "./extension-list";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import installFromInputInjectable from "../+extensions/install-from-input/install-from-input.injectable";
-import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import { observer } from "mobx-react";
 
 export function Install() {
   const [extensions, setExtensions] = useState([]);
@@ -65,73 +58,3 @@ function ExtensionList({ extensions }: { extensions: Extension[] }) {
     </>
   );
 }
-
-
-
-interface Dependencies {
-  installFromInput: (input: string) => Promise<void>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore;
-}
-
-interface CardProps {
-  extension: Extension
-}
-
-function NonInjectedExtensionCard({ extension, extensionInstallationStateStore, installFromInput }: CardProps & Dependencies) {
-  const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
-
-  function onInstall() {
-    installFromInput(extension.binaryUrl);
-  }
-
-  return (
-    <div className={styles.extensionCard}>
-      <div className={styles.icon} style={{ backgroundImage: `url(${appIconUrl})` }}/>
-      <div className={styles.contents}>
-        <div className={styles.head}>
-          <div className={styles.nameAndVersion}>
-            <div className={styles.name}>{name}</div>
-            <div className={styles.version}>{version}</div>
-          </div>
-
-          <div className={styles.downloads}>
-            <Icon material="cloud_download"/> {totalNumberOfInstallations}
-          </div>
-        </div>
-
-        <div className={styles.description}>
-          {shortDescription}
-        </div>
-
-        <div className={styles.footer}>
-          <div className={styles.author}>
-            <a href={githubRepositoryUrl} rel="noreferrer" target="_blank">{publisher.username}</a>
-          </div>
-          <div className={styles.install}>
-            <Button
-              primary
-              disabled={extensionInstallationStateStore.anyPreInstallingOrInstalling}
-              waiting={extensionInstallationStateStore.anyPreInstallingOrInstalling}
-              onClick={onInstall}
-            >
-              <Icon className={styles.installButtonIco} material="cloud_download"/> 
-              Install
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export const ExtensionCard = withInjectables<Dependencies, CardProps>(
-  observer(NonInjectedExtensionCard),
-  {
-    getProps: (di, props) => ({
-      installFromInput: di.inject(installFromInputInjectable),
-      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
-
-      ...props,
-    }),
-  },
-);
