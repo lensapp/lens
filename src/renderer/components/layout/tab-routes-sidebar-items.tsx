@@ -8,10 +8,6 @@ import { isActiveRoute } from "../../navigation";
 import { SidebarItem } from "./sidebar-item";
 import type { TabLayoutRoute } from "./tab-layout";
 
-export interface SidebarTreeProps {
-  routes: TabLayoutRoute[];
-}
-
 function withId(src: TabLayoutRoute) {
   return {
     ...src,
@@ -19,19 +15,23 @@ function withId(src: TabLayoutRoute) {
   };
 }
 
-export const TabRoutesSidebarItems = ({ routes }: SidebarTreeProps) => (
-  <>
-    {
-      routes
-        .map(withId)
-        .map(({ title, routePath, url = routePath, exact = true, id }) => (
-          <SidebarItem
-            key={id}
-            id={id}
-            url={url}
-            text={title}
-            isActive={isActiveRoute({ path: routePath, exact })} />
-        ))
-    }
-  </>
+/**
+ * Renders a sidebar item for each route
+ *
+ * NOTE: this cannot be a component because then the `<SidebarItem>.isExandable`
+ * check will always return true because a component that renders to `null` is
+ * still a present child to the parent `<SidebarItem>`
+ */
+export const renderTabRoutesSidebarItems = (routes: TabLayoutRoute[]) => (
+  routes
+    .map(withId)
+    .map(({ title, routePath, url = routePath, exact = true, id }) => (
+      <SidebarItem
+        key={id}
+        id={id}
+        url={url}
+        text={title}
+        isActive={isActiveRoute({ path: routePath, exact })}
+      />
+    ))
 );

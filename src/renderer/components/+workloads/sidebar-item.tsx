@@ -11,7 +11,7 @@ import { isActiveRoute } from "../../navigation";
 import { Icon } from "../icon";
 import { SidebarItem } from "../layout/sidebar-item";
 import type { TabLayoutRoute } from "../layout/tab-layout";
-import { TabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
+import { renderTabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
 import workloadsRouteTabsInjectable from "./route-tabs.injectable";
 
 export interface WorkloadSidebarItemProps {}
@@ -32,7 +32,7 @@ const NonInjectedWorkloadsSidebarItem = observer(({ routes }: Dependencies & Wor
       url={workloadsURL()}
       icon={<Icon svg="workloads"/>}
     >
-      <TabRoutesSidebarItems routes={tabRoutes} />
+      {renderTabRoutesSidebarItems(tabRoutes)}
     </SidebarItem>
   );
 });

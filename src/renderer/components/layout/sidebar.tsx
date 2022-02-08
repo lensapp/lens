@@ -14,7 +14,7 @@ import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegist
 import { SidebarItem } from "./sidebar-item";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { SidebarCluster } from "./sidebar-cluster";
-import { TabRoutesSidebarItems } from "./tab-routes-sidebar-items";
+import { renderTabRoutesSidebarItems } from "./tab-routes-sidebar-items";
 import { ConfigSidebarItem } from "../+config/sidebar-item";
 import { ClusterSidebarItem } from "../+cluster/sidebar-item";
 import { NodesSidebarItem } from "../+nodes/sidebar-item";
@@ -104,7 +104,7 @@ export class Sidebar extends React.Component<SidebarProps> {
           text={menuItem.title}
           icon={<menuItem.components.Icon/>}
         >
-          <TabRoutesSidebarItems routes={tabRoutes} />
+          {renderTabRoutesSidebarItems(tabRoutes)}
         </SidebarItem>
       );
     });

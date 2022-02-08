@@ -11,7 +11,7 @@ import { isActiveRoute } from "../../navigation";
 import { Icon } from "../icon";
 import { SidebarItem } from "../layout/sidebar-item";
 import type { TabLayoutRoute } from "../layout/tab-layout";
-import { TabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
+import { renderTabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
 import configRoutesInjectable from "./route-tabs.injectable";
 
 export interface ConfigSidebarItemProps {}
@@ -32,7 +32,7 @@ const NonInjectedConfigSidebarItem = observer(({ routes }: Dependencies & Config
       url={configURL()}
       icon={<Icon material="list"/>}
     >
-      <TabRoutesSidebarItems routes={tabRoutes} />
+      {renderTabRoutesSidebarItems(tabRoutes)}
     </SidebarItem>
   );
 });

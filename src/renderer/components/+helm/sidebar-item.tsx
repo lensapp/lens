@@ -10,7 +10,7 @@ import { isActiveRoute } from "../../navigation";
 import { Icon } from "../icon";
 import { SidebarItem } from "../layout/sidebar-item";
 import type { TabLayoutRoute } from "../layout/tab-layout";
-import { TabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
+import { renderTabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
 import { helmRoute, helmURL } from "../../../common/routes";
 import networkRouteTabsInjectable from "./route-tabs.injectable";
 
@@ -31,7 +31,7 @@ const NonInjectedHelmSidebarItem = observer(({ routes }: Dependencies & HelmSide
       url={helmURL()}
       icon={<Icon material="apps"/>}
     >
-      <TabRoutesSidebarItems routes={tabRoutes} />
+      {renderTabRoutesSidebarItems(tabRoutes)}
     </SidebarItem>
   );
 });

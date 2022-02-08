@@ -11,7 +11,7 @@ import { isActiveRoute } from "../../navigation";
 import { Icon } from "../icon";
 import { SidebarItem } from "../layout/sidebar-item";
 import type { TabLayoutRoute } from "../layout/tab-layout";
-import { TabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
+import { renderTabRoutesSidebarItems } from "../layout/tab-routes-sidebar-items";
 import userManagementRouteTabsInjectable from "./route-tabs.injectable";
 
 export interface UserManagementSidebarItemProps {}
@@ -32,7 +32,7 @@ const NonInjectedUserManagementSidebarItem = observer(({ routes }: Dependencies 
       url={usersManagementURL()}
       icon={<Icon material="security"/>}
     >
-      <TabRoutesSidebarItems routes={tabRoutes} />
+      {renderTabRoutesSidebarItems(tabRoutes)}
     </SidebarItem>
   );
 });
