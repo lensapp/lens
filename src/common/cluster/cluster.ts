@@ -7,7 +7,7 @@ import { ipcMain } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage } from "../ipc";
 import type { ContextHandler } from "../../main/context-handler/context-handler";
-import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
+import { HttpError, KubeConfig } from "@kubernetes/client-node";
 import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
 import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "../kube-helpers";
@@ -21,12 +21,16 @@ import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../clu
 import { disposer, toJS } from "../utils";
 import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
+import type { CanI } from "./authorization-review.injectable";
+import type { ListNamespaces } from "./list-namespaces.injectable";
 
-interface Dependencies {
-  directoryForKubeConfigs: string,
-  createKubeconfigManager: (cluster: Cluster) => KubeconfigManager,
-  createContextHandler: (cluster: Cluster) => ContextHandler,
-  createKubectl: (clusterVersion: string) => Kubectl
+export interface ClusterDependencies {
+  readonly directoryForKubeConfigs: string;
+  createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
+  createContextHandler: (cluster: Cluster) => ContextHandler;
+  createKubectl: (clusterVersion: string) => Kubectl;
+  createAuthorizationReview: (config: KubeConfig) => CanI;
+  createListNamespaces: (config: KubeConfig) => ListNamespaces;
 }
 
 /**
@@ -213,7 +217,7 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.preferences.defaultNamespace;
   }
 
-  constructor(private dependencies: Dependencies, model: ClusterModel) {
+  constructor(private readonly dependencies: ClusterDependencies, model: ClusterModel) {
     makeObservable(this);
     this.id = model.id;
     this.updateModel(model);
@@ -425,10 +429,20 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   private async refreshAccessibility(): Promise<void> {
-    this.isAdmin = await this.isClusterAdmin();
-    this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
-    this.allowedNamespaces = await this.getAllowedNamespaces();
-    this.allowedResources = await this.getAllowedResources();
+    const proxyConfig = await this.getProxyKubeconfig();
+    const canI = this.dependencies.createAuthorizationReview(proxyConfig);
+
+    this.isAdmin = await canI({
+      namespace: "kube-system",
+      resource: "*",
+      verb: "create",
+    });
+    this.isGlobalWatchEnabled = await canI({
+      verb: "watch",
+      resource: "*",
+    });
+    this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
+    this.allowedResources = await this.getAllowedResources(canI);
     this.ready = true;
   }
 
@@ -507,50 +521,6 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  /**
-   * @internal
-   * @param resourceAttributes resource attributes
-   */
-  async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = (await this.getProxyKubeconfig()).makeApiClient(AuthorizationV1Api);
-
-    try {
-      const accessReview = await authApi.createSelfSubjectAccessReview({
-        apiVersion: "authorization.k8s.io/v1",
-        kind: "SelfSubjectAccessReview",
-        spec: { resourceAttributes },
-      });
-
-      return accessReview.body.status.allowed;
-    } catch (error) {
-      logger.error(`failed to request selfSubjectAccessReview: ${error}`);
-
-      return false;
-    }
-  }
-
-  /**
-   * @internal
-   */
-  async isClusterAdmin(): Promise<boolean> {
-    return this.canI({
-      namespace: "kube-system",
-      resource: "*",
-      verb: "create",
-    });
-  }
-
-  /**
-   * @internal
-   */
-  async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
-    return this.canI({
-      verb: "watch",
-      resource: "*",
-      ...customizeResource,
-    });
-  }
-
   toJSON(): ClusterModel {
     return toJS({
       id: this.id,
@@ -622,20 +592,17 @@ export class Cluster implements ClusterModel, ClusterState {
     broadcastMessage(`cluster:${this.id}:connection-update`, update);
   }
 
-  protected async getAllowedNamespaces() {
+  protected async getAllowedNamespaces(proxyConfig: KubeConfig) {
     if (this.accessibleNamespaces.length) {
       return this.accessibleNamespaces;
     }
 
-    const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
-
     try {
-      const { body: { items }} = await api.listNamespace();
-      const namespaces = items.map(ns => ns.metadata.name);
+      const listNamespaces = this.dependencies.createListNamespaces(proxyConfig);
 
-      return namespaces;
+      return await listNamespaces();
     } catch (error) {
-      const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
+      const ctx = proxyConfig.getContextObject(this.contextName);
       const namespaceList = [ctx.namespace].filter(Boolean);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
@@ -649,7 +616,7 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async getAllowedResources() {
+  protected async getAllowedResources(canI: CanI) {
     try {
       if (!this.allowedNamespaces.length) {
         return [];
@@ -662,7 +629,7 @@ export class Cluster implements ClusterModel, ClusterState {
         requests.push(apiLimit(async () => {
           for (const namespace of this.allowedNamespaces.slice(0, 10)) {
             if (!this.resourceAccessStatuses.get(apiResource)) {
-              const result = await this.canI({
+              const result = await canI({
                 resource: apiResource.apiName,
                 group: apiResource.group,
                 verb: "list",

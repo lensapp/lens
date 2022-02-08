@@ -39,6 +39,8 @@ import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { ClusterModel } from "../../common/cluster-types";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
+import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -76,6 +78,9 @@ describe("create clusters", () => {
     });
 
     await di.runSetups();
+
+    di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
+    di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
 
     createCluster = di.inject(createClusterInjectionToken);
 
@@ -117,7 +122,6 @@ describe("create clusters", () => {
     } as any;
 
     jest.spyOn(cluster, "reconnect");
-    jest.spyOn(cluster, "canI");
     jest.spyOn(cluster, "refreshConnectionStatus");
 
     await cluster.activate();
