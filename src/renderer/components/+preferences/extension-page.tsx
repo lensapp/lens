@@ -26,7 +26,14 @@ export function ExtensionPage() {
       }
     }
 
+    async function fetchGithubDescription() {
+      const description = await fetch("https://raw.githubusercontent.com/{owner}/{repo}/{branch}/README.md");
+
+      console.log(await description.text());
+    }
+
     fetchExtension();
+    fetchGithubDescription();
   }, []);
 
   if (!extension) {
