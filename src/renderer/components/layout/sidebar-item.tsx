@@ -63,7 +63,7 @@ class NonInjectedSidebarItem extends React.Component<SidebarItemProps & Dependen
   }
 
   @computed get isExpandable(): boolean {
-    return Boolean(this.props.children);
+    return React.Children.count(this.props.children) > 0;
   }
 
   toggleExpand = () => {
