@@ -27,6 +27,7 @@ declare module "*.scss" {
 }
 
 // Declare everything what's bundled as webpack's type="asset/resource"
+// Should be mocked for tests support in jestConfig.moduleNameMapper (currently in "/package.json")
 declare module "*.svg";
 declare module "*.jpg";
 declare module "*.png";

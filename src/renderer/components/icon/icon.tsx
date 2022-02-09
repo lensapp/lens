@@ -37,7 +37,7 @@ export class Icon extends React.PureComponent<IconProps> {
     focusable: true,
   };
 
-  static isSvg(content: string){
+  static isSvg(content: string) {
     return String(content).includes("svg+xml"); // data-url for raw svg-icon
   }
 
@@ -63,7 +63,7 @@ export class Icon extends React.PureComponent<IconProps> {
     switch (evt.nativeEvent.code) {
       case "Space":
 
-        // fallthrough
+      // fallthrough
       case "Enter": {
         this.ref.current?.click();
         evt.preventDefault();
@@ -104,10 +104,11 @@ export class Icon extends React.PureComponent<IconProps> {
     // render as inline svg-icon
     if (typeof svg === "string") {
       const dataUrlPrefix = "data:image/svg+xml;base64,";
-      const svgIconDataUrl: string = svg.startsWith(dataUrlPrefix) ? svg : require(`./${svg}.svg`);
-      const svgIconText = decode(svgIconDataUrl.replace(dataUrlPrefix, "")); // get raw xml
+      const svgIconDataUrl = svg.startsWith(dataUrlPrefix) ? svg : require(`./${svg}.svg`);
+      const svgIconText = typeof svgIconDataUrl == "string" // decode xml from data-url
+        ? decode(svgIconDataUrl.replace(dataUrlPrefix, "")) : "";
 
-      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
+      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }} />;
     }
 
     // render as material-icon
@@ -135,7 +136,7 @@ export class Icon extends React.PureComponent<IconProps> {
     }
 
     if (href) {
-      return <a {...iconProps} href={href} ref={this.ref}/>;
+      return <a {...iconProps} href={href} ref={this.ref} />;
     }
 
     return <i {...iconProps} ref={this.ref} />;
