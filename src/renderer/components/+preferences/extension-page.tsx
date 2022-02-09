@@ -10,33 +10,35 @@ import { Extension, getExtensionById } from "./extension-list";
 import { Spinner } from "../spinner";
 import { ExtensionCard } from "./extension-card";
 import { useParams } from "react-router";
+import { MarkdownViewer } from "../markdown-viewer";
 
 export function ExtensionPage() {
   const [extension, setExtension] = useState<Extension>(null);
+  const [description, setDescription] = useState<string>("");
   const { id } = useParams<{ id?: string }>();
 
   useEffect(() => {
     async function fetchExtension() {
-      try {
-        const response = await getExtensionById(id);
+      return await getExtensionById(id);
+    }
 
-        setExtension(response);
+    async function loadData() {
+      try {
+        const extension = await fetchExtension();
+        const readmeUrl = `${extension.githubRepositoryUrl.replace("github.com", "raw.githubusercontent.com")}/master/README.md`;
+        const description = await (await fetch(readmeUrl)).text();
+
+        setExtension(extension);
+        setDescription(description);
       } catch (error) {
         console.error(error);
       }
     }
 
-    async function fetchGithubDescription() {
-      const description = await fetch("https://raw.githubusercontent.com/{owner}/{repo}/{branch}/README.md");
-
-      console.log(await description.text());
-    }
-
-    fetchExtension();
-    fetchGithubDescription();
+    loadData();
   }, []);
 
-  if (!extension) {
+  if (!extension || !description) {
     return <Spinner/>;
   }
 
@@ -46,7 +48,7 @@ export function ExtensionPage() {
       <hr />
       <div className={styles.contents}>
         <div className="github">
-          GitHub description
+          <MarkdownViewer markdown={description} />
         </div>
         <div className="metadata">
           <h3 className="mb-5">Categories</h3>
