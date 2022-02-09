@@ -40,11 +40,15 @@ function NonInjectedExtensionCard({
   extensionInstallationStateStore: store,
   installFromInput,
   onClick,
-  userExtensions,
+  confirmUninstallExtension,
+  enableExtension,
+  disableExtension,
+  // userExtensions,
 }: Props & Dependencies) {
   const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
-  const installedExtension = userExtensions.get().find(installed => installed.manifest.name == name);
+  // const installedExtension = userExtensions.get().find(installed => installed.manifest.name == name);
   const [waiting, setWaiting] = useState(false);
+  const installed = true;
 
   useEffect(() => {
     if (!store.anyPreInstallingOrInstalling) {
@@ -56,6 +60,21 @@ function NonInjectedExtensionCard({
     evt.stopPropagation();
     setWaiting(true);
     installFromInput(extension.binaryUrl);
+  }
+
+  function onUninstall(evt: React.MouseEvent, extension: InstalledExtension) {
+    evt.stopPropagation();
+    confirmUninstallExtension(extension);
+  }
+
+  function onStatusToggle(evt: React.MouseEvent, extension: InstalledExtension) {
+    evt.stopPropagation();
+
+    if (extension.isEnabled) {
+      disableExtension(extension.id);
+    } else {
+      enableExtension(extension.id);
+    }
   }
 
   return (
@@ -82,15 +101,43 @@ function NonInjectedExtensionCard({
             <a href={githubRepositoryUrl} rel="noreferrer" target="_blank">{publisher.username}</a>
           </div>
           <div className={styles.install}>
-            <Button
-              primary
-              waiting={waiting}
-              disabled={store.anyPreInstallingOrInstalling}
-              onClick={onInstall}
-            >
-              <Icon className={styles.installButtonIco} material="cloud_download"/>
-              Install
-            </Button>
+            {installed ? (
+              <div className={styles.buttonGroup}>
+                <Button
+                  className={styles.leftButton}
+                  onClick={onClick}
+                >
+                  <Icon className="mr-4" material="settings"/>
+                  Settings
+                </Button>
+                <Button
+                  className={styles.centerButton}
+                  onClick={onClick}
+                >
+                  <Icon className="mr-4" material="delete"/>
+                  Uninstall
+                </Button>
+                <Button
+                  className={styles.rightButton}
+                  onClick={onClick}
+                >
+                  <Icon className="mr-4" material="pause"/>
+                  Disable
+                </Button>
+              </div>
+            ) : (
+              <div className={styles.buttonGroup}>
+                <Button
+                  primary
+                  waiting={waiting}
+                  disabled={store.anyPreInstallingOrInstalling}
+                  onClick={onInstall}
+                >
+                  <Icon className={styles.installButtonIco} material="cloud_download"/>
+                  Install
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

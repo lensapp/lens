@@ -7,7 +7,7 @@
   margin-bottom: 16px;
   border-radius: 4px;
   border: 1px solid #181a1f;
-  background-color: #333842;
+  background-color: #343840;
   overflow: hidden;
   cursor: pointer;
   padding: 16px;
@@ -89,4 +89,51 @@
 
 .installButtonIco {
   margin-right: var(--margin);
+}
+
+.buttonGroup {
+  margin: 8px 0 0 8px;
+  display: flex;
+}
+
+@mixin stickedButton {
+  padding: 6px 8px;
+  color: var(--textColorTertiary);
+  background: #343840;
+  border: 1px solid #212121;
+
+  &:hover {
+    background-color: #3e434c;
+    color: rgb(230, 230, 230);
+  }
+}
+
+.leftButton {
+  @include stickedButton();
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.centerButton {
+  @include stickedButton();
+  border-radius: 0;
+  border-right: 0;
+}
+
+.rightButton {
+  @include stickedButton();
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-right: 14px;
+
+  &:after {
+    display: inline-block;
+    content: " ";
+    width: 4px;
+    background-color: #2ba143;
+    height: 100%;
+    position: absolute;
+    right: 0;
+  }
 }
