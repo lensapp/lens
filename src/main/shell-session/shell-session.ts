@@ -19,8 +19,6 @@ import logger from "../logger";
 import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";
-import type { ShellEnvModifier } from "./shell-env-modifier/shell-env-modifier-registration";
-import type { CatalogEntity } from "../../common/catalog";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -106,12 +104,10 @@ export enum WebSocketCloseEvent {
   TlsHandshake = 1015,
 }
 
-type ShellEnvId = { clusterId: string, ShellType: string };
-
 export abstract class ShellSession {
   abstract ShellType: string;
 
-  private static shellEnvs = new Map<ShellEnvId, Record<string, string>>();
+  private static shellEnvs = new Map<string, Record<string, string>>();
   private static processes = new Map<string, pty.IPty>();
 
   /**
@@ -159,7 +155,7 @@ export abstract class ShellSession {
     return { shellProcess, resume };
   }
 
-  constructor(protected kubectl: Kubectl, protected shellEnvModifiers: ShellEnvModifier[], protected entity: CatalogEntity, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
+  constructor(protected kubectl: Kubectl, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
@@ -298,17 +294,16 @@ export abstract class ShellSession {
 
   protected async getCachedShellEnv() {
     const { id: clusterId } = this.cluster;
-    const { ShellType } = this;
 
-    let env = ShellSession.shellEnvs.get({ clusterId, ShellType });
+    let env = ShellSession.shellEnvs.get(clusterId);
 
     if (!env) {
       env = await this.getShellEnv();
-      ShellSession.shellEnvs.set({ clusterId, ShellType }, env);
+      ShellSession.shellEnvs.set(clusterId, env);
     } else {
       // refresh env in the background
       this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnvs.set({ clusterId, ShellType }, shellEnv);
+        ShellSession.shellEnvs.set(clusterId, shellEnv);
       });
     }
 
@@ -362,13 +357,6 @@ export abstract class ShellSession {
     ]
       .filter(Boolean)
       .join();
-
-    if (this.entity) {
-      const ctx = { catalogEntity: this.entity };
-      const modifiedEnv = this.shellEnvModifiers.reduce((env, modifier) => modifier(ctx, env), env);
-
-      return modifiedEnv;
-    }
 
     return env;
   }

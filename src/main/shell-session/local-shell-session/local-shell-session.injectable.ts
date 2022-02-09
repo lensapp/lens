@@ -24,7 +24,7 @@ const localShellSessionInjectable = getInjectable({
     const kubectl = createKubectl(cluster.version);
     const entity = catalogEntityRegistry.getById(cluster.id);
 
-    return new LocalShellSession(kubectl, localShellEnvModifiers.get(), entity, webSocket, cluster, tabId);
+    return new LocalShellSession(localShellEnvModifiers.get(), entity, kubectl, webSocket, cluster, tabId);
   },
 
   lifecycle: lifecycleEnum.transient,

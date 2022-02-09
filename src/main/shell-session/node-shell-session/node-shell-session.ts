@@ -25,7 +25,7 @@ export class NodeShellSession extends ShellSession {
   protected readonly cwd: string | undefined = undefined;
 
   constructor(protected nodeName: string, kubectl: Kubectl, socket: WebSocket, cluster: Cluster, terminalId: string) {
-    super(kubectl, [], undefined, socket, cluster, terminalId);
+    super(kubectl, socket, cluster, terminalId);
   }
 
   public async open() {
