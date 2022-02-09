@@ -1,0 +1,13 @@
+.noResults {
+  display: flex;
+  align-items: center;
+  margin: 10px 0 0;
+  color: #bfd3f8;
+  border-color: #141b25;
+  background-color: #313a46;
+  padding: 16px;
+}
+
+.searchInput>label {
+  box-shadow: none!important;
+}

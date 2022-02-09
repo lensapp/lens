@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import styles from "./install.module.scss";
+
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Icon } from "../icon";
@@ -13,6 +15,8 @@ import { Extension, getExtensions } from "./extension-list";
 
 export function Install() {
   const [extensions, setExtensions] = useState([]);
+  const [search, setSearch] = useState<string>("");
+  const query = search.toLowerCase();
 
   useEffect(() => {
     async function fetchExtensions() {
@@ -33,7 +37,7 @@ export function Install() {
       return <Spinner/>;
     }
 
-    return <ExtensionList extensions={extensions}/>;
+    return <ExtensionList extensions={extensions} search={query}/>;
   };
 
   return (
@@ -41,7 +45,7 @@ export function Install() {
       <h2>Install Extensions</h2>
 
       <div className="mt-4">
-        <SearchInput theme="round-black"/>
+        <SearchInput theme="round-black" className={styles.searchInput} style={{ boxShadow: "none" }} value={search} onChange={setSearch}/>
       </div>
 
       <hr />
@@ -52,16 +56,27 @@ export function Install() {
   );
 }
 
-function ExtensionList({ extensions }: { extensions: Extension[] }) {
+function ExtensionList({ extensions, search }: { extensions: Extension[], search?: string }) {
   const history = useHistory();
+  const filteredExtensions = extensions.filter((extension) => (
+    extension.name.toLowerCase().includes(search)
+  ));
 
   function handleClick(extensionId: string) {
     history.push(`extension/${extensionId}`);
   }
 
+  if (!filteredExtensions.length) {
+    return (
+      <div className={styles.noResults}>
+        <Icon material="search"/>&nbsp;No extension results for {search}
+      </div>
+    );
+  }
+
   return (
     <>
-      {extensions.map(extension => (
+      {filteredExtensions.map(extension => (
         <ExtensionCard key={extension.id} extension={extension} onClick={() => handleClick(extension.id)}/>
       ))}
     </>
