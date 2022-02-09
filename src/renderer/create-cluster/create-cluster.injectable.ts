@@ -2,12 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { Cluster, ClusterDependencies } from "../../common/cluster/cluster";
 import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 
 const createClusterInjectable = getInjectable({
+  id: "create-cluster",
+
   instantiate: (di) => {
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
@@ -22,8 +24,6 @@ const createClusterInjectable = getInjectable({
   },
 
   injectionToken: createClusterInjectionToken,
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createClusterInjectable;

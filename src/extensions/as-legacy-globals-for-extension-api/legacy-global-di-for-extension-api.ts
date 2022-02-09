@@ -2,11 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
-let legacyGlobalDi: DependencyInjectionContainer;
+let legacyGlobalDi: DiContainer;
 
-export const setLegacyGlobalDiForExtensionApi = (di: DependencyInjectionContainer) => {
+export const setLegacyGlobalDiForExtensionApi = (di: DiContainer) => {
   legacyGlobalDi = di;
 };
 

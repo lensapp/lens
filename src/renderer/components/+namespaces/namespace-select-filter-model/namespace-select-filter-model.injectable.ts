@@ -3,15 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { NamespaceSelectFilterModel } from "./namespace-select-filter-model";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import namespaceStoreInjectable from "../namespace-store/namespace-store.injectable";
 
-const NamespaceSelectFilterModelInjectable = getInjectable({
+const namespaceSelectFilterModelInjectable = getInjectable({
+  id: "namespace-select-filter-model",
+
   instantiate: (di) => new NamespaceSelectFilterModel({
     namespaceStore: di.inject(namespaceStoreInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
-export default NamespaceSelectFilterModelInjectable;
+export default namespaceSelectFilterModelInjectable;

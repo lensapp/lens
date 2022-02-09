@@ -7,7 +7,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { HotbarRemoveCommand } from "../hotbar-remove-command";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
@@ -27,7 +27,7 @@ const mockHotbars: { [id: string]: any } = {
 };
 
 describe("<HotbarRemoveCommand />", () => {
-  let di: DependencyInjectionContainer;
+  let di: DiContainer;
   let render: DiRender;
 
   beforeEach(() => {

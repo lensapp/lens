@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { LensMainExtension } from "../../extensions/lens-main-extension";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
 import type { IComputedValue } from "mobx";
@@ -12,7 +12,7 @@ import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
 
 describe("electron-menu-items", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
   let electronMenuItems: IComputedValue<MenuRegistration[]>;
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 

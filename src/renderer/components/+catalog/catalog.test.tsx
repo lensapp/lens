@@ -14,7 +14,7 @@ import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
 import catalogEntityRegistryInjectable
   from "../../api/catalog-entity-registry/catalog-entity-registry.injectable";
@@ -95,7 +95,7 @@ describe("<Catalog />", () => {
     }, onRun);
   }
 
-  let di: DependencyInjectionContainer;
+  let di: DiContainer;
   let catalogEntityStore: CatalogEntityStore;
   let catalogEntityRegistry: CatalogEntityRegistry;
   let render: DiRender;

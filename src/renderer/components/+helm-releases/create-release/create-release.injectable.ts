@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import {
   createRelease,
   IReleaseCreatePayload,
@@ -10,6 +10,8 @@ import {
 import releasesInjectable from "../releases.injectable";
 
 const createReleaseInjectable = getInjectable({
+  id: "create-release",
+
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
 
@@ -21,8 +23,6 @@ const createReleaseInjectable = getInjectable({
       return release;
     };
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createReleaseInjectable;

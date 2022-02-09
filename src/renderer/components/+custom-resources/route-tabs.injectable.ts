@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
 import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints";
 import { crdURL, crdDefinitionsRoute } from "../../../common/routes";
@@ -51,10 +51,11 @@ function getRouteTabs({ customResourcesDefinitions }: Dependencies) {
 }
 
 const customResourcesRouteTabsInjectable = getInjectable({
+  id: "custom-resources-route-tabs",
+
   instantiate: (di) => getRouteTabs({
     customResourcesDefinitions: di.inject(groupedCustomResourceDefinitionsInjectable),
   }),
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default customResourcesRouteTabsInjectable;

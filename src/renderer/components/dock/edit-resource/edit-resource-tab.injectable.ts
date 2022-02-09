@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import editResourceTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { KubeObject } from "../../../../common/k8s-api/kube-object";
@@ -45,12 +45,12 @@ const createEditResourceTab = ({ dockStore, editResourceStore }: Dependencies) =
 };
 
 const createEditResourceTabInjectable = getInjectable({
+  id: "create-edit-resource-tab",
+
   instantiate: (di) => createEditResourceTab({
     dockStore: di.inject(dockStoreInjectable),
     editResourceStore: di.inject(editResourceTabStoreInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createEditResourceTabInjectable;

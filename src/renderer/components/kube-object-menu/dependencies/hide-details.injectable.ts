@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { hideDetails } from "../../kube-detail-params";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 
 const hideDetailsInjectable = getInjectable({
+  id: "hide-details",
   instantiate: () => hideDetails,
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default hideDetailsInjectable;

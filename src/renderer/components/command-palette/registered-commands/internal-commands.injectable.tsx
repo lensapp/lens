@@ -12,7 +12,7 @@ import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";
 import { HotbarRenameCommand } from "../../hotbar/hotbar-rename-command";
 import { ActivateEntityCommand } from "../../activate-entity-command";
 import type { CommandContext, CommandRegistration } from "./commands";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-overlay.injectable";
 import createTerminalTabInjectable from "../../dock/terminal/create-terminal-tab.injectable";
 import type { DockTabCreate } from "../../dock/dock/store";
@@ -205,6 +205,8 @@ function getInternalCommands({ openCommandDialog, getEntitySettingItems, createT
 }
 
 const internalCommandsInjectable = getInjectable({
+  id: "internal-commands",
+
   instantiate: (di) => getInternalCommands({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
     getEntitySettingItems: EntitySettingRegistry
@@ -212,7 +214,6 @@ const internalCommandsInjectable = getInjectable({
       .getItemsForKind,
     createTerminalTab: di.inject(createTerminalTabInjectable),
   }),
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default internalCommandsInjectable;
