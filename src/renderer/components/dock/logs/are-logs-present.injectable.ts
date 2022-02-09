@@ -7,6 +7,8 @@ import type { TabId } from "../dock/store";
 import logStoreInjectable from "./store.injectable";
 
 const areLogsPresentInjectable = getInjectable({
+  id: "are-logs-present",
+
   instantiate: (di) => {
     const logStore = di.inject(logStoreInjectable);
 

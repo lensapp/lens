@@ -8,6 +8,7 @@ import extensionsInjectable from "./extensions.injectable";
 import type { LensMainExtension } from "./lens-main-extension";
 
 const mainExtensionsInjectable = getInjectable({
+  id: "main-extensions",
   lifecycle: lifecycleEnum.singleton,
 
   instantiate: (di) =>

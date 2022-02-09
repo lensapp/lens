@@ -28,6 +28,8 @@ const installFromSelectFileDialog = ({ attemptInstalls, directoryForDownloads }:
 };
 
 const installFromSelectFileDialogInjectable = getInjectable({
+  id: "install-from-select-file-dialog",
+
   instantiate: (di) => installFromSelectFileDialog({
     attemptInstalls: di.inject(attemptInstallsInjectable),
     directoryForDownloads: di.inject(directoryForDownloadsInjectable),

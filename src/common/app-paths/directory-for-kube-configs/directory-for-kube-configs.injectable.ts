@@ -7,6 +7,8 @@ import directoryForUserDataInjectable from "../directory-for-user-data/directory
 import path from "path";
 
 const directoryForKubeConfigsInjectable = getInjectable({
+  id: "directory-for-kube-configs",
+
   instantiate: (di) =>
     path.resolve(di.inject(directoryForUserDataInjectable), "kubeconfigs"),
 

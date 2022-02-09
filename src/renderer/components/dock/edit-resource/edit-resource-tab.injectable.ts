@@ -45,6 +45,8 @@ const createEditResourceTab = ({ dockStore, editResourceStore }: Dependencies) =
 };
 
 const createEditResourceTabInjectable = getInjectable({
+  id: "create-edit-resource-tab",
+
   instantiate: (di) => createEditResourceTab({
     dockStore: di.inject(dockStoreInjectable),
     editResourceStore: di.inject(editResourceTabStoreInjectable),

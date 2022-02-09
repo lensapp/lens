@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { isWindows } from "../vars";
 
 const isWindowsInjectable = getInjectable({
+  id: "is-windows",
   instantiate: () => isWindows,
   lifecycle: lifecycleEnum.singleton,
 });

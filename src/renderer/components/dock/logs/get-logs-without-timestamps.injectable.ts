@@ -6,6 +6,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import logStoreInjectable from "./store.injectable";
 
 const getLogsWithoutTimestampsInjectable = getInjectable({
+  id: "get-logs-without-timestamps",
+
   instantiate: (di) => {
     const logStore = di.inject(logStoreInjectable);
 

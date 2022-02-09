@@ -18,6 +18,8 @@ import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-s
 import { workloads } from "./workloads";
 
 const workloadsInjectable = getInjectable({
+  id: "workloads",
+
   instantiate: (di) =>
     workloads({
       isAllowedResource: di.inject(isAllowedResourceInjectable),

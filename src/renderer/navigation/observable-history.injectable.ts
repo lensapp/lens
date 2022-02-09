@@ -7,8 +7,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { navigation as observableHistory } from "./history";
 
 const observableHistoryInjectable = getInjectable({
+  id: "observable-history",
   instantiate: () => observableHistory,
-
   lifecycle: lifecycleEnum.singleton,
 });
 

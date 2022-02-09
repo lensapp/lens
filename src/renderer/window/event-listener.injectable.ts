@@ -13,6 +13,7 @@ function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listene
 }
 
 const windowAddEventListenerInjectable = getInjectable({
+  id: "window-add-event-listener",
   instantiate: () => addWindowEventListener,
   lifecycle: lifecycleEnum.singleton,
 });

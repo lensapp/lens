@@ -8,6 +8,8 @@ import createStorageInjectable from "../../../utils/create-storage/create-storag
 export const defaultDrawerWidth = 725;
 
 const drawerStorageInjectable = getInjectable({
+  id: "drawer-storage",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

@@ -79,6 +79,8 @@ const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependenc
 };
 
 const sendCommandInjectable = getInjectable({
+  id: "send-command",
+
   instantiate: (di) => sendCommand({
     createTerminalTab: di.inject(createTerminalTabInjectable),
     selectTab: di.inject(selectDockTabInjectable),

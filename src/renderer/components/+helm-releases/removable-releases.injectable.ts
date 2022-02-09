@@ -9,6 +9,8 @@ import deleteReleaseInjectable from "./delete-release/delete-release.injectable"
 import { removableReleases } from "./removable-releases";
 
 const removableReleasesInjectable = getInjectable({
+  id: "removable-releases",
+
   instantiate: (di) =>
     removableReleases({
       releases: di.inject(releasesInjectable),

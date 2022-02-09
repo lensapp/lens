@@ -45,6 +45,8 @@ const createUpgradeChartTab = ({ upgradeChartStore, dockStore }: Dependencies) =
 };
 
 const createUpgradeChartTabInjectable = getInjectable({
+  id: "create-upgrade-chart-tab",
+
   instantiate: (di) => createUpgradeChartTab({
     upgradeChartStore: di.inject(upgradeChartTabStoreInjectable),
     dockStore: di.inject(dockStoreInjectable),

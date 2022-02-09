@@ -32,6 +32,7 @@ export class CommandOverlay {
 }
 
 const commandOverlayInjectable = getInjectable({
+  id: "command-overlay",
   instantiate: () => new CommandOverlay(),
   lifecycle: lifecycleEnum.singleton,
 });

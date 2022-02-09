@@ -10,6 +10,8 @@ export type IsAllowedResource = (resource: KubeResource) => boolean;
 
 // TODO: This injectable obscures MobX de-referencing. Make it more apparent in usage.
 const isAllowedResourceInjectable = getInjectable({
+  id: "is-allowed-resource",
+
   instantiate: (di) => {
     const allowedResources = di.inject(allowedResourcesInjectable);
 

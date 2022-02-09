@@ -9,6 +9,8 @@ import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 
 const createStorageInjectable = getInjectable({
+  id: "create-storage",
+
   instantiate: (di) =>
     createStorage({
       readJsonFile: di.inject(readJsonFileInjectable),

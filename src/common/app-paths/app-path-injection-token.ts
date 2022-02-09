@@ -8,7 +8,7 @@ import { createChannel } from "../ipc-channel/create-channel/create-channel";
 
 export type AppPaths = Record<PathName, string>;
 
-export const appPathsInjectionToken = getInjectionToken<AppPaths>();
+export const appPathsInjectionToken = getInjectionToken<AppPaths>({ id: "app-paths-token" });
 
 export const appPathsIpcChannel = createChannel<AppPaths>("app-paths");
 

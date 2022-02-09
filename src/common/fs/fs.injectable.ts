@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import fse from "fs-extra";
 
 const fsInjectable = getInjectable({
+  id: "fs",
   instantiate: () => fse,
   causesSideEffects: true,
   lifecycle: lifecycleEnum.singleton,

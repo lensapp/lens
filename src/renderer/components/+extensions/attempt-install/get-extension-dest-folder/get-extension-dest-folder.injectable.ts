@@ -9,6 +9,8 @@ import extensionDiscoveryInjectable from "../../../../../extensions/extension-di
 import { getExtensionDestFolder } from "./get-extension-dest-folder";
 
 const getExtensionDestFolderInjectable = getInjectable({
+  id: "get-extension-dest-folder",
+
   instantiate: (di) =>
     getExtensionDestFolder({
       extensionDiscovery: di.inject(extensionDiscoveryInjectable),

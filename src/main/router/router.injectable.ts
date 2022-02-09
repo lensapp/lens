@@ -8,6 +8,8 @@ import routePortForwardInjectable
   from "../routes/port-forward/route-port-forward/route-port-forward.injectable";
 
 const routerInjectable = getInjectable({
+  id: "router",
+
   instantiate: (di) => new Router({
     routePortForward: di.inject(routePortForwardInjectable),
   }),

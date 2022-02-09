@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { catalogEntityRegistry } from "../catalog-entity-registry";
 
 const catalogEntityRegistryInjectable = getInjectable({
+  id: "catalog-entity-registry",
   instantiate: () => catalogEntityRegistry,
   lifecycle: lifecycleEnum.singleton,
 });

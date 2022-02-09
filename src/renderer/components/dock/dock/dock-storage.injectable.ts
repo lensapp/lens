@@ -7,6 +7,8 @@ import createStorageInjectable from "../../../utils/create-storage/create-storag
 import { DockStorageState, TabKind } from "./store";
 
 const dockStorageInjectable = getInjectable({
+  id: "dock-storage",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

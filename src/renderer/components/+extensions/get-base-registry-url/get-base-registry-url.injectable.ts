@@ -11,6 +11,8 @@ import { UserStore } from "../../../../common/user-store";
 import { getBaseRegistryUrl } from "./get-base-registry-url";
 
 const getBaseRegistryUrlInjectable = getInjectable({
+  id: "get-base-registry-url",
+
   instantiate: () => getBaseRegistryUrl({
     // TODO: use injection
     getRegistryUrlPreference: () => UserStore.getInstance().extensionRegistryUrl,

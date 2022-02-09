@@ -12,6 +12,8 @@ import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bu
 import clusterFrameContextInjectable from "../../../cluster-frame-context/cluster-frame-context.injectable";
 
 const initClusterFrameInjectable = getInjectable({
+  id: "init-cluster-frame",
+
   instantiate: (di) =>
     initClusterFrame({
       hostedCluster: di.inject(hostedClusterInjectable),

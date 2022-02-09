@@ -7,6 +7,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import createPortForwardInjectable from "../create-port-forward.injectable";
 
 const routePortForwardInjectable = getInjectable({
+  id: "route-port-forward",
+
   instantiate: (di) => routePortForward({
     createPortForward: di.inject(createPortForwardInjectable),
   }),

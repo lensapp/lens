@@ -9,6 +9,8 @@ import shellRequestAuthenticatorInjectable
   from "./shell-request-authenticator/shell-request-authenticator.injectable";
 
 const shellApiRequestInjectable = getInjectable({
+  id: "shell-api-request",
+
   instantiate: (di) => shellApiRequest({
     createShellSession: di.inject(createShellSessionInjectable),
     authenticateRequest: di.inject(shellRequestAuthenticatorInjectable).authenticate,

@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { app } from "electron";
 
 const electronAppInjectable = getInjectable({
+  id: "electron-app",
   instantiate: () => app,
   lifecycle: lifecycleEnum.singleton,
   causesSideEffects: true,

@@ -7,6 +7,8 @@ import type { TabId } from "../dock/store";
 import upgradeChartTabStoreInjectable from "./store.injectable";
 
 const clearUpgradeChartTabDataInjectable = getInjectable({
+  id: "clear-upgrade-chart-tab-data",
+
   instantiate: (di) => {
     const upgradeChartTabStore = di.inject(upgradeChartTabStoreInjectable);
 

@@ -7,6 +7,8 @@ import { DockTabStore, DockTabStoreOptions } from "./dock-tab.store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const createDockTabStoreInjectable = getInjectable({
+  id: "create-dock-tab-store",
+
   instantiate: (di) => {
     const dependencies = {
       createStorage: di.inject(createStorageInjectable),

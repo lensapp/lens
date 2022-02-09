@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { ExtensionsStore } from "./extensions-store";
 
 const extensionsStoreInjectable = getInjectable({
+  id: "extensions-store",
   instantiate: () => ExtensionsStore.createInstance(),
   lifecycle: lifecycleEnum.singleton,
 });

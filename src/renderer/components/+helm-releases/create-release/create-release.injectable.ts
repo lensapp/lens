@@ -10,6 +10,8 @@ import {
 import releasesInjectable from "../releases.injectable";
 
 const createReleaseInjectable = getInjectable({
+  id: "create-release",
+
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
 

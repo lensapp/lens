@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { history } from "./history";
 
 const historyInjectable = getInjectable({
+  id: "history",
   instantiate: () => history,
   lifecycle: lifecycleEnum.singleton,
 });

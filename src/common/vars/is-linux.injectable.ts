@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { isLinux } from "../vars";
 
 const isLinuxInjectable = getInjectable({
+  id: "is-linux",
   instantiate: () => isLinux,
   lifecycle: lifecycleEnum.singleton,
 });

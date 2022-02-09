@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import fsInjectable from "./fs.injectable";
 
 const readFileInjectable = getInjectable({
+  id: "read-file",
   instantiate: (di) => di.inject(fsInjectable).readFile,
   lifecycle: lifecycleEnum.singleton,
 });

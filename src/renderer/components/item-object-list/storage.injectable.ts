@@ -6,6 +6,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import createStorageInjectable from "../../utils/create-storage/create-storage.injectable";
 
 const itemListLayoutStorageInjectable = getInjectable({
+  id: "item-list-layout-storage",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

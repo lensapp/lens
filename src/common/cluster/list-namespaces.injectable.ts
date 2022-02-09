@@ -18,6 +18,7 @@ export function listNamespaces(config: KubeConfig): ListNamespaces {
 }
 
 const listNamespacesInjectable = getInjectable({
+  id: "list-namespaces",
   instantiate: () => listNamespaces,
   lifecycle: lifecycleEnum.singleton,
 });

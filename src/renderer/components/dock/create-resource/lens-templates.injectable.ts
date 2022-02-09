@@ -33,6 +33,8 @@ async function getTemplates({ readDir, readFile }: Dependencies) {
 }
 
 const lensCreateResourceTemplatesInjectable = getInjectable({
+  id: "lens-create-resource-templates",
+
   instantiate: async (di): Promise<RawTemplates> => {
     const templates = await getTemplates({
       readFile: di.inject(readFileInjectable),

@@ -25,9 +25,12 @@ function getGroupedCustomResourceDefinitions({ definitions }: Dependencies) {
 }
 
 const groupedCustomResourceDefinitionsInjectable = getInjectable({
+  id: "grouped-custom-resource-definitions",
+
   instantiate: (di) => getGroupedCustomResourceDefinitions({
     definitions: di.inject(customResourceDefinitionsInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

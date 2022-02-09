@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import type { Channel } from "../common/ipc-channel/channel";
 import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
@@ -12,8 +12,8 @@ export const overrideIpcBridge = ({
   rendererDi,
   mainDi,
 }: {
-  rendererDi: DependencyInjectionContainer;
-  mainDi: DependencyInjectionContainer;
+  rendererDi: DiContainer;
+  mainDi: DiContainer;
 }) => {
   const fakeChannelMap = new Map<
     Channel<any>,

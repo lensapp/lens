@@ -16,6 +16,8 @@ interface Args {
 }
 
 const createShellSessionInjectable = getInjectable({
+  id: "create-shell-session",
+
   instantiate:
     (di) =>
       ({ nodeName, ...rest }: Args) =>

@@ -7,6 +7,7 @@ import { computed } from "mobx";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 
 const userExtensionsInjectable = getInjectable({
+  id: "user-extensions",
   lifecycle: lifecycleEnum.singleton,
 
   instantiate: (di) => {

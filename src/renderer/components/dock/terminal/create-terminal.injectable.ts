@@ -8,6 +8,7 @@ import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
 
 const createTerminalInjectable = getInjectable({
+  id: "create-terminal",
   instantiate: () => (tabId: TabId, api: TerminalApi) => new Terminal(tabId, api),
   lifecycle: lifecycleEnum.singleton,
 });

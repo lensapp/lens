@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { AddNamespaceDialogModel } from "./add-namespace-dialog-model";
 
 const addNamespaceDialogModelInjectable = getInjectable({
+  id: "add-namespace-dialog-model",
   instantiate: () => new AddNamespaceDialogModel(),
   lifecycle: lifecycleEnum.singleton,
 });

@@ -7,6 +7,8 @@ import path from "path";
 import directoryForUserDataInjectable from "../directory-for-user-data/directory-for-user-data.injectable";
 
 const directoryForBinariesInjectable = getInjectable({
+  id: "directory-for-binaries",
+
   instantiate: (di) =>
     path.join(di.inject(directoryForUserDataInjectable), "binaries"),
 

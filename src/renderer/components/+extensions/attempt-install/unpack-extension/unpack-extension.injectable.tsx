@@ -11,6 +11,8 @@ import extensionInstallationStateStoreInjectable
   from "../../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 
 const unpackExtensionInjectable = getInjectable({
+  id: "unpack-extension",
+
   instantiate: (di) =>
     unpackExtension({
       extensionLoader: di.inject(extensionLoaderInjectable),

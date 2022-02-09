@@ -7,6 +7,8 @@ import extensionLoaderInjectable from "../../../../extensions/extension-loader/e
 import { enableExtension } from "./enable-extension";
 
 const enableExtensionInjectable = getInjectable({
+  id: "enable-extension",
+
   instantiate: (di) =>
     enableExtension({
       extensionLoader: di.inject(extensionLoaderInjectable),

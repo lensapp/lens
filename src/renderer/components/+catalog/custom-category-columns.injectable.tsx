@@ -45,9 +45,12 @@ function getAdditionCategoryColumns({ extensions }: Dependencies): IComputedValu
 }
 
 const categoryColumnsInjectable = getInjectable({
+  id: "category-columns",
+
   instantiate: (di) => getAdditionCategoryColumns({
     extensions: di.inject(rendererExtensionsInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

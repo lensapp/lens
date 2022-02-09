@@ -7,6 +7,8 @@ import path from "path";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const directoryForLensLocalStorageInjectable = getInjectable({
+  id: "directory-for-lens-local-storage",
+
   instantiate: (di) =>
     path.resolve(
       di.inject(directoryForUserDataInjectable),

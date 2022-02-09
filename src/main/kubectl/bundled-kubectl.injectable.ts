@@ -7,6 +7,8 @@ import { getBundledKubectlVersion } from "../../common/utils";
 import createKubectlInjectable from "./create-kubectl.injectable";
 
 const bundledKubectlInjectable = getInjectable({
+  id: "bundled-kubectl",
+
   instantiate: (di) => {
     const createKubectl = di.inject(createKubectlInjectable);
 

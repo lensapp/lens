@@ -9,6 +9,8 @@ import type { IReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const installChartTabStoreInjectable = getInjectable({
+  id: "install-chart-tab-store",
+
   instantiate: (di) => {
     const createDockTabStore = di.inject(createDockTabStoreInjectable);
 

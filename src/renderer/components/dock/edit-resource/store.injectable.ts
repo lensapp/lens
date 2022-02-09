@@ -7,6 +7,8 @@ import { EditResourceTabStore } from "./store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const editResourceTabStoreInjectable = getInjectable({
+  id: "edit-resource-tab-store",
+
   instantiate: (di) => new EditResourceTabStore({
     createStorage: di.inject(createStorageInjectable),
   }),

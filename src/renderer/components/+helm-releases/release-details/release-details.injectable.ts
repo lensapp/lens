@@ -8,6 +8,8 @@ import { asyncComputed } from "@ogre-tools/injectable-react";
 import releaseInjectable from "./release.injectable";
 
 const releaseDetailsInjectable = getInjectable({
+  id: "release-details",
+
   instantiate: (di) =>
     asyncComputed(async () => {
       const release = di.inject(releaseInjectable).get();

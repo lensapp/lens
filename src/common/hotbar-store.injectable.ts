@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { HotbarStore } from "./hotbar-store";
 
 const hotbarManagerInjectable = getInjectable({
+  id: "hotbar-manager",
   instantiate: () => HotbarStore.getInstance(),
   lifecycle: lifecycleEnum.singleton,
 });

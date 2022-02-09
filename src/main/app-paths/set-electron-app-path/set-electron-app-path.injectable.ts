@@ -7,6 +7,8 @@ import type { PathName } from "../../../common/app-paths/app-path-names";
 import electronAppInjectable from "../get-electron-app-path/electron-app/electron-app.injectable";
 
 const setElectronAppPathInjectable = getInjectable({
+  id: "set-electron-app-path",
+
   instantiate: (di) => (name: PathName, path: string) : void =>
     di.inject(electronAppInjectable).setPath(name, path),
 

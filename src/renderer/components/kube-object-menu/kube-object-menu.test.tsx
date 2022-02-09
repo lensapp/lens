@@ -7,7 +7,7 @@ import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { ConfirmDialog } from "../confirm-dialog";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -47,7 +47,7 @@ class SomeTestExtension extends LensRendererExtension {
 }
 
 describe("kube-object-menu", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
   let render: DiRender;
 
   beforeEach(async () => {

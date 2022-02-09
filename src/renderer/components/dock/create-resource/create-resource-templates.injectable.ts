@@ -11,6 +11,8 @@ import lensCreateResourceTemplatesInjectable from "./lens-templates.injectable";
 export type RawTemplates = [group: string, items: [file: string, contents: string][]];
 
 const createResourceTemplatesInjectable = getInjectable({
+  id: "create-resource-templates",
+
   instantiate: async (di) => {
     const lensResourceTemplates = await di.inject(lensCreateResourceTemplatesInjectable);
     const userResourceTemplates = di.inject(userCreateResourceTemplatesInjectable);

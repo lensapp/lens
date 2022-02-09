@@ -7,6 +7,8 @@ import { CatalogEntityStore } from "./catalog-entity.store";
 import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
 
 const catalogEntityStoreInjectable = getInjectable({
+  id: "catalog-entity-store",
+
   instantiate: (di) => new CatalogEntityStore({
     registry: di.inject(catalogEntityRegistryInjectable),
   }),

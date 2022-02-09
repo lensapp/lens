@@ -7,6 +7,8 @@ import { PortForward, PortForwardArgs } from "./port-forward";
 import bundledKubectlInjectable from "../../kubectl/bundled-kubectl.injectable";
 
 const createPortForwardInjectable = getInjectable({
+  id: "create-port-forward",
+
   instantiate: (di) => {
     const bundledKubectl = di.inject(bundledKubectlInjectable);
 

@@ -7,6 +7,8 @@ import type { TabId } from "../dock/store";
 import logTabStoreInjectable from "./tab-store.injectable";
 
 const clearLogTabDataInjectable = getInjectable({
+  id: "clear-log-tab-data",
+
   instantiate: (di) => {
     const logTabStore = di.inject(logTabStoreInjectable);
 

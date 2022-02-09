@@ -6,8 +6,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import extensionInstallerInjectable from "../extension-installer.injectable";
 
 const installExtensionInjectable = getInjectable({
+  id: "install-extension",
   instantiate: (di) => di.inject(extensionInstallerInjectable).installPackage,
-
   lifecycle: lifecycleEnum.singleton,
 });
 

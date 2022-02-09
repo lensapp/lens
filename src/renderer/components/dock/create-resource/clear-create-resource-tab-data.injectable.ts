@@ -7,6 +7,8 @@ import type { TabId } from "../dock/store";
 import createResourceTabStoreInjectable from "./store.injectable";
 
 const clearCreateResourceTabDataInjectable = getInjectable({
+  id: "clear-create-resource-tab-data",
+
   instantiate: (di) => {
     const createResourceTabStore = di.inject(createResourceTabStoreInjectable);
 

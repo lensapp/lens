@@ -6,6 +6,7 @@ import { apiManager } from "../../../../common/k8s-api/api-manager";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
 const apiManagerInjectable = getInjectable({
+  id: "api-manager",
   instantiate: () => apiManager,
   lifecycle: lifecycleEnum.singleton,
 });

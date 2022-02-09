@@ -7,6 +7,8 @@ import { LogTabStore } from "./tab-store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const logTabStoreInjectable = getInjectable({
+  id: "log-tab-store",
+
   instantiate: (di) => new LogTabStore({
     createStorage: di.inject(createStorageInjectable),
   }),

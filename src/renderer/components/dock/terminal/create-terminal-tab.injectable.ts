@@ -7,6 +7,8 @@ import dockStoreInjectable from "../dock/store.injectable";
 import { DockTabCreateSpecific, TabKind } from "../dock/store";
 
 const createTerminalTabInjectable = getInjectable({
+  id: "create-terminal-tab",
+
   instantiate: (di) => {
     const dockStore = di.inject(dockStoreInjectable);
 

@@ -7,6 +7,8 @@ import type { TabId } from "../dock/store";
 import terminalStoreInjectable from "./store.injectable";
 
 const clearTerminalTabDataInjectable = getInjectable({
+  id: "clear-terminal-tab-data",
+
   instantiate: (di) => {
     const terminalStore = di.inject(terminalStoreInjectable);
 

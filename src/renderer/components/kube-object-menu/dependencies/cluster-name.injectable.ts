@@ -7,6 +7,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import clusterInjectable from "./cluster.injectable";
 
 const clusterNameInjectable = getInjectable({
+  id: "cluster-name",
+
   instantiate: (di) => {
     const cluster = di.inject(clusterInjectable);
 

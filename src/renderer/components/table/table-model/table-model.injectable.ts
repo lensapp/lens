@@ -7,6 +7,8 @@ import createStorageInjectable from "../../../utils/create-storage/create-storag
 import { TableModel, TableStorageModel } from "./table-model";
 
 const tableModelInjectable = getInjectable({
+  id: "table-model",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

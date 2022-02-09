@@ -49,9 +49,12 @@ function getCustomCategoryViews({ extensions }: Dependencies): IComputedValue<Ma
 }
 
 const customCategoryViewsInjectable = getInjectable({
+  id: "custom-category-views",
+
   instantiate: (di) => getCustomCategoryViews({
     extensions: di.inject(rendererExtensionsInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

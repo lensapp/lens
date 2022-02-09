@@ -28,7 +28,7 @@ import electron from "electron";
 import { stdout, stderr } from "process";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import userStoreInjectable from "../user-store/user-store.injectable";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultTheme } from "../vars";
@@ -37,7 +37,7 @@ console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   let userStore: UserStore;
-  let mainDi: DependencyInjectionContainer;
+  let mainDi: DiContainer;
 
   beforeEach(async () => {
     const dis = getDisForUnitTesting({ doGeneralOverrides: true });

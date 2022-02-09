@@ -7,6 +7,8 @@ import type { LogTabData } from "./tab-store";
 import logTabStoreInjectable from "./tab-store.injectable";
 
 const setLogTabDataInjectable = getInjectable({
+  id: "set-log-tab-data",
+
   instantiate: (di) => {
     const logTabStore = di.inject(logTabStoreInjectable);
 

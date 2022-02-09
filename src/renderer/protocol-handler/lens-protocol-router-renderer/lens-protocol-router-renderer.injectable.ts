@@ -9,6 +9,8 @@ import extensionsStoreInjectable
   from "../../../extensions/extensions-store/extensions-store.injectable";
 
 const lensProtocolRouterRendererInjectable = getInjectable({
+  id: "lens-protocol-router-renderer",
+
   instantiate: (di) =>
     new LensProtocolRouterRenderer({
       extensionLoader: di.inject(extensionLoaderInjectable),

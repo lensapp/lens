@@ -8,6 +8,8 @@ import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-s
 import { listReleases } from "../../../common/k8s-api/endpoints/helm-releases.api";
 
 const releasesInjectable = getInjectable({
+  id: "releases",
+
   instantiate: (di) => {
     const namespaceStore = di.inject(namespaceStoreInjectable);
 

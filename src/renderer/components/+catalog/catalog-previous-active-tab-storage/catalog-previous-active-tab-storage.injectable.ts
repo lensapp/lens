@@ -7,6 +7,8 @@ import { browseCatalogTab } from "../../../../common/routes";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const catalogPreviousActiveTabStorageInjectable = getInjectable({
+  id: "catalog-previous-active-tab-storage",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

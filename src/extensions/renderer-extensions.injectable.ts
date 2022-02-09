@@ -8,6 +8,7 @@ import extensionsInjectable from "./extensions.injectable";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 
 const rendererExtensionsInjectable = getInjectable({
+  id: "renderer-extensions",
   instantiate: (di) => di.inject(extensionsInjectable) as IComputedValue<LensRendererExtension[]>,
   lifecycle: lifecycleEnum.singleton,
 });

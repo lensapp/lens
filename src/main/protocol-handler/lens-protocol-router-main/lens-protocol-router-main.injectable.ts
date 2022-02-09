@@ -8,6 +8,8 @@ import { LensProtocolRouterMain } from "./lens-protocol-router-main";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 
 const lensProtocolRouterMainInjectable = getInjectable({
+  id: "lens-protocol-router-main",
+
   instantiate: (di) =>
     new LensProtocolRouterMain({
       extensionLoader: di.inject(extensionLoaderInjectable),

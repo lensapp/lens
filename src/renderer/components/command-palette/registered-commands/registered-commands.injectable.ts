@@ -41,6 +41,8 @@ const instantiateRegisteredCommands = ({ extensions, customResourceDefinitions, 
 });
 
 const registeredCommandsInjectable = getInjectable({
+  id: "registered-commands",
+
   instantiate: (di) => instantiateRegisteredCommands({
     extensions: di.inject(rendererExtensionsInjectable),
     customResourceDefinitions: di.inject(customResourceDefinitionsInjectable),

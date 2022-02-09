@@ -7,6 +7,8 @@ import ipcMainInjectable from "./ipc-main/ipc-main.injectable";
 import { registerChannel } from "./register-channel";
 
 const registerChannelInjectable = getInjectable({
+  id: "register-channel",
+
   instantiate: (di) => registerChannel({
     ipcMain: di.inject(ipcMainInjectable),
   }),

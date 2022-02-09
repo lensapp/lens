@@ -10,6 +10,8 @@ import extensionInstallationStateStoreInjectable
   from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 
 const installFromInputInjectable = getInjectable({
+  id: "install-from-input",
+
   instantiate: (di) =>
     installFromInput({
       attemptInstall: di.inject(attemptInstallInjectable),

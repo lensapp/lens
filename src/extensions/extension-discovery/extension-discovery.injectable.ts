@@ -14,6 +14,8 @@ import extensionPackageRootDirectoryInjectable from "../extension-installer/exte
 import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
+  id: "extension-discovery",
+
   instantiate: (di) =>
     new ExtensionDiscovery({
       extensionLoader: di.inject(extensionLoaderInjectable),

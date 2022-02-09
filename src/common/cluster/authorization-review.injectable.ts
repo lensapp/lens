@@ -38,6 +38,7 @@ export function authorizationReview(proxyConfig: KubeConfig): CanI {
 }
 
 const authorizationReviewInjectable = getInjectable({
+  id: "authorization-review",
   instantiate: () => authorizationReview,
   lifecycle: lifecycleEnum.singleton,
 });

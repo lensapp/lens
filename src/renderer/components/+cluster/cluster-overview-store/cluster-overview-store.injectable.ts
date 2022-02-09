@@ -13,6 +13,8 @@ import createStorageInjectable from "../../../utils/create-storage/create-storag
 import apiManagerInjectable from "../../kube-object-menu/dependencies/api-manager.injectable";
 
 const clusterOverviewStoreInjectable = getInjectable({
+  id: "cluster-overview-store",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

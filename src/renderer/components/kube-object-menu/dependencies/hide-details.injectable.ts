@@ -6,6 +6,7 @@ import { hideDetails } from "../../kube-detail-params";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
 const hideDetailsInjectable = getInjectable({
+  id: "hide-details",
   instantiate: () => hideDetails,
   lifecycle: lifecycleEnum.singleton,
 });

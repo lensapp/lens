@@ -9,6 +9,8 @@ import observableHistoryInjectable from "../../../navigation/observable-history.
 import { releaseRoute, ReleaseRouteParams } from "../../../../common/routes";
 
 const releaseRouteParametersInjectable = getInjectable({
+  id: "release-route-parameters",
+
   instantiate: (di) => {
     const observableHistory = di.inject(observableHistoryInjectable);
 

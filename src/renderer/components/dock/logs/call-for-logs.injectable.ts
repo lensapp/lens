@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { podsApi } from "../../../../common/k8s-api/endpoints";
 
 const callForLogsInjectable = getInjectable({
+  id: "call-for-logs",
   instantiate: () => podsApi.getLogs,
   lifecycle: lifecycleEnum.singleton,
 });

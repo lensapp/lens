@@ -9,6 +9,8 @@ import directoryForLensLocalStorageInjectable
 import { initIpcMainHandlers } from "./init-ipc-main-handlers";
 
 const initIpcMainHandlersInjectable = getInjectable({
+  id: "init-ipc-main-handlers",
+
   instantiate: (di) => initIpcMainHandlers({
     electronMenuItems: di.inject(electronMenuItemsInjectable),
     directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),

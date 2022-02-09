@@ -44,6 +44,8 @@ const createInstallChartTab = ({ createDockTab, installChartStore }: Dependencie
 };
 
 const createInstallChartTabInjectable = getInjectable({
+  id: "create-install-chart-tab",
+
   instantiate: (di) => createInstallChartTab({
     installChartStore: di.inject(installChartTabStoreInjectable),
     createDockTab: di.inject(createDockTabInjectable),

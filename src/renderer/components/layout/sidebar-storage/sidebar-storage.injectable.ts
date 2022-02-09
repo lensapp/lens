@@ -15,6 +15,8 @@ export interface SidebarStorageState {
 export const defaultSidebarWidth = 200;
 
 const sidebarStorageInjectable = getInjectable({
+  id: "sidebar-storage",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

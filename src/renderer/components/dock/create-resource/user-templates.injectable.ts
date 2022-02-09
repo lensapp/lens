@@ -95,6 +95,7 @@ function watchUserCreateResourceTemplates(): IComputedValue<RawTemplates[]> {
 }
 
 const userCreateResourceTemplatesInjectable = getInjectable({
+  id: "user-create-resource-templates",
   instantiate: () => watchUserCreateResourceTemplates(),
   lifecycle: lifecycleEnum.singleton,
 });

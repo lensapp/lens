@@ -8,6 +8,8 @@ import namespaceStoreInjectable from "../components/+namespaces/namespace-store/
 import hostedClusterInjectable from "../../common/cluster-store/hosted-cluster.injectable";
 
 const clusterFrameContextInjectable = getInjectable({
+  id: "cluster-frame-context",
+
   instantiate: (di) => {
     const cluster = di.inject(hostedClusterInjectable);
 

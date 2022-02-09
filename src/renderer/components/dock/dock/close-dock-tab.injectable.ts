@@ -7,6 +7,8 @@ import type { TabId } from "./store";
 import dockStoreInjectable from "./store.injectable";
 
 const closeDockTabInjectable = getInjectable({
+  id: "close-dock-tab",
+
   instantiate: (di) => {
     const dockStore = di.inject(dockStoreInjectable);
 
@@ -14,7 +16,7 @@ const closeDockTabInjectable = getInjectable({
       dockStore.closeTab(tabId);
     };
   },
-  
+
   lifecycle: lifecycleEnum.singleton,
 });
 

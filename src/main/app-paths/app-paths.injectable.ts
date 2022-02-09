@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import {
-  DependencyInjectionContainer,
+  DiContainerForSetup,
   getInjectable,
   lifecycleEnum,
 } from "@ogre-tools/injectable";
@@ -22,17 +22,19 @@ import appNameInjectable from "./app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
 
 const appPathsInjectable = getInjectable({
-  setup: (di) => {
-    const directoryForIntegrationTesting = di.inject(
+  id: "app-paths",
+
+  setup: async (di) => {
+    const directoryForIntegrationTesting = await di.inject(
       directoryForIntegrationTestingInjectable,
     );
 
     if (directoryForIntegrationTesting) {
-      setupPathForAppDataInIntegrationTesting(di, directoryForIntegrationTesting);
+      await setupPathForAppDataInIntegrationTesting(di, directoryForIntegrationTesting);
     }
 
-    setupPathForUserData(di);
-    registerAppPathsChannel(di);
+    await setupPathForUserData(di);
+    await registerAppPathsChannel(di);
   },
 
   instantiate: (di) =>
@@ -44,16 +46,17 @@ const appPathsInjectable = getInjectable({
 
 export default appPathsInjectable;
 
-const registerAppPathsChannel = (di: DependencyInjectionContainer) => {
-  const registerChannel = di.inject(registerChannelInjectable);
+const registerAppPathsChannel = async (di: DiContainerForSetup) => {
+  const registerChannel = await di.inject(registerChannelInjectable);
+  const appPaths = await di.inject(appPathsInjectable);
 
-  registerChannel(appPathsIpcChannel, () => di.inject(appPathsInjectable));
+  registerChannel(appPathsIpcChannel, () => appPaths);
 };
 
-const setupPathForUserData = (di: DependencyInjectionContainer) => {
-  const setElectronAppPath = di.inject(setElectronAppPathInjectable);
-  const appName = di.inject(appNameInjectable);
-  const getAppPath = di.inject(getElectronAppPathInjectable);
+const setupPathForUserData = async (di: DiContainerForSetup) => {
+  const setElectronAppPath = await di.inject(setElectronAppPathInjectable);
+  const appName = await di.inject(appNameInjectable);
+  const getAppPath = await di.inject(getElectronAppPathInjectable);
 
   const appDataPath = getAppPath("appData");
 
@@ -61,8 +64,8 @@ const setupPathForUserData = (di: DependencyInjectionContainer) => {
 };
 
 // Todo: this kludge is here only until we have a proper place to setup integration testing.
-const setupPathForAppDataInIntegrationTesting = (di: DependencyInjectionContainer, appDataPath: string) => {
-  const setElectronAppPath = di.inject(setElectronAppPathInjectable);
+const setupPathForAppDataInIntegrationTesting = async (di: DiContainerForSetup, appDataPath: string) => {
+  const setElectronAppPath = await di.inject(setElectronAppPathInjectable);
 
   setElectronAppPath("appData", appDataPath);
 };

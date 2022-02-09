@@ -51,9 +51,12 @@ function getRouteTabs({ customResourcesDefinitions }: Dependencies) {
 }
 
 const customResourcesRouteTabsInjectable = getInjectable({
+  id: "custom-resources-route-tabs",
+
   instantiate: (di) => getRouteTabs({
     customResourcesDefinitions: di.inject(groupedCustomResourceDefinitionsInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

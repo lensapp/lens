@@ -7,6 +7,8 @@ import rendererExtensionsInjectable from "../../../../extensions/renderer-extens
 import { computed } from "mobx";
 
 const welcomeBannerItemsInjectable = getInjectable({
+  id: "welcome-banner-items",
+
   instantiate: (di) => {
     const extensions = di.inject(rendererExtensionsInjectable);
 

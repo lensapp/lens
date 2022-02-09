@@ -7,6 +7,8 @@ import ipcRendererInjectable from "./ipc-renderer/ipc-renderer.injectable";
 import { getValueFromRegisteredChannel } from "./get-value-from-registered-channel";
 
 const getValueFromRegisteredChannelInjectable = getInjectable({
+  id: "get-value-from-registered-channel",
+
   instantiate: (di) =>
     getValueFromRegisteredChannel({ ipcRenderer: di.inject(ipcRendererInjectable) }),
 

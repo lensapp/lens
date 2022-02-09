@@ -7,6 +7,8 @@ import { confirmUninstallExtension } from "./confirm-uninstall-extension";
 import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
 
 const confirmUninstallExtensionInjectable = getInjectable({
+  id: "confirm-uninstall-extension",
+
   instantiate: (di) =>
     confirmUninstallExtension({
       uninstallExtension: di.inject(uninstallExtensionInjectable),

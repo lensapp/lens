@@ -14,6 +14,8 @@ import clearInstallChartTabDataInjectable from "../install-chart/clear-install-c
 import isLogsTabDataValidInjectable from "../logs/is-logs-tab-data-valid.injectable";
 
 const dockStoreInjectable = getInjectable({
+  id: "dock-store",
+
   instantiate: (di) => new DockStore({
     storage: di.inject(dockStorageInjectable),
     tabDataClearers: {

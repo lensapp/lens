@@ -5,6 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
 const directoryForIntegrationTestingInjectable = getInjectable({
+  id: "directory-for-integration-testing",
   instantiate: () => process.env.CICD,
   lifecycle: lifecycleEnum.singleton,
 });

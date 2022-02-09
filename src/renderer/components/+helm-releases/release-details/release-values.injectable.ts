@@ -10,6 +10,8 @@ import { Notifications } from "../../notifications";
 import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-shown.injectable";
 
 const releaseValuesInjectable = getInjectable({
+  id: "release-values",
+
   instantiate: (di) =>
     asyncComputed(async () => {
       const release = di.inject(releaseInjectable).get();

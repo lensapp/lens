@@ -8,6 +8,8 @@ import { KubeconfigSyncManager } from "./kubeconfig-sync-manager";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 
 const kubeconfigSyncManagerInjectable = getInjectable({
+  id: "kubeconfig-sync-manager",
+
   instantiate: (di) => new KubeconfigSyncManager({
     directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
     createCluster: di.inject(createClusterInjectionToken),

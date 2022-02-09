@@ -7,6 +7,8 @@ import { getHostedClusterId } from "../utils";
 import clusterStoreInjectable from "./cluster-store.injectable";
 
 const hostedClusterInjectable = getInjectable({
+  id: "hosted-cluster",
+
   instantiate: (di) => {
     const hostedClusterId = getHostedClusterId();
 

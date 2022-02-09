@@ -7,9 +7,11 @@ import directoryForBinariesInjectable from "../../../common/app-paths/directory-
 import path from "path";
 
 const directoryForKubectlBinariesInjectable = getInjectable({
+  id: "directory-for-kubectl-binaries",
+
   instantiate: (di) =>
     path.join(di.inject(directoryForBinariesInjectable), "kubectl"),
-  
+
   lifecycle: lifecycleEnum.singleton,
 });
 

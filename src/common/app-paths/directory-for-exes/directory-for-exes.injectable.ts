@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { appPathsInjectionToken } from "../app-path-injection-token";
 
 const directoryForExesInjectable = getInjectable({
+  id: "directory-for-exes",
   instantiate: (di) => di.inject(appPathsInjectionToken).exe,
   lifecycle: lifecycleEnum.singleton,
 });

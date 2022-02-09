@@ -9,6 +9,8 @@ import releaseRouteParametersInjectable from "./release-route-parameters.injecta
 import { computed } from "mobx";
 
 const releaseInjectable = getInjectable({
+  id: "release",
+
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
     const releaseRouteParameters = di.inject(releaseRouteParametersInjectable);

@@ -8,6 +8,8 @@ import type { TabId } from "../dock/store";
 import terminalStoreInjectable from "./store.injectable";
 
 const getTerminalApiInjectable = getInjectable({
+  id: "get-terminal-api",
+
   instantiate: (di) => {
     const terminalStore = di.inject(terminalStoreInjectable);
 

@@ -205,6 +205,8 @@ function getInternalCommands({ openCommandDialog, getEntitySettingItems, createT
 }
 
 const internalCommandsInjectable = getInjectable({
+  id: "internal-commands",
+
   instantiate: (di) => getInternalCommands({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
     getEntitySettingItems: EntitySettingRegistry
@@ -212,6 +214,7 @@ const internalCommandsInjectable = getInjectable({
       .getItemsForKind,
     createTerminalTab: di.inject(createTerminalTabInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

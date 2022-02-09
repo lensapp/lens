@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import electronAppInjectable from "../get-electron-app-path/electron-app/electron-app.injectable";
 
 const appNameInjectable = getInjectable({
+  id: "app-name",
   instantiate: (di) => di.inject(electronAppInjectable).name,
   lifecycle: lifecycleEnum.singleton,
 });

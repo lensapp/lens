@@ -8,6 +8,8 @@ import { computed } from "mobx";
 import { crdStore } from "./crd.store";
 
 const customResourceDefinitionsInjectable = getInjectable({
+  id: "custom-resource-definitions",
+
   instantiate: () => computed(() => [...crdStore.items]),
 
   lifecycle: lifecycleEnum.singleton,

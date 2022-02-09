@@ -38,6 +38,8 @@ const createWorkloadLogsTab = ({ createLogsTab }: Dependencies) => ({ workload }
 };
 
 const createWorkloadLogsTabInjectable = getInjectable({
+  id: "create-workload-logs-tab",
+
   instantiate: (di) => createWorkloadLogsTab({
     createLogsTab: di.inject(createLogsTabInjectable),
   }),

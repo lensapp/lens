@@ -8,6 +8,8 @@ import { ContextHandler } from "./context-handler";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 
 const createContextHandlerInjectable = getInjectable({
+  id: "create-context-handler",
+
   instantiate: (di) => {
     const dependencies = {
       createKubeAuthProxy: di.inject(createKubeAuthProxyInjectable),

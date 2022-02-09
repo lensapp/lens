@@ -13,6 +13,8 @@ import authorizationReviewInjectable from "../../common/cluster/authorization-re
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 
 const createClusterInjectable = getInjectable({
+  id: "create-cluster",
+
   instantiate: (di) => {
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),

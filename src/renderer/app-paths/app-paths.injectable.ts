@@ -9,8 +9,10 @@ import getValueFromRegisteredChannelInjectable from "./get-value-from-registered
 let syncAppPaths: AppPaths;
 
 const appPathsInjectable = getInjectable({
+  id: "app-paths",
+
   setup: async (di) => {
-    const getValueFromRegisteredChannel = di.inject(
+    const getValueFromRegisteredChannel = await di.inject(
       getValueFromRegisteredChannelInjectable,
     );
 

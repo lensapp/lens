@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { ipcRenderer } from "electron";
 
 const ipcRendererInjectable = getInjectable({
+  id: "ipc-renderer",
   instantiate: () => ipcRenderer,
   lifecycle: lifecycleEnum.singleton,
   causesSideEffects: true,

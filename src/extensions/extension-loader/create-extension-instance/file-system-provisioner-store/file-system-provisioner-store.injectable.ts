@@ -7,6 +7,8 @@ import { FileSystemProvisionerStore } from "./file-system-provisioner-store";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data/directory-for-extension-data.injectable";
 
 const fileSystemProvisionerStoreInjectable = getInjectable({
+  id: "file-system-provisioner-store",
+
   instantiate: (di) =>
     FileSystemProvisionerStore.createInstance({
       directoryForExtensionData: di.inject(

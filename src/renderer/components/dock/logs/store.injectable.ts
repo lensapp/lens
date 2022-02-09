@@ -7,6 +7,8 @@ import { LogStore } from "./store";
 import callForLogsInjectable from "./call-for-logs.injectable";
 
 const logStoreInjectable = getInjectable({
+  id: "log-store",
+
   instantiate: (di) => new LogStore({
     callForLogs: di.inject(callForLogsInjectable),
   }),

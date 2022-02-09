@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { appEventBus } from "./event-bus";
 
 const appEventBusInjectable = getInjectable({
+  id: "app-event-bus",
   instantiate: () => appEventBus,
   lifecycle: lifecycleEnum.singleton,
 });

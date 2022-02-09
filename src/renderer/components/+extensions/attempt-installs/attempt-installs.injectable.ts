@@ -7,6 +7,8 @@ import { attemptInstalls } from "./attempt-installs";
 import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
 
 const attemptInstallsInjectable = getInjectable({
+  id: "attempt-installs",
+
   instantiate: (di) =>
     attemptInstalls({
       attemptInstall: di.inject(attemptInstallInjectable),

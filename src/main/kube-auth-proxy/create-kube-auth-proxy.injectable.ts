@@ -8,6 +8,8 @@ import type { Cluster } from "../../common/cluster/cluster";
 import bundledKubectlInjectable from "../kubectl/bundled-kubectl.injectable";
 
 const createKubeAuthProxyInjectable = getInjectable({
+  id: "create-kube-auth-proxy",
+
   instantiate: (di) => {
     const bundledKubectl = di.inject(bundledKubectlInjectable);
 

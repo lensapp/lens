@@ -11,6 +11,8 @@ import lensProtocolRouterRendererInjectable from "../../../protocol-handler/lens
 import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
 
 const initRootFrameInjectable = getInjectable({
+  id: "init-root-frame",
+
   instantiate: (di) => {
     const extensionLoader = di.inject(extensionLoaderInjectable);
 

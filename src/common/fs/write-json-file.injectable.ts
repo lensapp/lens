@@ -23,6 +23,8 @@ const writeJsonFile = ({ writeJson, ensureDir }: Dependencies) => async (filePat
 };
 
 const writeJsonFileInjectable = getInjectable({
+  id: "write-json-file",
+
   instantiate: (di) => {
     const { writeJson, ensureDir } = di.inject(fsInjectable);
 

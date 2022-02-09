@@ -10,6 +10,8 @@ import {
 import releasesInjectable from "../releases.injectable";
 
 const deleteReleaseInjectable = getInjectable({
+  id: "delete-release",
+
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
 

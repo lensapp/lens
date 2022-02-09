@@ -7,6 +7,8 @@ import { computed } from "mobx";
 import extensionLoaderInjectable from "./extension-loader/extension-loader.injectable";
 
 const extensionsInjectable = getInjectable({
+  id: "extensions",
+
   instantiate: (di) => {
     const extensionLoader = di.inject(extensionLoaderInjectable);
 

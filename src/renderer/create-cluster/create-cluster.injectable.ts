@@ -8,6 +8,8 @@ import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 
 const createClusterInjectable = getInjectable({
+  id: "create-cluster",
+
   instantiate: (di) => {
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),

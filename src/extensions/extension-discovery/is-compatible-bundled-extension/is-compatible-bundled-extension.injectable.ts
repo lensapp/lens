@@ -7,6 +7,7 @@ import { appSemVer } from "../../../common/vars";
 import { isCompatibleBundledExtension } from "./is-compatible-bundled-extension";
 
 const isCompatibleBundledExtensionInjectable = getInjectable({
+  id: "is-compatible-bundled-extension",
   instantiate: () => isCompatibleBundledExtension({ appSemVer }),
   lifecycle: lifecycleEnum.singleton,
 });

@@ -8,6 +8,8 @@ import rendererExtensionsInjectable from "../../../../extensions/renderer-extens
 import { getAppPreferences } from "./get-app-preferences";
 
 const appPreferencesInjectable = getInjectable({
+  id: "app-preferences",
+
   instantiate: (di) =>
     getAppPreferences({
       extensions: di.inject(rendererExtensionsInjectable),

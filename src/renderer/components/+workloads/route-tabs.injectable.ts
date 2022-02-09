@@ -100,9 +100,12 @@ function getRouteTabs({ isAllowedResource }: Dependencies) {
 }
 
 const workloadsRouteTabsInjectable = getInjectable({
+  id: "workloads-route-tabs",
+
   instantiate: (di) => getRouteTabs({
     isAllowedResource: di.inject(isAllowedResourceInjectable),
   }),
+
   lifecycle: lifecycleEnum.singleton,
 });
 

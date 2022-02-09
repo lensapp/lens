@@ -7,6 +7,8 @@ import rendererExtensionsInjectable from "../../../../extensions/renderer-extens
 import { getWelcomeMenuItems } from "./get-welcome-menu-items";
 
 const welcomeMenuItemsInjectable = getInjectable({
+  id: "welcome-menu-items",
+
   instantiate: (di) =>
     getWelcomeMenuItems({
       extensions: di.inject(rendererExtensionsInjectable),

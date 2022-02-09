@@ -12,6 +12,8 @@ export interface KubeConfigManagerInstantiationParameter {
 }
 
 const createKubeconfigManagerInjectable = getInjectable({
+  id: "create-kubeconfig-manager",
+
   instantiate: (di) => {
     const dependencies = {
       directoryForTemp: di.inject(directoryForTempInjectable),

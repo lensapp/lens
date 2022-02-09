@@ -85,6 +85,8 @@ const getCategoryColumns = ({ extensionColumns }: Dependencies) => ({ activeCate
 };
 
 const getCategoryColumnsInjectable = getInjectable({
+  id: "get-category-columns",
+
   instantiate: (di) => getCategoryColumns({
     extensionColumns: di.inject(categoryColumnsInjectable),
   }),

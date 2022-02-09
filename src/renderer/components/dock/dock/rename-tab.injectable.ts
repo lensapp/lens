@@ -7,6 +7,7 @@ import dockStoreInjectable from "./store.injectable";
 import type { TabId } from "./store";
 
 const renameTabInjectable = getInjectable({
+  id: "rename-tab",
 
   instantiate: (di) => {
     const dockStore = di.inject(dockStoreInjectable);

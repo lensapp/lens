@@ -27,6 +27,7 @@ function getRouteTabs() {
 }
 
 const helmRoutesInjectable = getInjectable({
+  id: "helm-routes",
   instantiate: () => getRouteTabs(),
   lifecycle: lifecycleEnum.singleton,
 });

@@ -7,6 +7,8 @@ import { computed } from "mobx";
 import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
 
 const trayItemsInjectable = getInjectable({
+  id: "tray-items",
+
   lifecycle: lifecycleEnum.singleton,
 
   instantiate: (di) => {

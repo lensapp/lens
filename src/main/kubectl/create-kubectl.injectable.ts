@@ -8,6 +8,8 @@ import directoryForKubectlBinariesInjectable from "./directory-for-kubectl-binar
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 
 const createKubectlInjectable = getInjectable({
+  id: "create-kubectl",
+
   instantiate: (di) => {
     const dependencies = {
       userStore: di.inject(userStoreInjectable),

@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import extensionsStoreInjectable from "../../extensions-store/extensions-store.injectable";
 
 const updateExtensionsStateInjectable = getInjectable({
+  id: "upadte-extensions-state",
   instantiate: (di) => di.inject(extensionsStoreInjectable).mergeState,
   lifecycle: lifecycleEnum.singleton,
 });

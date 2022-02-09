@@ -8,6 +8,8 @@ import apiManagerInjectable from "../../kube-object-menu/dependencies/api-manage
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const namespaceStoreInjectable = getInjectable({
+  id: "namespace-store",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

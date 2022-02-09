@@ -7,6 +7,8 @@ import { ClusterStore } from "./cluster-store";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 
 const clusterStoreInjectable = getInjectable({
+  id: "cluster-store",
+
   instantiate: (di) =>
     ClusterStore.createInstance({
       createCluster: di.inject(createClusterInjectionToken),

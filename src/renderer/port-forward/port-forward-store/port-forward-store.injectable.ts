@@ -8,6 +8,8 @@ import type { ForwardedPort } from "../port-forward-item";
 import createStorageInjectable from "../../utils/create-storage/create-storage.injectable";
 
 const portForwardStoreInjectable = getInjectable({
+  id: "port-forward-store",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 

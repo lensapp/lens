@@ -7,6 +7,8 @@ import clusterFrameContextInjectable from "../cluster-frame-context/cluster-fram
 import { KubeWatchApi } from "./kube-watch-api";
 
 const kubeWatchApiInjectable = getInjectable({
+  id: "kube-watch-api",
+
   instantiate: (di) => new KubeWatchApi({
     clusterFrameContext: di.inject(clusterFrameContextInjectable),
   }),

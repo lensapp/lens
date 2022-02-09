@@ -9,6 +9,7 @@ import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 import rendererExtensionsInjectable from "../../../../../extensions/renderer-extensions.injectable";
 
 const kubeObjectMenuItemsInjectable = getInjectable({
+  id: "kube-object-menu-items",
   instantiate: (di, { kubeObject }: { kubeObject: KubeObject }) =>
     getKubeObjectMenuItems({
       extensions: di.inject(rendererExtensionsInjectable).get(),

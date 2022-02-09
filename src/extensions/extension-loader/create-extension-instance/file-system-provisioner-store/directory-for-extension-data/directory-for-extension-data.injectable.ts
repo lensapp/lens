@@ -7,6 +7,8 @@ import path from "path";
 import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const directoryForExtensionDataInjectable = getInjectable({
+  id: "directory-for-extension-data",
+
   instantiate: (di) =>
     path.join(di.inject(directoryForUserDataInjectable), "extension_data"),
 

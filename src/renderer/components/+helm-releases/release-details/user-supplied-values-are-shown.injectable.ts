@@ -6,6 +6,8 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 
 const userSuppliedValuesAreShownInjectable = getInjectable({
+  id: "user-supplied-values-are-shown",
+
   instantiate: () => {
     const state = observable.box(false);
 

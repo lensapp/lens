@@ -8,6 +8,8 @@ import createDockTabStoreInjectable from "../dock-tab-store/create-dock-tab-stor
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 
 const upgradeChartTabStoreInjectable = getInjectable({
+  id: "upgrade-chart-tab-store",
+
   instantiate: (di) => {
     const createDockTabStore = di.inject(createDockTabStoreInjectable);
 

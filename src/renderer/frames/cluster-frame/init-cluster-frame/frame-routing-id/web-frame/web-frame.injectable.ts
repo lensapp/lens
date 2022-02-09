@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { webFrame } from "electron";
 
 const webFrameInjectable = getInjectable({
+  id: "web-frame",
   instantiate: () => webFrame,
   lifecycle: lifecycleEnum.singleton,
   causesSideEffects: true,

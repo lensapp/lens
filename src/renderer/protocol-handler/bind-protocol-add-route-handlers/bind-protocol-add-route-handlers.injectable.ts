@@ -8,6 +8,8 @@ import { bindProtocolAddRouteHandlers } from "./bind-protocol-add-route-handlers
 import lensProtocolRouterRendererInjectable from "../lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({
+  id: "bind-protocol-add-route-handlers",
+
   instantiate: (di) =>
     bindProtocolAddRouteHandlers({
       attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),

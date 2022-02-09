@@ -37,6 +37,8 @@ const createLogsTab = ({ createDockTab, setLogTabData }: Dependencies) => (title
 };
 
 const createLogsTabInjectable = getInjectable({
+  id: "create-logs-tab",
+
   instantiate: (di) => createLogsTab({
     createDockTab: di.inject(createDockTabInjectable),
     setLogTabData: di.inject(setLogTabDataInjectable),

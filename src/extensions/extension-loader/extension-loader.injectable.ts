@@ -9,6 +9,8 @@ import createExtensionInstanceInjectable
   from "./create-extension-instance/create-extension-instance.injectable";
 
 const extensionLoaderInjectable = getInjectable({
+  id: "extension-loader",
+
   instantiate: (di) =>
     new ExtensionLoader({
       updateExtensionsState: di.inject(updateExtensionsStateInjectable),

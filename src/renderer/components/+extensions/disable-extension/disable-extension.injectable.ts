@@ -7,6 +7,8 @@ import extensionLoaderInjectable from "../../../../extensions/extension-loader/e
 import { disableExtension } from "./disable-extension";
 
 const disableExtensionInjectable = getInjectable({
+  id: "disable-extension",
+
   instantiate: (di) =>
     disableExtension({
       extensionLoader: di.inject(extensionLoaderInjectable),

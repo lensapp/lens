@@ -11,6 +11,8 @@ import extensionDiscoveryInjectable
   from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 
 const uninstallExtensionInjectable = getInjectable({
+  id: "uninstall-extension",
+
   instantiate: (di) =>
     uninstallExtension({
       extensionLoader: di.inject(extensionLoaderInjectable),

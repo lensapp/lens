@@ -7,6 +7,8 @@ import { comparer, computed } from "mobx";
 import hostedClusterInjectable from "./hosted-cluster.injectable";
 
 const allowedResourcesInjectable = getInjectable({
+  id: "allowed-resources",
+
   instantiate: (di) => {
     const cluster = di.inject(hostedClusterInjectable);
 

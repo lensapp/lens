@@ -13,6 +13,8 @@ export interface PodLogsTabData {
 }
 
 const createPodLogsTabInjectable = getInjectable({
+  id: "create-pod-logs-tab",
+
   instantiate: (di) => {
     const createLogsTab = di.inject(createLogsTabInjectable);
 

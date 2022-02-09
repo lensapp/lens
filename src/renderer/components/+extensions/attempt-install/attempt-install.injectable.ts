@@ -14,6 +14,8 @@ import extensionInstallationStateStoreInjectable
   from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 
 const attemptInstallInjectable = getInjectable({
+  id: "attempt-install",
+
   instantiate: (di) =>
     attemptInstall({
       extensionLoader: di.inject(extensionLoaderInjectable),
