@@ -55,6 +55,9 @@ function getRegisteredStatusBarItems({ registrations }: Dependencies): IComputed
       }
     }
 
+    // This is done so that the first ones registered are closest to the corner
+    res.right.reverse();
+
     return res;
   });
 }
