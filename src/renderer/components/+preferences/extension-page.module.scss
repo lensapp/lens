@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 30%;
   margin-top: 46px;
+  gap: 16px;
 }
 
 .metadata {
@@ -9,23 +10,27 @@
     font-size: 1.5rem;
     margin: 0;
     padding: 0;
+    color: var(--textColorAccent);
   }
 
   .links {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    margin: 16px 0;
 
     a {
       border: 1px solid rgb(72, 72, 72);
       padding: 4px 6px;
       border-radius: 3px;
       font-size: 13px;
-      color: #333;
+      color: #9a9a9a;
       margin: 0 6px 4px 0;
       display: inline-block;
 
       &:hover {
+        color: white;
+        border-color: transparent;
         background-color: var(--blue);
       }
     }

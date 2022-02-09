@@ -98,15 +98,15 @@ function Overview({ extension, description }: { extension: Extension, descriptio
       <div className="github">
         <MarkdownViewer markdown={description} />
       </div>
-      <div className="metadata">
+      <div className={styles.metadata}>
         <h3 className="mb-5">Categories</h3>
-        <div className="links">
+        <div className={styles.links}>
           {extension.category.map(category => (
             <a key={`category-${category.id}`} href="#">{category.name}</a>
           ))}
         </div>
         <h3 className="mb-5 mtp-5">Tags</h3>
-        <div className="links">
+        <div className={styles.links}>
           {extension.tags.map(tag => (
             <a key={`tag-${tag.id}`} href="#">{tag.name}</a>
           ))}
