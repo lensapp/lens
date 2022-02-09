@@ -14,6 +14,8 @@ import { MarkdownViewer } from "../markdown-viewer";
 import { Tab, Tabs } from "../tabs";
 import { navigate } from "../../navigation";
 import { extensionPageRoute, extensionReviewsRoute } from "../../../common/routes";
+import { Avatar } from "../avatar";
+import { Rating } from "@material-ui/lab";
 
 export function ExtensionPage() {
   const [extension, setExtension] = useState<Extension>(null);
@@ -73,23 +75,21 @@ export function ExtensionPage() {
       </Tabs>
 
 
-      <div className={styles.contents}>
-        <Switch>
-          <Route path={`/preferences/extension/:extensionId?/overview`}>
-            <Overview extension={extension} description={description}/>
-          </Route>
-          <Route path={`/preferences/extension/:extensionId?/reviews`}>
-            <Reviews reviews={reviews}/>
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path={`/preferences/extension/:extensionId?/overview`}>
+          <Overview extension={extension} description={description}/>
+        </Route>
+        <Route path={`/preferences/extension/:extensionId?/reviews`}>
+          <Reviews reviews={reviews}/>
+        </Route>
+      </Switch>
     </section>
   );
 }
 
 function Overview({ extension, description }: { extension: Extension, description: string }) {
   return (
-    <>
+    <div className={styles.contents}>
       <div className="github">
         <MarkdownViewer markdown={description} />
       </div>
@@ -109,23 +109,28 @@ function Overview({ extension, description }: { extension: Extension, descriptio
         <h3 className="mb-5 mtp-5">More Info</h3>
         <div className="moreInfo"></div>
       </div>
-    </>
+    </div>
   );
 }
 
 function Reviews({ reviews }: { reviews: Review[] }) {
   return (
-    <div className="reviews">
+    <div className={styles.reviews}>
       <h2>User reviews</h2>
 
       {reviews.map(review => (
-        <div key={review.id} className="review">
+        <div key={review.id} className={styles.review}>
           <div className="avatar">
-
+            <Avatar
+              title={review.user.username}
+              size={32}
+            />
           </div>
           <div className="content">
-            <div className="mb-4"><b>{review.user.firstName} {review.user.lastName}</b></div>
-            <div className="rating">rating</div>
+            <div className={styles.userName}><b>{review.user.firstName} {review.user.lastName}</b></div>
+            <div className="mb-4">
+              <Rating name="read-only" value={Math.floor(Math.random() * 5) + 1} readOnly />
+            </div>
             <div className="text">
               {review.content}
             </div>
