@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import allowedResourcesInjectable from "../cluster-store/allowed-resources.injectable";
 import type { KubeResource } from "../rbac";
 
@@ -17,8 +17,6 @@ const isAllowedResourceInjectable = getInjectable({
 
     return (resource: KubeResource) => allowedResources.get().has(resource);
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default isAllowedResourceInjectable;

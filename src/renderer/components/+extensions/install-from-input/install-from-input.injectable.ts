@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
 import { installFromInput } from "./install-from-input";
 import attemptInstallByInfoInjectable from "../attempt-install-by-info/attempt-install-by-info.injectable";
@@ -18,8 +18,6 @@ const installFromInputInjectable = getInjectable({
       attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
       extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default installFromInputInjectable;

@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { TabLayoutRoute } from "../layout/tab-layout";
 import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
@@ -87,8 +87,6 @@ const userManagementRouteTabsInjectable = getInjectable({
   instantiate: (di) => getRouteTabs({
     isAllowedResource: di.inject(isAllowedResourceInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default userManagementRouteTabsInjectable;

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
 import type { CustomResourceDefinition } from "../../../../common/k8s-api/endpoints";
 import customResourceDefinitionsInjectable from "../../+custom-resources/custom-resources.injectable";
@@ -48,8 +48,6 @@ const registeredCommandsInjectable = getInjectable({
     customResourceDefinitions: di.inject(customResourceDefinitionsInjectable),
     internalCommands: di.inject(internalCommandsInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default registeredCommandsInjectable;

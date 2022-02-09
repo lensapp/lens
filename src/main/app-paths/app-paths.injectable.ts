@@ -5,7 +5,6 @@
 import {
   DiContainerForSetup,
   getInjectable,
-  lifecycleEnum,
 } from "@ogre-tools/injectable";
 
 import {
@@ -41,7 +40,6 @@ const appPathsInjectable = getInjectable({
     getAppPaths({ getAppPath: di.inject(getElectronAppPathInjectable) }),
 
   injectionToken: appPathsInjectionToken,
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default appPathsInjectable;

@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import path from "path";
 import { hasCorrectExtension } from "./has-correct-extension";
 import "../../../../common/vars";
@@ -43,8 +43,6 @@ const lensCreateResourceTemplatesInjectable = getInjectable({
 
     return ["lens", templates];
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default lensCreateResourceTemplatesInjectable;

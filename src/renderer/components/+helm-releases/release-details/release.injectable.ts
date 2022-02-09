@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { matches } from "lodash/fp";
 import releasesInjectable from "../releases.injectable";
 import releaseRouteParametersInjectable from "./release-route-parameters.injectable";
@@ -25,8 +25,6 @@ const releaseInjectable = getInjectable({
       return releases.value.get().find(matches({ name, namespace }));
     });
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default releaseInjectable;

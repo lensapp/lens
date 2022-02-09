@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { shellApiRequest } from "./shell-api-request";
 import createShellSessionInjectable from "../../shell-session/create-shell-session.injectable";
 import shellRequestAuthenticatorInjectable
@@ -15,8 +15,6 @@ const shellApiRequestInjectable = getInjectable({
     createShellSession: di.inject(createShellSessionInjectable),
     authenticateRequest: di.inject(shellRequestAuthenticatorInjectable).authenticate,
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default shellApiRequestInjectable;

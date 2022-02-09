@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { GroupSelectOption, SelectOption } from "../../select";
 import userCreateResourceTemplatesInjectable from "./user-templates.injectable";
@@ -29,8 +29,6 @@ const createResourceTemplatesInjectable = getInjectable({
       }) as GroupSelectOption<SelectOption<string>>);
     });
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createResourceTemplatesInjectable;

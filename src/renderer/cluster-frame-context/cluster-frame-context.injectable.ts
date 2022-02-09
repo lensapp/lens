@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterFrameContext } from "./cluster-frame-context";
 import namespaceStoreInjectable from "../components/+namespaces/namespace-store/namespace-store.injectable";
 import hostedClusterInjectable from "../../common/cluster-store/hosted-cluster.injectable";
@@ -21,8 +21,6 @@ const clusterFrameContextInjectable = getInjectable({
       },
     );
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default clusterFrameContextInjectable;

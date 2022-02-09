@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { rollbackRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import releasesInjectable from "../releases.injectable";
 
@@ -18,8 +18,6 @@ const rollbackReleaseInjectable = getInjectable({
       releases.invalidate();
     };
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default rollbackReleaseInjectable;

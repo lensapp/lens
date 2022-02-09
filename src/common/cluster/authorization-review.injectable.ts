@@ -5,7 +5,7 @@
 
 import { AuthorizationV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import logger from "../logger";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 
 export type CanI = (resourceAttributes: V1ResourceAttributes) => Promise<boolean>;
 
@@ -40,7 +40,6 @@ export function authorizationReview(proxyConfig: KubeConfig): CanI {
 const authorizationReviewInjectable = getInjectable({
   id: "authorization-review",
   instantiate: () => authorizationReview,
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default authorizationReviewInjectable;

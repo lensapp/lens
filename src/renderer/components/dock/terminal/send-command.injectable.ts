@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { noop } from "../../../utils";
@@ -86,8 +86,6 @@ const sendCommandInjectable = getInjectable({
     selectTab: di.inject(selectDockTabInjectable),
     getTerminalApi: di.inject(getTerminalApiInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default sendCommandInjectable;

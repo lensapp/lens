@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { comparer, computed } from "mobx";
 import hostedClusterInjectable from "./hosted-cluster.injectable";
 
@@ -17,7 +17,6 @@ const allowedResourcesInjectable = getInjectable({
       equals: (cur, prev) => comparer.structural(cur, prev),
     });
   },
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default allowedResourcesInjectable;

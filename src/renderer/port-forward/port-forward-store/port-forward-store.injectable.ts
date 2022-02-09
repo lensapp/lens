@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { PortForwardStore } from "./port-forward-store";
 import type { ForwardedPort } from "../port-forward-item";
 import createStorageInjectable from "../../utils/create-storage/create-storage.injectable";
@@ -20,8 +20,6 @@ const portForwardStoreInjectable = getInjectable({
 
     return new PortForwardStore({ storage });
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default portForwardStoreInjectable;

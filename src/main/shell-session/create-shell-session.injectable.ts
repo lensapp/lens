@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type WebSocket from "ws";
 import localShellSessionInjectable from "./local-shell-session/local-shell-session.injectable";
@@ -24,8 +24,6 @@ const createShellSessionInjectable = getInjectable({
         !nodeName
           ? di.inject(localShellSessionInjectable, rest)
           : di.inject(nodeShellSessionInjectable, { nodeName, ...rest }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createShellSessionInjectable;
