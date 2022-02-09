@@ -26,7 +26,7 @@ import {
   terminalURL,
   installURL,
   installRoute,
-  extensionPageURL,
+  // extensionPageURL,
 } from "../../../common/routes";
 import { navigateWithoutHistoryChange, navigation } from "../../navigation";
 import { SettingLayout } from "../layout/setting-layout";
@@ -95,7 +95,7 @@ const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) 
         <Route path={telemetryURL()} component={Telemetry}/>
         <Route path={extensionURL()} component={Extensions}/>
         <Route path={installURL()} component={Install}/>
-        <Route path={extensionPageURL()} component={ExtensionPage}/>
+        <Route path={`/preferences/extension`} component={ExtensionPage}/>
         <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
       </Switch>
     </SettingLayout>

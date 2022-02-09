@@ -13,7 +13,7 @@ import { matchPath, Route, RouteProps, Switch, useParams } from "react-router";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Tab, Tabs } from "../tabs";
 import { navigate } from "../../navigation";
-import { extensionPageRoute, extensionPageURL, extensionReviewsRoute, extensionReviewsURL } from "../../../common/routes";
+import { extensionPageRoute, extensionReviewsRoute } from "../../../common/routes";
 
 export function ExtensionPage() {
   const [extension, setExtension] = useState<Extension>(null);
@@ -50,7 +50,7 @@ export function ExtensionPage() {
   }, []);
 
   if (!extension || !description) {
-    return <Spinner/>;
+    return <Spinner center/>;
   }
 
   return (
@@ -61,30 +61,25 @@ export function ExtensionPage() {
         navigate(url);
       }}>
         <Tab
-          value={`/preferences/extension/${extension.id}`}
+          value={`/preferences/extension/${extension.id}/overview`}
           label="Overview"
           active={isActive(extensionPageRoute)}
         />
         <Tab
-          value={`${extension.id}/reviews`}
+          value={`/preferences/extension/${extension.id}/reviews`}
           label="Rating & Review"
           active={isActive(extensionReviewsRoute)}
         />
-        {/* {tabs.map(({ title, routePath, url = routePath, exact }) => {
-          const isActive = !!matchPath(currentLocation, { path: routePath, exact });
-
-          return <Tab key={url} label={title} value={url} active={isActive}/>;
-        })} */}
       </Tabs>
 
 
       <div className={styles.contents}>
         <Switch>
-          <Route path={extensionReviewsURL()}>
-            <Reviews reviews={reviews}/>
-          </Route>
-          <Route path={extensionPageURL()}>
+          <Route path={`/preferences/extension/:extensionId?/overview`}>
             <Overview extension={extension} description={description}/>
+          </Route>
+          <Route path={`/preferences/extension/:extensionId?/reviews`}>
+            <Reviews reviews={reviews}/>
           </Route>
         </Switch>
       </div>

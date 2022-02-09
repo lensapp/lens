@@ -43,11 +43,11 @@ export const installRoute: RouteProps = {
 };
 
 export const extensionPageRoute: RouteProps = {
-  path: `${preferencesRoute.path}/extension/:extensionId?`,
+  path: `${preferencesRoute.path}/extension/:extensionId?/overview`,
 };
 
 export const extensionReviewsRoute: RouteProps = {
-  path: `${extensionPageRoute.path}/reviews`,
+  path: `${preferencesRoute.path}/extension/:extensionId?/reviews`,
 };
 
 export const preferencesURL = buildURL(preferencesRoute.path);

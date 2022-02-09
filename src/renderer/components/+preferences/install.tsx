@@ -63,7 +63,7 @@ function ExtensionList({ extensions, search }: { extensions: Extension[], search
   ));
 
   function handleClick(extensionId: string) {
-    history.push(`extension/${extensionId}`);
+    history.push(`extension/${extensionId}/overview`);
   }
 
   if (!filteredExtensions.length) {
