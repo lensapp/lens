@@ -106,10 +106,12 @@ export enum WebSocketCloseEvent {
   TlsHandshake = 1015,
 }
 
+type ShellEnvId = { clusterId: string, ShellType: string };
+
 export abstract class ShellSession {
   abstract ShellType: string;
 
-  private static shellEnvs = new Map<string, Record<string, string>>();
+  private static shellEnvs = new Map<ShellEnvId, Record<string, string>>();
   private static processes = new Map<string, pty.IPty>();
 
   /**
@@ -296,16 +298,17 @@ export abstract class ShellSession {
 
   protected async getCachedShellEnv() {
     const { id: clusterId } = this.cluster;
+    const { ShellType } = this;
 
-    let env = ShellSession.shellEnvs.get(clusterId);
+    let env = ShellSession.shellEnvs.get({ clusterId, ShellType });
 
     if (!env) {
       env = await this.getShellEnv();
-      ShellSession.shellEnvs.set(clusterId, env);
+      ShellSession.shellEnvs.set({ clusterId, ShellType }, env);
     } else {
       // refresh env in the background
       this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnvs.set(clusterId, shellEnv);
+        ShellSession.shellEnvs.set({ clusterId, ShellType }, shellEnv);
       });
     }
 
@@ -343,10 +346,8 @@ export abstract class ShellSession {
       env.DISABLE_AUTO_UPDATE = "true";
     }
 
-    const kubeconfigPath = await this.kubeconfigPathP;
-
     env.PTYPID = process.pid.toString();
-    env.KUBECONFIG = kubeconfigPath;
+    env.KUBECONFIG = await this.kubeconfigPathP;
     env.TERM_PROGRAM = app.getName();
     env.TERM_PROGRAM_VERSION = app.getVersion();
 
@@ -362,15 +363,14 @@ export abstract class ShellSession {
       .filter(Boolean)
       .join();
 
-    console.log("entity in shell-session", this.entity);
-    console.log(this.entity.spec.kubeconfigPath);
-    console.log(this.entity.spec.kubeconfigContext);
-    console.log(this.entity.getId());
+    if (this.entity) {
+      const ctx = { catalogEntity: this.entity };
+      const modifiedEnv = this.shellEnvModifiers.reduce((env, modifier) => modifier(ctx, env), env);
 
-    const ctx = { catalogEntity: this.entity };
-    const modifiedEnv = this.shellEnvModifiers.reduce((env, modifier) => modifier(ctx, env), env);
+      return modifiedEnv;
+    }
 
-    return modifiedEnv;
+    return env;
   }
 
   protected exit(code = WebSocketCloseEvent.NormalClosure) {

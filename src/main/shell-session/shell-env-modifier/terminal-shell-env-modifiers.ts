@@ -10,10 +10,10 @@ interface Dependencies {
   extensions: IComputedValue<LensMainExtension[]>;
 }
  
-export const shellEnvModifiers = ({ extensions }: Dependencies) => {
+export const terminalShellEnvModifiers = ({ extensions }: Dependencies) => {
   return computed(() => (
     extensions.get()
-      .map((extension) => extension.shellEnvModifier)
+      .map((extension) => extension.terminalShellEnvModifier)
       .filter(Boolean)
   ));
 };

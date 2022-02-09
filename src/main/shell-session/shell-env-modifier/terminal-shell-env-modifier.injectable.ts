@@ -5,15 +5,15 @@
 
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
-import { shellEnvModifiers } from "./shell-env-modifiers";
+import { terminalShellEnvModifiers } from "./terminal-shell-env-modifiers";
  
-const shellEnvModifiersInjectable = getInjectable({
+const terminalShellEnvModifiersInjectable = getInjectable({
   instantiate: (di) =>
-    shellEnvModifiers({
+    terminalShellEnvModifiers({
       extensions: di.inject(mainExtensionsInjectable),
     }),
  
   lifecycle: lifecycleEnum.singleton,
 });
  
-export default shellEnvModifiersInjectable;
+export default terminalShellEnvModifiersInjectable;

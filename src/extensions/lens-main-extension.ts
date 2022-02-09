@@ -16,7 +16,7 @@ export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
   trayMenus: TrayMenuRegistration[] = [];
 
-  shellEnvModifier?: ShellEnvModifier;
+  terminalShellEnvModifier?: ShellEnvModifier;
 
   async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
     return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
