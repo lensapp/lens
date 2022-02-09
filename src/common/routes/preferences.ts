@@ -46,6 +46,10 @@ export const extensionPageRoute: RouteProps = {
   path: `${preferencesRoute.path}/extension/:extensionId?`,
 };
 
+export const extensionReviewsRoute: RouteProps = {
+  path: `${extensionPageRoute.path}/reviews`,
+};
+
 export const preferencesURL = buildURL(preferencesRoute.path);
 export const appURL = buildURL(appRoute.path);
 export const proxyURL = buildURL(proxyRoute.path);
@@ -56,3 +60,4 @@ export const extensionURL = buildURL(extensionRoute.path);
 export const terminalURL = buildURL(terminalRoute.path);
 export const installURL = buildURL(installRoute.path);
 export const extensionPageURL = buildURL<{ extensionId?: string }>(extensionPageRoute.path);
+export const extensionReviewsURL = buildURL<{ extensionId?: string }>(extensionReviewsRoute.path);
