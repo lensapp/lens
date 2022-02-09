@@ -40,6 +40,9 @@
     font-weight: bolder;
     color: #d7dae0;
     font-size: larger;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .version {

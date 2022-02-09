@@ -6,6 +6,7 @@ import styles from "./extension-card.module.scss";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
+import Rating from "@material-ui/lab/Rating";
 
 import installFromInputInjectable from "../+extensions/install-from-input/install-from-input.injectable";
 import { Button } from "../button";
@@ -40,15 +41,16 @@ function NonInjectedExtensionCard({
   extensionInstallationStateStore: store,
   installFromInput,
   onClick,
-  confirmUninstallExtension,
-  enableExtension,
-  disableExtension,
+  // confirmUninstallExtension,
+  // enableExtension,
+  // disableExtension,
   // userExtensions,
 }: Props & Dependencies) {
   const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
   // const installedExtension = userExtensions.get().find(installed => installed.manifest.name == name);
   const [waiting, setWaiting] = useState(false);
   const installed = true;
+  const rating = name.toLowerCase().includes("space") ? 5 : Math.floor(Math.random() * 5) + 1;
 
   useEffect(() => {
     if (!store.anyPreInstallingOrInstalling) {
@@ -62,20 +64,20 @@ function NonInjectedExtensionCard({
     installFromInput(extension.binaryUrl);
   }
 
-  function onUninstall(evt: React.MouseEvent, extension: InstalledExtension) {
-    evt.stopPropagation();
-    confirmUninstallExtension(extension);
-  }
+  // function onUninstall(evt: React.MouseEvent, extension: InstalledExtension) {
+  //   evt.stopPropagation();
+  //   confirmUninstallExtension(extension);
+  // }
 
-  function onStatusToggle(evt: React.MouseEvent, extension: InstalledExtension) {
-    evt.stopPropagation();
+  // function onStatusToggle(evt: React.MouseEvent, extension: InstalledExtension) {
+  //   evt.stopPropagation();
 
-    if (extension.isEnabled) {
-      disableExtension(extension.id);
-    } else {
-      enableExtension(extension.id);
-    }
-  }
+  //   if (extension.isEnabled) {
+  //     disableExtension(extension.id);
+  //   } else {
+  //     enableExtension(extension.id);
+  //   }
+  // }
 
   return (
     <div className={styles.extensionCard} onClick={onClick}>
@@ -83,7 +85,10 @@ function NonInjectedExtensionCard({
       <div className={styles.contents}>
         <div className={styles.head}>
           <div className={styles.nameAndVersion}>
-            <div className={styles.name}>{name}</div>
+            <div className={styles.name}>
+              {name}
+              <Rating name="read-only" value={rating} readOnly />
+            </div>
             <div className={styles.version}>{version}</div>
           </div>
 
