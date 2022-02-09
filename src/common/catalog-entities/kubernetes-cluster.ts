@@ -58,7 +58,11 @@ export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconn
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
 }
 
-export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
+export class KubernetesCluster<
+  Metadata extends KubernetesClusterMetadata = KubernetesClusterMetadata,
+  Status extends KubernetesClusterStatus = KubernetesClusterStatus,
+  Spec extends KubernetesClusterSpec = KubernetesClusterSpec,
+> extends CatalogEntity<Metadata, Status, Spec> {
   public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
   public static readonly kind: string = "KubernetesCluster";
 
