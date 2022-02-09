@@ -8,15 +8,14 @@ import path from "path";
 import { helmCli } from "../../helm/helm-cli";
 import { UserStore } from "../../../common/user-store";
 import type { Cluster } from "../../../common/cluster/cluster";
+import type { ClusterId } from "../../../common/cluster-types";
 import { ShellSession } from "../shell-session";
 import type { Kubectl } from "../../kubectl/kubectl";
-import type { ShellEnvModifier } from "../shell-env-modifier/shell-env-modifier-registration";
-import type { CatalogEntity } from "../../../common/catalog";
 
 export class LocalShellSession extends ShellSession {
   ShellType = "shell";
 
-  constructor(protected shellEnvModifiers: ShellEnvModifier[], protected entity: CatalogEntity, kubectl: Kubectl, websocket: WebSocket, cluster: Cluster, terminalId: string) {
+  constructor(protected shellEnvModify: (clusterId: ClusterId, env: Record<string, string>) => Record<string, string>, kubectl: Kubectl, websocket: WebSocket, cluster: Cluster, terminalId: string) {
     super(kubectl, websocket, cluster, terminalId);
   }
   
@@ -30,12 +29,8 @@ export class LocalShellSession extends ShellSession {
 
   public async open() {
     let env = await this.getCachedShellEnv();
-  
-    if (this.entity) {
-      const ctx = { catalogEntity: this.entity };
 
-      env = JSON.parse(JSON.stringify(this.shellEnvModifiers.reduce((env, modifier) => modifier(ctx, env), env)));
-    }
+    env = this.shellEnvModify(this.cluster.id, env);
 
     const shell = env.PTYSHELL;
     const args = await this.getShellArgs(shell);

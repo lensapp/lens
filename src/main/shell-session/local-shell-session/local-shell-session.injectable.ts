@@ -7,8 +7,7 @@ import { LocalShellSession } from "./local-shell-session";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type WebSocket from "ws";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
-import terminalShellEnvModifiersInjectable from "../shell-env-modifier/terminal-shell-env-modifier.injectable";
-import { catalogEntityRegistry } from "../../catalog";
+import terminalShellEnvModifiersInjectable from "../shell-env-modifier/terminal-shell-env-modify.injectable";
 
 interface InstantiationParameter {
   webSocket: WebSocket;
@@ -19,12 +18,11 @@ interface InstantiationParameter {
 const localShellSessionInjectable = getInjectable({
   instantiate: (di, { cluster, tabId, webSocket }: InstantiationParameter) => {
     const createKubectl = di.inject(createKubectlInjectable);
-    const localShellEnvModifiers = di.inject(terminalShellEnvModifiersInjectable);
+    const localShellEnvModify = di.inject(terminalShellEnvModifiersInjectable);
 
     const kubectl = createKubectl(cluster.version);
-    const entity = catalogEntityRegistry.getById(cluster.id);
 
-    return new LocalShellSession(localShellEnvModifiers.get(), entity, kubectl, webSocket, cluster, tabId);
+    return new LocalShellSession(localShellEnvModify, kubectl, webSocket, cluster, tabId);
   },
 
   lifecycle: lifecycleEnum.transient,
