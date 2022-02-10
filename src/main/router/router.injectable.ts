@@ -2,12 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import { Router, Route } from "../router";
+import routePortForwardInjectable from "../routes/port-forward/route-port-forward/route-port-forward.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
-import { Router } from "../router";
-import routePortForwardInjectable
-  from "../routes/port-forward/route-port-forward/route-port-forward.injectable";
+
+export const routeInjectionToken = getInjectionToken<Route>({
+  id: "route-injection-token",
+});
 
 const routerInjectable = getInjectable({
   id: "router",
@@ -16,10 +19,18 @@ const routerInjectable = getInjectable({
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const proxy = isDevelopment ? httpProxy.createProxy() : undefined;
 
-    return new Router({
+    const router = new Router({
       routePortForward: di.inject(routePortForwardInjectable),
       httpProxy: proxy,
     });
+
+    const routes = di.injectMany(routeInjectionToken);
+
+    routes.forEach(route => {
+      router.addRoute(route);
+    });
+
+    return router;
   },
 });
 
