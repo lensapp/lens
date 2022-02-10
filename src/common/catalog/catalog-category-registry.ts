@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, observable, makeObservable } from "mobx";
-import { Disposer, ExtendedMap, iter } from "../utils";
-import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 import { once } from "lodash";
+import { action, computed, makeObservable, observable } from "mobx";
+import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
+import { ExtendedMap, iter, type Disposer } from "../utils";
 
 export type CategoryFilter = (category: CatalogCategory) => any;
 
