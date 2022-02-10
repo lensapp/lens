@@ -30,6 +30,7 @@ export class LocalShellSession extends ShellSession {
   public async open() {
     let env = await this.getCachedShellEnv();
 
+    // extensions can modify the env
     env = this.shellEnvModify(this.cluster.id, env);
 
     const shell = env.PTYSHELL;
