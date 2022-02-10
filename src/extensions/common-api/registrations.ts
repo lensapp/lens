@@ -11,3 +11,4 @@ export type { PageRegistration, RegisteredPage, PageParams, PageComponentProps, 
 export type { ClusterPageMenuRegistration, ClusterPageMenuComponents } from "../registries/page-menu-registry";
 export type { ProtocolHandlerRegistration, RouteParams as ProtocolRouteParams, RouteHandler as ProtocolRouteHandler } from "../registries/protocol-handler";
 export type { CustomCategoryViewProps, CustomCategoryViewComponents, CustomCategoryViewRegistration } from "../../renderer/components/+catalog/custom-views";
+export type { ShellEnvModifier, ShellEnvContext } from "../../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
