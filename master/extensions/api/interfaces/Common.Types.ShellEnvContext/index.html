@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.KubernetesCluster/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ShellEnvContext/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Class: KubernetesCluster - Lens Extension Development</title>
+        <title>Interface: ShellEnvContext - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubernetesclustermetadata-status-spec" class="md-skip">
+        <a href="#interface-shellenvcontext" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: KubernetesCluster<Metadata, Status, Spec\>
+              Interface: ShellEnvContext
             
           </span>
         </div>
@@ -712,20 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#type-parameters" class="md-nav__link">
-    Type parameters
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hierarchy" class="md-nav__link">
-    Hierarchy
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -734,42 +720,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constructors" class="md-nav__link">
-    Constructors
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#constructors_1" class="md-nav__link">
-    Constructors
-  </a>
-  
-    <nav class="md-nav" aria-label="Constructors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#constructor" class="md-nav__link">
-    constructor
   </a>
   
 </li>
@@ -788,133 +740,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#apiversion" class="md-nav__link">
-    apiVersion
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kind" class="md-nav__link">
-    kind
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metadata" class="md-nav__link">
-    metadata
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spec" class="md-nav__link">
-    spec
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    status
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#apiversion_1" class="md-nav__link">
-    apiVersion
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kind_1" class="md-nav__link">
-    kind
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#connect" class="md-nav__link">
-    connect
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#disconnect" class="md-nav__link">
-    disconnect
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getid" class="md-nav__link">
-    getId
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getname" class="md-nav__link">
-    getName
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getsource" class="md-nav__link">
-    getSource
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#isenabled" class="md-nav__link">
-    isEnabled
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#oncontextmenuopen" class="md-nav__link">
-    onContextMenuOpen
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ondetailsopen" class="md-nav__link">
-    onDetailsOpen
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#onrun" class="md-nav__link">
-    onRun
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#onsettingsopen" class="md-nav__link">
-    onSettingsOpen
+  <a href="#catalogentity" class="md-nav__link">
+    catalogEntity
   </a>
   
 </li>
@@ -938,241 +765,16 @@
                 
                 
                 
-                <h1 id="class-kubernetesclustermetadata-status-spec">Class: KubernetesCluster&lt;Metadata, Status, Spec><a class="headerlink" href="#class-kubernetesclustermetadata-status-spec" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Catalog/">Catalog</a>.KubernetesCluster</p>
-<p>Copyright (c) OpenLens Authors. All rights reserved.
-Licensed under MIT License. See LICENSE in root directory for more information.</p>
-<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>Metadata</code></td>
-<td align="left">extends <a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a><a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a></td>
-</tr>
-<tr>
-<td align="left"><code>Status</code></td>
-<td align="left">extends <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a><a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a></td>
-</tr>
-<tr>
-<td align="left"><code>Spec</code></td>
-<td align="left">extends <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a><a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
-<ul>
-<li><a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></li>
-</ul>
-<p>↳ <strong><code>KubernetesCluster</code></strong></p>
+                <h1 id="interface-shellenvcontext">Interface: ShellEnvContext<a class="headerlink" href="#interface-shellenvcontext" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Types/">Types</a>.ShellEnvContext</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#constructor">constructor</a></li>
-</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#apiversion">apiVersion</a></li>
-<li><a href="./#kind">kind</a></li>
-<li><a href="./#metadata">metadata</a></li>
-<li><a href="./#spec">spec</a></li>
-<li><a href="./#status">status</a></li>
-<li><a href="./#apiversion">apiVersion</a></li>
-<li><a href="./#kind">kind</a></li>
+<li><a href="./#catalogentity">catalogEntity</a></li>
 </ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#connect">connect</a></li>
-<li><a href="./#disconnect">disconnect</a></li>
-<li><a href="./#getid">getId</a></li>
-<li><a href="./#getname">getName</a></li>
-<li><a href="./#getsource">getSource</a></li>
-<li><a href="./#isenabled">isEnabled</a></li>
-<li><a href="./#oncontextmenuopen">onContextMenuOpen</a></li>
-<li><a href="./#ondetailsopen">onDetailsOpen</a></li>
-<li><a href="./#onrun">onRun</a></li>
-<li><a href="./#onsettingsopen">onSettingsOpen</a></li>
-</ul>
-<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
-<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubernetesCluster</strong>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>>(<code>__namedParameters</code>)</p>
-<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>Metadata</code></td>
-<td align="left">extends <a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a><a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a></td>
-</tr>
-<tr>
-<td align="left"><code>Status</code></td>
-<td align="left">extends <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a><a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a></td>
-</tr>
-<tr>
-<td align="left"><code>Spec</code></td>
-<td align="left">extends <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a>&lt;<code>Spec</code>><a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Common.Catalog.CatalogEntityData/"><code>CatalogEntityData</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code> = <code>KubernetesCluster.apiVersion</code></p>
-<p>The group and version of this class.</p>
-<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#apiversion">apiVersion</a></p>
-<hr />
-<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>kind</strong>: <code>string</code> = <code>KubernetesCluster.kind</code></p>
-<p>A DNS label name of the entity.</p>
-<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#kind">kind</a></p>
-<hr />
-<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>: <code>Metadata</code></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#metadata">metadata</a></p>
-<hr />
-<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
-<p>• <strong>spec</strong>: <code>Spec</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#spec">spec</a></p>
-<hr />
-<h3 id="status">status<a class="headerlink" href="#status" title="Permanent link">#</a></h3>
-<p>• <strong>status</strong>: <code>Status</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#status">status</a></p>
-<hr />
-<h3 id="apiversion_1">apiVersion<a class="headerlink" href="#apiversion_1" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code> = <code>"entity.k8slens.dev/v1alpha1"</code></p>
-<hr />
-<h3 id="kind_1">kind<a class="headerlink" href="#kind_1" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <code>Readonly</code> <strong>kind</strong>: <code>string</code> = <code>"KubernetesCluster"</code></p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="connect">connect<a class="headerlink" href="#connect" title="Permanent link">#</a></h3>
-<p>▸ <strong>connect</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<hr />
-<h3 id="disconnect">disconnect<a class="headerlink" href="#disconnect" title="Permanent link">#</a></h3>
-<p>▸ <strong>disconnect</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<hr />
-<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getId</strong>(): <code>string</code></p>
-<p>Get the UID of this entity</p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#getid">getId</a></p>
-<hr />
-<h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">#</a></h3>
-<p>▸ <strong>getName</strong>(): <code>string</code></p>
-<p>Get the name of this entity</p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#getname">getName</a></p>
-<hr />
-<h3 id="getsource">getSource<a class="headerlink" href="#getsource" title="Permanent link">#</a></h3>
-<p>▸ <strong>getSource</strong>(): <code>string</code></p>
-<p>Get the specified source of this entity, defaulting to <code>"unknown"</code> if not
-provided</p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#getsource">getSource</a></p>
-<hr />
-<h3 id="isenabled">isEnabled<a class="headerlink" href="#isenabled" title="Permanent link">#</a></h3>
-<p>▸ <strong>isEnabled</strong>(): <code>boolean</code></p>
-<p>Get if this entity is enabled.</p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#isenabled">isEnabled</a></p>
-<hr />
-<h3 id="oncontextmenuopen">onContextMenuOpen<a class="headerlink" href="#oncontextmenuopen" title="Permanent link">#</a></h3>
-<p>▸ <strong>onContextMenuOpen</strong>(<code>context</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>context</code></td>
-<td align="left"><a href="../../interfaces/Common.Catalog.CatalogEntityContextMenuContext/"><code>CatalogEntityContextMenuContext</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#oncontextmenuopen">onContextMenuOpen</a></p>
-<hr />
-<h3 id="ondetailsopen">onDetailsOpen<a class="headerlink" href="#ondetailsopen" title="Permanent link">#</a></h3>
-<p>▸ <strong>onDetailsOpen</strong>(): <code>void</code></p>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
-<h3 id="onrun">onRun<a class="headerlink" href="#onrun" title="Permanent link">#</a></h3>
-<p>▸ <strong>onRun</strong>(<code>context</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>context</code></td>
-<td align="left"><a href="../../interfaces/Common.Catalog.CatalogEntityActionContext/"><code>CatalogEntityActionContext</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#onrun">onRun</a></p>
-<hr />
-<h3 id="onsettingsopen">onSettingsOpen<a class="headerlink" href="#onsettingsopen" title="Permanent link">#</a></h3>
-<p>▸ <strong>onSettingsOpen</strong>(): <code>void</code></p>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
-<p><a href="../Common.Catalog.CatalogEntity/">CatalogEntity</a>.<a href="../Common.Catalog.CatalogEntity/#onsettingsopen">onSettingsOpen</a></p>
+<h3 id="catalogentity">catalogEntity<a class="headerlink" href="#catalogentity" title="Permanent link">#</a></h3>
+<p>• <strong>catalogEntity</strong>: <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></p>
                 
               
               

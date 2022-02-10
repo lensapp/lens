@@ -767,6 +767,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#shellenvmodifier" class="md-nav__link">
+    ShellEnvModifier
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -812,6 +819,7 @@
 <li><a href="../../interfaces/Common.Types.ProtocolRouteHandler/">ProtocolRouteHandler</a></li>
 <li><a href="../../interfaces/Common.Types.ProtocolRouteParams/">ProtocolRouteParams</a></li>
 <li><a href="../../interfaces/Common.Types.RegisteredPage/">RegisteredPage</a></li>
+<li><a href="../../interfaces/Common.Types.ShellEnvContext/">ShellEnvContext</a></li>
 <li><a href="../../interfaces/Common.Types.StatusBarRegistration/">StatusBarRegistration</a></li>
 </ul>
 <h3 id="type-aliases">Type aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
@@ -819,6 +827,7 @@
 <li><a href="./#ipcmainevent">IpcMainEvent</a></li>
 <li><a href="./#ipcmaininvokeevent">IpcMainInvokeEvent</a></li>
 <li><a href="./#ipcrendererevent">IpcRendererEvent</a></li>
+<li><a href="./#shellenvmodifier">ShellEnvModifier</a></li>
 </ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
 <h3 id="ipcmainevent">IpcMainEvent<a class="headerlink" href="#ipcmainevent" title="Permanent link">#</a></h3>
@@ -831,6 +840,32 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 <hr />
 <h3 id="ipcrendererevent">IpcRendererEvent<a class="headerlink" href="#ipcrendererevent" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>IpcRendererEvent</strong>: <code>Electron.IpcRendererEvent</code></p>
+<hr />
+<h3 id="shellenvmodifier">ShellEnvModifier<a class="headerlink" href="#shellenvmodifier" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>ShellEnvModifier</strong>: (<code>ctx</code>: <a href="../../interfaces/Common.Types.ShellEnvContext/"><code>ShellEnvContext</code></a>, <code>env</code>: <code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>>) =&gt; <code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>ctx</code>, <code>env</code>): <code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>ctx</code></td>
+<td align="left"><a href="../../interfaces/Common.Types.ShellEnvContext/"><code>ShellEnvContext</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>env</code></td>
+<td align="left"><code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></p>
                 
               
               

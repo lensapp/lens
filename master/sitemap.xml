@@ -856,6 +856,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ShellEnvContext/</loc>
+         <lastmod>2022-02-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.StatusBarRegistration/</loc>
          <lastmod>2022-02-10</lastmod>
          <changefreq>daily</changefreq>
