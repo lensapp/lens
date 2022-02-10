@@ -4,7 +4,7 @@
  */
 import { powerMonitor } from "electron";
 import type { Disposer } from "../../common/utils/disposer";
-type PowerEventListener = () => void;
+export type PowerEventListener = () => void;
 
 export const onSuspend = (listener: PowerEventListener): Disposer => {
   powerMonitor.on("suspend", listener);
