@@ -262,6 +262,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
         isSelectable={false}
         isConfigurable={true}
         store={catalogEntityStore}
+        getItems={() => catalogEntityStore.entities}
         customizeTableRowProps={entity => ({
           disabled: !entity.isEnabled(),
         })}
