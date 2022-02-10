@@ -5,20 +5,17 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { BottomBar } from "./bottom-bar";
+import { StatusBar } from "./status-bar";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import directoryForUserDataInjectable  from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { computed, IObservableArray, observable } from "mobx";
+import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import statusBarItemsInjectable from "./status-bar-items.injectable";
+import type { StatusBarRegistration } from "./status-bar-registration";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import { computed, IObservableArray, observable, runInAction } from "mobx";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
-
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "/foo",
-  },
-}));
 
 class SomeTestExtension extends LensRendererExtension {
   constructor(statusBarItems: IObservableArray<any>) {
@@ -36,35 +33,27 @@ class SomeTestExtension extends LensRendererExtension {
   }
 }
 
-describe("<BottomBar />", () => {
+describe("<StatusBar />", () => {
   let render: DiRender;
+  let di: ConfigurableDependencyInjectionContainer;
   let statusBarItems: IObservableArray<any>;
 
   beforeEach(async () => {
-
     statusBarItems = observable.array([]);
-
-    const someTestExtension = new SomeTestExtension(statusBarItems);
-
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    render = renderFor(di);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    di.override(rendererExtensionsInjectable, () => {
-      return computed(() => [someTestExtension]);
-    });
-
-    render = renderFor(di);
+    di.override(rendererExtensionsInjectable, () => computed(() => [new SomeTestExtension(statusBarItems)]));
 
     await di.runSetups();
   });
 
   it("renders w/o errors", () => {
-    const { container } = render(<BottomBar />);
+    const { container } = render(<StatusBar />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
-
 
   it.each([
     undefined,
@@ -74,25 +63,21 @@ describe("<BottomBar />", () => {
     [],
     [{}],
     {},
-  ])("renders w/o errors when .getItems() returns not type compliant (%p)", val => {
-    runInAction(() => {
-      statusBarItems.replace([val]);
-    });
+  ])("renders w/o errors when registrations are not type compliant (%p)", val => {
+    statusBarItems.replace([val]);
 
-    expect(() => render(<BottomBar />)).not.toThrow();
+    expect(() => render(<StatusBar />)).not.toThrow();
   });
 
   it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", () => {
     const testId = "testId";
     const text = "heee";
 
-    runInAction(() => {
-      statusBarItems.replace([
-        { item: <span data-testid={testId} >{text}</span> },
-      ]);
-    });
+    di.override(statusBarItemsInjectable, () => computed(() => [
+      { item: <span data-testid={testId} >{text}</span> },
+    ] as StatusBarRegistration[]));
 
-    const { getByTestId } = render(<BottomBar />);
+    const { getByTestId } = render(<StatusBar />);
 
     expect(getByTestId(testId)).toHaveTextContent(text);
   });
@@ -101,51 +86,47 @@ describe("<BottomBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    runInAction(() => {
-      statusBarItems.replace([
-        { item: () => <span data-testid={testId} >{text}</span> },
-      ]);
-    });
+    statusBarItems.replace([{
+      item: () => <span data-testid={testId} >{text}</span>,
+    }]);
 
-    const { getByTestId } = render(<BottomBar />);
+    const { getByTestId } = render(<StatusBar />);
 
     expect(getByTestId(testId)).toHaveTextContent(text);
   });
 
 
   it("sort positioned items properly", () => {
-    runInAction(() => {
-      statusBarItems.replace([
-        {
-          components: {
-            Item: () => <div data-testid="sortedElem">right</div>,
-          },
+    statusBarItems.replace([
+      {
+        components: {
+          Item: () => <div data-testid="sortedElem">right1</div>,
         },
-        {
-          components: {
-            Item: () => <div data-testid="sortedElem">right</div>,
-            position: "right",
-          },
+      },
+      {
+        components: {
+          Item: () => <div data-testid="sortedElem">right2</div>,
+          position: "right",
         },
-        {
-          components: {
-            Item: () => <div data-testid="sortedElem">left</div>,
-            position: "left",
-          },
+      },
+      {
+        components: {
+          Item: () => <div data-testid="sortedElem">left1</div>,
+          position: "left",
         },
-        {
-          components: {
-            Item: () => <div data-testid="sortedElem">left</div>,
-            position: "left",
-          },
+      },
+      {
+        components: {
+          Item: () => <div data-testid="sortedElem">left2</div>,
+          position: "left",
         },
-      ]);
-    });
+      },
+    ]);
 
-    const { getAllByTestId } = render(<BottomBar />);
+    const { getAllByTestId } = render(<StatusBar />);
     const elems = getAllByTestId("sortedElem");
     const positions = elems.map(elem => elem.textContent);
 
-    expect(positions).toEqual(["left", "left", "right", "right"]);
+    expect(positions).toEqual(["left1", "left2", "right2", "right1"]);
   });
 });
