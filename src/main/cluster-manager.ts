@@ -48,7 +48,7 @@ export class ClusterManager extends Singleton {
     );
 
     reaction(
-      () => catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster),
+      () => catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster) as KubernetesCluster[],
       entities => this.syncClustersFromCatalog(entities),
     );
 
