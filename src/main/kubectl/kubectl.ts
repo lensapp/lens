@@ -35,7 +35,9 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.18", "1.18.20"],
   ["1.19", "1.19.12"],
   ["1.20", "1.20.8"],
-  ["1.21", bundledVersion],
+  ["1.21", "1.21.9"],
+  ["1.22", "1.22.6"],
+  ["1.23", bundledVersion],
 ]);
 let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3";
