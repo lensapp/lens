@@ -11,30 +11,18 @@ import type { TabId } from "../dock/store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
-import { isMac, defaultTerminalFontFamily } from "../../../../common/vars";
+import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
 import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
-import RobotoMonoFontUrl from "../../fonts/roboto-mono-nerd.ttf";
 
 export class Terminal {
   private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
 
   public static get spawningPool() {
     return document.getElementById("terminal-init");
-  }
-
-  static async preloadFonts() {
-    try {
-      const fontFace = new FontFace(defaultTerminalFontFamily, `url(${RobotoMonoFontUrl})`);
-
-      await fontFace.load();
-      document.fonts.add(fontFace);
-    } catch (error) {
-      logger.error(`[TERMINAL]: preloading default font failed`, error);
-    }
   }
 
   private xterm: XTerm | null = new XTerm({

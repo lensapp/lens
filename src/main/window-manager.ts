@@ -28,13 +28,14 @@ export interface SendToViewArgs {
 }
 
 export class WindowManager extends Singleton {
+  public mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
+
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
   protected disposers: Record<string, Function> = {};
 
   @observable activeClusterId: ClusterId;
-  @observable mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
 
   constructor() {
     super();
