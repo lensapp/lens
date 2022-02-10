@@ -46,6 +46,7 @@ export function webpackLensRenderer(): webpack.Configuration {
     ignoreWarnings: [
       /Critical dependency: the request of a dependency is an expression/,
       /export '.*' was not found in/,
+      /require.extensions is not supported by webpack./, // handlebars
     ],
     resolve: {
       extensions: [
