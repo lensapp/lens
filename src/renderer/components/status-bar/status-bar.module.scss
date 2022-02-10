@@ -17,23 +17,21 @@
 }
 
 .leftSide {
-  display: block;
-
-  .item {
-    float: left;
-  }
+  display: flex;
+  align-items: center;
 }
 
 .rightSide {
-  display: block;
-
-  .item {
-    float: right;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .item {
-  padding: 2px 4px;
+  height: 100%;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
