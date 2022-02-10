@@ -1241,6 +1241,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main.Power/</loc>
+         <lastmod>2022-02-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main/</loc>
          <lastmod>2022-02-10</lastmod>
          <changefreq>daily</changefreq>
