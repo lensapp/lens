@@ -17,7 +17,7 @@ import { catalogEntityRunListener } from "../../common/ipc/catalog";
 import { navigate } from "../navigation";
 import { isMainFrame } from "process";
 import { startCatalogEntitySync } from "./catalog-entity-sync";
-import type { RawCatalogEntity, RawCatalogEntityUpdate } from "../../common/catalog/entity-sync";
+import type { EntityChangeEvents, RawCatalogEntity, RawCatalogEntityUpdate } from "../../common/catalog/entity-sync";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
@@ -28,6 +28,11 @@ export const catalogEntityRunContext = {
     catalogEntityRegistry.activeEntity = entity;
   },
 };
+
+export interface CatalogEntityRegistryDependencies {
+  categoryRegistry: CatalogCategoryRegistry;
+  initSync: (handlers: EntityChangeEvents) => void;
+}
 
 export class CatalogEntityRegistry {
   @observable protected activeEntityId: string | undefined = undefined;
@@ -44,7 +49,7 @@ export class CatalogEntityRegistry {
    */
   protected rawEntities = new Map<string, CatalogEntityData & CatalogEntityKindData>();
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {
+  constructor(protected readonly dependencies: CatalogEntityRegistryDependencies) {
     makeObservable(this);
   }
 
@@ -80,7 +85,7 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    startCatalogEntitySync({
+    this.dependencies.initSync({
       delete: this.onDeleteEvent,
       add: this.onAddEvent,
       update: this.onUpdateEvent,
@@ -126,7 +131,7 @@ export class CatalogEntityRegistry {
 
   @action
   protected addItem(item: (CatalogEntityData & CatalogEntityKindData)) {
-    const entity = this.categoryRegistry.getEntityForData(item);
+    const entity = this.dependencies.categoryRegistry.getEntityForData(item);
 
     if (entity) {
       this._entities.set(entity.getId(), entity);
@@ -256,7 +261,10 @@ export class CatalogEntityRegistry {
   }
 }
 
-export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+export const catalogEntityRegistry = new CatalogEntityRegistry({
+  categoryRegistry: catalogCategoryRegistry,
+  initSync: startCatalogEntitySync,
+});
 
 export function getActiveClusterEntity(): Cluster | undefined {
   return ClusterStore.getInstance().getById(catalogEntityRegistry.activeEntity?.getId());
