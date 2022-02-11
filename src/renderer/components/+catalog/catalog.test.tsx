@@ -16,15 +16,14 @@ import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.s
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
-import catalogEntityRegistryInjectable
-  from "../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog-entity-registry/catalog-entity-registry.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import mockFs from "mock-fs";
-import directoryForUserDataInjectable
-  from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { noop } from "../../utils";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -115,9 +114,10 @@ describe("<Catalog />", () => {
 
     render = renderFor(di);
 
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-
-    catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    catalogEntityRegistry = new CatalogEntityRegistry({
+      categoryRegistry: new CatalogCategoryRegistry(),
+      initSync: noop,
+    });
 
     di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
 
