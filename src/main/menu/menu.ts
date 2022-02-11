@@ -14,6 +14,8 @@ import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } 
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { MenuRegistration } from "./menu-registration";
 
+export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
+
 interface MenuItemsOpts extends MenuItemConstructorOptions {
   submenu?: MenuItemConstructorOptions[];
 }
