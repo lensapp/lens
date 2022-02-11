@@ -48,7 +48,7 @@ export function initCatalog({ openCommandDialog }: Dependencies) {
     .on("contextMenuOpen", (entity, context) => {
       if (entity.metadata?.source == "local") {
         context.menuItems.push({
-          title: "Delete",
+          title: "Remove",
           icon: "delete",
           onClick: () => onClusterDelete(entity.getId()),
         });
