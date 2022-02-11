@@ -322,13 +322,12 @@ export class ExtensionLoader {
             this.instances.set(extId, instance);
 
             return {
-              extId,
               instance,
-              isBundled: extension.isBundled,
+              installedExtension: extension,
               activated: instance.activate(),
             };
           } catch (err) {
-            logger.error(`${logModule}: activation extension error`, { ext: extension, err });
+            logger.error(`${logModule}: error loading extension`, { ext: extension, err });
           }
         } else if (!extension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
@@ -339,9 +338,16 @@ export class ExtensionLoader {
       // Remove null values
       .filter(extension => Boolean(extension));
 
-    // We first need to wait until each extension's `onActivate` is resolved,
+    // We first need to wait until each extension's `onActivate` is resolved or rejected,
     // as this might register new catalog categories. Afterwards we can safely .enable the extension.
-    await Promise.all(extensions.map(extension => extension.activated));
+    await Promise.all(
+      extensions.map(extension =>
+        // If extension activation fails, log error
+        extension.activated.catch((error) => {
+          logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
+        }),
+      ),
+    );
 
     // Return ExtensionLoading[]
     return extensions.map(extension => {
@@ -350,7 +356,7 @@ export class ExtensionLoader {
       });
 
       return {
-        isBundled: extension.isBundled,
+        isBundled: extension.installedExtension.isBundled,
         loaded,
       };
     });
