@@ -5,8 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { LensApiRequest } from "../../router";
-import { respondJson } from "../../utils/http-responses";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import { PrometheusProviderRegistry } from "../../prometheus";
 import type { MetricProviderInfo } from "../../../common/k8s-api/endpoints/metrics.api";
@@ -18,14 +17,15 @@ const getMetricProvidersRouteInjectable = getInjectable({
     method: "get",
     path: `${apiPrefix}/metrics/providers`,
 
-    handler: async (request: LensApiRequest) => {
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    handler: async (request: LensApiRequest) : Promise<LensApiResult> => {
       const providers: MetricProviderInfo[] = [];
 
       for (const { name, id, isConfigurable } of PrometheusProviderRegistry.getInstance().providers.values()) {
         providers.push({ name, id, isConfigurable });
       }
 
-      respondJson(request.response, providers);
+      return { response: providers };
     },
   }),
 

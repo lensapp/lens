@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensApiRequest } from "../router";
+import type { LensApiRequest, LensApiResult } from "../router";
 import staticFileRouteInjectable from "../routes/static-file-route.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
@@ -24,7 +24,7 @@ jest.mock("electron", () => ({
 }));
 
 describe("Router", () => {
-  let handleStaticFile: (request: LensApiRequest) => Promise<void>;
+  let handleStaticFile: (request: LensApiRequest) => Promise<LensApiResult>;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });

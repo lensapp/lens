@@ -6,6 +6,8 @@
 import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
 import type http from "http";
+import type httpProxy from "http-proxy";
+import { toPairs } from "lodash/fp";
 import path from "path";
 import type { Cluster } from "../common/cluster/cluster";
 
@@ -40,6 +42,94 @@ export interface LensApiRequest<P = any> {
   };
 }
 
+const respondFor =
+  (contentType: string) =>
+    (
+      content: any,
+      statusCode: number,
+      response: http.ServerResponse,
+    ) => {
+      response.statusCode = statusCode;
+      response.setHeader("Content-Type", contentType);
+
+      if (content instanceof Buffer) {
+        response.write(content);
+
+        response.end();
+
+        return;
+      }
+
+      response.end(content);
+    };
+
+export type SupportedFileExtension = "json" | "txt" | "html" | "css" | "gif" | "jpg" | "png" | "svg" | "js" | "woff2" | "ttf";
+
+export const contentTypes: Record<SupportedFileExtension, LensApiResultContentType> = {
+  json: {
+    respond: (
+      content: any,
+      statusCode: number,
+      response: http.ServerResponse,
+    ) => {
+      response.statusCode = statusCode;
+      response.setHeader("Content-Type", "application/json");
+
+      if (content instanceof Buffer) {
+        response.write(content);
+        response.end();
+
+        return;
+      }
+
+      const normalizedContent =
+        typeof content === "object" ? JSON.stringify(content) : content;
+
+      response.end(normalizedContent);
+    },
+  },
+
+  txt: {
+    respond: respondFor("text/plain"),
+  },
+
+  html: {
+    respond: respondFor("text/html"),
+  },
+
+  css: {
+    respond: respondFor("text/css"),
+  },
+
+  gif: {
+    respond: respondFor("image/gif"),
+  },
+
+  jpg: {
+    respond: respondFor("image/jpeg"),
+  },
+
+  png: {
+    respond: respondFor("image/png"),
+  },
+
+  svg: {
+    respond: respondFor("image/svg+xml"),
+  },
+
+  js: {
+    respond: respondFor("application/javascript"),
+  },
+
+  woff2: {
+    respond: respondFor("font/woff2"),
+  },
+
+  ttf: {
+    respond: respondFor("font/ttf"),
+  },
+};
+
 export class Router {
   protected router = new Call.Router();
   static rootPath = path.resolve(__static);
@@ -47,7 +137,42 @@ export class Router {
   constructor(routes: Route[]) {
     routes.forEach(route => {
       this.router.add({ method: route.method, path: route.path }, async (request: LensApiRequest) => {
-        await route.handler(request);
+        let result: LensApiResult | void;
+
+        try {
+          result = await route.handler(request);
+        } catch(error) {
+          contentTypes.txt.respond(error.toString(), 422, request.response);
+
+          return;
+        }
+
+        if (!result) {
+          contentTypes.txt.respond(null, 204, request.response);
+
+          return;
+        }
+
+        const {
+          response,
+          error,
+          statusCode = error ? 400 : 200,
+          contentType = contentTypes.json,
+          headers = {},
+          proxy,
+        } = result;
+
+        if (proxy) {
+          return;
+        }
+
+        const headerNameValuePairs = toPairs<string>(headers);
+
+        headerNameValuePairs.forEach(([key, value]) => {
+          request.response.setHeader(key, value);
+        });
+
+        contentType.respond(error || response, statusCode, request.response);
       });
     });
   }
@@ -91,8 +216,21 @@ export class Router {
   }
 }
 
+interface LensApiResultContentType {
+  respond: (content: any, statusCode: number, response: http.ServerResponse) => void;
+}
+
+export interface LensApiResult {
+  statusCode?: number;
+  response?: any;
+  error?: any;
+  contentType?: LensApiResultContentType;
+  headers?: { Location: string };
+  proxy?: httpProxy;
+}
+
 export interface Route {
   path: string;
   method: "get" | "post" | "put" | "patch" | "delete";
-  handler: (request: LensApiRequest) => void | Promise<void>;
+  handler: (request: LensApiRequest) => LensApiResult | Promise<LensApiResult>;
 }

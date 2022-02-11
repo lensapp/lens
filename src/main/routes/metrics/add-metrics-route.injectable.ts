@@ -5,8 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { LensApiRequest } from "../../router";
-import { respondJson } from "../../utils/http-responses";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import { ClusterMetadataKey, ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import logger from "../../logger";
@@ -43,7 +42,7 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   return Promise.all(queries.map(loadMetric));
 }
 
-const addMetricsRoute = async ({ response, cluster, payload, query }: LensApiRequest) => {
+const addMetricsRoute = async ({ cluster, payload, query }: LensApiRequest): Promise<LensApiResult> => {
   const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
   const prometheusMetadata: ClusterPrometheusMetadata = {};
 
@@ -56,33 +55,39 @@ const addMetricsRoute = async ({ response, cluster, payload, query }: LensApiReq
     if (!prometheusPath) {
       prometheusMetadata.success = false;
 
-      return respondJson(response, {});
+      return { response: {}};
     }
 
     // return data in same structure as query
     if (typeof payload === "string") {
       const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
 
-      respondJson(response, data);
-    } else if (Array.isArray(payload)) {
+      return { response: data };
+    }
+
+    if (Array.isArray(payload)) {
       const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
 
-      respondJson(response, data);
-    } else {
-      const queries = Object.entries<Record<string, string>>(payload)
-        .map(([queryName, queryOpts]) => (
-          provider.getQuery(queryOpts, queryName)
-        ));
-      const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
-      const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
-
-      respondJson(response, data);
+      return { response: data };
     }
+
+    const queries = Object.entries<Record<string, string>>(payload)
+      .map(([queryName, queryOpts]) => (
+        provider.getQuery(queryOpts, queryName)
+      ));
+
+    const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
+    const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
+
     prometheusMetadata.success = true;
+
+    return { response: data };
   } catch (error) {
     prometheusMetadata.success = false;
-    respondJson(response, {});
+
     logger.warn(`[METRICS-ROUTE]: failed to get metrics for clusterId=${cluster.id}:`, error);
+
+    return { response: {}};
   } finally {
     cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
   }

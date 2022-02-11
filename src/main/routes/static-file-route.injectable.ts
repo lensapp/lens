@@ -3,35 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensApiRequest, Route } from "../router";
+import type { LensApiRequest, LensApiResult, SupportedFileExtension, Route } from "../router";
+import { contentTypes } from "../router";
 import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
-import {
-  appName,
-  publicPath,
-} from "../../common/vars";
+import { appName, publicPath } from "../../common/vars";
 import path from "path";
 import readFileInjectable from "../../common/fs/read-file.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
-import { Router } from "../router";
-
-function getMimeType(filename: string) {
-  const mimeTypes: Record<string, string> = {
-    html: "text/html",
-    txt: "text/plain",
-    css: "text/css",
-    gif: "image/gif",
-    jpg: "image/jpeg",
-    png: "image/png",
-    svg: "image/svg+xml",
-    js: "application/javascript",
-    woff2: "font/woff2",
-    ttf: "font/ttf",
-  };
-
-  return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
-}
 
 interface ProductionDependencies {
   readFile: (path: string) => Promise<Buffer>;
@@ -39,36 +19,38 @@ interface ProductionDependencies {
 
 const handleStaticFileInProduction =
   ({ readFile }: ProductionDependencies) =>
-    async ({ params, response }: LensApiRequest): Promise<void> => {
+    async ({ params }: LensApiRequest): Promise<LensApiResult> => {
+      const staticPath = path.resolve(__static);
       let filePath = params.path;
 
       for (let retryCount = 0; retryCount < 5; retryCount += 1) {
-        const asset = path.join(Router.rootPath, filePath);
+        const asset = path.join(staticPath, filePath);
         const normalizedFilePath = path.resolve(asset);
 
-        if (!normalizedFilePath.startsWith(Router.rootPath)) {
-          response.statusCode = 404;
-
-          return response.end();
+        if (!normalizedFilePath.startsWith(staticPath)) {
+          return { statusCode: 404 };
         }
 
         try {
-          const data = await readFile(asset);
+          const fileExtension = path
+            .extname(asset)
+            .slice(1) as SupportedFileExtension;
 
-          response.setHeader("Content-Type", getMimeType(asset));
-          response.write(data);
-          response.end();
+          const contentType = contentTypes[fileExtension] || contentTypes.txt;
+
+          return { response: await readFile(asset), contentType };
         } catch (err) {
           if (retryCount > 5) {
             logger.error("handleStaticFile:", err.toString());
-            response.statusCode = 404;
 
-            return response.end();
+            return { statusCode: 404 };
           }
 
           filePath = `${publicPath}/${appName}.html`;
         }
       }
+
+      return { statusCode: 404 };
     };
 
 interface DevelopmentDependencies {
@@ -87,6 +69,8 @@ const handleStaticFileInDevelopment =
       proxy.web(req, res, {
         target: "http://127.0.0.1:8080",
       });
+
+      return { proxy };
     };
 
 const staticFileRouteInjectable = getInjectable({

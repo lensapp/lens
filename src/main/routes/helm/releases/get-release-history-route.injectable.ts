@@ -3,12 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { LensApiRequest } from "../../../router";
+import type { LensApiRequest, LensApiResult } from "../../../router";
 import { helmService } from "../../../helm/helm-service";
-import { respondJson, respondText } from "../../../utils/http-responses";
 import { routeInjectionToken } from "../../../router/router.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import logger from "../../../logger";
 
 const getReleaseRouteHistoryInjectable = getInjectable({
   id: "get-release-history-route",
@@ -17,17 +15,16 @@ const getReleaseRouteHistoryInjectable = getInjectable({
     method: "get",
     path: `${apiPrefix}/v2/releases/{namespace}/{release}/history`,
 
-    handler: async (request: LensApiRequest) => {
-      const { cluster, params, response } = request;
+    handler: async (request: LensApiRequest): Promise<LensApiResult> => {
+      const { cluster, params } = request;
 
-      try {
-        const result = await helmService.getReleaseHistory(cluster, params.release, params.namespace);
-
-        respondJson(response, result);
-      } catch (error) {
-        logger.debug(error);
-        respondText(response, error?.toString() || "Error getting release history", 422);
-      }
+      return {
+        response: await helmService.getReleaseHistory(
+          cluster,
+          params.release,
+          params.namespace,
+        ),
+      };
     },
   }),
 

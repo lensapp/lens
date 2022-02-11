@@ -4,9 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../../router/router.injectable";
-import type { LensApiRequest } from "../../../router";
+import type { LensApiRequest, LensApiResult } from "../../../router";
 import { helmService } from "../../../helm/helm-service";
-import { respondJson } from "../../../utils/http-responses";
 import { apiPrefix } from "../../../../common/vars";
 
 const listChartsRouteInjectable = getInjectable({
@@ -16,12 +15,10 @@ const listChartsRouteInjectable = getInjectable({
     method: "get",
     path: `${apiPrefix}/v2/charts`,
 
-    handler: async (request: LensApiRequest) => {
-      const { response } = request;
-      const charts = await helmService.listCharts();
-
-      respondJson(response, charts);
-    },
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    handler: async (request: LensApiRequest): Promise<LensApiResult> => ({
+      response: await helmService.listCharts(),
+    }),
   }),
 
   injectionToken: routeInjectionToken,

@@ -4,14 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest } from "../../router";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { apiPrefix } from "../../../common/vars";
-import { respondJson } from "../../utils/http-responses";
 import { PortForward } from "./functionality/port-forward";
 import logger from "../../logger";
 
-const stopCurrentPortForward = async (request: LensApiRequest) => {
-  const { params, query, response, cluster } = request;
+const stopCurrentPortForward = async (request: LensApiRequest): Promise<LensApiResult> => {
+  const { params, query, cluster } = request;
   const { namespace, resourceType, resourceName } = params;
   const port = Number(query.get("port"));
   const forwardPort = Number(query.get("forwardPort"));
@@ -23,13 +22,17 @@ const stopCurrentPortForward = async (request: LensApiRequest) => {
 
   try {
     await portForward.stop();
-    respondJson(response, { status: true });
+
+    return { response: { status: true }};
   } catch (error) {
     logger.error("[PORT-FORWARD-ROUTE]: error stopping a port-forward", { namespace, port, forwardPort, resourceType, resourceName });
 
-    return respondJson(response, {
-      message: `error stopping a forward port ${port}`,
-    }, 400);
+    return {
+      error: {
+        message: `error stopping a forward port ${port}`,
+      },
+    };
+
   }
 };
 

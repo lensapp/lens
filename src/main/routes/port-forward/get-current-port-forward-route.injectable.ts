@@ -4,13 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest } from "../../router";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { apiPrefix } from "../../../common/vars";
-import { respondJson } from "../../utils/http-responses";
 import { PortForward } from "./functionality/port-forward";
 
-const getCurrentPortForward = async (request: LensApiRequest) => {
-  const { params, query, response, cluster } = request;
+const getCurrentPortForward = async (request: LensApiRequest): Promise<LensApiResult> => {
+  const { params, query, cluster } = request;
   const { namespace, resourceType, resourceName } = params;
   const port = Number(query.get("port"));
   const forwardPort = Number(query.get("forwardPort"));
@@ -20,7 +19,7 @@ const getCurrentPortForward = async (request: LensApiRequest) => {
     namespace, port, forwardPort,
   });
 
-  respondJson(response, { port: portForward?.forwardPort ?? null });
+  return { response: { port: portForward?.forwardPort ?? null }};
 };
 
 const getCurrentPortForwardRouteInjectable = getInjectable({

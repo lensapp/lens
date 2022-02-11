@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensApiRequest } from "../../router";
-import { respondJson } from "../../utils/http-responses";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import { getAppVersion } from "../../../common/utils";
 
@@ -15,10 +14,9 @@ const getVersionRouteInjectable = getInjectable({
     method: "get",
     path: `/version`,
 
-    handler: async (request: LensApiRequest) => {
-      const { response } = request;
-
-      respondJson(response, { version: getAppVersion() }, 200);
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    handler: async (request: LensApiRequest): Promise<LensApiResult> => {
+      return { response: { version: getAppVersion() }};
     },
   }),
 

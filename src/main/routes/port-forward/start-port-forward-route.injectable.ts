@@ -4,19 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest } from "../../router";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward, PortForwardArgs } from "./functionality/port-forward";
 import logger from "../../logger";
-import { respondJson } from "../../utils/http-responses";
 import createPortForwardInjectable from "./functionality/create-port-forward.injectable";
 
 interface Dependencies {
   createPortForward: (pathToKubeConfig: string, args: PortForwardArgs) => PortForward;
 }
 
-const startPortForward = ({ createPortForward }: Dependencies) => async (request: LensApiRequest) => {
-  const { params, query, response, cluster } = request;
+const startPortForward = ({ createPortForward }: Dependencies) => async (request: LensApiRequest): Promise<LensApiResult> => {
+  const { params, query, cluster } = request;
   const { namespace, resourceType, resourceName } = params;
   const port = Number(query.get("port"));
   const forwardPort = Number(query.get("forwardPort"));
@@ -58,32 +57,28 @@ const startPortForward = ({ createPortForward }: Dependencies) => async (request
           resourceName,
         });
 
-        return respondJson(
-          response,
-          {
+        return {
+          error: {
             message: `Failed to forward port ${port} to ${
               thePort ? forwardPort : "random port"
             }`,
           },
-          400,
-        );
+        };
       }
     }
 
-    respondJson(response, { port: portForward.forwardPort });
+    return { response: { port: portForward.forwardPort }};
   } catch (error) {
     logger.error(
       `[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`,
       { namespace, port, resourceType, resourceName },
     );
 
-    return respondJson(
-      response,
-      {
+    return {
+      error: {
         message: `Failed to forward port ${port}`,
       },
-      400,
-    );
+    };
   }
 };
 

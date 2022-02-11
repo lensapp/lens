@@ -5,12 +5,10 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { LensApiRequest } from "../../router";
-import { respondJson } from "../../utils/http-responses";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node";
-
 
 const getServiceAccountRouteInjectable = getInjectable({
   id: "get-service-account-route",
@@ -19,8 +17,8 @@ const getServiceAccountRouteInjectable = getInjectable({
     method: "get",
     path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}`,
 
-    handler: async (request: LensApiRequest) => {
-      const { params, response, cluster } = request;
+    handler: async (request: LensApiRequest): Promise<LensApiResult> => {
+      const { params, cluster } = request;
       const client = (await cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
       const secretList = await client.listNamespacedSecret(params.namespace);
 
@@ -30,9 +28,7 @@ const getServiceAccountRouteInjectable = getInjectable({
         return annotations && annotations["kubernetes.io/service-account.name"] == params.account;
       });
 
-      const data = generateKubeConfig(params.account, secret, cluster);
-
-      respondJson(response, data);
+      return { response: generateKubeConfig(params.account, secret, cluster) };
     },
   }),
 

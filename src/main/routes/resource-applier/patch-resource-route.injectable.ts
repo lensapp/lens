@@ -4,10 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest } from "../../router";
+import type { LensApiRequest, LensApiResult } from "../../router";
 import { apiPrefix } from "../../../common/vars";
 import { ResourceApplier } from "../../resource-applier";
-import { respondJson, respondText } from "../../utils/http-responses";
 
 const patchResourceRouteInjectable = getInjectable({
   id: "patch-resource-route",
@@ -16,17 +15,17 @@ const patchResourceRouteInjectable = getInjectable({
     method: "patch",
     path: `${apiPrefix}/stack`,
 
-    handler: async (request: LensApiRequest) => {
-      const { response, cluster, payload } = request;
-
-      try {
-        const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.patch, payload.ns);
-
-        respondJson(response, resource, 200);
-      } catch (error) {
-        respondText(response, error, 422);
-      }
-    },
+    handler: async ({
+      cluster,
+      payload,
+    }: LensApiRequest): Promise<LensApiResult> => ({
+      response: await new ResourceApplier(cluster).patch(
+        payload.name,
+        payload.kind,
+        payload.patch,
+        payload.ns,
+      ),
+    }),
   }),
 
   injectionToken: routeInjectionToken,
