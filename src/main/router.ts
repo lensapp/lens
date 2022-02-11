@@ -11,7 +11,7 @@ import path from "path";
 import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
 import { apiPrefix, appName, publicPath } from "../common/vars";
-import { KubeconfigRoute, MetricsRoute, VersionRoute } from "./routes";
+import { KubeconfigRoute, VersionRoute } from "./routes";
 import logger from "./logger";
 
 export interface RouterRequestOpts {
@@ -171,10 +171,6 @@ export class Router {
 
     this.router.add({ method: "get", path: "/version" }, VersionRoute.getVersion);
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, KubeconfigRoute.routeServiceAccountRoute);
-
-    // Metrics API
-    this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, MetricsRoute.routeMetrics);
-    this.router.add({ method: "get", path: `${apiPrefix}/metrics/providers` }, MetricsRoute.routeMetricsProviders);
   }
 }
 
