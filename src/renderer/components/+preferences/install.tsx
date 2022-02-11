@@ -11,7 +11,7 @@ import { Icon } from "../icon";
 import { SearchInput } from "../input";
 import { Spinner } from "../spinner";
 import { ExtensionCard } from "./extension-card";
-import { Extension, getExtensions } from "./extension-list";
+import type { Extension } from "./extension-list";
 
 export function Install() {
   const [extensions, setExtensions] = useState([]);
@@ -21,9 +21,13 @@ export function Install() {
   useEffect(() => {
     async function fetchExtensions() {
       try {
-        const response = await getExtensions();
+        const response = await fetch("http://localhost:65113/api/extensions/", {
+          method: "GET",
+        });
 
-        setExtensions(response);
+        const extensions = await response.json();
+
+        setExtensions(extensions.reverse());
       } catch (error) {
         console.error(error);
       }
@@ -63,7 +67,7 @@ function ExtensionList({ extensions, search }: { extensions: Extension[], search
   ));
 
   function handleClick(extensionId: string) {
-    history.push(`extension/${extensionId}/overview`);
+    history.push(`extension/${extensionId}/overview?id=${extensionId}`);
   }
 
   if (!filteredExtensions.length) {
