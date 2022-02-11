@@ -75,6 +75,7 @@ export class WindowManager extends Singleton {
           webviewTag: true,
           contextIsolation: false,
           nativeWindowOpen: false,
+          webSecurity: false, // TODO: set true for production!
         },
       });
       this.windowState.manage(this.mainWindow);
