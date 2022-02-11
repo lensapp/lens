@@ -86,7 +86,9 @@ class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
         <ItemListLayout
           isConfigurable
           tableId="port_forwards"
-          className="PortForwards" store={this.props.portForwardStore}
+          className="PortForwards"
+          store={this.props.portForwardStore}
+          getItems={() => this.props.portForwardStore.items}
           sortingCallbacks={{
             [columnId.name]: item => item.getName(),
             [columnId.namespace]: item => item.getNs(),
