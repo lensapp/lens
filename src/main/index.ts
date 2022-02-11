@@ -55,7 +55,6 @@ import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
-import { createDevServer } from "../../webpack.dev-server";
 
 const di = getDi();
 
@@ -231,10 +230,12 @@ di.runSetups().then(() => {
 
     // Override main content view url to local webpack-dev-server to support HMR / live-reload
     if (isDevelopment) {
+      const { createDevServer } = await import("../../webpack.dev-server");
       const devServer = createDevServer(lensProxy.port);
 
-      await devServer.start();
       windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
+
+      await devServer.start();
     }
 
     const menuItems = di.inject(electronMenuItemsInjectable);
