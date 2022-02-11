@@ -11,7 +11,7 @@ import { Icon } from "../icon";
 import { SearchInput } from "../input";
 import { Spinner } from "../spinner";
 import { ExtensionCard } from "./extension-card";
-import type { Extension } from "./extension-list";
+import type { Extension } from "./extension-directory-types";
 
 export function Install() {
   const [extensions, setExtensions] = useState([]);

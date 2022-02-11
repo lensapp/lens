@@ -11,7 +11,7 @@ import Rating from "@material-ui/lab/Rating";
 import installFromInputInjectable from "../+extensions/install-from-input/install-from-input.injectable";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import type { Extension } from "./extension-list";
+import type { Extension } from "./extension-directory-types";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { IComputedValue } from "mobx";

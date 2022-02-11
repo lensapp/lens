@@ -6,7 +6,7 @@
 import styles from "./extension-page.module.scss";
 
 import React, { useEffect, useState } from "react";
-import type { Extension, Review } from "./extension-list";
+import type { Extension, Review } from "./extension-directory-types";
 import { Spinner } from "../spinner";
 import { ExtensionCard } from "./extension-card";
 import { matchPath, Route, RouteProps, Switch, useLocation } from "react-router";
