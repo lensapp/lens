@@ -46,8 +46,8 @@ export class Router {
 
   constructor(routes: Route[]) {
     routes.forEach(route => {
-      this.router.add({ method: route.method, path: route.path }, (request: LensApiRequest) => {
-        route.handler(request);
+      this.router.add({ method: route.method, path: route.path }, async (request: LensApiRequest) => {
+        await route.handler(request);
       });
     });
   }
