@@ -183,7 +183,6 @@ export class Router {
     this.router.add({ method: "delete", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForwardStop);
 
     // Resource Applier API
-    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.applyResource);
     this.router.add({ method: "patch", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.patchResource);
   }
 }
