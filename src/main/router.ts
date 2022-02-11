@@ -10,8 +10,8 @@ import type httpProxy from "http-proxy";
 import path from "path";
 import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
-import { apiPrefix, appName, publicPath } from "../common/vars";
-import { KubeconfigRoute, VersionRoute } from "./routes";
+import { appName, publicPath } from "../common/vars";
+import { VersionRoute } from "./routes";
 import logger from "./logger";
 
 export interface RouterRequestOpts {
@@ -170,7 +170,6 @@ export class Router {
 
 
     this.router.add({ method: "get", path: "/version" }, VersionRoute.getVersion);
-    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, KubeconfigRoute.routeServiceAccountRoute);
   }
 }
 
