@@ -4,7 +4,6 @@
  */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { Router, Route } from "../router";
-import routePortForwardInjectable from "../routes/port-forward/route-port-forward/route-port-forward.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
 
@@ -20,7 +19,6 @@ const routerInjectable = getInjectable({
     const proxy = isDevelopment ? httpProxy.createProxy() : undefined;
 
     const router = new Router({
-      routePortForward: di.inject(routePortForwardInjectable),
       httpProxy: proxy,
     });
 

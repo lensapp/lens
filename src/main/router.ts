@@ -63,7 +63,6 @@ function getMimeType(filename: string) {
 }
 
 interface Dependencies {
-  routePortForward: (request: LensApiRequest) => Promise<void>;
   httpProxy?: httpProxy;
 }
 
@@ -168,7 +167,7 @@ export class Router {
     } else {
       this.router.add({ method: "get", path: "/{path*}" }, Router.handleStaticFile);
     }
-    
+
 
     this.router.add({ method: "get", path: "/version" }, VersionRoute.getVersion);
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, KubeconfigRoute.routeServiceAccountRoute);
@@ -176,9 +175,6 @@ export class Router {
     // Metrics API
     this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, MetricsRoute.routeMetrics);
     this.router.add({ method: "get", path: `${apiPrefix}/metrics/providers` }, MetricsRoute.routeMetricsProviders);
-
-    // Port-forward API (the container port and local forwarding port are obtained from the query parameters)
-    this.router.add({ method: "post", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, this.dependencies.routePortForward);
   }
 }
 

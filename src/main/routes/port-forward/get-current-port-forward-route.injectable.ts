@@ -7,10 +7,9 @@ import { routeInjectionToken } from "../../router/router.injectable";
 import type { LensApiRequest } from "../../router";
 import { apiPrefix } from "../../../common/vars";
 import { respondJson } from "../../utils/http-responses";
-import { PortForward } from "../port-forward/port-forward";
-import logger from "../../logger";
+import { PortForward } from "./functionality/port-forward";
 
-const stopCurrentPortForward = async (request: LensApiRequest) => {
+const getCurrentPortForward = async (request: LensApiRequest) => {
   const { params, query, response, cluster } = request;
   const { namespace, resourceType, resourceName } = params;
   const port = Number(query.get("port"));
@@ -21,28 +20,19 @@ const stopCurrentPortForward = async (request: LensApiRequest) => {
     namespace, port, forwardPort,
   });
 
-  try {
-    await portForward.stop();
-    respondJson(response, { status: true });
-  } catch (error) {
-    logger.error("[PORT-FORWARD-ROUTE]: error stopping a port-forward", { namespace, port, forwardPort, resourceType, resourceName });
-
-    return respondJson(response, {
-      message: `error stopping a forward port ${port}`,
-    }, 400);
-  }
+  respondJson(response, { port: portForward?.forwardPort ?? null });
 };
 
-const stopCurrentPortForwardRouteInjectable = getInjectable({
-  id: "stop-current-port-forward-route",
+const getCurrentPortForwardRouteInjectable = getInjectable({
+  id: "get-current-port-forward-route",
 
   instantiate: () => ({
-    method: "delete",
+    method: "get",
     path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
-    handler: stopCurrentPortForward,
+    handler: getCurrentPortForward,
   }),
 
   injectionToken: routeInjectionToken,
 });
 
-export default stopCurrentPortForwardRouteInjectable;
+export default getCurrentPortForwardRouteInjectable;

@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import logger from "../../logger";
-import { getPortFrom } from "../../utils/get-port";
+import logger from "../../../logger";
+import { getPortFrom } from "../../../utils/get-port";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 import * as tcpPortUsed from "tcp-port-used";
 
