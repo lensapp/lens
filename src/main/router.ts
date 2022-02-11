@@ -183,7 +183,6 @@ export class Router {
     this.router.add({ method: "delete", path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}` }, PortForwardRoute.routeCurrentPortForwardStop);
 
     // Helm API
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, HelmApiRoute.listCharts);
     this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, HelmApiRoute.getChart);
     this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, HelmApiRoute.getChartValues);
 
