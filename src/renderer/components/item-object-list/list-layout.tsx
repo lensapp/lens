@@ -41,8 +41,7 @@ export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlace
 export interface ItemListLayoutProps<I extends ItemObject> {
   tableId?: string;
   className: IClassName;
-  items?: I[];
-  getItems?: () => I[];
+  getItems: () => I[];
   store: ItemStore<I>;
   dependentStores?: ItemStore<ItemObject>[];
   preloadStores?: boolean;
@@ -213,7 +212,7 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
       }
     }
 
-    const items = this.props.getItems?.() ?? this.props.items ?? this.props.store.items;
+    const items = this.props.getItems();
 
     return applyFilters(filterItems.concat(this.props.filterItems), items);
   }

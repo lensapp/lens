@@ -147,6 +147,7 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
       <>
         <ItemListLayout
           store={legacyReleaseStore}
+          getItems={() => legacyReleaseStore.items}
           preloadStores={false}
           isConfigurable
           tableId="helm_releases"

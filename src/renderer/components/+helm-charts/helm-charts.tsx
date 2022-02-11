@@ -73,6 +73,7 @@ export class HelmCharts extends Component<Props> {
           tableId="helm_charts"
           className="HelmCharts"
           store={helmChartStore}
+          getItems={() => helmChartStore.items}
           isSelectable={false}
           sortingCallbacks={{
             [columnId.name]: chart => chart.getName(),
