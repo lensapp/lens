@@ -6,12 +6,8 @@
 import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
 import type http from "http";
-import type httpProxy from "http-proxy";
 import path from "path";
-import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
-import { appName, publicPath } from "../common/vars";
-import logger from "./logger";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -44,34 +40,9 @@ export interface LensApiRequest<P = any> {
   };
 }
 
-function getMimeType(filename: string) {
-  const mimeTypes: Record<string, string> = {
-    html: "text/html",
-    txt: "text/plain",
-    css: "text/css",
-    gif: "image/gif",
-    jpg: "image/jpeg",
-    png: "image/png",
-    svg: "image/svg+xml",
-    js: "application/javascript",
-    woff2: "font/woff2",
-    ttf: "font/ttf",
-  };
-
-  return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
-}
-
-interface Dependencies {
-  httpProxy?: httpProxy;
-}
-
 export class Router {
   protected router = new Call.Router();
-  protected static rootPath = path.resolve(__static);
-
-  public constructor(private dependencies: Dependencies) {
-    this.addRoutes();
-  }
+  static rootPath = path.resolve(__static);
 
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
     const url = new URL(req.url, "http://localhost");
@@ -111,66 +82,15 @@ export class Router {
     };
   }
 
-  protected static async handleStaticFile({ params, response }: LensApiRequest): Promise<void> {
-    let filePath = params.path;
-
-    for (let retryCount = 0; retryCount < 5; retryCount += 1) {
-      const asset = path.join(Router.rootPath, filePath);
-      const normalizedFilePath = path.resolve(asset);
-
-      if (!normalizedFilePath.startsWith(Router.rootPath)) {
-        response.statusCode = 404;
-
-        return response.end();
-      }
-
-      try {
-        const data = await readFile(asset);
-
-        response.setHeader("Content-Type", getMimeType(asset));
-        response.write(data);
-        response.end();
-      } catch (err) {
-        if (retryCount > 5) {
-          logger.error("handleStaticFile:", err.toString());
-          response.statusCode = 404;
-
-          return response.end();
-        }
-
-        filePath = `${publicPath}/${appName}.html`;
-      }
-    }
-  }
-
   addRoute = (route: Route) => {
     this.router.add({ method: route.method, path: route.path }, (request: LensApiRequest) => {
       route.handler(request);
     });
   };
-
-  protected addRoutes() {
-    // Static assets
-    if (this.dependencies.httpProxy) {
-      this.router.add({ method: "get", path: "/{path*}" }, (apiReq: LensApiRequest) => {
-        const { req, res } = apiReq.raw;
-
-        if (req.url === "/" || !req.url.startsWith("/build/")) {
-          req.url = `${publicPath}/${appName}.html`;
-        }
-
-        this.dependencies.httpProxy.web(req, res, {
-          target: "http://127.0.0.1:8080",
-        });
-      });
-    } else {
-      this.router.add({ method: "get", path: "/{path*}" }, Router.handleStaticFile);
-    }
-  }
 }
 
 export interface Route {
   path: string;
   method: "get" | "post" | "put" | "patch" | "delete";
-  handler: (request: LensApiRequest) => Promise<void>;
+  handler: (request: LensApiRequest) => void | Promise<void>;
 }

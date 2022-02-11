@@ -3,7 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Router } from "../router";
+import type { LensApiRequest } from "../router";
+import staticFileRouteInjectable from "../routes/static-file-route.injectable";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
 jest.mock("electron", () => ({
   app: {
@@ -22,19 +24,31 @@ jest.mock("electron", () => ({
 }));
 
 describe("Router", () => {
+  let handleStaticFile: (request: LensApiRequest) => Promise<void>;
+
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    await di.runSetups();
+
+    handleStaticFile = di.inject(staticFileRouteInjectable).handler;
+  });
+
   it("blocks path traversal attacks", async () => {
     const response: any = {
       statusCode: 200,
       end: jest.fn(),
     };
 
-    await (Router as any).handleStaticFile({
+    const request = {
       params: {
         path: "../index.ts",
       },
       response,
       raw: {},
-    });
+    } as LensApiRequest<any>;
+
+    await handleStaticFile(request);
 
     expect(response.statusCode).toEqual(404);
   });
@@ -46,17 +60,20 @@ describe("Router", () => {
       setHeader: jest.fn(),
       end: jest.fn(),
     };
+
     const req: any = {
       url: "",
     };
 
-    await (Router as any).handleStaticFile({
+    const request = {
       params: {
         path: "router.test.ts",
       },
       response,
       raw: { req },
-    });
+    } as LensApiRequest<any>;
+
+    await handleStaticFile(request);
 
     expect(response.statusCode).toEqual(200);
   });
