@@ -11,18 +11,20 @@ import { apiPrefix, apiKubePrefix } from "../common/vars";
 import type { Router } from "./router";
 import type { ContextHandler } from "./context-handler/context-handler";
 import logger from "./logger";
-import { Singleton } from "../common/utils";
+import { entries, Singleton } from "../common/utils";
 import type { Cluster } from "../common/cluster/cluster";
-import type { ProxyApiRequestArgs } from "./proxy-functions";
+import type { ClusterProxyApiRequestArgs, KubeApiRequestArgs, ProxyApiRequestArgs } from "./proxy-functions";
 import { appEventBus } from "../common/app-event-bus/event-bus";
 import { getBoolean } from "./utils/parse-query";
+import { matchPath } from "react-router";
 
-type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
+export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 
 export interface LensProxyFunctions {
   getClusterForRequest: GetClusterForRequest,
-  shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  shellApiRequest: (args: ClusterProxyApiRequestArgs) => void;
+  catalogApiRequest: (args: ProxyApiRequestArgs) => Promise<void>;
+  kubeApiRequest: (args: KubeApiRequestArgs) => Promise<void>;
 }
 
 const watchParam = "watch";
@@ -52,6 +54,12 @@ const disallowedPorts = new Set([
   10080,
 ]);
 
+enum ProxyRouteKey {
+  KUBE = "kube",
+  SHELL = "shell",
+  CATALOG = "catalog",
+}
+
 export class LensProxy extends Singleton {
   protected origin: string;
   protected proxyServer: http.Server;
@@ -62,7 +70,7 @@ export class LensProxy extends Singleton {
 
   public port: number;
 
-  constructor(protected router: Router, { shellApiRequest, kubeApiRequest, getClusterForRequest }: LensProxyFunctions) {
+  constructor(protected router: Router, { shellApiRequest, kubeApiRequest, getClusterForRequest, catalogApiRequest }: LensProxyFunctions) {
     super();
 
     this.getClusterForRequest = getClusterForRequest;
@@ -76,19 +84,55 @@ export class LensProxy extends Singleton {
       this.handleRequest(req, res);
     });
 
-    this.proxyServer
-      .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-        const isInternal = req.url.startsWith(`${apiPrefix}?`);
+    const routes: Record<ProxyRouteKey, string> = {
+      [ProxyRouteKey.KUBE]: `${apiKubePrefix}/:rest*`,
+      [ProxyRouteKey.CATALOG]: `${apiPrefix}/catalog-sync`,
+      [ProxyRouteKey.SHELL]: `${apiPrefix}/shell`,
+    };
+    const handlers: Record<ProxyRouteKey, (req: http.IncomingMessage, socket: net.Socket, head: Buffer, restUrl: string | undefined) => Promise<void>> = {
+      [ProxyRouteKey.KUBE]: (req, socket, head, restUrl) => {
+        req.url = `/${restUrl}`;
+
         const cluster = getClusterForRequest(req);
 
         if (!cluster) {
           return void logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
         }
 
-        const reqHandler = isInternal ? shellApiRequest : kubeApiRequest;
+        return kubeApiRequest({ req, socket, head, cluster, restUrl });
+      },
+      [ProxyRouteKey.CATALOG]: (req, socket, head) => {
+        return catalogApiRequest({ req, socket, head });
+      },
+      [ProxyRouteKey.SHELL]: (req, socket, head) => {
+        const cluster = getClusterForRequest(req);
 
-        (async () => reqHandler({ req, socket, head, cluster }))()
-          .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
+        if (!cluster) {
+          return void logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
+        }
+
+        shellApiRequest({ req, socket, head, cluster });
+      },
+    };
+
+    this.proxyServer
+      .on("upgrade", async (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+        try {
+          for (const [type, matcher] of entries(routes)) {
+            const match = matchPath<{ rest?: string }>(req.url, {
+              path: matcher,
+              exact: true,
+            });
+
+            if (match) {
+              return await handlers[type](req, socket, head, match.params.rest);
+            }
+          }
+
+          logger.warn(`[LENS-PROXY]: Tried to upgrade request with no matching handler, url=${req.url}`);
+        } catch (error) {
+          logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error);
+        }
       });
   }
 

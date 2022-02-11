@@ -7,11 +7,17 @@ import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
 import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 
 class TestCatalogEntityRegistry extends CatalogEntityRegistry {
-  replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
-    this.updateItems(items);
+  replaceItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
+    runInAction(() => {
+      this._entities.clear();
+
+      for (const item of items) {
+        this.addItem(item);
+      }
+    });
   }
 }
 

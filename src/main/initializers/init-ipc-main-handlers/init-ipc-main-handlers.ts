@@ -10,8 +10,6 @@ import type { ClusterId } from "../../../common/cluster-types";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../common/ipc";
-import { catalogEntityRegistry } from "../../catalog";
-import { pushCatalogToRenderer } from "../../catalog-pusher";
 import { ClusterManager } from "../../cluster-manager";
 import { ResourceApplier } from "../../resource-applier";
 import { WindowManager } from "../../window-manager";
@@ -43,8 +41,6 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
       cluster.pushState();
-
-      pushCatalogToRenderer(catalogEntityRegistry);
     }
   });
 

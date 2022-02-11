@@ -26,8 +26,6 @@ import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common
 import { ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
-import { pushCatalogToRenderer } from "./catalog-pusher";
-import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { syncGeneralEntities, syncWeblinks } from "./catalog-sources";
 import configurePackages from "../common/configure-packages";
@@ -55,6 +53,7 @@ import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
+import catalogApiRequestHandlerInjectable from "./proxy-functions/catalog-api-request/handler.injectable";
 
 const di = getDi();
 
@@ -63,7 +62,6 @@ app.setName(appName);
 di.runSetups().then(() => {
   injectSystemCAs();
 
-  const onCloseCleanup = disposer();
   const onQuitCleanup = disposer();
 
   SentryInit();
@@ -163,11 +161,13 @@ di.runSetups().then(() => {
 
     const router = di.inject(routerInjectable);
     const shellApiRequest = di.inject(shellApiRequestInjectable);
+    const catalogApiRequest = di.inject(catalogApiRequestHandlerInjectable);
 
     const lensProxy = LensProxy.createInstance(router, {
       getClusterForRequest: (req) => ClusterManager.getInstance().getClusterForRequest(req),
       kubeApiRequest,
       shellApiRequest,
+      catalogApiRequest,
     });
 
     ClusterManager.createInstance().init();
@@ -244,8 +244,6 @@ di.runSetups().then(() => {
     }
 
     ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
-      onCloseCleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
-
       const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
 
       await ensureDir(directoryForKubeConfigs);
@@ -319,8 +317,6 @@ di.runSetups().then(() => {
     const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
 
     kubeConfigSyncManager.stopSync();
-
-    onCloseCleanup();
 
     // This is set to false here so that LPRM can wait to send future lens://
     // requests until after it loads again

@@ -12,6 +12,7 @@ import { ipcRenderer } from "electron";
 import logger from "../../common/logger";
 import { deserialize, serialize } from "v8";
 import { once } from "lodash";
+import { apiPrefix, shellRoute } from "../../common/vars";
 
 export enum TerminalChannels {
   STDIN = "stdin",
@@ -96,7 +97,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       protocol: protocol.includes("https") ? "wss" : "ws",
       hostname,
       port,
-      pathname: "/api",
+      pathname: `${apiPrefix}${shellRoute}`,
       query: {
         ...this.query,
         shellToken: Buffer.from(authTokenArray).toString("base64"),
@@ -126,6 +127,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
 
     super.connect(socketUrl);
     this.socket.binaryType = "arraybuffer";
+    this.on("close", () => this.isReady = false);
   }
 
   sendMessage(message: TerminalMessage) {
@@ -174,11 +176,6 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     // But this size will be changed by terminal.fit()
     this.sendTerminalSize(120, 80);
     super._onOpen(evt);
-  }
-
-  protected _onClose(evt: CloseEvent) {
-    super._onClose(evt);
-    this.isReady = false;
   }
 
   protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}) {

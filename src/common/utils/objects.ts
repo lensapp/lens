@@ -10,3 +10,7 @@
 export function fromEntries<T, Key extends string>(entries: Iterable<readonly [Key, T]>): { [k in Key]: T } {
   return Object.fromEntries(entries) as { [k in Key]: T };
 }
+
+export function entries<Key extends string, T>(obj: Record<Key, T>): [Key, T][] {
+  return Object.entries(obj) as [Key, T][];
+}

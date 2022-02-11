@@ -5,16 +5,19 @@
 
 import { chunk } from "lodash";
 import net from "net";
-import url from "url";
-import { apiKubePrefix } from "../../common/vars";
-import type { ProxyApiRequestArgs } from "./types";
+import { parse } from "url";
+import type { ClusterProxyApiRequestArgs } from ".";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 
-export async function kubeApiRequest({ req, socket, head, cluster }: ProxyApiRequestArgs) {
-  const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
-  const apiUrl = url.parse(cluster.apiUrl);
-  const pUrl = url.parse(proxyUrl);
+export interface KubeApiRequestArgs extends ClusterProxyApiRequestArgs {
+  restUrl: string;
+}
+
+export async function kubeApiRequest({ req, socket, head, cluster, restUrl }: KubeApiRequestArgs) {
+  const proxyUrl = `${await cluster.contextHandler.resolveAuthProxyUrl()}/${restUrl}`;
+  const apiUrl = parse(cluster.apiUrl);
+  const pUrl = parse(proxyUrl);
   const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
   const proxySocket = new net.Socket();
 

@@ -207,7 +207,7 @@ export interface CatalogEntityMetadata {
   description?: string;
   source?: string;
   labels: Record<string, string>;
-  [key: string]: string | object;
+  [key: string]: string | Record<string, string>;
 }
 
 export interface CatalogEntityStatus {
@@ -220,6 +220,7 @@ export interface CatalogEntityStatus {
   enabled?: boolean;
   message?: string;
   active?: boolean;
+  [key: string]: string | number | boolean;
 }
 
 export interface CatalogEntityActionContext {

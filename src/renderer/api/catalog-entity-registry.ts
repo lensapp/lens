@@ -13,10 +13,11 @@ import { Disposer, iter } from "../utils";
 import { once } from "lodash";
 import logger from "../../common/logger";
 import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
-import { ipcRenderer } from "electron";
-import { catalogInitChannel, catalogItemsChannel, catalogEntityRunListener } from "../../common/ipc/catalog";
+import { catalogEntityRunListener } from "../../common/ipc/catalog";
 import { navigate } from "../navigation";
 import { isMainFrame } from "process";
+import { startCatalogEntitySync } from "./catalog-entity-sync";
+import type { RawCatalogEntity, RawCatalogEntityUpdate } from "../../common/catalog/entity-sync";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
@@ -41,7 +42,7 @@ export class CatalogEntityRegistry {
   /**
    * Buffer for keeping entities that don't yet have CatalogCategory synced
    */
-  protected rawEntities: (CatalogEntityData & CatalogEntityKindData)[] = [];
+  protected rawEntities = new Map<string, CatalogEntityData & CatalogEntityKindData>();
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
@@ -57,7 +58,7 @@ export class CatalogEntityRegistry {
     // If the entity was not found but there are rawEntities to be processed,
     // try to process them and return the entity.
     // This might happen if an extension registered a new Catalog category.
-    if (this.activeEntityId && !entity && this.rawEntities.length > 0) {
+    if (this.activeEntityId && !entity && this.rawEntities.size > 0) {
       this.processRawEntities();
 
       return this.getActiveEntityById();
@@ -79,12 +80,11 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    ipcRendererOn(catalogItemsChannel, (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
-      this.updateItems(items);
+    startCatalogEntitySync({
+      delete: this.onDeleteEvent,
+      add: this.onAddEvent,
+      update: this.onUpdateEvent,
     });
-
-    // Make sure that we get items ASAP and not the next time one of them changes
-    ipcRenderer.send(catalogInitChannel);
 
     if (isMainFrame) {
       ipcRendererOn(catalogEntityRunListener, (event, id: string) => {
@@ -97,47 +97,51 @@ export class CatalogEntityRegistry {
     }
   }
 
-  @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
-    this.rawEntities.length = 0;
+  private onDeleteEvent = action((uid: string) => {
+    this._entities.delete(uid);
+    this.rawEntities.delete(uid);
+  });
 
-    const newIds = new Set(items.map((item) => item.metadata.uid));
+  private onAddEvent = (data: RawCatalogEntity) => {
+    this.addItem(data);
+  };
 
-    for (const uid of this._entities.keys()) {
-      if (!newIds.has(uid)) {
-        this._entities.delete(uid);
+  private onUpdateEvent = action((uid: string, data: RawCatalogEntityUpdate) => {
+    const prev = this._entities.get(uid) ?? this.rawEntities.get(uid);
+
+    if (prev) {
+      if (data.metadata) {
+        prev.metadata = data.metadata;
+      }
+
+      if (data.status) {
+        prev.status = data.status;
+      }
+
+      if (data.spec) {
+        prev.spec = data.spec;
       }
     }
+  });
 
-    for (const item of items) {
-      this.updateItem(item);
-    }
-  }
+  @action
+  protected addItem(item: (CatalogEntityData & CatalogEntityKindData)) {
+    const entity = this.categoryRegistry.getEntityForData(item);
 
-  @action protected updateItem(item: (CatalogEntityData & CatalogEntityKindData)) {
-    const existing = this._entities.get(item.metadata.uid);
-
-    if (!existing) {
-      const entity = this.categoryRegistry.getEntityForData(item);
-
-      if (entity) {
-        this._entities.set(entity.getId(), entity);
-      } else {
-        this.rawEntities.push(item);
-      }
+    if (entity) {
+      this._entities.set(entity.getId(), entity);
     } else {
-      existing.metadata = item.metadata;
-      existing.spec = item.spec;
-      existing.status = item.status;
+      this.rawEntities.set(item.metadata.uid, item);
     }
   }
 
   protected processRawEntities() {
-    const items = [...this.rawEntities];
+    const items = new Map(this.rawEntities);
 
-    this.rawEntities.length = 0;
+    this.rawEntities.clear();
 
-    for (const item of items) {
-      this.updateItem(item);
+    for (const item of items.values()) {
+      this.addItem(item);
     }
   }
 

@@ -5,11 +5,10 @@
 
 import logger from "../../logger";
 import WebSocket, { Server as WebSocketServer } from "ws";
-import type { ProxyApiRequestArgs } from "../types";
-import { ClusterManager } from "../../cluster-manager";
-import URLParse from "url-parse";
+import type { ClusterProxyApiRequestArgs } from "../types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
+import URLParse from "url-parse";
 
 interface Dependencies {
   authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string) => boolean,
@@ -22,9 +21,9 @@ interface Dependencies {
   }) => { open: () => Promise<void> };
 }
 
-export const shellApiRequest = ({ createShellSession, authenticateRequest }: Dependencies) => ({ req, socket, head }: ProxyApiRequestArgs): void => {
-  const cluster = ClusterManager.getInstance().getClusterForRequest(req);
-  const { query: { node: nodeName, shellToken, id: tabId }} = new URLParse(req.url, true);
+export const shellApiRequest = ({ createShellSession, authenticateRequest }: Dependencies) => ({ req, socket, head, cluster }: ClusterProxyApiRequestArgs): void => {
+  const url = new URLParse(req.url, true);
+  const { query: { node: nodeName, shellToken, id: tabId }} = url;
 
   if (!cluster || !authenticateRequest(cluster.id, tabId, shellToken)) {
     socket.write("Invalid shell request");

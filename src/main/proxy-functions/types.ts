@@ -11,5 +11,8 @@ export interface ProxyApiRequestArgs {
   req: http.IncomingMessage,
   socket: net.Socket,
   head: Buffer,
+}
+
+export interface ClusterProxyApiRequestArgs extends ProxyApiRequestArgs {
   cluster: Cluster,
 }

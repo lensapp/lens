@@ -54,6 +54,8 @@ defineGlobal("__static", {
 // Apis
 export const apiPrefix = "/api" as string; // local router apis
 export const apiKubePrefix = "/api-kube" as string; // k8s cluster apis
+export const shellRoute = "/shell" as string;
+export const catalogSyncRoute = "/catalog-sync" as string;
 
 // Links
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;

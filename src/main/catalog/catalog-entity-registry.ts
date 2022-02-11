@@ -26,13 +26,15 @@ export class CatalogEntityRegistry {
     this.sources.delete(id);
   }
 
-  @computed get items(): CatalogEntity[] {
-    return Array.from(
-      iter.filter(
-        iter.flatMap(this.sources.values(), source => source.get()),
-        entity => this.categoryRegistry.getCategoryForEntity(entity),
-      ),
-    );
+  readonly entities = computed(() => Array.from(
+    iter.filter(
+      iter.flatMap(this.sources.values(), source => source.get()),
+      entity => this.categoryRegistry.getCategoryForEntity(entity),
+    ),
+  ));
+
+  get items(): CatalogEntity[] {
+    return this.entities.get();
   }
 
   getById<T extends CatalogEntity>(id: string): T | undefined {

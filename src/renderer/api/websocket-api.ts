@@ -80,10 +80,13 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     pingMessage: "PING",
   };
 
-  constructor(params: WebsocketApiParams) {
+  constructor(params: WebsocketApiParams = {}) {
     super();
     makeObservable(this);
-    this.params = Object.assign({}, WebSocketApi.defaultParams, params);
+    this.params = {
+      ...WebSocketApi.defaultParams,
+      ...params,
+    };
     const { pingInterval } = this.params;
 
     if (pingInterval) {
@@ -108,7 +111,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.socket.addEventListener("open", ev => this._onOpen(ev));
     this.socket.addEventListener("message", ev => this._onMessage(ev));
     this.socket.addEventListener("error", ev => this._onError(ev));
-    this.socket.addEventListener("close", ev => this._onClose(ev));
+    this.socket.addEventListener("close", ev => this._onClose(ev, url));
     this.readyState = WebSocketApiState.CONNECTING;
   }
 
@@ -175,15 +178,13 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.writeLog("%cERROR", "color:red;font-weight:bold;", evt);
   }
 
-  protected _onClose(evt: CloseEvent) {
+  protected _onClose(evt: CloseEvent, url: string) {
     const error = evt.code !== 1000 || !evt.wasClean;
 
     if (error) {
       const { reconnectDelay } = this.params;
 
       if (reconnectDelay) {
-        const url = this.socket.url;
-
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
 
         this.reconnectTimer = setTimeout(() => this.connect(url), reconnectDelay * 1000);
