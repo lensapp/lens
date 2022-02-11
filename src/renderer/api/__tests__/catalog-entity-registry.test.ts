@@ -8,6 +8,7 @@ import { catalogCategoryRegistry } from "../../../common/catalog/catalog-categor
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
 import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";
 import { observable, runInAction } from "mobx";
+import { noop } from "../../utils";
 
 class TestCatalogEntityRegistry extends CatalogEntityRegistry {
   replaceItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
@@ -88,7 +89,10 @@ const entitykc = new KubernetesCluster({
 describe("CatalogEntityRegistry", () => {
   describe("updateItems", () => {
     it("adds new catalog item", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry({
+        categoryRegistry: catalogCategoryRegistry,
+        initSync: noop,
+      });
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -127,7 +131,10 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("updates existing items", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry({
+        categoryRegistry: catalogCategoryRegistry,
+        initSync: noop,
+      });
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -155,7 +162,10 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("updates activeEntity", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry({
+        categoryRegistry: catalogCategoryRegistry,
+        initSync: noop,
+      });
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -181,7 +191,10 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("removes deleted items", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry({
+        categoryRegistry: catalogCategoryRegistry,
+        initSync: noop,
+      });
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -223,7 +236,10 @@ describe("CatalogEntityRegistry", () => {
 
   describe("items", () => {
     it("does not return items without matching category", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry({
+        categoryRegistry: catalogCategoryRegistry,
+        initSync: noop,
+      });
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -261,7 +277,10 @@ describe("CatalogEntityRegistry", () => {
   });
 
   it("does return items after matching category is added", () => {
-    const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+    const catalog = new TestCatalogEntityRegistry({
+      categoryRegistry: catalogCategoryRegistry,
+      initSync: noop,
+    });
     const items = [
       {
         apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -286,7 +305,10 @@ describe("CatalogEntityRegistry", () => {
 
   it("does not return items that are filtered out", () => {
     const source = observable.array([entity, entity2, entitykc]);
-    const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+    const catalog = new TestCatalogEntityRegistry({
+      categoryRegistry: catalogCategoryRegistry,
+      initSync: noop,
+    });
 
     catalog.replaceItems(source);
 
