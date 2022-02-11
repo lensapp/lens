@@ -44,6 +44,14 @@ export class Router {
   protected router = new Call.Router();
   static rootPath = path.resolve(__static);
 
+  constructor(routes: Route[]) {
+    routes.forEach(route => {
+      this.router.add({ method: route.method, path: route.path }, (request: LensApiRequest) => {
+        route.handler(request);
+      });
+    });
+  }
+
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
     const url = new URL(req.url, "http://localhost");
     const path = url.pathname;
@@ -81,12 +89,6 @@ export class Router {
       params,
     };
   }
-
-  addRoute = (route: Route) => {
-    this.router.add({ method: route.method, path: route.path }, (request: LensApiRequest) => {
-      route.handler(request);
-    });
-  };
 }
 
 export interface Route {
