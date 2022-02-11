@@ -21,6 +21,7 @@ import enableExtensionInjectable from "../+extensions/enable-extension/enable-ex
 import userExtensionsInjectable from "../+extensions/user-extensions/user-extensions.injectable";
 import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
+import { cssNames } from "../../utils";
 
 interface Dependencies {
   installFromInput: (input: string) => Promise<void>;
@@ -41,16 +42,16 @@ function NonInjectedExtensionCard({
   extensionInstallationStateStore: store,
   installFromInput,
   onClick,
-  // confirmUninstallExtension,
-  // enableExtension,
-  // disableExtension,
-  // userExtensions,
+  confirmUninstallExtension,
+  enableExtension,
+  disableExtension,
+  userExtensions,
 }: Props & Dependencies) {
-  const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl } = extension;
-  // const installedExtension = userExtensions.get().find(installed => installed.manifest.name == name);
+  const { name, version, totalNumberOfInstallations, shortDescription, publisher, githubRepositoryUrl, appIconUrl, installationName, rating } = extension;
+  const installedExtension = userExtensions.get().find(installed => installed.manifest.name == installationName);
   const [waiting, setWaiting] = useState(false);
-  const installed = true;
-  const rating = name.toLowerCase().includes("space") ? 5 : Math.floor(Math.random() * 5) + 1;
+  const installed = Boolean(installedExtension);
+  const rate = rating || 4;
 
   useEffect(() => {
     if (!store.anyPreInstallingOrInstalling) {
@@ -64,20 +65,20 @@ function NonInjectedExtensionCard({
     installFromInput(extension.binaryUrl);
   }
 
-  // function onUninstall(evt: React.MouseEvent, extension: InstalledExtension) {
-  //   evt.stopPropagation();
-  //   confirmUninstallExtension(extension);
-  // }
+  function onUninstall(evt: React.MouseEvent) {
+    evt.stopPropagation();
+    confirmUninstallExtension(installedExtension);
+  }
 
-  // function onStatusToggle(evt: React.MouseEvent, extension: InstalledExtension) {
-  //   evt.stopPropagation();
+  function onStatusToggle(evt: React.MouseEvent) {
+    evt.stopPropagation();
 
-  //   if (extension.isEnabled) {
-  //     disableExtension(extension.id);
-  //   } else {
-  //     enableExtension(extension.id);
-  //   }
-  // }
+    if (installedExtension.isEnabled) {
+      disableExtension(installedExtension.id);
+    } else {
+      enableExtension(installedExtension.id);
+    }
+  }
 
   return (
     <div className={styles.extensionCard} onClick={onClick}>
@@ -87,7 +88,7 @@ function NonInjectedExtensionCard({
           <div className={styles.nameAndVersion}>
             <div className={styles.name}>
               {name}
-              <Rating name="read-only" value={rating} readOnly />
+              <Rating name="read-only" value={rate} readOnly />
             </div>
             <div className={styles.version}>{version}</div>
           </div>
@@ -117,17 +118,17 @@ function NonInjectedExtensionCard({
                 </Button>
                 <Button
                   className={styles.centerButton}
-                  onClick={onClick}
+                  onClick={onUninstall}
                 >
                   <Icon className="mr-4" material="delete"/>
                   Uninstall
                 </Button>
                 <Button
-                  className={styles.rightButton}
-                  onClick={onClick}
+                  className={cssNames(styles.rightButton, { [styles.disabledButton]: !installedExtension.isEnabled } )}
+                  onClick={onStatusToggle}
                 >
-                  <Icon className="mr-4" material="pause"/>
-                  Disable
+                  <Icon className="mr-4" material={`${installedExtension.isEnabled ? "pause" : "play_arrow"}`}/>
+                  {installedExtension.isEnabled ? "Disable" : "Enable"}
                 </Button>
               </div>
             ) : (

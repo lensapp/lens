@@ -83,6 +83,7 @@
   background-repeat: no-repeat;
   background-clip: content-box;
   background-color: #3a404c;
+  background-size: 50px;
 }
 
 .install button {
@@ -138,5 +139,11 @@
     height: 100%;
     position: absolute;
     right: 0;
+  }
+
+  &.disabledButton {
+    &:after {
+      background-color: #ad7c0c;
+    }
   }
 }
