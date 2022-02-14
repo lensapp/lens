@@ -13,6 +13,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./router/parse-request.injectable";
 import { contentTypes } from "./router-content-types";
+import mockFs from "mock-fs";
 
 describe("router", () => {
   let router: Router;
@@ -22,6 +23,8 @@ describe("router", () => {
     routeHandlerMock = asyncFn();
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    mockFs();
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
 
@@ -42,6 +45,10 @@ describe("router", () => {
     }));
 
     router = di.inject(routerInjectable);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
   });
 
   describe("when navigating to the route", () => {
@@ -95,6 +102,46 @@ describe("router", () => {
       await actualPromise;
 
       expect(responseStub.end).toHaveBeenCalledWith('{"some":"object"}');
+    });
+
+    describe("when handler resolves without any result", () => {
+      beforeEach(async () => {
+        await routeHandlerMock.resolve(undefined);
+
+        await actualPromise;
+      });
+
+      it("resolves as plain text", () => {
+        expect(responseStub.setHeader.mock.calls).toEqual([["Content-Type", "text/plain"]]);
+      });
+
+      it("resolves with status code for no content", async () => {
+        expect(responseStub.statusCode).toBe(204);
+      });
+
+      it("resolves without content", async () => {
+        expect(responseStub.end.mock.calls).toEqual([[]]);
+      });
+    });
+
+    describe("when handler rejects", () => {
+      beforeEach(async () => {
+        await routeHandlerMock.reject(new Error("some-error"));
+
+        await actualPromise;
+      });
+
+      it("resolves as plain text", () => {
+        expect(responseStub.setHeader.mock.calls).toEqual([["Content-Type", "text/plain"]]);
+      });
+
+      it('resolves with "422" status code', () => {
+        expect(responseStub.statusCode).toBe(422);
+      });
+
+      it("resolves with error", () => {
+        expect(responseStub.end).toHaveBeenCalledWith("Error: some-error");
+      });
     });
 
     [
@@ -164,7 +211,7 @@ describe("router", () => {
 
         await actualPromise;
 
-        expect(responseStub.end).toHaveBeenCalledWith(undefined);
+        expect(responseStub.end.mock.calls).toEqual([[]]);
       });
 
       it(`given content type is "${scenario.contentType}", when handler resolves with error, has error as body`, async () => {
