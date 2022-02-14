@@ -4,12 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest, LensApiResult } from "../../router";
+import type { LensApiRequest, Route } from "../../router";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward } from "./functionality/port-forward";
 import logger from "../../logger";
 
-const stopCurrentPortForward = async (request: LensApiRequest): Promise<LensApiResult> => {
+const stopCurrentPortForward = async (request: LensApiRequest) => {
   const { params, query, cluster } = request;
   const { namespace, resourceType, resourceName } = params;
   const port = Number(query.get("port"));
@@ -39,7 +39,7 @@ const stopCurrentPortForward = async (request: LensApiRequest): Promise<LensApiR
 const stopCurrentPortForwardRouteInjectable = getInjectable({
   id: "stop-current-port-forward-route",
 
-  instantiate: () => ({
+  instantiate: (): Route<{ status: boolean }> => ({
     method: "delete",
     path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
     handler: stopCurrentPortForward,

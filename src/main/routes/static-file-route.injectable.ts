@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensApiRequest, LensApiResult, SupportedFileExtension, Route } from "../router";
+import type { LensApiRequest, SupportedFileExtension, Route } from "../router";
 import { contentTypes } from "../router";
 import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
@@ -19,7 +19,7 @@ interface ProductionDependencies {
 
 const handleStaticFileInProduction =
   ({ readFile }: ProductionDependencies) =>
-    async ({ params }: LensApiRequest): Promise<LensApiResult> => {
+    async ({ params }: LensApiRequest) => {
       const staticPath = path.resolve(__static);
       let filePath = params.path;
 
@@ -76,7 +76,7 @@ const handleStaticFileInDevelopment =
 const staticFileRouteInjectable = getInjectable({
   id: "static-file-route",
 
-  instantiate: (di): Route => {
+  instantiate: (di): Route<Buffer> => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
 
     return {

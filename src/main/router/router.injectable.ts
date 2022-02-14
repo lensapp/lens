@@ -5,7 +5,7 @@
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { Route, Router } from "../router";
 
-export const routeInjectionToken = getInjectionToken<Route>({
+export const routeInjectionToken = getInjectionToken<Route<any>>({
   id: "route-injection-token",
 });
 

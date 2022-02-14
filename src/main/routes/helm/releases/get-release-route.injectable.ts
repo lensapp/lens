@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { LensApiRequest, LensApiResult } from "../../../router";
+import type { Route } from "../../../router";
 import { helmService } from "../../../helm/helm-service";
 import { routeInjectionToken } from "../../../router/router.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -11,11 +11,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 const getReleaseRouteInjectable = getInjectable({
   id: "get-release-route",
 
-  instantiate: () => ({
+  instantiate: (): Route<any> => ({
     method: "get",
     path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
 
-    handler: async (request: LensApiRequest): Promise<LensApiResult> => {
+    handler: async (request) => {
       const { cluster, params } = request;
 
       return {

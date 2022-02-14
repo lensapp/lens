@@ -5,7 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { LensApiRequest, LensApiResult } from "../../router";
+import type { LensApiRequest, Route } from "../../router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import { ClusterMetadataKey, ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import logger from "../../logger";
@@ -42,7 +42,7 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   return Promise.all(queries.map(loadMetric));
 }
 
-const addMetricsRoute = async ({ cluster, payload, query }: LensApiRequest): Promise<LensApiResult> => {
+const addMetricsRoute = async ({ cluster, payload, query }: LensApiRequest) => {
   const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
   const prometheusMetadata: ClusterPrometheusMetadata = {};
 
@@ -96,7 +96,7 @@ const addMetricsRoute = async ({ cluster, payload, query }: LensApiRequest): Pro
 const addMetricsRouteInjectable = getInjectable({
   id: "add-metrics-route",
 
-  instantiate: () => ({
+  instantiate: (): Route<any> => ({
     method: "post",
     path: `${apiPrefix}/metrics`,
     handler: addMetricsRoute,

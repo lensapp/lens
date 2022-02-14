@@ -4,21 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest, LensApiResult } from "../../router";
+import type { Route } from "../../router";
 import { apiPrefix } from "../../../common/vars";
 import { ResourceApplier } from "../../resource-applier";
 
 const applyResourceRouteInjectable = getInjectable({
   id: "apply-resource-route",
 
-  instantiate: () => ({
+  instantiate: (): Route<string> => ({
     method: "post",
     path: `${apiPrefix}/stack`,
 
-    handler: async ({
-      cluster,
-      payload,
-    }: LensApiRequest): Promise<LensApiResult> => ({
+    handler: async ({ cluster, payload }) => ({
       response: await new ResourceApplier(cluster).apply(payload),
     }),
   }),

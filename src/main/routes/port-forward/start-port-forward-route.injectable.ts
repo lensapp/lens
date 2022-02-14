@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { LensApiRequest, LensApiResult } from "../../router";
+import type { LensApiRequest, Route } from "../../router";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward, PortForwardArgs } from "./functionality/port-forward";
 import logger from "../../logger";
@@ -14,7 +14,7 @@ interface Dependencies {
   createPortForward: (pathToKubeConfig: string, args: PortForwardArgs) => PortForward;
 }
 
-const startPortForward = ({ createPortForward }: Dependencies) => async (request: LensApiRequest): Promise<LensApiResult> => {
+const startPortForward = ({ createPortForward }: Dependencies) => async (request: LensApiRequest) => {
   const { params, query, cluster } = request;
   const { namespace, resourceType, resourceName } = params;
   const port = Number(query.get("port"));
@@ -85,7 +85,7 @@ const startPortForward = ({ createPortForward }: Dependencies) => async (request
 const startPortForwardRouteInjectable = getInjectable({
   id: "start-current-port-forward-route",
 
-  instantiate: (di) => ({
+  instantiate: (di): Route<{ port: number }> => ({
     method: "post",
     path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
     handler: startPortForward({ createPortForward: di.inject(createPortForwardInjectable) }),

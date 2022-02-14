@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensApiRequest, LensApiResult } from "../router";
+import type { LensApiRequest, Route } from "../router";
 import staticFileRouteInjectable from "../routes/static-file-route.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
@@ -24,14 +24,14 @@ jest.mock("electron", () => ({
 }));
 
 describe("Router", () => {
-  let handleStaticFile: (request: LensApiRequest) => Promise<LensApiResult>;
+  let handleStaticFileRoute: Route<Buffer>;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     await di.runSetups();
 
-    handleStaticFile = di.inject(staticFileRouteInjectable).handler;
+    handleStaticFileRoute = di.inject(staticFileRouteInjectable);
   });
 
   it("blocks path traversal attacks", async () => {
@@ -48,7 +48,7 @@ describe("Router", () => {
       raw: {},
     } as LensApiRequest<any>;
 
-    await handleStaticFile(request);
+    await handleStaticFileRoute.handler(request);
 
     expect(response.statusCode).toEqual(404);
   });
@@ -73,7 +73,7 @@ describe("Router", () => {
       raw: { req },
     } as LensApiRequest<any>;
 
-    await handleStaticFile(request);
+    await handleStaticFileRoute.handler(request);
 
     expect(response.statusCode).toEqual(200);
   });
