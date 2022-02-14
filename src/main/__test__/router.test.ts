@@ -35,32 +35,21 @@ describe("Router", () => {
   });
 
   it("blocks path traversal attacks", async () => {
-    const response: any = {
-      statusCode: 200,
-      end: jest.fn(),
-    };
 
     const request = {
       params: {
         path: "../index.ts",
       },
-      response,
+      response: {},
       raw: {},
     } as LensApiRequest<any>;
 
-    await handleStaticFileRoute.handler(request);
+    const result = await handleStaticFileRoute.handler(request);
 
-    expect(response.statusCode).toEqual(404);
+    expect(result).toEqual({ statusCode: 404 });
   });
 
   it("serves files under static root", async () => {
-    const response: any = {
-      statusCode: 200,
-      write: jest.fn(),
-      setHeader: jest.fn(),
-      end: jest.fn(),
-    };
-
     const req: any = {
       url: "",
     };
@@ -69,12 +58,12 @@ describe("Router", () => {
       params: {
         path: "router.test.ts",
       },
-      response,
+      response: {},
       raw: { req },
     } as LensApiRequest<any>;
 
-    await handleStaticFileRoute.handler(request);
+    const result = await handleStaticFileRoute.handler(request);
 
-    expect(response.statusCode).toEqual(200);
+    expect(result).toEqual({ statusCode: 404 });
   });
 });

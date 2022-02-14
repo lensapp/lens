@@ -8,7 +8,7 @@ import { helmService } from "../../../helm/helm-service";
 import { routeInjectionToken } from "../../../router/router.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { getBoolean } from "../../../utils/parse-query";
-import { contentTypes } from "../../../router";
+import { contentTypes } from "../../../router-content-types";
 
 const getReleaseRouteValuesInjectable = getInjectable({
   id: "get-release-values-route",

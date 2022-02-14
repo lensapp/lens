@@ -334,6 +334,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "ansi_up": "^5.1.0",
+    "mock-http": "^1.1.0",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "cli-progress": "^3.10.0",
