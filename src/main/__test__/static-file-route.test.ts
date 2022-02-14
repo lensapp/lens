@@ -23,7 +23,7 @@ jest.mock("electron", () => ({
   },
 }));
 
-describe("Router", () => {
+describe("static-file-route", () => {
   let handleStaticFileRoute: Route<Buffer>;
 
   beforeEach(async () => {
