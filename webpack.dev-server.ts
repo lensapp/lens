@@ -30,7 +30,8 @@ export function createDevServer(lensProxyPort: number): DevServer {
     host: "localhost",
     port: webpackDevServerPort,
     static: buildDir, // aka `devServer.contentBase` in webpack@4
-    hot: true, // enable HMR when supported by modules or page refresh by default {liveReload:true}
+    hot: "only", // use HMR only without errors
+    liveReload: false,
     proxy: {
       "*": {
         router(req) {
