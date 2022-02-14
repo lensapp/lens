@@ -12,6 +12,7 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 export function webpackLensRenderer(): webpack.Configuration {
   console.info("WEBPACK:renderer", vars);
@@ -43,6 +44,9 @@ export function webpackLensRenderer(): webpack.Configuration {
       chunkFilename: "chunks/[name].js",
       assetModuleFilename: "assets/[name][ext][query]",
     },
+    watchOptions: {
+      ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
+    },
     ignoreWarnings: [
       /Critical dependency: the request of a dependency is an expression/,
       /export '.*' was not found in/,
@@ -66,7 +70,11 @@ export function webpackLensRenderer(): webpack.Configuration {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader(),
+        getTSLoader({
+          getCustomTransformers: () => ({
+            before: isDevelopment ? [require("react-refresh-typescript")()] : [],
+          }),
+        }),
         cssModulesWebpackRule(),
         ...iconsAndImagesWebpackRules(),
         ...fontsLoaderWebpackRules(),
@@ -100,6 +108,8 @@ export function webpackLensRenderer(): webpack.Configuration {
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
+
+      isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
   };
 }
