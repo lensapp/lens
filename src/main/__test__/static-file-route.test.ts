@@ -35,12 +35,10 @@ describe("static-file-route", () => {
   });
 
   it("blocks path traversal attacks", async () => {
-
     const request = {
       params: {
         path: "../index.ts",
       },
-      response: {},
       raw: {},
     } as LensApiRequest<any>;
 
@@ -58,7 +56,6 @@ describe("static-file-route", () => {
       params: {
         path: "router.test.ts",
       },
-      response: {},
       raw: { req },
     } as LensApiRequest<any>;
 
