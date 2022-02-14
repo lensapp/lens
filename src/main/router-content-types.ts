@@ -4,10 +4,6 @@
  */
 import type { LensApiResult } from "./router";
 
-/**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
 export interface LensApiResultContentType {
   resultMapper: (result: LensApiResult<any>) => ({ statusCode: number, content: any, headers: { [ name: string ]: string }})
 }
