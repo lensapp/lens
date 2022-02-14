@@ -82,7 +82,6 @@ describe("router", () => {
         payload: "some-payload",
         query: expect.any(URLSearchParams),
         raw: { req: requestStub },
-        response: responseStub,
       });
     });
 
