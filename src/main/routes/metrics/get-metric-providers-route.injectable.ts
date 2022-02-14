@@ -17,7 +17,7 @@ const getMetricProvidersRouteInjectable = getInjectable({
     method: "get",
     path: `${apiPrefix}/metrics/providers`,
 
-    handler: async () => {
+    handler: () => {
       const providers: MetricProviderInfo[] = [];
 
       for (const { name, id, isConfigurable } of PrometheusProviderRegistry.getInstance().providers.values()) {

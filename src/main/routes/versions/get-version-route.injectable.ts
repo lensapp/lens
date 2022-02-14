@@ -14,9 +14,7 @@ const getVersionRouteInjectable = getInjectable({
     method: "get",
     path: `/version`,
 
-    handler: async () => {
-      return { response: { version: getAppVersion() }};
-    },
+    handler: () => ({ response: { version: getAppVersion() }}),
   }),
 
   injectionToken: routeInjectionToken,
