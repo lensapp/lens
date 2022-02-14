@@ -10,7 +10,7 @@ import * as vars from "./src/common/vars";
 import { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./webpack.renderer";
 
 export default function generateExtensionTypes(): webpack.Configuration {
-  const { isDevelopment, isProduction } = vars;
+  const { isDevelopment } = vars;
   const entry = "./src/extensions/extension-api.ts";
   const outDir = "./src/extensions/npm/extensions/dist";
 
@@ -20,7 +20,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
     target: "electron-renderer",
     entry,
     // this is the default mode, so we should make it explicit to silence the warning
-    mode: isProduction ? "production" : "development",
+    mode: isDevelopment ? "development" : "production",
     output: {
       filename: "extension-api.js",
       // need to be an absolute path
