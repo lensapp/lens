@@ -84,6 +84,7 @@ import startKubeConfigSyncInjectable from "./start-main-application/runnables/ku
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import execFileInjectable from "../common/fs/exec-file.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -161,6 +162,11 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(readFileInjectable, () => () => {
       throw new Error("Tried to read file from file system without specifying explicit override.");
     });
+
+    di.override(execFileInjectable, () => () => {
+      throw new Error("Tried to exec file from file system without specifying explicit override.");
+    });
+
 
     di.override(loggerInjectable, () => ({
       warn: noop,
