@@ -61,11 +61,11 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   @observable showOptions = false;
 
   @action
-  close = () => {
-    AddHelmRepoDialog.close();
-    this.helmRepo = getEmptyRepo();
-    this.showOptions = false;
-  };
+    close = () => {
+      AddHelmRepoDialog.close();
+      this.helmRepo = getEmptyRepo();
+      this.showOptions = false;
+    };
 
   setFilepath(type: FileType, value: string) {
     this.helmRepo[type] = value;
@@ -95,7 +95,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   async addCustomRepo() {
     try {
       await HelmRepoManager.getInstance().addRepo(this.helmRepo);
-      Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
+      Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has been added</>);
       this.props.onAddRepo();
       this.close();
     } catch (err) {
