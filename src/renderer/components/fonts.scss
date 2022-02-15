@@ -22,5 +22,6 @@
 // https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/RobotoMono
 @font-face {
   font-family: 'RobotoMono';
+  font-display: block;
   src: local('RobotoMono'), url('./fonts/roboto-mono-nerd.ttf') format('truetype');
 }

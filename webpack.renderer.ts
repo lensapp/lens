@@ -17,14 +17,8 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 export function webpackLensRenderer(): webpack.Configuration {
   console.info("WEBPACK:renderer", vars);
 
-  const {
-    appName,
-    buildDir,
-    htmlTemplate,
-    isDevelopment,
-    publicPath,
-    rendererDir,
-  } = vars;
+  const assetsFolderName = "assets";
+  const { appName, buildDir, htmlTemplate, isDevelopment, publicPath, rendererDir } = vars;
 
   return {
     target: "electron-renderer",
@@ -42,7 +36,7 @@ export function webpackLensRenderer(): webpack.Configuration {
       path: buildDir,
       filename: "[name].js",
       chunkFilename: "chunks/[name].js",
-      assetModuleFilename: "assets/[name][ext][query]",
+      assetModuleFilename: `${assetsFolderName}/[name][ext][query]`,
     },
     watchOptions: {
       ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
@@ -97,6 +91,9 @@ export function webpackLensRenderer(): webpack.Configuration {
         template: htmlTemplate,
         inject: true,
         hash: true,
+        templateParameters: {
+          assetPath: `${publicPath}${assetsFolderName}`,
+        },
       }),
 
       new CircularDependencyPlugin({

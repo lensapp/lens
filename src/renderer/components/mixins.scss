@@ -59,3 +59,15 @@
     @content; // css-modules (*.module.scss)
   }
 }
+
+// Makes custom font available at earlier stages (start preloading)
+// Element must be in DOM and contain some text of loading font.
+@mixin font-preload() {
+  &:before {
+    width: 0;
+    display: block;
+    overflow: hidden;
+    content: "x"; // required
+    @content; // must contain `font-family`
+  }
+}
