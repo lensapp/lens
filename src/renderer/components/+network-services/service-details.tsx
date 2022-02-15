@@ -30,8 +30,8 @@ interface Props extends KubeObjectDetailsProps<Service> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
-  portForwardStore: PortForwardStore
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
+  portForwardStore: PortForwardStore;
 }
 
 @observer

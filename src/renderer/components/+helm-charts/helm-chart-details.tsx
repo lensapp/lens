@@ -32,7 +32,7 @@ const LargeTooltip = withStyles({
 })(Tooltip);
 
 interface Dependencies {
-  createInstallChartTab: (helmChart: HelmChart) => void
+  createInstallChartTab: (helmChart: HelmChart) => void;
 }
 
 @observer

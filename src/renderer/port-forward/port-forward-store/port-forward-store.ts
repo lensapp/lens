@@ -13,7 +13,7 @@ import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";
 
 interface Dependencies {
-  storage: StorageHelper<ForwardedPort[] | undefined>
+  storage: StorageHelper<ForwardedPort[] | undefined>;
 }
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {

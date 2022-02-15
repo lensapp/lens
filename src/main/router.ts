@@ -40,7 +40,7 @@ export interface LensApiRequest<P = any> {
   query: URLSearchParams;
   raw: {
     req: http.IncomingMessage;
-  }
+  };
 }
 
 function getMimeType(filename: string) {
@@ -61,7 +61,7 @@ function getMimeType(filename: string) {
 }
 
 interface Dependencies {
-  routePortForward: (request: LensApiRequest) => Promise<void>
+  routePortForward: (request: LensApiRequest) => Promise<void>;
 }
 
 export class Router {

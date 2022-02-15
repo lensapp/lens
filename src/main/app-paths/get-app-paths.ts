@@ -7,7 +7,7 @@ import { pathNames, PathName } from "../../common/app-paths/app-path-names";
 import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
 
 interface Dependencies {
-  getAppPath: (name: PathName) => string
+  getAppPath: (name: PathName) => string;
 }
 
 export const getAppPaths = ({ getAppPath }: Dependencies) =>

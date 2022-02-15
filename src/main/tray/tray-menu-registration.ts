@@ -7,8 +7,8 @@ export interface TrayMenuRegistration {
   label?: string;
   click?: (menuItem: TrayMenuRegistration) => void;
   id?: string;
-  type?: "normal" | "separator" | "submenu"
+  type?: "normal" | "separator" | "submenu";
   toolTip?: string;
   enabled?: boolean;
-  submenu?: TrayMenuRegistration[]
+  submenu?: TrayMenuRegistration[];
 }

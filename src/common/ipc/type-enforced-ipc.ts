@@ -29,10 +29,10 @@ export function onceCorrect<
   listener,
   verifier,
 }: {
-  source: IPC,
-  channel: string,
-  listener: Listener,
-  verifier: ListVerifier<Rest<Parameters<Listener>>>,
+  source: IPC;
+  channel: string;
+  listener: Listener;
+  verifier: ListVerifier<Rest<Parameters<Listener>>>;
 }): void {
   function wrappedListener(event: ListenerEvent<IPC>, ...args: unknown[]): void {
     if (verifier(args)) {
@@ -63,10 +63,10 @@ export function onCorrect<
   listener,
   verifier,
 }: {
-  source: IPC,
-  channel: string,
-  listener: Listener,
-  verifier: ListVerifier<Rest<Parameters<Listener>>>,
+  source: IPC;
+  channel: string;
+  listener: Listener;
+  verifier: ListVerifier<Rest<Parameters<Listener>>>;
 }): Disposer {
   function wrappedListener(event: ListenerEvent<IPC>, ...args: unknown[]) {
     if (verifier(args)) {
@@ -89,9 +89,9 @@ export function handleCorrect<
   handler,
   verifier,
 }: {
-  channel: string,
-  handler: Handler,
-  verifier: ListVerifier<Rest<Parameters<Handler>>>,
+  channel: string;
+  handler: Handler;
+  verifier: ListVerifier<Rest<Parameters<Handler>>>;
 }): Disposer {
   function wrappedHandler(event: Electron.IpcMainInvokeEvent, ...args: unknown[]): ReturnType<Handler> {
     if (verifier(args)) {

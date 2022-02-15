@@ -26,7 +26,7 @@ interface PrometheusServicePreferences {
 }
 
 interface Dependencies {
-  createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy
+  createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
 }
 
 export class ContextHandler {

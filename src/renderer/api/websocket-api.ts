@@ -57,7 +57,7 @@ export enum WebSocketApiState {
 }
 
 export interface WebSocketEvents {
-  open: () => void,
+  open: () => void;
   data: (message: string) => void;
   close: () => void;
 }

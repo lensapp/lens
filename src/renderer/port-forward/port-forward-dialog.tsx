@@ -25,8 +25,8 @@ import portForwardStoreInjectable from "./port-forward-store/port-forward-store.
 interface Props extends Partial<DialogProps> {}
 
 interface Dependencies {
-  portForwardStore: PortForwardStore,
-  model: PortForwardDialogModel
+  portForwardStore: PortForwardStore;
+  model: PortForwardDialogModel;
 }
 
 @observer

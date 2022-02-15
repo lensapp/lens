@@ -15,7 +15,7 @@ export function migrationLog(...args: any[]) {
 }
 
 export interface MigrationDeclaration {
-  version: string,
+  version: string;
   run(store: Conf<any>): void;
 }
 

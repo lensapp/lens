@@ -40,8 +40,8 @@ const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
 };
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
-  subscribeToStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+  clusterFrameContext: ClusterFrameContext;
+  subscribeToStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
 }
 
 @observer

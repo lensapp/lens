@@ -247,7 +247,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
+  async reloadAll(opts: { force?: boolean; namespaces?: string[]; merge?: boolean } = {}) {
     const { force = false, ...loadingOptions } = opts;
 
     if (this.isLoading || (this.isLoaded && !force)) {

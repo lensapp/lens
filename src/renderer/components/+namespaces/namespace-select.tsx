@@ -27,7 +27,7 @@ const defaultProps: Partial<Props> = {
 };
 
 interface Dependencies {
-  namespaceStore: NamespaceStore
+  namespaceStore: NamespaceStore;
 }
 
 @observer

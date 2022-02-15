@@ -21,7 +21,7 @@ import clusterOverviewStoreInjectable
   from "./cluster-overview-store/cluster-overview-store.injectable";
 
 interface Dependencies {
-  clusterOverviewStore: ClusterOverviewStore
+  clusterOverviewStore: ClusterOverviewStore;
 }
 
 const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics }}: Dependencies) => {

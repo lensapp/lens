@@ -31,7 +31,7 @@ interface Props extends RouteComponentProps<PortForwardsRouteParams> {
 }
 
 interface Dependencies {
-  portForwardStore: PortForwardStore
+  portForwardStore: PortForwardStore;
 }
 
 @observer

@@ -129,6 +129,16 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/member-delimiter-style": ["error", {
+          "multiline": {
+            "delimiter": "semi",
+            "requireLast": true,
+          },
+          "singleline": {
+            "delimiter": "semi",
+            "requireLast": false,
+          },
+        }],
         "react/display-name": "off",
         "space-before-function-paren": "off",
         "@typescript-eslint/space-before-function-paren": ["error", {

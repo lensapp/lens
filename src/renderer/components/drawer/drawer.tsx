@@ -60,7 +60,7 @@ resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, R
 resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
 
 interface Dependencies {
-  history: History
+  history: History;
   drawerStorage: StorageHelper<{ width: number }>;
 }
 

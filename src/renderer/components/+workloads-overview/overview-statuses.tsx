@@ -21,7 +21,7 @@ interface Workload {
   amountOfItems: number;
   href: string;
   status: Record<string, number>;
-  title: string
+  title: string;
 }
 
 interface Dependencies {

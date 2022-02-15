@@ -22,7 +22,7 @@ export interface ExtensionInfo {
 interface Dependencies {
   attemptInstall: (request: InstallRequest, d: ExtendableDisposer) => Promise<void>;
   getBaseRegistryUrl: () => Promise<string>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, extensionInstallationStateStore }: Dependencies) => async ({

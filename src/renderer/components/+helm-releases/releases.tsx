@@ -41,9 +41,9 @@ interface Props extends RouteComponentProps<ReleaseRouteParams> {
 }
 
 interface Dependencies {
-  releases: IComputedValue<RemovableHelmRelease[]>
-  releasesArePending: IComputedValue<boolean>
-  selectNamespace: (namespace: string) => void
+  releases: IComputedValue<RemovableHelmRelease[]>;
+  releasesArePending: IComputedValue<boolean>;
+  selectNamespace: (namespace: string) => void;
 }
 
 class NonInjectedHelmReleases extends Component<Dependencies & Props> {

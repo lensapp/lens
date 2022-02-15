@@ -29,7 +29,7 @@ import { TopBar } from "../layout/top-bar/top-bar";
 import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { get: () => string }
+  catalogPreviousActiveTabStorage: { get: () => string };
 }
 
 @observer

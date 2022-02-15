@@ -34,7 +34,7 @@ interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer

@@ -31,7 +31,7 @@ interface Props {
 }
 
 interface Dependencies {
-  portForwardStore: PortForwardStore
+  portForwardStore: PortForwardStore;
 }
 
 @observer

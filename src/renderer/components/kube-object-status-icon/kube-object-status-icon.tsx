@@ -40,7 +40,7 @@ function getAge(timestamp: string) {
 }
 
 interface SplitStatusesByLevel {
-  maxLevel: string,
+  maxLevel: string;
   criticals: KubeObjectStatus[];
   warnings: KubeObjectStatus[];
   infos: KubeObjectStatus[];

@@ -39,12 +39,12 @@ interface Props {
 }
 
 interface Dependencies {
-  release: IComputedValue<HelmRelease>
-  releaseDetails: IAsyncComputed<IReleaseDetails>
-  releaseValues: IAsyncComputed<string>
-  updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>
-  createUpgradeChartTab: (release: HelmRelease) => void
-  userSuppliedValuesAreShown: { toggle: () => void, value: boolean }
+  release: IComputedValue<HelmRelease>;
+  releaseDetails: IAsyncComputed<IReleaseDetails>;
+  releaseValues: IAsyncComputed<string>;
+  updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>;
+  createUpgradeChartTab: (release: HelmRelease) => void;
+  userSuppliedValuesAreShown: { toggle: () => void; value: boolean };
 }
 
 @observer

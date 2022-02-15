@@ -24,8 +24,8 @@ interface Props extends DialogProps {
 }
 
 interface Dependencies {
-  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<void>
-  model: ReleaseRollbackDialogModel
+  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<void>;
+  model: ReleaseRollbackDialogModel;
 }
 
 @observer

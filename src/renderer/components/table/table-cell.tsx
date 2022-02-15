@@ -57,7 +57,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   /**
    * id of the column which follow same visibility rules
    */
-  showWithColumn?: string
+  showWithColumn?: string;
 
   /**
    * @internal

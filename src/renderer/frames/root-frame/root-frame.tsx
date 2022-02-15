@@ -22,7 +22,7 @@ import type { History } from "history";
 injectSystemCAs();
 
 interface Dependencies {
-  history: History
+  history: History;
 }
 
 @observer

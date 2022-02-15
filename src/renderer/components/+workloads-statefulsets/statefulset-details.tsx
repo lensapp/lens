@@ -35,7 +35,7 @@ interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer

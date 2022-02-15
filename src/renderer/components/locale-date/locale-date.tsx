@@ -9,7 +9,7 @@ import moment from "moment-timezone";
 import { UserStore } from "../../../common/user-store";
 
 interface Props {
-  date: string
+  date: string;
 }
 
 @observer

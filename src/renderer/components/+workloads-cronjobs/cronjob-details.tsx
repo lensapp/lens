@@ -29,7 +29,7 @@ interface Props extends KubeObjectDetailsProps<CronJob> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer

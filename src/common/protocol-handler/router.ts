@@ -63,8 +63,8 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 }
 
 interface Dependencies {
-  extensionLoader: ExtensionLoader
-  extensionsStore: ExtensionsStore
+  extensionLoader: ExtensionLoader;
+  extensionsStore: ExtensionsStore;
 }
 
 export abstract class LensProtocolRouter {

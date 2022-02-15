@@ -38,7 +38,7 @@ interface Props {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean, onClose: () => void }) => void;
+  openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean; onClose: () => void }) => void;
 }
 
 @observer

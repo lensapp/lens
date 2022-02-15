@@ -13,15 +13,15 @@ import { Input, InputProps, InputValidator } from "../input";
 import { boundMethod } from "../../utils";
 
 export interface Props<T> {
-  items: T[],
-  add: (newItem: string) => void,
-  remove: (info: { oldItem: T, index: number }) => void,
-  placeholder?: string,
+  items: T[];
+  add: (newItem: string) => void;
+  remove: (info: { oldItem: T; index: number }) => void;
+  placeholder?: string;
   validators?: InputValidator | InputValidator[];
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
-  renderItem?: (item: T, index: number) => React.ReactNode,
+  renderItem?: (item: T, index: number) => React.ReactNode;
   inputTheme?: InputProps["theme"];
 }
 

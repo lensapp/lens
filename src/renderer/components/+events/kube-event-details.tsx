@@ -23,7 +23,7 @@ export interface KubeEventDetailsProps {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer

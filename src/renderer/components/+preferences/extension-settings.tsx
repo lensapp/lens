@@ -9,7 +9,7 @@ import { cssNames } from "../../../renderer/utils";
 
 interface ExtensionSettingsProps {
   setting: AppPreferenceRegistration;
-  size: "small" | "normal"
+  size: "small" | "normal";
 }
 
 export function ExtensionSettings({ setting, size }: ExtensionSettingsProps) {

@@ -13,7 +13,7 @@ import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-ove
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 interface Dependencies {
-  clusterOverviewStore: ClusterOverviewStore
+  clusterOverviewStore: ClusterOverviewStore;
 }
 
 const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: Dependencies) => {

@@ -21,19 +21,19 @@ export enum TerminalChannels {
 }
 
 export type TerminalMessage = {
-  type: TerminalChannels.STDIN,
-  data: string,
+  type: TerminalChannels.STDIN;
+  data: string;
 } | {
-  type: TerminalChannels.STDOUT,
-  data: string,
+  type: TerminalChannels.STDOUT;
+  data: string;
 } | {
-  type: TerminalChannels.CONNECTED
+  type: TerminalChannels.CONNECTED;
 } | {
-  type: TerminalChannels.RESIZE,
+  type: TerminalChannels.RESIZE;
   data: {
-    width: number,
-    height: number,
-  },
+    width: number;
+    height: number;
+  };
 };
 
 enum TerminalColor {

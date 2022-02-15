@@ -157,7 +157,7 @@ export const initialNodeShellImage = "docker.io/alpine:3.13";
  * The arguments for requesting to refresh a cluster's metadata
  */
 export interface ClusterRefreshOptions {
-  refreshMetadata?: boolean
+  refreshMetadata?: boolean;
 }
 
 /**
@@ -170,7 +170,7 @@ export interface ClusterState {
   accessible: boolean;
   ready: boolean;
   isAdmin: boolean;
-  allowedNamespaces: string[]
-  allowedResources: string[]
+  allowedNamespaces: string[];
+  allowedResources: string[];
   isGlobalWatchEnabled: boolean;
 }

@@ -27,7 +27,7 @@ interface Props<T extends ItemObject = any> {
   selectedItemId?: string;
   getRow?: (uid: string | number) => React.ReactElement<any>;
   onScroll?: (props: ListOnScrollProps) => void;
-  outerRef?: React.Ref<any>
+  outerRef?: React.Ref<any>;
 
   /**
    * If specified then AutoSizer will not be used and instead a fixed height

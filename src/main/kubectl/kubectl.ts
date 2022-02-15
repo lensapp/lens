@@ -64,10 +64,10 @@ interface Dependencies {
   directoryForKubectlBinaries: string;
 
   userStore: {
-    kubectlBinariesPath?: string
-    downloadBinariesPath?: string
-    downloadKubectlBinaries: boolean
-    downloadMirror: string
+    kubectlBinariesPath?: string;
+    downloadBinariesPath?: string;
+    downloadKubectlBinaries: boolean;
+    downloadMirror: string;
   };
 }
 

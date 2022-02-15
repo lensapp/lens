@@ -22,11 +22,11 @@ export enum MetricNodeRole {
 
 export interface ClusterOverviewStorageState {
   metricType: MetricType;
-  metricNodeRole: MetricNodeRole,
+  metricNodeRole: MetricNodeRole;
 }
 
 interface Dependencies {
-  storage: StorageHelper<ClusterOverviewStorageState>
+  storage: StorageHelper<ClusterOverviewStorageState>;
 }
 
 export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {

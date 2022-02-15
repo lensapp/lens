@@ -70,7 +70,7 @@ export interface KubeWatchSubscribeStoreOptions {
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
+  clusterFrameContext: ClusterFrameContext;
 }
 
 export type SubscribeStores = (stores: KubeObjectStore<KubeObject>[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;

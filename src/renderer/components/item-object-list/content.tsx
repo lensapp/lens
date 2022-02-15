@@ -23,7 +23,7 @@ import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 
 interface ItemListLayoutContentProps<I extends ItemObject> {
-  getFilters: () => Filter[]
+  getFilters: () => Filter[];
   tableId?: string;
   className: IClassName;
   getItems: () => I[];

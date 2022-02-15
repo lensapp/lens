@@ -24,7 +24,7 @@ export interface EditorPanelProps {
 }
 
 interface Dependencies {
-  dockStore: DockStore
+  dockStore: DockStore;
 }
 
 const defaultProps: Partial<EditorPanelProps> = {

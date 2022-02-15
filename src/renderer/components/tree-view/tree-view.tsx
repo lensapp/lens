@@ -25,7 +25,7 @@ export interface NavigationTree {
 }
 
 interface Props {
-  data: NavigationTree[]
+  data: NavigationTree[];
 }
 
 function scrollToItem(id: string) {
