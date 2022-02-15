@@ -11,7 +11,6 @@ import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
-import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -139,7 +138,7 @@ class KubernetesClusterCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Clusters",
-    icon: KubeClusterCategoryIcon,
+    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default, // eslint-disable-line
   };
   public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",

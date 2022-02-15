@@ -28,8 +28,6 @@ export interface SendToViewArgs {
 }
 
 export class WindowManager extends Singleton {
-  public mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
-
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
@@ -41,6 +39,10 @@ export class WindowManager extends Singleton {
     super();
     makeObservable(this);
     this.bindEvents();
+  }
+
+  get mainUrl() {
+    return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
   private async initMainWindow(showSplash: boolean) {
@@ -140,8 +142,8 @@ export class WindowManager extends Singleton {
 
     try {
       if (showSplash) await this.showSplash();
-      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainContentUrl} ...`);
-      await this.mainWindow.loadURL(this.mainContentUrl);
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
+      await this.mainWindow.loadURL(this.mainUrl);
     } catch (error) {
       logger.error("Loading main window failed", { error });
       dialog.showErrorBox("ERROR!", error.toString());

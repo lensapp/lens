@@ -15,7 +15,7 @@ import type { UpgradeChartTabStore } from "./store";
 import { Spinner } from "../../spinner";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
-import { helmChartStore, type IChartVersion } from "../../+helm-charts/helm-chart.store";
+import { helmChartStore, IChartVersion } from "../../+helm-charts/helm-chart.store";
 import type { HelmRelease, IReleaseUpdateDetails, IReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../../select";
 import { IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";

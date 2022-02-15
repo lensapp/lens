@@ -28,7 +28,7 @@ function getCategoryIcon(category: CatalogCategory) {
   const { icon } = category.metadata ?? {};
 
   if (typeof icon === "string") {
-    return Icon.isSvg(icon)
+    return icon.includes("<svg")
       ? <Icon small svg={icon}/>
       : <Icon small material={icon}/>;
   }
