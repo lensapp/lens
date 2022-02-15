@@ -328,7 +328,7 @@
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "color": "^3.2.1",
-    "concurrently": "^5.3.0",
+    "concurrently": "^7.0.0",
     "css-loader": "^6.5.1",
     "deepdash": "^5.3.9",
     "dompurify": "^2.3.4",
