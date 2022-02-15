@@ -5,18 +5,23 @@
 
 import path from "path";
 import fs from "fs";
-import request from "request";
 import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
 import type winston from "winston";
+import got, { Options } from "got";
+import type { Merge } from "type-fest";
+
+type GotStreamOptions = Merge<Options, {
+    isStream?: true;
+}>;
 
 export type LensBinaryOpts = {
   version: string;
   baseDir: string;
   originalBinaryName: string;
   newBinaryName?: string;
-  requestOpts?: request.Options;
+  requestOpts?: GotStreamOptions;
 };
 
 export class LensBinary {
@@ -31,7 +36,7 @@ export class LensBinary {
   protected platformName: string;
   protected arch: string;
   protected originalBinaryName: string;
-  protected requestOpts: request.Options;
+  protected requestOpts: GotStreamOptions;
   protected logger: Console | winston.Logger;
 
   constructor(opts: LensBinaryOpts) {
@@ -40,7 +45,7 @@ export class LensBinary {
     this.originalBinaryName = opts.originalBinaryName;
     this.binaryName = opts.newBinaryName || opts.originalBinaryName;
     this.binaryVersion = opts.version;
-    this.requestOpts = opts.requestOpts;
+    this.requestOpts = opts.requestOpts || {};
     this.logger = console;
     let arch = null;
 
@@ -160,6 +165,7 @@ export class LensBinary {
   }
 
   protected async downloadBinary() {
+
     const binaryPath = this.tarPath || this.getBinaryPath();
 
     await ensureDir(this.getBinaryDir(), 0o755);
@@ -168,12 +174,11 @@ export class LensBinary {
     const url = this.getUrl();
 
     this.logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`);
-    const requestOpts: request.UriOptions & request.CoreOptions = {
-      uri: url,
-      gzip: true,
+
+    const stream = got.stream(url, {
+      decompress: true,
       ...this.requestOpts,
-    };
-    const stream = request(requestOpts);
+    });
 
     stream.on("complete", () => {
       this.logger.info(`Download of ${this.originalBinaryName} finished`);

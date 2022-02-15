@@ -18,6 +18,17 @@ import { observer } from "mobx-react";
 import { RemovableItem } from "./removable-item";
 import { Notice } from "../+extensions/notice";
 import { Spinner } from "../spinner";
+import got from "got";
+import { orderBy } from "lodash";
+
+async function loadAvailableHelmRepos(): Promise<HelmRepo[]> {
+  const { body } = await got.get<HelmRepo[]>("https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json", {
+    timeout: 10_000,
+    responseType: "json",
+  });
+
+  return orderBy(body, repo => repo.name);
+}
 
 @observer
 export class HelmCharts extends React.Component {
@@ -47,7 +58,7 @@ export class HelmCharts extends React.Component {
 
     try {
       if (!this.repos.length) {
-        this.repos = await HelmRepoManager.loadAvailableRepos();
+        this.repos = await loadAvailableHelmRepos();
       }
       const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
 

@@ -30,7 +30,6 @@ jest.mock("winston", () => ({
 
 jest.mock("../../common/ipc");
 jest.mock("request");
-jest.mock("request-promise-native");
 
 import { Console } from "console";
 import mockFs from "mock-fs";

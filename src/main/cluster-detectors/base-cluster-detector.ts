@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RequestPromiseOptions } from "request-promise-native";
 import type { Cluster } from "../../common/cluster/cluster";
+import type { OptionsOfJSONResponseBody } from "got";
 import { k8sRequest } from "../k8s-request";
 
 export type ClusterDetectionResult = {
@@ -12,17 +12,14 @@ export type ClusterDetectionResult = {
   accuracy: number
 };
 
-export class BaseClusterDetector {
-  key: string;
+export abstract class BaseClusterDetector {
+  abstract key: string;
 
-  constructor(public cluster: Cluster) {
-  }
+  constructor(public cluster: Cluster) {}
 
-  detect(): Promise<ClusterDetectionResult> {
-    return null;
-  }
+  abstract detect(): Promise<ClusterDetectionResult>;
 
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
+  protected async k8sRequest<T = any>(path: string, options: OptionsOfJSONResponseBody = {}): Promise<T> {
     return k8sRequest(this.cluster, path, options);
   }
 }

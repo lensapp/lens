@@ -4,19 +4,18 @@
  */
 import packageInfo from "../package.json";
 import fs from "fs";
-import request from "request";
 import md5File from "md5-file";
-import requestPromise from "request-promise-native";
 import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
 import { noop } from "lodash";
 import { isLinux, isMac } from "../src/common/vars";
+import got from "got";
 
 class KubectlDownloader {
-  public kubectlVersion: string;
-  protected url: string;
-  protected path: string;
-  protected dirname: string;
+  public readonly kubectlVersion: string;
+  protected readonly url: string;
+  protected readonly path: string;
+  protected readonly dirname: string;
 
   constructor(clusterVersion: string, platform: string, arch: string, target: string) {
     this.kubectlVersion = clusterVersion;
@@ -28,14 +27,14 @@ class KubectlDownloader {
   }
 
   protected async urlEtag() {
-    const response = await requestPromise({
-      method: "HEAD",
-      uri: this.url,
-      resolveWithFullResponse: true,
-    }).catch(console.error);
+    try {
+      const response = await got.head(this.url);
 
-    if (response.headers["etag"]) {
-      return response.headers["etag"].replace(/"/g, "");
+      if (response.headers["etag"]) {
+        return response.headers["etag"].replace(/"/g, "");
+      }
+    } catch (error) {
+      console.error(error);
     }
 
     return "";
@@ -71,11 +70,10 @@ class KubectlDownloader {
     const file = fs.createWriteStream(this.path);
 
     console.log(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
-    const requestOpts: request.UriOptions & request.CoreOptions = {
-      uri: this.url,
-      gzip: true,
-    };
-    const stream = request(requestOpts);
+    const stream = got.stream({
+      url: this.url,
+      decompress: true,
+    });
 
     stream.on("complete", () => {
       console.log("kubectl binary download finished");

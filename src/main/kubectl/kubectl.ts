@@ -14,7 +14,8 @@ import { getBundledKubectlVersion } from "../../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../../common/vars";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
-import got from "got/dist/source";
+import got, { Agents } from "got";
+import { HttpsProxyAgent } from "hpagent";
 import { promisify } from "util";
 import stream from "stream";
 import { noop } from "lodash/fp";
@@ -68,6 +69,8 @@ interface Dependencies {
     downloadBinariesPath?: string
     downloadKubectlBinaries: boolean
     downloadMirror: string
+    httpsProxy?: string;
+    allowUntrustedCAs?: boolean;
   };
 }
 
@@ -297,7 +300,20 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    const downloadStream = got.stream({ url: this.url, decompress: true });
+    const { httpsProxy, allowUntrustedCAs } = this.dependencies.userStore;
+    const agent: Agents | false = httpsProxy
+      ? {
+        https: new HttpsProxyAgent({
+          proxy: httpsProxy,
+        }),
+      }
+      : false;
+    const downloadStream = got.stream({
+      url: this.url,
+      decompress: true,
+      rejectUnauthorized: !allowUntrustedCAs,
+      agent,
+    });
     const fileWriteStream = fs.createWriteStream(this.path, { mode: 0o755 });
     const pipeline = promisify(stream.pipeline);
 
