@@ -4,61 +4,54 @@
  */
 
 import * as vars from "./src/common/vars";
-import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars, webpackDevServerPort } from "./src/common/vars";
 import path from "path";
-import webpack from "webpack";
+import type webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import ProgressBarPlugin from "progress-bar-webpack-plugin";
-import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
-export default [
-  webpackLensRenderer,
-];
+export function webpackLensRenderer(): webpack.Configuration {
+  console.info("WEBPACK:renderer", vars);
 
-export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
-  if (showVars) {
-    console.info("WEBPACK:renderer", vars);
-  }
+  const {
+    appName,
+    buildDir,
+    htmlTemplate,
+    isDevelopment,
+    publicPath,
+    rendererDir,
+  } = vars;
 
   return {
-    context: __dirname,
     target: "electron-renderer",
-    devtool: isDevelopment ? "cheap-source-map" : "source-map",
-    devServer: {
-      contentBase: buildDir,
-      port: webpackDevServerPort,
-      host: "localhost",
-      hot: true,
-      // to avoid cors errors when requests is from iframes
-      disableHostCheck: true,
-      headers: { "Access-Control-Allow-Origin": "*" },
-    },
     name: "lens-app",
-    mode: isProduction ? "production" : "development",
+    mode: isDevelopment ? "development" : "production",
+    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
     },
     output: {
       libraryTarget: "global",
-      library: "",
       globalObject: "this",
       publicPath,
       path: buildDir,
       filename: "[name].js",
       chunkFilename: "chunks/[name].js",
+      assetModuleFilename: "assets/[name][ext][query]",
     },
-    stats: {
-      warningsFilter: [
-        /Critical dependency: the request of a dependency is an expression/,
-        /export '.*' was not found in/,
-      ],
+    watchOptions: {
+      ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
     },
+    ignoreWarnings: [
+      /Critical dependency: the request of a dependency is an expression/,
+      /export '.*' was not found in/,
+      /require.extensions is not supported by webpack./, // handlebars
+    ],
     resolve: {
       extensions: [
         ".js", ".jsx", ".json",
@@ -77,71 +70,18 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader(/\.tsx?$/),
-        {
-          test: /\.(jpg|png|svg|map|ico)$/,
-          use: {
-            loader: "file-loader",
-            options: {
-              name: "images/[name]-[hash:6].[ext]",
-              esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (vue/react?)
-            },
-          },
-        },
-        {
-          test: /\.(ttf|eot|woff2?)$/,
-          use: {
-            loader: "url-loader",
-            options: {
-              name: "fonts/[name].[ext]",
-            },
-          },
-        },
-        {
-          test: /\.s?css$/,
-          use: [
-            isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
-            {
-              loader: "css-loader",
-              options: {
-                sourceMap: isDevelopment,
-                modules: {
-                  auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
-                  mode: "local", // :local(.selector) by default
-                  localIdentName: "[name]__[local]--[hash:base64:5]",
-                },
-              },
-            },
-            {
-              loader: "postcss-loader",
-              options: {
-                sourceMap: isDevelopment,
-                postcssOptions: {
-                  plugins: [
-                    "tailwindcss",
-                  ],
-                },
-              },
-            },
-            {
-              loader: "sass-loader",
-              options: {
-                sourceMap: isDevelopment,
-                additionalData: `@import "${path.basename(sassCommonVars)}";`,
-                sassOptions: {
-                  includePaths: [
-                    path.dirname(sassCommonVars),
-                  ],
-                },
-              },
-            },
-          ],
-        },
+        getTSLoader({
+          getCustomTransformers: () => ({
+            before: isDevelopment ? [require("react-refresh-typescript")()] : [],
+          }),
+        }),
+        cssModulesWebpackRule(),
+        ...iconsAndImagesWebpackRules(),
+        ...fontsLoaderWebpackRules(),
       ],
     },
 
     plugins: [
-      new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
       // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
@@ -156,6 +96,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         filename: `${appName}.html`,
         template: htmlTemplate,
         inject: true,
+        hash: true,
       }),
 
       new CircularDependencyPlugin({
@@ -168,8 +109,90 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         filename: "[name].css",
       }),
 
-      isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
   };
 }
+
+/**
+ * Import icons and image files.
+ * Read more about asset types: https://webpack.js.org/guides/asset-modules/
+ */
+export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
+  return [
+    {
+      test: /\.svg$/,
+      type: "asset/inline", // data:image/svg+xml;base64,...
+    },
+    {
+      test: /\.(jpg|png|ico)$/,
+      type: "asset/resource", // path to file, e.g. "/static/build/assets/*"
+    },
+  ];
+}
+
+/**
+ * Import custom fonts as URL.
+ */
+export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
+  return [
+    {
+      test: /\.(ttf|eot|woff2?)$/,
+      type: "asset/resource",
+    },
+  ];
+}
+
+/**
+ * Import CSS or SASS styles with modules support (*.module.scss)
+ * @param {string} styleLoader
+ */
+export function cssModulesWebpackRule(
+  {
+    styleLoader = vars.isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+  } = {}): webpack.RuleSetRule {
+  const { isDevelopment, sassCommonVars } = vars;
+
+  return {
+    test: /\.s?css$/,
+    use: [
+      styleLoader,
+      {
+        loader: "css-loader",
+        options: {
+          sourceMap: isDevelopment,
+          modules: {
+            auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
+            mode: "local", // :local(.selector) by default
+            localIdentName: "[name]__[local]--[hash:base64:5]",
+          },
+        },
+      },
+      {
+        loader: "postcss-loader",
+        options: {
+          sourceMap: isDevelopment,
+          postcssOptions: {
+            plugins: [
+              "tailwindcss",
+            ],
+          },
+        },
+      },
+      {
+        loader: "sass-loader",
+        options: {
+          sourceMap: isDevelopment,
+          additionalData: `@import "${path.basename(sassCommonVars)}";`,
+          sassOptions: {
+            includePaths: [
+              path.dirname(sassCommonVars),
+            ],
+          },
+        },
+      },
+    ],
+  };
+}
+
+export default webpackLensRenderer;

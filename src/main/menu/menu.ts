@@ -9,7 +9,7 @@ import { appName, isMac, isWindows, docsUrl, supportUrl, productName } from "../
 import logger from "../logger";
 import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
-import * as packageJson from "../../../package.json";
+import packageJson from "../../../package.json";
 import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../../common/routes";
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { MenuRegistration } from "./menu-registration";

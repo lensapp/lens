@@ -12,7 +12,8 @@ import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../app-event-bus/event-bus";
 import { getOrInsertSet, toggle, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel, TerminalConfig } from "./preferences-helpers";
+import { DESCRIPTORS } from "./preferences-helpers";
+import type { EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel, TerminalConfig } from "./preferences-helpers";
 import logger from "../../main/logger";
 
 export interface UserStoreModel {

@@ -9,7 +9,7 @@ import type http from "http";
 import path from "path";
 import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
-import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
+import { apiPrefix, appName, publicPath } from "../common/vars";
 import { HelmApiRoute, KubeconfigRoute, MetricsRoute, PortForwardRoute, ResourceApplierApiRoute, VersionRoute } from "./routes";
 import logger from "./logger";
 
@@ -110,7 +110,7 @@ export class Router {
     };
   }
 
-  protected static async handleStaticFile({ params, response, raw: { req }}: LensApiRequest): Promise<void> {
+  protected static async handleStaticFile({ params, response }: LensApiRequest): Promise<void> {
     let filePath = params.path;
 
     for (let retryCount = 0; retryCount < 5; retryCount += 1) {
@@ -124,19 +124,6 @@ export class Router {
       }
 
       try {
-        const filename = path.basename(req.url);
-        // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-        const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
-
-        if (isDevelopment && toWebpackDevServer) {
-          const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
-
-          response.statusCode = 307;
-          response.setHeader("Location", redirectLocation);
-
-          return response.end();
-        }
-
         const data = await readFile(asset);
 
         response.setHeader("Content-Type", getMimeType(asset));

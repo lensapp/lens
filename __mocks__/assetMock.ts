@@ -3,4 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export default {};
+export default ""; // mostly path to bundled file or data-url (webpack)
