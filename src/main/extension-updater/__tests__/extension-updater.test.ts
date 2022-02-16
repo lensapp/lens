@@ -7,10 +7,11 @@ import { BundledExtensionUpdater } from "../bundled-extension-updater";
 import fs from "fs";
 import mockFs from "mock-fs";
 import nock from "nock";
+import path from "path";
 
 const mockOpts = {
   "some-user-data-directory": {
-    "some-file.tgz": "file content here",
+    "some-file.tgz": mockFs.load(path.resolve(__dirname, "./survey-mock.tgz")),
   },
   "extension-updates": {
     "file.txt": "text",
@@ -47,7 +48,7 @@ describe("BundledExtensionUpdater", () => {
     expect(exist).toBeTruthy();
   });
 
-  it.only("Should skip download if no file found on server", () => {
+  it("Should skip download if no file found on server", () => {
     mockFs(mockOpts);
 
     nock("http://my-example-url.com")
@@ -97,5 +98,31 @@ describe("BundledExtensionUpdater", () => {
     const exist = fs.existsSync("./extension-updates/node-menu-0.0.1");
 
     expect(exist).toBeTruthy();
+  });
+
+  it.only("Should unpack downloaded tar file", async () => {
+    mockFs(mockOpts);
+
+    nock("http://my-example-url.com")
+      .get("/some-file.tgz")
+      .replyWithFile(200, `./some-user-data-directory/some-file.tgz`, {
+        "Content-Type": "application/tar",
+      });
+
+    await new BundledExtensionUpdater({
+      name: "test-extension",
+      version: "0.0.1",
+      downloadUrl: "http://my-example-url.com/some-file.tgz",
+    }, "./extension-updates").update();
+
+    fs.readdirSync("./extension-updates/").forEach(file => {
+      console.log(file);
+    });
+
+    const existTar = fs.existsSync("./extension-updates/test-extension-0.0.1.tgz");
+    const existFolder = fs.existsSync("./extension-updates/test-extension-0.0.1");
+
+    expect(existTar).toBeTruthy();
+    expect(existFolder).toBeTruthy();
   });
 });

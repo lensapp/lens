@@ -9,6 +9,7 @@ import request from "request";
 import logger from "../logger";
 import path from "path";
 import { noop } from "../../common/utils";
+import tar from "tar-fs";
 
 type Extension = {
   name: string
@@ -28,6 +29,7 @@ export class BundledExtensionUpdater {
   public async update() {
     await this.download();
     await this.removePreviousUpdateFolder();
+    // await this.unpackTar();
   }
 
   private get filePath() {
@@ -84,5 +86,14 @@ export class BundledExtensionUpdater {
         logger.info(`[EXTENSION-UPDATER]: Previous update folder '${this.folderPath}' deleted.`);
       });
     }
+  }
+
+  private async unpackTar() {
+    logger.info(`[EXTENSION-UPDATER]: Unpacking '${this.filePath}' into '${this.folderPath}'`);
+
+    const extract = tar.extract("./extension-updates/");
+
+    // console.log(this.filePath.replace("./", ""))
+    fs.createReadStream("extension-updates/file.txt").pipe(extract).end();
   }
 }
