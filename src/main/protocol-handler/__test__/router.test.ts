@@ -42,11 +42,13 @@ describe("protocol router tests", () => {
       "tmp": {},
     });
 
+    di.override(extensionsStoreInjectable, () => ExtensionsStore.createInstance());
+
     await di.runSetups();
 
     extensionLoader = di.inject(extensionLoaderInjectable);
-    extensionsStore = di.inject(extensionsStoreInjectable);
 
+    extensionsStore = di.inject(extensionsStoreInjectable);
 
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
@@ -55,9 +57,6 @@ describe("protocol router tests", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-
-    // TODO: Remove Singleton from BaseStore to achieve independent unit testing
-    ExtensionsStore.resetInstance();
 
     mockFs.restore();
   });

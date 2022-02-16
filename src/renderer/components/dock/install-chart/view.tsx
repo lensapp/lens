@@ -21,14 +21,14 @@ import { LogsDialog } from "../../dialog/logs-dialog";
 import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";
 import { EditorPanel } from "../editor-panel";
-import { navigate } from "../../../navigation";
-import { releaseURL } from "../../../../common/routes";
 import type { IReleaseCreatePayload, IReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import installChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import createReleaseInjectable from "../../+helm-releases/create-release/create-release.injectable";
 import { Notifications } from "../../notifications";
+import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
+import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 
 export interface InstallCharProps {
   tab: DockTab;
@@ -38,6 +38,7 @@ interface Dependencies {
   createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>;
   installChartStore: InstallChartTabStore;
   dockStore: DockStore;
+  navigateToHelmReleases: NavigateToHelmReleases;
 }
 
 @observer
@@ -74,12 +75,11 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
   viewRelease = () => {
     const { release } = this.releaseDetails;
 
-    navigate(releaseURL({
-      params: {
-        name: release.name,
-        namespace: release.namespace,
-      },
-    }));
+    this.props.navigateToHelmReleases({
+      name: release.name,
+      namespace: release.namespace,
+    });
+
     this.props.dockStore.closeTab(this.tabId);
   };
 
@@ -226,6 +226,7 @@ export const InstallChart = withInjectables<Dependencies, InstallCharProps>(
       createRelease: di.inject(createReleaseInjectable),
       installChartStore: di.inject(installChartTabStoreInjectable),
       dockStore: di.inject(dockStoreInjectable),
+      navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
       ...props,
     }),
   },

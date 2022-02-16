@@ -9,16 +9,16 @@ import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
 import { appName, publicPath } from "../../common/vars";
 import path from "path";
-import readFileInjectable from "../../common/fs/read-file.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
+import readFileBufferInjectable from "../../common/fs/read-file-buffer.injectable";
 
 interface ProductionDependencies {
-  readFile: (path: string) => Promise<Buffer>;
+  readFileBuffer: (path: string) => Promise<Buffer>;
 }
 
 const handleStaticFileInProduction =
-  ({ readFile }: ProductionDependencies) =>
+  ({ readFileBuffer }: ProductionDependencies) =>
     async ({ params }: LensApiRequest) => {
       const staticPath = path.resolve(__static);
       let filePath = params.path;
@@ -38,7 +38,7 @@ const handleStaticFileInProduction =
 
           const contentType = contentTypes[fileExtension] || contentTypes.txt;
 
-          return { response: await readFile(asset), contentType };
+          return { response: await readFileBuffer(asset), contentType };
         } catch (err) {
           if (retryCount > 5) {
             logger.error("handleStaticFile:", err.toString());
@@ -78,13 +78,14 @@ const staticFileRouteInjectable = getInjectable({
 
   instantiate: (di): Route<Buffer> => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
+    const readFileBuffer = di.inject(readFileBufferInjectable);
 
     return {
       method: "get",
       path: `/{path*}`,
       handler: isDevelopment
         ? handleStaticFileInDevelopment({ proxy: httpProxy.createProxy() })
-        : handleStaticFileInProduction({ readFile: di.inject(readFileInjectable) }),
+        : handleStaticFileInProduction({ readFileBuffer }),
     };
   },
 

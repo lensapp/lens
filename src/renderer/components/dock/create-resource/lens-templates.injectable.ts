@@ -12,7 +12,7 @@ import type { RawTemplates } from "./create-resource-templates.injectable";
 
 interface Dependencies {
   readDir: (dirPath: string) => Promise<string[]>;
-  readFile: (filePath: string, encoding: "utf-8") => Promise<string>;
+  readFile: (filePath: string) => Promise<string>;
 }
 
 async function getTemplates({ readDir, readFile }: Dependencies) {
@@ -25,7 +25,7 @@ async function getTemplates({ readDir, readFile }: Dependencies) {
 
   for (const dirEntry of await readDir(templatesFolder)) {
     if (hasCorrectExtension(dirEntry)) {
-      templates.push([path.parse(dirEntry).name, await readFile(path.join(templatesFolder, dirEntry), "utf-8")]);
+      templates.push([path.parse(dirEntry).name, await readFile(path.join(templatesFolder, dirEntry))]);
     }
   }
 

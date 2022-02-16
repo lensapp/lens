@@ -4,10 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { HotbarStore } from "./hotbar-store";
+import catalogCatalogEntityInjectable from "./catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 
-const hotbarManagerInjectable = getInjectable({
-  id: "hotbar-manager",
-  instantiate: () => HotbarStore.getInstance(),
+const hotbarStoreInjectable = getInjectable({
+  id: "hotbar-store",
+
+  instantiate: (di) => HotbarStore.createInstance({
+    catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
+  }),
+
+  causesSideEffects: true,
 });
 
-export default hotbarManagerInjectable;
+export default hotbarStoreInjectable;

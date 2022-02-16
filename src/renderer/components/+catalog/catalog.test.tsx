@@ -7,7 +7,6 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Catalog } from "./catalog";
-import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import { CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
 import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
@@ -66,24 +65,8 @@ class MockCatalogEntity extends CatalogEntity {
 }
 
 describe("<Catalog />", () => {
-  const history = createMemoryHistory();
-  const mockLocation = {
-    pathname: "",
-    search: "",
-    state: "",
-    hash: "",
-  };
-  const mockMatch = {
-    params: {
-      // will be used to match activeCategory
-      // need to be the same as property values in kubernetesClusterCategory
-      group: "entity.k8slens.dev",
-      kind: "KubernetesCluster",
-    },
-    isExact: true,
-    path: "",
-    url: "",
-  };
+  //   group: "entity.k8slens.dev",
+  // kind: "KubernetesCluster",
 
   function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
     return new MockCatalogEntity({
@@ -169,11 +152,7 @@ describe("<Catalog />", () => {
     );
 
     render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
+      <Catalog />,
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
@@ -198,13 +177,7 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
@@ -229,13 +202,7 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
@@ -255,13 +222,7 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
@@ -288,13 +249,7 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
@@ -319,13 +274,7 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });

@@ -7,10 +7,10 @@ import mockFs from "mock-fs";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 
 import directoryForUserDataInjectable
   from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -78,11 +78,11 @@ describe("BaseStore", () => {
   let store: TestStore;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    dis.mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+    mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
 
-    await dis.runSetups();
+    await mainDi.runSetups();
 
     store = undefined;
     TestStore.resetInstance();
@@ -99,9 +99,9 @@ describe("BaseStore", () => {
   });
 
   afterEach(() => {
+    mockFs.restore();
     store.disableSync();
     TestStore.resetInstance();
-    mockFs.restore();
   });
 
   describe("persistence", () => {

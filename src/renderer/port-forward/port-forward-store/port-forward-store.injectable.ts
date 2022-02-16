@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { PortForwardStore } from "./port-forward-store";
 import type { ForwardedPort } from "../port-forward-item";
 import createStorageInjectable from "../../utils/create-storage/create-storage.injectable";
+import notifyErrorPortForwardingInjectable from "../notify-error-port-forwarding.injectable";
 
 const portForwardStoreInjectable = getInjectable({
   id: "port-forward-store",
@@ -18,7 +19,10 @@ const portForwardStoreInjectable = getInjectable({
       undefined,
     );
 
-    return new PortForwardStore({ storage });
+    return new PortForwardStore({
+      storage,
+      notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
+    });
   },
 });
 

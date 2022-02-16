@@ -7,12 +7,11 @@ import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddClusterRoleDialog } from "./add-dialog";
 import { clusterRolesStore } from "./store";
-import type { ClusterRolesRouteParams } from "../../../../common/routes";
+import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
@@ -21,14 +20,11 @@ enum columnId {
   age = "age",
 }
 
-export interface ClusterRolesProps extends RouteComponentProps<ClusterRolesRouteParams> {
-}
-
 @observer
-export class ClusterRoles extends React.Component<ClusterRolesProps> {
+export class ClusterRoles extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_cluster_roles"
@@ -58,7 +54,7 @@ export class ClusterRoles extends React.Component<ClusterRolesProps> {
           }}
         />
         <AddClusterRoleDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

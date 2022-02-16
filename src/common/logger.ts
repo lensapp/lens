@@ -10,6 +10,14 @@ import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
 
+export interface Logger {
+  info: (...args: any) => void;
+  error: (...args: any) => void;
+  debug: (...args: any) => void;
+  log: (...args: any) => void;
+  warn: (...args: any) => void;
+}
+
 const logLevel = process.env.LOG_LEVEL
   ? process.env.LOG_LEVEL
   : isDebugging
@@ -55,7 +63,7 @@ if (ipcMain) {
          */
         dirname: app.getPath("logs"),
         maxsize: 16 * 1024,
-        maxFiles: 16,
+        maxFiles: 1,
         tailable: true,
       }),
     );

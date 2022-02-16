@@ -9,6 +9,7 @@ import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-
 import bindProtocolAddRouteHandlersInjectable from "../../../protocol-handler/bind-protocol-add-route-handlers/bind-protocol-add-route-handlers.injectable";
 import lensProtocolRouterRendererInjectable from "../../../protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import registerIpcListenersInjectable from "../../../ipc/register-ipc-listeners.injectable";
 
 const initRootFrameInjectable = getInjectable({
   id: "init-root-frame",
@@ -18,6 +19,8 @@ const initRootFrameInjectable = getInjectable({
 
     return initRootFrame({
       loadExtensions: extensionLoader.loadOnClusterManagerRenderer,
+
+      registerIpcListeners: di.inject(registerIpcListenersInjectable),
 
       ipcRenderer: di.inject(ipcRendererInjectable),
 

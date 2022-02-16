@@ -8,15 +8,19 @@ import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
-import { catalogEntity } from "../main/catalog-sources/general";
 import logger from "../main/logger";
 import { broadcastMessage } from "./ipc";
 import { defaultHotbarCells, getEmptyHotbar, Hotbar, CreateHotbarData, CreateHotbarOptions } from "./hotbar-types";
 import { hotbarTooManyItemsChannel } from "./ipc/hotbar";
+import type { GeneralEntity } from "./catalog-entities";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
   activeHotbarId: string;
+}
+
+interface Dependencies {
+  catalogCatalogEntity: GeneralEntity;
 }
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
@@ -24,7 +28,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
   @observable private _activeHotbarId: string;
 
-  constructor() {
+  constructor(private dependencies: Dependencies) {
     super({
       configName: "lens-hotbar-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -77,7 +81,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   protected fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (!data.hotbars || !data.hotbars.length) {
       const hotbar = getEmptyHotbar("Default");
-      const { metadata: { uid, name, source }} = catalogEntity;
+      const { metadata: { uid, name, source }} = this.dependencies.catalogCatalogEntity;
       const initialItem = { entity: { uid, name, source }};
 
       hotbar.items[0] = initialItem;

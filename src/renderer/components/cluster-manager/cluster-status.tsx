@@ -14,23 +14,28 @@ import { cssNames, IClassName } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import { navigate } from "../../navigation";
-import { entitySettingsURL } from "../../../common/routes";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
+import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 
 export interface ClusterStatusProps {
   className?: IClassName;
   cluster: Cluster;
 }
 
+interface Dependencies {
+  navigateToEntitySettings: NavigateToEntitySettings;
+}
+
 @observer
-export class ClusterStatus extends React.Component<ClusterStatusProps> {
+class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Dependencies> {
   @observable authOutput: KubeAuthUpdate[] = [];
   @observable isReconnecting = false;
 
-  constructor(props: ClusterStatusProps) {
+  constructor(props: ClusterStatusProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -72,12 +77,7 @@ export class ClusterStatus extends React.Component<ClusterStatusProps> {
   };
 
   manageProxySettings = () => {
-    navigate(entitySettingsURL({
-      params: {
-        entityId: this.cluster.id,
-      },
-      fragment: "proxy",
-    }));
+    this.props.navigateToEntitySettings(this.cluster.id, "proxy");
   };
 
   renderAuthenticationOutput() {
@@ -146,3 +146,14 @@ export class ClusterStatus extends React.Component<ClusterStatusProps> {
     );
   }
 }
+
+export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(
+  NonInjectedClusterStatus,
+
+  {
+    getProps: (di, props) => ({
+      navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
+      ...props,
+    }),
+  },
+);

@@ -14,25 +14,22 @@ import { catalogEntityRegistry } from "../../catalog";
 import { pushCatalogToRenderer } from "../../catalog-pusher";
 import { ClusterManager } from "../../cluster-manager";
 import { ResourceApplier } from "../../resource-applier";
-import { WindowManager } from "../../window-manager";
 import path from "path";
 import { remove } from "fs-extra";
-import { getAppMenu } from "../../menu/menu";
-import type { MenuRegistration } from "../../menu/menu-registration";
-import type { IComputedValue } from "mobx";
 import { onLocationChange, handleWindowAction } from "../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
 import { showOpenDialog } from "../../ipc/dialog";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
 import { getNativeColorTheme } from "../../native-theme";
 import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
+import type { MenuItemsOpts } from "../../menu/get-app-menu-items.injectable";
 
 interface Dependencies {
-  electronMenuItems: IComputedValue<MenuRegistration[]>;
+  getAppMenuItems: () => MenuItemsOpts[];
   directoryForLensLocalStorage: string;
 }
 
-export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalStorage }: Dependencies) => () => {
+export const initIpcMainHandlers = ({ getAppMenuItems, directoryForLensLocalStorage }: Dependencies) => () => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -151,7 +148,9 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 
   ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
-    const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
+    const appMenu = getAppMenuItems();
+
+    const menu = Menu.buildFromTemplate(appMenu);
 
     menu.popup({
       ...BrowserWindow.fromWebContents(event.sender),

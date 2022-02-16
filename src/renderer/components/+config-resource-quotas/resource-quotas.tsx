@@ -7,12 +7,11 @@ import "./resource-quotas.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { ResourceQuotaRouteParams } from "../../../common/routes";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
@@ -21,14 +20,11 @@ enum columnId {
   age = "age",
 }
 
-export interface ResourceQuotasProps extends RouteComponentProps<ResourceQuotaRouteParams> {
-}
-
 @observer
-export class ResourceQuotas extends React.Component<ResourceQuotasProps> {
+export class ResourceQuotas extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_quotas"
@@ -62,7 +58,7 @@ export class ResourceQuotas extends React.Component<ResourceQuotasProps> {
           }}
         />
         <AddQuotaDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

@@ -386,6 +386,8 @@ export class Input extends React.Component<InputProps, State> {
         {errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
+
+    // TODO: Remove side-effect to allow deterministic unit testing
     const componentId = id || showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
     let tooltipError: React.ReactNode;
 

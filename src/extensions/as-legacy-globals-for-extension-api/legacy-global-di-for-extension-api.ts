@@ -4,10 +4,29 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 
-let legacyGlobalDi: DiContainer;
+const legacyGlobalDis = new Map<Environments, DiContainer>();
 
-export const setLegacyGlobalDiForExtensionApi = (di: DiContainer) => {
-  legacyGlobalDi = di;
+export enum Environments {
+  renderer,
+  main,
+}
+
+export const setLegacyGlobalDiForExtensionApi = (
+  di: DiContainer,
+  environment: Environments,
+) => {
+  legacyGlobalDis.set(environment, di);
 };
 
-export const getLegacyGlobalDiForExtensionApi = () => legacyGlobalDi;
+export const getLegacyGlobalDiForExtensionApi = () => {
+  const globalDis = [...legacyGlobalDis.values()];
+
+  if (globalDis.length > 1) {
+    throw new Error("Tried to get DI container using legacy globals where there is multiple containers available.");
+  }
+
+  return globalDis[0];
+};
+
+export const getEnvironmentSpecificLegacyGlobalDiForExtensionApi = (environment: Environments) =>
+  legacyGlobalDis.get(environment);

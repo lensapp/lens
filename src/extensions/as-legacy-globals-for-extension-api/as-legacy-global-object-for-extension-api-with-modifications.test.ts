@@ -8,7 +8,7 @@ import {
   getInjectable,
   Injectable,
 } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
+import { Environments, setLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 import { asLegacyGlobalObjectForExtensionApiWithModifications } from "./as-legacy-global-object-for-extension-api-with-modifications";
 
 describe("asLegacyGlobalObjectForExtensionApiWithModifications", () => {
@@ -24,7 +24,7 @@ describe("asLegacyGlobalObjectForExtensionApiWithModifications", () => {
 
       jest.spyOn(di, "inject");
 
-      setLegacyGlobalDiForExtensionApi(di);
+      setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
       someInjectable = getInjectable({
         id: "some-injectable",

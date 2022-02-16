@@ -7,12 +7,11 @@ import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { CreateServiceAccountDialog } from "./create-dialog";
 import { serviceAccountsStore } from "./store";
-import type { ServiceAccountsRouteParams } from "../../../../common/routes";
+import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
@@ -21,14 +20,11 @@ enum columnId {
   age = "age",
 }
 
-export interface ServiceAccountsProps extends RouteComponentProps<ServiceAccountsRouteParams> {
-}
-
 @observer
-export class ServiceAccounts extends React.Component<ServiceAccountsProps> {
+export class ServiceAccounts extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_service_accounts"
@@ -60,7 +56,7 @@ export class ServiceAccounts extends React.Component<ServiceAccountsProps> {
           }}
         />
         <CreateServiceAccountDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

@@ -29,7 +29,6 @@ describe("<Select />", () => {
   let render: DiRender;
 
   beforeEach(async () => {
-
     di = getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
 

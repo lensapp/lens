@@ -8,33 +8,36 @@ import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
-import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import { ExtensionSettings } from "./extension-settings";
+import { Preferences } from "./preferences";
+import extensionsPreferenceItemsInjectable from "./extension-preference-items.injectable";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
+  preferenceItems: IComputedValue<RegisteredAppPreference[]>;
 }
 
-const NonInjectedExtensions: React.FC<Dependencies> = ({ appPreferenceItems }) => {
-
-  const settings = appPreferenceItems.get();
-
-  return (
+const NonInjectedExtensions = ({ preferenceItems }: Dependencies) => (
+  <Preferences data-testid="extension-preferences-page">
     <section id="extensions">
       <h2>Extensions</h2>
-      {settings.filter(e => !e.showInPreferencesTab).map((setting) =>
-        <ExtensionSettings key={setting.id} setting={setting} size="small" />,
-      )}
+      {preferenceItems.get().map((preferenceItem) => (
+        <ExtensionSettings
+          key={preferenceItem.id}
+          setting={preferenceItem}
+          size="small"
+          data-testid={`extension-preference-item-for-${preferenceItem.id}`}
+        />
+      ))}
     </section>
-  );
-};
+  </Preferences>
+);
 
 export const Extensions = withInjectables<Dependencies>(
   observer(NonInjectedExtensions),
 
   {
     getProps: (di) => ({
-      appPreferenceItems: di.inject(appPreferencesInjectable),
+      preferenceItems: di.inject(extensionsPreferenceItemsInjectable),
     }),
   },
 );

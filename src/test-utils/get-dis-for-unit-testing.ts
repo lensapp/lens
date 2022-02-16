@@ -7,8 +7,8 @@ import { getDiForUnitTesting as getMainDi } from "../main/getDiForUnitTesting";
 import { overrideIpcBridge } from "./override-ipc-bridge";
 
 export const getDisForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverrides: false }) => {
-  const rendererDi = getRendererDi({ doGeneralOverrides });
   const mainDi = getMainDi({ doGeneralOverrides });
+  const rendererDi = getRendererDi({ doGeneralOverrides });
 
   overrideIpcBridge({ rendererDi, mainDi });
 

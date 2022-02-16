@@ -6,15 +6,17 @@
 import "./helm-charts.scss";
 
 import React, { Component } from "react";
-import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { helmChartStore } from "./helm-chart.store";
 import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
-import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/list-layout";
-import { helmChartsURL } from "../../../common/routes";
-import type { HelmChartsRouteParams } from "../../../common/routes";
+import type { IComputedValue } from "mobx";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
+import helmChartsRouteParametersInjectable from "./helm-charts-route-parameters.injectable";
+import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
+import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 
 enum columnId {
   name = "name",
@@ -24,19 +26,25 @@ enum columnId {
   repo = "repo",
 }
 
-export interface HelmChartsProps extends RouteComponentProps<HelmChartsRouteParams> {
+interface Dependencies {
+  routeParameters: {
+    chartName: IComputedValue<string>;
+    repo: IComputedValue<string>;
+  };
+
+  navigateToHelmCharts: NavigateToHelmCharts;
 }
 
 @observer
-export class HelmCharts extends Component<HelmChartsProps> {
+class NonInjectedHelmCharts extends Component<Dependencies> {
   componentDidMount() {
     helmChartStore.loadAll();
   }
 
   get selectedChart() {
-    const { match: { params: { chartName, repo }}} = this.props;
+    const { chartName, repo } = this.props.routeParameters;
 
-    return helmChartStore.getByName(chartName, repo);
+    return helmChartStore.getByName(chartName.get(), repo.get());
   }
 
   onDetails = (chart: HelmChart) => {
@@ -49,15 +57,13 @@ export class HelmCharts extends Component<HelmChartsProps> {
 
   showDetails = (chart: HelmChart) => {
     if (!chart) {
-      navigation.push(helmChartsURL());
+      this.props.navigateToHelmCharts();
     }
     else {
-      navigation.push(helmChartsURL({
-        params: {
-          chartName: chart.getName(),
-          repo: chart.getRepository(),
-        },
-      }));
+      this.props.navigateToHelmCharts({
+        chartName: chart.getName(),
+        repo: chart.getRepository(),
+      });
     }
   };
 
@@ -67,7 +73,7 @@ export class HelmCharts extends Component<HelmChartsProps> {
 
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <ItemListLayout
           isConfigurable
           tableId="helm_charts"
@@ -122,7 +128,19 @@ export class HelmCharts extends Component<HelmChartsProps> {
             hideDetails={this.hideDetails}
           />
         )}
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }
+
+export const HelmCharts = withInjectables<Dependencies>(
+  NonInjectedHelmCharts,
+
+  {
+    getProps: (di) => ({
+      routeParameters: di.inject(helmChartsRouteParametersInjectable),
+      navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
+    }),
+  },
+);
+

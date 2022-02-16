@@ -10,7 +10,7 @@ import React from "react";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
-import hotbarManagerInjectable from "../../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
 import { ThemeStore } from "../../../theme.store";
 import { ConfirmDialog } from "../../confirm-dialog";
 import type { HotbarStore } from "../../../../common/hotbar-store";
@@ -57,7 +57,7 @@ describe("<HotbarRemoveCommand />", () => {
   });
 
   it("renders w/o errors", async () => {
-    di.override(hotbarManagerInjectable, () => ({
+    di.override(hotbarStoreInjectable, () => ({
       hotbars: [mockHotbars["1"]],
       getById: (id: string) => mockHotbars[id],
       remove: () => {
@@ -76,7 +76,7 @@ describe("<HotbarRemoveCommand />", () => {
   it("calls remove if you click on the entry", async () => {
     const removeMock = jest.fn();
 
-    di.override(hotbarManagerInjectable, () => ({
+    di.override(hotbarStoreInjectable, () => ({
       hotbars: [mockHotbars["1"]],
       getById: (id: string) => mockHotbars[id],
       remove: removeMock,

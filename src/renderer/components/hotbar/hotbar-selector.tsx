@@ -7,7 +7,7 @@ import styles from "./hotbar-selector.module.scss";
 import React, { useRef, useState } from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
-import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import { observer } from "mobx-react";
@@ -17,7 +17,7 @@ import commandOverlayInjectable from "../command-palette/command-overlay.injecta
 import { cssNames } from "../../utils";
 
 interface Dependencies {
-  hotbarManager: {
+  hotbarStore: {
     switchToPrevious: () => void;
     switchToNext: () => void;
     getActive: () => Hotbar;
@@ -30,7 +30,7 @@ export interface HotbarSelectorProps extends Partial<Dependencies> {
   hotbar: Hotbar;
 }
 
-const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommandOverlay }: HotbarSelectorProps & Dependencies) => {
+const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOverlay }: HotbarSelectorProps & Dependencies) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltipTimeout = useRef<NodeJS.Timeout>();
 
@@ -59,13 +59,13 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommand
       <Icon
         material="play_arrow"
         className={cssNames(styles.Icon, styles.previous)}
-        onClick={() => onArrowClick(hotbarManager.switchToPrevious)}
+        onClick={() => onArrowClick(hotbarStore.switchToPrevious)}
       />
       <div className={styles.HotbarIndex}>
         <Badge
           id="hotbarIndex"
           small
-          label={hotbarManager.getDisplayIndex(hotbarManager.getActive())}
+          label={hotbarStore.getDisplayIndex(hotbarStore.getActive())}
           onClick={() => openCommandOverlay(<HotbarSwitchCommand />)}
           className={styles.Badge}
           onMouseEnter={onMouseEvent}
@@ -79,14 +79,14 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarManager, openCommand
           {hotbar.name}
         </Tooltip>
       </div>
-      <Icon material="play_arrow" className={styles.Icon} onClick={() => onArrowClick(hotbarManager.switchToNext)} />
+      <Icon material="play_arrow" className={styles.Icon} onClick={() => onArrowClick(hotbarStore.switchToNext)} />
     </div>
   );
 });
 
 export const HotbarSelector = withInjectables<Dependencies, HotbarSelectorProps>(NonInjectedHotbarSelector, {
   getProps: (di, props) => ({
-    hotbarManager: di.inject(hotbarManagerInjectable),
+    hotbarStore: di.inject(hotbarStoreInjectable),
     openCommandOverlay: di.inject(commandOverlayInjectable).open,
     ...props,
   }),

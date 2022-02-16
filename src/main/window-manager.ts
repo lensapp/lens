@@ -187,7 +187,7 @@ export class WindowManager extends Singleton {
     return this.mainWindow;
   }
 
-  private sendToView({ channel, frameInfo, data = [] }: SendToViewArgs) {
+  sendToView({ channel, frameInfo, data = [] }: SendToViewArgs) {
     if (frameInfo) {
       this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
@@ -210,6 +210,10 @@ export class WindowManager extends Singleton {
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
 
+    this.navigateSync(url, frameId);
+  }
+
+  navigateSync(url: string, frameId?: number) {
     const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
     const channel = frameInfo
       ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER

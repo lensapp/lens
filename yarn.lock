@@ -956,28 +956,28 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@ogre-tools/fp@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-5.1.2.tgz#8648bcd2e942211b8e94882afbfdf00ae2d07310"
-  integrity sha512-xWXg51KKoRX5p1czSkhUnWoRvzzM83V9bThWGjZKg5opZMUPmZI/GZ3uSALq0484lDr1rQCK1DaEDy4VDB7tWg==
+"@ogre-tools/fp@5.1.3", "@ogre-tools/fp@^5.1.3":
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-5.1.3.tgz#cf3fe91ecd1dfa9c9d704802e33d1ffe6f6aec44"
+  integrity sha512-UjSMt+2qxsL6zhnaztMC+6zKROFUgInKcyB+lCjUSyGldHvsCKEQgoLqjVx3R3poB2TcP3i/TASqqeCd6NsogA==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-5.1.2.tgz#95cf37881b026a18f3625fbfe896e987cb108f36"
-  integrity sha512-D/B4Tyh5KuEnPP73QTZpbErDtCHGDbYPp6KvOU4t+TnNUCX0fw2ImPSa09YmjtyLh3hr4DZVyf/QpamY6HEjMw==
+"@ogre-tools/injectable-react@5.1.3":
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-5.1.3.tgz#b2983134aa59a9bcce070033d48c1fc957aac389"
+  integrity sha512-1RRn7CS6vXogYyduI+KfwesunHzcpUi5G4kFz1o3JGDTef8cfpxLUtrCx+fB5AEGybghDQQBl0+rrYRhJ1WPtg==
   dependencies:
-    "@ogre-tools/fp" "^5.1.2"
-    "@ogre-tools/injectable" "^5.1.2"
+    "@ogre-tools/fp" "^5.1.3"
+    "@ogre-tools/injectable" "^5.1.3"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@5.1.2", "@ogre-tools/injectable@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-5.1.2.tgz#7fa0673c447e493ea8bc0c6821cfe6e6a79ce8fe"
-  integrity sha512-dP4T/vHy6HlfAJPzXtzGRlgwMDx7SqnAJKvDuhDPpsMWqEGPxouVMMJIi7aF2lvZtnDj9xJK/VfAk7oXPcMXAA==
+"@ogre-tools/injectable@5.1.3", "@ogre-tools/injectable@^5.1.3":
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-5.1.3.tgz#766fc7bce85ca666c2de4105feef0769014f72d7"
+  integrity sha512-VgQhPLEhuavRSFTrOks4IKUVvB7k6mV6sR3vd158ytXKMTP5XMqYWNnBc+DwiUyttKKfi9OLx0Xasg6vxeOR8Q==
   dependencies:
-    "@ogre-tools/fp" "^5.1.2"
+    "@ogre-tools/fp" "^5.1.3"
     lodash "^4.17.21"
 
 "@panva/asn1.js@^1.0.0":

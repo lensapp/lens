@@ -48,6 +48,10 @@ describe("kubeconfig-sync.source tests", () => {
       createCluster: di.inject(createClusterInjectionToken),
     });
 
+    di.override(clusterStoreInjectable, () =>
+      ClusterStore.createInstance({ createCluster: () => null }),
+    );
+
     di.inject(clusterStoreInjectable);
 
     ClusterManager.createInstance();

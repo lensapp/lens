@@ -19,11 +19,13 @@ import type {
 } from "@ogre-tools/injectable";
 
 
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 
 import directoryForUserDataInjectable
   from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import kubeAuthProxyCaInjectable from "../../main/kube-auth-proxy/kube-auth-proxy-ca.injectable";
+import createKubeAuthProxyCertFilesInjectable from "../../main/kube-auth-proxy/create-kube-auth-proxy-cert-files.injectable";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 
 console = new Console(stdout, stderr);
 
@@ -80,15 +82,14 @@ describe("cluster-store", () => {
   let createCluster: (model: ClusterModel) => Cluster;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
-    mainDi = dis.mainDi;
-
+    mainDi.override(clusterStoreInjectable, (di) => ClusterStore.createInstance({ createCluster: di.inject(createClusterInjectionToken) }));
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    await dis.runSetups();
+    await mainDi.runSetups();
 
     createCluster = mainDi.inject(createClusterInjectionToken);
   });

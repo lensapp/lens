@@ -11,6 +11,9 @@ import { HotbarStore } from "../hotbar-store";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import writeFileInjectable from "../fs/write-file.injectable";
+import hotbarStoreInjectable from "../hotbar-store.injectable";
+import catalogCatalogEntityInjectable
+  from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
@@ -119,7 +122,11 @@ describe("HotbarStore", () => {
     di.override(writeFileInjectable, () => () => undefined);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    await di.runSetups();
+    di.override(hotbarStoreInjectable, (di) =>
+      HotbarStore.createInstance({
+        catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
+      }),
+    );
 
     mockFs({
       "some-directory-for-user-data": {
@@ -127,12 +134,14 @@ describe("HotbarStore", () => {
       },
     });
 
-    HotbarStore.createInstance();
+    await di.runSetups();
+
+    di.inject(hotbarStoreInjectable);
   });
 
   afterEach(() => {
-    HotbarStore.resetInstance();
     mockFs.restore();
+    HotbarStore.resetInstance();
   });
 
   describe("load", () => {
@@ -328,7 +337,6 @@ describe("HotbarStore", () => {
 
   describe("pre beta-5 migrations", () => {
     beforeEach(() => {
-      HotbarStore.resetInstance();
       const mockOpts = {
         "some-directory-for-user-data": {
           "lens-hotbar-store.json": JSON.stringify({
@@ -392,8 +400,6 @@ describe("HotbarStore", () => {
       };
 
       mockFs(mockOpts);
-
-      HotbarStore.createInstance();
     });
 
     afterEach(() => {

@@ -13,9 +13,9 @@ import type { WindowManager } from "../window-manager";
 import logger from "../logger";
 import { isDevelopment, isWindows, productName } from "../../common/vars";
 import { exitApp } from "../exit-app";
-import { preferencesURL } from "../../common/routes";
 import { toJS } from "../../common/utils";
 import type { TrayMenuRegistration } from "./tray-menu-registration";
+
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -33,6 +33,7 @@ export function getTrayIcon(): string {
 export function initTray(
   windowManager: WindowManager,
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
+  navigateToPreferences: () => void,
 ) {
   const icon = getTrayIcon();
 
@@ -51,7 +52,7 @@ export function initTray(
   const disposers = [
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()));
+        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
 
         tray.setContextMenu(menu);
       } catch (error) {
@@ -80,6 +81,7 @@ function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron
 function createTrayMenu(
   windowManager: WindowManager,
   extensionTrayItems: TrayMenuRegistration[],
+  navigateToPreferences: () => void,
 ): Menu {
   let template: Electron.MenuItemConstructorOptions[] = [
     {
@@ -93,9 +95,7 @@ function createTrayMenu(
     {
       label: "Preferences",
       click() {
-        windowManager
-          .navigate(preferencesURL())
-          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to navigate to Preferences`, { error }));
+        navigateToPreferences();
       },
     },
   ];

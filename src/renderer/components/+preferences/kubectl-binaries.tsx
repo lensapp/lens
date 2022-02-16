@@ -7,20 +7,21 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
-import { UserStore } from "../../../common/user-store";
+import type { UserStore } from "../../../common/user-store";
 import { SelectOption, Select } from "../select";
 import { Switch } from "../switch";
 import { packageMirrors } from "../../../common/user-store/preferences-helpers";
 import directoryForBinariesInjectable from "../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import { kubectlBinaryPath } from "../../../common/vars";
 
 interface Dependencies {
   defaultPathForKubectlBinaries: string;
+  userStore: UserStore;
 }
 
-const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPathForKubectlBinaries }) => {
-  const userStore = UserStore.getInstance();
+const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPathForKubectlBinaries, userStore }) => {
   const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
@@ -94,5 +95,6 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPa
 export const KubectlBinaries = withInjectables<Dependencies>(NonInjectedKubectlBinaries, {
   getProps: (di) => ({
     defaultPathForKubectlBinaries: di.inject(directoryForBinariesInjectable),
+    userStore: di.inject(userStoreInjectable),
   }),
 });

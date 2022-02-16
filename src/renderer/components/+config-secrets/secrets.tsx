@@ -7,13 +7,12 @@ import "./secrets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { SecretsRouteParams } from "../../../common/routes";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
@@ -25,14 +24,11 @@ enum columnId {
   age = "age",
 }
 
-export interface SecretsProps extends RouteComponentProps<SecretsRouteParams> {
-}
-
 @observer
-export class Secrets extends React.Component<SecretsProps> {
+export class Secrets extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_secrets"
@@ -75,7 +71,7 @@ export class Secrets extends React.Component<SecretsProps> {
           }}
         />
         <AddSecretDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

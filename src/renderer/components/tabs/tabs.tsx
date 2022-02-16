@@ -60,7 +60,7 @@ export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
   disabled?: boolean;
   icon?: React.ReactNode | string; // material-ui name or custom icon
   label?: React.ReactNode;
-  value: D;
+  value?: D;
 }
 
 export class Tab extends React.PureComponent<TabProps> {

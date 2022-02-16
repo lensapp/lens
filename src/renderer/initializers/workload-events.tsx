@@ -4,20 +4,20 @@
  */
 
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import type { IsAllowedResource } from "../../common/utils/is-allowed-resource.injectable";
 import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
 import { Events } from "../components/+events/events";
 
 export interface WorkloadEventsProps {}
 
 interface Dependencies {
-  isAllowedResource: IsAllowedResource;
+  workloadEventsAreAllowed: IComputedValue<boolean>;
 }
 
-const NonInjectedWorkloadEvents = observer(({ isAllowedResource }: Dependencies & WorkloadEventsProps) => {
-  if (!isAllowedResource("events")) {
+const NonInjectedWorkloadEvents = observer(({ workloadEventsAreAllowed }: Dependencies & WorkloadEventsProps) => {
+  if (!workloadEventsAreAllowed.get()) {
     return null;
   }
 
@@ -32,7 +32,7 @@ const NonInjectedWorkloadEvents = observer(({ isAllowedResource }: Dependencies 
 
 export const WorkloadEvents = withInjectables<Dependencies, WorkloadEventsProps>(NonInjectedWorkloadEvents, {
   getProps: (di, props) => ({
-    isAllowedResource: di.inject(isAllowedResourceInjectable),
+    workloadEventsAreAllowed: di.inject(isAllowedResourceInjectable, "events"),
     ...props,
   }),
 });

@@ -8,6 +8,7 @@ import { navigation as observableHistory } from "./history";
 
 const observableHistoryInjectable = getInjectable({
   id: "observable-history",
+  causesSideEffects: true,
   instantiate: () => observableHistory,
 });
 

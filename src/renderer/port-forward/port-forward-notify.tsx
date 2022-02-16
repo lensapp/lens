@@ -4,14 +4,16 @@
  */
 
 import React from "react";
-import { portForwardsURL } from "../../common/routes/port-forwards";
 import { Button } from "../components/button";
 import { Notifications, notificationsStore } from "../components/notifications";
-import { navigate } from "../navigation";
 import { getHostedClusterId } from "../utils";
+import type { NavigateToPortForwards } from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 
+interface AboutPortForwardingDependencies {
+  navigateToPortForwards: NavigateToPortForwards;
+}
 
-export function aboutPortForwarding() {
+export const aboutPortForwarding = ({ navigateToPortForwards }: AboutPortForwardingDependencies) => () => {
   const notificationId = `port-forward-notification-${getHostedClusterId()}`;
 
   Notifications.info(
@@ -27,7 +29,7 @@ export function aboutPortForwarding() {
             outlined
             label="Go to Port Forwarding"
             onClick={() => {
-              navigate(portForwardsURL());
+              navigateToPortForwards();
               notificationsStore.remove(notificationId);
             }}
           />
@@ -39,9 +41,14 @@ export function aboutPortForwarding() {
       timeout: 10_000,
     },
   );
+};
+
+interface NotifyErrorPortForwardingDependencies {
+  navigateToPortForwards: NavigateToPortForwards;
 }
 
-export function notifyErrorPortForwarding(msg: string) {
+
+export const notifyErrorPortForwarding = ({ navigateToPortForwards }: NotifyErrorPortForwardingDependencies) => (msg: string) => {
   const notificationId = `port-forward-error-notification-${getHostedClusterId()}`;
 
   Notifications.error(
@@ -57,7 +64,7 @@ export function notifyErrorPortForwarding(msg: string) {
             outlined
             label="Check Port Forwarding"
             onClick={() => {
-              navigate(portForwardsURL());
+              navigateToPortForwards();
               notificationsStore.remove(notificationId);
             }}
           />
@@ -69,5 +76,5 @@ export function notifyErrorPortForwarding(msg: string) {
       timeout: 10_000,
     },
   );
-}
+};
 

@@ -8,6 +8,7 @@ import { UserStore } from "./user-store";
 const userStoreInjectable = getInjectable({
   id: "user-store",
   instantiate: () => UserStore.createInstance(),
+  causesSideEffects: true,
 });
 
 export default userStoreInjectable;
