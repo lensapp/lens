@@ -65,7 +65,7 @@ export interface WebSocketEvents {
 type Defaulted<Params, DefaultParams extends keyof Params> = Required<Pick<Params, DefaultParams>> & Omit<Params, DefaultParams>;
 
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
-  protected socket: WebSocket;
+  protected socket?: WebSocket | null;
   protected pendingCommands: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
   protected reconnectTimer?: any;
   protected pingTimer?: any;
@@ -181,7 +181,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     if (error) {
       const { reconnectDelay } = this.params;
 
-      if (reconnectDelay) {
+      if (reconnectDelay && this.socket) {
         const url = this.socket.url;
 
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
