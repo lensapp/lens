@@ -181,7 +181,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     if (error) {
       const { reconnectDelay } = this.params;
 
-      if (reconnectDelay) {
+      if (reconnectDelay && this.socket) {
         const url = this.socket.url;
 
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
