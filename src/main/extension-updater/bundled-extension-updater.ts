@@ -27,10 +27,15 @@ export class BundledExtensionUpdater {
 
   public async update() {
     await this.download();
+    await this.removePreviousUpdateFolder();
   }
 
   private get filePath() {
     return `${this.updateFolderPath}/${this.extension.name}-${this.extension.version}.tgz`;
+  }
+
+  private get folderPath() {
+    return `${this.updateFolderPath}/${this.extension.name}-${this.extension.version}`;
   }
 
   private async download() {
@@ -68,5 +73,16 @@ export class BundledExtensionUpdater {
       });
       stream.pipe(file);
     });
+  }
+
+  private async removePreviousUpdateFolder() {
+    if (fs.existsSync(this.folderPath)) {
+      return fs.rm(this.folderPath, { recursive: true, force: true }, (err) => {
+        if (err) {
+          throw new Error(err.message);
+        }
+        logger.info(`[EXTENSION-UPDATER]: Previous update folder '${this.folderPath}' deleted.`);
+      });
+    }
   }
 }
