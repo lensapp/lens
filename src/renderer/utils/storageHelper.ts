@@ -14,7 +14,7 @@ export interface StorageAdapter<T> {
   getItem(key: string): T | Promise<T>;
   setItem(key: string, value: T): void;
   removeItem(key: string): void;
-  onChange?(change: { key: string, value: T, oldValue?: T }): void;
+  onChange?(change: { key: string; value: T; oldValue?: T }): void;
 }
 
 export interface StorageHelperOptions<T> {

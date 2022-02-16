@@ -20,8 +20,8 @@ interface Props extends MenuActionsProps {
 }
 
 interface Dependencies {
-  portForwardStore: PortForwardStore,
-  openPortForwardDialog: (item: PortForwardItem) => void
+  portForwardStore: PortForwardStore;
+  openPortForwardDialog: (item: PortForwardItem) => void;
 }
 
 class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {

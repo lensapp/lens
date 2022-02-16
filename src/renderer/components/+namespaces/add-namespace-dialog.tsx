@@ -26,8 +26,8 @@ interface Props extends DialogProps {
 }
 
 interface Dependencies {
-  createNamespace: (params: { name: string }) => Promise<Namespace>,
-  model: AddNamespaceDialogModel
+  createNamespace: (params: { name: string }) => Promise<Namespace>;
+  model: AddNamespaceDialogModel;
 }
 
 @observer

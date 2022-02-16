@@ -12,7 +12,7 @@ import { runInAction } from "mobx";
 
 interface Dependencies {
   upgradeChartStore: UpgradeChartTabStore;
-  dockStore: DockStore
+  dockStore: DockStore;
 }
 
 const createUpgradeChartTab = ({ upgradeChartStore, dockStore }: Dependencies) => (release: HelmRelease, tabParams: DockTabCreateSpecific = {}): TabId => {

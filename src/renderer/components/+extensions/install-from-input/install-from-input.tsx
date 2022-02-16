@@ -15,9 +15,9 @@ import type { ExtensionInfo } from "../attempt-install-by-info/attempt-install-b
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
-  attemptInstall: (request: InstallRequest, disposer?: ExtendableDisposer) => Promise<void>,
-  attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>,
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  attemptInstall: (request: InstallRequest, disposer?: ExtendableDisposer) => Promise<void>;
+  attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>;
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 export const installFromInput = ({ attemptInstall, attemptInstallByInfo, extensionInstallationStateStore }: Dependencies) => async (input: string) => {

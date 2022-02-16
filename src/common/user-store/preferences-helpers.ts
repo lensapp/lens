@@ -327,7 +327,7 @@ export type ExtensionRegistry = {
   location: ExtensionRegistryLocation.DEFAULT | ExtensionRegistryLocation.NPMRC;
   customUrl?: undefined;
 } | {
-  location: ExtensionRegistryLocation.CUSTOM,
+  location: ExtensionRegistryLocation.CUSTOM;
   customUrl: string;
 };
 

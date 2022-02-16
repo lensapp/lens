@@ -12,7 +12,7 @@ import appPreferencesInjectable from "./app-preferences/app-preferences.injectab
 import { ExtensionSettings } from "./extension-settings";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
 }
 
 const NonInjectedExtensions: React.FC<Dependencies> = ({ appPreferenceItems }) => {

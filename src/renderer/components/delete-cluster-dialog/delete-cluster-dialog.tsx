@@ -22,9 +22,9 @@ import { Checkbox } from "../checkbox";
 import { requestClearClusterAsDeleting, requestDeleteCluster, requestSetClusterAsDeleting } from "../../ipc";
 
 type DialogState = {
-  isOpen: boolean,
-  config?: KubeConfig,
-  cluster?: Cluster
+  isOpen: boolean;
+  config?: KubeConfig;
+  cluster?: Cluster;
 };
 
 const dialogState: DialogState = observable({

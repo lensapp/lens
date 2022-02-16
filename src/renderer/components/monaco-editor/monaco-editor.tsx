@@ -61,7 +61,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   @observable.ref containerElem: HTMLElement;
   @observable.ref editor: editor.IStandaloneCodeEditor;
-  @observable dimensions: { width?: number, height?: number } = {};
+  @observable dimensions: { width?: number; height?: number } = {};
   @observable unmounting = false;
 
   constructor(props: MonacoEditorProps) {
@@ -241,7 +241,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.validate(value);
   }
 
-  getValue(opts?: { preserveBOM: boolean; lineEnding: string; }): string {
+  getValue(opts?: { preserveBOM: boolean; lineEnding: string }): string {
     return this.editor?.getValue(opts) ?? "";
   }
 

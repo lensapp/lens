@@ -98,7 +98,7 @@ export interface DockTabCloseEvent {
 }
 
 interface Dependencies {
-  readonly storage: StorageHelper<DockStorageState>
+  readonly storage: StorageHelper<DockStorageState>;
   readonly tabDataClearers: Record<TabKind, (tabId: TabId) => void>;
   readonly tabDataValidator: Partial<Record<TabKind, (tabId: TabId) => boolean>>;
 }

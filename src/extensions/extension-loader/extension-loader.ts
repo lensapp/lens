@@ -23,13 +23,13 @@ import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
-  updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void
-  createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension,
+  updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
+  createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension;
 }
 
 export interface ExtensionLoading {
-  isBundled: boolean,
-  loaded: Promise<void>
+  isBundled: boolean;
+  loaded: Promise<void>;
 }
 
 /**

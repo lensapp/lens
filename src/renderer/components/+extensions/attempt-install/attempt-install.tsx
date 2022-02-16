@@ -34,9 +34,9 @@ interface Dependencies {
     installRequest: InstallRequest,
   ) => Promise<InstallRequestValidated | null>;
 
-  getExtensionDestFolder: (name: string) => string
+  getExtensionDestFolder: (name: string) => string;
 
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 export const attemptInstall =

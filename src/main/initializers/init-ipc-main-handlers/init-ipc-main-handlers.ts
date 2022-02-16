@@ -26,7 +26,7 @@ import { showOpenDialog } from "../../ipc/dialog";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
 
 interface Dependencies {
-  electronMenuItems: IComputedValue<MenuRegistration[]>,
+  electronMenuItems: IComputedValue<MenuRegistration[]>;
   directoryForLensLocalStorage: string;
 }
 

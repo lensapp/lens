@@ -9,7 +9,7 @@ import type { TabId } from "../dock/store";
 import createLogsTabInjectable, { CreateLogsTabData } from "./create-logs-tab.injectable";
 
 export interface WorkloadLogsTabData {
-  workload: WorkloadKubeObject
+  workload: WorkloadKubeObject;
 }
 
 interface Dependencies {

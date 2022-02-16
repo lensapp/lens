@@ -19,19 +19,19 @@ export type HelmEnv = Record<string, string> & {
 };
 
 export interface HelmRepoConfig {
-  repositories: HelmRepo[]
+  repositories: HelmRepo[];
 }
 
 export interface HelmRepo {
   name: string;
   url: string;
-  cacheFilePath?: string
-  caFile?: string,
-  certFile?: string,
-  insecureSkipTlsVerify?: boolean,
-  keyFile?: string,
-  username?: string,
-  password?: string,
+  cacheFilePath?: string;
+  caFile?: string;
+  certFile?: string;
+  insecureSkipTlsVerify?: boolean;
+  keyFile?: string;
+  username?: string;
+  password?: string;
 }
 
 async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFileOptions): Promise<string> {

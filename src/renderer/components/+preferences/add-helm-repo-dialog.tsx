@@ -22,7 +22,7 @@ import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager"
 import { requestOpenFilePickingDialog } from "../../ipc";
 
 interface Props extends Partial<DialogProps> {
-  onAddRepo: Function
+  onAddRepo: Function;
 }
 
 enum FileType {

@@ -16,7 +16,7 @@ import { navigate } from "../../navigation";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 
 export type CatalogAddButtonProps = {
-  category: CatalogCategory
+  category: CatalogCategory;
 };
 
 type CategoryId = string;

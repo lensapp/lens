@@ -29,7 +29,7 @@ interface Props {
  */
 
 interface Dependencies {
-  sidebarStorage: StorageHelper<SidebarStorageState>
+  sidebarStorage: StorageHelper<SidebarStorageState>;
 }
 
 @observer

@@ -45,7 +45,7 @@ export interface MenuProps {
 
 interface State {
   position?: MenuPosition;
-  menuStyle?: MenuStyle
+  menuStyle?: MenuStyle;
 }
 
 const defaultPropsMenu: Partial<MenuProps> = {

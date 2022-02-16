@@ -24,7 +24,7 @@ interface Dependencies {
   emitEvent: (event: AppEvent) => void;
 
   // TODO: This dependency belongs to KubeObjectStore
-  clusterFrameContext: ClusterFrameContext
+  clusterFrameContext: ClusterFrameContext;
 }
 
 const logPrefix = "[CLUSTER-FRAME]:";

@@ -26,7 +26,7 @@ interface HotbarManager {
 }
 
 interface Dependencies {
-  hotbarManager: HotbarManager
+  hotbarManager: HotbarManager;
   commandOverlay: CommandOverlay;
 }
 

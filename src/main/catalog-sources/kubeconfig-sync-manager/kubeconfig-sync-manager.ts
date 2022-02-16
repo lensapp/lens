@@ -48,8 +48,8 @@ const folderSyncMaxAllowedFileReadSize = 2 * 1024 * 1024; // 2 MiB
 const fileSyncMaxAllowedFileReadSize = 16 * folderSyncMaxAllowedFileReadSize; // 32 MiB
 
 interface Dependencies {
-  directoryForKubeConfigs: string
-  createCluster: (model: ClusterModel) => Cluster
+  directoryForKubeConfigs: string;
+  createCluster: (model: ClusterModel) => Cluster;
 }
 
 const kubeConfigSyncName = "lens:kube-sync";

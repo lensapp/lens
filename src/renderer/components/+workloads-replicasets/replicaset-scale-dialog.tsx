@@ -17,7 +17,7 @@ import { cssNames } from "../../utils";
 import { ReplicaSet, ReplicaSetApi, replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
 interface Props extends Partial<DialogProps> {
-  replicaSetApi: ReplicaSetApi
+  replicaSetApi: ReplicaSetApi;
 }
 
 const dialogState = observable.object({

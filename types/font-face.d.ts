@@ -8,7 +8,7 @@ declare global {
   const FontFace: FontFace;
 
   interface Document {
-    fonts: FontFaceSet
+    fonts: FontFaceSet;
   }
 
   type CSSOMString = string;
@@ -39,7 +39,7 @@ declare global {
     readonly ready: Promise<FontFaceSet>;
     add(font: FontFace): void;
     check(font: string, text?: string): Boolean; // might not work, throws exception
-    load(font: string, text?: string): Promise<FontFace[]>
+    load(font: string, text?: string): Promise<FontFace[]>;
     delete(font: FontFace): void;
     clear(): void;
   }

@@ -7,8 +7,8 @@ import { action, computed, observable, makeObservable } from "mobx";
 import type { ForwardedPort } from "../port-forward-item";
 
 interface PortForwardDialogOpenOptions {
-  openInBrowser: boolean
-  onClose: () => void
+  openInBrowser: boolean;
+  onClose: () => void;
 }
 
 export class PortForwardDialogModel {

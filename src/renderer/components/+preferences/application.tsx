@@ -30,7 +30,7 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
 );
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
 }
 
 const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) => {

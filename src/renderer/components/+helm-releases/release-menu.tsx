@@ -20,9 +20,9 @@ interface Props extends MenuActionsProps {
 }
 
 interface Dependencies {
-  deleteRelease: (release: HelmRelease) => Promise<any>
-  createUpgradeChartTab: (release: HelmRelease) => void
-  openRollbackDialog: (release: HelmRelease) => void
+  deleteRelease: (release: HelmRelease) => Promise<any>;
+  createUpgradeChartTab: (release: HelmRelease) => void;
+  openRollbackDialog: (release: HelmRelease) => void;
 }
 
 class NonInjectedHelmReleaseMenu extends React.Component<Props & Dependencies> {

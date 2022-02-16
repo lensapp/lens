@@ -149,7 +149,7 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.setPosition({ left, top });
   }
 
-  protected setPosition(pos: { left: number, top: number }) {
+  protected setPosition(pos: { left: number; top: number }) {
     const elemStyle = this.elem.style;
 
     elemStyle.left = `${pos.left}px`;

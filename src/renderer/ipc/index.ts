@@ -34,7 +34,7 @@ export function requestWindowAction(type: WindowAction): Promise<void> {
   return requestMain(windowActionHandleChannel, type);
 }
 
-export function requestOpenFilePickingDialog(opts: OpenDialogOptions): Promise<{ canceled: boolean; filePaths: string[]; }> {
+export function requestOpenFilePickingDialog(opts: OpenDialogOptions): Promise<{ canceled: boolean; filePaths: string[] }> {
   return requestMain(openFilePickingDialogChannel, opts);
 }
 
@@ -62,7 +62,7 @@ export function requestDeleteCluster(clusterId: ClusterId): Promise<void> {
   return requestMain(clusterDeleteHandler, clusterId);
 }
 
-export function requestInitialClusterStates(): Promise<{ id: string, state: ClusterState }[]> {
+export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
   return requestMain(clusterStates);
 }
 

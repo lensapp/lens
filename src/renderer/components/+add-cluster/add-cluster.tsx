@@ -34,7 +34,7 @@ interface Option {
 }
 
 interface Dependencies {
-  getCustomKubeConfigDirectory: (directoryName: string) => string
+  getCustomKubeConfigDirectory: (directoryName: string) => string;
 }
 
 function getContexts(config: KubeConfig): Map<string, Option> {

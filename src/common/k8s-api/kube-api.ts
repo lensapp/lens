@@ -88,7 +88,7 @@ export interface KubeApiListOptions {
 export interface IKubePreferredVersion {
   preferredVersion?: {
     version: string;
-  }
+  };
 }
 
 export interface IKubeResourceList {
@@ -105,7 +105,7 @@ export interface IKubeResourceList {
 export interface ILocalKubeApiConfig {
   metadata: {
     uid: string;
-  }
+  };
 }
 
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
@@ -116,7 +116,7 @@ export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Backgroun
 export interface IKubeApiCluster extends ILocalKubeApiConfig { }
 
 export type PartialKubeObject<T extends KubeObject> = Partial<Omit<T, "metadata">> & {
-  metadata?: Partial<T["metadata"]>,
+  metadata?: Partial<T["metadata"]>;
 };
 
 export interface IRemoteKubeApiConfig {
@@ -124,12 +124,12 @@ export interface IRemoteKubeApiConfig {
     server: string;
     caData?: string;
     skipTLSVerify?: boolean;
-  }
+  };
   user: {
     token?: string | (() => Promise<string>);
     clientCertificateData?: string;
     clientKeyData?: string;
-  }
+  };
 }
 
 export function forCluster<T extends KubeObject, Y extends KubeApi<T> = KubeApi<T>>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>, apiClass: new (apiOpts: IKubeApiOptions<T>) => Y = null): KubeApi<T> {
@@ -219,7 +219,7 @@ export type KubeApiWatchCallback = (data: IKubeWatchEvent<KubeJsonApiData>, erro
 export type KubeApiWatchOptions = {
   namespace: string;
   callback?: KubeApiWatchCallback;
-  abortController?: AbortController
+  abortController?: AbortController;
   watchId?: string;
   retry?: boolean;
 

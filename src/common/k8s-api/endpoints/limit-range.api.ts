@@ -33,7 +33,7 @@ export enum LimitPart {
 type LimitRangeParts = Partial<Record<LimitPart, Record<string, string>>>;
 
 export interface LimitRangeItem extends LimitRangeParts {
-  type: string
+  type: string;
 }
 
 export interface LimitRange {
