@@ -4,15 +4,16 @@
  */
 
 import { action, computed, observable, makeObservable } from "mobx";
-import { Disposer, ExtendedMap, iter } from "../utils";
-import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
+import type { Disposer } from "../utils";
+import { strictSet, iter, getOrInsertMap } from "../utils";
 import { once } from "lodash";
+import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export type CategoryFilter = (category: CatalogCategory) => any;
 
 export class CatalogCategoryRegistry {
   protected categories = observable.set<CatalogCategory>();
-  protected groupKinds = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
+  protected groupKinds = new Map<string, Map<string, CatalogCategory>>();
   protected filters = observable.set<CategoryFilter>([], {
     deep: false,
   });
@@ -22,14 +23,14 @@ export class CatalogCategoryRegistry {
   }
 
   @action add(category: CatalogCategory): Disposer {
+    const byGroup = getOrInsertMap(this.groupKinds, category.spec.group);
+
     this.categories.add(category);
-    this.groupKinds
-      .getOrInsert(category.spec.group, ExtendedMap.new)
-      .strictSet(category.spec.names.kind, category);
+    strictSet(byGroup, category.spec.names.kind, category);
 
     return () => {
       this.categories.delete(category);
-      this.groupKinds.get(category.spec.group).delete(category.spec.names.kind);
+      byGroup.delete(category.spec.names.kind);
     };
   }
 

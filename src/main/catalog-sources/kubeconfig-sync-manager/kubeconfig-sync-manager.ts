@@ -10,7 +10,7 @@ import { FSWatcher, watch } from "chokidar";
 import fs from "fs";
 import path from "path";
 import type stream from "stream";
-import { bytesToUnits, Disposer, ExtendedObservableMap, iter, noop } from "../../../common/utils";
+import { bytesToUnits, Disposer, getOrInsertWith, iter, noop } from "../../../common/utils";
 import logger from "../../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
@@ -294,7 +294,7 @@ const diffChangedConfigFor = (dependencies: Dependencies) => ({ filePath, source
 };
 
 const watchFileChanges = (filePath: string, dependencies: Dependencies): [IComputedValue<CatalogEntity[]>, Disposer] => {
-  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>();
+  const rootSource = observable.map<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
 
   let watcher: FSWatcher;
@@ -335,7 +335,7 @@ const watchFileChanges = (filePath: string, dependencies: Dependencies): [ICompu
           cleanup();
           cleanupFns.set(childFilePath, diffChangedConfig({
             filePath: childFilePath,
-            source: rootSource.getOrInsert(childFilePath, observable.map),
+            source: getOrInsertWith(rootSource, childFilePath, observable.map),
             stats,
             maxAllowedFileReadSize,
           }));
@@ -353,7 +353,7 @@ const watchFileChanges = (filePath: string, dependencies: Dependencies): [ICompu
 
           cleanupFns.set(childFilePath, diffChangedConfig({
             filePath: childFilePath,
-            source: rootSource.getOrInsert(childFilePath, observable.map),
+            source: getOrInsertWith(rootSource, childFilePath, observable.map),
             stats,
             maxAllowedFileReadSize,
           }));
