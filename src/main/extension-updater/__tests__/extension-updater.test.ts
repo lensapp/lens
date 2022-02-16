@@ -25,7 +25,7 @@ describe("BundledExtensionUpdater", () => {
   it("Should download file from server", async () => {
     mockFs(mockOpts);
 
-    const scope = nock("http://my-example-url.com")
+    nock("http://my-example-url.com")
       .get("/node-menu-0.0.1.tgz")
       .replyWithFile(200, `./some-user-data-directory/some-file.tgz`, {
         "Content-Type": "application/tar",
@@ -37,7 +37,8 @@ describe("BundledExtensionUpdater", () => {
       downloadUrl: "http://my-example-url.com/node-menu-0.0.1.tgz",
     }, "./extension-updates").update();
 
-    const exist = await fs.promises.access(mockFs.bypass(() => "./extension-updates/node-menu-0.0.1.tgz"), fs.constants.F_OK);
+
+    const exist = fs.existsSync("./extension-updates/node-menu-0.0.1.tgz");
 
     expect(exist).toBeTruthy();
   });
