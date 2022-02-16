@@ -31,7 +31,7 @@ export * from "./getRandId";
 export * from "./hash-set";
 export * from "./n-fircate";
 export * from "./objects";
-export * from "./openExternal";
+export * from "./openBrowser";
 export * from "./paths";
 export * from "./promise-exec";
 export * from "./reject-promise";
