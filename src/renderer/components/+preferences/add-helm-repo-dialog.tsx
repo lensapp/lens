@@ -7,7 +7,7 @@ import "./add-helm-repo-dialog.scss";
 
 import React from "react";
 import type { FileFilter } from "electron";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, action } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -35,10 +35,12 @@ const dialogState = observable.object({
   isOpen: false,
 });
 
+function getEmptyRepo(): HelmRepo {
+  return { name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile: "", keyFile: "", certFile: "" };
+}
+
 @observer
 export class AddHelmRepoDialog extends React.Component<Props> {
-  private emptyRepo = { name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: "" };
-
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
   private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c", "p7s", "p12", "pfx", "pem"];
 
@@ -55,14 +57,15 @@ export class AddHelmRepoDialog extends React.Component<Props> {
     dialogState.isOpen = false;
   }
 
-  @observable helmRepo : HelmRepo = this.emptyRepo;
+  @observable helmRepo = getEmptyRepo();
   @observable showOptions = false;
 
-  close = () => {
-    AddHelmRepoDialog.close();
-    this.helmRepo = this.emptyRepo;
-    this.showOptions = false;
-  };
+  @action
+    close = () => {
+      AddHelmRepoDialog.close();
+      this.helmRepo = getEmptyRepo();
+      this.showOptions = false;
+    };
 
   setFilepath(type: FileType, value: string) {
     this.helmRepo[type] = value;
@@ -91,8 +94,8 @@ export class AddHelmRepoDialog extends React.Component<Props> {
 
   async addCustomRepo() {
     try {
-      await HelmRepoManager.addCustomRepo(this.helmRepo);
-      Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
+      await HelmRepoManager.getInstance().addRepo(this.helmRepo);
+      Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has been added</>);
       this.props.onAddRepo();
       this.close();
     } catch (err) {
@@ -127,9 +130,9 @@ export class AddHelmRepoDialog extends React.Component<Props> {
           value={this.helmRepo.insecureSkipTlsVerify}
           onChange={v => this.helmRepo.insecureSkipTlsVerify = v}
         />
-        {this.renderFileInput(`Key file`, FileType.KeyFile, AddHelmRepoDialog.keyExtensions)}
-        {this.renderFileInput(`Ca file`, FileType.CaFile, AddHelmRepoDialog.certExtensions)}
-        {this.renderFileInput(`Certificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
+        {this.renderFileInput("Key file", FileType.KeyFile, AddHelmRepoDialog.keyExtensions)}
+        {this.renderFileInput("Ca file", FileType.CaFile, AddHelmRepoDialog.certExtensions)}
+        {this.renderFileInput("Certificate file", FileType.CertFile, AddHelmRepoDialog.certExtensions)}
         <SubTitle title="Chart Repository Credentials" />
         <Input
           placeholder="Username"

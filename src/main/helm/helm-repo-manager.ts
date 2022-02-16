@@ -49,9 +49,9 @@ async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFile
 export class HelmRepoManager extends Singleton {
   protected repos: HelmRepo[];
   protected helmEnv: HelmEnv;
-  protected initialized: boolean;
+  protected didUpdateOnce: boolean;
 
-  public static async loadAvailableRepos(): Promise<HelmRepo[]> {
+  public async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({
       uri: "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json",
       json: true,
@@ -59,21 +59,31 @@ export class HelmRepoManager extends Singleton {
       timeout: 10000,
     });
 
-    return orderBy<HelmRepo>(res.body, repo => repo.name);
+    return orderBy(res.body as HelmRepo[], repo => repo.name);
   }
 
-  private async init() {
+  private async ensureInitialized() {
     helmCli.setLogger(logger);
     await helmCli.ensureBinary();
 
-    if (!this.initialized) {
-      this.helmEnv = await HelmRepoManager.parseHelmEnv();
-      await HelmRepoManager.update();
-      this.initialized = true;
+    this.helmEnv ??= await this.parseHelmEnv();
+
+    const repos = await this.list();
+
+    if (repos.length === 0) {
+      await this.addRepo({
+        name: "bitnami",
+        url: "https://charts.bitnami.com/bitnami",
+      });
+    }
+
+    if (!this.didUpdateOnce) {
+      await this.update();
+      this.didUpdateOnce = true;
     }
   }
 
-  protected static async parseHelmEnv() {
+  protected async parseHelmEnv() {
     const output = await execHelm(["env"]);
     const lines = output.split(/\r?\n/); // split by new line feed
     const env: HelmEnv = {};
@@ -95,38 +105,28 @@ export class HelmRepoManager extends Singleton {
     return repos.find(repo => repo.name === name);
   }
 
-  private async readConfig(): Promise<HelmRepoConfig> {
+  private async list(): Promise<HelmRepo[]> {
     try {
       const rawConfig = await readFile(this.helmEnv.HELM_REPOSITORY_CONFIG, "utf8");
-      const parsedConfig = yaml.load(rawConfig);
+      const parsedConfig = yaml.load(rawConfig) as HelmRepoConfig;
 
       if (typeof parsedConfig === "object" && parsedConfig) {
-        return parsedConfig as HelmRepoConfig;
+        return parsedConfig.repositories;
       }
     } catch {
       // ignore error
     }
 
-    return {
-      repositories: [],
-    };
+    return [];
   }
 
   public async repositories(): Promise<HelmRepo[]> {
     try {
-      if (!this.initialized) {
-        await this.init();
-      }
+      await this.ensureInitialized();
 
-      const { repositories } = await this.readConfig();
+      const repos = await this.list();
 
-      if (!repositories.length) {
-        await HelmRepoManager.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });
-
-        return await this.repositories();
-      }
-
-      return repositories.map(repo => ({
+      return repos.map(repo => ({
         ...repo,
         cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
       }));
@@ -137,25 +137,14 @@ export class HelmRepoManager extends Singleton {
     }
   }
 
-  public static async update() {
+  public async update() {
     return execHelm([
       "repo",
       "update",
     ]);
   }
 
-  public static async addRepo({ name, url }: HelmRepo) {
-    logger.info(`[HELM]: adding repo "${name}" from ${url}`);
-
-    return execHelm([
-      "repo",
-      "add",
-      name,
-      url,
-    ]);
-  }
-
-  public static async addCustomRepo({ name, url, insecureSkipTlsVerify, username, password, caFile, keyFile, certFile }: HelmRepo) {
+  public async addRepo({ name, url, insecureSkipTlsVerify, username, password, caFile, keyFile, certFile }: HelmRepo) {
     logger.info(`[HELM]: adding repo ${name} from ${url}`);
     const args = [
       "repo",
@@ -191,7 +180,7 @@ export class HelmRepoManager extends Singleton {
     return execHelm(args);
   }
 
-  public static async removeRepo({ name, url }: HelmRepo): Promise<string> {
+  public async removeRepo({ name, url }: HelmRepo): Promise<string> {
     logger.info(`[HELM]: removing repo ${name} (${url})`);
 
     return execHelm([
