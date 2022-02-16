@@ -6,23 +6,23 @@
 import path from "path";
 import type webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
+import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
+import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
-import { iconsAndImagesWebpackRules } from "./webpack.renderer";
 
 const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
   console.info("WEBPACK:main", vars);
-  const { mainDir, buildDir, isDevelopment } = vars;
 
   return {
     context: __dirname,
     target: "electron-main",
-    mode: isDevelopment ? "development" : "production",
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+    mode: isProduction ? "production" : "development",
+    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
@@ -43,11 +43,11 @@ configs.push((): webpack.Configuration => {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader({}, /\.ts$/),
-        ...iconsAndImagesWebpackRules(),
+        getTSLoader(/\.ts$/),
       ],
     },
     plugins: [
+      new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
       new CircularDependencyPlugin({

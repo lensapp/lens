@@ -65,7 +65,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
         continue;
       }
 
-      const key = Icon.isSvg(menuItem.icon) ? "svg" : "material";
+      const key = menuItem.icon.includes("<svg") ? "svg" : "material";
 
       items.push(
         <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem)}>

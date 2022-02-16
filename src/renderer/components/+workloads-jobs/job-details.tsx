@@ -17,7 +17,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForJobs, type IPodMetrics, Job } from "../../../common/k8s-api/endpoints";
+import { getMetricsForJobs, IPodMetrics, Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable, reaction } from "mobx";

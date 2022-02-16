@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, type IComputedValue, type IObservableArray, makeObservable, observable } from "mobx";
+import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
 import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity, CatalogEntityConstructor } from "../../common/catalog";
 import { iter } from "../../common/utils";
 

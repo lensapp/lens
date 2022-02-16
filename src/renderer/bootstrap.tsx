@@ -136,14 +136,7 @@ export async function bootstrap(di: DependencyInjectionContainer) {
     App = (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame;
   }
 
-  try {
-    await initializeApp(rootElem);
-  } catch (error) {
-    console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
-      origin: location.href,
-      isTopFrameView: process.isMainFrame,
-    });
-  }
+  await initializeApp(rootElem);
 
   render(
     <DiContextProvider value={{ di }}>

@@ -5,6 +5,7 @@
 import type { Cluster } from "../../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
 import logger from "../../../../main/logger";
+import { Terminal } from "../../../components/dock/terminal/terminal";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { Notifications } from "../../../components/notifications";
 import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
@@ -39,6 +40,7 @@ export const initClusterFrame =
         `${logPrefix} Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`,
       );
 
+      await Terminal.preloadFonts();
       await requestSetClusterFrameId(hostedCluster.id);
       await hostedCluster.whenReady; // cluster.activate() is done at this point
 

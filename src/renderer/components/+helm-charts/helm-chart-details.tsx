@@ -14,7 +14,7 @@ import { boundMethod, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
-import { Select, type SelectOption } from "../select";
+import { Select, SelectOption } from "../select";
 import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
 import { withInjectables } from "@ogre-tools/injectable-react";
