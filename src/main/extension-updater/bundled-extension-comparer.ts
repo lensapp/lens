@@ -7,7 +7,7 @@ import semverGt from "semver/functions/gt";
 
 type Extensions = Record<string, string>;
 
-type ExtensionToDownload = {
+export type ExtensionToDownload = {
   name: string;
   version: string;
   downloadUrl: string;
