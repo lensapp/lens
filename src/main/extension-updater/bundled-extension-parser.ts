@@ -5,7 +5,7 @@
 
 import logger from "../logger";
 
-type Extensions = Record<string, string>[];
+type Extensions = Record<string, string>;
 
 interface ExtensionList {
   release: Extensions,
@@ -30,19 +30,19 @@ export class BundledExtensionParser {
         return response.json();
       }
 
-      return [];
+      return {};
     }).catch(error => {
       logger.error(`[EXTENSION-PARSER]: Failed to download and parse extension list: ${error}`);
 
-      return [];
+      return {};
     });
   }
 
   public async getExtensionLists(): Promise<ExtensionList> {
     if (!this.url) {
       return {
-        release: [],
-        available: [],
+        release: {},
+        available: {},
       };
     }
 
