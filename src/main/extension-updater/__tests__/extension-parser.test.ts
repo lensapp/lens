@@ -49,4 +49,30 @@ describe("BundledExtensionParser", () => {
       available: [],
     });
   });
+
+  it("Should return proper lists for both release.json and version.json files", async () => {
+    fetchMock
+      .get("http://my-example-url.com/versions.json", [
+        { "node-menu": "0.0.1" },
+        { "survey": "0.1.1" },
+      ])
+      .get("http://my-example-url.com/5.4.0-latest12345.json", [
+        { "node-menu": "0.0.1" },
+        { "survey": "0.0.1" },
+      ]);
+
+
+    const lists = await new BundledExtensionParser("5.4.0-latest12345", "http://my-example-url.com").getExtensionLists();
+
+    expect(lists).toEqual({
+      release: [
+        { "node-menu": "0.0.1" },
+        { "survey": "0.0.1" },
+      ],
+      available: [
+        { "node-menu": "0.0.1" },
+        { "survey": "0.1.1" },
+      ],
+    });
+  });
 });
