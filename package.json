@@ -346,6 +346,7 @@
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^1.1.5",
+    "fetch-mock": "^9.11.0",
     "file-loader": "^6.2.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.2.1",
