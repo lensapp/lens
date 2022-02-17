@@ -11,7 +11,7 @@ import type { TabId } from "../dock/store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
-import { isMac, defaultTerminalFontFamily } from "../../../../common/vars";
+import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
 import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
@@ -23,14 +23,6 @@ export class Terminal {
 
   public static get spawningPool() {
     return document.getElementById("terminal-init");
-  }
-
-  static async preloadFonts() {
-    const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
-    const fontFace = new FontFace(defaultTerminalFontFamily, `url(${fontPath})`);
-
-    await fontFace.load();
-    document.fonts.add(fontFace);
   }
 
   private xterm: XTerm | null = new XTerm({

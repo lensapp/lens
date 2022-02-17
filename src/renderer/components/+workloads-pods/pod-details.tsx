@@ -10,7 +10,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi, getMetricsForPods } from "../../../common/k8s-api/endpoints";
+import { type IPodMetrics, nodesApi, Pod, pvcApi, configMapApi, getMetricsForPods } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { boundMethod, cssNames, toJS } from "../../utils";

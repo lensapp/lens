@@ -4,9 +4,8 @@
  */
 
 import { action, computed, observable, makeObservable } from "mobx";
-import type { Disposer } from "../utils";
-import { strictSet, iter, getOrInsertMap } from "../utils";
 import { once } from "lodash";
+import { iter, type Disposer, getOrInsertMap, strictSet } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export type CategoryFilter = (category: CatalogCategory) => any;
