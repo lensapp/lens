@@ -2,13 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents } from "electron";
 import { autorun, IComputedValue } from "mobx";
 import type { WindowManager } from "../window-manager";
 import { appName, isMac, isWindows, docsUrl, supportUrl, productName } from "../../common/vars";
 import logger from "../logger";
 import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
+import { openBrowser } from "../../common/utils";
 import * as packageJson from "../../../package.json";
 import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../../common/routes";
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
@@ -261,14 +262,18 @@ export function getAppMenu(
         label: "Documentation",
         id: "documentation",
         click: async () => {
-          shell.openExternal(docsUrl);
+          openBrowser(docsUrl).catch(error => {
+            logger.error("[MENU]: failed to open browser", { error });
+          });
         },
       },
       {
         label: "Support",
         id: "support",
         click: async () => {
-          shell.openExternal(supportUrl);
+          openBrowser(supportUrl).catch(error => {
+            logger.error("[MENU]: failed to open browser", { error });
+          });
         },
       },
       ...ignoreIf(isMac, [
