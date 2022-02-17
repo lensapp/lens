@@ -4,7 +4,7 @@
  */
 
 
-import { openExternal } from "../utils";
+import { openBrowser } from "../utils";
 import { Notifications } from "../components/notifications";
 import type { ForwardedPort } from "./port-forward-item";
 import logger from "../../common/logger";
@@ -16,7 +16,7 @@ export function portForwardAddress(portForward: ForwardedPort) {
 export function openPortForward(portForward: ForwardedPort) {
   const browseTo = portForwardAddress(portForward);
 
-  openExternal(browseTo)
+  openBrowser(browseTo)
     .catch(error => {
       logger.error(`failed to open in browser: ${error}`, {
         port: portForward.port,
