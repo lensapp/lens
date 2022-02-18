@@ -7,12 +7,25 @@
   display: flex;
   padding: 0 var(--padding);
 
-  div {
+  > div {
     flex: 1 0;
-    padding: var(--padding);
+    padding: 20px var(--padding);
+    display: flex;
+    align-items: flex-start;
+    align-content: space-between;
+    flex-direction: column;
+    gap: 24px;
 
     &.actionColumn {
       flex: 0 0 55px;
     }
   }
+}
+
+.line {
+  width: 100%;
+  height: 0px;
+  padding: 3px;
+  border-radius: 4px;
+  background-color: var(--colorVague);
 }

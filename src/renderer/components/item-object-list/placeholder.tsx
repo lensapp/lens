@@ -14,15 +14,31 @@ interface Props {
 }
 
 export function Placeholder({ renderTableHeader, showExtraColumn = true }: Props) {
+  const linesNumber = 3;
+
+  function renderLines() {
+    const lines: React.ReactNode[] = [];
+
+    for (let i = 0; i < linesNumber; i++) {
+      lines.push(
+        <div className={styles.line} style={{ opacity: 1 - i * .33 }}></div>,
+      );
+    }
+
+    return React.Children.toArray(lines);
+  }
+
   return (
     <div className={styles.placeholder}>
       {renderTableHeader.map((cellProps) => {
         return (
-          <div key={cellProps.id} className={cellProps.className}>line</div>
+          <div key={cellProps.id} className={cellProps.className}>
+            {renderLines()}
+          </div>
         );
       })}
       {showExtraColumn && (
-        <div className={styles.actionColumn}>line</div>
+        <div className={styles.actionColumn}>{renderLines()}</div>
       )}
     </div>
   );
