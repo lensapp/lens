@@ -18,12 +18,17 @@
 
     &.actionColumn {
       flex: 0 0 55px;
+
+      .line {
+        width: 100%;
+      }
     }
   }
 }
 
 .line {
-  width: 100%;
+  width: 90%;
+  max-width: 290px;
   height: 0px;
   padding: 3px;
   border-radius: 4px;
