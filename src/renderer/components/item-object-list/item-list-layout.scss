@@ -33,6 +33,12 @@
     position: relative;
     min-height: 200px;
   }
+
+  .noItemsHolder {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .ItemListLayoutVisibilityMenu {

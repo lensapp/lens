@@ -187,8 +187,15 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       );
     }
 
-    if (this.props.showEmptyTablePlaceholder && this.props.renderTableHeader) {
-      return <Placeholder renderTableHeader={this.props.renderTableHeader}/>;
+    if (this.props.showEmptyTablePlaceholder && this.props.renderTableHeader && this.props.tableId) {
+      return (
+        <>
+          <Placeholder renderTableHeader={this.props.renderTableHeader} tableId={this.props.tableId}/>
+          <div className="noItemsHolder">
+            <NoItems />
+          </div>
+        </>
+      );
     }
 
     return <NoItems />;
