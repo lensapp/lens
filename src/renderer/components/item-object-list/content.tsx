@@ -41,7 +41,18 @@ interface ItemListLayoutContentProps<I extends ItemObject> {
   customizeTableRowProps?: (item: I) => Partial<TableRowProps>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
-  showEmptyTablePlaceholder?: boolean; // show fading lines down the header
+
+  /**
+   * Message to display when no items available
+   *
+   * @default "Item list is empty"
+   */
+  noItemsMessage?: React.ReactNode;
+
+  /**
+   * Flag indicating striped lines should be displayed when no items provided
+   */
+  showEmptyTablePlaceholder?: boolean;
 
   // item details view
   hasDetailsView?: boolean;
@@ -192,13 +203,13 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
         <>
           <Placeholder renderTableHeader={this.props.renderTableHeader} tableId={this.props.tableId}/>
           <div className="noItemsHolder">
-            <NoItems />
+            <NoItems>{this.props.noItemsMessage}</NoItems>
           </div>
         </>
       );
     }
 
-    return <NoItems />;
+    return <NoItems>{this.props.noItemsMessage}</NoItems>;
   }
 
   renderItems() {

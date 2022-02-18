@@ -264,6 +264,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
         store={catalogEntityStore}
         getItems={() => catalogEntityStore.entities}
         showEmptyTablePlaceholder
+        noItemsMessage="There are no Dev Clusters in this space"
         customizeTableRowProps={entity => ({
           disabled: !entity.isEnabled(),
         })}

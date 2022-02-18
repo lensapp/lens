@@ -79,6 +79,7 @@ export interface ItemListLayoutProps<I extends ItemObject> {
   customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
   renderFooter?: (parent: NonInjectedItemListLayout<I>) => React.ReactNode;
   showEmptyTablePlaceholder?: boolean;
+  noItemsMessage?: React.ReactNode;
 
   /**
    * Message to display when a store failed to load
@@ -266,6 +267,7 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
           customizeRemoveDialog={this.props.customizeRemoveDialog}
           failedToLoadMessage={this.props.failedToLoadMessage}
           showEmptyTablePlaceholder={this.props.showEmptyTablePlaceholder}
+          noItemsMessage={this.props.noItemsMessage}
         />
 
         {this.props.renderFooter?.(this)}
