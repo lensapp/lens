@@ -250,6 +250,9 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
       ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}`
       : "catalog-items";
 
+    const noItemsMessage = activeCategory?.metadata.name == "Dev Clusters" ? "There are no Dev Clusters in this space"
+      : "Item list is empty";
+
     if (this.activeTab === undefined) {
       return null;
     }
@@ -264,7 +267,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
         store={catalogEntityStore}
         getItems={() => catalogEntityStore.entities}
         showEmptyTablePlaceholder
-        noItemsMessage="There are no Dev Clusters in this space"
+        noItemsMessage={noItemsMessage}
         customizeTableRowProps={entity => ({
           disabled: !entity.isEnabled(),
         })}
