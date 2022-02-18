@@ -21,6 +21,7 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
+import { Placeholder } from "./placeholder";
 
 interface ItemListLayoutContentProps<I extends ItemObject> {
   getFilters: () => Filter[]
@@ -40,6 +41,7 @@ interface ItemListLayoutContentProps<I extends ItemObject> {
   customizeTableRowProps?: (item: I) => Partial<TableRowProps>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
+  showEmptyTablePlaceholder?: boolean; // show fading lines down the header
 
   // item details view
   hasDetailsView?: boolean;
@@ -183,6 +185,10 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           </p>
         </NoItems>
       );
+    }
+
+    if (this.props.showEmptyTablePlaceholder && this.props.renderTableHeader) {
+      return <Placeholder renderTableHeader={this.props.renderTableHeader}/>;
     }
 
     return <NoItems />;
