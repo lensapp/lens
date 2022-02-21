@@ -81,6 +81,11 @@ export interface CatalogCategorySpec {
    * These columns will not be used in the "Browse" view.
    */
   displayColumns?: CategoryColumnRegistration[];
+
+  /**
+   * Custom message to display when no items available inside current category
+   */
+  noItemsMessage?: string;
 }
 
 /**

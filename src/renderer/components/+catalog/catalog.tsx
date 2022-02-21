@@ -250,8 +250,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
       ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}`
       : "catalog-items";
 
-    const noItemsMessage = activeCategory?.metadata.name == "Dev Clusters" ? "There are no Dev Clusters in this space"
-      : "Item list is empty";
+    const noItemsMessage = activeCategory?.spec.noItemsMessage ?? "Item list is empty";
 
     if (this.activeTab === undefined) {
       return null;
