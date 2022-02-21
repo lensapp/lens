@@ -118,9 +118,9 @@ export class PrometheusOperator extends PrometheusProvider {
           case "bytesSentFailure":
             return this.bytesSent(opts.ingress, opts.namespace, "^5\\\\d*");
           case "requestDurationSeconds":
-            return `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
+            return `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}", exported_namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
           case "responseDurationSeconds":
-            return `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
+            return `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}", exported_namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
         }
         break;
     }
