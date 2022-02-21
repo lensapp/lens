@@ -19,6 +19,7 @@ import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable from "../dock/install-chart/create-install-chart-tab.injectable";
+import { Notifications } from "../notifications";
 
 interface Props {
   chart: HelmChart;
@@ -40,7 +41,6 @@ class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
   @observable chartVersions: HelmChart[];
   @observable selectedChart?: HelmChart;
   @observable readme?: string;
-  @observable error?: string;
 
   private abortController?: AbortController;
 
@@ -67,7 +67,7 @@ class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
           this.chartVersions = versions;
           this.selectedChart = versions[0];
         } catch (error) {
-          this.error = error;
+          Notifications.error(error);
           this.selectedChart = null;
         }
       }, {
@@ -89,7 +89,7 @@ class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
 
       this.readme = readme;
     } catch (error) {
-      this.error = error;
+      Notifications.error(error);
     }
   }
 
@@ -167,14 +167,6 @@ class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
   }
 
   renderContent() {
-    if (this.error) {
-      return (
-        <div className="box grow">
-          <p className="error">{this.error}</p>
-        </div>
-      );
-    }
-
     if (!this.selectedChart) {
       return <Spinner center />;
     }
