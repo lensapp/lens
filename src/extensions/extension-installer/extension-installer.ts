@@ -13,7 +13,7 @@ import type { PackageJson } from "type-fest";
 const logModule = "[EXTENSION-INSTALLER]";
 
 interface Dependencies {
-  extensionPackageRootDirectory: string
+  extensionPackageRootDirectory: string;
 }
 
 /**

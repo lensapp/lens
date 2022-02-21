@@ -17,7 +17,7 @@ import directoryForBinariesInjectable
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 interface Dependencies {
-  defaultPathForKubectlBinaries: string
+  defaultPathForKubectlBinaries: string;
 }
 
 const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPathForKubectlBinaries }) => {

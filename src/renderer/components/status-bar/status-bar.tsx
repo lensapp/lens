@@ -14,7 +14,7 @@ import type { IComputedValue } from "mobx";
 export interface StatusBarProps {}
 
 interface Dependencies {
-  items: IComputedValue<RegisteredStatusBarItems>
+  items: IComputedValue<RegisteredStatusBarItems>;
 }
 
 const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps) => {

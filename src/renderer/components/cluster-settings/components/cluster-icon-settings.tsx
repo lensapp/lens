@@ -20,7 +20,7 @@ enum GeneralInputStatus {
 
 interface Props {
   cluster: Cluster;
-  entity: KubernetesCluster
+  entity: KubernetesCluster;
 }
 
 @observer

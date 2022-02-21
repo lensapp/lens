@@ -28,8 +28,8 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer,
-  clusterOverviewStore: ClusterOverviewStore
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  clusterOverviewStore: ClusterOverviewStore;
 }
 
 @observer

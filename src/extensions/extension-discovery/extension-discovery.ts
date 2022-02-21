@@ -32,7 +32,7 @@ interface Dependencies {
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
 
   installExtension: (name: string) => Promise<void>;
-  installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>
+  installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   extensionPackageRootDirectory: string;
 }
 

@@ -101,8 +101,8 @@ export interface Node {
     daemonEndpoints?: {
       kubeletEndpoint: {
         Port: number; //it must be uppercase for backwards compatibility
-      }
-    }
+      };
+    };
     nodeInfo?: {
       machineID: string;
       systemUUID: string;

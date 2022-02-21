@@ -9,8 +9,8 @@ import attemptInstallsInjectable from "./attempt-installs/attempt-installs.injec
 import directoryForDownloadsInjectable from "../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 
 interface Dependencies {
-  attemptInstalls: (filePaths: string[]) => Promise<void>
-  directoryForDownloads: string
+  attemptInstalls: (filePaths: string[]) => Promise<void>;
+  directoryForDownloads: string;
 }
 
 const installFromSelectFileDialog = ({ attemptInstalls, directoryForDownloads }: Dependencies) => async () => {

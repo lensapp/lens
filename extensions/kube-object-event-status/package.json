@@ -18,8 +18,8 @@
   "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
-    "ts-loader": "latest",
-    "typescript": "latest",
-    "webpack": "latest"
+    "ts-loader": "^8.0.4",
+    "typescript": "^4.3.2",
+    "webpack": "^4.46.0"
   }
 }

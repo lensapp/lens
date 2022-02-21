@@ -19,8 +19,8 @@ interface Props extends DockTabProps {
 }
 
 interface Dependencies {
-  dockStore: DockStore
-  terminalStore: TerminalStore
+  dockStore: DockStore;
+  terminalStore: TerminalStore;
 }
 
 @observer

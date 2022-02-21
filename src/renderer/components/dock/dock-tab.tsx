@@ -22,7 +22,7 @@ export interface DockTabProps extends TabProps<DockTabModel> {
 }
 
 interface Dependencies {
-  dockStore: DockStore
+  dockStore: DockStore;
 }
 
 @observer

@@ -15,7 +15,7 @@ import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
 }
 
 const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) => {

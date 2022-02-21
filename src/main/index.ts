@@ -10,7 +10,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName, isDevelopment } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -176,7 +176,7 @@ di.runSetups().then(() => {
 
     try {
       logger.info("🔌 Starting LensProxy");
-      await lensProxy.listen(); // lensProxy.port available
+      await lensProxy.listen();
     } catch (error) {
       dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
@@ -227,16 +227,6 @@ di.runSetups().then(() => {
 
     logger.info("🖥️  Starting WindowManager");
     const windowManager = WindowManager.createInstance();
-
-    // Override main content view url to local webpack-dev-server to support HMR / live-reload
-    if (isDevelopment) {
-      const { createDevServer } = await import("../../webpack.dev-server");
-      const devServer = createDevServer(lensProxy.port);
-
-      windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
-
-      await devServer.start();
-    }
 
     const menuItems = di.inject(electronMenuItemsInjectable);
     const trayMenuItems = di.inject(trayMenuItemsInjectable);

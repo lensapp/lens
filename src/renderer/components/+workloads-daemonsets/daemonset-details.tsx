@@ -15,7 +15,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { DaemonSet, getMetricsForDaemonSets, type IPodMetrics } from "../../../common/k8s-api/endpoints";
+import { DaemonSet, getMetricsForDaemonSets, IPodMetrics } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
@@ -35,7 +35,7 @@ interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer

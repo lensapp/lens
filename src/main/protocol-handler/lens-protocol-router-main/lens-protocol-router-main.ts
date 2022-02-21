@@ -37,8 +37,8 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
 }
 
 interface Dependencies {
-  extensionLoader: ExtensionLoader
-  extensionsStore: ExtensionsStore
+  extensionLoader: ExtensionLoader;
+  extensionsStore: ExtensionsStore;
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {

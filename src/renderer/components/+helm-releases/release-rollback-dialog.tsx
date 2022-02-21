@@ -10,7 +10,7 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { getReleaseHistory, HelmRelease, type IReleaseRevision } from "../../../common/k8s-api/endpoints/helm-releases.api";
+import { getReleaseHistory, HelmRelease, IReleaseRevision } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
 import orderBy from "lodash/orderBy";
@@ -24,8 +24,8 @@ interface Props extends DialogProps {
 }
 
 interface Dependencies {
-  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<void>
-  model: ReleaseRollbackDialogModel
+  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<void>;
+  model: ReleaseRollbackDialogModel;
 }
 
 @observer

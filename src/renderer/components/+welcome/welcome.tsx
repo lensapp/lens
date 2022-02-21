@@ -19,8 +19,8 @@ import type { WelcomeBannerRegistration } from "./welcome-banner-items/welcome-b
 export const defaultWidth = 320;
 
 interface Dependencies {
-  welcomeMenuItems: IComputedValue<WelcomeMenuRegistration[]>
-  welcomeBannerItems: IComputedValue<WelcomeBannerRegistration[]>
+  welcomeMenuItems: IComputedValue<WelcomeMenuRegistration[]>;
+  welcomeBannerItems: IComputedValue<WelcomeBannerRegistration[]>;
 }
 
 const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems, welcomeBannerItems }) => {

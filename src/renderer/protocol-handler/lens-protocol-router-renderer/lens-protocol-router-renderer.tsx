@@ -33,8 +33,8 @@ function verifyIpcArgs(args: unknown[]): args is [string, RouteAttempt] {
 }
 
 interface Dependencies {
-  extensionLoader: ExtensionLoader
-  extensionsStore: ExtensionsStore
+  extensionLoader: ExtensionLoader;
+  extensionsStore: ExtensionsStore;
 }
 
 

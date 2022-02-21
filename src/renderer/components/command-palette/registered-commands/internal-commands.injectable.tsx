@@ -24,7 +24,7 @@ export function isKubernetesClusterActive(context: CommandContext): boolean {
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
   getEntitySettingItems: (kind: string, apiVersion: string, source?: string) => RegisteredEntitySetting[];
-  createTerminalTab: () => DockTabCreate
+  createTerminalTab: () => DockTabCreate;
 }
 
 function getInternalCommands({ openCommandDialog, getEntitySettingItems, createTerminalTab }: Dependencies): CommandRegistration[] {

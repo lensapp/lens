@@ -8,8 +8,8 @@ import type net from "net";
 import type { Cluster } from "../../common/cluster/cluster";
 
 export interface ProxyApiRequestArgs {
-  req: http.IncomingMessage,
-  socket: net.Socket,
-  head: Buffer,
-  cluster: Cluster,
+  req: http.IncomingMessage;
+  socket: net.Socket;
+  head: Buffer;
+  cluster: Cluster;
 }

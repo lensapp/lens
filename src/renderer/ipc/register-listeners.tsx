@@ -21,7 +21,7 @@ function sendToBackchannel(backchannel: string, notificationId: string, data: Ba
   ipcRenderer.send(backchannel, data);
 }
 
-function RenderYesButtons(props: { backchannel: string, notificationId: string }) {
+function RenderYesButtons(props: { backchannel: string; notificationId: string }) {
   if (isMac) {
     /**
      * auto-updater's "installOnQuit" is not applicable for macOS as per their docs.

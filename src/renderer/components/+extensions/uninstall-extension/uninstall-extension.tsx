@@ -13,9 +13,9 @@ import { getMessageFromError } from "../get-message-from-error/get-message-from-
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
-  extensionLoader: ExtensionLoader
-  extensionDiscovery: ExtensionDiscovery
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  extensionLoader: ExtensionLoader;
+  extensionDiscovery: ExtensionDiscovery;
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 export const uninstallExtension =

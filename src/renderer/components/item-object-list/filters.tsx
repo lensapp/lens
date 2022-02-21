@@ -11,10 +11,10 @@ import { observer } from "mobx-react";
 import type { Filter } from "./page-filters.store";
 
 export interface ItemListLayoutFilterProps {
-  getIsReady: () => boolean
-  getFilters: () => Filter[]
-  getFiltersAreShown: () => boolean
-  hideFilters: boolean
+  getIsReady: () => boolean;
+  getFilters: () => Filter[];
+  getFiltersAreShown: () => boolean;
+  hideFilters: boolean;
 }
 
 export const ItemListLayoutFilters = observer(({ getFilters, getFiltersAreShown, getIsReady, hideFilters }: ItemListLayoutFilterProps) => {

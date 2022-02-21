@@ -15,7 +15,7 @@ export interface DockTabStoreOptions {
 export type DockTabStorageState<T> = Record<TabId, T>;
 
 interface DockTabStoreDependencies {
-  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>
+  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
 }
 
 export class DockTabStore<T> {

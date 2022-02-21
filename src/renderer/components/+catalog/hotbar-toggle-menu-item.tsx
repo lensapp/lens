@@ -9,7 +9,7 @@ import { MenuItem } from "../menu";
 
 import type { CatalogEntity } from "../../api/catalog-entity";
 
-export function HotbarToggleMenuItem(props: { entity: CatalogEntity, addContent: ReactNode, removeContent: ReactNode }) {
+export function HotbarToggleMenuItem(props: { entity: CatalogEntity; addContent: ReactNode; removeContent: ReactNode }) {
   const store = HotbarStore.getInstance();
   const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
 

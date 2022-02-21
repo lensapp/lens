@@ -17,7 +17,7 @@ interface FSProvisionModel {
 }
 
 interface Dependencies {
-  directoryForExtensionData: string
+  directoryForExtensionData: string;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {

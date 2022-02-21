@@ -35,8 +35,8 @@ interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+  clusterFrameContext: ClusterFrameContext;
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
 }
 
 @observer

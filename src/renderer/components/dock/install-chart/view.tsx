@@ -35,9 +35,9 @@ interface Props {
 }
 
 interface Dependencies {
-  createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>
-  installChartStore: InstallChartTabStore
-  dockStore: DockStore
+  createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>;
+  installChartStore: InstallChartTabStore;
+  dockStore: DockStore;
 }
 
 @observer

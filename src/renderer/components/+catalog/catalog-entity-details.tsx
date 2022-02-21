@@ -25,7 +25,7 @@ interface Props<T extends CatalogEntity> {
 @observer
 export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Props<T>> {
   categoryIcon(category: CatalogCategory) {
-    if (Icon.isSvg(category.metadata.icon)) {
+    if (category.metadata.icon.includes("<svg")) {
       return <Icon svg={category.metadata.icon} smallest />;
     } else {
       return <Icon material={category.metadata.icon} smallest />;

@@ -26,7 +26,7 @@ export interface InstallRequestValidated {
 }
 
 interface Dependencies {
-  extensionDiscovery: ExtensionDiscovery
+  extensionDiscovery: ExtensionDiscovery;
 }
 
 export const createTempFilesAndValidate =

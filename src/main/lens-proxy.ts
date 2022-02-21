@@ -20,7 +20,7 @@ import { getBoolean } from "./utils/parse-query";
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 
 export interface LensProxyFunctions {
-  getClusterForRequest: GetClusterForRequest,
+  getClusterForRequest: GetClusterForRequest;
   shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
 }

@@ -133,7 +133,7 @@ export abstract class ShellSession {
 
   protected abstract get cwd(): string | undefined;
 
-  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string>, cwd: string): { shellProcess: pty.IPty, resume: boolean } {
+  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
     const resume = ShellSession.processes.has(this.terminalId);
 
     if (!resume) {

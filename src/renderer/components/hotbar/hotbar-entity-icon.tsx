@@ -47,7 +47,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
       return <Icon material="bug_report" className={className} />;
     }
 
-    if (Icon.isSvg(category.metadata.icon)) {
+    if (category.metadata.icon.includes("<svg")) {
       return <Icon svg={category.metadata.icon} className={className} />;
     } else {
       return <Icon material={category.metadata.icon} className={className} />;

@@ -90,7 +90,7 @@ export interface RawHelmChart {
   urls?: string[];
   maintainers?: HelmChartMaintainer[];
   dependencies?: RawHelmChartDependency[];
-  annotations?: Record<string, string>,
+  annotations?: Record<string, string>;
 }
 
 const helmChartMaintainerValidator = Joi.object<HelmChartMaintainer>({

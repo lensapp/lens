@@ -14,7 +14,7 @@ type PodLogLine = string;
 const logLinesToLoad = 500;
 
 interface Dependencies {
-  callForLogs: ({ namespace, name }: { namespace: string, name: string }, query: IPodLogsQuery) => Promise<string>
+  callForLogs: ({ namespace, name }: { namespace: string; name: string }, query: IPodLogsQuery) => Promise<string>;
 }
 
 export class LogStore {

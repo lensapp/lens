@@ -104,10 +104,8 @@ export async function upgradeRelease(name: string, chart: string, values: any, n
   ];
 
   try {
-    const output = await execHelm(args);
-
     return {
-      log: output,
+      log: await execHelm(args),
       release: getRelease(name, namespace, kubeconfigPath, kubectlPath),
     };
   } finally {

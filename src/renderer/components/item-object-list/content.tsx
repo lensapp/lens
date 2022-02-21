@@ -24,7 +24,7 @@ import { UserStore } from "../../../common/user-store";
 import { Placeholder } from "./placeholder";
 
 interface ItemListLayoutContentProps<I extends ItemObject> {
-  getFilters: () => Filter[]
+  getFilters: () => Filter[];
   tableId?: string;
   className: IClassName;
   getItems: () => I[];

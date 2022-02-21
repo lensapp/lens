@@ -165,7 +165,7 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
    * @param id The id of a category is parse
    * @returns The group and kind parts of the ID
    */
-  public static parseId(id: string): { group?: string, kind?: string } {
+  public static parseId(id: string): { group?: string; kind?: string } {
     const [group, kind] = id.split("/") ?? [];
 
     return { group, kind };
@@ -250,7 +250,7 @@ export interface CatalogEntityContextMenu {
    */
   confirm?: {
     message: string;
-  }
+  };
 }
 
 export interface CatalogEntityAddMenu extends CatalogEntityContextMenu {
@@ -262,7 +262,7 @@ export interface CatalogEntitySettingsMenu {
   group?: string;
   title: string;
   components: {
-    View: React.ComponentType<any>
+    View: React.ComponentType<any>;
   };
 }
 

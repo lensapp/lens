@@ -11,7 +11,7 @@ import { CatalogCategory, catalogCategoryRegistry } from "../../../../common/cat
 import { autoBind, disposer } from "../../../../common/utils";
 
 interface Dependencies {
-  registry: CatalogEntityRegistry
+  registry: CatalogEntityRegistry;
 }
 
 export class CatalogEntityStore extends ItemStore<CatalogEntity> {

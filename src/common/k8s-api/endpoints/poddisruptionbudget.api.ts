@@ -16,10 +16,10 @@ export interface PodDisruptionBudget {
     selector: LabelSelector;
   };
   status: {
-    currentHealthy: number
-    desiredHealthy: number
-    disruptionsAllowed: number
-    expectedPods: number
+    currentHealthy: number;
+    desiredHealthy: number;
+    disruptionsAllowed: number;
+    expectedPods: number;
   };
 }
 

@@ -22,7 +22,7 @@ export interface ClusterStoreModel {
 }
 
 interface Dependencies {
-  createCluster: (model: ClusterModel) => Cluster
+  createCluster: (model: ClusterModel) => Cluster;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {

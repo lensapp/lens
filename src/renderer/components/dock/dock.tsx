@@ -32,9 +32,9 @@ interface Props {
 }
 
 interface Dependencies {
-  createResourceTab: () => void
-  createTerminalTab: () => void
-  dockStore: DockStore
+  createResourceTab: () => void;
+  createTerminalTab: () => void;
+  dockStore: DockStore;
 }
 
 @observer

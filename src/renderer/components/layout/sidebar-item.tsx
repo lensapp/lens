@@ -35,7 +35,7 @@ interface SidebarItemProps {
 }
 
 interface Dependencies {
-  sidebarStorage: StorageHelper<SidebarStorageState>
+  sidebarStorage: StorageHelper<SidebarStorageState>;
 }
 
 @observer

@@ -17,7 +17,7 @@ import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 
 interface Props extends Partial<DialogProps> {
-  statefulSetApi: StatefulSetApi
+  statefulSetApi: StatefulSetApi;
 }
 
 const dialogState = observable.object({

@@ -31,8 +31,8 @@ export interface NamespacesRouteProps extends RouteComponentProps<NamespacesRout
 }
 
 interface Dependencies {
-  namespaceStore: NamespaceStore
-  openAddNamespaceDialog: () => void
+  namespaceStore: NamespaceStore;
+  openAddNamespaceDialog: () => void;
 }
 
 export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: Dependencies & NamespacesRouteProps) => (

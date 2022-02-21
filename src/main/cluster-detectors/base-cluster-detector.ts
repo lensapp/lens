@@ -8,8 +8,8 @@ import type { Cluster } from "../../common/cluster/cluster";
 import { k8sRequest } from "../k8s-request";
 
 export type ClusterDetectionResult = {
-  value: string | number | boolean
-  accuracy: number
+  value: string | number | boolean;
+  accuracy: number;
 };
 
 export class BaseClusterDetector {

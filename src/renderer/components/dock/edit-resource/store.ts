@@ -17,7 +17,7 @@ export interface EditingResource {
 }
 
 interface Dependencies {
-  createStorage:<T> (storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>
+  createStorage:<T> (storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
 }
 
 export class EditResourceTabStore extends DockTabStore<EditingResource> {

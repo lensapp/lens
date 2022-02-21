@@ -9,7 +9,7 @@ import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../../commo
 import { Namespace, namespacesApi } from "../../../../common/k8s-api/endpoints/namespaces.api";
 
 interface Dependencies {
-  storage: StorageHelper<string[] | undefined>
+  storage: StorageHelper<string[] | undefined>;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace> {

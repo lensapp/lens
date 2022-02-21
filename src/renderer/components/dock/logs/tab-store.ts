@@ -57,7 +57,7 @@ export interface LogTabData {
 }
 
 interface Dependencies {
-  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>
+  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
 }
 
 export class LogTabStore extends DockTabStore<LogTabData> {

@@ -9,7 +9,7 @@ import { promiseExecFile } from "../../../utils";
 import { Notifications } from "../../notifications";
 
 interface Dependencies {
-  getRegistryUrlPreference: () => ExtensionRegistry,
+  getRegistryUrlPreference: () => ExtensionRegistry;
 }
 
 export const getBaseRegistryUrl = ({ getRegistryUrlPreference }: Dependencies) => async () => {

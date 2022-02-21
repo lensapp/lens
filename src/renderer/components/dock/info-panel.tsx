@@ -29,7 +29,7 @@ interface OptionalProps {
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
   disableSubmit?: boolean;
-  showButtons?: boolean
+  showButtons?: boolean;
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
@@ -37,7 +37,7 @@ interface OptionalProps {
 }
 
 interface Dependencies {
-  dockStore: DockStore
+  dockStore: DockStore;
 }
 
 @observer

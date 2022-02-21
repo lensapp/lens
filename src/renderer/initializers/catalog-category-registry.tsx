@@ -6,21 +6,15 @@
 import React from "react";
 import { kubernetesClusterCategory } from "../../common/catalog-entities";
 import { addClusterURL, kubernetesURL } from "../../common/routes";
-import { multiSet } from "../utils";
 import { UserStore } from "../../common/user-store";
 import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
-import { runInAction } from "mobx";
 import { isLinux, isWindows } from "../../common/vars";
 import { PathPicker } from "../components/path-picker";
 import { Notifications } from "../components/notifications";
 import { Link } from "react-router-dom";
 
 async function addSyncEntries(filePaths: string[]) {
-  const entries = await getAllEntries(filePaths);
-
-  runInAction(() => {
-    multiSet(UserStore.getInstance().syncKubeconfigEntries, entries);
-  });
+  UserStore.getInstance().syncKubeconfigEntries.merge(await getAllEntries(filePaths));
 
   Notifications.ok(
     <div>

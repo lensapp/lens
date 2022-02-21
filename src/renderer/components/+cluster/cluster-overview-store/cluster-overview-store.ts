@@ -5,9 +5,9 @@
 
 import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import { Cluster, clusterApi, getMetricsByNodeNames, type IClusterMetrics } from "../../../../common/k8s-api/endpoints";
+import { Cluster, clusterApi, getMetricsByNodeNames, IClusterMetrics } from "../../../../common/k8s-api/endpoints";
 import { autoBind, StorageHelper } from "../../../utils";
-import { type IMetricsReqParams, normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
+import { IMetricsReqParams, normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { nodesStore } from "../../+nodes/nodes.store";
 
 export enum MetricType {
@@ -22,11 +22,11 @@ export enum MetricNodeRole {
 
 export interface ClusterOverviewStorageState {
   metricType: MetricType;
-  metricNodeRole: MetricNodeRole,
+  metricNodeRole: MetricNodeRole;
 }
 
 interface Dependencies {
-  storage: StorageHelper<ClusterOverviewStorageState>
+  storage: StorageHelper<ClusterOverviewStorageState>;
 }
 
 export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {

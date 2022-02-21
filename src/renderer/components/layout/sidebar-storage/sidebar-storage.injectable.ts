@@ -9,7 +9,7 @@ export interface SidebarStorageState {
   width: number;
   expanded: {
     [itemId: string]: boolean;
-  }
+  };
 }
 
 export const defaultSidebarWidth = 200;

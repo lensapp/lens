@@ -12,7 +12,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
 
 interface Dependencies {
-  authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string) => boolean,
+  authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string) => boolean;
 
   createShellSession: (args: {
     webSocket: WebSocket;

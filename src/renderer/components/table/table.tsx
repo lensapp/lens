@@ -77,7 +77,7 @@ export const orderByUrlParam = createPageParam({
 });
 
 interface Dependencies {
-  model: TableModel
+  model: TableModel;
 }
 
 @observer

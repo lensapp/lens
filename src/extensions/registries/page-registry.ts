@@ -38,7 +38,7 @@ export interface PageParams<V = any> {
 export interface PageComponentProps<P extends PageParams = {}> {
   params?: {
     [N in keyof P]: PageParam<P[N]>;
-  }
+  };
 }
 
 export interface RegisteredPage {
