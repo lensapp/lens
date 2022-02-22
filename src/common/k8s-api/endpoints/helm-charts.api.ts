@@ -75,7 +75,7 @@ export interface RawHelmChart {
   version: string;
   repo: string;
   created: string;
-  digest: string;
+  digest?: string;
   kubeVersion?: string;
   description?: string;
   home?: string;
@@ -142,7 +142,7 @@ const helmChartValidator = Joi.object<HelmChart, true, RawHelmChart>({
     .required(),
   digest: Joi
     .string()
-    .required(),
+    .optional(),
   kubeVersion: Joi
     .string()
     .optional(),
@@ -247,22 +247,22 @@ export interface HelmChart {
   name: string;
   version: string;
   repo: string;
-  kubeVersion?: string;
   created: string;
   description: string;
-  digest: string;
   keywords: string[];
-  home?: string;
   sources: string[];
   urls: string[];
   annotations: Record<string, string>;
   dependencies: HelmChartDependency[];
   maintainers: HelmChartMaintainer[];
+  deprecated: boolean;
+  kubeVersion?: string;
+  digest?: string;
+  home?: string;
   engine?: string;
   icon?: string;
   appVersion?: string;
   type?: string;
-  deprecated: boolean;
   tillerVersion?: string;
 }
 
@@ -324,7 +324,11 @@ export class HelmChart {
   }
 
   getId(): string {
-    return `${this.repo}:${this.apiVersion}/${this.name}@${this.getAppVersion()}+${this.digest}`;
+    const digestPart = this.digest
+      ? `+${this.digest}`
+      : "";
+
+    return `${this.repo}:${this.apiVersion}/${this.name}@${this.getAppVersion()}${digestPart}`;
   }
 
   getName(): string {
