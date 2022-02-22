@@ -671,7 +671,9 @@ export class KubeApi<T extends KubeObject> {
         callback(null, error);
       });
 
-    return abortController.abort;
+    return () => {
+      abortController.abort();
+    };
   }
 
   protected modifyWatchEvent(event: IKubeWatchEvent<KubeJsonApiData>) {
