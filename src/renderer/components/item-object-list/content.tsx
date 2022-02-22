@@ -201,7 +201,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     if (this.props.showEmptyTablePlaceholder && this.props.renderTableHeader && this.props.tableId) {
       return (
         <>
-          <Placeholder renderTableHeader={this.props.renderTableHeader} tableId={this.props.tableId}/>
+          <Placeholder renderTableHeader={this.props.renderTableHeader} tableId={this.props.tableId} showCheckColumn={this.props.isSelectable}/>
           <div className="noItemsHolder">
             <NoItems>{this.props.noItemsMessage}</NoItems>
           </div>

@@ -6,16 +6,17 @@
 import styles from "./placeholder.module.scss";
 
 import React from "react";
-import type { TableCellProps } from "../table";
+import { TableCell, TableCellProps } from "../table";
 import { UserStore } from "../../../common/user-store";
 
 interface Props {
   renderTableHeader: TableCellProps[];
-  showExtraColumn?: boolean;
+  showActionsColumn?: boolean;
+  showCheckColumn?: boolean;
   tableId: string;
 }
 
-export function Placeholder({ renderTableHeader, showExtraColumn = true, tableId }: Props) {
+export function Placeholder({ renderTableHeader, showActionsColumn: showExtraColumn = true, showCheckColumn, tableId }: Props) {
   const linesNumber = 3;
 
   function renderLines() {
@@ -23,7 +24,7 @@ export function Placeholder({ renderTableHeader, showExtraColumn = true, tableId
 
     for (let i = 0; i < linesNumber; i++) {
       lines.push(
-        <div className={styles.line} style={{ opacity: 1 - i * .33 }}></div>,
+        <div className={styles.line} style={{ opacity: 1 - i * .4 }}></div>,
       );
     }
 
@@ -38,11 +39,14 @@ export function Placeholder({ renderTableHeader, showExtraColumn = true, tableId
 
   return (
     <div className={styles.placeholder} aria-hidden="true">
-      {filteredColumns.map((cellProps) => {
+      {showCheckColumn && (
+        <div className={styles.checkerColumn}>{renderLines()}</div>
+      )}
+      {filteredColumns.map((cellProps, index) => {
         return (
-          <div key={cellProps.id} className={cellProps.className}>
-            {renderLines()}
-          </div>
+          <TableCell key={cellProps.id ?? index} className={cellProps.className}>
+            {cellProps.title && renderLines()}
+          </TableCell>
         );
       })}
       {showExtraColumn && (

@@ -9,7 +9,10 @@
 
   > div {
     flex: 1 0;
-    padding: 20px var(--padding);
+    padding-top: 20px!important;
+    padding-right: var(--padding);
+    padding-bottom: 20px;
+    padding-left: var(--padding);
     display: flex;
     align-items: flex-start;
     align-content: space-between;
@@ -22,6 +25,10 @@
       .line {
         width: 100%;
       }
+    }
+
+    &.checkerColumn {
+      flex: 0 0 32px;
     }
   }
 }

@@ -106,6 +106,7 @@ const defaultProps: Partial<ItemListLayoutProps<ItemObject>> = {
   virtual: true,
   customizeTableRowProps: () => ({}),
   failedToLoadMessage: "Failed to load items",
+  showEmptyTablePlaceholder: true,
 };
 
 interface Dependencies {
