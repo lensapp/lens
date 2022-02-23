@@ -51,6 +51,7 @@ export class KubeAuthProxy {
       env: {
         ...this.env,
         KUBECONFIG: this.cluster.kubeConfigPath,
+        KUBECONFIG_CONTEXT: this.cluster.contextName,
         API_PREFIX: this.apiPrefix,
       },
     });
