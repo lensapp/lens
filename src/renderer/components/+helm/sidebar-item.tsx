@@ -29,7 +29,7 @@ const NonInjectedHelmSidebarItem = observer(({ routes }: Dependencies & HelmSide
       text="Helm"
       isActive={isActiveRoute(helmRoute)}
       url={helmURL()}
-      icon={<Icon material="apps"/>}
+      icon={<Icon svg="helm" />}
     >
       {renderTabRoutesSidebarItems(tabRoutes)}
     </SidebarItem>
