@@ -15,11 +15,11 @@ import { makeObservable, observable, when } from "mobx";
 const startingServeRegex = /^starting to serve on (?<address>.+)/i;
 
 interface Dependencies {
-  getProxyBinPath: () => Promise<string>;
+  proxyBinPath: string;
 }
 
 export class KubeAuthProxy {
-  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}`;
+  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}/`;
 
   public get port(): number {
     return this._port;
@@ -45,23 +45,15 @@ export class KubeAuthProxy {
       return this.whenReady;
     }
 
-    const proxyBin = await this.dependencies.getProxyBinPath();
-    const args = [
-      "proxy",
-      "-p", "0",
-      "--kubeconfig", `${this.cluster.kubeConfigPath}`,
-      "--context", `${this.cluster.contextName}`,
-      "--accept-hosts", this.acceptHosts,
-      "--reject-paths", "^[^/]",
-      "--api-prefix", this.apiPrefix,
-    ];
-
-    if (process.env.DEBUG_PROXY === "true") {
-      args.push("-v", "9");
-    }
-    logger.debug(`spawning kubectl proxy with args: ${args}`);
-
-    this.proxyProcess = spawn(proxyBin, args, { env: this.env });
+    const proxyBin = this.dependencies.proxyBinPath;
+    
+    this.proxyProcess = spawn(proxyBin, [], { 
+      env: {
+        ...this.env,
+        KUBECONFIG: this.cluster.kubeConfigPath,
+        API_PREFIX: this.apiPrefix,
+      },
+    });
     this.proxyProcess.on("error", (error) => {
       this.cluster.broadcastConnectUpdate(error.message, true);
       this.exit();
