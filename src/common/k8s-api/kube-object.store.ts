@@ -312,14 +312,14 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return this.api.create(params, data);
   }
 
-  create = async (params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> => {
+  async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
 
     this.items.replace(items);
 
     return newItem;
-  };
+  }
 
   private postUpdate(rawItem: KubeJsonApiData): T {
     const newItem = new this.api.objectConstructor(rawItem);
