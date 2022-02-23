@@ -4,13 +4,14 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import path from "path";
-import { isDevelopment, contextDir } from "../../vars";
+import isDevelopmentInjectable from "../../vars/is-development.injectable";
+import contextDirInjectable from "../../vars/context-dir.injectable";
 import directoryForUserDataInjectable from "../directory-for-user-data/directory-for-user-data.injectable";
 
 const directoryForBinariesInjectable = getInjectable({
   instantiate: (di) => {
-    if (isDevelopment) {
-      return path.join(contextDir, "binaries");
+    if (di.inject(isDevelopmentInjectable)) {
+      return path.join(di.inject(contextDirInjectable), "binaries");
     }
 
     return path.join(di.inject(directoryForUserDataInjectable), "binaries");
