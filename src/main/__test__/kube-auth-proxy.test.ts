@@ -195,7 +195,7 @@ describe("kube auth proxy tests", () => {
         return mockedCP.stdout;
       });
       mockSpawn.mockImplementationOnce((command: string): ChildProcess => {
-        expect(path.basename(command)).toBe("lens-k8s-proxy");
+        expect(path.basename(command).split(".")[0]).toBe("lens-k8s-proxy");
 
         return mockedCP;
       });
