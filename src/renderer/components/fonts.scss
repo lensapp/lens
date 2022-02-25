@@ -13,7 +13,8 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("../fonts/MaterialIcons-Regular.ttf") format("truetype");
+  src: url("./fonts/MaterialIcons-Regular.woff2") format("woff");
+  src: url("./fonts/MaterialIcons-Regular.ttf") format("truetype");
 }
 
 // Patched RobotoMono font with icons
@@ -21,6 +22,6 @@
 // https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/RobotoMono
 @font-face {
   font-family: 'RobotoMono';
-  src: local('RobotoMono'),
-  url('fonts/roboto-mono-nerd.ttf') format('truetype');
+  font-display: block;
+  src: local('RobotoMono'), url('./fonts/roboto-mono-nerd.ttf') format('truetype');
 }

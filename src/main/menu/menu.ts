@@ -10,7 +10,7 @@ import logger from "../logger";
 import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
-import * as packageJson from "../../../package.json";
+import packageJson from "../../../package.json";
 import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../../common/routes";
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { MenuRegistration } from "./menu-registration";

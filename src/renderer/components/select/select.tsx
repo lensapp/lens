@@ -10,8 +10,10 @@ import "./select.scss";
 import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import ReactSelect, { ActionMeta, components, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
-import Creatable, { CreatableProps } from "react-select/creatable";
+import ReactSelect, { components } from "react-select";
+import ReactSelectCreatable from "react-select/creatable";
+import type { ActionMeta, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
+import type { CreatableProps } from "react-select/creatable";
 
 import { ThemeStore } from "../../theme.store";
 import { boundMethod, cssNames } from "../../utils";
@@ -138,7 +140,7 @@ export class Select extends React.Component<SelectProps> {
     };
 
     return isCreatable
-      ? <Creatable {...selectProps}/>
+      ? <ReactSelectCreatable {...selectProps}/>
       : <ReactSelect {...selectProps}/>;
   }
 }
