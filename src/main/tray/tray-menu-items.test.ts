@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { LensMainExtension } from "../../extensions/lens-main-extension";
 import trayItemsInjectable from "./tray-menu-items.injectable";
 import type { IComputedValue } from "mobx";
@@ -12,7 +12,7 @@ import mainExtensionsInjectable from "../../extensions/main-extensions.injectabl
 import type { TrayMenuRegistration } from "./tray-menu-registration";
 
 describe("tray-menu-items", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
   let trayMenuItems: IComputedValue<TrayMenuRegistration[]>;
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 

@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { crdStore } from "./crd.store";
 
 const customResourceDefinitionsInjectable = getInjectable({
-  instantiate: () => computed(() => [...crdStore.items]),
+  id: "custom-resource-definitions",
 
-  lifecycle: lifecycleEnum.singleton,
+  instantiate: () => computed(() => [...crdStore.items]),
 });
 
 export default customResourceDefinitionsInjectable;

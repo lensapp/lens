@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import path from "path";
 import { hasCorrectExtension } from "./has-correct-extension";
 import "../../../../common/vars";
@@ -33,6 +33,8 @@ async function getTemplates({ readDir, readFile }: Dependencies) {
 }
 
 const lensCreateResourceTemplatesInjectable = getInjectable({
+  id: "lens-create-resource-templates",
+
   instantiate: async (di): Promise<RawTemplates> => {
     const templates = await getTemplates({
       readFile: di.inject(readFileInjectable),
@@ -41,8 +43,6 @@ const lensCreateResourceTemplatesInjectable = getInjectable({
 
     return ["lens", templates];
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default lensCreateResourceTemplatesInjectable;

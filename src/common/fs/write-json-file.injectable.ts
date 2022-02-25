@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { EnsureOptions, WriteOptions } from "fs-extra";
 import path from "path";
 import type { JsonValue } from "type-fest";
@@ -23,6 +23,8 @@ const writeJsonFile = ({ writeJson, ensureDir }: Dependencies) => async (filePat
 };
 
 const writeJsonFileInjectable = getInjectable({
+  id: "write-json-file",
+
   instantiate: (di) => {
     const { writeJson, ensureDir } = di.inject(fsInjectable);
 
@@ -31,8 +33,6 @@ const writeJsonFileInjectable = getInjectable({
       ensureDir,
     });
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default writeJsonFileInjectable;

@@ -16,6 +16,8 @@ interface InstantiationParameter {
 }
 
 const nodeShellSessionInjectable = getInjectable({
+  id: "node-shell-session",
+
   instantiate: (di, { cluster, tabId, webSocket, nodeName }: InstantiationParameter) => {
     const createKubectl = di.inject(createKubectlInjectable);
 

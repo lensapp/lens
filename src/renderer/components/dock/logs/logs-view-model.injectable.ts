@@ -23,6 +23,8 @@ export interface InstantiateArgs {
 }
 
 const logsViewModelInjectable = getInjectable({
+  id: "logs-view-model",
+
   instantiate: (di, { tabId }: InstantiateArgs) => new LogTabViewModel(tabId, {
     getLogs: di.inject(getLogsInjectable),
     getLogsWithoutTimestamps: di.inject(getLogsWithoutTimestampsInjectable),

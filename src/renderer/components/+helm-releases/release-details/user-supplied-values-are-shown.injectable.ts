@@ -2,10 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 
 const userSuppliedValuesAreShownInjectable = getInjectable({
+  id: "user-supplied-values-are-shown",
+
   instantiate: () => {
     const state = observable.box(false);
 
@@ -19,8 +21,6 @@ const userSuppliedValuesAreShownInjectable = getInjectable({
       },
     };
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default userSuppliedValuesAreShownInjectable;

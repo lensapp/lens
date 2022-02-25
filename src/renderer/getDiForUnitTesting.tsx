@@ -22,7 +22,6 @@ export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverride
     const injectableInstance = require(filePath).default;
 
     di.register({
-      id: filePath,
       ...injectableInstance,
       aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
     });

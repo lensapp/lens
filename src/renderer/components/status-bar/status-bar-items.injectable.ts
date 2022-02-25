@@ -7,6 +7,8 @@ import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 
 const statusBarItemsInjectable = getInjectable({
+  id: "status-bar-items",
+
   instantiate: (di) => {
     const extensions = di.inject(rendererExtensionsInjectable);
 

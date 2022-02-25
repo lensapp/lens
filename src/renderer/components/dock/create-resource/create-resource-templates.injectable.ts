@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { GroupSelectOption, SelectOption } from "../../select";
 import userCreateResourceTemplatesInjectable from "./user-templates.injectable";
@@ -11,6 +11,8 @@ import lensCreateResourceTemplatesInjectable from "./lens-templates.injectable";
 export type RawTemplates = [group: string, items: [file: string, contents: string][]];
 
 const createResourceTemplatesInjectable = getInjectable({
+  id: "create-resource-templates",
+
   instantiate: async (di) => {
     const lensResourceTemplates = await di.inject(lensCreateResourceTemplatesInjectable);
     const userResourceTemplates = di.inject(userCreateResourceTemplatesInjectable);
@@ -27,8 +29,6 @@ const createResourceTemplatesInjectable = getInjectable({
       }) as GroupSelectOption<SelectOption<string>>);
     });
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createResourceTemplatesInjectable;

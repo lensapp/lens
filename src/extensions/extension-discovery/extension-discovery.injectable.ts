@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionDiscovery } from "./extension-discovery";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import isCompatibleExtensionInjectable from "./is-compatible-extension/is-compatible-extension.injectable";
@@ -14,6 +14,8 @@ import extensionPackageRootDirectoryInjectable from "../extension-installer/exte
 import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
+  id: "extension-discovery",
+
   instantiate: (di) =>
     new ExtensionDiscovery({
       extensionLoader: di.inject(extensionLoaderInjectable),
@@ -36,8 +38,6 @@ const extensionDiscoveryInjectable = getInjectable({
         extensionPackageRootDirectoryInjectable,
       ),
     }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default extensionDiscoveryInjectable;
