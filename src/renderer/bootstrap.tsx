@@ -27,7 +27,7 @@ import { SentryInit } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
@@ -55,7 +55,7 @@ async function attachChromeDebugger() {
   }
 }
 
-export async function bootstrap(di: DependencyInjectionContainer) {
+export async function bootstrap(di: DiContainer) {
   await di.runSetups();
 
   const rootElem = document.getElementById("app");

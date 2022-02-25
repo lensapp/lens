@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type React from "react";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
@@ -13,7 +13,7 @@ import type { CustomCategoryViewRegistration } from "../custom-views";
 import customCategoryViewsInjectable from "../custom-views.injectable";
 
 describe("Custom Category Views", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
 
   beforeEach(() => {
     di = getDiForUnitTesting();

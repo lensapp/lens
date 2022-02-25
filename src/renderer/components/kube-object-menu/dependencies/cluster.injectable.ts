@@ -7,6 +7,7 @@ import { getActiveClusterEntity } from "../../../api/catalog-entity-registry";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
 const clusterInjectable = getInjectable({
+  id: "cluster",
   instantiate: () => getActiveClusterEntity(),
   lifecycle: lifecycleEnum.transient,
 });

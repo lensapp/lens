@@ -10,7 +10,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { computed, IObservableArray, observable } from "mobx";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import statusBarItemsInjectable from "./status-bar-items.injectable";
 import type { StatusBarRegistration } from "./status-bar-registration";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
@@ -35,7 +35,7 @@ class SomeTestExtension extends LensRendererExtension {
 
 describe("<StatusBar />", () => {
   let render: DiRender;
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
   let statusBarItems: IObservableArray<any>;
 
   beforeEach(async () => {

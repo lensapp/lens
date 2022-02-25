@@ -2,12 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 import { listReleases } from "../../../common/k8s-api/endpoints/helm-releases.api";
 
 const releasesInjectable = getInjectable({
+  id: "releases",
+
   instantiate: (di) => {
     const namespaceStore = di.inject(namespaceStoreInjectable);
 
@@ -33,8 +35,6 @@ const releasesInjectable = getInjectable({
       return releaseArrays.flat();
     }, []);
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default releasesInjectable;

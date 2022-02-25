@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
@@ -45,10 +45,11 @@ function getAdditionCategoryColumns({ extensions }: Dependencies): IComputedValu
 }
 
 const categoryColumnsInjectable = getInjectable({
+  id: "category-columns",
+
   instantiate: (di) => getAdditionCategoryColumns({
     extensions: di.inject(rendererExtensionsInjectable),
   }),
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default categoryColumnsInjectable;

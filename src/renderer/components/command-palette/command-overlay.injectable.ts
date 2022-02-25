@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 import React from "react";
 
@@ -32,8 +32,8 @@ export class CommandOverlay {
 }
 
 const commandOverlayInjectable = getInjectable({
+  id: "command-overlay",
   instantiate: () => new CommandOverlay(),
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default commandOverlayInjectable;

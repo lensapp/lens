@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import {
   deleteRelease,
   HelmRelease,
@@ -10,6 +10,8 @@ import {
 import releasesInjectable from "../releases.injectable";
 
 const deleteReleaseInjectable = getInjectable({
+  id: "delete-release",
+
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
 
@@ -19,8 +21,6 @@ const deleteReleaseInjectable = getInjectable({
       releases.invalidate();
     };
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default deleteReleaseInjectable;

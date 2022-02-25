@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { DockStore, TabKind } from "./store";
 import dockStorageInjectable from "./dock-storage.injectable";
 import clearLogTabDataInjectable from "../logs/clear-log-tab-data.injectable";
@@ -14,6 +14,8 @@ import clearInstallChartTabDataInjectable from "../install-chart/clear-install-c
 import isLogsTabDataValidInjectable from "../logs/is-logs-tab-data-valid.injectable";
 
 const dockStoreInjectable = getInjectable({
+  id: "dock-store",
+
   instantiate: (di) => new DockStore({
     storage: di.inject(dockStorageInjectable),
     tabDataClearers: {
@@ -28,8 +30,6 @@ const dockStoreInjectable = getInjectable({
       [TabKind.POD_LOGS]: di.inject(isLogsTabDataValidInjectable),
     },
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default dockStoreInjectable;

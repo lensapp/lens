@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { initRootFrame } from "./init-root-frame";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
@@ -11,6 +11,8 @@ import lensProtocolRouterRendererInjectable from "../../../protocol-handler/lens
 import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
 
 const initRootFrameInjectable = getInjectable({
+  id: "init-root-frame",
+
   instantiate: (di) => {
     const extensionLoader = di.inject(extensionLoaderInjectable);
 
@@ -30,8 +32,6 @@ const initRootFrameInjectable = getInjectable({
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
     });
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default initRootFrameInjectable;

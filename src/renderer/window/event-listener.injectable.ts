@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { Disposer } from "../utils";
 
 function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): Disposer {
@@ -13,8 +13,8 @@ function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listene
 }
 
 const windowAddEventListenerInjectable = getInjectable({
+  id: "window-add-event-listener",
   instantiate: () => addWindowEventListener,
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default windowAddEventListenerInjectable;
