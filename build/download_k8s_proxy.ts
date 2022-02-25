@@ -42,7 +42,7 @@ class K8sProxyDownloader {
 
     const file = fs.createWriteStream(this.path);
 
-    console.log(`Downloading lens-k8s-version ${this.version} from ${this.url} to ${this.path}`);
+    console.log(`Downloading lens-k8s-proxy ${this.version} from ${this.url} to ${this.path}`);
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: this.url,
       gzip: true,
@@ -51,7 +51,7 @@ class K8sProxyDownloader {
     const stream = request(requestOpts);
 
     stream.on("complete", () => {
-      console.log("lens-k8s-version binary download finished");
+      console.log("lens-k8s-proxy binary download finished");
       file.end(noop);
     });
 
@@ -63,7 +63,7 @@ class K8sProxyDownloader {
 
     return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
-        console.log("lens-k8s-version binary download closed");
+        console.log("lens-k8s-proxy binary download closed");
         fs.chmod(this.path, 0o755, (err) => {
           if (err) reject(err);
         });
