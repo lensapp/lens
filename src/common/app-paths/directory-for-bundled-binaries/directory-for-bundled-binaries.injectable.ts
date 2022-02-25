@@ -13,7 +13,7 @@ const directoryForBundledBinariesInjectable = getInjectable({
       return path.join(di.inject(contextDirInjectable), "binaries");
     }
 
-    return path.join(process.resourcesPath);
+    return process.resourcesPath;
   },
   lifecycle: lifecycleEnum.singleton,
 });
