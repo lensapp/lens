@@ -23,7 +23,7 @@ const getTSLoader = (options: Partial<TSLoaderOptions> = {}, testRegExp?: RegExp
       loader: "esbuild-loader",
       options: {
         loader: "tsx",
-        target: "es2015",
+        target: "ES2019", // supported by >= electron@14
         implementation: esbuild,
       },
     };
