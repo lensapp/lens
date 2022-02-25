@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import "./terminal-dock-tab.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../../utils";

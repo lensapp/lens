@@ -3,4 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export default {};
+.TerminalTab {
+  @include font-preload {
+    font-family: "RobotoMono", monospace;
+  }
+}
