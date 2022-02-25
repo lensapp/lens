@@ -1051,7 +1051,7 @@ Should be used with type annotation or static contextType.</p>
 <p>React.Component.context</p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.WizardLayoutProps/"><code>WizardLayoutProps</code></a>> &amp; <code>Readonly</code>&lt;<code>Object</code>></p>
+<p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.WizardLayoutProps/"><code>WizardLayoutProps</code></a>> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
 <h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>React.Component.props</p>
 <hr />
@@ -1065,7 +1065,7 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>React.Component.refs</p>
 <hr />
 <h3 id="state">state<a class="headerlink" href="#state" title="Permanent link">#</a></h3>
-<p>• <strong>state</strong>: <code>Readonly</code>&lt;<code>Object</code>></p>
+<p>• <strong>state</strong>: <code>Readonly</code>&lt;{}></p>
 <h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>React.Component.state</p>
 <hr />
@@ -1164,7 +1164,7 @@ prevents this from being invoked.</p>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;{}></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1232,7 +1232,7 @@ the entire component tree to unmount.</p>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;{}></td>
 </tr>
 <tr>
 <td align="left"><code>snapshot?</code></td>
@@ -1327,7 +1327,7 @@ prevents this from being invoked.</p>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;{}></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1384,7 +1384,7 @@ lifecycle events from running.</p>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;{}></td>
 </tr>
 </tbody>
 </table>
@@ -1428,7 +1428,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;<code>Object</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.WizardLayoutProps/"><code>WizardLayoutProps</code></a>>) =&gt; {} | <code>Pick</code>&lt;<code>Object</code>, <code>K</code>> | <code>Pick</code>&lt;<code>Object</code>, <code>K</code>></td>
+<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.WizardLayoutProps/"><code>WizardLayoutProps</code></a>>) =&gt; {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>
@@ -1464,7 +1464,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
-<td align="left"><code>Readonly</code>&lt;<code>Object</code>></td>
+<td align="left"><code>Readonly</code>&lt;{}></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
