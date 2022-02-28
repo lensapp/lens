@@ -8,7 +8,6 @@ import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
 import logger from "../logger";
-import * as url from "url";
 import { getPortFrom } from "../utils/get-port";
 import { makeObservable, observable, when } from "mobx";
 
@@ -27,13 +26,10 @@ export class KubeAuthProxy {
 
   protected _port: number;
   protected proxyProcess?: ChildProcess;
-  protected readonly acceptHosts: string;
   @observable protected ready = false;
 
   constructor(private dependencies: Dependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
-
-    this.acceptHosts = url.parse(this.cluster.apiUrl).hostname;
   }
 
   get whenReady() {
