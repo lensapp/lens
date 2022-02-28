@@ -379,7 +379,11 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  @action disconnect() {
+  @action disconnect(): void {
+    if (this.disconnected) {
+      return void logger.debug("[CLUSTER]: already disconnected", { id: this.id });
+    }
+
     logger.info(`[CLUSTER]: disconnecting`, { id: this.id });
     this.eventsDisposer();
     this.contextHandler?.stopServer();
