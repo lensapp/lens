@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { isDevelopment } from "../vars";
 
 const isDevelopmentInjectable = getInjectable({
+  id: "is-development",
   instantiate: () => isDevelopment,
   lifecycle: lifecycleEnum.singleton,
 });

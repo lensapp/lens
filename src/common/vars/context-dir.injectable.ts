@@ -6,6 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { contextDir } from "../vars";
 
 const contextDirInjectable = getInjectable({
+  id: "context-dir",
   instantiate: () => contextDir,
   lifecycle: lifecycleEnum.singleton,
 });
