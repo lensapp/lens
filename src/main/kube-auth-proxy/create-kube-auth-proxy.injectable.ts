@@ -5,16 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { KubeAuthProxy } from "./kube-auth-proxy";
 import type { Cluster } from "../../common/cluster/cluster";
-import bundledKubectlInjectable from "../kubectl/bundled-kubectl.injectable";
+import path from "path";
+import { isDevelopment, isWindows } from "../../common/vars";
+import directoryForBundledBinariesInjectable from "../../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
 
 const createKubeAuthProxyInjectable = getInjectable({
   id: "create-kube-auth-proxy",
 
   instantiate: (di) => {
-    const bundledKubectl = di.inject(bundledKubectlInjectable);
-
+    const binaryName = isWindows ? "lens-k8s-proxy.exe" : "lens-k8s-proxy";
+    const proxyPath = isDevelopment ? path.join("client", process.platform, process.arch) : process.arch;
     const dependencies = {
-      getProxyBinPath: bundledKubectl.getPath,
+      proxyBinPath: path.join(di.inject(directoryForBundledBinariesInjectable), proxyPath, binaryName),
     };
 
     return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) =>
