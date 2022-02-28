@@ -73,7 +73,7 @@ export enum PodStatus {
   EVICTED = "Evicted",
 }
 
-export interface IPodContainer extends Partial<Record<PodContainerProbe, IContainerProbe>> {
+export interface IPodContainer extends Partial<Record<PodContainerProbe, ContainerProbe>> {
   name: string;
   image: string;
   command?: string[];
@@ -129,7 +129,7 @@ export interface IPodContainer extends Partial<Record<PodContainerProbe, IContai
 
 export type PodContainerProbe = "livenessProbe" | "readinessProbe" | "startupProbe";
 
-interface IContainerProbe {
+export interface ContainerProbe {
   httpGet?: {
     path?: string;
 
@@ -501,14 +501,11 @@ export class Pod extends WorkloadKubeObject {
   }
 }
 
-let podsApi: PodsApi;
-
-if (isClusterPageContext()) {
-  podsApi = new PodsApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const podsApi = isClusterPageContext()
+  ? new PodsApi({
     objectConstructor: Pod,
-  });
-}
-
-export {
-  podsApi,
-};
+  })
+  : undefined;

@@ -130,10 +130,14 @@ export class KubernetesCluster<
 
     catalogCategoryRegistry
       .getCategoryForEntity<KubernetesClusterCategory>(this)
-      ?.emit("contextMenuOpen", this, context);
+      .emit("contextMenuOpen", this, context);
   }
 }
 
+/**
+ * The category for {@link KubernetesCluster}'s. Not constructable, use
+ * {@link kubernetesClusterCategory} to register event handlers.
+ */
 class KubernetesClusterCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
@@ -155,6 +159,7 @@ class KubernetesClusterCategory extends CatalogCategory {
   };
 }
 
+export type { KubernetesClusterCategory };
 export const kubernetesClusterCategory = new KubernetesClusterCategory();
 
 catalogCategoryRegistry.add(kubernetesClusterCategory);

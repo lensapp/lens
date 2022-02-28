@@ -21,10 +21,23 @@ const { conditionalValidators, ...InputValidators } = Validators;
 export { InputValidators };
 export type { InputValidator };
 
-type InputElement = HTMLInputElement | HTMLTextAreaElement;
-type InputElementProps = InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement> & DOMAttributes<InputElement>;
+/**
+ * Either an {@link HTMLInputElement} or an {@link HTMLTextAreaElement}
+ */
+export type InputElement = HTMLInputElement | HTMLTextAreaElement;
 
+/**
+ * The builtin props for {@link InputElement}
+ */
+export type InputElementProps = InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement> & DOMAttributes<InputElement>;
+
+/**
+ * The information provided for rendering a custom icon
+ */
 export interface IconDataFnArg {
+  /**
+   * is `true` if the input is not the same as the original value
+   */
   isDirty: boolean;
 }
 
@@ -36,28 +49,135 @@ export interface IconDataFnArg {
  */
 export type IconData = string | React.ReactNode | ((opt: IconDataFnArg) => React.ReactNode);
 
+/**
+ * The props for {@link Input}
+ */
 export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
-  theme?: "round-black" | "round";
+  /**
+   * Determins which style of input to use
+   *
+   * @default "line"
+   */
+  theme?: "round-black" | "round" | "line";
+
+  /**
+   * Any additional class names for this instance
+   */
   className?: string;
+
+  /**
+   * The current value. Must always be defined, or never. If not provided then
+   * this component will act as if it is not managed
+   */
   value?: string;
+
+  /**
+   * Should the input be trimmed of leading and trailing whitespace before
+   * being passed to the `onChange` or `onSubmit` handlers
+   *
+   * @default false
+   */
   trim?: boolean;
+
+  /**
+   * Should the input be selected when the input becomes focused.
+   *
+   * @default false
+   */
   autoSelectOnFocus?: boolean;
+
+  /**
+   * If specified and the component is not in managed mode then this will be
+   * used when not valid has been typed
+   */
   defaultValue?: string;
-  multiLine?: boolean; // use text-area as input field
-  maxRows?: number; // when multiLine={true} define max rows size
-  dirty?: boolean; // show validation errors even if the field wasn't touched yet
-  showValidationLine?: boolean; // show animated validation line for async validators
-  showErrorsAsTooltip?: boolean | Omit<TooltipProps, "targetId">; // show validation errors as a tooltip :hover (instead of block below)
+
+  /**
+   * If `true` then the input field will be a `<textarea>` instead of an `<input>`
+   *
+   * @default false
+   */
+  multiLine?: boolean;
+
+  /**
+   * Only relavent when {@link InputProps.multiLine} is `true`.
+   *
+   * Sets the maximum number of rows that the text area will grow to.
+   *
+   * @default 10_000
+   */
+  maxRows?: number;
+
+  /**
+   * If set then validation errors will be shown even if no input has been shown yet.
+   *
+   * @default false
+   */
+  dirty?: boolean;
+
+  /**
+   * If `true` then an animation will be shown while async validators are being run
+   *
+   * @default true
+   */
+  showValidationLine?: boolean;
+
+  /**
+   * If truthy then validation errors will be shown as a tooltip on hover,
+   * instead of as a list of errors below the input.
+   *
+   * Can also be an object for controlling the tooltip.
+   *
+   * @default false
+   */
+  showErrorsAsTooltip?: boolean | Omit<TooltipProps, "targetId">;
+
+  /**
+   * Data for rendering an icon on the left side of the input field
+   */
   iconLeft?: IconData;
+
+  /**
+   * Data for rendering an icon on the right side of the input field
+   */
   iconRight?: IconData;
-  contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
+
+  /**
+   * Content that should be shown to the right of {@link InputProps.iconRight}
+   */
+  contentRight?: React.ReactNode;
+
+  /**
+   * Either a single or a list of validators that should be run on the input
+   * as it changes.
+   *
+   * @default []
+   */
   validators?: InputValidator | InputValidator[];
+
+  /**
+   * If true then a `blur` event will be emitted on this component when the
+   * ENTER key is pressed
+   *
+   * @default true
+   */
   blurOnEnter?: boolean;
+
+  /**
+   * A function to be called on all changes
+   * @param value The new value that was inputed, before any validation is done
+   * @param evt The React change event
+   */
   onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
+
+  /**
+   * A function to be called when "enter" is pressed and the input is validated
+   * @param value The value, only after all validations have passed
+   * @param evt The react keyboard event that triggered the submit
+   */
   onSubmit?(value: string, evt: React.KeyboardEvent<InputElement>): void;
 };
-
-interface State {
+export interface InputState {
   focused: boolean;
   dirty: boolean;
   valid: boolean;
@@ -72,15 +192,22 @@ const defaultProps: Partial<InputProps> = {
   showValidationLine: true,
   validators: [],
   blurOnEnter: true,
+  trim: false,
+  autoSelectOnFocus: false,
+  showErrorsAsTooltip: false,
+  dirty: false,
 };
 
-export class Input extends React.Component<InputProps, State> {
+/**
+ * A component for getting user input
+ */
+export class Input extends React.Component<InputProps, InputState> {
   static defaultProps = defaultProps as object;
 
   public input: InputElement | null = null;
   public validators: InputValidator[] = [];
 
-  public state: State = {
+  public state: InputState = {
     focused: false,
     valid: true,
     validating: false,
@@ -316,7 +443,7 @@ export class Input extends React.Component<InputProps, State> {
   get themeSelection(): Record<string, boolean> {
     const { theme } = this.props;
 
-    if (!theme) {
+    if (!theme || theme === "line") {
       return {};
     }
 

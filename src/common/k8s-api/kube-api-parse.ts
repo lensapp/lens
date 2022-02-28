@@ -12,7 +12,7 @@ import { inspect } from "util";
 
 export interface IKubeObjectRef {
   kind: string;
-  apiVersion: string;
+  apiVersion?: string;
   name: string;
   namespace?: string;
 }

@@ -15,7 +15,7 @@ import type { CommandContext, CommandRegistration } from "./commands";
 import { getInjectable } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-overlay.injectable";
 import createTerminalTabInjectable from "../../dock/terminal/create-terminal-tab.injectable";
-import type { DockTabCreate } from "../../dock/dock/store";
+import type { BaseDockTabCreateOptions } from "../../dock/dock/store";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -24,7 +24,7 @@ export function isKubernetesClusterActive(context: CommandContext): boolean {
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
   getEntitySettingItems: (kind: string, apiVersion: string, source?: string) => RegisteredEntitySetting[];
-  createTerminalTab: () => DockTabCreate;
+  createTerminalTab: () => BaseDockTabCreateOptions;
 }
 
 function getInternalCommands({ openCommandDialog, getEntitySettingItems, createTerminalTab }: Dependencies): CommandRegistration[] {

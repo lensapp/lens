@@ -16,8 +16,16 @@ import { ThemeStore } from "../../theme.store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 
 export interface BarChartProps extends ChartProps {
+  /**
+   * The name of the chart
+   */
   name?: string;
-  timeLabelStep?: number;  // Minute labels appearance step
+
+  /**
+   * The step between the minute labels
+   * @default 10
+   */
+  timeLabelStep?: number;
 }
 
 const defaultProps: Partial<BarChartProps> = {

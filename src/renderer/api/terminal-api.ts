@@ -60,6 +60,9 @@ export interface TerminalEvents extends WebSocketEvents {
 }
 
 export class TerminalApi extends WebSocketApi<TerminalEvents> {
+  /**
+   * @internal
+   */
   protected size: { width: number; height: number };
 
   @observable public isReady = false;
@@ -144,6 +147,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     }
   }
 
+  /**
+   * @internal
+   */
   protected _onMessage({ data, ...evt }: MessageEvent<ArrayBuffer>): void {
     try {
       const message: TerminalMessage = deserialize(new Uint8Array(data));
@@ -169,6 +175,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     }
   }
 
+  /**
+   * @internal
+   */
   protected _onOpen(evt: Event) {
     // Client should send terminal size in special channel 4,
     // But this size will be changed by terminal.fit()
@@ -176,11 +185,17 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     super._onOpen(evt);
   }
 
+  /**
+   * @internal
+   */
   protected _onClose(evt: CloseEvent) {
     super._onClose(evt);
     this.isReady = false;
   }
 
+  /**
+   * @internal
+   */
   protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}) {
     const { color, showTime } = options;
     const time = showTime ? `${(new Date()).toLocaleString()} ` : "";
@@ -192,6 +207,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     this.emit("data", `${time}${data}\r\n`);
   }
 
+  /**
+   * @internal
+   */
   protected emitError(error: string) {
     this.emitStatus(error, {
       color: TerminalColor.RED,

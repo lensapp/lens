@@ -15,7 +15,9 @@ export interface CommandContext {
 export interface CommandActionNavigateOptions {
   /**
    * If `true` then the navigate will only navigate on the root frame and not
-   * within a cluster
+   * within a cluster's frame.
+   *
+   * If `false` then the navigation will only occur in the current frame
    * @default false
    */
   forceRootFrame?: boolean;

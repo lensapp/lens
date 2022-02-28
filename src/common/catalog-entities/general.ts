@@ -7,7 +7,7 @@ import { navigate } from "../../renderer/navigation";
 import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
-interface GeneralEntitySpec extends CatalogEntitySpec {
+export interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
   icon?: {
     material?: string;

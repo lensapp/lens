@@ -4,7 +4,7 @@
  */
 
 import { action, observable, reaction } from "mobx";
-import { autoBind, StorageHelper, toJS } from "../../../utils";
+import { autoBind, noop, StorageHelper, toJS } from "../../../utils";
 import type { TabId } from "../dock/store";
 
 export interface DockTabStoreOptions {
@@ -19,35 +19,39 @@ interface DockTabStoreDependencies {
 }
 
 export class DockTabStore<T> {
+  /**
+   * @internal
+   */
   protected storage?: StorageHelper<DockTabStorageState<T>>;
   private data = observable.map<TabId, T>();
 
-  constructor(protected dependencies: DockTabStoreDependencies, protected options: DockTabStoreOptions) {
+  /**
+   * @internal
+   */
+  protected dependencies: DockTabStoreDependencies;
+
+  constructor(dependencies: DockTabStoreDependencies, { autoInit = true, storageKey }: DockTabStoreOptions) {
     autoBind(this);
 
-    this.options = {
-      autoInit: true,
-      ...this.options,
-    };
+    this.dependencies = dependencies;
 
-    if (this.options.autoInit) {
+    this.init = storageKey
+      ? (() => {
+        this.storage = this.dependencies.createStorage<T>(storageKey, {});
+
+        this.storage.whenReady.then(() => {
+          this.data.replace(this.storage.value);
+          reaction(() => this.toJSON(), data => this.storage.set(data));
+        });
+      })
+      : noop;
+
+    if (autoInit) {
       this.init();
     }
   }
 
-  protected init() {
-    const { storageKey } = this.options;
-
-    // auto-save to local-storage
-    if (storageKey) {
-      this.storage = this.dependencies.createStorage<T>(storageKey, {});
-
-      this.storage.whenReady.then(() => {
-        this.data.replace(this.storage.value);
-        reaction(() => this.toJSON(), data => this.storage.set(data));
-      });
-    }
-  }
+  protected init: () => void;
 
   protected finalizeDataForSave(data: T): T {
     return data;

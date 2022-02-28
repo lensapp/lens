@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { DockTabCreate, DockTab, TabKind, TabId } from "../dock/store";
+import { BaseDockTabCreateOptions, DockTab, TabKind, TabId } from "../dock/store";
 import type { LogTabData } from "./tab-store";
 import * as uuid from "uuid";
 import { runInAction } from "mobx";
@@ -13,7 +13,7 @@ import setLogTabDataInjectable from "./set-log-tab-data.injectable";
 export type CreateLogsTabData = Pick<LogTabData, "owner" | "selectedPodId" | "selectedContainer" | "namespace"> & Omit<Partial<LogTabData>, "owner" | "selectedPodId" | "selectedContainer" | "namespace">;
 
 interface Dependencies {
-  createDockTab: (rawTabDesc: DockTabCreate, addNumber?: boolean) => DockTab;
+  createDockTab: (rawTabDesc: BaseDockTabCreateOptions, addNumber?: boolean) => DockTab;
   setLogTabData: (tabId: string, data: LogTabData) => void;
 }
 

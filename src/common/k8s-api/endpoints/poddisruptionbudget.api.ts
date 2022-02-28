@@ -5,7 +5,7 @@
 
 import { autoBind } from "../../utils";
 import { KubeObject, LabelSelector } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
@@ -54,17 +54,23 @@ export class PodDisruptionBudget extends KubeObject {
   getDesiredHealthy() {
     return this.status.desiredHealthy;
   }
-
 }
 
-let pdbApi: KubeApi<PodDisruptionBudget>;
-
-if (isClusterPageContext()) {
-  pdbApi = new KubeApi({
-    objectConstructor: PodDisruptionBudget,
-  });
+/**
+ * The api type for {@link PodDisruptionBudget}'s
+ */
+export class PodDisruptionBudgetApi extends KubeApi<PodDisruptionBudget> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: PodDisruptionBudget,
+    });
+  }
 }
 
-export {
-  pdbApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const pdbApi = isClusterPageContext()
+  ? new PodDisruptionBudgetApi()
+  : undefined;

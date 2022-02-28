@@ -11,81 +11,136 @@ import type { KubeApi } from "./kube-api";
 import type { KubeObject } from "./kube-object";
 import { IKubeObjectRef, parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
+/**
+ * The manager of registered kube apis and KubeObject stores
+ */
 export class ApiManager {
   private apis = observable.map<string, KubeApi<KubeObject>>();
-  private stores = observable.map<string, KubeObjectStore<KubeObject>>();
+  private stores = observable.map<KubeApi<KubeObject>, KubeObjectStore<KubeObject>>();
 
+  /**
+   * @internal
+   */
   constructor() {
     makeObservable(this);
     autoBind(this);
   }
 
-  getApi(pathOrCallback: string | ((api: KubeApi<KubeObject>) => boolean)) {
+  /**
+   * Get the KubeApi instance which either has registered under the given
+   * path or by the apiBase of the given path or the first api which the
+   * callback returns `true` for.
+   * @param pathOrCallback Either the api path or a matching function
+   */
+  getApi(pathOrCallback: string | ((api: KubeApi<KubeObject>) => boolean)): KubeApi<KubeObject> | undefined {
     if (typeof pathOrCallback === "string") {
       return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
 
-    return iter.find(this.apis.values(), pathOrCallback ?? (() => true));
+    return iter.find(this.apis.values(), pathOrCallback);
   }
 
-  getApiByKind(kind: string, apiVersion: string) {
-    return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
+  /**
+   * Get the `KubeApi` instance which is for the kube resource `kind` under the
+   * apiVersion and group `apiVersion`
+   *
+   * Example:
+   * ```ts
+   * this.getApiByKind("Pod", "api/v1");
+   * ```
+   * @param kind The kube resource kind
+   * @param apiVersion The kube apiVersion and group
+   */
+  getApiByKind(kind: string, apiVersion: string): KubeApi<KubeObject> | undefined {
+    return this.getApi(api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi(apiBase: string, api: KubeApi<KubeObject>) {
-    if (!api.apiBase) return;
-
-    if (!this.apis.has(apiBase)) {
-      this.stores.forEach((store) => {
-        if (store.api === api) {
-          this.stores.set(apiBase, store);
-        }
-      });
-
-      this.apis.set(apiBase, api);
+  /**
+   * Attempt to register `api` under `apiBase`. If `apiBase` already has been
+   * registered then this function does nothing.
+   * @param apiBase The kube resource api base to register the api against
+   * @param api The `KubeApi` instance to register
+   */
+  registerApi(apiBase: string, api: KubeApi<KubeObject>): void {
+    if (!api.apiBase || this.apis.has(apiBase)) {
+      return;
     }
+
+    this.apis.set(apiBase, api);
   }
 
-  protected resolveApi<K extends KubeObject>(api?: string | KubeApi<K>): KubeApi<K> | undefined {
-    if (!api) {
+  /**
+   * Unifies apiBases and instances into instances
+   * @param apiOrBase Either the `apiBase` string or the `KubeApi` instance
+   */
+  protected resolveApi<K extends KubeObject>(apiOrBase: string | KubeApi<K>): KubeApi<K> | undefined {
+    if (!apiOrBase) {
       return undefined;
     }
 
-    if (typeof api === "string") {
-      return this.getApi(api) as KubeApi<K>;
+    if (typeof apiOrBase === "string") {
+      return this.getApi(apiOrBase) as KubeApi<K>;
     }
 
-    return api;
+    return apiOrBase;
   }
 
-  unregisterApi(api: string | KubeApi<KubeObject>) {
-    if (typeof api === "string") this.apis.delete(api);
-    else {
-      const apis = Array.from(this.apis.entries());
-      const entry = apis.find(entry => entry[1] === api);
-
-      if (entry) this.unregisterApi(entry[0]);
+  /**
+   * Removes
+   * @param apiOrBase Either an apiBase string or the instance to deregister
+   */
+  unregisterApi(apiOrBase: string | KubeApi<KubeObject>) {
+    if (typeof apiOrBase === "string") {
+      this.apis.delete(apiOrBase);
+    } else {
+      for (const [apiBase, api] of this.apis) {
+        if (api === apiOrBase) {
+          this.apis.delete(apiBase);
+        }
+      }
     }
   }
 
+  /**
+   * Register a store under its api's apiBase
+   * @param store The store instance to register
+   */
+  registerStore(store: KubeObjectStore<KubeObject>): void;
+  /**
+   * @deprecated Use {@link ApiManager.registerStore} instead as a store should
+   * only be registered under its own api
+   */
+  registerStore(store: KubeObjectStore<KubeObject>, apis: KubeApi<KubeObject>[]): void;
   @action
-  registerStore(store: KubeObjectStore<KubeObject>, apis: KubeApi<KubeObject>[] = [store.api]) {
-    apis.filter(Boolean).forEach(api => {
-      if (api.apiBase) this.stores.set(api.apiBase, store);
-    });
+  registerStore(store: KubeObjectStore<KubeObject>, apis?: KubeApi<KubeObject>[]): void {
+    if (apis) {
+      for (const api of apis) {
+        this.stores.set(api, store);
+      }
+    } else {
+      this.stores.set(store.api, store);
+    }
   }
 
-  getStore<S extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): S | undefined {
-    return this.stores.get(this.resolveApi(api)?.apiBase) as S;
+  /**
+   * Get the registered store under the provided key
+   * @param apiOrBase Either the apiBase or a KubeApi instance
+   */
+  getStore<S extends KubeObjectStore<KubeObject>>(apiOrBase: string | KubeApi<KubeObject>): S | undefined {
+    return this.stores.get(this.resolveApi(apiOrBase)) as S;
   }
 
+  /**
+   * Attempt to get the api string for a given kube resource
+   * @param ref An object describing the kube resource
+   * @param parentObject Used to get the namespace or the resource if `ref` does not provided it
+   * @returns The kube API resource string
+   */
   lookupApiLink(ref: IKubeObjectRef, parentObject?: KubeObject): string {
     const {
       kind, apiVersion, name,
       namespace = parentObject?.getNs(),
     } = ref;
-
-    if (!kind) return "";
 
     // search in registered apis by 'kind' & 'apiVersion'
     const api = this.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion);
@@ -119,4 +174,7 @@ export class ApiManager {
   }
 }
 
+/**
+ * The single instance per frame.
+ */
 export const apiManager = new ApiManager();

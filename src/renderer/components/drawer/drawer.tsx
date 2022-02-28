@@ -12,9 +12,7 @@ import { cssNames, noop, StorageHelper } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
-import drawerStorageInjectable, {
-  defaultDrawerWidth,
-} from "./drawer-storage/drawer-storage.injectable";
+import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import historyInjectable from "../../navigation/history.injectable";
 import type { History } from "history";
@@ -47,7 +45,7 @@ const defaultProps: Partial<DrawerProps> = {
   onClose: noop,
 };
 
-interface State {
+export interface DrawerState {
   isCopied: boolean;
   width: number;
 }
@@ -64,7 +62,7 @@ interface Dependencies {
   drawerStorage: StorageHelper<{ width: number }>;
 }
 
-class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, State> {
+class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, DrawerState> {
   static defaultProps = defaultProps as object;
 
   private mouseDownTarget: HTMLElement;

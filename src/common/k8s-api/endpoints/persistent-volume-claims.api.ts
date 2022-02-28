@@ -94,14 +94,11 @@ export class PersistentVolumeClaim extends KubeObject {
   }
 }
 
-let pvcApi: PersistentVolumeClaimsApi;
-
-if (isClusterPageContext()) {
-  pvcApi = new PersistentVolumeClaimsApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const pvcApi = isClusterPageContext()
+  ? new PersistentVolumeClaimsApi({
     objectConstructor: PersistentVolumeClaim,
-  });
-}
-
-export {
-  pvcApi,
-};
+  })
+  : undefined;

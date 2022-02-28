@@ -23,14 +23,12 @@ const useStyles = makeStyles({
  * @deprecated Use <Switch/> instead from "../switch.tsx".
  */
 export function FormSwitch(props: FormControlLabelProps) {
-  const classes = useStyles();
-
   return (
     <FormControlLabel
       control={props.control}
       labelPlacement="start"
       label={props.label}
-      className={classes.root}
+      className={useStyles().root}
     />
   );
 }

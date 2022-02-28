@@ -40,14 +40,18 @@ export interface ILoadBalancerIngress {
   ip?: string;
 }
 
-// extensions/v1beta1
-interface IExtensionsBackend {
+/**
+ * For use when Ingresses are under `extensions/v1beta1`
+ */
+export interface IExtensionsBackend {
   serviceName: string;
   servicePort: number | string;
 }
 
-// networking.k8s.io/v1
-interface INetworkingBackend {
+/**
+ * For use when Ingresses are under `networking.k8s.io/v1`
+ */
+export interface INetworkingBackend {
   service: IIngressService;
 }
 
@@ -194,17 +198,14 @@ export class Ingress extends KubeObject {
   }
 }
 
-let ingressApi: IngressApi;
-
-if (isClusterPageContext()) {
-  ingressApi = new IngressApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const ingressApi = isClusterPageContext()
+  ? new IngressApi({
     objectConstructor: Ingress,
     // Add fallback for Kubernetes <1.19
     checkPreferredVersion: true,
     fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
-  });
-}
-
-export {
-  ingressApi,
-};
+  })
+  : undefined;

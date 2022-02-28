@@ -14,13 +14,18 @@ export interface IToleration {
   tolerationSeconds?: number;
 }
 
-interface IMatchExpression {
+export interface Affinity<T> {
+  requiredDuringSchedulingIgnoredDuringExecution?: T[];
+  preferredDuringSchedulingIgnoredDuringExecution?: T[];
+}
+
+export interface IMatchExpression {
   key: string;
   operator: string;
   values: string[];
 }
 
-interface INodeAffinity {
+export interface INodeAffinity {
   nodeSelectorTerms?: {
     matchExpressions: IMatchExpression[];
   }[];
@@ -30,7 +35,7 @@ interface INodeAffinity {
   };
 }
 
-interface IPodAffinity {
+export interface IPodAffinity {
   labelSelector: {
     matchExpressions: IMatchExpression[];
   };
@@ -38,18 +43,9 @@ interface IPodAffinity {
 }
 
 export interface IAffinity {
-  nodeAffinity?: {
-    requiredDuringSchedulingIgnoredDuringExecution?: INodeAffinity[];
-    preferredDuringSchedulingIgnoredDuringExecution?: INodeAffinity[];
-  };
-  podAffinity?: {
-    requiredDuringSchedulingIgnoredDuringExecution?: IPodAffinity[];
-    preferredDuringSchedulingIgnoredDuringExecution?: IPodAffinity[];
-  };
-  podAntiAffinity?: {
-    requiredDuringSchedulingIgnoredDuringExecution?: IPodAffinity[];
-    preferredDuringSchedulingIgnoredDuringExecution?: IPodAffinity[];
-  };
+  nodeAffinity?: Affinity<INodeAffinity>;
+  podAffinity?: Affinity<IPodAffinity>;
+  podAntiAffinity?: Affinity<IPodAffinity>;
 }
 
 export class WorkloadKubeObject extends KubeObject {

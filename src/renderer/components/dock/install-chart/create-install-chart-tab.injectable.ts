@@ -7,19 +7,19 @@ import installChartTabStoreInjectable from "./store.injectable";
 import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
 import {
   DockTab,
-  DockTabCreate,
-  DockTabCreateSpecific,
+  BaseDockTabCreateOptions,
+  DockTabCreateOption,
   TabKind,
 } from "../dock/store";
 import type { InstallChartTabStore } from "./store";
 import createDockTabInjectable from "../dock/create-dock-tab.injectable";
 
 interface Dependencies {
-  createDockTab: (rawTab: DockTabCreate, addNumber: boolean) => DockTab;
+  createDockTab: (rawTab: BaseDockTabCreateOptions, addNumber: boolean) => DockTab;
   installChartStore: InstallChartTabStore;
 }
 
-const createInstallChartTab = ({ createDockTab, installChartStore }: Dependencies) => (chart: HelmChart, tabParams: DockTabCreateSpecific = {}) => {
+const createInstallChartTab = ({ createDockTab, installChartStore }: Dependencies) => (chart: HelmChart, tabParams: DockTabCreateOption = {}) => {
   const { name, repo, version } = chart;
 
   const tab = createDockTab(

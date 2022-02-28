@@ -10,6 +10,8 @@ export function noop<T extends any[]>(...args: T): void {
   return void args;
 }
 
+export type Defaulted<Params, DefaultParams extends keyof Params> = Required<Pick<Params, DefaultParams>> & Omit<Params, DefaultParams>;
+
 export * from "./abort-controller";
 export * from "./app-version";
 export * from "./autobind";

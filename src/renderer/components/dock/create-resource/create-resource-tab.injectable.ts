@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import dockStoreInjectable from "../dock/store.injectable";
-import { DockTabCreateSpecific, TabKind } from "../dock/store";
+import { DockTabCreateOption, TabKind } from "../dock/store";
 
 const createResourceTabInjectable = getInjectable({
   id: "create-resource-tab",
@@ -12,7 +12,7 @@ const createResourceTabInjectable = getInjectable({
   instantiate: (di) => {
     const dockStore = di.inject(dockStoreInjectable);
 
-    return (tabParams: DockTabCreateSpecific = {}) =>
+    return (tabParams: DockTabCreateOption = {}) =>
       dockStore.createTab({
         title: "Create resource",
         ...tabParams,

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
 export type ClusterRoleBindingSubjectKind = "Group" | "ServiceAccount" | "User";
@@ -39,16 +39,20 @@ export class ClusterRoleBinding extends KubeObject {
 }
 
 /**
- * Only available within kubernetes cluster pages
+ * The api type for {@link ClusterRoleBinding}'s
  */
-let clusterRoleBindingApi: KubeApi<ClusterRoleBinding>;
-
-if (isClusterPageContext()) {
-  clusterRoleBindingApi = new KubeApi({
-    objectConstructor: ClusterRoleBinding,
-  });
+export class ClusterRoleBindingApi extends KubeApi<ClusterRoleBinding> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: ClusterRoleBinding,
+    });
+  }
 }
 
-export {
-  clusterRoleBindingApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const clusterRoleBindingApi = isClusterPageContext()
+  ? new ClusterRoleBindingApi()
+  : undefined;

@@ -88,5 +88,5 @@ export const initClusterFrame =
       };
 
       // TODO: Make context dependency of KubeObjectStore
-      KubeObjectStore.defaultContext.set(clusterFrameContext);
+      KubeObjectStore.defaultContext = clusterFrameContext;
     };

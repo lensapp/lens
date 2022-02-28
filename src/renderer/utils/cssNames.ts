@@ -8,20 +8,27 @@
 export type IClassName = string | string[] | IClassNameMap;
 export type IClassNameMap = Record<string, any>;
 
+/**
+ * @param args A list of class names or objects for specifying optional class names
+ * @returns a space seperated list of class names
+ */
 export function cssNames(...args: IClassName[]): string {
-  const map: IClassNameMap = {};
+  const map: Record<string, any> = {};
 
-  args.forEach(className => {
-    if (typeof className === "string" || Array.isArray(className)) {
-      [].concat(className).forEach(name => map[name] = true);
+  for (const arg of args) {
+    if (typeof arg === "string") {
+      map[arg] = true;
+    } else if (Array.isArray(arg)) {
+      for (const className of arg) {
+        map[className] = true;
+      }
+    } else {
+      Object.assign(map, arg);
     }
-    else {
-      Object.assign(map, className);
-    }
-  });
+  }
 
   return Object.entries(map)
-    .filter(([, isActive]) => !!isActive)
+    .filter(([, isActive]) => isActive)
     .map(([className]) => className.trim())
     .join(" ");
 }

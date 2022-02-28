@@ -110,14 +110,8 @@ export class Cluster extends KubeObject {
 /**
  * Only available within kubernetes cluster pages
  */
-let clusterApi: ClusterApi;
-
-if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
-  clusterApi = new ClusterApi({
+export const clusterApi = isClusterPageContext()
+  ? new ClusterApi({
     objectConstructor: Cluster,
-  });
-}
-
-export {
-  clusterApi,
-};
+  })
+  : undefined;

@@ -4,12 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { podsStore } from "../../+workloads-pods/pods.store";
-import type { WorkloadKubeObject } from "../../../../common/k8s-api/workload-kube-object";
+import type { DaemonSet, Deployment, Job, Pod, ReplicaSet, StatefulSet } from "../../../../common/k8s-api/endpoints";
 import type { TabId } from "../dock/store";
 import createLogsTabInjectable, { CreateLogsTabData } from "./create-logs-tab.injectable";
 
 export interface WorkloadLogsTabData {
-  workload: WorkloadKubeObject;
+  workload: DaemonSet | Deployment | Job | Pod | ReplicaSet | StatefulSet;
 }
 
 interface Dependencies {

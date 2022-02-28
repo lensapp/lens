@@ -7,12 +7,21 @@ import React from "react";
 import { createStyles, withStyles, Theme } from "@material-ui/core/styles";
 import Switch, { SwitchClassKey, SwitchProps } from "@material-ui/core/Switch";
 
-interface Styles extends Partial<Record<SwitchClassKey, string>> {
+/**
+ * An extended set of style strings.
+ */
+export interface SwitcherStyles extends Partial<Record<SwitchClassKey, string>> {
+  /**
+   * The style for when the element has keyboard focus.
+   */
   focusVisible?: string;
 }
 
+/**
+ * The properties for the {@link Switcher} component
+ */
 export interface SwitcherProps extends SwitchProps {
-  classes: Styles;
+  classes: SwitcherStyles;
 }
 
 /**

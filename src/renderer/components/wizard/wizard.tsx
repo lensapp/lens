@@ -29,12 +29,12 @@ export interface WizardProps<D> extends WizardCommonProps<D> {
   children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
-interface State {
-  step?: number;
+export interface WizardState {
+  step: number;
 }
 
-export class Wizard<D> extends React.Component<WizardProps<D>, State> {
-  public state: State = {
+export class Wizard<D> extends React.Component<WizardProps<D>, WizardState> {
+  public state: WizardState = {
     step: this.getValidStep(this.props.step),
   };
 
@@ -132,7 +132,7 @@ export interface WizardStepProps<D> extends WizardCommonProps<D> {
   scrollable?: boolean;
 }
 
-interface WizardStepState {
+export interface WizardStepState {
   waiting?: boolean;
 }
 

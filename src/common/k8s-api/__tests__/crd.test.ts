@@ -29,7 +29,7 @@ describe("Crds", () => {
               storage: false,
             },
           ],
-        },
+        } as CustomResourceDefinitionSpec,
       });
 
       expect(() => crd.getVersion()).toThrowError("Failed to find a version for CustomResourceDefinition foo");
@@ -57,7 +57,7 @@ describe("Crds", () => {
               storage: false,
             },
           ],
-        },
+        } as CustomResourceDefinitionSpec,
       });
 
       expect(crd.getVersion()).toBe("123");
@@ -85,7 +85,7 @@ describe("Crds", () => {
               storage: false,
             },
           ],
-        },
+        } as CustomResourceDefinitionSpec,
       });
 
       expect(crd.getVersion()).toBe("123");
@@ -114,7 +114,7 @@ describe("Crds", () => {
               storage: false,
             },
           ],
-        },
+        } as CustomResourceDefinitionSpec,
       });
 
       expect(crd.getVersion()).toBe("123");

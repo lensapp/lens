@@ -4,7 +4,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum HpaMetricType {
@@ -148,14 +148,21 @@ export class HorizontalPodAutoscaler extends KubeObject {
   }
 }
 
-let hpaApi: KubeApi<HorizontalPodAutoscaler>;
-
-if (isClusterPageContext()) {
-  hpaApi = new KubeApi<HorizontalPodAutoscaler>({
-    objectConstructor: HorizontalPodAutoscaler,
-  });
+/**
+ * The api type for {@link HorizontalPodAutoscaler}'s
+ */
+export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: HorizontalPodAutoscaler,
+    });
+  }
 }
 
-export {
-  hpaApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const hpaApi = isClusterPageContext()
+  ? new HorizontalPodAutoscalerApi()
+  : undefined;

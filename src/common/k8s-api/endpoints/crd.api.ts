@@ -3,13 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeCreationError, KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { KubeObject, KubeObjectMetadata } from "../kube-object";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { crdResourcesURL } from "../../routes";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { KubeJsonApiData } from "../kube-json-api";
 
-interface AdditionalPrinterColumnsCommon {
+export interface AdditionalPrinterColumnsCommon {
   name: string;
   type: "integer" | "number" | "string" | "boolean" | "date";
   priority: number;
@@ -20,7 +19,7 @@ export type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & {
   jsonPath: string;
 };
 
-type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
+export type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
   JSONPath: string;
 };
 
@@ -79,24 +78,34 @@ export interface CustomResourceDefinition {
     };
     storedVersions: string[];
   };
+  /**
+   * @deprecated for apiextensions.k8s.io/v1 but used previously
+   */
+  additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
 }
 
-export interface CRDApiData extends KubeJsonApiData {
-  spec: object; // TODO: make better
+export interface CustomResourceDefinitionStatus {
+  conditions: {
+    lastTransitionTime: string;
+    message: string;
+    reason: string;
+    status: string;
+    type?: string;
+  }[];
+  acceptedNames: {
+    plural: string;
+    singular: string;
+    kind: string;
+    shortNames: string[];
+    listKind: string;
+  };
+  storedVersions: string[];
 }
 
-export class CustomResourceDefinition extends KubeObject {
+export class CustomResourceDefinition extends KubeObject<KubeObjectMetadata, CustomResourceDefinitionStatus, CustomResourceDefinitionSpec> {
   static kind = "CustomResourceDefinition";
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
-
-  constructor(data: CRDApiData) {
-    super(data);
-
-    if (!data.spec || typeof data.spec !== "object") {
-      throw new KubeCreationError("Cannot create a CustomResourceDefinition from an object without spec", data);
-    }
-  }
 
   getResourceUrl() {
     return crdResourcesURL({
@@ -211,17 +220,21 @@ export class CustomResourceDefinition extends KubeObject {
 }
 
 /**
- * Only available within kubernetes cluster pages
+ * The api type for {@link CustomResourceDefinition}'s
  */
-let crdApi: KubeApi<CustomResourceDefinition>;
-
-if (isClusterPageContext()) {
-  crdApi = new KubeApi<CustomResourceDefinition>({
-    objectConstructor: CustomResourceDefinition,
-    checkPreferredVersion: true,
-  });
+export class CustomResourceDefinitionApi extends KubeApi<CustomResourceDefinition> {
+  constructor(params?: Pick<BaseKubeApiOptions, "request">) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: CustomResourceDefinition,
+      checkPreferredVersion: true,
+    });
+  }
 }
 
-export {
-  crdApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const crdApi = isClusterPageContext()
+  ? new CustomResourceDefinitionApi()
+  : undefined;

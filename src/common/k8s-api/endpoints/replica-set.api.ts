@@ -111,14 +111,11 @@ export class ReplicaSet extends WorkloadKubeObject {
   }
 }
 
-let replicaSetApi: ReplicaSetApi;
-
-if (isClusterPageContext()) {
-  replicaSetApi = new ReplicaSetApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const replicaSetApi = isClusterPageContext()
+  ? new ReplicaSetApi({
     objectConstructor: ReplicaSet,
-  });
-}
-
-export {
-  replicaSetApi,
-};
+  })
+  : undefined;

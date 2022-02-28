@@ -88,13 +88,9 @@ class NonInjectedNamespaceSelect extends React.Component<NamespaceSelectProps & 
   }
 }
 
-export const NamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps>(
-  NonInjectedNamespaceSelect,
-
-  {
-    getProps: (di, props) => ({
-      namespaceStore: di.inject(namespaceStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const NamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps>(NonInjectedNamespaceSelect, {
+  getProps: (di, props) => ({
+    namespaceStore: di.inject(namespaceStoreInjectable),
+    ...props,
+  }),
+});

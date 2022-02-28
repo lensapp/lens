@@ -21,6 +21,9 @@ interface State {
 
 @observer
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
+  /**
+   * @internal
+   */
   public state: State = {};
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {

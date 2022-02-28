@@ -128,14 +128,8 @@ export class CronJob extends KubeObject {
 /**
  * Only available within kubernetes cluster pages
  */
-let cronJobApi: CronJobApi;
-
-if (isClusterPageContext()) {
-  cronJobApi = new CronJobApi({
+export const cronJobApi = isClusterPageContext()
+  ? new CronJobApi({
     objectConstructor: CronJob,
-  });
-}
-
-export {
-  cronJobApi,
-};
+  })
+  : undefined;

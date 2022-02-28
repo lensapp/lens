@@ -4,3 +4,4 @@
  */
 
 export { ExtensionStore } from "../extension-store";
+export type { BaseStoreParams } from "../../common/base-store";

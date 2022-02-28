@@ -5,3 +5,4 @@
 
 export { appEventBus } from "../../common/app-event-bus/event-bus";
 export type { AppEvent } from "../../common/app-event-bus/event-bus";
+export type { EventEmitter, AddListenerOptions, EventListener } from "../../common/event-emitter";

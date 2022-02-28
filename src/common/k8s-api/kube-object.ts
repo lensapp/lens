@@ -14,6 +14,7 @@ import type { JsonApiParams } from "./json-api";
 import * as resourceApplierApi from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 import type { Patch } from "rfc6902";
+import Joi from "joi";
 
 export type KubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
   kind?: string;
@@ -25,9 +26,9 @@ export interface KubeObjectMetadata {
   uid: string;
   name: string;
   namespace?: string;
-  creationTimestamp: string;
+  creationTimestamp?: string;
   resourceVersion: string;
-  selfLink: string;
+  selfLink?: string;
   deletionTimestamp?: string;
   finalizers?: string[];
   continue?: string; // provided when used "?limit=" query param to fetch objects list
@@ -116,6 +117,36 @@ export interface LabelSelector {
   matchExpressions?: LabelMatchExpression[];
 }
 
+const kubeObjectValidator = Joi
+  .object({
+    metadata: Joi
+      .object()
+      .unknown(true)
+      .required(),
+    spec: Joi.
+      object()
+      .unknown(true)
+      .optional(),
+    status: Joi.
+      object()
+      .unknown(true)
+      .optional(),
+    managedFields: Joi.
+      object()
+      .unknown(true)
+      .optional(),
+    apiVersion: Joi
+      .string()
+      .required(),
+    kind: Joi
+      .string()
+      .required(),
+  })
+  .unknown(true);
+
+/**
+ * The Lens representation of a kube resource
+ */
 export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind?: string;
   static readonly namespaced?: boolean;
@@ -126,7 +157,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   metadata: Metadata;
   status?: Status;
   spec?: Spec;
-  managedFields?: any;
+  managedFields?: object;
 
   static create(data: KubeJsonApiData) {
     return new KubeObject(data);
@@ -227,13 +258,11 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     ...KubeObject.nonEditablePathPrefixes,
   ]);
 
-  constructor(data: KubeJsonApiData) {
-    if (typeof data !== "object") {
-      throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
-    }
+  constructor(data: KubeJsonApiData<Metadata, Status, Spec>) {
+    const { error } = kubeObjectValidator.validate(data);
 
-    if (!data.metadata || typeof data.metadata !== "object") {
-      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata`, data);
+    if (error) {
+      throw error;
     }
 
     Object.assign(this, data);

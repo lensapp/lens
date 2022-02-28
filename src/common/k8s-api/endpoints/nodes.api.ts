@@ -249,14 +249,11 @@ export class Node extends KubeObject {
   }
 }
 
-let nodesApi: NodesApi;
-
-if (isClusterPageContext()) {
-  nodesApi = new NodesApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const nodesApi = isClusterPageContext()
+  ? new NodesApi({
     objectConstructor: Node,
-  });
-}
-
-export {
-  nodesApi,
-};
+  })
+  : undefined;

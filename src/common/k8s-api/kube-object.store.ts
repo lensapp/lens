@@ -57,7 +57,10 @@ export interface KubeObjectStoreSubscribeParams {
 }
 
 export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
-  static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
+  /**
+   * @internal
+   */
+  static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
 
   public api: KubeApi<T>;
   public readonly limit?: number;
@@ -81,8 +84,11 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     this.bindWatchEventsUpdater();
   }
 
+  /**
+   * @internal
+   */
   get context(): ClusterContext {
-    return KubeObjectStore.defaultContext.get();
+    return KubeObjectStore.defaultContext;
   }
 
   // TODO: Circular dependency: KubeObjectStore -> ClusterFrameContext -> NamespaceStore -> KubeObjectStore
@@ -369,11 +375,10 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return Promise.all(this.selectedItems.map(this.remove));
   }
 
-  async removeItems(items: T[]) {
-    await Promise.all(items.map(this.remove));
-  }
-
-  // collect items from watch-api events to avoid UI blowing up with huge streams of data
+  /**
+   * collect items from watch-api events to avoid UI blowing up with huge streams of data
+   * @internal
+   */
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {

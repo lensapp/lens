@@ -25,14 +25,11 @@ export class PodMetrics extends KubeObject {
   static apiBase = "/apis/metrics.k8s.io/v1beta1/pods";
 }
 
-let podMetricsApi: KubeApi<PodMetrics>;
-
-if (isClusterPageContext()) {
-  podMetricsApi = new KubeApi<PodMetrics>({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const podMetricsApi = isClusterPageContext()
+  ? new KubeApi<PodMetrics>({
     objectConstructor: PodMetrics,
-  });
-}
-
-export {
-  podMetricsApi,
-};
+  })
+  : undefined;

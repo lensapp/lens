@@ -10,14 +10,12 @@ import { Icon } from "../icon";
 
 const TabsContext = React.createContext<TabsContextValue>({});
 
-interface TabsContextValue<D = any> {
+export interface TabsContextValue<D = any> {
   autoFocus?: boolean;
   withBorder?: boolean;
   value?: D;
   onChange?(value: D): void;
 }
-
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttributes<HTMLElement>, "onChange"> {
   className?: string;

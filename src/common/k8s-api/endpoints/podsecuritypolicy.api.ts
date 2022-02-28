@@ -102,14 +102,11 @@ export class PodSecurityPolicy extends KubeObject {
   }
 }
 
-let pspApi: KubeApi<PodSecurityPolicy>;
-
-if (isClusterPageContext()) {
-  pspApi = new KubeApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const pspApi = isClusterPageContext()
+  ? new KubeApi<PodSecurityPolicy>({
     objectConstructor: PodSecurityPolicy,
-  });
-}
-
-export {
-  pspApi,
-};
+  })
+  : undefined;

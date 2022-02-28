@@ -8,6 +8,7 @@ import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
 import { isDevelopment } from "../../common/vars";
+import type { Defaulted } from "../utils";
 
 interface WebsocketApiParams {
   /**
@@ -62,28 +63,29 @@ export interface WebSocketEvents {
   close: () => void;
 }
 
-type Defaulted<Params, DefaultParams extends keyof Params> = Required<Pick<Params, DefaultParams>> & Omit<Params, DefaultParams>;
+const defaultWebsocketApiParams = {
+  logging: isDevelopment,
+  reconnectDelay: 10,
+  flushOnOpen: true,
+  pingMessage: "PING",
+};
 
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
   protected socket?: WebSocket | null;
   protected pendingCommands: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
   protected reconnectTimer?: any;
   protected pingTimer?: any;
-  protected params: Defaulted<WebsocketApiParams, keyof typeof WebSocketApi["defaultParams"]>;
+  private params: Defaulted<WebsocketApiParams, keyof typeof defaultWebsocketApiParams>;
 
   @observable readyState = WebSocketApiState.PENDING;
-
-  private static defaultParams = {
-    logging: isDevelopment,
-    reconnectDelay: 10,
-    flushOnOpen: true,
-    pingMessage: "PING",
-  };
 
   constructor(params: WebsocketApiParams) {
     super();
     makeObservable(this);
-    this.params = Object.assign({}, WebSocketApi.defaultParams, params);
+    this.params = {
+      ...defaultWebsocketApiParams,
+      ...params,
+    };
     const { pingInterval } = this.params;
 
     if (pingInterval) {

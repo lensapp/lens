@@ -1,12 +1,12 @@
 name: Check Documentation
 on:
   pull_request:
-    types: [opened, labeled, unlabeled, synchronize]
+    branches:
+      - "**"
 jobs:
   build:
     name: Check Docs
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'area/documentation') }}
     strategy:
       matrix:
         node-version: [14.x]

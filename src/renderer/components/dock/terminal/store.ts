@@ -9,7 +9,7 @@ import { TerminalApi } from "../../../api/terminal-api";
 import type { DockTab, TabId } from "../dock/store";
 import { WebSocketApiState } from "../../../api/websocket-api";
 
-export interface ITerminalTab extends DockTab {
+export interface TerminalTab extends DockTab {
   node?: string; // activate node shell mode
 }
 
@@ -21,11 +21,14 @@ export class TerminalStore {
   protected terminals = new Map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();
 
+  /**
+   * @internal
+   */
   constructor(private dependencies: Dependencies) {
   }
 
   @action
-  connect(tab: ITerminalTab) {
+  connect(tab: TerminalTab) {
     if (this.isConnected(tab.id)) {
       return;
     }

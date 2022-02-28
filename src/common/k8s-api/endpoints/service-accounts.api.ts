@@ -5,7 +5,7 @@
 
 import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
@@ -37,14 +37,22 @@ export class ServiceAccount extends KubeObject {
   }
 }
 
-let serviceAccountsApi: KubeApi<ServiceAccount>;
+/**
+ * The api type for {@link ServiceAccount}'s
+ */
 
-if (isClusterPageContext()) {
-  serviceAccountsApi = new KubeApi<ServiceAccount>({
-    objectConstructor: ServiceAccount,
-  });
+export class ServiceAccountApi extends KubeApi<ServiceAccount> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: ServiceAccount,
+    });
+  }
 }
 
-export {
-  serviceAccountsApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const serviceAccountsApi = isClusterPageContext()
+  ? new ServiceAccountApi()
+  : undefined;

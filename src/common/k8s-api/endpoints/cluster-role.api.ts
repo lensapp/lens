@@ -4,7 +4,7 @@
  */
 
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
 export interface ClusterRole {
@@ -27,16 +27,20 @@ export class ClusterRole extends KubeObject {
 }
 
 /**
- * Only available within kubernetes cluster pages
+ * The api type for {@link ClusterRole}'s
  */
-let clusterRoleApi: KubeApi<ClusterRole>;
-
-if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
-  clusterRoleApi = new KubeApi({
-    objectConstructor: ClusterRole,
-  });
+export class ClusterRoleApi extends KubeApi<ClusterRole> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: ClusterRole,
+    });
+  }
 }
 
-export {
-  clusterRoleApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const clusterRoleApi = isClusterPageContext()
+  ? new ClusterRoleApi()
+  : undefined;

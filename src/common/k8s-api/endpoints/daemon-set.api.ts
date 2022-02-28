@@ -103,14 +103,8 @@ export function getMetricsForDaemonSets(daemonsets: DaemonSet[], namespace: stri
 /**
  * Only available within kubernetes cluster pages
  */
-let daemonSetApi: DaemonSetApi;
-
-if (isClusterPageContext()) {
-  daemonSetApi = new DaemonSetApi({
+export const daemonSetApi = isClusterPageContext()
+  ? new DaemonSetApi({
     objectConstructor: DaemonSet,
-  });
-}
-
-export {
-  daemonSetApi,
-};
+  })
+  : undefined;

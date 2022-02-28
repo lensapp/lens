@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import upgradeChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { DockStore, DockTabCreateSpecific, TabId, TabKind } from "../dock/store";
+import { DockStore, DockTabCreateOption, TabId, TabKind } from "../dock/store";
 import type { UpgradeChartTabStore } from "./store";
 import { runInAction } from "mobx";
 
@@ -15,7 +15,7 @@ interface Dependencies {
   dockStore: DockStore;
 }
 
-const createUpgradeChartTab = ({ upgradeChartStore, dockStore }: Dependencies) => (release: HelmRelease, tabParams: DockTabCreateSpecific = {}): TabId => {
+const createUpgradeChartTab = ({ upgradeChartStore, dockStore }: Dependencies) => (release: HelmRelease, tabParams: DockTabCreateOption = {}): TabId => {
   const tabId = upgradeChartStore.getTabIdByRelease(release.getName());
 
   if (tabId) {

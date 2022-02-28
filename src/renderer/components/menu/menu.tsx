@@ -43,7 +43,7 @@ export interface MenuProps {
   toggleEvent?: "click" | "contextmenu";
 }
 
-interface State {
+export interface MenuState {
   position?: MenuPosition;
   menuStyle?: MenuStyle;
 }
@@ -58,7 +58,7 @@ const defaultPropsMenu: Partial<MenuProps> = {
   toggleEvent: "click",
 };
 
-export class Menu extends React.Component<MenuProps, State> {
+export class Menu extends React.Component<MenuProps, MenuState> {
   static defaultProps = defaultPropsMenu as object;
 
   constructor(props: MenuProps) {
@@ -68,7 +68,8 @@ export class Menu extends React.Component<MenuProps, State> {
   public opener: HTMLElement;
   public elem: HTMLUListElement;
   protected items: { [index: number]: MenuItem } = {};
-  public state: State = {};
+
+  public state: MenuState = {};
 
   get isOpen() {
     return !!this.props.isOpen;

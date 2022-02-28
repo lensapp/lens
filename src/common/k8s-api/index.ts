@@ -9,8 +9,7 @@ import { apiKubePrefix, apiPrefix, isDebugging, isDevelopment } from "../../comm
 import { isClusterPageContext } from "../utils/cluster-id-url-parsing";
 import { appEventBus } from "../app-event-bus/event-bus";
 
-let apiBase: JsonApi;
-let apiKube: KubeJsonApi;
+export let apiBase: JsonApi;
 
 if (typeof window === "undefined") {
   appEventBus.addListener((event) => {
@@ -42,8 +41,11 @@ if (typeof window === "undefined") {
   });
 }
 
-if (isClusterPageContext()) {
-  apiKube = new KubeJsonApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const apiKube = isClusterPageContext()
+  ? new KubeJsonApi({
     serverAddress: `http://127.0.0.1:${window.location.port}`,
     apiBase: apiKubePrefix,
     debug: isDevelopment,
@@ -51,10 +53,5 @@ if (isClusterPageContext()) {
     headers: {
       "Host": window.location.host,
     },
-  });
-}
-
-export {
-  apiBase,
-  apiKube,
-};
+  })
+  : undefined;

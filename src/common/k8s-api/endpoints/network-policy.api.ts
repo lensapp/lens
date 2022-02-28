@@ -5,7 +5,7 @@
 
 import { KubeObject, LabelSelector } from "../kube-object";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
@@ -129,14 +129,22 @@ export class NetworkPolicy extends KubeObject {
   }
 }
 
-let networkPolicyApi: KubeApi<NetworkPolicy>;
+/**
+ * The api type for {@link NetworkPolicy}'s
+ */
 
-if (isClusterPageContext()) {
-  networkPolicyApi = new KubeApi<NetworkPolicy>({
-    objectConstructor: NetworkPolicy,
-  });
+export class NetworkPolicyApi extends KubeApi<NetworkPolicy> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: NetworkPolicy,
+    });
+  }
 }
 
-export {
-  networkPolicyApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const networkPolicyApi = isClusterPageContext()
+  ? new NetworkPolicyApi()
+  : undefined;

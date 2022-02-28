@@ -4,7 +4,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { autoBind } from "../../utils";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
@@ -65,14 +65,21 @@ export class LimitRange extends KubeObject {
   }
 }
 
-let limitRangeApi: KubeApi<LimitRange>;
-
-if (isClusterPageContext()) {
-  limitRangeApi = new KubeApi<LimitRange>({
-    objectConstructor: LimitRange,
-  });
+/**
+ * The api type for {@link LimitRange}'s
+ */
+export class LimitRangeApi extends KubeApi<LimitRange> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: LimitRange,
+    });
+  }
 }
 
-export {
-  limitRangeApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const limitRangeApi = isClusterPageContext()
+  ? new LimitRangeApi()
+  : undefined;

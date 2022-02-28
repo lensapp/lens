@@ -7,6 +7,9 @@ import orderBy from "lodash/orderBy";
 import { autoBind } from "./utils";
 import { action, computed, observable, when, makeObservable } from "mobx";
 
+/**
+ * An object whose ID and name can be gotten via methods.
+ */
 export interface ItemObject {
   getId(): string;
   getName(): string;

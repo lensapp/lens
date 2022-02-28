@@ -11,7 +11,14 @@ import type { TableCellProps } from "../table";
  * These are the supported props for the title cell
  */
 export interface TitleCellProps {
+  /**
+   * An optional className entry
+   */
   className?: string;
+
+  /**
+   * The actual title for the column
+   */
   title: string;
 }
 

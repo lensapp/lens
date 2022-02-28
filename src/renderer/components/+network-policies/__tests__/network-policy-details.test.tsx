@@ -12,7 +12,12 @@ jest.mock("../../kube-object-meta");
 
 describe("NetworkPolicyDetails", () => {
   it("should render w/o errors", () => {
-    const policy = new NetworkPolicy({ metadata: {} as any, spec: {}} as any);
+    const policy = new NetworkPolicy({
+      metadata: {} as any,
+      kind: "NetworkPolicy",
+      apiVersion:"networking.k8s.io/v1",
+      spec: {},
+    });
     const { container } = render(<NetworkPolicyDetails object={policy} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
@@ -31,7 +36,12 @@ describe("NetworkPolicyDetails", () => {
       }],
       podSelector: {},
     };
-    const policy = new NetworkPolicy({ metadata: {} as any, spec } as any);
+    const policy = new NetworkPolicy({
+      metadata: {} as any,
+      kind: "NetworkPolicy",
+      apiVersion: "networking.k8s.io/v1",
+      spec,
+    });
     const { container } = render(<NetworkPolicyDetails object={policy} />);
 
     expect(await findByTestId(container, "egress-0")).toBeInstanceOf(HTMLElement);
@@ -47,7 +57,12 @@ describe("NetworkPolicyDetails", () => {
       }],
       podSelector: {},
     };
-    const policy = new NetworkPolicy({ metadata: {} as any, spec } as any);
+    const policy = new NetworkPolicy({
+      metadata: {} as any,
+      kind: "NetworkPolicy",
+      apiVersion: "networking.k8s.io/v1",
+      spec,
+    });
     const { container } = render(<NetworkPolicyDetails object={policy} />);
 
     expect(container).toBeInstanceOf(HTMLElement);

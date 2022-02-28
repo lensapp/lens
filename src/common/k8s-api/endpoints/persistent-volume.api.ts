@@ -5,7 +5,7 @@
 
 import { KubeObject } from "../kube-object";
 import { autoBind, unitsToBytes } from "../../utils";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
@@ -86,14 +86,22 @@ export class PersistentVolume extends KubeObject {
   }
 }
 
-let persistentVolumeApi: KubeApi<PersistentVolume>;
+/**
+ * The api type for {@link PersistentVolume}'s
+ */
 
-if (isClusterPageContext()) {
-  persistentVolumeApi = new KubeApi({
-    objectConstructor: PersistentVolume,
-  });
+export class PersistentVolumeApi extends KubeApi<PersistentVolume> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: PersistentVolume,
+    });
+  }
 }
 
-export {
-  persistentVolumeApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const persistentVolumeApi = isClusterPageContext()
+  ? new PersistentVolumeApi()
+  : undefined;

@@ -61,7 +61,10 @@ interface Dependencies {
 }
 
 export class LogTabStore extends DockTabStore<LogTabData> {
-  constructor(protected dependencies: Dependencies) {
+  /**
+   * @internal
+   */
+  constructor(dependencies: Dependencies) {
     super(dependencies, {
       storageKey: "pod_logs",
     });

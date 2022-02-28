@@ -15,6 +15,11 @@ import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } 
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { MenuRegistration } from "./menu-registration";
 
+/**
+ * The IDs of the menus that Lens uses.
+ *
+ * Note: `"mac"` is only valid on macOS
+ */
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
 interface MenuItemsOpts extends MenuItemConstructorOptions {

@@ -24,12 +24,12 @@ export enum TabKind {
  *
  * All fields are required.
  */
-export type DockTab = Required<DockTabCreate>;
+export type DockTab = Required<BaseDockTabCreateOptions>;
 
 /**
  * These are the arguments for creating a new Tab on the dock
  */
-export interface DockTabCreate {
+export interface BaseDockTabCreateOptions {
   /**
    * The ID of the tab for reference purposes.
    */
@@ -63,7 +63,7 @@ export interface DockTabCreate {
  * That way users should get a type error if they try and specify a `kind`
  * themselves.
  */
-export type DockTabCreateSpecific = Omit<DockTabCreate, "kind">;
+export type DockTabCreateOption = Omit<BaseDockTabCreateOptions, "kind">;
 
 export interface DockStorageState {
   height: number;
@@ -288,7 +288,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  createTab = action((rawTabDesc: DockTabCreate, addNumber = true): DockTab => {
+  createTab = action((rawTabDesc: BaseDockTabCreateOptions, addNumber = true): DockTab => {
     const {
       id = uuid.v4(),
       kind,

@@ -17,12 +17,12 @@ import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
 
-export interface InfoPanelProps extends OptionalProps {
+export interface InfoPanelProps extends InfoPanelOptionalProps {
   tabId: TabId;
   submit?: () => Promise<ReactNode | string | void>;
 }
 
-export interface OptionalProps {
+export interface InfoPanelOptionalProps {
   className?: string;
   error?: string;
   controls?: ReactNode;
@@ -42,7 +42,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
-  static defaultProps: OptionalProps = {
+  static defaultProps: InfoPanelOptionalProps = {
     submitLabel: "Submit",
     submittingMessage: "Submitting..",
     showButtons: true,

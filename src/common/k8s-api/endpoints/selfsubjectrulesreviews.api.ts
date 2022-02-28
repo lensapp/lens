@@ -71,15 +71,12 @@ export class SelfSubjectRulesReview extends KubeObject {
   }
 }
 
-let selfSubjectRulesReviewApi: SelfSubjectRulesReviewApi;
-
-if (isClusterPageContext()) {
-  selfSubjectRulesReviewApi = new SelfSubjectRulesReviewApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const selfSubjectRulesReviewApi = isClusterPageContext()
+  ? new SelfSubjectRulesReviewApi({
     objectConstructor: SelfSubjectRulesReview,
-  });
-}
-
-export {
-  selfSubjectRulesReviewApi,
-};
+  })
+  : undefined;
 

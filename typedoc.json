@@ -2,10 +2,12 @@
   "readme": "docs/extensions/typedoc-readme.md.tpl",
   "name": "@k8slens/extensions",
   "out": "docs/extensions/api",
-  "excludePrivate": true,
   "includes": [
     "src/"
   ],
-  "hideBreadcrumbs": true,
-  "disableSources": true
+  "disableSources": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "validation": true,
+  "treatWarningsAsErrors": true
 }

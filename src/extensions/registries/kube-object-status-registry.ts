@@ -3,8 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObject, KubeObjectStatus } from "../renderer-api/k8s-api";
+import type { KubeObject } from "../renderer-api/k8s-api";
 import { BaseRegistry } from "./base-registry";
+
+export enum KubeObjectStatusLevel {
+  INFO = 1,
+  WARNING = 2,
+  CRITICAL = 3,
+}
+
+export interface KubeObjectStatus {
+  level: KubeObjectStatusLevel;
+  text: string;
+  timestamp?: string;
+}
 
 export interface KubeObjectStatusRegistration {
   kind: string;

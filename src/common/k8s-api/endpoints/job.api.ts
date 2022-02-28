@@ -123,14 +123,11 @@ export function getMetricsForJobs(jobs: Job[], namespace: string, selector = "")
   });
 }
 
-let jobApi: JobApi;
-
-if (isClusterPageContext()) {
-  jobApi = new JobApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const jobApi = isClusterPageContext()
+  ? new JobApi({
     objectConstructor: Job,
-  });
-}
-
-export {
-  jobApi,
-};
+  })
+  : undefined;

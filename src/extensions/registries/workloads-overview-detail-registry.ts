@@ -8,7 +8,7 @@ import type React from "react";
 import { BaseRegistry } from "./base-registry";
 
 export interface WorkloadsOverviewDetailComponents {
-  Details: React.ComponentType<{}>;
+  Details: React.ComponentType;
 }
 
 export interface WorkloadsOverviewDetailRegistration {

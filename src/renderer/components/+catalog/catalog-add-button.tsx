@@ -10,7 +10,7 @@ import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { observable, makeObservable, action } from "mobx";
 import { boundMethod } from "../../../common/utils";
-import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
+import type { CatalogCategory, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
@@ -60,12 +60,11 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   updateCategoryItems = action((category: CatalogCategory) => {
     if (category instanceof EventEmitter) {
       const menuItems: CatalogEntityAddMenu[] = [];
-      const context: CatalogEntityAddMenuContext = {
+
+      category.emit("catalogAddMenu", {
         navigate: (url: string) => navigate(url),
         menuItems,
-      };
-
-      category.emit("catalogAddMenu", context);
+      });
       this.menuItems.set(category.getId(), menuItems);
     }
   });
@@ -86,10 +85,13 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
   @boundMethod
   onButtonClick() {
-    const defaultAction = this.items.find(item => item.defaultAction)?.onClick;
-    const clickAction = defaultAction || (this.items.length === 1 ? this.items[0].onClick : null);
+    const defaultActions = this.items.filter(item => item.defaultAction);
 
-    clickAction?.();
+    if (defaultActions.length === 1) {
+      defaultActions[0].onClick();
+    } else if (defaultActions.length === 0 && this.items.length === 1) {
+      this.items[0].onClick();
+    }
   }
 
   get items() {

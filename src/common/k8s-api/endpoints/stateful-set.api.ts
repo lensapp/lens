@@ -136,14 +136,11 @@ export class StatefulSet extends WorkloadKubeObject {
   }
 }
 
-let statefulSetApi: StatefulSetApi;
-
-if (isClusterPageContext()) {
-  statefulSetApi = new StatefulSetApi({
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const statefulSetApi = isClusterPageContext()
+  ? new StatefulSetApi({
     objectConstructor: StatefulSet,
-  });
-}
-
-export {
-  statefulSetApi,
-};
+  })
+  : undefined;

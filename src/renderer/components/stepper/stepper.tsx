@@ -12,17 +12,15 @@ export interface StepperProps extends React.HTMLProps<any> {
   steps: Step[];
 }
 
-interface Step {
+export interface Step {
   title?: string;
 }
 
 export class Stepper extends React.Component<StepperProps, {}> {
   render() {
-    const { className, steps, ...props } = this.props;
+    const { className, steps, step: rawStep, ...props } = this.props;
     const stepsCount = steps.length;
-    let { step } = this.props;
-
-    step = Math.min(Math.max(1, step), stepsCount);
+    const step = Math.min(Math.max(1, rawStep), stepsCount);
 
     return (
       <div {...props} className={cssNames("Stepper flex auto", className)}>

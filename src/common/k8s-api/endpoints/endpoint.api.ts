@@ -5,7 +5,7 @@
 
 import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { get } from "lodash";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
@@ -28,7 +28,7 @@ export interface IEndpointSubset {
   ports: IEndpointPort[];
 }
 
-interface ITargetRef {
+export interface ITargetRef {
   kind: string;
   namespace: string;
   name: string;
@@ -131,17 +131,23 @@ export class Endpoint extends KubeObject {
       return "<none>";
     }
   }
-
 }
 
-let endpointApi: KubeApi<Endpoint>;
-
-if (isClusterPageContext()) {
-  endpointApi = new KubeApi<Endpoint>({
-    objectConstructor: Endpoint,
-  });
+/**
+ * The api type for {@link Endpoint}'s
+ */
+export class EndpointApi extends KubeApi<Endpoint> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: Endpoint,
+    });
+  }
 }
 
-export {
-  endpointApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const endpointApi = isClusterPageContext()
+  ? new EndpointApi()
+  : undefined;

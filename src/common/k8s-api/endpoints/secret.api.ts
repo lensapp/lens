@@ -6,7 +6,7 @@
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum SecretType {
@@ -54,14 +54,21 @@ export class Secret extends KubeObject {
   }
 }
 
-let secretsApi: KubeApi<Secret>;
-
-if (isClusterPageContext()) {
-  secretsApi = new KubeApi({
-    objectConstructor: Secret,
-  });
+/**
+ * The api type for {@link Secret}'s
+ */
+export class SecretApi extends KubeApi<Secret> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: Secret,
+    });
+  }
 }
 
-export {
-  secretsApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const secretsApi = isClusterPageContext()
+  ? new SecretApi()
+  : undefined;

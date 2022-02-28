@@ -15,6 +15,9 @@ interface Dependencies {
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
 
+  /**
+   * @internal
+   */
   constructor(private dependencies: Dependencies) {
     super();
     makeObservable(this);

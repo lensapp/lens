@@ -12,11 +12,11 @@ export interface DrawerParamTogglerProps {
   label: string | number;
 }
 
-interface State {
+export interface DrawerParamTogglerState {
   open?: boolean;
 }
-export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps, State> {
-  public state: State = {};
+export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps, DrawerParamTogglerState> {
+  public state: DrawerParamTogglerState = {};
 
   toggle = () => {
     this.setState({ open: !this.state.open });

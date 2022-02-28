@@ -5,7 +5,7 @@
 
 import { autoBind } from "../../../renderer/utils";
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
@@ -132,14 +132,21 @@ export class Service extends KubeObject {
   }
 }
 
-let serviceApi: KubeApi<Service>;
-
-if (isClusterPageContext()) {
-  serviceApi = new KubeApi<Service>({
-    objectConstructor: Service,
-  });
+/**
+ * The api type for {@link Service}'s
+ */
+export class ServiceApi extends KubeApi<Service> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: Service,
+    });
+  }
 }
 
-export {
-  serviceApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const serviceApi = isClusterPageContext()
+  ? new ServiceApi()
+  : undefined;

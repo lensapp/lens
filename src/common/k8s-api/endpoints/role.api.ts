@@ -4,7 +4,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { BaseKubeApiOptions, KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface Role {
@@ -26,14 +26,23 @@ export class Role extends KubeObject {
   }
 }
 
-let roleApi: KubeApi<Role>;
+/**
+ * The api type for {@link Role}'s
+ */
 
-if (isClusterPageContext()) {
-  roleApi = new KubeApi<Role>({
-    objectConstructor: Role,
-  });
+export class RoleApi extends KubeApi<Role> {
+  constructor(params?: BaseKubeApiOptions) {
+    super({
+      ...(params ?? {}),
+      objectConstructor: Role,
+    });
+  }
 }
 
-export{
-  roleApi,
-};
+/**
+ * Only available within kubernetes cluster pages
+ */
+export const roleApi = isClusterPageContext()
+  ? new RoleApi()
+  : undefined;
+

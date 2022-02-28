@@ -23,16 +23,10 @@ import { Agent, AgentOptions } from "https";
 import type { Patch } from "rfc6902";
 
 /**
- * The options used for creating a `KubeApi`
+ * The base constructor options for {@link KubeApi} for use with child classes
+ * of it.
  */
-export interface IKubeApiOptions<T extends KubeObject> {
-  /**
-   * base api-path for listing all resources, e.g. "/api/v1/pods"
-   *
-   * If not specified then will be the one on the `objectConstructor`
-   */
-  apiBase?: string;
-
+export interface BaseKubeApiOptions {
   /**
    * If the API uses a different API endpoint (e.g. apiBase) depending on the cluster version,
    * fallback API bases can be listed individually.
@@ -48,16 +42,28 @@ export interface IKubeApiOptions<T extends KubeObject> {
   checkPreferredVersion?: boolean;
 
   /**
-   * The constructor for the kube objects returned from the API
-   */
-  objectConstructor: KubeObjectConstructor<T>;
-
-  /**
    * The api instance to use for making requests
    *
    * @default apiKube
    */
   request?: KubeJsonApi;
+}
+
+/**
+ * The options used for creating a `KubeApi`
+ */
+export interface IKubeApiOptions<T extends KubeObject> extends BaseKubeApiOptions {
+  /**
+   * The constructor for the kube objects returned from the API
+   */
+  objectConstructor: KubeObjectConstructor<T>;
+
+  /**
+   * base api-path for listing all resources, e.g. "/api/v1/pods"
+   *
+   *  @deprecated It should be specified on the `objectConstructor`
+   */
+  apiBase?: string;
 
   /**
    * @deprecated should be specified by `objectConstructor`
@@ -290,7 +296,7 @@ export class KubeApi<T extends KubeObject> {
     this.objectConstructor = objectConstructor;
 
     this.parseResponse = this.parseResponse.bind(this);
-    apiManager.registerApi(apiBase, this);
+    apiManager.registerApi(this.apiBase, this);
   }
 
   get apiVersionWithGroup() {
