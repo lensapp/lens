@@ -11,7 +11,7 @@ import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
 import { makeObservable, observable, when } from "mobx";
 
-const startingServeRegex = /^starting to serve on (?<address>.+)/i;
+const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
 interface Dependencies {
   proxyBinPath: string;
