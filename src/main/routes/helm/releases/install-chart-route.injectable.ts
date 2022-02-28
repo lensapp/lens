@@ -10,7 +10,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 
 interface InstallChartResponse {
   log: string;
-  release: { name: string, namespace: string }
+  release: { name: string; namespace: string };
 }
 
 const installChartRouteInjectable = getInjectable({

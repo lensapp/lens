@@ -5,7 +5,11 @@
 import type { LensApiResult } from "./router";
 
 export interface LensApiResultContentType {
-  resultMapper: (result: LensApiResult<any>) => ({ statusCode: number, content: any, headers: { [ name: string ]: string }})
+  resultMapper: (result: LensApiResult<any>) => ({
+    statusCode: number;
+    content: any;
+    headers: { [ name: string ]: string };
+  });
 }
 
 const resultMapperFor =

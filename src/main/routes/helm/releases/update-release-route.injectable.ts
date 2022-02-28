@@ -10,7 +10,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 
 interface UpdateReleaseResponse {
   log: string;
-  release: { name: string, namespace: string }
+  release: { name: string; namespace: string };
 }
 
 const updateReleaseRouteInjectable = getInjectable({
