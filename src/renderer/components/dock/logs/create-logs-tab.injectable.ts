@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { DockTabCreate, DockTab, TabKind, TabId } from "../dock/store";
 import type { LogTabData } from "./tab-store";
 import * as uuid from "uuid";
@@ -37,12 +37,12 @@ const createLogsTab = ({ createDockTab, setLogTabData }: Dependencies) => (title
 };
 
 const createLogsTabInjectable = getInjectable({
+  id: "create-logs-tab",
+
   instantiate: (di) => createLogsTab({
     createDockTab: di.inject(createDockTabInjectable),
     setLogTabData: di.inject(setLogTabDataInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createLogsTabInjectable;

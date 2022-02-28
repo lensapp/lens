@@ -28,7 +28,6 @@ export const getDiForUnitTesting = (
     const injectableInstance = require(filePath).default;
 
     di.register({
-      id: filePath,
       ...injectableInstance,
       aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
     });

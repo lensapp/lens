@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { AppPaths, appPathsInjectionToken } from "./app-path-injection-token";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
@@ -13,8 +13,8 @@ import directoryForIntegrationTestingInjectable from "../../main/app-paths/direc
 import path from "path";
 
 describe("app-paths", () => {
-  let mainDi: DependencyInjectionContainer;
-  let rendererDi: DependencyInjectionContainer;
+  let mainDi: DiContainer;
+  let rendererDi: DiContainer;
   let runSetups: () => Promise<void[]>;
 
   beforeEach(() => {

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { CoreV1Api, KubeConfig } from "@kubernetes/client-node";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 
 export type ListNamespaces = () => Promise<string[]>;
 
@@ -18,8 +18,8 @@ export function listNamespaces(config: KubeConfig): ListNamespaces {
 }
 
 const listNamespacesInjectable = getInjectable({
+  id: "list-namespaces",
   instantiate: () => listNamespaces,
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default listNamespacesInjectable;

@@ -63,6 +63,8 @@ function getRegisteredStatusBarItems({ registrations }: Dependencies): IComputed
 }
 
 const registeredStatusBarItemsInjectable = getInjectable({
+  id: "registered-status-bar-items",
+
   instantiate: (di) => getRegisteredStatusBarItems({
     registrations: di.inject(statusBarItemsInjectable),
   }),

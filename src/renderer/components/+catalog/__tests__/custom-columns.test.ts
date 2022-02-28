@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { CatalogCategorySpec } from "../../../../common/catalog";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
@@ -35,7 +35,7 @@ class TestCategory extends CatalogCategory {
 }
 
 describe("Custom Category Columns", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
 
   beforeEach(() => {
     di = getDiForUnitTesting();

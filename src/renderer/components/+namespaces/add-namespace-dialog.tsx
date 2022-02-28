@@ -19,6 +19,7 @@ import namespaceStoreInjectable from "./namespace-store/namespace-store.injectab
 import type { AddNamespaceDialogModel } from "./add-namespace-dialog-model/add-namespace-dialog-model";
 import addNamespaceDialogModelInjectable
   from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
+import type { NamespaceStore } from "./namespace-store/namespace.store";
 
 interface Props extends DialogProps {
   onSuccess?(ns: Namespace): void;
@@ -26,7 +27,7 @@ interface Props extends DialogProps {
 }
 
 interface Dependencies {
-  createNamespace: (params: { name: string }) => Promise<Namespace>;
+  namespaceStore: NamespaceStore;
   model: AddNamespaceDialogModel;
 }
 
@@ -48,7 +49,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
     const { onSuccess, onError } = this.props;
 
     try {
-      const created = await this.props.createNamespace({ name: namespace });
+      const created = await this.props.namespaceStore.create({ name: namespace });
 
       onSuccess?.(created);
       this.props.model.close();
@@ -59,7 +60,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
   };
 
   render() {
-    const { model, createNamespace, ...dialogProps } = this.props;
+    const { model, namespaceStore, ...dialogProps } = this.props;
     const { namespace } = this;
     const header = <h5>Create Namespace</h5>;
 
@@ -97,7 +98,7 @@ export const AddNamespaceDialog = withInjectables<Dependencies, Props>(
 
   {
     getProps: (di, props) => ({
-      createNamespace: di.inject(namespaceStoreInjectable).create,
+      namespaceStore: di.inject(namespaceStoreInjectable),
       model: di.inject(addNamespaceDialogModelInjectable),
 
       ...props,

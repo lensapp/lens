@@ -15,7 +15,7 @@ import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { ClusterModel } from "../cluster-types";
 import type {
-  DependencyInjectionContainer,
+  DiContainer,
 } from "@ogre-tools/injectable";
 
 
@@ -75,7 +75,7 @@ jest.mock("electron", () => ({
 }));
 
 describe("cluster-store", () => {
-  let mainDi: DependencyInjectionContainer;
+  let mainDi: DiContainer;
   let clusterStore: ClusterStore;
   let createCluster: (model: ClusterModel) => Cluster;
 

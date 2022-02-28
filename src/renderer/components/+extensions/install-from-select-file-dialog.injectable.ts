@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { requestOpenFilePickingDialog } from "../../ipc";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import attemptInstallsInjectable from "./attempt-installs/attempt-installs.injectable";
@@ -28,12 +28,12 @@ const installFromSelectFileDialog = ({ attemptInstalls, directoryForDownloads }:
 };
 
 const installFromSelectFileDialogInjectable = getInjectable({
+  id: "install-from-select-file-dialog",
+
   instantiate: (di) => installFromSelectFileDialog({
     attemptInstalls: di.inject(attemptInstallsInjectable),
     directoryForDownloads: di.inject(directoryForDownloadsInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default installFromSelectFileDialogInjectable;

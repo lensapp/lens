@@ -2,10 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Injectable } from "@ogre-tools/injectable";
+import type { Injectable, TentativeTuple } from "@ogre-tools/injectable";
 import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
-
-type TentativeTuple<T> = T extends object ? [T] : [undefined?];
 
 type MapInjectables<T> = {
   [Key in keyof T]: T[Key] extends () => infer Res ? Res : never;

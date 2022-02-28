@@ -18,7 +18,7 @@ import { systemName, isUrl, isPath } from "../input/input_validators";
 import { SubTitle } from "../layout/sub-title";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
-import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
+import { type HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { requestOpenFilePickingDialog } from "../../ipc";
 
 interface Props extends Partial<DialogProps> {

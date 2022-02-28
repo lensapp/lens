@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import {
   ClusterOverviewStorageState,
   ClusterOverviewStore,
@@ -13,6 +13,8 @@ import createStorageInjectable from "../../../utils/create-storage/create-storag
 import apiManagerInjectable from "../../kube-object-menu/dependencies/api-manager.injectable";
 
 const clusterOverviewStoreInjectable = getInjectable({
+  id: "cluster-overview-store",
+
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 
@@ -34,8 +36,6 @@ const clusterOverviewStoreInjectable = getInjectable({
 
     return store;
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default clusterOverviewStoreInjectable;

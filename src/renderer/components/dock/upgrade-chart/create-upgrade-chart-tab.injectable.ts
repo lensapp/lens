@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import upgradeChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
@@ -45,12 +45,12 @@ const createUpgradeChartTab = ({ upgradeChartStore, dockStore }: Dependencies) =
 };
 
 const createUpgradeChartTabInjectable = getInjectable({
+  id: "create-upgrade-chart-tab",
+
   instantiate: (di) => createUpgradeChartTab({
     upgradeChartStore: di.inject(upgradeChartTabStoreInjectable),
     dockStore: di.inject(dockStoreInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default createUpgradeChartTabInjectable;

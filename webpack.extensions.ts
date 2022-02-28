@@ -6,9 +6,11 @@
 
 import path from "path";
 import type webpack from "webpack";
-import { sassCommonVars, isDevelopment, isProduction } from "./src/common/vars";
+import * as vars from "./src/common/vars";
+import { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./webpack.renderer";
 
 export default function generateExtensionTypes(): webpack.Configuration {
+  const { isDevelopment } = vars;
   const entry = "./src/extensions/extension-api.ts";
   const outDir = "./src/extensions/npm/extensions/dist";
 
@@ -18,7 +20,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
     target: "electron-renderer",
     entry,
     // this is the default mode, so we should make it explicit to silence the warning
-    mode: isProduction ? "production" : "development",
+    mode: isDevelopment ? "development" : "production",
     output: {
       filename: "extension-api.js",
       // need to be an absolute path
@@ -31,6 +33,10 @@ export default function generateExtensionTypes(): webpack.Configuration {
     optimization: {
       minimize: false, // speed up types compilation
     },
+    ignoreWarnings: [
+      /Critical dependency: the request of a dependency is an expression/, // see who is using request: "npm ls request"
+      /require.extensions is not supported by webpack./, // handlebars
+    ],
     stats: "errors-warnings",
     module: {
       rules: [
@@ -52,47 +58,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
             },
           },
         },
-        // for src/renderer/components/fonts/roboto-mono-nerd.ttf
-        // in src/renderer/components/dock/terminal.ts 95:25-65
-        {
-          test: /\.(ttf|eot|woff2?)$/,
-          use: {
-            loader: "url-loader",
-            options: {
-              name: "fonts/[name].[ext]",
-            },
-          },
-        },
-        {
-          test: /\.(jpg|png|svg|map|ico)$/,
-          use: {
-            loader: "file-loader",
-            options: {
-              name: "images/[name]-[hash:6].[ext]",
-              esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (react)
-            },
-          },
-        },
-        // for import scss files
-        {
-          test: /\.s?css$/,
-          use: [
-            "style-loader",
-            "css-loader",
-            "postcss-loader",
-            {
-              loader: "sass-loader",
-              options: {
-                additionalData: `@import "${path.basename(sassCommonVars)}";`,
-                sassOptions: {
-                  includePaths: [
-                    path.dirname(sassCommonVars),
-                  ],
-                },
-              },
-            },
-          ],
-        },
+        cssModulesWebpackRule({ styleLoader: "style-loader" }),
+        ...fontsLoaderWebpackRules(),
+        ...iconsAndImagesWebpackRules(),
       ],
     },
     resolve: {

@@ -8,7 +8,7 @@ import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed } from "mobx";
@@ -72,7 +72,7 @@ jest.mock("../../+catalog", () => ({
 }));
 
 describe("<TopBar/>", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
   let render: DiRender;
 
   beforeEach(async () => {

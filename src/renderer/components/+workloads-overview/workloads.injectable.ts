@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeResource } from "../../../common/rbac";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -18,6 +18,8 @@ import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-s
 import { workloads } from "./workloads";
 
 const workloadsInjectable = getInjectable({
+  id: "workloads",
+
   instantiate: (di) =>
     workloads({
       isAllowedResource: di.inject(isAllowedResourceInjectable),
@@ -33,8 +35,6 @@ const workloadsInjectable = getInjectable({
         ["cronjobs", cronJobStore],
       ]),
     }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default workloadsInjectable;
