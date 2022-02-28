@@ -34,6 +34,7 @@
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
+    "download:k8s-proxy": "yarn run ts-node build/download_k8s_proxy.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
     "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
@@ -47,6 +48,7 @@
     "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
   },
   "config": {
+    "k8sProxyVersion": "0.1.2",
     "bundledKubectlVersion": "1.23.3",
     "bundledHelmVersion": "3.7.2",
     "sentryDsn": ""
@@ -130,6 +132,10 @@
           "to": "./${arch}/kubectl"
         },
         {
+          "from": "binaries/client/linux/${arch}/lens-k8s-proxy",
+          "to": "./${arch}/lens-k8s-proxy"
+        },
+        {
           "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
@@ -151,6 +157,10 @@
           "to": "./${arch}/kubectl"
         },
         {
+          "from": "binaries/client/darwin/${arch}/lens-k8s-proxy",
+          "to": "./${arch}/lens-k8s-proxy"
+        },
+        {
           "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
@@ -168,6 +178,14 @@
         {
           "from": "binaries/client/windows/ia32/kubectl.exe",
           "to": "./ia32/kubectl.exe"
+        },
+        {
+          "from": "binaries/client/windows/x64/lens-k8s-proxy",
+          "to": "./x64/lens-k8s-proxy.exe"
+        },
+        {
+          "from": "binaries/client/windows/ia32/lens-k8s-proxy",
+          "to": "./ia32/lens-k8s-proxy.exe"
         },
         {
           "from": "binaries/client/x64/helm3/helm3.exe",

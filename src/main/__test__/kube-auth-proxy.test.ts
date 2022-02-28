@@ -38,7 +38,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import { broadcastMessage } from "../../common/ipc";
 import { ChildProcess, spawn } from "child_process";
-import { bundledKubectlPath, Kubectl } from "../kubectl/kubectl";
+import { Kubectl } from "../kubectl/kubectl";
 import { mock, MockProxy } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
 import { EventEmitter, Readable } from "stream";
@@ -49,6 +49,7 @@ import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import path from "path";
 
 console = new Console(stdout, stderr);
 
@@ -194,7 +195,7 @@ describe("kube auth proxy tests", () => {
         return mockedCP.stdout;
       });
       mockSpawn.mockImplementationOnce((command: string): ChildProcess => {
-        expect(command).toBe(bundledKubectlPath());
+        expect(path.basename(command).split(".")[0]).toBe("lens-k8s-proxy");
 
         return mockedCP;
       });

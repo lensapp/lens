@@ -118,7 +118,7 @@ export class ContextHandler {
     await this.ensureServer();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `http://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix}${path}`;
+    return `http://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix.slice(0, -1)}${path}`;
   }
 
   async getApiTarget(isLongRunningRequest = false): Promise<httpProxy.ServerOptions> {
