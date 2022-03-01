@@ -85,7 +85,6 @@ export const Editor = observer(() => {
         <Input
           theme="round-black"
           type="text"
-          validators={InputValidators.isNumber}
           value={editorConfiguration.fontFamily}
           onChange={value => editorConfiguration.fontFamily = value}
         />
