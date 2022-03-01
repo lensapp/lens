@@ -4,14 +4,12 @@
  */
 
 import yaml from "js-yaml";
-import { BaseEncodingOptions, readFile } from "fs-extra";
-import { promiseExecFile } from "../../common/utils/promise-exec";
-import { helmCli } from "./helm-cli";
+import { readFile } from "fs-extra";
 import { Singleton } from "../../common/utils/singleton";
 import { customRequestPromise } from "../../common/request";
 import orderBy from "lodash/orderBy";
 import logger from "../logger";
-import type { ExecFileOptions } from "child_process";
+import { execHelm } from "./exec";
 
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
@@ -34,18 +32,6 @@ export interface HelmRepo {
   password?: string;
 }
 
-async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFileOptions): Promise<string> {
-  const helmCliPath = await helmCli.binaryPath();
-
-  try {
-    const { stdout } = await promiseExecFile(helmCliPath, args, options);
-
-    return stdout;
-  } catch (error) {
-    throw error?.stderr || error;
-  }
-}
-
 export class HelmRepoManager extends Singleton {
   protected repos: HelmRepo[];
   protected helmEnv: HelmEnv;
@@ -63,9 +49,6 @@ export class HelmRepoManager extends Singleton {
   }
 
   private async ensureInitialized() {
-    helmCli.setLogger(logger);
-    await helmCli.ensureBinary();
-
     this.helmEnv ??= await this.parseHelmEnv();
 
     const repos = await this.list();

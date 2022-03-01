@@ -75,6 +75,11 @@ export const baseBinariesDir = onceCell(() => (
   )
 ));
 
+export const helmBinaryName = getBinaryName("helm");
+export const helmBinaryPath = onceCell(() => path.join(baseBinariesDir.get(), helmBinaryName));
+export const kubectlBinaryName = getBinaryName("kubectl");
+export const kubectlBinaryPath = onceCell(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
+
 // Webpack build paths
 export const contextDir = process.cwd();
 export const buildDir = path.join(contextDir, "static", publicPath);

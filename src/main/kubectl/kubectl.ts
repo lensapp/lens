@@ -9,16 +9,14 @@ import { promiseExecFile } from "../../common/utils/promise-exec";
 import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
-import { helmCli } from "../helm/helm-cli";
 import { getBundledKubectlVersion } from "../../common/utils/app-version";
-import { normalizedPlatform, normalizedArch, getBinaryName, baseBinariesDir } from "../../common/vars";
+import { normalizedPlatform, normalizedArch, kubectlBinaryName, kubectlBinaryPath, baseBinariesDir } from "../../common/vars";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
 import { noop } from "lodash/fp";
-import { onceCell } from "../../common/utils/once-cell";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -40,12 +38,7 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.22", "1.22.6"],
   ["1.23", bundledVersion],
 ]);
-const binaryName = getBinaryName("kubectl");
 const initScriptVersionString = "# lens-initscript v3";
-
-export const bundledKubectlPath = onceCell(() => (
-  path.join(baseBinariesDir.get(), binaryName)
-));
 
 interface Dependencies {
   directoryForKubectlBinaries: string;
@@ -89,13 +82,13 @@ export class Kubectl {
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
-    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${normalizedPlatform}/${normalizedArch}/${binaryName}`;
+    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${normalizedPlatform}/${normalizedArch}/${kubectlBinaryName}`;
     this.dirname = path.normalize(path.join(this.getDownloadDir(), this.kubectlVersion));
-    this.path = path.join(this.dirname, binaryName);
+    this.path = path.join(this.dirname, kubectlBinaryName);
   }
 
   public getBundledPath() {
-    return bundledKubectlPath.get();
+    return kubectlBinaryPath.get();
   }
 
   public getPathFromPreferences() {
@@ -289,7 +282,7 @@ export class Kubectl {
       ? this.dirname
       : path.dirname(this.getPathFromPreferences());
 
-    const helmPath = helmCli.getBinaryDir();
+    const binariesDir = baseBinariesDir.get();
 
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
     const bashScript = [
@@ -303,7 +296,7 @@ export class Kubectl {
       "elif test -f \"$HOME/.profile\"; then",
       "  . \"$HOME/.profile\"",
       "fi",
-      `export PATH="${helmPath}:${kubectlPath}:$PATH"`,
+      `export PATH="${binariesDir}:${kubectlPath}:$PATH"`,
       'export KUBECONFIG="$tempkubeconfig"',
       `NO_PROXY=",\${NO_PROXY:-localhost},"`,
       `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
@@ -329,12 +322,12 @@ export class Kubectl {
 
       // voodoo to replace any previous occurrences of kubectl path in the PATH
       `kubectlpath="${kubectlPath}"`,
-      `helmpath="${helmPath}"`,
+      `binariesDir="${binariesDir}"`,
       "p=\":$kubectlpath:\"",
       "d=\":$PATH:\"",
       `d=\${d//$p/:}`,
       `d=\${d/#:/}`,
-      `export PATH="$helmpath:$kubectlpath:\${d/%:/}"`,
+      `export PATH="$binariesDir:$kubectlpath:\${d/%:/}"`,
       "export KUBECONFIG=\"$tempkubeconfig\"",
       `NO_PROXY=",\${NO_PROXY:-localhost},"`,
       `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
