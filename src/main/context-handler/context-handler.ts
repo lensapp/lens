@@ -12,6 +12,8 @@ import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
+import path from "path";
+import { readFile } from "fs/promises";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -27,6 +29,7 @@ interface PrometheusServicePreferences {
 
 interface Dependencies {
   createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+  certPath: string;
 }
 
 export class ContextHandler {
@@ -118,7 +121,7 @@ export class ContextHandler {
     await this.ensureServer();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `http://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix.slice(0, -1)}${path}`;
+    return `https://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix.slice(0, -1)}${path}`;
   }
 
   async getApiTarget(isLongRunningRequest = false): Promise<httpProxy.ServerOptions> {
@@ -132,10 +135,21 @@ export class ContextHandler {
   }
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
+    await this.ensureServer();
+
+    const ca = (await readFile(path.join(this.dependencies.certPath, "proxy.crt"))).toString();
+
     return {
-      target: await this.resolveAuthProxyUrl(),
+      //target: await this.resolveAuthProxyUrl(),
+      target: {
+        protocol: "https:",
+        host: "127.0.0.1",
+        port: this.kubeAuthProxy.port,
+        ca,
+      },
       changeOrigin: true,
       timeout,
+      secure: true,
       headers: {
         "Host": this.clusterUrl.hostname,
       },

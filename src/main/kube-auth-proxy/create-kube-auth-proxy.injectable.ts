@@ -8,6 +8,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import path from "path";
 import { isDevelopment, isWindows } from "../../common/vars";
 import directoryForBundledBinariesInjectable from "../../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
+import getKubeAuthProxyCertDirInjectable from "./kube-auth-proxy-cert.injectable";
 
 const createKubeAuthProxyInjectable = getInjectable({
   id: "create-kube-auth-proxy",
@@ -17,6 +18,7 @@ const createKubeAuthProxyInjectable = getInjectable({
     const proxyPath = isDevelopment ? path.join("client", process.platform, process.arch) : process.arch;
     const dependencies = {
       proxyBinPath: path.join(di.inject(directoryForBundledBinariesInjectable), proxyPath, binaryName),
+      proxyCertPath: di.inject(getKubeAuthProxyCertDirInjectable),
     };
 
     return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) =>

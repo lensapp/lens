@@ -15,6 +15,7 @@ const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
 interface Dependencies {
   proxyBinPath: string;
+  proxyCertPath: string;
 }
 
 export class KubeAuthProxy {
@@ -42,13 +43,15 @@ export class KubeAuthProxy {
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
-    
-    this.proxyProcess = spawn(proxyBin, [], { 
+    const certPath = await this.dependencies.proxyCertPath;
+
+    this.proxyProcess = spawn(proxyBin, [], {
       env: {
         ...this.env,
         KUBECONFIG: this.cluster.kubeConfigPath,
         KUBECONFIG_CONTEXT: this.cluster.contextName,
         API_PREFIX: this.apiPrefix,
+        CERT_PATH: certPath,
       },
     });
     this.proxyProcess.on("error", (error) => {
