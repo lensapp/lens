@@ -66,17 +66,16 @@ export function getBinaryName(name: string, { forPlatform = normalizedPlatform }
   return name;
 }
 
-export const baseBinariesDir = onceCell(() => (
-  path.join(
-    isProduction
-      ? process.resourcesPath
-      : path.join(process.cwd(), "binaries", "client", normalizedPlatform),
-    normalizedArch,
-  )
+export const resourcesDir = onceCell(() => (
+  isProduction
+    ? process.resourcesPath
+    : path.join(process.cwd(), "binaries", "client", normalizedPlatform)
 ));
 
+export const baseBinariesDir = onceCell(() => path.join(resourcesDir.get(), normalizedArch));
+
 export const helmBinaryName = getBinaryName("helm");
-export const helmBinaryPath = onceCell(() => path.join(baseBinariesDir.get(), helmBinaryName));
+export const helmBinaryPath = onceCell(() => path.join(resourcesDir.get(), helmBinaryName));
 export const kubectlBinaryName = getBinaryName("kubectl");
 export const kubectlBinaryPath = onceCell(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
 

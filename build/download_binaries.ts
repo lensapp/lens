@@ -154,11 +154,6 @@ class HelmDownloader extends BinaryDownloader {
 
 type SupportedPlatform = "darwin" | "linux" | "windows";
 
-interface SupportedArch {
-  downloadArch: string;
-  fileArch: string;
-}
-
 async function main() {
   const multiBar = new MultiBar({
     align: "left",
@@ -169,44 +164,68 @@ async function main() {
     format: "[{bar}] {percentage}% | {downloadArch} {binaryName}",
   });
   const baseDir = path.join(__dirname, "..", "binaries", "client");
-  const supportedArchitectures: SupportedArch[] = [
-    {
+  const downloaders: BinaryDownloader[] = [
+    new LensK8sProxyDownloader({
+      version: packageInfo.config.k8sProxyVersion,
+      platform: normalizedPlatform,
       downloadArch: "amd64",
       fileArch: "x64",
-    },
-    normalizedPlatform === "windows"
-      ? {
-        downloadArch: "386",
-        fileArch: "ia32",
-      }
-      : {
-        downloadArch: "arm64",
-        fileArch: "arm64",
-      },
+      baseDir,
+    }, multiBar),
+    new KubectlDownloader({
+      version: packageInfo.config.bundledKubectlVersion,
+      platform: normalizedPlatform,
+      downloadArch: "amd64",
+      fileArch: "x64",
+      baseDir,
+    }, multiBar),
+    new HelmDownloader({
+      version: packageInfo.config.bundledHelmVersion,
+      platform: normalizedPlatform,
+      downloadArch: "amd64",
+      fileArch: "x64",
+      baseDir,
+    }, multiBar),
   ];
-  const downloaders: BinaryDownloader[] = [];
 
-  for (const { downloadArch, fileArch } of supportedArchitectures) {
+  if (normalizedPlatform === "windows") {
     downloaders.push(
       new LensK8sProxyDownloader({
         version: packageInfo.config.k8sProxyVersion,
         platform: normalizedPlatform,
-        downloadArch,
-        fileArch,
+        downloadArch: "386",
+        fileArch: "ia32",
         baseDir,
       }, multiBar),
       new KubectlDownloader({
         version: packageInfo.config.bundledKubectlVersion,
         platform: normalizedPlatform,
-        downloadArch,
-        fileArch,
+        downloadArch: "386",
+        fileArch: "ia32",
+        baseDir,
+      }, multiBar),
+    );
+  } else {
+    downloaders.push(
+      new LensK8sProxyDownloader({
+        version: packageInfo.config.k8sProxyVersion,
+        platform: normalizedPlatform,
+        downloadArch: "arm64",
+        fileArch: "arm64",
+        baseDir,
+      }, multiBar),
+      new KubectlDownloader({
+        version: packageInfo.config.bundledKubectlVersion,
+        platform: normalizedPlatform,
+        downloadArch: "arm64",
+        fileArch: "arm64",
         baseDir,
       }, multiBar),
       new HelmDownloader({
         version: packageInfo.config.bundledHelmVersion,
         platform: normalizedPlatform,
-        downloadArch,
-        fileArch,
+        downloadArch: "arm64",
+        fileArch: "arm64",
         baseDir,
       }, multiBar),
     );
