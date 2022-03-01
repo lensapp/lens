@@ -3,47 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import packageInfo from "../../../package.json";
 import path from "path";
-import { LensBinary, LensBinaryOpts } from "../lens-binary";
-import { isProduction } from "../../common/vars";
+import { onceCell } from "../../common/utils/once-cell";
+import { baseBinariesDir, getBinaryName } from "../../common/vars";
 
-export class HelmCli extends LensBinary {
+export const helmBinaryPath = onceCell(() => path.join(baseBinariesDir.get(), getBinaryName("helm")));
 
-  public constructor(baseDir: string, version: string) {
-    const opts: LensBinaryOpts = {
-      version,
-      baseDir,
-      originalBinaryName: "helm",
-      newBinaryName: "helm3",
-    };
-
-    super(opts);
-  }
-
-  protected getTarName(): string | null {
-    return `${this.binaryName}-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`;
-  }
-
-  protected getUrl() {
-    return `https://get.helm.sh/helm-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`;
-  }
-
-  protected getBinaryPath() {
-    return path.join(this.dirname, this.binaryName);
-  }
-
-  protected getOriginalBinaryPath() {
-    return path.join(this.dirname, `${this.platformName}-${this.arch}`, this.originalBinaryName);
-  }
-}
-
-const helmVersion = packageInfo.config.bundledHelmVersion;
-let baseDir = process.resourcesPath;
-
-if (!isProduction) {
-  baseDir = path.join(process.cwd(), "binaries", "client", process.arch);
-}
-
-export const helmCli = new HelmCli(baseDir, helmVersion);
+/**
+ * @deprecated use `helmBinaryPath` or its injection equivalent instead
+ */
+export const helmCli = {
+  binaryPath: (): Promise<string> => Promise.resolve(helmBinaryPath.get()),
+  getBinaryPath: (): string => helmBinaryPath.get(),
+  getBinaryDir: (): string => baseBinariesDir.get(),
+  setLogger: (logger: any): void => void logger,
+  ensureBinary: (): Promise<void> => Promise.resolve(),
+};
 

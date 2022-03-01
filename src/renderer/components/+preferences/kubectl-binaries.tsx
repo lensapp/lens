@@ -80,7 +80,7 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPa
         <SubTitle title="Path to kubectl binary" />
         <Input
           theme="round-black"
-          placeholder={bundledKubectlPath()}
+          placeholder={bundledKubectlPath.get()}
           value={binariesPath}
           validators={pathValidator}
           onChange={setBinariesPath}

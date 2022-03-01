@@ -11,13 +11,14 @@ import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "../helm/helm-cli";
 import { getBundledKubectlVersion } from "../../common/utils/app-version";
-import { isDevelopment, isWindows, isTestEnv } from "../../common/vars";
+import { normalizedPlatform, normalizedArch, getBinaryName, baseBinariesDir } from "../../common/vars";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
 import { noop } from "lodash/fp";
+import { onceCell } from "../../common/utils/once-cell";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -39,26 +40,12 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.22", "1.22.6"],
   ["1.23", bundledVersion],
 ]);
-let bundledPath: string;
+const binaryName = getBinaryName("kubectl");
 const initScriptVersionString = "# lens-initscript v3";
 
-export function bundledKubectlPath(): string {
-  if (bundledPath) { return bundledPath; }
-
-  if (isDevelopment || isTestEnv) {
-    const platformName = isWindows ? "windows" : process.platform;
-
-    bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl");
-  } else {
-    bundledPath = path.join(process.resourcesPath, process.arch, "kubectl");
-  }
-
-  if (isWindows) {
-    bundledPath = `${bundledPath}.exe`;
-  }
-
-  return bundledPath;
-}
+export const bundledKubectlPath = onceCell(() => (
+  path.join(baseBinariesDir.get(), binaryName)
+));
 
 interface Dependencies {
   directoryForKubectlBinaries: string;
@@ -102,27 +89,13 @@ export class Kubectl {
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
-    let arch = null;
-
-    if (process.arch == "x64") {
-      arch = "amd64";
-    } else if (process.arch == "x86" || process.arch == "ia32") {
-      arch = "386";
-    } else {
-      arch = process.arch;
-    }
-
-    const platformName = isWindows ? "windows" : process.platform;
-    const binaryName = isWindows ? "kubectl.exe" : "kubectl";
-
-    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${platformName}/${arch}/${binaryName}`;
-
+    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${normalizedPlatform}/${normalizedArch}/${binaryName}`;
     this.dirname = path.normalize(path.join(this.getDownloadDir(), this.kubectlVersion));
     this.path = path.join(this.dirname, binaryName);
   }
 
   public getBundledPath() {
-    return bundledKubectlPath();
+    return bundledKubectlPath.get();
   }
 
   public getPathFromPreferences() {

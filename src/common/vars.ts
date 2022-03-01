@@ -8,6 +8,7 @@ import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { defineGlobal } from "./utils/defineGlobal";
+import { onceCell } from "./utils/once-cell";
 
 export const isMac = process.platform === "darwin";
 export const isWindows = process.platform === "win32";
@@ -29,6 +30,50 @@ export const defaultTheme = "lens-dark" as string;
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";
+export const normalizedPlatform = (() => {
+  switch (process.platform) {
+    case "darwin":
+      return "darwin";
+    case "linux":
+      return "linux";
+    case "win32":
+      return "windows";
+    default:
+      throw new Error(`platform=${process.platform} is unsupported`);
+  }
+})();
+export const normalizedArch = (() => {
+  switch (process.arch) {
+    case "arm64":
+      return "arm64";
+    case "x64":
+    case "amd64":
+      return "x64";
+    case "386":
+    case "x32":
+    case "ia32":
+      return "ia32";
+    default:
+      throw new Error(`arch=${process.arch} is unsupported`);
+  }
+})();
+
+export function getBinaryName(name: string, { forPlatform = normalizedPlatform } = {}): string {
+  if (forPlatform === "windows") {
+    return `${name}.exe`;
+  }
+
+  return name;
+}
+
+export const baseBinariesDir = onceCell(() => (
+  path.join(
+    isProduction
+      ? process.resourcesPath
+      : path.join(process.cwd(), "binaries", "client", normalizedPlatform),
+    normalizedArch,
+  )
+));
 
 // Webpack build paths
 export const contextDir = process.cwd();

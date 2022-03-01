@@ -15,7 +15,7 @@ import { iconsAndImagesWebpackRules } from "./webpack.renderer";
 const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
-  console.info("WEBPACK:main", vars);
+  console.info("WEBPACK:main", { ...vars });
   const { mainDir, buildDir, isDevelopment } = vars;
 
   return {
