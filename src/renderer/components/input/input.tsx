@@ -22,7 +22,7 @@ export { InputValidators };
 export type { InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
-type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
+type InputElementProps = InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement> & DOMAttributes<InputElement>;
 
 export interface IconDataFnArg {
   isDirty: boolean;

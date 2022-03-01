@@ -19,15 +19,15 @@ DOMPurify.addHook("afterSanitizeAttributes", function (node) {
   }
 });
 
-interface Props extends OptionalProps {
+export interface MarkdownViewerProps extends OptionalProps {
   markdown: string;
 }
 
-interface OptionalProps {
+export interface OptionalProps {
   className?: string;
 }
 
-export class MarkdownViewer extends Component<Props> {
+export class MarkdownViewer extends Component<MarkdownViewerProps> {
   render() {
     const { className, markdown } = this.props;
     const html = DOMPurify.sanitize(marked(markdown));

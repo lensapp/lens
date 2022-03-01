@@ -25,11 +25,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<DaemonSetsRouteParams> {
+export interface DaemonSetsProps extends RouteComponentProps<DaemonSetsRouteParams> {
 }
 
 @observer
-export class DaemonSets extends React.Component<Props> {
+export class DaemonSets extends React.Component<DaemonSetsProps> {
   getPodsLength(daemonSet: DaemonSet) {
     return daemonSetStore.getChildPods(daemonSet).length;
   }

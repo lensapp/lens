@@ -24,7 +24,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 
-interface Props {
+export interface PodDetailsContainerProps {
   pod: Pod;
   container: IPodContainer;
   metrics?: { [key: string]: IMetrics };
@@ -35,7 +35,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedPodDetailsContainer extends React.Component<Props & Dependencies> {
+class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainerProps & Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -191,7 +191,7 @@ class NonInjectedPodDetailsContainer extends React.Component<Props & Dependencie
   }
 }
 
-export const PodDetailsContainer = withInjectables<Dependencies, Props>(
+export const PodDetailsContainer = withInjectables<Dependencies, PodDetailsContainerProps>(
   NonInjectedPodDetailsContainer,
 
   {

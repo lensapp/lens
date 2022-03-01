@@ -22,7 +22,7 @@ import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 
-interface ItemListLayoutContentProps<I extends ItemObject> {
+export interface ItemListLayoutContentProps<I extends ItemObject> {
   getFilters: () => Filter[];
   tableId?: string;
   className: IClassName;

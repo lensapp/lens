@@ -14,12 +14,12 @@ import { podsApi, serviceApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 import { PortForwardMenu } from "./port-forward-menu";
 
-interface Props {
+export interface PortForwardDetailsProps {
   portForward: PortForwardItem;
   hideDetails(): void;
 }
 
-export class PortForwardDetails extends React.Component<Props> {
+export class PortForwardDetails extends React.Component<PortForwardDetailsProps> {
 
   renderResourceName() {
     const { portForward } = this.props;

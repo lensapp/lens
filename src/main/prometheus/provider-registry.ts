@@ -7,12 +7,12 @@ import type { CoreV1Api } from "@kubernetes/client-node";
 import { inspect } from "util";
 import { Singleton } from "../../common/utils";
 
-export type PrometheusService = {
+export interface PrometheusService {
   id: string;
   namespace: string;
   service: string;
   port: number;
-};
+}
 
 export abstract class PrometheusProvider {
   abstract readonly id: string;

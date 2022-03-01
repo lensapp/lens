@@ -12,7 +12,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
 import { debounce } from "lodash";
 
-interface WizardCommonProps<D = any> {
+export interface WizardCommonProps<D> {
   data?: Partial<D>;
   save?: (data: Partial<D>, callback?: () => void) => void;
   reset?: () => void;
@@ -20,43 +20,44 @@ interface WizardCommonProps<D = any> {
   hideSteps?: boolean;
 }
 
-export interface WizardProps extends WizardCommonProps {
+export interface WizardProps<D> extends WizardCommonProps<D> {
   className?: string;
   step?: number;
   title?: string;
   header?: React.ReactNode;
   onChange?: (step: number) => void;
+  children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
 interface State {
   step?: number;
 }
 
-export class Wizard extends React.Component<WizardProps, State> {
+export class Wizard<D> extends React.Component<WizardProps<D>, State> {
   public state: State = {
     step: this.getValidStep(this.props.step),
   };
 
-  get steps() {
+  get steps(): React.ReactElement<WizardStepProps<D>>[] {
     const { className, title, step, header, onChange, children, ...commonProps } = this.props;
-    const steps = React.Children.toArray(children) as WizardStepElem[];
+    const steps = React.Children.toArray(children) as React.ReactElement<WizardStepProps<D>>[];
 
-    return steps.filter(step => !step.props.skip).map((stepElem, i) => {
-      const stepProps = stepElem.props;
-
-      return React.cloneElement(stepElem, {
-        step: i + 1,
-        wizard: this,
-        next: this.nextStep,
-        prev: this.prevStep,
-        first: this.firstStep,
-        last: this.lastStep,
-        isFirst: this.isFirstStep,
-        isLast: this.isLastStep,
-        ...commonProps,
-        ...stepProps,
-      } as WizardStepProps<any>);
-    });
+    return steps
+      .filter(step => !step.props.skip)
+      .map((stepElem, i) => (
+        React.cloneElement(stepElem, {
+          step: i + 1,
+          wizard: this,
+          next: this.nextStep,
+          prev: this.prevStep,
+          first: this.firstStep,
+          last: this.lastStep,
+          isFirst: this.isFirstStep,
+          isLast: this.isLastStep,
+          ...commonProps,
+          ...stepElem.props,
+        })
+      ));
   }
 
   get step() {
@@ -103,8 +104,8 @@ export class Wizard extends React.Component<WizardProps, State> {
   }
 }
 
-export interface WizardStepProps<D = any> extends WizardCommonProps<D> {
-  wizard?: Wizard;
+export interface WizardStepProps<D> extends WizardCommonProps<D> {
+  wizard?: Wizard<D>;
   title?: string;
   className?: string | object;
   contentClass?: string | object;
@@ -135,14 +136,12 @@ interface WizardStepState {
   waiting?: boolean;
 }
 
-type WizardStepElem = React.ReactElement<WizardStepProps>;
-
-export class WizardStep extends React.Component<WizardStepProps, WizardStepState> {
+export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardStepState> {
   private form: HTMLFormElement;
   public state: WizardStepState = {};
   private unmounting = false;
 
-  static defaultProps: WizardStepProps = {
+  static defaultProps: WizardStepProps<any> = {
     scrollable: true,
   };
 

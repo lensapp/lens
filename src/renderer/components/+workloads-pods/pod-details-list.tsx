@@ -27,18 +27,15 @@ enum sortBy {
   memory = "memory",
 }
 
-interface Props extends OptionalProps {
+export interface PodDetailsListProps {
   pods: Pod[];
   owner: KubeObject;
-}
-
-interface OptionalProps {
   maxCpu?: number;
   maxMemory?: number;
 }
 
 @observer
-export class PodDetailsList extends React.Component<Props> {
+export class PodDetailsList extends React.Component<PodDetailsListProps> {
   private metricsWatcher = interval(120, () => {
     podsStore.loadKubeMetrics(this.props.owner.getNs());
   });

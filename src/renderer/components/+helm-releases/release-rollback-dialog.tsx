@@ -20,7 +20,7 @@ import releaseRollbackDialogModelInjectable
 import type { ReleaseRollbackDialogModel } from "./release-rollback-dialog-model/release-rollback-dialog-model";
 import rollbackReleaseInjectable from "./rollback-release/rollback-release.injectable";
 
-interface Props extends DialogProps {
+export interface ReleaseRollbackDialogProps extends DialogProps {
 }
 
 interface Dependencies {
@@ -29,12 +29,12 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedReleaseRollbackDialog extends React.Component<Props & Dependencies> {
+class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDialogProps & Dependencies> {
   @observable isLoading = false;
   @observable revision: IReleaseRevision;
   @observable revisions = observable.array<IReleaseRevision>();
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: ReleaseRollbackDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -114,7 +114,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<Props & Dependenc
   }
 }
 
-export const ReleaseRollbackDialog = withInjectables<Dependencies, Props>(
+export const ReleaseRollbackDialog = withInjectables<Dependencies, ReleaseRollbackDialogProps>(
   NonInjectedReleaseRollbackDialog,
 
   {

@@ -11,12 +11,12 @@ import { boundMethod } from "../../../../common/utils";
 import { shell } from "electron";
 import { Notice } from "../../+extensions/notice";
 
-interface Props {
+export interface ClusterKubeconfigProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterKubeconfig extends React.Component<Props> {
+export class ClusterKubeconfig extends React.Component<ClusterKubeconfigProps> {
 
   @boundMethod
   openKubeconfig() {

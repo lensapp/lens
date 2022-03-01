@@ -724,11 +724,11 @@ const {
 
 type Pod = Renderer.K8sApi.Pod;
 
-interface Props {
+interface PodsDetailsListProps {
   pods?: Pod[];
 }
 
-export class PodsDetailsList extends React.Component<Props> {
+export class PodsDetailsList extends React.Component<PodsDetailsListProps> {
   getTableRow = (pod: Pod) => {
     return (
       <TableRow key={index} nowrap>

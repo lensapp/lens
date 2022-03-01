@@ -13,12 +13,12 @@ import { cssVar } from "../../utils";
 import type { ChartData } from "chart.js";
 import { ThemeStore } from "../../theme.store";
 
-interface Props {
+export interface OverviewWorkloadStatusProps {
   status: Record<string, number>;
 }
 
 @observer
-export class OverviewWorkloadStatus extends React.Component<Props> {
+export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStatusProps> {
   elem?: HTMLElement;
 
   renderChart() {

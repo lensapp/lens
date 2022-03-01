@@ -19,11 +19,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<LimitRangeRouteParams> {
+export interface LimitRangesProps extends RouteComponentProps<LimitRangeRouteParams> {
 }
 
 @observer
-export class LimitRanges extends React.Component<Props> {
+export class LimitRanges extends React.Component<LimitRangesProps> {
   render() {
     return (
       <KubeObjectListLayout

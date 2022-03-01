@@ -23,11 +23,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ReplicaSetsRouteParams> {
+export interface ReplicaSetsProps extends RouteComponentProps<ReplicaSetsRouteParams> {
 }
 
 @observer
-export class ReplicaSets extends React.Component<Props> {
+export class ReplicaSets extends React.Component<ReplicaSetsProps> {
   render() {
     return (
       <KubeObjectListLayout

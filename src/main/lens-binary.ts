@@ -11,13 +11,13 @@ import * as tar from "tar";
 import { isWindows } from "../common/vars";
 import type winston from "winston";
 
-export type LensBinaryOpts = {
+export interface LensBinaryOpts {
   version: string;
   baseDir: string;
   originalBinaryName: string;
   newBinaryName?: string;
   requestOpts?: request.Options;
-};
+}
 
 export class LensBinary {
 

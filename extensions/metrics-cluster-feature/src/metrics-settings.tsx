@@ -17,13 +17,13 @@ const {
   },
 } = Renderer;
 
-interface Props {
+export interface MetricsSettingsProps {
   cluster: Common.Catalog.KubernetesCluster;
 }
 
 @observer
-export class MetricsSettings extends React.Component<Props> {
-  constructor(props: Props) {
+export class MetricsSettings extends React.Component<MetricsSettingsProps> {
+  constructor(props: MetricsSettingsProps) {
     super(props);
     makeObservable(this);
   }

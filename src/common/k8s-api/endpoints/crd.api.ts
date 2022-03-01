@@ -9,12 +9,12 @@ import { crdResourcesURL } from "../../routes";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeJsonApiData } from "../kube-json-api";
 
-type AdditionalPrinterColumnsCommon = {
+interface AdditionalPrinterColumnsCommon {
   name: string;
   type: "integer" | "number" | "string" | "boolean" | "date";
   priority: number;
   description: string;
-};
+}
 
 export type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & {
   jsonPath: string;

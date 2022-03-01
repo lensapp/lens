@@ -21,11 +21,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IngressRouteParams> {
+export interface IngressesProps extends RouteComponentProps<IngressRouteParams> {
 }
 
 @observer
-export class Ingresses extends React.Component<Props> {
+export class Ingresses extends React.Component<IngressesProps> {
   render() {
     return (
       <KubeObjectListLayout

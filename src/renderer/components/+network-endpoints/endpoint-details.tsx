@@ -14,11 +14,11 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Endpoint> {
+export interface EndpointDetailsProps extends KubeObjectDetailsProps<Endpoint> {
 }
 
 @observer
-export class EndpointDetails extends React.Component<Props> {
+export class EndpointDetails extends React.Component<EndpointDetailsProps> {
   render() {
     const { object: endpoint } = this.props;
 

@@ -18,7 +18,7 @@ import type { Stats } from "fs";
 import logger from "../../../../common/logger";
 import { lowerFirst } from "lodash";
 
-interface Props {
+export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
 }
 
@@ -80,7 +80,7 @@ async function validateDirectory(dir: string): Promise<string | false> {
   }
 }
 
-export const ClusterLocalTerminalSetting = observer(({ cluster }: Props) => {
+export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTerminalSettingProps) => {
   if (!cluster) {
     return null;
   }

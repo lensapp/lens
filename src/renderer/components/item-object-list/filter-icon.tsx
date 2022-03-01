@@ -7,11 +7,11 @@ import React from "react";
 import { Icon, IconProps } from "../icon";
 import { FilterType } from "./page-filters.store";
 
-interface Props extends Partial<IconProps> {
+export interface FilterIconProps extends Partial<IconProps> {
   type: FilterType;
 }
 
-export function FilterIcon(props: Props) {
+export function FilterIcon(props: FilterIconProps) {
   const { type, ...iconProps } = props;
 
   switch (type) {

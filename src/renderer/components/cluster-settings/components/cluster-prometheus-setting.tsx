@@ -14,12 +14,12 @@ import { productName } from "../../../../common/vars";
 import { MetricProviderInfo, metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
 
-interface Props {
+export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterPrometheusSetting extends React.Component<Props> {
+export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps> {
   @observable path = "";
   @observable provider = "";
   @observable loading = true;
@@ -32,7 +32,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     ];
   }
 
-  constructor(props: Props) {
+  constructor(props: ClusterPrometheusSettingProps) {
     super(props);
     makeObservable(this);
   }

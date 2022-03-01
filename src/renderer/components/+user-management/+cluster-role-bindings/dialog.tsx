@@ -25,7 +25,7 @@ import { ObservableHashSet, nFircate } from "../../../utils";
 import { Input } from "../../input";
 import { TooltipPosition } from "../../tooltip";
 
-interface Props extends Partial<DialogProps> {
+export interface ClusterRoleBindingDialogProps extends Partial<DialogProps> {
 }
 
 interface DialogState {
@@ -34,12 +34,12 @@ interface DialogState {
 }
 
 @observer
-export class ClusterRoleBindingDialog extends React.Component<Props> {
+export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBindingDialogProps> {
   static state = observable.object<DialogState>({
     isOpen: false,
   });
 
-  constructor(props: Props) {
+  constructor(props: ClusterRoleBindingDialogProps) {
     super(props);
     makeObservable(this);
   }

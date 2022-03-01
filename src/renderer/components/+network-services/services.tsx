@@ -26,11 +26,11 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<ServicesRouteParams> {
+export interface ServicesProps extends RouteComponentProps<ServicesRouteParams> {
 }
 
 @observer
-export class Services extends React.Component<Props> {
+export class Services extends React.Component<ServicesProps> {
   render() {
     return (
       <KubeObjectListLayout

@@ -15,12 +15,12 @@ import { clipboard } from "electron";
 
 // todo: make as external BrowserWindow (?)
 
-interface Props extends DialogProps {
+export interface LogsDialogProps extends DialogProps {
   title: string;
   logs: string;
 }
 
-export class LogsDialog extends React.Component<Props> {
+export class LogsDialog extends React.Component<LogsDialogProps> {
   public logsElem: HTMLElement;
 
   copyToClipboard = () => {
