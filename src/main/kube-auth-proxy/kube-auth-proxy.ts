@@ -18,7 +18,7 @@ interface Dependencies {
 }
 
 export class KubeAuthProxy {
-  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}/`;
+  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}`;
 
   public get port(): number {
     return this._port;
