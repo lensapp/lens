@@ -12,7 +12,7 @@ import type { Secret } from "../../../../common/k8s-api/endpoints/secret.api";
 import { prevDefault } from "../../../utils";
 import { Icon } from "../../icon";
 
-interface Props {
+export interface ServiceAccountsSecretProps {
   secret: Secret;
 }
 
@@ -20,7 +20,7 @@ interface State {
   showToken: boolean;
 }
 
-export class ServiceAccountsSecret extends React.Component<Props, State> {
+export class ServiceAccountsSecret extends React.Component<ServiceAccountsSecretProps, State> {
   public state: State = {
     showToken: false,
   };

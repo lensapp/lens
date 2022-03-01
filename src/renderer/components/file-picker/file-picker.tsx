@@ -69,9 +69,9 @@ export interface BaseProps {
     onOverTotalSizeLimit?: OverTotalSizeLimitStyle;
 }
 
-export type Props = BaseProps & (MemoryUseProps | FileUploadProps);
+export type FilePickerProps = BaseProps & (MemoryUseProps | FileUploadProps);
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<FilePickerProps> = {
   maxSize: Infinity,
   onOverSizeLimit: OverSizeLimitStyle.REJECT,
   maxTotalSize: Infinity,
@@ -80,13 +80,13 @@ const defaultProps: Partial<Props> = {
 };
 
 @observer
-export class FilePicker extends React.Component<Props> {
+export class FilePicker extends React.Component<FilePickerProps> {
   static defaultProps = defaultProps as Object;
 
   @observable status = FileInputStatus.CLEAR;
   @observable errorText?: string;
 
-  constructor(props: Props) {
+  constructor(props: FilePickerProps) {
     super(props);
     makeObservable(this);
   }

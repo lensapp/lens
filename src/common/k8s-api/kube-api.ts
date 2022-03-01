@@ -216,7 +216,7 @@ export function ensureObjectSelfLink(api: KubeApi<KubeObject>, object: KubeJsonA
 
 export type KubeApiWatchCallback = (data: IKubeWatchEvent<KubeJsonApiData>, error: any) => void;
 
-export type KubeApiWatchOptions = {
+export interface KubeApiWatchOptions {
   namespace: string;
   callback?: KubeApiWatchCallback;
   abortController?: AbortController;
@@ -225,7 +225,7 @@ export type KubeApiWatchOptions = {
 
   // timeout in seconds
   timeout?: number;
-};
+}
 
 export type KubeApiPatchType = "merge" | "json" | "strategic";
 

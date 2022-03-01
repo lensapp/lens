@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-type StaticThis<T, R extends any[]> = { new(...args: R): T };
+interface StaticThis<T, R extends any[]> { new(...args: R): T }
 
 export class Singleton {
   private static instances = new WeakMap<object, Singleton>();

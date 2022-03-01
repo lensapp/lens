@@ -20,11 +20,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<RolesRouteParams> {
+export interface RolesProps extends RouteComponentProps<RolesRouteParams> {
 }
 
 @observer
-export class Roles extends React.Component<Props> {
+export class Roles extends React.Component<RolesProps> {
   render() {
     return (
       <>

@@ -14,11 +14,11 @@ import { PodDisruptionBudget } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
+export interface PodDisruptionBudgetDetailsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
 
 @observer
-export class PodDisruptionBudgetDetails extends React.Component<Props> {
+export class PodDisruptionBudgetDetails extends React.Component<PodDisruptionBudgetDetailsProps> {
 
   render() {
     const { object: pdb } = this.props;

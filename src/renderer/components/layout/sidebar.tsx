@@ -27,7 +27,7 @@ import { HelmSidebarItem } from "../+helm/sidebar-item";
 import { UserManagementSidebarItem } from "../+user-management/sidebar-item";
 import { CustomResourcesSidebarItem } from "../+custom-resources/sidebar-item";
 
-interface SidebarProps {
+export interface SidebarProps {
   className?: string;
 }
 

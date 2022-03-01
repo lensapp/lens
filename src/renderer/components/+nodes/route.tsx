@@ -37,7 +37,7 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<NodesRouteParams> {
+export interface NodesRouteProps extends RouteComponentProps<NodesRouteParams> {
 }
 
 type MetricsTooltipFormatter = (metrics: [number, number]) => string;
@@ -50,11 +50,11 @@ interface UsageArgs {
 }
 
 @observer
-export class NodesRoute extends React.Component<Props> {
+export class NodesRoute extends React.Component<NodesRouteProps> {
   @observable.ref metrics: Partial<INodeMetrics> = {};
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
-  constructor(props: Props) {
+  constructor(props: NodesRouteProps) {
     super(props);
     makeObservable(this);
   }

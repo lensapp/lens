@@ -20,16 +20,16 @@ import { Secret } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Secret> {
+export interface SecretDetailsProps extends KubeObjectDetailsProps<Secret> {
 }
 
 @observer
-export class SecretDetails extends React.Component<Props> {
+export class SecretDetails extends React.Component<SecretDetailsProps> {
   @observable isSaving = false;
   @observable data: { [name: string]: string } = {};
   @observable revealSecret = observable.set<string>();
 
-  constructor(props: Props) {
+  constructor(props: SecretDetailsProps) {
     super(props);
     makeObservable(this);
   }

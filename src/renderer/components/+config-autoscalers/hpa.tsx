@@ -27,11 +27,11 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<HpaRouteParams> {
+export interface HorizontalPodAutoscalersProps extends RouteComponentProps<HpaRouteParams> {
 }
 
 @observer
-export class HorizontalPodAutoscalers extends React.Component<Props> {
+export class HorizontalPodAutoscalers extends React.Component<HorizontalPodAutoscalersProps> {
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
 

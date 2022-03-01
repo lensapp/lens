@@ -24,11 +24,11 @@ enum columnId {
   replicas = "replicas",
 }
 
-interface Props extends RouteComponentProps<StatefulSetsRouteParams> {
+export interface StatefulSetsProps extends RouteComponentProps<StatefulSetsRouteParams> {
 }
 
 @observer
-export class StatefulSets extends React.Component<Props> {
+export class StatefulSets extends React.Component<StatefulSetsProps> {
   renderPods(statefulSet: StatefulSet) {
     const { readyReplicas, currentReplicas } = statefulSet.status;
 

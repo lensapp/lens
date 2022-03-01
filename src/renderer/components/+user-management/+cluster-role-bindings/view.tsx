@@ -23,11 +23,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ClusterRoleBindingsRouteParams> {
+export interface ClusterRoleBindingsProps extends RouteComponentProps<ClusterRoleBindingsRouteParams> {
 }
 
 @observer
-export class ClusterRoleBindings extends React.Component<Props> {
+export class ClusterRoleBindings extends React.Component<ClusterRoleBindingsProps> {
   render() {
     return (
       <>

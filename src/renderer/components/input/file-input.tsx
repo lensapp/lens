@@ -11,7 +11,7 @@ export interface FileInputSelection<T = string> {
   error?: string;
 }
 
-interface Props extends InputHTMLAttributes<any> {
+export interface FileInputProps extends InputHTMLAttributes<any> {
   id?: string; // could be used with <label htmlFor={id}/> to open filesystem dialog
   accept?: string; // allowed file types to select, e.g. "application/json"
   readAsText?: boolean; // provide files content as text in selection-callback
@@ -19,7 +19,7 @@ interface Props extends InputHTMLAttributes<any> {
   onSelectFiles(...selectedFiles: FileInputSelection[]): void;
 }
 
-export class FileInput extends React.Component<Props> {
+export class FileInput extends React.Component<FileInputProps> {
   protected input: HTMLInputElement;
 
   protected style: React.CSSProperties = {

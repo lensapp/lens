@@ -26,7 +26,7 @@ import { clusterRolesStore } from "../+cluster-roles/store";
 import { Input } from "../../input";
 import { ObservableHashSet, nFircate } from "../../../utils";
 
-interface Props extends Partial<DialogProps> {
+export interface RoleBindingDialogProps extends Partial<DialogProps> {
 }
 
 interface DialogState {
@@ -35,12 +35,12 @@ interface DialogState {
 }
 
 @observer
-export class RoleBindingDialog extends React.Component<Props> {
+export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   static state = observable.object<DialogState>({
     isOpen: false,
   });
 
-  constructor(props: Props) {
+  constructor(props: RoleBindingDialogProps) {
     super(props);
     makeObservable(this);
   }

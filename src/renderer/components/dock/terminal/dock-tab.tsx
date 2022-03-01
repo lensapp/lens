@@ -16,7 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
 
-interface Props extends DockTabProps {
+export interface TerminalTabProps extends DockTabProps {
 }
 
 interface Dependencies {
@@ -25,7 +25,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
+class NonInjectedTerminalTab extends React.Component<TerminalTabProps & Dependencies> {
   componentDidMount() {
     reaction(() => this.isDisconnected === true, () => {
       this.props.dockStore.closeTab(this.tabId);
@@ -72,7 +72,7 @@ class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
   }
 }
 
-export const TerminalTab = withInjectables<Dependencies, Props>(NonInjectedTerminalTab, {
+export const TerminalTab = withInjectables<Dependencies, TerminalTabProps>(NonInjectedTerminalTab, {
   getProps: (di, props) => ({
     dockStore: di.inject(dockStoreInjectable),
     terminalStore: di.inject(terminalStoreInjectable),

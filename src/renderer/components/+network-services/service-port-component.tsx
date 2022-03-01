@@ -25,7 +25,7 @@ import portForwardStoreInjectable from "../../port-forward/port-forward-store/po
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import logger from "../../../common/logger";
 
-interface Props {
+export interface ServicePortComponentProps {
   service: Service;
   port: ServicePort;
 }
@@ -36,13 +36,13 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedServicePortComponent extends React.Component<Props & Dependencies> {
+class NonInjectedServicePortComponent extends React.Component<ServicePortComponentProps & Dependencies> {
   @observable waiting = false;
   @observable forwardPort = 0;
   @observable isPortForwarded = false;
   @observable isActive = false;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: ServicePortComponentProps & Dependencies) {
     super(props);
     makeObservable(this);
     this.checkExistingPortForwarding();
@@ -186,7 +186,7 @@ class NonInjectedServicePortComponent extends React.Component<Props & Dependenci
   }
 }
 
-export const ServicePortComponent = withInjectables<Dependencies, Props>(
+export const ServicePortComponent = withInjectables<Dependencies, ServicePortComponentProps>(
   NonInjectedServicePortComponent,
 
   {

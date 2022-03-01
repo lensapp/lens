@@ -14,7 +14,7 @@ import createUpgradeChartTabInjectable from "../dock/upgrade-chart/create-upgrad
 import releaseRollbackDialogModelInjectable from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
 import deleteReleaseInjectable from "./delete-release/delete-release.injectable";
 
-interface Props extends MenuActionsProps {
+export interface HelmReleaseMenuProps extends MenuActionsProps {
   release: HelmRelease;
   hideDetails?(): void;
 }
@@ -25,7 +25,7 @@ interface Dependencies {
   openRollbackDialog: (release: HelmRelease) => void;
 }
 
-class NonInjectedHelmReleaseMenu extends React.Component<Props & Dependencies> {
+class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & Dependencies> {
   remove = () => {
     return this.props.deleteRelease(this.props.release);
   };
@@ -79,7 +79,7 @@ class NonInjectedHelmReleaseMenu extends React.Component<Props & Dependencies> {
   }
 }
 
-export const HelmReleaseMenu = withInjectables<Dependencies, Props>(
+export const HelmReleaseMenu = withInjectables<Dependencies, HelmReleaseMenuProps>(
   NonInjectedHelmReleaseMenu,
 
   {

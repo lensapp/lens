@@ -7,11 +7,11 @@ import styles from "./notice.module.scss";
 import React, { DOMAttributes } from "react";
 import { cssNames } from "../../utils";
 
-interface Props extends DOMAttributes<any> {
+export interface NoticeProps extends DOMAttributes<any> {
   className?: string;
 }
 
-export function Notice(props: Props) {
+export function Notice(props: NoticeProps) {
   return (
     <div className={cssNames(styles.notice, props.className)}>
       {props.children}

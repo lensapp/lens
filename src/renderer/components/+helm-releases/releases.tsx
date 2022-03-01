@@ -37,7 +37,7 @@ enum columnId {
   updated = "update",
 }
 
-interface Props extends RouteComponentProps<ReleaseRouteParams> {
+export interface HelmReleasesProps extends RouteComponentProps<ReleaseRouteParams> {
 }
 
 interface Dependencies {
@@ -46,7 +46,7 @@ interface Dependencies {
   selectNamespace: (namespace: string) => void;
 }
 
-class NonInjectedHelmReleases extends Component<Dependencies & Props> {
+class NonInjectedHelmReleases extends Component<Dependencies & HelmReleasesProps> {
   componentDidMount() {
     const { match: { params: { namespace }}} = this.props;
 
@@ -223,7 +223,7 @@ class NonInjectedHelmReleases extends Component<Dependencies & Props> {
   }
 }
 
-export const HelmReleases = withInjectables<Dependencies, Props>(
+export const HelmReleases = withInjectables<Dependencies, HelmReleasesProps>(
   NonInjectedHelmReleases,
 
   {

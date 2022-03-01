@@ -16,7 +16,7 @@ import { Slider } from "../slider";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 
-interface Props extends Partial<DialogProps> {
+export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
   statefulSetApi: StatefulSetApi;
 }
 
@@ -26,7 +26,7 @@ const dialogState = observable.object({
 });
 
 @observer
-export class StatefulSetScaleDialog extends Component<Props> {
+export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProps> {
   static defaultProps = {
     statefulSetApi,
   };
@@ -34,7 +34,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  constructor(props: Props) {
+  constructor(props: StatefulSetScaleDialogProps) {
     super(props);
     makeObservable(this);
   }

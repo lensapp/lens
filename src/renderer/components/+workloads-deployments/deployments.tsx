@@ -27,11 +27,11 @@ enum columnId {
   condition = "condition",
 }
 
-interface Props extends RouteComponentProps<DeploymentsRouteParams> {
+export interface DeploymentsProps extends RouteComponentProps<DeploymentsRouteParams> {
 }
 
 @observer
-export class Deployments extends React.Component<Props> {
+export class Deployments extends React.Component<DeploymentsProps> {
   renderPods(deployment: Deployment) {
     const { replicas, availableReplicas } = deployment.status;
 

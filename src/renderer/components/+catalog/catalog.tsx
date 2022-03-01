@@ -37,7 +37,7 @@ import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable
 import customCategoryViewsInjectable from "./custom-views.injectable";
 import type { CustomCategoryViewComponents } from "./custom-views";
 
-interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
+export interface CatalogProps extends RouteComponentProps<CatalogViewRouteParam> {}
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void };
@@ -47,11 +47,11 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedCatalog extends React.Component<Props & Dependencies> {
+class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
   @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: CatalogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -305,7 +305,7 @@ class NonInjectedCatalog extends React.Component<Props & Dependencies> {
   }
 }
 
-export const Catalog = withInjectables<Dependencies, Props>( NonInjectedCatalog, {
+export const Catalog = withInjectables<Dependencies, CatalogProps>( NonInjectedCatalog, {
   getProps: (di, props) => ({
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),

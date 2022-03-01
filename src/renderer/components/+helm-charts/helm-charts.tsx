@@ -24,11 +24,11 @@ enum columnId {
   repo = "repo",
 }
 
-interface Props extends RouteComponentProps<HelmChartsRouteParams> {
+export interface HelmChartsProps extends RouteComponentProps<HelmChartsRouteParams> {
 }
 
 @observer
-export class HelmCharts extends Component<Props> {
+export class HelmCharts extends Component<HelmChartsProps> {
   componentDidMount() {
     helmChartStore.loadAll();
   }

@@ -20,11 +20,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ClusterRolesRouteParams> {
+export interface ClusterRolesProps extends RouteComponentProps<ClusterRolesRouteParams> {
 }
 
 @observer
-export class ClusterRoles extends React.Component<Props> {
+export class ClusterRoles extends React.Component<ClusterRolesProps> {
   render() {
     return (
       <>

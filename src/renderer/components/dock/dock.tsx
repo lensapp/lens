@@ -27,7 +27,7 @@ import dockStoreInjectable from "./dock/store.injectable";
 import createTerminalTabInjectable from "./terminal/create-terminal-tab.injectable";
 import { ErrorBoundary } from "../error-boundary";
 
-interface Props {
+export interface DockProps {
   className?: string;
 }
 
@@ -38,7 +38,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedDock extends React.Component<Props & Dependencies> {
+class NonInjectedDock extends React.Component<DockProps & Dependencies> {
   private element = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
@@ -169,7 +169,7 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
   }
 }
 
-export const Dock = withInjectables<Dependencies, Props>(
+export const Dock = withInjectables<Dependencies, DockProps>(
   NonInjectedDock,
 
   {

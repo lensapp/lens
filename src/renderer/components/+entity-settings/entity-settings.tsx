@@ -20,14 +20,14 @@ import { SettingLayout } from "../layout/setting-layout";
 import logger from "../../../common/logger";
 import { Avatar } from "../avatar";
 
-interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
+export interface EntitySettingsProps extends RouteComponentProps<EntitySettingsRouteParams> {
 }
 
 @observer
-export class EntitySettings extends React.Component<Props> {
+export class EntitySettings extends React.Component<EntitySettingsProps> {
   @observable activeTab: string;
 
-  constructor(props: Props) {
+  constructor(props: EntitySettingsProps) {
     super(props);
     makeObservable(this);
 

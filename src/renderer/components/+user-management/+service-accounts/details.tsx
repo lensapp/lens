@@ -20,11 +20,11 @@ import { Spinner } from "../../spinner";
 import { ServiceAccountsSecret } from "./secret";
 import { getDetailsUrl } from "../../kube-detail-params";
 
-interface Props extends KubeObjectDetailsProps<ServiceAccount> {
+export interface ServiceAccountsDetailsProps extends KubeObjectDetailsProps<ServiceAccount> {
 }
 
 @observer
-export class ServiceAccountsDetails extends React.Component<Props> {
+export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetailsProps> {
   @observable secrets: Secret[];
   @observable imagePullSecrets: Secret[];
 
@@ -53,7 +53,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     ]);
   }
 
-  constructor(props: Props) {
+  constructor(props: ServiceAccountsDetailsProps) {
     super(props);
     makeObservable(this);
   }

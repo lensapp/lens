@@ -109,13 +109,13 @@ To allow the end-user to control the life cycle of this cluster feature the foll
    }
  } = Renderer;
 
- interface Props {
+ interface ExampleClusterFeatureSettingsProps {
    cluster: Common.Catalog.KubernetesCluster;
  }
 
  @observer
- export class ExampleClusterFeatureSettings extends React.Component<Props> {
-  constructor(props: Props) {
+ export class ExampleClusterFeatureSettings extends React.Component<ExampleClusterFeatureSettingsProps> {
+  constructor(props: ExampleClusterFeatureSettingsProps) {
     super(props);
     makeObservable(this);
   }

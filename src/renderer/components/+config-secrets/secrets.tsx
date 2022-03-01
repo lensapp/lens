@@ -24,11 +24,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<SecretsRouteParams> {
+export interface SecretsProps extends RouteComponentProps<SecretsRouteParams> {
 }
 
 @observer
-export class Secrets extends React.Component<Props> {
+export class Secrets extends React.Component<SecretsProps> {
   render() {
     return (
       <>
