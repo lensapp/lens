@@ -1648,11 +1648,11 @@ The rest of this example's details are defined in <code>PodsDetailsList</code>, 
 
 <span class="kr">type</span> <span class="nx">Pod</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span>
 
-<span class="kd">interface</span> <span class="nx">Props</span> <span class="p">{</span>
+<span class="kd">interface</span> <span class="nx">PodsDetailsListProps</span> <span class="p">{</span>
   <span class="nx">pods?</span>: <span class="kt">Pod</span><span class="p">[];</span>
 <span class="p">}</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">PodsDetailsList</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">Props</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">PodsDetailsList</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">PodsDetailsListProps</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="nx">getTableRow</span> <span class="o">=</span> <span class="p">(</span><span class="nx">pod</span>: <span class="kt">Pod</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span>
       <span class="o">&lt;</span><span class="nx">TableRow</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">index</span><span class="p">}</span> <span class="nx">nowrap</span><span class="o">&gt;</span>

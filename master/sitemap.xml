@@ -746,7 +746,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.WebLinkSpec/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.WebLinkStatus/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.EventBus.AppEvent/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -876,6 +886,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.BarChartProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.ButtonProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
@@ -902,6 +917,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.ConfirmDialogProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.CustomPlaceholderProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -986,6 +1006,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.MainLayoutProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.MenuActionsProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
@@ -1011,12 +1036,32 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.NamespaceSelectProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.Notification/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.PieChartProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.PodDetailsListProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.RadioGroupProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.SearchInputProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -1056,6 +1101,21 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.SubTitleProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.SwitchProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.SwitcherProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.TabLayoutProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
@@ -1091,6 +1151,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.TableSortParams/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.TabsProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
@@ -1107,6 +1172,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.TooltipProps/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.WizardCommonProps/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -1157,6 +1227,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.KubeObjectMetadata/</loc>
+         <lastmod>2022-03-01</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.KubeObjectStatus/</loc>
          <lastmod>2022-03-01</lastmod>
          <changefreq>daily</changefreq>
     </url>

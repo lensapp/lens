@@ -827,13 +827,13 @@ This method can be useful in creating a context-sensitive UI for installing/unin
    <span class="p">}</span>
  <span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
 
- <span class="kd">interface</span> <span class="nx">Props</span> <span class="p">{</span>
+ <span class="kd">interface</span> <span class="nx">ExampleClusterFeatureSettingsProps</span> <span class="p">{</span>
    <span class="nx">cluster</span>: <span class="kt">Common.Catalog.KubernetesCluster</span><span class="p">;</span>
  <span class="p">}</span>
 
  <span class="kd">@observer</span>
- <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleClusterFeatureSettings</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">Props</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="kr">constructor</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">Props</span><span class="p">)</span> <span class="p">{</span>
+ <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleClusterFeatureSettings</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">ExampleClusterFeatureSettingsProps</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="kr">constructor</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">ExampleClusterFeatureSettingsProps</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
     <span class="nx">makeObservable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>

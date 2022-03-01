@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-wizardprops" class="md-skip">
+        <a href="#interface-wizardpropsd" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: WizardProps
+              Interface: WizardProps<D\>
             
           </span>
         </div>
@@ -712,6 +712,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hierarchy" class="md-nav__link">
     Hierarchy
   </a>
@@ -752,6 +759,13 @@
   
     <nav class="md-nav" aria-label="Properties">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#children" class="md-nav__link">
+    children
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#classname" class="md-nav__link">
@@ -855,16 +869,30 @@
                 
                 
                 
-                <h1 id="interface-wizardprops">Interface: WizardProps<a class="headerlink" href="#interface-wizardprops" title="Permanent link">#</a></h1>
+                <h1 id="interface-wizardpropsd">Interface: WizardProps&lt;D><a class="headerlink" href="#interface-wizardpropsd" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.WizardProps</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>D</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>WizardCommonProps</code></li>
+<li><a href="../Renderer.Component.WizardCommonProps/"><code>WizardCommonProps</code></a>&lt;<code>D</code>></li>
 </ul>
 <p>↳ <strong><code>WizardProps</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#children">children</a></li>
 <li><a href="./#classname">className</a></li>
 <li><a href="./#data">data</a></li>
 <li><a href="./#header">header</a></li>
@@ -880,13 +908,16 @@
 <li><a href="./#save">save</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="children">children<a class="headerlink" href="#children" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>children</strong>: <code>ReactElement</code>&lt;<a href="../Renderer.Component.WizardStepProps/"><code>WizardStepProps</code></a>&lt;<code>D</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.WizardStepProps/"><code>WizardStepProps</code></a>&lt;<code>D</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>>[]</p>
+<hr />
 <h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
 <hr />
 <h3 id="data">data<a class="headerlink" href="#data" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>data</strong>: <code>Partial</code>&lt;<code>any</code>></p>
+<p>• <code>Optional</code> <strong>data</strong>: <code>Partial</code>&lt;<code>D</code>></p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>WizardCommonProps.data</p>
+<p><a href="../Renderer.Component.WizardCommonProps/">WizardCommonProps</a>.<a href="../Renderer.Component.WizardCommonProps/#data">data</a></p>
 <hr />
 <h3 id="header">header<a class="headerlink" href="#header" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>header</strong>: <code>ReactNode</code></p>
@@ -894,7 +925,7 @@
 <h3 id="hidesteps">hideSteps<a class="headerlink" href="#hidesteps" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>hideSteps</strong>: <code>boolean</code></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>WizardCommonProps.hideSteps</p>
+<p><a href="../Renderer.Component.WizardCommonProps/">WizardCommonProps</a>.<a href="../Renderer.Component.WizardCommonProps/#hidesteps">hideSteps</a></p>
 <hr />
 <h3 id="step">step<a class="headerlink" href="#step" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>step</strong>: <code>number</code></p>
@@ -907,7 +938,7 @@
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p>WizardCommonProps.done</p>
+<p><a href="../Renderer.Component.WizardCommonProps/">WizardCommonProps</a>.<a href="../Renderer.Component.WizardCommonProps/#done">done</a></p>
 <hr />
 <h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>onChange</strong>(<code>step</code>): <code>void</code></p>
@@ -934,7 +965,7 @@
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
-<p>WizardCommonProps.reset</p>
+<p><a href="../Renderer.Component.WizardCommonProps/">WizardCommonProps</a>.<a href="../Renderer.Component.WizardCommonProps/#reset">reset</a></p>
 <hr />
 <h3 id="save">save<a class="headerlink" href="#save" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>save</strong>(<code>data</code>, <code>callback?</code>): <code>void</code></p>
@@ -960,7 +991,7 @@
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
-<p>WizardCommonProps.save</p>
+<p><a href="../Renderer.Component.WizardCommonProps/">WizardCommonProps</a>.<a href="../Renderer.Component.WizardCommonProps/#save">save</a></p>
                 
               
               
