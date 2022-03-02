@@ -117,8 +117,6 @@ export class Select extends React.Component<SelectProps> {
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
 
-    console.log("this.selectedOption", this.selectedOption);
-
     const selectProps: Partial<SelectProps> = {
       ...props,
       styles: this.styles,
