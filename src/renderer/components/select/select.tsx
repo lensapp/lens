@@ -78,7 +78,7 @@ export class Select extends React.Component<SelectProps> {
       });
     }
 
-    return this.options.find(opt => opt === value || opt.value === value);
+    return this.options.find(opt => opt === value || opt.value === value) || null;
   }
 
   @computed get options(): SelectOption[] {
@@ -116,6 +116,8 @@ export class Select extends React.Component<SelectProps> {
       value, options, components = {}, ...props
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
+
+    console.log("this.selectedOption", this.selectedOption);
 
     const selectProps: Partial<SelectProps> = {
       ...props,
