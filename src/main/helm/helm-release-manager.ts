@@ -104,10 +104,8 @@ export async function upgradeRelease(name: string, chart: string, values: any, n
   ];
 
   try {
-    const output = await execHelm(args);
-
     return {
-      log: output,
+      log: await execHelm(args),
       release: getRelease(name, namespace, kubeconfigPath, kubectlPath),
     };
   } finally {
@@ -179,12 +177,13 @@ export async function getHistory(name: string, namespace: string, kubeconfigPath
 }
 
 export async function rollback(name: string, namespace: string, revision: number, kubeconfigPath: string) {
-  return JSON.parse(await execHelm([
+  await execHelm([
     "rollback",
     name,
+    `${revision}`,
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
-  ]));
+  ]);
 }
 
 async function getResources(name: string, namespace: string, kubeconfigPath: string, kubectlPath: string) {

@@ -10,7 +10,7 @@ import uniqueId from "lodash/uniqueId";
 import type { IToleration } from "../../../common/k8s-api/workload-kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 
-interface Props {
+export interface PodTolerationsProps {
   tolerations: IToleration[];
 }
 
@@ -40,7 +40,7 @@ const getTableRow = (toleration: IToleration) => {
   );
 };
 
-export function PodTolerations({ tolerations }: Props) {
+export function PodTolerations({ tolerations }: PodTolerationsProps) {
   return (
     <Table
       tableId="workloads_pod_tolerations"

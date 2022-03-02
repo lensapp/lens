@@ -14,8 +14,8 @@ import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-char
 import { iter, sortCharts } from "../../common/utils";
 
 interface ChartCacheEntry {
-  data: Buffer,
-  mtimeMs: number,
+  data: Buffer;
+  mtimeMs: number;
 }
 
 export interface HelmCacheFile {

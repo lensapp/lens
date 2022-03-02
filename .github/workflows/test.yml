@@ -42,7 +42,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - uses: nick-invision/retry@v2
+      - uses: nick-fields/retry@v2
         name: Install dependencies
         with:
           timeout_minutes: 10
@@ -53,7 +53,7 @@ jobs:
       - run: make build-npm
         name: Generate npm package
 
-      - uses: nick-invision/retry@v2
+      - uses: nick-fields/retry@v2
         name: Build bundled extensions
         with:
           timeout_minutes: 15

@@ -27,25 +27,25 @@ import type { IReleaseCreatePayload, IReleaseUpdateDetails } from "../../../../c
 import { withInjectables } from "@ogre-tools/injectable-react";
 import installChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
-import createReleaseInjectable from "../../+apps-releases/create-release/create-release.injectable";
+import createReleaseInjectable from "../../+helm-releases/create-release/create-release.injectable";
 import { Notifications } from "../../notifications";
 
-interface Props {
+export interface InstallCharProps {
   tab: DockTab;
 }
 
 interface Dependencies {
-  createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>
-  installChartStore: InstallChartTabStore
-  dockStore: DockStore
+  createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>;
+  installChartStore: InstallChartTabStore;
+  dockStore: DockStore;
 }
 
 @observer
-class NonInjectedInstallChart extends Component<Props & Dependencies> {
+class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies> {
   @observable error = "";
   @observable showNotes = false;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: InstallCharProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -218,7 +218,7 @@ class NonInjectedInstallChart extends Component<Props & Dependencies> {
   }
 }
 
-export const InstallChart = withInjectables<Dependencies, Props>(
+export const InstallChart = withInjectables<Dependencies, InstallCharProps>(
   NonInjectedInstallChart,
 
   {

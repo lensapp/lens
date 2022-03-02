@@ -8,7 +8,7 @@ import "./cluster-manager.scss";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { BottomBar } from "./bottom-bar";
+import { StatusBar } from "../status-bar/status-bar";
 import { Catalog } from "../+catalog";
 import { Preferences } from "../+preferences";
 import { AddCluster } from "../+add-cluster";
@@ -29,7 +29,7 @@ import { TopBar } from "../layout/top-bar/top-bar";
 import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { get: () => string }
+  catalogPreviousActiveTabStorage: { get: () => string };
 }
 
 @observer
@@ -71,7 +71,7 @@ class NonInjectedClusterManager extends React.Component<Dependencies> {
           </Switch>
         </main>
         <HotbarMenu />
-        <BottomBar />
+        <StatusBar />
         <DeleteClusterDialog />
       </div>
     );

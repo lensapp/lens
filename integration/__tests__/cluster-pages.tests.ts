@@ -233,16 +233,16 @@ const commonPageTests: CommonPageTest[] = [{
   },
 },
 {
-  drawerId: "apps",
+  drawerId: "helm",
   pages: [
     {
       name: "Charts",
-      href: "/apps/charts",
+      href: "/helm/charts",
       expectedSelector: "div.HelmCharts input",
     },
     {
       name: "Releases",
-      href: "/apps/releases",
+      href: "/helm/releases",
       expectedSelector: "h5.title",
       expectedText: "Releases",
     },
@@ -320,7 +320,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await frame.waitForSelector(`.Menu >> text="Add to Hotbar"`);
     await frame.waitForSelector(`.Menu >> text="Settings"`);
     await frame.waitForSelector(`.Menu >> text="Disconnect"`);
-    await frame.waitForSelector(`.Menu >> text="Delete"`);
+    await frame.waitForSelector(`.Menu >> text="Remove"`);
   });
 
   it("should navigate around common cluster pages", async () => {

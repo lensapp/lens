@@ -15,20 +15,20 @@ import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
+import { getBackendServiceNamePort, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Ingress> {
+export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }
 
 @observer
-export class IngressDetails extends React.Component<Props> {
+export class IngressDetails extends React.Component<IngressDetailsProps> {
   @observable metrics: IIngressMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: IngressDetailsProps) {
     super(props);
     makeObservable(this);
   }

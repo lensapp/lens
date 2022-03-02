@@ -4,14 +4,13 @@
  */
 
 .ClusterManager {
-  --bottom-bar-height: 21px;
   --hotbar-width: 75px;
 
   display: grid;
   grid-template-areas:
     "topbar topbar"
     "menu main"
-    "bottom-bar bottom-bar";
+    "status-bar status-bar";
   grid-template-rows: auto 1fr min-content;
   grid-template-columns: min-content 1fr;
 
@@ -24,10 +23,6 @@
 
   .HotbarMenu {
     grid-area: menu;
-  }
-
-  .BottomBar {
-    grid-area: bottom-bar;
   }
 
   #lens-views {

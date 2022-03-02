@@ -7,7 +7,7 @@ import yaml from "js-yaml";
 import { formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
 import { apiBase } from "../index";
-import { helmChartStore } from "../../../renderer/components/+apps-helm-charts/helm-chart.store";
+import { helmChartStore } from "../../../renderer/components/+helm-charts/helm-chart.store";
 import type { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
 import type { JsonApiData } from "../json-api";
@@ -70,8 +70,8 @@ export interface IReleaseRevision {
 
 type EndpointParams = {}
   | { namespace: string }
-  | { namespace: string, name: string }
-  | { namespace: string, name: string, route: string };
+  | { namespace: string; name: string }
+  | { namespace: string; name: string; route: string };
 
 interface EndpointQuery {
   all?: boolean;
@@ -163,13 +163,13 @@ interface HelmReleaseDto {
 }
 
 export interface HelmRelease extends HelmReleaseDto, ItemObject {
-  getNs: () => string
-  getChart: (withVersion?: boolean) => string
-  getRevision: () => number
-  getStatus: () => string
-  getVersion: () => string
-  getUpdated: (humanize?: boolean, compact?: boolean) => string | number
-  getRepo: () => Promise<string>
+  getNs: () => string;
+  getChart: (withVersion?: boolean) => string;
+  getRevision: () => number;
+  getStatus: () => string;
+  getVersion: () => string;
+  getUpdated: (humanize?: boolean, compact?: boolean) => string | number;
+  getRepo: () => Promise<string>;
 }
 
 const toHelmRelease = (release: HelmReleaseDto) : HelmRelease => ({

@@ -10,7 +10,7 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { boundMethod, cssNames, Disposer } from "../../utils";
-import { getMetricsForNamespace, IPodMetrics, Namespace } from "../../../common/k8s-api/endpoints";
+import { getMetricsForNamespace, type IPodMetrics, Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
@@ -29,18 +29,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<Namespace> {
+export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedNamespaceDetails extends React.Component<Props & Dependencies> {
+class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: NamespaceDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -132,7 +132,7 @@ class NonInjectedNamespaceDetails extends React.Component<Props & Dependencies> 
   }
 }
 
-export const NamespaceDetails = withInjectables<Dependencies, Props>(
+export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsProps>(
   NonInjectedNamespaceDetails,
 
   {

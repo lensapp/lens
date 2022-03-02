@@ -2,8 +2,19 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { KubeResource } from "../../common/rbac";
+import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import { castArray } from "lodash/fp";
 
-export { isAllowedResource } from "../../common/utils/allowed-resource";
+export function isAllowedResource(resource: KubeResource | KubeResource[]) {
+  const _isAllowedResource = asLegacyGlobalFunctionForExtensionApi(isAllowedResourceInjectable);
+
+  const resources = castArray(resource);
+
+  return resources.every(x => _isAllowedResource(x));
+}
+
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
 export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";

@@ -31,19 +31,19 @@ import type { Disposer } from "../../../common/utils";
 import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
-interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
+export interface WorkloadsOverviewProps extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
+  clusterFrameContext: ClusterFrameContext;
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
 }
 
 @observer
-class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies> {
+class NonInjectedWorkloadsOverview extends React.Component<WorkloadsOverviewProps & Dependencies> {
   @observable loadErrors: string[] = [];
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: WorkloadsOverviewProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -111,7 +111,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies>
   }
 }
 
-export const WorkloadsOverview = withInjectables<Dependencies, Props>(
+export const WorkloadsOverview = withInjectables<Dependencies, WorkloadsOverviewProps>(
   NonInjectedWorkloadsOverview,
 
   {

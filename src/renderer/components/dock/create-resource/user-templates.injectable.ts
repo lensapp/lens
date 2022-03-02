@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed, IComputedValue, observable } from "mobx";
 import path from "path";
 import os from "os";
@@ -95,8 +95,8 @@ function watchUserCreateResourceTemplates(): IComputedValue<RawTemplates[]> {
 }
 
 const userCreateResourceTemplatesInjectable = getInjectable({
+  id: "user-create-resource-templates",
   instantiate: () => watchUserCreateResourceTemplates(),
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default userCreateResourceTemplatesInjectable;

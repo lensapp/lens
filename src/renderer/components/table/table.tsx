@@ -21,7 +21,10 @@ import tableModelInjectable from "./table-model/table-model.injectable";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
-export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
+export interface TableSortParams {
+  sortBy: TableSortBy;
+  orderBy: TableOrderBy;
+}
 export type TableSortCallback<Item> = (data: Item) => string | number | (string | number)[];
 export type TableSortCallbacks<Item> = Record<string, TableSortCallback<Item>>;
 
@@ -77,7 +80,7 @@ export const orderByUrlParam = createPageParam({
 });
 
 interface Dependencies {
-  model: TableModel
+  model: TableModel;
 }
 
 @observer
@@ -246,18 +249,18 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
   }
 }
 
+const InjectedTable = withInjectables<Dependencies, TableProps<any>>(
+  NonInjectedTable,
+
+  {
+    getProps: (di, props) => ({
+      model: di.inject(tableModelInjectable),
+      ...props,
+    }),
+  },
+);
+
 export function Table<Item>(props: TableProps<Item>) {
-  const InjectedTable = withInjectables<Dependencies, TableProps<Item>>(
-    NonInjectedTable,
-
-    {
-      getProps: (di, props) => ({
-        model: di.inject(tableModelInjectable),
-        ...props,
-      }),
-    },
-  );
-
   return <InjectedTable {...props} />;
 }
 

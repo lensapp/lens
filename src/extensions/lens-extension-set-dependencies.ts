@@ -10,5 +10,5 @@ import type { FileSystemProvisionerStore } from "./extension-loader/create-exten
 export const setLensExtensionDependencies = Symbol("set-lens-extension-dependencies");
 
 export interface LensExtensionDependencies {
-  fileSystemProvisionerStore: FileSystemProvisionerStore
+  fileSystemProvisionerStore: FileSystemProvisionerStore;
 }

@@ -19,7 +19,7 @@ export interface PortForwardArgs {
 }
 
 interface Dependencies {
-  getKubectlBinPath: (bundled: boolean) => Promise<string>
+  getKubectlBinPath: (bundled: boolean) => Promise<string>;
 }
 
 export class PortForward {

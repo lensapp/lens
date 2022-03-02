@@ -10,7 +10,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi, getMetricsForPods } from "../../../common/k8s-api/endpoints";
+import { type IPodMetrics, nodesApi, Pod, pvcApi, configMapApi, getMetricsForPods } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { boundMethod, cssNames, toJS } from "../../utils";
@@ -29,15 +29,15 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Pod> {
+export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }
 
 @observer
-export class PodDetails extends React.Component<Props> {
+export class PodDetails extends React.Component<PodDetailsProps> {
   @observable metrics: IPodMetrics;
   @observable containerMetrics: IPodMetrics;
 
-  constructor(props: Props) {
+  constructor(props: PodDetailsProps) {
     super(props);
     makeObservable(this);
   }

@@ -36,11 +36,11 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<PodsRouteParams> {
+export interface PodsProps extends RouteComponentProps<PodsRouteParams> {
 }
 
 @observer
-export class Pods extends React.Component<Props> {
+export class Pods extends React.Component<PodsProps> {
   renderContainersStatus(pod: Pod) {
     return pod.getContainerStatuses().map(containerStatus => {
       const { name, state, ready } = containerStatus;

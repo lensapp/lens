@@ -15,7 +15,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<PodSecurityPolicy> {
+export interface PodSecurityPolicyDetailsProps extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }
 
 interface RuleGroup {
@@ -27,7 +27,7 @@ interface RuleGroup {
 }
 
 @observer
-export class PodSecurityPolicyDetails extends React.Component<Props> {
+export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps> {
   renderRuleGroup( title: React.ReactNode, group: RuleGroup) {
     if (!group) return null;
     const { rule, ranges } = group;

@@ -40,7 +40,7 @@ function getAge(timestamp: string) {
 }
 
 interface SplitStatusesByLevel {
-  maxLevel: string,
+  maxLevel: string;
   criticals: KubeObjectStatus[];
   warnings: KubeObjectStatus[];
   infos: KubeObjectStatus[];
@@ -64,11 +64,11 @@ function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
   return { maxLevel, criticals, warnings, infos };
 }
 
-interface Props {
+export interface KubeObjectStatusIconProps {
   object: KubeObject;
 }
 
-export class KubeObjectStatusIcon extends React.Component<Props> {
+export class KubeObjectStatusIcon extends React.Component<KubeObjectStatusIconProps> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
 

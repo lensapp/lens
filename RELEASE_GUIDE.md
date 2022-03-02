@@ -6,7 +6,7 @@ Lens releases are built by CICD automatically on git tags. The typical release p
 
 1. If doing a patch release checkout the `release/vMAJOR.MINOR` branch for the appropriate `MAJOR`/`MINOR` version and manually `cherry-pick` the PRs required for the patch that were commited to master. If there are any conflicts they must be resolved manually. If necessary, get assistance from the PR authors.
 
-This can be helped (if you have the `gh` CLI installed) by running:
+This can be helped (if you have the `gh` CLI and `jq` installed) by running:
 ```
 gh api -XGET "/repos/lensapp/lens/pulls?state=closed&per_page=100" | jq -r '[.[] | select(.milestone.title == "<VERSION>") | select((.merged_at | type) == "string")] | sort_by(.merged_at) | map(.merge_commit_sha) | join(" ")'
 ```
@@ -36,11 +36,12 @@ But you will probably need to verify that all the PRs have correct milestones.
     gh api -XGET "/repos/lensapp/lens/pulls?state=closed&per_page=100" | jq -r '[.[] | select(.milestone.title == "<VERSION>") | select((.merged_at | type) == "string")] | sort_by(.merged_at) | map([.title, " (**#", .number, "**) ", .user.html_url] | join ("")) | join("\n")' | pbcopy
     ```
 
-    And if you want to specify just bug fixes then you can add the following to the end of the `[ ... ]` section in the above command (before the `sort_by`) to just have bug fixes. Switch to `== "enhancement"` for enhancements and `all()` with `. != "bug && . != "enhancement"` for maintanence sections.
+    And if you want to specify just bug fixes then you can add the following to the end of the `[ ... ]` section in the above command (before the `sort_by`) to just have bug fixes. Switch to `== "enhancement"` for enhancements and `all()` instead of `any()` with `. != "bug and . != "enhancement"` for maintanence sections.
 
     ```
     | select(any(.labels | map(.name)[]; . == "bug"))
     ```
+    See notes below for ideas for building changelogs.
 
 1. After the PR is accepted and passes CI (and before merging), go to the same branch and run `make tag-release` (set GIT_REMOTE if necessary). This additionally triggers the azure jobs to build the binaries and put them on S3.
 1. If the CI fails at this stage the problem needs to be fixed. Sometimes an azure job fails due to outside service issues (e.g. Apple signing occasionally fails), in which case the specific azure job can be rerun from https://dev.azure.com/lensapp/lensapp/_build. Otherwise changes to the codebase may need to be done and committed to the release branch and pushed to https://github.com/lensapp/lens. CI will run again. As well the release tag needs to be manually set to this new commit. You can do something like:
@@ -64,3 +65,31 @@ Other tasks
  - announce the release on lens and lens-hq slack channels (release is announced automatically on the community slack lens channel through the above publishing process)
  - announce on lens-hq that master is open for PR merges for the next release (for major/minor releases)
  - update issues on github (bump those that did not make it into the release to a subsequent release) (for major/minor/patch releases)
+
+
+ ### Rough Notes
+
+ To get all of the PRs since a certain date you can use something like:
+ ```
+ gh api -XGET "/repos/lensapp/lens/pulls?state=closed&per_page=100&q=committer-date:>YYYY-MM-DD" > prs.json
+ ```
+
+If there are more than 100 PRs you'll need to rerun for multiple pages:
+```
+ gh api -XGET "/repos/lensapp/lens/pulls?state=closed&per_page=100&page=2&q=committer-date:>YYYY-MM-DD" >> prs.json
+```
+
+To get all the bug PRs:
+```
+jq -r '[.[] | select((.merged_at | type) == "string") | select(any(.labels | map(.name)[]; . == "bug"))] | sort_by(.merged_at) | reverse | map([.title, " (**#", .number, "**) ", .user.html_url] | join ("")) | join("\n")' prs.json
+```
+
+To get all the enhancement PRs:
+```
+jq -r '[.[] | select((.merged_at | type) == "string") | select(any(.labels | map(.name)[]; . == "enhancement"))] | sort_by(.merged_at) | reverse | map([.title, " (**#", .number, "**) ", .user.html_url] | join ("")) | join("\n")' prs.json
+```
+
+To get all of the maintenance PRs:
+```
+jq -r '[.[] | select((.merged_at | type) == "string") | select(all(.labels | map(.name)[]; . != "bug" and . != "enhancement" and . != "skip-changelog"))] | sort_by(.merged_at) | reverse | map([.title, " (**#", .number, "**) ", .user.html_url] | join ("")) | join("\n")' prs.json
+```

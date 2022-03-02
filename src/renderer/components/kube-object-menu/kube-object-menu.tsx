@@ -108,25 +108,25 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Co
   }
 }
 
+const InjectedKubeObjectMenu = withInjectables<Dependencies, KubeObjectMenuProps<KubeObject>>(
+  NonInjectedKubeObjectMenu,
+  {
+    getProps: (di, props) => ({
+      clusterName: di.inject(clusterNameInjectable),
+      apiManager: di.inject(apiManagerInjectable),
+      createEditResourceTab: di.inject(createEditResourceTabInjectable),
+      hideDetails: di.inject(hideDetailsInjectable),
+
+      kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
+        kubeObject: props.object,
+      }),
+      ...props,
+    }),
+  },
+);
+
 export function KubeObjectMenu<T extends KubeObject>(
   props: KubeObjectMenuProps<T>,
 ) {
-  const InjectedKubeObjectMenu = withInjectables<Dependencies, KubeObjectMenuProps<T>>(
-    NonInjectedKubeObjectMenu,
-    {
-      getProps: (di, props) => ({
-        clusterName: di.inject(clusterNameInjectable),
-        apiManager: di.inject(apiManagerInjectable),
-        createEditResourceTab: di.inject(createEditResourceTabInjectable),
-        hideDetails: di.inject(hideDetailsInjectable),
-
-        kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
-          kubeObject: props.object,
-        }),
-        ...props,
-      }),
-    },
-  );
-
   return <InjectedKubeObjectMenu {...props} />;
 }

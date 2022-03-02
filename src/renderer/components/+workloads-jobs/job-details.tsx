@@ -17,7 +17,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForJobs, IPodMetrics, Job } from "../../../common/k8s-api/endpoints";
+import { getMetricsForJobs, type IPodMetrics, Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable, reaction } from "mobx";
@@ -36,18 +36,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<Job> {
+export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedJobDetails extends React.Component<Props & Dependencies> {
+class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: JobDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -165,7 +165,7 @@ class NonInjectedJobDetails extends React.Component<Props & Dependencies> {
   }
 }
 
-export const JobDetails = withInjectables<Dependencies, Props>(
+export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(
   NonInjectedJobDetails,
 
   {

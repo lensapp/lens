@@ -11,14 +11,14 @@ import type { DockTab as DockTabModel } from "./dock/store";
 import { TabKind } from "./dock/store";
 import { TerminalTab } from "./terminal/dock-tab";
 
-interface Props {
-  tabs: DockTabModel[]
-  autoFocus: boolean
-  selectedTab: DockTabModel
-  onChangeTab: (tab: DockTabModel) => void
+export interface DockTabsProps {
+  tabs: DockTabModel[];
+  autoFocus: boolean;
+  selectedTab: DockTabModel;
+  onChangeTab: (tab: DockTabModel) => void;
 }
 
-export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
+export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabsProps) => {
   const elem = useRef(null);
   const contentElem = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);

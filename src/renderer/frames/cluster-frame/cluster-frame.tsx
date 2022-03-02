@@ -3,17 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, computed } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { UserManagement } from "../../components/+user-management/user-management";
+import { UserManagementRoute } from "../../components/+user-management/route";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { ClusterOverview } from "../../components/+cluster/cluster-overview";
 import { Events } from "../../components/+events/events";
 import { DeploymentScaleDialog } from "../../components/+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "../../components/+workloads-cronjobs/cronjob-trigger-dialog";
-import { CustomResources } from "../../components/+custom-resources/custom-resources";
-import { isAllowedResource } from "../../../common/utils/allowed-resource";
+import { CustomResourcesRoute } from "../../components/+custom-resources/route";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries/page-registry";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../../extensions/registries";
 import { StatefulSetScaleDialog } from "../../components/+workloads-statefulsets/statefulset-scale-dialog";
@@ -28,13 +27,12 @@ import { KubeObjectDetails } from "../../components/kube-object-details";
 import { KubeConfigDialog } from "../../components/kubeconfig-dialog";
 import { Sidebar } from "../../components/layout/sidebar";
 import { Dock } from "../../components/dock";
-import { Apps } from "../../components/+apps";
-import { Namespaces } from "../../components/+namespaces";
-import { Network } from "../../components/+network";
-import { Nodes } from "../../components/+nodes";
-import { Workloads } from "../../components/+workloads";
-import { Config } from "../../components/+config";
-import { Storage } from "../../components/+storage";
+import { NamespacesRoute } from "../../components/+namespaces/route";
+import { NetworkRoute } from "../../components/+network/route";
+import { NodesRoute } from "../../components/+nodes/route";
+import { WorkloadsRoute } from "../../components/+workloads/route";
+import { ConfigRoute } from "../../components/+config/route";
+import { StorageRoute } from "../../components/+storage/route";
 import { watchHistoryState } from "../../remote-helpers/history-updater";
 import { PortForwardDialog } from "../../port-forward";
 import { DeleteClusterDialog } from "../../components/delete-cluster-dialog";
@@ -42,19 +40,24 @@ import type { NamespaceStore } from "../../components/+namespaces/namespace-stor
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable  from "../../components/+namespaces/namespace-store/namespace-store.injectable";
 import type { ClusterId } from "../../../common/cluster-types";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { Disposer } from "../../../common/utils";
 import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import historyInjectable from "../../navigation/history.injectable";
 import type { History } from "history";
+import type { IsAllowedResource } from "../../../common/utils/is-allowed-resource.injectable";
+import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
+import { HelmRoute } from "../../components/+helm/route";
+import type { KubeResource } from "../../../common/rbac";
 
 interface Dependencies {
-  history: History,
-  namespaceStore: NamespaceStore
-  hostedClusterId: ClusterId
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  history: History;
+  namespaceStore: NamespaceStore;
+  hostedClusterId: ClusterId;
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  isAllowedResource: IsAllowedResource;
 }
 
 @observer
@@ -75,7 +78,13 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
     ]);
   }
 
-  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? routes.clusterURL() : routes.workloadsURL();
+  @computed get startUrl() {
+    const resources : KubeResource[] = ["events", "nodes", "pods"];
+
+    return resources.every(x => this.props.isAllowedResource(x))
+      ? routes.clusterURL()
+      : routes.workloadsURL();
+  }
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -138,18 +147,17 @@ class NonInjectedClusterFrame extends React.Component<Dependencies> {
         <ErrorBoundary>
           <MainLayout sidebar={<Sidebar />} footer={<Dock />}>
             <Switch>
-
               <Route component={ClusterOverview} {...routes.clusterRoute}/>
-              <Route component={Nodes} {...routes.nodesRoute}/>
-              <Route component={Workloads} {...routes.workloadsRoute}/>
-              <Route component={Config} {...routes.configRoute}/>
-              <Route component={Network} {...routes.networkRoute}/>
-              <Route component={Storage} {...routes.storageRoute}/>
-              <Route component={Namespaces} {...routes.namespacesRoute}/>
+              <Route component={NodesRoute} {...routes.nodesRoute}/>
+              <Route component={WorkloadsRoute} {...routes.workloadsRoute}/>
+              <Route component={ConfigRoute} {...routes.configRoute}/>
+              <Route component={NetworkRoute} {...routes.networkRoute}/>
+              <Route component={StorageRoute} {...routes.storageRoute}/>
+              <Route component={NamespacesRoute} {...routes.namespacesRoute}/>
               <Route component={Events} {...routes.eventRoute}/>
-              <Route component={CustomResources} {...routes.crdRoute}/>
-              <Route component={UserManagement} {...routes.usersManagementRoute}/>
-              <Route component={Apps} {...routes.appsRoute}/>
+              <Route component={CustomResourcesRoute} {...routes.crdRoute}/>
+              <Route component={UserManagementRoute} {...routes.usersManagementRoute}/>
+              <Route component={HelmRoute} {...routes.helmRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
               <Redirect exact from="/" to={this.startUrl}/>
@@ -185,5 +193,6 @@ export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFram
     namespaceStore: di.inject(namespaceStoreInjectable),
     hostedClusterId: di.inject(hostedClusterInjectable).id,
     subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+    isAllowedResource: di.inject(isAllowedResourceInjectable),
   }),
 });

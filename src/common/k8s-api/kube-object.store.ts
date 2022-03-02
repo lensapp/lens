@@ -6,7 +6,7 @@
 import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
-import { autoBind, noop, rejectPromiseBy } from "../utils";
+import { autoBind, Disposer, noop, rejectPromiseBy } from "../utils";
 import { KubeObject, KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
@@ -247,7 +247,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
+  async reloadAll(opts: { force?: boolean; namespaces?: string[]; merge?: boolean } = {}) {
     const { force = false, ...loadingOptions } = opts;
 
     if (this.isLoading || (this.isLoaded && !force)) {
@@ -312,14 +312,14 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return this.api.create(params, data);
   }
 
-  create = async (params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> => {
+  async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
 
     this.items.replace(items);
 
     return newItem;
-  };
+  }
 
   private postUpdate(rawItem: KubeJsonApiData): T {
     const newItem = new this.api.objectConstructor(rawItem);
@@ -369,6 +369,10 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return Promise.all(this.selectedItems.map(this.remove));
   }
 
+  async removeItems(items: T[]) {
+    await Promise.all(items.map(this.remove));
+  }
+
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
@@ -378,7 +382,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     });
   }
 
-  subscribe({ onLoadFailure, abortController = new AbortController() }: KubeObjectStoreSubscribeParams = {}) {
+  subscribe({ onLoadFailure, abortController = new AbortController() }: KubeObjectStoreSubscribeParams = {}): Disposer {
     if (this.api.isNamespaced) {
       Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
         .then(() => {

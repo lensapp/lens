@@ -25,15 +25,15 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<CronJob> {
+export interface CronJobDetailsProps extends KubeObjectDetailsProps<CronJob> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedCronJobDetails extends React.Component<Props & Dependencies> {
+class NonInjectedCronJobDetails extends React.Component<CronJobDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -113,7 +113,7 @@ class NonInjectedCronJobDetails extends React.Component<Props & Dependencies> {
   }
 }
 
-export const CronJobDetails = withInjectables<Dependencies, Props>(
+export const CronJobDetails = withInjectables<Dependencies, CronJobDetailsProps>(
   NonInjectedCronJobDetails,
 
   {

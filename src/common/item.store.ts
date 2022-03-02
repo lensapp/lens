@@ -21,7 +21,7 @@ export abstract class ItemStore<Item extends ItemObject> {
   @observable isLoading = false;
   @observable isLoaded = false;
   @observable items = observable.array<Item>([], { deep: false });
-  @observable selectedItemsIds = observable.map<string, boolean>();
+  @observable selectedItemsIds = observable.set<string>();
 
   constructor() {
     makeObservable(this);
@@ -29,7 +29,11 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   @computed get selectedItems(): Item[] {
-    return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
+    return this.pickOnlySelected(this.items);
+  }
+
+  public pickOnlySelected(items: Item[]): Item[] {
+    return items.filter(item => this.selectedItemsIds.has(item.getId()));
   }
 
   public getItems(): Item[] {
@@ -152,12 +156,12 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   isSelected(item: Item) {
-    return !!this.selectedItemsIds.get(item.getId());
+    return this.selectedItemsIds.has(item.getId());
   }
 
   @action
   select(item: Item) {
-    this.selectedItemsIds.set(item.getId(), true);
+    this.selectedItemsIds.add(item.getId());
   }
 
   @action
@@ -206,6 +210,8 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   async removeSelectedItems?(): Promise<any>;
+
+  async removeItems?(items: Item[]): Promise<void>;
 
   * [Symbol.iterator]() {
     yield* this.items;

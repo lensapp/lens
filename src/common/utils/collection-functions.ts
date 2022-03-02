@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { runInAction } from "mobx";
+
 /**
  * Get the value behind `key`. If it was not present, first insert `value`
  * @param map The map to interact with
@@ -19,20 +21,70 @@ export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
 }
 
 /**
- * Like `getOrInsert` but specifically for when `V` is `Map<any, any>` so that
- * the typings are inferred.
+ * Like `getOrInsert` but specifically for when `V` is `Map<MK, MV>` so that
+ * the typings are inferred correctly.
  */
 export function getOrInsertMap<K, MK, MV>(map: Map<K, Map<MK, MV>>, key: K): Map<MK, MV> {
   return getOrInsert(map, key, new Map<MK, MV>());
 }
 
 /**
- * Like `getOrInsert` but with delayed creation of the item
+ * Like `getOrInsert` but specifically for when `V` is `Set<any>` so that
+ * the typings are inferred.
  */
-export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, value: () => V): V {
+export function getOrInsertSet<K, SK>(map: Map<K, Set<SK>>, key: K): Set<SK> {
+  return getOrInsert(map, key, new Set<SK>());
+}
+
+/**
+ * Like `getOrInsert` but with delayed creation of the item. Which is useful
+ * if it is very expensive to create the initial value.
+ */
+export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, builder: () => V): V {
   if (!map.has(key)) {
-    map.set(key, value());
+    map.set(key, builder());
   }
 
   return map.get(key);
+}
+
+/**
+ * Set the value associated with `key` iff there was not a previous value
+ * @param map The map to interact with
+ * @throws if `key` already in map
+ * @returns `this` so that `strictSet` can be chained
+ */
+export function strictSet<K, V>(map: Map<K, V>, key: K, val: V): typeof map {
+  if (map.has(key)) {
+    throw new TypeError("Duplicate key in map");
+  }
+
+  return map.set(key, val);
+}
+
+/**
+ * Get the value associated with `key`
+ * @param map The map to interact with
+ * @throws if `key` did not a value associated with it
+ */
+export function strictGet<K, V>(map: Map<K, V>, key: K): V {
+  if (!map.has(key)) {
+    throw new TypeError("key not in map");
+  }
+
+  return map.get(key);
+}
+
+/**
+ * If `key` is in `set`, remove it otherwise add it.
+ * @param set The set to manipulate
+ * @param key The key to toggle the "is in"-ness of
+ */
+export function toggle<K>(set: Set<K>, key: K): void {
+  runInAction(() => {
+    // Returns true if value was already in Set; otherwise false.
+    if (!set.delete(key)) {
+      set.add(key);
+    }
+  });
 }

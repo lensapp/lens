@@ -27,15 +27,15 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<PortForwardsRouteParams> {
+export interface PortForwardsProps extends RouteComponentProps<PortForwardsRouteParams> {
 }
 
 interface Dependencies {
-  portForwardStore: PortForwardStore
+  portForwardStore: PortForwardStore;
 }
 
 @observer
-class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
+class NonInjectedPortForwards extends React.Component<PortForwardsProps & Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -86,7 +86,9 @@ class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
         <ItemListLayout
           isConfigurable
           tableId="port_forwards"
-          className="PortForwards" store={this.props.portForwardStore}
+          className="PortForwards"
+          store={this.props.portForwardStore}
+          getItems={() => this.props.portForwardStore.items}
           sortingCallbacks={{
             [columnId.name]: item => item.getName(),
             [columnId.namespace]: item => item.getNs(),
@@ -141,7 +143,7 @@ class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
   }
 }
 
-export const PortForwards = withInjectables<Dependencies, Props>(
+export const PortForwards = withInjectables<Dependencies, PortForwardsProps>(
   NonInjectedPortForwards,
 
   {

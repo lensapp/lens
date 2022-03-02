@@ -34,18 +34,18 @@ enum columnId {
   lastSeen = "last-seen",
 }
 
-interface Props extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
+export interface EventsProps extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<EventsProps> = {
   compactLimit: 10,
 };
 
 @observer
-export class Events extends React.Component<Props> {
+export class Events extends React.Component<EventsProps> {
   static defaultProps = defaultProps as object;
   now = Date.now();
 
@@ -63,7 +63,7 @@ export class Events extends React.Component<Props> {
     [columnId.lastSeen]: event => this.now - new Date(event.lastTimestamp).getTime(),
   };
 
-  constructor(props: Props) {
+  constructor(props: EventsProps) {
     super(props);
     makeObservable(this);
   }
@@ -124,7 +124,7 @@ export class Events extends React.Component<Props> {
   };
 
   render() {
-    const { store, visibleItems } = this;
+    const { store } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
@@ -137,7 +137,7 @@ export class Events extends React.Component<Props> {
         renderHeaderTitle="Events"
         customizeHeader={this.customizeHeader}
         isSelectable={false}
-        items={visibleItems}
+        getItems={() => this.visibleItems}
         virtual={!compact}
         tableProps={{
           sortSyncWithUrl: false,

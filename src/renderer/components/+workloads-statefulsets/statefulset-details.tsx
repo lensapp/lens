@@ -16,7 +16,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForStatefulSets, IPodMetrics, StatefulSet } from "../../../common/k8s-api/endpoints";
+import { getMetricsForStatefulSets, type IPodMetrics, StatefulSet } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -31,18 +31,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<StatefulSet> {
+export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedStatefulSetDetails extends React.Component<Props & Dependencies> {
+class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: StatefulSetDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -131,7 +131,7 @@ class NonInjectedStatefulSetDetails extends React.Component<Props & Dependencies
   }
 }
 
-export const StatefulSetDetails = withInjectables<Dependencies, Props>(
+export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetailsProps>(
   NonInjectedStatefulSetDetails,
 
   {

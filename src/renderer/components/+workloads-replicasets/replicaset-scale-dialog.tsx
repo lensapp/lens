@@ -16,8 +16,8 @@ import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { ReplicaSet, ReplicaSetApi, replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
-interface Props extends Partial<DialogProps> {
-  replicaSetApi: ReplicaSetApi
+export interface ReplicaSetScaleDialogProps extends Partial<DialogProps> {
+  replicaSetApi: ReplicaSetApi;
 }
 
 const dialogState = observable.object({
@@ -26,7 +26,7 @@ const dialogState = observable.object({
 });
 
 @observer
-export class ReplicaSetScaleDialog extends Component<Props> {
+export class ReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogProps> {
   static defaultProps = {
     replicaSetApi,
   };
@@ -35,7 +35,7 @@ export class ReplicaSetScaleDialog extends Component<Props> {
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  constructor(props: Props) {
+  constructor(props: ReplicaSetScaleDialogProps) {
     super(props);
     makeObservable(this);
   }

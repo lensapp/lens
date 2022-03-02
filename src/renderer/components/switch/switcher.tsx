@@ -11,7 +11,7 @@ interface Styles extends Partial<Record<SwitchClassKey, string>> {
   focusVisible?: string;
 }
 
-interface Props extends SwitchProps {
+export interface SwitcherProps extends SwitchProps {
   classes: Styles;
 }
 
@@ -58,7 +58,7 @@ export const Switcher = withStyles((theme: Theme) =>
     checked: {},
     focusVisible: {},
   }),
-)(({ classes, ...props }: Props) => {
+)(({ classes, ...props }: SwitcherProps) => {
   return (
     <Switch
       focusVisibleClassName={classes.focusVisible}

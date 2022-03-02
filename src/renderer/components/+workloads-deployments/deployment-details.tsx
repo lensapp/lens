@@ -10,7 +10,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment, getMetricsForDeployments, IPodMetrics } from "../../../common/k8s-api/endpoints";
+import { Deployment, getMetricsForDeployments, type IPodMetrics } from "../../../common/k8s-api/endpoints";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -33,18 +33,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<Deployment> {
+export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies> {
+class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: DeploymentDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -156,7 +156,7 @@ class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies>
   }
 }
 
-export const DeploymentDetails = withInjectables<Dependencies, Props>(
+export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetailsProps>(
   NonInjectedDeploymentDetails,
 
   {

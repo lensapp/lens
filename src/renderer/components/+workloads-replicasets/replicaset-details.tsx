@@ -15,7 +15,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForReplicaSets, IPodMetrics, ReplicaSet } from "../../../common/k8s-api/endpoints";
+import { getMetricsForReplicaSets, type IPodMetrics, ReplicaSet } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -30,18 +30,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<ReplicaSet> {
+export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedReplicaSetDetails extends React.Component<Props & Dependencies> {
+class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: ReplicaSetDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -134,7 +134,7 @@ class NonInjectedReplicaSetDetails extends React.Component<Props & Dependencies>
   }
 }
 
-export const ReplicaSetDetails = withInjectables<Dependencies, Props>(
+export const ReplicaSetDetails = withInjectables<Dependencies, ReplicaSetDetailsProps>(
   NonInjectedReplicaSetDetails,
 
   {

@@ -41,7 +41,7 @@ import type { RegisteredAppPreference } from "./app-preferences/app-preference-r
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>
+  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
 }
 
 const NonInjectedPreferences: React.FC<Dependencies> = ({ appPreferenceItems }) => {

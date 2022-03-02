@@ -12,7 +12,7 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { cssNames } from "../../utils";
 import { Spinner } from "../spinner";
 
-interface Props extends React.HTMLProps<any> {
+export interface ResourceMetricsProps extends React.HTMLProps<any> {
   tabs: React.ReactNode[];
   object?: KubeObject;
   loader?: () => void;
@@ -23,21 +23,15 @@ interface Props extends React.HTMLProps<any> {
   };
 }
 
-export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
+export interface IResourceMetricsValue<T extends KubeObject = any, P = any> {
   object: T;
   tabId: number;
   params?: P;
-};
+}
 
 export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
 
-const defaultProps: Partial<Props> = {
-  interval: 60,  // 1 min
-};
-
-ResourceMetrics.defaultProps = defaultProps;
-
-export function ResourceMetrics({ object, loader, interval, tabs, children, className, params }: Props) {
+export function ResourceMetrics({ object, loader, interval = 60, tabs, children, className, params }: ResourceMetricsProps) {
   const [tabId, setTabId] = useState<number>(0);
 
   useEffect(() => {

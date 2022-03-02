@@ -27,7 +27,7 @@ import portForwardStoreInjectable from "../../port-forward/port-forward-store/po
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import logger from "../../../common/logger";
 
-interface Props {
+export interface PodContainerPortProps {
   pod: Pod;
   port: {
     name?: string;
@@ -38,17 +38,17 @@ interface Props {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean, onClose: () => void }) => void;
+  openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean; onClose: () => void }) => void;
 }
 
 @observer
-class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> {
+class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps & Dependencies> {
   @observable waiting = false;
   @observable forwardPort = 0;
   @observable isPortForwarded = false;
   @observable isActive = false;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: PodContainerPortProps & Dependencies) {
     super(props);
     makeObservable(this);
     this.checkExistingPortForwarding();
@@ -192,7 +192,7 @@ class NonInjectedPodContainerPort extends React.Component<Props & Dependencies> 
   }
 }
 
-export const PodContainerPort = withInjectables<Dependencies, Props>(
+export const PodContainerPort = withInjectables<Dependencies, PodContainerPortProps>(
   NonInjectedPodContainerPort,
 
   {

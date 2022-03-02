@@ -9,11 +9,11 @@ import { useFlexLayout, useSortBy, useTable, UseTableOptions } from "react-table
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 
-interface Props extends UseTableOptions<any> {
+export interface ReactTableProps extends UseTableOptions<any> {
   headless?: boolean;
 }
 
-export function ReactTable({ columns, data, headless }: Props) {
+export function ReactTable({ columns, data, headless }: ReactTableProps) {
   const defaultColumn = useMemo(
     () => ({
       minWidth: 20,

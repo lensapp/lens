@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export type KubeObjectStatus = {
+export interface KubeObjectStatus {
   level: KubeObjectStatusLevel;
   text: string;
   timestamp?: string;
-};
+}
 
 export enum KubeObjectStatusLevel {
   INFO = 1,

@@ -26,16 +26,16 @@ import kubeWatchApiInjectable
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
-interface Props extends KubeObjectDetailsProps<Service> {
+export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer
-  portForwardStore: PortForwardStore
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
+  portForwardStore: PortForwardStore;
 }
 
 @observer
-class NonInjectedServiceDetails extends React.Component<Props & Dependencies> {
+class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & Dependencies> {
   componentDidMount() {
     const { object: service } = this.props;
 
@@ -137,7 +137,7 @@ class NonInjectedServiceDetails extends React.Component<Props & Dependencies> {
   }
 }
 
-export const ServiceDetails = withInjectables<Dependencies, Props>(
+export const ServiceDetails = withInjectables<Dependencies, ServiceDetailsProps>(
   NonInjectedServiceDetails,
 
   {

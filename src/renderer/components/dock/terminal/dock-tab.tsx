@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import "./terminal-dock-tab.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../../utils";
@@ -15,16 +16,16 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
 
-interface Props extends DockTabProps {
+export interface TerminalTabProps extends DockTabProps {
 }
 
 interface Dependencies {
-  dockStore: DockStore
-  terminalStore: TerminalStore
+  dockStore: DockStore;
+  terminalStore: TerminalStore;
 }
 
 @observer
-class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
+class NonInjectedTerminalTab extends React.Component<TerminalTabProps & Dependencies> {
   componentDidMount() {
     reaction(() => this.isDisconnected === true, () => {
       this.props.dockStore.closeTab(this.tabId);
@@ -71,7 +72,7 @@ class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
   }
 }
 
-export const TerminalTab = withInjectables<Dependencies, Props>(NonInjectedTerminalTab, {
+export const TerminalTab = withInjectables<Dependencies, TerminalTabProps>(NonInjectedTerminalTab, {
   getProps: (di, props) => ({
     dockStore: di.inject(dockStoreInjectable),
     terminalStore: di.inject(terminalStoreInjectable),

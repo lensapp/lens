@@ -58,7 +58,7 @@ export interface IIngressService {
   port: {
     name?: string;
     number?: number;
-  }
+  };
 }
 
 export const getBackendServiceNamePort = (backend: IIngressBackend) => {
@@ -96,8 +96,8 @@ export interface Ingress {
         apiGroup: string;
         kind: string;
         name: string;
-      }
-    }>
+      };
+    }>;
   };
   status: {
     loadBalancer: {

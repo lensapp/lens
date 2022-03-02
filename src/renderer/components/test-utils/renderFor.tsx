@@ -9,13 +9,13 @@ import {
   RenderResult,
 } from "@testing-library/react";
 
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 
 export type DiRender = (ui: React.ReactElement) => RenderResult;
 
-type DiRenderFor = (di: DependencyInjectionContainer) => DiRender;
+type DiRenderFor = (di: DiContainer) => DiRender;
 
 export const renderFor: DiRenderFor = (di) => (ui) => {
   const result = testingLibraryRender(

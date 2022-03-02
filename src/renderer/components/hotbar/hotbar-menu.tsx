@@ -12,22 +12,22 @@ import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { HotbarStore } from "../../../common/hotbar-store";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, type DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
 import { action, makeObservable, observable } from "mobx";
 
-interface Props {
+export interface HotbarMenuProps {
   className?: IClassName;
 }
 
 @observer
-export class HotbarMenu extends React.Component<Props> {
+export class HotbarMenu extends React.Component<HotbarMenuProps> {
   @observable draggingOver = false;
 
-  constructor(props: Props) {
+  constructor(props: HotbarMenuProps) {
     super(props);
     makeObservable(this);
   }

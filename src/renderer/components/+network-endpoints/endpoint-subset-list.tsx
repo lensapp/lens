@@ -14,13 +14,13 @@ import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
 import { getDetailsUrl } from "../kube-detail-params";
 
-interface Props {
+export interface EndpointSubsetListProps {
   subset: EndpointSubset;
   endpoint: Endpoint;
 }
 
 @observer
-export class EndpointSubsetList extends React.Component<Props> {
+export class EndpointSubsetList extends React.Component<EndpointSubsetListProps> {
 
   getAddressTableRow(ip: string) {
     const { subset } = this.props;

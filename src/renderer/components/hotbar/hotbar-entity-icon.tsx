@@ -18,7 +18,7 @@ import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
 
-interface Props extends HTMLAttributes<HTMLElement> {
+export interface HotbarEntityIconProps extends HTMLAttributes<HTMLElement> {
   entity: CatalogEntity;
   index: number;
   errorClass?: IClassName;
@@ -28,13 +28,13 @@ interface Props extends HTMLAttributes<HTMLElement> {
 }
 
 @observer
-export class HotbarEntityIcon extends React.Component<Props> {
+export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
   @observable private contextMenu: CatalogEntityContextMenuContext = {
     menuItems: [],
     navigate: (url: string) => navigate(url),
   };
 
-  constructor(props: Props) {
+  constructor(props: HotbarEntityIconProps) {
     super(props);
     makeObservable(this);
   }
@@ -47,7 +47,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
       return <Icon material="bug_report" className={className} />;
     }
 
-    if (category.metadata.icon.includes("<svg")) {
+    if (Icon.isSvg(category.metadata.icon)) {
       return <Icon svg={category.metadata.icon} className={className} />;
     } else {
       return <Icon material={category.metadata.icon} className={className} />;

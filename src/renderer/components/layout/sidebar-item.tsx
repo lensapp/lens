@@ -15,7 +15,7 @@ import { isActiveRoute } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import sidebarStorageInjectable, { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 
-interface SidebarItemProps {
+export interface SidebarItemProps {
   /**
    * Unique id, used in storage and integration tests
    */
@@ -35,7 +35,7 @@ interface SidebarItemProps {
 }
 
 interface Dependencies {
-  sidebarStorage: StorageHelper<SidebarStorageState>
+  sidebarStorage: StorageHelper<SidebarStorageState>;
 }
 
 @observer
@@ -63,7 +63,7 @@ class NonInjectedSidebarItem extends React.Component<SidebarItemProps & Dependen
   }
 
   @computed get isExpandable(): boolean {
-    return Boolean(this.props.children);
+    return React.Children.count(this.props.children) > 0;
   }
 
   toggleExpand = () => {

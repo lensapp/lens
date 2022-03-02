@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { ExtendedMap } from "../../../../common/utils";
+import { getOrInsertMap } from "../../../../common/utils";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ipcMainHandle } from "../../../../common/ipc";
 import crypto from "crypto";
@@ -11,15 +11,14 @@ import { promisify } from "util";
 const randomBytes = promisify(crypto.randomBytes);
 
 export class ShellRequestAuthenticator {
-  private tokens = new ExtendedMap<ClusterId, Map<string, Uint8Array>>();
+  private tokens = new Map<ClusterId, Map<string, Uint8Array>>();
 
   init() {
     ipcMainHandle("cluster:shell-api", async (event, clusterId, tabId) => {
       const authToken = Uint8Array.from(await randomBytes(128));
+      const forCluster = getOrInsertMap(this.tokens, clusterId);
 
-      this.tokens
-        .getOrInsert(clusterId, () => new Map())
-        .set(tabId, authToken);
+      forCluster.set(tabId, authToken);
 
       return authToken;
     });

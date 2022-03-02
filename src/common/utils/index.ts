@@ -10,6 +10,7 @@ export function noop<T extends any[]>(...args: T): void {
   return void args;
 }
 
+export * from "./abort-controller";
 export * from "./app-version";
 export * from "./autobind";
 export * from "./camelCase";
@@ -24,13 +25,12 @@ export * from "./delay";
 export * from "./disposer";
 export * from "./downloadFile";
 export * from "./escapeRegExp";
-export * from "./extended-map";
 export * from "./formatDuration";
 export * from "./getRandId";
 export * from "./hash-set";
 export * from "./n-fircate";
 export * from "./objects";
-export * from "./openExternal";
+export * from "./openBrowser";
 export * from "./paths";
 export * from "./promise-exec";
 export * from "./reject-promise";
@@ -38,11 +38,11 @@ export * from "./singleton";
 export * from "./sort-compare";
 export * from "./splitArray";
 export * from "./tar";
-export * from "./toggle-set";
 export * from "./toJS";
 export * from "./type-narrowing";
-export * from "./types";
 export * from "./wait-for-path";
+
+export type { Tuple } from "./tuple";
 
 import * as iter from "./iter";
 import * as array from "./array";

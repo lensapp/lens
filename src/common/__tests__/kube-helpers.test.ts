@@ -43,30 +43,30 @@ users:
       command: foo
 `;
 
-interface kubeconfig {
-  apiVersion: string,
+interface Kubeconfig {
+  apiVersion: string;
   clusters: [{
-    name: string,
+    name: string;
     cluster: {
-      server: string
-    }
-  }],
+      server: string;
+    };
+  }];
   contexts: [{
     context: {
-      cluster: string,
-      user: string,
-    },
-    name: string
-  }],
+      cluster: string;
+      user: string;
+    };
+    name: string;
+  }];
   users: [{
-    name: string
-  }],
-  kind: string,
-  "current-context": string,
-  preferences: {}
+    name: string;
+  }];
+  kind: string;
+  "current-context": string;
+  preferences: {};
 }
 
-let mockKubeConfig: kubeconfig;
+let mockKubeConfig: Kubeconfig;
 
 describe("kube helpers", () => {
   describe("validateKubeconfig", () => {

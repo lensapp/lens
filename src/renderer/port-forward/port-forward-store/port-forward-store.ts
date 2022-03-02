@@ -13,7 +13,7 @@ import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";
 
 interface Dependencies {
-  storage: StorageHelper<ForwardedPort[] | undefined>
+  storage: StorageHelper<ForwardedPort[] | undefined>;
 }
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
@@ -73,8 +73,8 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     });
   }
 
-  async removeSelectedItems() {
-    return Promise.all(this.selectedItems.map(this.remove));
+  async removeItems(items: PortForwardItem[]) {
+    await Promise.all(items.map(this.remove));
   }
 
   getById(id: string) {

@@ -16,7 +16,7 @@ import sidebarStorageInjectable, {
   SidebarStorageState,
 } from "./sidebar-storage/sidebar-storage.injectable";
 
-interface Props {
+export interface MainLayoutProps {
   sidebar: React.ReactNode;
   className?: string;
   footer?: React.ReactNode;
@@ -29,11 +29,11 @@ interface Props {
  */
 
 interface Dependencies {
-  sidebarStorage: StorageHelper<SidebarStorageState>
+  sidebarStorage: StorageHelper<SidebarStorageState>;
 }
 
 @observer
-class NonInjectedMainLayout extends React.Component<Props & Dependencies> {
+class NonInjectedMainLayout extends React.Component<MainLayoutProps & Dependencies> {
   onSidebarResize = (width: number) => {
     this.props.sidebarStorage.merge({ width });
   };
@@ -69,7 +69,7 @@ class NonInjectedMainLayout extends React.Component<Props & Dependencies> {
   }
 }
 
-export const MainLayout = withInjectables<Dependencies, Props>(
+export const MainLayout = withInjectables<Dependencies, MainLayoutProps>(
   NonInjectedMainLayout,
 
   {

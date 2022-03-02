@@ -15,7 +15,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { DaemonSet, getMetricsForDaemonSets, IPodMetrics } from "../../../common/k8s-api/endpoints";
+import { DaemonSet, getMetricsForDaemonSets, type IPodMetrics } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
@@ -31,18 +31,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<DaemonSet> {
+export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
 }
 
 @observer
-class NonInjectedDaemonSetDetails extends React.Component<Props & Dependencies> {
+class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: DaemonSetDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -132,7 +132,7 @@ class NonInjectedDaemonSetDetails extends React.Component<Props & Dependencies> 
   }
 }
 
-export const DaemonSetDetails = withInjectables<Dependencies, Props>(
+export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsProps>(
   NonInjectedDaemonSetDetails,
 
   {

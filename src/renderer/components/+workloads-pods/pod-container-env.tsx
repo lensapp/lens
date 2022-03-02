@@ -16,12 +16,12 @@ import { Icon } from "../icon";
 import { base64, cssNames, iter } from "../../utils";
 import _ from "lodash";
 
-interface Props {
+export interface ContainerEnvironmentProps {
   container: IPodContainer;
   namespace: string;
 }
 
-export const ContainerEnvironment = observer((props: Props) => {
+export const ContainerEnvironment = observer((props: ContainerEnvironmentProps) => {
   const { container: { env, envFrom }, namespace } = props;
 
   useEffect( () => autorun(() => {
@@ -149,7 +149,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   );
 });
 
-interface SecretKeyProps {
+export interface SecretKeyProps {
   reference: {
     name: string;
     key: string;

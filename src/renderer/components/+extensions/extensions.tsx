@@ -42,7 +42,7 @@ interface Dependencies {
   installFromInput: (input: string) => Promise<void>;
   installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: (files: File[]) => Promise<void>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 @observer

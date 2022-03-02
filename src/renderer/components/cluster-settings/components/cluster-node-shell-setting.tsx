@@ -12,16 +12,16 @@ import { observer } from "mobx-react";
 import { Icon } from "../../icon/icon";
 import { initialNodeShellImage } from "../../../../common/cluster-types";
 
-interface Props {
+export interface ClusterNodeShellSettingProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterNodeShellSetting extends React.Component<Props> {
+export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSettingProps> {
   @observable nodeShellImage = this.props.cluster.preferences?.nodeShellImage || "";
   @observable imagePullSecret = this.props.cluster.preferences?.imagePullSecret || "";
 
-  constructor(props: Props) {
+  constructor(props: ClusterNodeShellSettingProps) {
     super(props);
     makeObservable(this);
   }

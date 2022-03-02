@@ -25,7 +25,7 @@
 .contents {
   grid-area: contents;
   overflow: auto;
-  height: calc(100vh - var(--bottom-bar-height) - var(--main-layout-header));
+  height: calc(100vh - var(--status-bar-height) - var(--main-layout-header));
 }
 
 .footer {

@@ -19,22 +19,23 @@ import namespaceStoreInjectable from "./namespace-store/namespace-store.injectab
 import type { AddNamespaceDialogModel } from "./add-namespace-dialog-model/add-namespace-dialog-model";
 import addNamespaceDialogModelInjectable
   from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
+import type { NamespaceStore } from "./namespace-store/namespace.store";
 
-interface Props extends DialogProps {
+export interface AddNamespaceDialogProps extends DialogProps {
   onSuccess?(ns: Namespace): void;
   onError?(error: any): void;
 }
 
 interface Dependencies {
-  createNamespace: (params: { name: string }) => Promise<Namespace>,
-  model: AddNamespaceDialogModel
+  namespaceStore: NamespaceStore;
+  model: AddNamespaceDialogModel;
 }
 
 @observer
-class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies> {
+class NonInjectedAddNamespaceDialog extends React.Component<AddNamespaceDialogProps & Dependencies> {
   @observable namespace = "";
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: AddNamespaceDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -48,7 +49,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
     const { onSuccess, onError } = this.props;
 
     try {
-      const created = await this.props.createNamespace({ name: namespace });
+      const created = await this.props.namespaceStore.create({ name: namespace });
 
       onSuccess?.(created);
       this.props.model.close();
@@ -59,7 +60,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
   };
 
   render() {
-    const { model, createNamespace, ...dialogProps } = this.props;
+    const { model, namespaceStore, ...dialogProps } = this.props;
     const { namespace } = this;
     const header = <h5>Create Namespace</h5>;
 
@@ -92,12 +93,12 @@ class NonInjectedAddNamespaceDialog extends React.Component<Props & Dependencies
   }
 }
 
-export const AddNamespaceDialog = withInjectables<Dependencies, Props>(
+export const AddNamespaceDialog = withInjectables<Dependencies, AddNamespaceDialogProps>(
   NonInjectedAddNamespaceDialog,
 
   {
     getProps: (di, props) => ({
-      createNamespace: di.inject(namespaceStoreInjectable).create,
+      namespaceStore: di.inject(namespaceStoreInjectable),
       model: di.inject(addNamespaceDialogModelInjectable),
 
       ...props,

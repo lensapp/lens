@@ -11,6 +11,7 @@ import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
+import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -58,7 +59,11 @@ export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconn
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
 }
 
-export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
+export class KubernetesCluster<
+  Metadata extends KubernetesClusterMetadata = KubernetesClusterMetadata,
+  Status extends KubernetesClusterStatus = KubernetesClusterStatus,
+  Spec extends KubernetesClusterSpec = KubernetesClusterSpec,
+> extends CatalogEntity<Metadata, Status, Spec> {
   public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
   public static readonly kind: string = "KubernetesCluster";
 
@@ -134,7 +139,7 @@ class KubernetesClusterCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Clusters",
-    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default, // eslint-disable-line
+    icon: KubeClusterCategoryIcon,
   };
   public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",

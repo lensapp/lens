@@ -75,7 +75,7 @@ function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">):
   };
 }
 
-function moveStorageFolder({ folder, newId, oldId }: { folder: string, newId: string, oldId: string }): void {
+function moveStorageFolder({ folder, newId, oldId }: { folder: string; newId: string; oldId: string }): void {
   const oldPath = path.resolve(folder, `${oldId}.json`);
   const newPath = path.resolve(folder, `${newId}.json`);
 

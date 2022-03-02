@@ -20,11 +20,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ServiceAccountsRouteParams> {
+export interface ServiceAccountsProps extends RouteComponentProps<ServiceAccountsRouteParams> {
 }
 
 @observer
-export class ServiceAccounts extends React.Component<Props> {
+export class ServiceAccounts extends React.Component<ServiceAccountsProps> {
   render() {
     return (
       <>

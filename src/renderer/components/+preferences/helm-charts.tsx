@@ -6,7 +6,7 @@
 import styles from "./helm-charts.module.scss";
 
 import React from "react";
-import { action, computed, observable, makeObservable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 
 import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
@@ -18,10 +18,12 @@ import { observer } from "mobx-react";
 import { RemovableItem } from "./removable-item";
 import { Notice } from "../+extensions/notice";
 import { Spinner } from "../spinner";
+import { noop } from "../../utils";
 
 @observer
 export class HelmCharts extends React.Component {
-  @observable loading = false;
+  @observable loadingRepos = false;
+  @observable loadingAvailableRepos = false;
   @observable repos: HelmRepo[] = [];
   @observable addedRepos = observable.map<string, HelmRepo>();
 
@@ -37,32 +39,42 @@ export class HelmCharts extends React.Component {
     }));
   }
 
-  async componentDidMount() {
-    await this.loadRepos();
+  componentDidMount() {
+    this.loadAvailableRepos().catch(noop);
+    this.loadRepos().catch(noop);
   }
 
-  @action
-  async loadRepos() {
-    this.loading = true;
+  async loadAvailableRepos() {
+    this.loadingAvailableRepos = true;
 
     try {
       if (!this.repos.length) {
-        this.repos = await HelmRepoManager.loadAvailableRepos();
+        this.repos = await HelmRepoManager.getInstance().loadAvailableRepos();
       }
-      const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
-
-      this.addedRepos.clear();
-      repos.forEach(repo => this.addedRepos.set(repo.name, repo));
     } catch (err) {
       Notifications.error(String(err));
     }
 
-    this.loading = false;
+    this.loadingAvailableRepos = false;
+  }
+
+  async loadRepos() {
+    this.loadingRepos = true;
+
+    try {
+      const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
+
+      this.addedRepos.replace(repos.map(repo => [repo.name, repo]));
+    } catch (err) {
+      Notifications.error(String(err));
+    }
+
+    this.loadingRepos = false;
   }
 
   async addRepo(repo: HelmRepo) {
     try {
-      await HelmRepoManager.addRepo(repo);
+      await HelmRepoManager.getInstance().addRepo(repo);
       this.addedRepos.set(repo.name, repo);
     } catch (err) {
       Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
@@ -71,7 +83,7 @@ export class HelmCharts extends React.Component {
 
   async removeRepo(repo: HelmRepo) {
     try {
-      await HelmRepoManager.removeRepo(repo);
+      await HelmRepoManager.getInstance().removeRepo(repo);
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(
@@ -80,17 +92,14 @@ export class HelmCharts extends React.Component {
     }
   }
 
-  onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>) => {
+  onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>): Promise<void> => {
     const isAdded = this.addedRepos.has(repo.name);
 
     if (isAdded) {
-      Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
-
-      return;
+      return void Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
     }
-    this.loading = true;
+
     await this.addRepo(repo);
-    this.loading = false;
   };
 
   formatOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
@@ -107,7 +116,7 @@ export class HelmCharts extends React.Component {
   renderRepositories() {
     const repos = Array.from(this.addedRepos);
 
-    if (this.loading) {
+    if (this.loadingRepos) {
       return <div className="pt-5 relative"><Spinner center/></div>;
     }
 
@@ -137,8 +146,8 @@ export class HelmCharts extends React.Component {
         <div className="flex gaps">
           <Select id="HelmRepoSelect"
             placeholder="Repositories"
-            isLoading={this.loading}
-            isDisabled={this.loading}
+            isLoading={this.loadingAvailableRepos}
+            isDisabled={this.loadingAvailableRepos}
             options={this.options}
             onChange={this.onRepoSelect}
             formatOptionLabel={this.formatOptionLabel}

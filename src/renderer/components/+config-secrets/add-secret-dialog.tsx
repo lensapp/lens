@@ -23,7 +23,7 @@ import { Notifications } from "../notifications";
 import upperFirst from "lodash/upperFirst";
 import { showDetails } from "../kube-detail-params";
 
-interface Props extends Partial<DialogProps> {
+export interface AddSecretDialogProps extends Partial<DialogProps> {
 }
 
 interface ISecretTemplateField {
@@ -46,8 +46,8 @@ const dialogState = observable.object({
 });
 
 @observer
-export class AddSecretDialog extends React.Component<Props> {
-  constructor(props: Props) {
+export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
+  constructor(props: AddSecretDialogProps) {
     super(props);
     makeObservable(this);
   }

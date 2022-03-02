@@ -16,16 +16,16 @@ import { cssNames } from "../../utils";
 import { Avatar } from "../avatar";
 import { getLabelBadges } from "./helpers";
 
-interface Props<T extends CatalogEntity> {
+export interface CatalogEntityDetailsProps<T extends CatalogEntity> {
   entity: T;
   hideDetails(): void;
   onRun: () => void;
 }
 
 @observer
-export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Props<T>> {
+export class CatalogEntityDetails<T extends CatalogEntity> extends Component<CatalogEntityDetailsProps<T>> {
   categoryIcon(category: CatalogCategory) {
-    if (category.metadata.icon.includes("<svg")) {
+    if (Icon.isSvg(category.metadata.icon)) {
       return <Icon svg={category.metadata.icon} smallest />;
     } else {
       return <Icon material={category.metadata.icon} smallest />;

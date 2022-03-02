@@ -18,15 +18,15 @@ import { ConfigMap } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<ConfigMap> {
+export interface ConfigMapDetailsProps extends KubeObjectDetailsProps<ConfigMap> {
 }
 
 @observer
-export class ConfigMapDetails extends React.Component<Props> {
+export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
   @observable isSaving = false;
   @observable data = observable.map<string, string>();
 
-  constructor(props: Props) {
+  constructor(props: ConfigMapDetailsProps) {
     super(props);
     makeObservable(this);
   }

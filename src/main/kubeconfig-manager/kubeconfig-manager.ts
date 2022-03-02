@@ -13,7 +13,7 @@ import logger from "../logger";
 import { LensProxy } from "../lens-proxy";
 
 interface Dependencies {
-  directoryForTemp: string
+  directoryForTemp: string;
 }
 
 export class KubeconfigManager {

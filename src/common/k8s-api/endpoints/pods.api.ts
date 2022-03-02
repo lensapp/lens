@@ -43,9 +43,9 @@ export interface IPodMetrics<T = IMetrics> {
   [metric: string]: T;
   cpuUsage: T;
   memoryUsage: T;
-  fsUsage: T,
-  fsWrites: T,
-  fsReads: T,
+  fsUsage: T;
+  fsWrites: T;
+  fsReads: T;
   networkReceive: T;
   networkTransmit: T;
   cpuRequests?: T;
@@ -117,7 +117,7 @@ export interface IPodContainer extends Partial<Record<PodContainerProbe, IContai
     };
     secretRef?: {
       name: string;
-    }
+    };
   }[];
   volumeMounts?: {
     name: string;
@@ -273,7 +273,7 @@ export class Pod extends WorkloadKubeObject {
     hostIP: string;
     podIP: string;
     podIPs?: {
-      ip: string
+      ip: string;
     }[];
     startTime: string;
     initContainerStatuses?: IPodContainerStatus[];

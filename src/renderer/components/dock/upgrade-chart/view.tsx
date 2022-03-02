@@ -15,15 +15,15 @@ import type { UpgradeChartTabStore } from "./store";
 import { Spinner } from "../../spinner";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
-import { helmChartStore, IChartVersion } from "../../+apps-helm-charts/helm-chart.store";
+import { helmChartStore, type IChartVersion } from "../../+helm-charts/helm-chart.store";
 import type { HelmRelease, IReleaseUpdateDetails, IReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../../select";
 import { IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";
 import upgradeChartTabStoreInjectable from "./store.injectable";
-import updateReleaseInjectable from "../../+apps-releases/update-release/update-release.injectable";
-import releasesInjectable from "../../+apps-releases/releases.injectable";
+import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
+import releasesInjectable from "../../+helm-releases/releases.injectable";
 
-interface Props {
+export interface UpgradeChartProps {
   className?: string;
   tab: DockTab;
 }
@@ -35,12 +35,12 @@ interface Dependencies {
 }
 
 @observer
-export class NonInjectedUpgradeChart extends React.Component<Props & Dependencies> {
+export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps & Dependencies> {
   @observable error: string;
   @observable versions = observable.array<IChartVersion>();
   @observable version: IChartVersion;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: UpgradeChartProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -136,8 +136,8 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
     const { tabId, release, value, error, onChange, onError, upgrade, versions, version } = this;
     const { className } = this.props;
 
-    if (!release || this.props.upgradeChartTabStore.isReady(tabId) || !version) {
-      return <Spinner center/>;
+    if (!release || !this.props.upgradeChartTabStore.isReady(tabId) || !version) {
+      return <Spinner center />;
     }
     const currentVersion = release.getVersion();
     const controlsAndInfo = (
@@ -179,7 +179,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
   }
 }
 
-export const UpgradeChart = withInjectables<Dependencies, Props>(NonInjectedUpgradeChart, {
+export const UpgradeChart = withInjectables<Dependencies, UpgradeChartProps>(NonInjectedUpgradeChart, {
   getProps: (di, props) => ({
     releases: di.inject(releasesInjectable),
     updateRelease: di.inject(updateReleaseInjectable),

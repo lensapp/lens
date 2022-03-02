@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForPvc, IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
+import { getMetricsForPvc, type IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
@@ -23,14 +23,14 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
+export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
 
 @observer
-export class PersistentVolumeClaimDetails extends React.Component<Props> {
+export class PersistentVolumeClaimDetails extends React.Component<PersistentVolumeClaimDetailsProps> {
   @observable metrics: IPvcMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: PersistentVolumeClaimDetailsProps) {
     super(props);
     makeObservable(this);
   }

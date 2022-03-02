@@ -1,0 +1,40 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.StatusBar {
+  --status-bar-height: 21px;
+  color: white;
+
+  grid-area: status-bar;
+  background-color: var(--blue);
+  height: var(--status-bar-height);
+  font-size: var(--font-size-small);
+
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.item {
+  height: 100%;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #ffffff33;
+  }
+}

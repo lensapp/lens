@@ -147,7 +147,7 @@ export function loadConfigFromString(content: string): ConfigResult {
 }
 
 export interface SplitConfigEntry {
-  config: KubeConfig,
+  config: KubeConfig;
   error?: string;
 }
 

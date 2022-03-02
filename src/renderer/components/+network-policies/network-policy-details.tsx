@@ -17,11 +17,11 @@ import logger from "../../../common/logger";
 import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
 import { isEmpty } from "lodash";
 
-interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
+export interface NetworkPolicyDetailsProps extends KubeObjectDetailsProps<NetworkPolicy> {
 }
 
 @observer
-export class NetworkPolicyDetails extends React.Component<Props> {
+export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsProps> {
   renderIPolicyIpBlock(ipBlock: IPolicyIpBlock | undefined) {
     if (!ipBlock) {
       return null;

@@ -20,7 +20,7 @@ import { TableHead } from "../table/table-head";
 import { volumesStore } from "./volumes.store";
 import kebabCase from "lodash/kebabCase";
 
-interface Props {
+export interface VolumeDetailsListProps {
   persistentVolumes: PersistentVolume[];
 }
 
@@ -31,7 +31,7 @@ enum sortBy {
 }
 
 @observer
-export class VolumeDetailsList extends React.Component<Props> {
+export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
   private sortingCallbacks = {
     [sortBy.name]: (volume: PersistentVolume) => volume.getName(),
     [sortBy.capacity]: (volume: PersistentVolume) => volume.getCapacity(),

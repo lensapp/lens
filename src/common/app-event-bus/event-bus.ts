@@ -5,10 +5,10 @@
 
 import { EventEmitter } from "../event-emitter";
 
-export type AppEvent = {
+export interface AppEvent {
   name: string;
   action: string;
   params?: object;
-};
+}
 
 export const appEventBus = new EventEmitter<[AppEvent]>();

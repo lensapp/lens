@@ -5,11 +5,11 @@
 
 import type { ClusterId } from "../common/cluster-types";
 import { makeObservable, observable } from "mobx";
-import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/app-event-bus/event-bus";
 import { ipcMainOn } from "../common/ipc";
-import { delay, iter, Singleton } from "../common/utils";
+import { delay, iter, Singleton, openBrowser } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
@@ -28,6 +28,8 @@ export interface SendToViewArgs {
 }
 
 export class WindowManager extends Singleton {
+  public mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
+
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
@@ -39,10 +41,6 @@ export class WindowManager extends Singleton {
     super();
     makeObservable(this);
     this.bindEvents();
-  }
-
-  get mainUrl() {
-    return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
   private async initMainWindow(showSplash: boolean) {
@@ -74,7 +72,7 @@ export class WindowManager extends Singleton {
           nodeIntegrationInSubFrames: true,
           webviewTag: true,
           contextIsolation: false,
-          nativeWindowOpen: true,
+          nativeWindowOpen: false,
         },
       });
       this.windowState.manage(this.mainWindow);
@@ -134,7 +132,9 @@ export class WindowManager extends Singleton {
           webPreferences.nodeIntegration = false;
         })
         .setWindowOpenHandler((details) => {
-          shell.openExternal(details.url);
+          openBrowser(details.url).catch(error => {
+            logger.error("[WINDOW-MANAGER]: failed to open browser", { error });
+          });
 
           return { action: "deny" };
         });
@@ -142,8 +142,8 @@ export class WindowManager extends Singleton {
 
     try {
       if (showSplash) await this.showSplash();
-      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
-      await this.mainWindow.loadURL(this.mainUrl);
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainContentUrl} ...`);
+      await this.mainWindow.loadURL(this.mainContentUrl);
     } catch (error) {
       logger.error("Loading main window failed", { error });
       dialog.showErrorBox("ERROR!", error.toString());

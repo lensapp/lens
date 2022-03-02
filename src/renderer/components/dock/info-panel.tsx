@@ -17,19 +17,19 @@ import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
 
-interface Props extends OptionalProps {
+export interface InfoPanelProps extends OptionalProps {
   tabId: TabId;
   submit?: () => Promise<ReactNode | string | void>;
 }
 
-interface OptionalProps {
+export interface OptionalProps {
   className?: string;
   error?: string;
   controls?: ReactNode;
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
   disableSubmit?: boolean;
-  showButtons?: boolean
+  showButtons?: boolean;
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
@@ -37,11 +37,11 @@ interface OptionalProps {
 }
 
 interface Dependencies {
-  dockStore: DockStore
+  dockStore: DockStore;
 }
 
 @observer
-class NonInjectedInfoPanel extends Component<Props & Dependencies> {
+class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
   static defaultProps: OptionalProps = {
     submitLabel: "Submit",
     submittingMessage: "Submitting..",
@@ -55,7 +55,7 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
   @observable error = "";
   @observable waiting = false;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: InfoPanelProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -150,7 +150,7 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
   }
 }
 
-export const InfoPanel = withInjectables<Dependencies, Props>(
+export const InfoPanel = withInjectables<Dependencies, InfoPanelProps>(
   NonInjectedInfoPanel,
 
   {

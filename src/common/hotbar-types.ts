@@ -14,7 +14,7 @@ export interface HotbarItem {
   };
   params?: {
     [key: string]: string;
-  }
+  };
 }
 
 export type Hotbar = Required<CreateHotbarData>;

@@ -24,7 +24,7 @@ function createLabels(rawLabelData: [string, number | undefined][]): string[] {
 }
 
 interface Dependencies {
-  clusterOverviewStore: ClusterOverviewStore
+  clusterOverviewStore: ClusterOverviewStore;
 }
 
 const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependencies) => {
