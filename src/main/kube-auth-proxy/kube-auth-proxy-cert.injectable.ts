@@ -10,7 +10,10 @@ const getKubeAuthProxyCertDirInjectable = getInjectable({
   id: "get-kube-auth-proxy-cert-dir",
 
   setup: async (di) => {
-    await createKubeAuthProxyCertificateFiles(getKubeAuthProxyCertificatePath(await di.inject(directoryForUserDataInjectable)));
+    const userData = await di.inject(directoryForUserDataInjectable);
+    const certPath = getKubeAuthProxyCertificatePath(userData);
+    
+    await createKubeAuthProxyCertificateFiles(certPath);
   },
 
   instantiate: (di) => getKubeAuthProxyCertificatePath(di.inject(directoryForUserDataInjectable)),
