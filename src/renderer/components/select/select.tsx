@@ -80,7 +80,7 @@ export class Select extends React.Component<SelectProps> {
       });
     }
 
-    return this.options.find(opt => opt === value || opt.value === value);
+    return this.options.find(opt => opt === value || opt.value === value) || null;
   }
 
   @computed get options(): SelectOption[] {
