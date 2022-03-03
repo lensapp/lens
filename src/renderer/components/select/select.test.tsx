@@ -105,10 +105,6 @@ describe("<Select />", () => {
     rerender(<Select value={options[1].value} onChange={onChange} options={options} />);
 
     expect(container.querySelector(".Select__single-value").textContent).toBe(options[1].label);
-
-    rerender(<Select value={null} onChange={onChange} options={options} />);
-
-    expect(container.querySelector(".Select__single-value")).not.toBeInTheDocument();
   });
 
   it("should unselect value if no value is passed", async () => {
