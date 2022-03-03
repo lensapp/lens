@@ -8,7 +8,7 @@ export interface LensApiResultContentType {
   resultMapper: (result: LensApiResult<any>) => ({
     statusCode: number;
     content: any;
-    headers: { [ name: string ]: string };
+    headers: Record<string, string>;
   });
 }
 

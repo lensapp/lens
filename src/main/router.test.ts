@@ -36,8 +36,6 @@ describe("router", () => {
       instantiate: (): Route<any> => ({
         method: "get",
         path: "/some-path",
-
-        // @ts-ignore
         handler: routeHandlerMock,
       }),
 
@@ -66,7 +64,6 @@ describe("router", () => {
         },
       });
 
-      // @ts-ignore
       responseStub = { end: jest.fn(), setHeader: jest.fn(), write: jest.fn(), statusCode: undefined };
 
       clusterStub = {} as Cluster;

@@ -50,7 +50,7 @@ export class Router {
   protected router = new Call.Router();
   protected static rootPath = path.resolve(__static);
 
-  constructor(routes: Route<any>[], private dependencies: Dependencies) {
+  constructor(routes: Route<unknown>[], private dependencies: Dependencies) {
     routes.forEach(route => {
       this.router.add({ method: route.method, path: route.path }, handleRoute(route));
     });
@@ -118,7 +118,7 @@ export interface Route<TResponse> {
   handler: RouteHandler<TResponse>;
 }
 
-const handleRoute = (route: Route<any>) => async (request: LensApiRequest, response: http.ServerResponse) => {
+const handleRoute = (route: Route<unknown>) => async (request: LensApiRequest, response: http.ServerResponse) => {
   let result: LensApiResult<any> | void;
 
   const writeServerResponse = writeServerResponseFor(response);
