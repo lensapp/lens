@@ -11,16 +11,16 @@ import type { KubeApi } from "./kube-api";
 import type { KubeObject } from "./kube-object";
 import { IKubeObjectRef, parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
-export class ApiManager {
-  private apis = observable.map<string, KubeApi<any>>();
-  private stores = observable.map<string, KubeObjectStore<any>>();
+export class ApiManager<TKubeObject extends KubeObject = any> {
+  private apis = observable.map<string, KubeApi<TKubeObject>>();
+  private stores = observable.map<string, KubeObjectStore<TKubeObject>>();
 
   constructor() {
     makeObservable(this);
     autoBind(this);
   }
 
-  getApi(pathOrCallback: string | ((api: KubeApi<any>) => boolean)) {
+  getApi(pathOrCallback: string | ((api: KubeApi<TKubeObject>) => boolean)) {
     if (typeof pathOrCallback === "string") {
       return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
@@ -32,7 +32,7 @@ export class ApiManager {
     return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi(apiBase: string, api: KubeApi<any>) {
+  registerApi(apiBase: string, api: KubeApi<TKubeObject>) {
     if (!api.apiBase) return;
 
     if (!this.apis.has(apiBase)) {
@@ -46,13 +46,13 @@ export class ApiManager {
     }
   }
 
-  protected resolveApi<K extends KubeObject>(api?: string | KubeApi<K>): KubeApi<K> | undefined {
+  protected resolveApi(api?: string | KubeApi<TKubeObject>): KubeApi<TKubeObject> | undefined {
     if (!api) {
       return undefined;
     }
 
     if (typeof api === "string") {
-      return this.getApi(api) as KubeApi<K>;
+      return this.getApi(api) as KubeApi<TKubeObject>;
     }
 
     return api;
@@ -75,7 +75,7 @@ export class ApiManager {
     });
   }
 
-  getStore<S extends KubeObjectStore<any>>(api: string | KubeApi<KubeObject>): S | undefined {
+  getStore<S extends KubeObjectStore<TKubeObject>>(api: string | KubeApi<TKubeObject>): S | undefined {
     return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 
