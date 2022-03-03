@@ -12,15 +12,15 @@ import type { KubeObject } from "./kube-object";
 import { IKubeObjectRef, parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
 export class ApiManager {
-  private apis = observable.map<string, KubeApi<KubeObject>>();
-  private stores = observable.map<string, KubeObjectStore<KubeObject>>();
+  private apis = observable.map<string, KubeApi<any>>();
+  private stores = observable.map<string, KubeObjectStore<any>>();
 
   constructor() {
     makeObservable(this);
     autoBind(this);
   }
 
-  getApi(pathOrCallback: string | ((api: KubeApi<KubeObject>) => boolean)) {
+  getApi(pathOrCallback: string | ((api: KubeApi<any>) => boolean)) {
     if (typeof pathOrCallback === "string") {
       return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
@@ -32,7 +32,7 @@ export class ApiManager {
     return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi(apiBase: string, api: KubeApi<KubeObject>) {
+  registerApi(apiBase: string, api: KubeApi<any>) {
     if (!api.apiBase) return;
 
     if (!this.apis.has(apiBase)) {
@@ -58,7 +58,7 @@ export class ApiManager {
     return api;
   }
 
-  unregisterApi(api: string | KubeApi<KubeObject>) {
+  unregisterApi(api: string | KubeApi<any>) {
     if (typeof api === "string") this.apis.delete(api);
     else {
       const apis = Array.from(this.apis.entries());
@@ -69,17 +69,17 @@ export class ApiManager {
   }
 
   @action
-  registerStore(store: KubeObjectStore<KubeObject>, apis: KubeApi<KubeObject>[] = [store.api]) {
+  registerStore(store: KubeObjectStore<any>, apis: KubeApi<any>[] = [store.api]) {
     apis.filter(Boolean).forEach(api => {
       if (api.apiBase) this.stores.set(api.apiBase, store);
     });
   }
 
-  getStore<S extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): S | undefined {
+  getStore<S extends KubeObjectStore<any>>(api: string | KubeApi<KubeObject>): S | undefined {
     return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 
-  lookupApiLink(ref: IKubeObjectRef, parentObject?: KubeObject): string {
+  lookupApiLink<T extends KubeObject = KubeObject>(ref: IKubeObjectRef, parentObject?: T): string {
     const {
       kind, apiVersion, name,
       namespace = parentObject?.getNs(),
