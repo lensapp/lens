@@ -69,7 +69,7 @@ export class ApiManager<TKubeObject extends KubeObject = any> {
   }
 
   @action
-  registerStore(store: KubeObjectStore<any>, apis: KubeApi<any>[] = [store.api]) {
+  registerStore(store: KubeObjectStore<TKubeObject>, apis: KubeApi<TKubeObject>[] = [store.api]) {
     apis.filter(Boolean).forEach(api => {
       if (api.apiBase) this.stores.set(api.apiBase, store);
     });
