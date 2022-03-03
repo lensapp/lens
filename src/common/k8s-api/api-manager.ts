@@ -32,7 +32,7 @@ export class ApiManager {
     return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi(apiBase: string, api: KubeApi<KubeObject>) {
+  registerApi<K extends KubeObject>(apiBase: string, api: KubeApi<K>) {
     if (!api.apiBase) return;
 
     if (!this.apis.has(apiBase)) {
@@ -46,13 +46,13 @@ export class ApiManager {
     }
   }
 
-  protected resolveApi<K extends KubeObject>(api?: string | KubeApi<K>): KubeApi<K> | undefined {
+  protected resolveApi(api?: string | KubeApi<KubeObject>): KubeApi<KubeObject> | undefined {
     if (!api) {
       return undefined;
     }
 
     if (typeof api === "string") {
-      return this.getApi(api) as KubeApi<K>;
+      return this.getApi(api) as KubeApi<KubeObject>;
     }
 
     return api;
@@ -69,7 +69,7 @@ export class ApiManager {
   }
 
   @action
-  registerStore(store: KubeObjectStore<KubeObject>, apis: KubeApi<KubeObject>[] = [store.api]) {
+  registerStore<K extends KubeObject>(store: KubeObjectStore<K>, apis: KubeApi<K>[] = [store.api]) {
     apis.filter(Boolean).forEach(api => {
       if (api.apiBase) this.stores.set(api.apiBase, store);
     });
