@@ -8,7 +8,7 @@ import { Select } from "./select";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { DiRender, renderFor } from "../test-utils/renderFor";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable
@@ -19,7 +19,7 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 
 
 describe("<Select />", () => {
-  let di: DependencyInjectionContainer;
+  let di: DiContainer;
   let render: DiRender;
 
   beforeEach(async () => {
