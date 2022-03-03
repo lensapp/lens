@@ -107,7 +107,7 @@ describe("<Select />", () => {
     expect(container.querySelector(".Select__single-value").textContent).toBe(options[1].label);
   });
 
-  it("should unselect value if no value is passed", async () => {
+  it("should unselect value if null is passed as a value", async () => {
     const options = [
       {
         label: "Option one label",
@@ -127,6 +127,30 @@ describe("<Select />", () => {
     expect(selectedValueContainer.textContent).toBe(options[0].label);
 
     rerender(<Select value={null} onChange={onChange} options={options} />);
+
+    expect(container.querySelector(".Select__single-value")).not.toBeInTheDocument();
+  });
+
+  it("should unselect value if undefined is passed as a value", async () => {
+    const options = [
+      {
+        label: "Option one label",
+        value: "optionOneValue",
+      },
+      {
+        label: "Option two label",
+        value: "optionTwoValue",
+      },
+    ];
+
+    const onChange = jest.fn();
+
+    const { container, rerender } = render(<Select value={options[0].value} onChange={onChange} options={options} />);
+    const selectedValueContainer = container.querySelector(".Select__single-value");
+
+    expect(selectedValueContainer.textContent).toBe(options[0].label);
+
+    rerender(<Select value={undefined} onChange={onChange} options={options} />);
 
     expect(container.querySelector(".Select__single-value")).not.toBeInTheDocument();
   });
