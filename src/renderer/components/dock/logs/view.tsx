@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { createRef, useEffect } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { InfoPanel } from "../info-panel";
 import { LogResourceSelector } from "./resource-selector";
@@ -34,6 +34,12 @@ interface Dependencies {
 const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStores }: Dependencies & LogsDockTabProps) => {
   const logListElement = createRef<LogList>();
   const data = model.logTabData.get();
+  const [tabIds, setTabIds] = useState([]);
+
+  if (!tabIds.find(id => tab.id === id)) {
+    setTabIds([...tabIds, tab.id]);
+    model.reloadLogs();
+  }
 
   useEffect(() => {
     model.reloadLogs();
