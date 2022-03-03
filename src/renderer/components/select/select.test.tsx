@@ -17,6 +17,7 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 
+
 describe("<Select />", () => {
   let di: DependencyInjectionContainer;
   let render: DiRender;
@@ -32,8 +33,8 @@ describe("<Select />", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
 
-    ThemeStore.createInstance();
     UserStore.createInstance();
+    ThemeStore.createInstance();
   });
 
   afterEach(() => {
@@ -60,5 +61,77 @@ describe("<Select />", () => {
     const { container } = render(<Select onChange={onChange} options={options} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
+  });
+
+  it("should show selected option", async () => {
+    const options = [
+      {
+        label: "Option one label",
+        value: "optionOneValue",
+      },
+      {
+        label: "Option two label",
+        value: "optionTwoValue",
+      },
+    ];
+
+    const onChange = jest.fn();
+
+    const { container } = render(<Select value={options[0].value} onChange={onChange} options={options} />);
+    const selectedValueContainer = container.querySelector(".Select__single-value");
+
+    expect(selectedValueContainer.textContent).toBe(options[0].label);
+  });
+
+  it("should reflect to change value", async () => {
+    const options = [
+      {
+        label: "Option one label",
+        value: "optionOneValue",
+      },
+      {
+        label: "Option two label",
+        value: "optionTwoValue",
+      },
+    ];
+
+    const onChange = jest.fn();
+
+    const { container, rerender } = render(<Select value={options[0].value} onChange={onChange} options={options} />);
+    const selectedValueContainer = container.querySelector(".Select__single-value");
+
+    expect(selectedValueContainer.textContent).toBe(options[0].label);
+
+    rerender(<Select value={options[1].value} onChange={onChange} options={options} />);
+
+    expect(selectedValueContainer.textContent).toBe(options[1].label);
+
+    rerender(<Select value={null} onChange={onChange} options={options} />);
+
+    expect(selectedValueContainer).not.toBeInTheDocument();
+  });
+
+  it("should unselect value if no value is passed", async () => {
+    const options = [
+      {
+        label: "Option one label",
+        value: "optionOneValue",
+      },
+      {
+        label: "Option two label",
+        value: "optionTwoValue",
+      },
+    ];
+
+    const onChange = jest.fn();
+
+    const { container, rerender } = render(<Select value={options[0].value} onChange={onChange} options={options} />);
+    const selectedValueContainer = container.querySelector(".Select__single-value");
+
+    expect(selectedValueContainer.textContent).toBe(options[0].label);
+
+    rerender(<Select value={null} onChange={onChange} options={options} />);
+
+    expect(selectedValueContainer).not.toBeInTheDocument();
   });
 });
