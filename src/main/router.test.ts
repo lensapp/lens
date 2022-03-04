@@ -30,17 +30,19 @@ describe("router", () => {
 
     await di.runSetups();
 
-    di.register(getInjectable({
+    const injectable = getInjectable({
       id: "some-route",
 
-      instantiate: (): Route<any> => ({
+      instantiate: () => ({
         method: "get",
         path: "/some-path",
         handler: routeHandlerMock,
-      }),
+      } as Route<any>),
 
       injectionToken: routeInjectionToken,
-    }));
+    });
+
+    di.register(injectable);
 
     router = di.inject(routerInjectable);
   });
