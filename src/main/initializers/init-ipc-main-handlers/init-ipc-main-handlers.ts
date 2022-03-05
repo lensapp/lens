@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BrowserWindow, IpcMainInvokeEvent, Menu, nativeTheme } from "electron";
+import { BrowserWindow, IpcMainInvokeEvent, Menu } from "electron";
 import { clusterFrameMap } from "../../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../common/ipc/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
