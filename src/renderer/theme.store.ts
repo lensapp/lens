@@ -75,7 +75,7 @@ export class ThemeStore extends Singleton {
       value: themeId,
     }));
 
-    options.unshift({ label: "System", value: "system" });
+    options.unshift({ label: "Sync with computer", value: "system" });
 
     return options;
   }
