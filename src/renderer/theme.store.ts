@@ -36,7 +36,7 @@ export class ThemeStore extends Singleton {
     "lens-light": lensLightThemeJson as Theme,
   });
 
-  private osNativeTheme: "dark" | "light" | undefined;
+  @observable osNativeTheme: "dark" | "light" | undefined;
 
   @computed get activeThemeId(): ThemeId {
     return UserStore.getInstance().colorTheme;
@@ -131,11 +131,12 @@ export class ThemeStore extends Singleton {
   }
 
   getThemeById(themeId: ThemeId): Theme {
-    return this.systemTheme ?? this.themes.get(themeId);
+    return this.themes.get(themeId);
   }
 
   protected applyTheme(themeId: ThemeId) {
-    const theme = this.getThemeById(themeId);
+    const theme = this.systemTheme ?? this.getThemeById(themeId);
+
     const colors = Object.entries({
       ...theme.colors,
       ...Object.fromEntries(this.terminalColors),
