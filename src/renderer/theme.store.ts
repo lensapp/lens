@@ -70,14 +70,10 @@ export class ThemeStore extends Singleton {
   }
 
   @computed get themeOptions(): SelectOption<string>[] {
-    const options = Array.from(this.themes).map(([themeId, theme]) => ({
+    return Array.from(this.themes).map(([themeId, theme]) => ({
       label: theme.name,
       value: themeId,
     }));
-
-    options.unshift({ label: "Sync with computer", value: "system" });
-
-    return options;
   }
 
   @computed get systemTheme() {
