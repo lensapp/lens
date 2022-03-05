@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BrowserWindow, IpcMainInvokeEvent, Menu } from "electron";
+import { BrowserWindow, IpcMainInvokeEvent, Menu, nativeTheme } from "electron";
 import { clusterFrameMap } from "../../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../common/ipc/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
@@ -24,6 +24,8 @@ import { onLocationChange, handleWindowAction } from "../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
 import { showOpenDialog } from "../../ipc/dialog";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
+import { getNativeColorTheme } from "../../native-theme";
+import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
 
 interface Dependencies {
   electronMenuItems: IComputedValue<MenuRegistration[]>;
@@ -157,5 +159,9 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
       x: 20,
       y: 20,
     });
+  });
+
+  ipcMainHandle(getNativeThemeChannel, () => {
+    return getNativeColorTheme();
   });
 };
