@@ -93,7 +93,11 @@ export class ThemeStore extends Singleton {
 
     makeObservable(this);
     autoBind(this);
-    this.setNativeTheme();
+    this.init();
+  }
+
+  async init() {
+    await this.setNativeTheme();
     this.bindNativeThemeUpdateEvent();
 
     // auto-apply active theme
