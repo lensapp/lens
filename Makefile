@@ -23,16 +23,14 @@ node_modules: yarn.lock
 binaries/client: node_modules
 	yarn download-bins
 
-static/build/LensDev.html: node_modules
-	yarn compile:renderer
-
 .PHONY: compile-dev
 compile-dev: node_modules
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev: binaries/client build-extensions static/build/LensDev.html
+dev: binaries/client build-extensions
+	rm -rf static/build/
 	yarn dev
 
 .PHONY: lint

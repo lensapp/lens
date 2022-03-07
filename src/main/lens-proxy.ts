@@ -6,7 +6,7 @@
 import type net from "net";
 import type http from "http";
 import spdy from "spdy";
-import httpProxy from "http-proxy";
+import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../common/vars";
 import type { Router } from "./router";
 import type { ContextHandler } from "./context-handler/context-handler";
@@ -57,13 +57,14 @@ export class LensProxy extends Singleton {
   protected proxyServer: http.Server;
   protected closed = false;
   protected retryCounters = new Map<string, number>();
-  protected proxy = this.createProxy();
   protected getClusterForRequest: GetClusterForRequest;
 
   public port: number;
 
-  constructor(protected router: Router, { shellApiRequest, kubeApiRequest, getClusterForRequest }: LensProxyFunctions) {
+  constructor(protected router: Router, protected proxy: httpProxy, { shellApiRequest, kubeApiRequest, getClusterForRequest }: LensProxyFunctions) {
     super();
+
+    this.configureProxy(proxy);
 
     this.getClusterForRequest = getClusterForRequest;
 
@@ -78,6 +79,7 @@ export class LensProxy extends Singleton {
 
     this.proxyServer
       .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+        console.log("upgrade", req.url);
         const isInternal = req.url.startsWith(`${apiPrefix}?`);
         const cluster = getClusterForRequest(req);
 
@@ -163,9 +165,7 @@ export class LensProxy extends Singleton {
     this.closed = true;
   }
 
-  protected createProxy(): httpProxy {
-    const proxy = httpProxy.createProxyServer();
-
+  protected configureProxy(proxy: httpProxy): httpProxy {
     proxy.on("proxyRes", (proxyRes, req, res) => {
       const retryCounterId = this.getRequestId(req);
 

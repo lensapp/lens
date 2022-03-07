@@ -9,16 +9,13 @@ import { webpackLensRenderer } from "./webpack.renderer";
 import { buildDir } from "./src/common/vars";
 import logger from "./src/common/logger";
 
-export interface DevServer extends WebpackDevServer {
-}
-
 /**
  * Creates `webpack-dev-server`
  * API docs:
  * @url https://webpack.js.org/configuration/dev-server/
  * @url https://github.com/chimurai/http-proxy-middleware
  */
-export function createDevServer(lensProxyPort: number): DevServer {
+function createDevServer(): WebpackDevServer {
   const config = webpackLensRenderer({ showVars: false });
   const compiler = Webpack(config);
 
@@ -31,17 +28,13 @@ export function createDevServer(lensProxyPort: number): DevServer {
     static: buildDir, // aka `devServer.contentBase` in webpack@4
     hot: "only", // use HMR only without errors
     liveReload: false,
+    devMiddleware: {
+      writeToDisk: false,
+      index: "OpenLensDev.html",
+      publicPath: "/build",
+    },
     proxy: {
-      "*": {
-        router(req) {
-          logger.silly(`[WEBPACK-DEV-SERVER]: proxy path ${req.path}`, req.headers);
-
-          return `http://localhost:${lensProxyPort}`;
-        },
-        secure: false, // allow http connections
-        ws: true, // proxy websockets, e.g. terminal
-        logLevel: "error",
-      },
+      "^/$": "/build/",
     },
     client: {
       overlay: false, // don't show warnings and errors on top of rendered app view
@@ -53,3 +46,15 @@ export function createDevServer(lensProxyPort: number): DevServer {
 
   return server;
 }
+
+const server = createDevServer();
+
+server.start();
+
+process.once("SIGTERM", () => {
+  server.stop().then(() => process.exit(0));
+});
+
+process.once("SIGINT", () => {
+  server.stop().then(() => process.exit(0));
+});
