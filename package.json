@@ -133,7 +133,7 @@
         },
         {
           "from": "binaries/client/linux/${arch}/helm",
-          "to": "./helm"
+          "to": "./${arch}/helm"
         }
       ]
     },
@@ -158,7 +158,7 @@
         },
         {
           "from": "binaries/client/darwin/${arch}/helm",
-          "to": "./helm"
+          "to": "./${arch}/helm"
         }
       ]
     },
@@ -168,24 +168,16 @@
       ],
       "extraResources": [
         {
-          "from": "binaries/client/windows/x64/kubectl.exe",
-          "to": "./x64/kubectl.exe"
+          "from": "binaries/client/windows/${arch}/kubectl.exe",
+          "to": "./${arch}/kubectl.exe"
         },
         {
-          "from": "binaries/client/windows/ia32/kubectl.exe",
-          "to": "./ia32/kubectl.exe"
+          "from": "binaries/client/windows/${arch}/lens-k8s-proxy.exe",
+          "to": "./${arch}/lens-k8s-proxy.exe"
         },
         {
-          "from": "binaries/client/windows/x64/lens-k8s-proxy.exe",
-          "to": "./x64/lens-k8s-proxy.exe"
-        },
-        {
-          "from": "binaries/client/windows/ia32/lens-k8s-proxy.exe",
-          "to": "./ia32/lens-k8s-proxy.exe"
-        },
-        {
-          "from": "binaries/client/windows/x64/helm.exe",
-          "to": "./helm.exe"
+          "from": "binaries/client/windows/${arch}/helm.exe",
+          "to": "./${arch}/helm.exe"
         }
       ]
     },

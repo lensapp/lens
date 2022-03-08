@@ -188,7 +188,7 @@ async function main() {
     }, multiBar),
   ];
 
-  if (normalizedPlatform !== "windows") {
+  if (normalizedPlatform === "darwin") {
     downloaders.push(
       new LensK8sProxyDownloader({
         version: packageInfo.config.k8sProxyVersion,
