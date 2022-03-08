@@ -8,9 +8,10 @@
     "styles": []
   },
   "scripts": {
-    "build": "npx webpack && npm pack",
-    "dev": "npx webpack --watch",
-    "test": "npx jest --passWithNoTests --env=jsdom src $@",
+    "build": "npm run webpack && npm pack",
+    "dev": "npm run webpack -- --watch",
+    "webpack": "../../node_modules/.bin/webpack",
+    "test": "../../node_modules/.bin/jest --passWithNoTests --env=jsdom src $@",
     "clean": "rm -rf dist/ && rm *.tgz"
   },
   "files": [

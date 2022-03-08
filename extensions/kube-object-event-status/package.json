@@ -8,8 +8,9 @@
     "styles": []
   },
   "scripts": {
-    "build": "npx webpack && npm pack",
-    "dev": "npx webpack --watch",
+    "build": "npm run webpack && npm pack",
+    "dev": "npm run webpack -- --watch",
+    "webpack": "../../node_modules/.bin/webpack",
     "test": "echo NO TESTS"
   },
   "files": [
