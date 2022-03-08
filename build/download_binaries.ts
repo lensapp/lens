@@ -18,7 +18,7 @@ import { getBinaryName, normalizedPlatform } from "../src/common/vars";
 
 const pipeline = promisify(_pipeline);
 
-interface DownloadK8sProxyArgs {
+interface BinaryDownloaderArgs {
   readonly version: string;
   readonly platform: SupportedPlatform;
   readonly downloadArch: string;
@@ -36,7 +36,7 @@ abstract class BinaryDownloader {
     return [file];
   }
 
-  constructor(public readonly args: DownloadK8sProxyArgs, multiBar: MultiBar) {
+  constructor(public readonly args: BinaryDownloaderArgs, multiBar: MultiBar) {
     this.bar = multiBar.create(1, 0, args);
     this.target = path.join(args.baseDir, args.platform, args.fileArch, args.binaryName);
   }
@@ -102,7 +102,7 @@ abstract class BinaryDownloader {
 class LensK8sProxyDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(args: Omit<DownloadK8sProxyArgs, "binaryName">, bar: MultiBar) {
+  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("lens-k8s-proxy", { forPlatform: args.platform });
 
     super({ ...args, binaryName }, bar);
@@ -113,7 +113,7 @@ class LensK8sProxyDownloader extends BinaryDownloader {
 class KubectlDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(args: Omit<DownloadK8sProxyArgs, "binaryName">, bar: MultiBar) {
+  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("kubectl", { forPlatform: args.platform });
 
     super({ ...args, binaryName }, bar);
@@ -124,7 +124,7 @@ class KubectlDownloader extends BinaryDownloader {
 class HelmDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(args: Omit<DownloadK8sProxyArgs, "binaryName">, bar: MultiBar) {
+  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("helm", { forPlatform: args.platform });
 
     super({ ...args, binaryName }, bar);
@@ -188,24 +188,7 @@ async function main() {
     }, multiBar),
   ];
 
-  if (normalizedPlatform === "windows") {
-    downloaders.push(
-      new LensK8sProxyDownloader({
-        version: packageInfo.config.k8sProxyVersion,
-        platform: normalizedPlatform,
-        downloadArch: "386",
-        fileArch: "ia32",
-        baseDir,
-      }, multiBar),
-      new KubectlDownloader({
-        version: packageInfo.config.bundledKubectlVersion,
-        platform: normalizedPlatform,
-        downloadArch: "386",
-        fileArch: "ia32",
-        baseDir,
-      }, multiBar),
-    );
-  } else {
+  if (normalizedPlatform !== "windows") {
     downloaders.push(
       new LensK8sProxyDownloader({
         version: packageInfo.config.k8sProxyVersion,

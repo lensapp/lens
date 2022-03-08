@@ -8,7 +8,7 @@ import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { defineGlobal } from "./utils/defineGlobal";
-import { onceCell } from "./utils/once-cell";
+import { lazyInitialized } from "./utils/once-cell";
 
 export const isMac = process.platform === "darwin";
 export const isWindows = process.platform === "win32";
@@ -66,18 +66,18 @@ export function getBinaryName(name: string, { forPlatform = normalizedPlatform }
   return name;
 }
 
-export const resourcesDir = onceCell(() => (
+const resourcesDir = lazyInitialized(() => (
   isProduction
     ? process.resourcesPath
     : path.join(process.cwd(), "binaries", "client", normalizedPlatform)
 ));
 
-export const baseBinariesDir = onceCell(() => path.join(resourcesDir.get(), normalizedArch));
-
+export const baseBinariesDir = lazyInitialized(() => path.join(resourcesDir.get(), normalizedArch));
+export const kubeAuthProxyBinaryName = getBinaryName("lens-k8s-proxy");
 export const helmBinaryName = getBinaryName("helm");
-export const helmBinaryPath = onceCell(() => path.join(resourcesDir.get(), helmBinaryName));
+export const helmBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), helmBinaryName));
 export const kubectlBinaryName = getBinaryName("kubectl");
-export const kubectlBinaryPath = onceCell(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
+export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
 
 // Webpack build paths
 export const contextDir = process.cwd();

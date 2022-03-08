@@ -9,14 +9,14 @@
  * It then only calls the function on the first call to `get()` and returns the
  * same instance/value on every subsequent call.
  */
-export interface OnceCell<T> {
+export interface LazyInitialized<T> {
   get(): T;
 }
 
 /**
  * A function to make a `OnceCell<T>`
  */
-export function onceCell<T>(builder: () => T): OnceCell<T> {
+export function lazyInitialized<T>(builder: () => T): LazyInitialized<T> {
   let value: T | undefined;
   let called = false;
 
@@ -26,9 +26,10 @@ export function onceCell<T>(builder: () => T): OnceCell<T> {
         return value;
       }
 
+      value = builder();
       called = true;
 
-      return value = builder();
+      return value;
     },
   };
 }
