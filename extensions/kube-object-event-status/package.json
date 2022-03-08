@@ -8,16 +8,15 @@
     "styles": []
   },
   "scripts": {
-    "build": "npm run webpack && npm pack",
-    "dev": "npm run webpack -- --watch",
-    "webpack": "../../node_modules/.bin/webpack",
+    "build": "npx webpack && npm pack",
+    "dev": "npx webpack -- --watch",
     "test": "echo NO TESTS"
   },
   "files": [
     "dist/**/*"
   ],
-  "dependencies": {},
   "devDependencies": {
-    "@k8slens/extensions": "file:../../src/extensions/npm/extensions"
+    "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
+    "npm": "^8.5.3"
   }
 }
