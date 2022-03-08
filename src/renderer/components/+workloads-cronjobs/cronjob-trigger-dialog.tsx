@@ -15,7 +15,6 @@ import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";
 import { systemName, maxLength } from "../input/input_validators";
-import type { KubeObjectMetadata } from "../../../common/k8s-api/kube-object";
 
 export interface CronJobTriggerDialogProps extends Partial<DialogProps> {
 }
@@ -80,6 +79,7 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
       }, {
         spec: cronjobDefinition.spec.jobTemplate.spec,
         metadata: {
+          annotations: { "cronjob.kubernetes.io/instantiate": "manual" },
           ownerReferences: [{
             apiVersion: cronjob.apiVersion,
             blockOwnerDeletion: true,
@@ -88,7 +88,7 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
             name: cronjob.metadata.name,
             uid: cronjob.metadata.uid,
           }],
-        } as KubeObjectMetadata,
+        },
       });
 
       close();
