@@ -24,11 +24,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
 
   return {
     target: "electron-renderer",
-    name: "lens-app",
+    name: "lens-app-renderer",
     mode: isDevelopment ? "development" : "production",
     // https://webpack.js.org/configuration/devtool/ (see description of each option)
     devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-    cache: isDevelopment,
+    cache: isDevelopment ? { type: "filesystem" } : false,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
     },

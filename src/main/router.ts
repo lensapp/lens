@@ -6,6 +6,7 @@
 import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
 import type http from "http";
+import type httpProxy from "http-proxy";
 import path from "path";
 import { readFile } from "fs-extra";
 import type { Cluster } from "../common/cluster/cluster";
@@ -40,6 +41,7 @@ export interface LensApiRequest<P = any> {
   query: URLSearchParams;
   raw: {
     req: http.IncomingMessage;
+    res: http.ServerResponse;
   };
 }
 
@@ -62,6 +64,7 @@ function getMimeType(filename: string) {
 
 interface Dependencies {
   routePortForward: (request: LensApiRequest) => Promise<void>;
+  httpProxy?: httpProxy;
 }
 
 export class Router {
@@ -101,7 +104,7 @@ export class Router {
       cluster,
       path: url.pathname,
       raw: {
-        req,
+        req, res,
       },
       response: res,
       query: url.searchParams,
@@ -140,12 +143,26 @@ export class Router {
         filePath = `${publicPath}/${appName}.html`;
       }
     }
-
   }
 
   protected addRoutes() {
     // Static assets
-    this.router.add({ method: "get", path: "/{path*}" }, Router.handleStaticFile);
+    if (this.dependencies.httpProxy) {
+      this.router.add({ method: "get", path: "/{path*}" }, (apiReq: LensApiRequest) => {
+        const { req, res } = apiReq.raw;
+
+        if (req.url === "/" || !req.url.startsWith("/build/")) {
+          req.url = `${publicPath}/${appName}.html`;
+        }
+
+        this.dependencies.httpProxy.web(req, res, {
+          target: "http://127.0.0.1:8080",
+        });
+      });
+    } else {
+      this.router.add({ method: "get", path: "/{path*}" }, Router.handleStaticFile);
+    }
+    
 
     this.router.add({ method: "get", path: "/version" }, VersionRoute.getVersion);
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, KubeconfigRoute.routeServiceAccountRoute);

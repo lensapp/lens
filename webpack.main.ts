@@ -19,11 +19,12 @@ configs.push((): webpack.Configuration => {
   const { mainDir, buildDir, isDevelopment } = vars;
 
   return {
+    name: "lens-app-main",
     context: __dirname,
     target: "electron-main",
     mode: isDevelopment ? "development" : "production",
     devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-    cache: isDevelopment,
+    cache: isDevelopment ? { type: "filesystem" } : false,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
     },
@@ -49,7 +50,6 @@ configs.push((): webpack.Configuration => {
     },
     plugins: [
       new ForkTsCheckerPlugin(),
-
       new CircularDependencyPlugin({
         cwd: __dirname,
         exclude: /node_modules/,
