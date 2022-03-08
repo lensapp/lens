@@ -20,6 +20,7 @@ function createDevServer(): WebpackDevServer {
   const compiler = Webpack(config);
 
   const server = new WebpackDevServer({
+    setupExitSignals: true,
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
@@ -50,11 +51,3 @@ function createDevServer(): WebpackDevServer {
 const server = createDevServer();
 
 server.start();
-
-process.once("SIGTERM", () => {
-  server.stop().then(() => process.exit(0));
-});
-
-process.once("SIGINT", () => {
-  server.stop().then(() => process.exit(0));
-});

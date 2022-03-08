@@ -151,7 +151,9 @@ export class Router {
       this.router.add({ method: "get", path: "/{path*}" }, (apiReq: LensApiRequest) => {
         const { req, res } = apiReq.raw;
 
-        if (req.url === "/" || !req.url.startsWith("/build/")) req.url = "/build/OpenLensDev.html";
+        if (req.url === "/" || !req.url.startsWith("/build/")) {
+          req.url = `${publicPath}/${appName}.html`;
+        }
 
         this.dependencies.httpProxy.web(req, res, {
           target: "http://127.0.0.1:8080",

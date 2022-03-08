@@ -19,6 +19,7 @@ configs.push((): webpack.Configuration => {
   const { mainDir, buildDir, isDevelopment } = vars;
 
   return {
+    name: "lens-app-main",
     context: __dirname,
     target: "electron-main",
     mode: isDevelopment ? "development" : "production",
