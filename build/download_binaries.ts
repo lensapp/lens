@@ -137,7 +137,7 @@ class HelmDownloader extends BinaryDownloader {
     });
 
     extracting.on("entry", (headers, stream, next) => {
-      if (headers.name.endsWith("/helm")) {
+      if (headers.name.endsWith(this.args.binaryName)) {
         stream
           .pipe(file)
           .once("finish", () => next())
