@@ -16,7 +16,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
   if (showVars) {
-    console.info("WEBPACK:renderer", vars);
+    console.info("WEBPACK:renderer", { ...vars });
   }
 
   const assetsFolderName = "assets";

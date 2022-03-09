@@ -30,10 +30,7 @@
     "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
-    "download-bins": "concurrently yarn:download:*",
-    "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
-    "download:helm": "yarn run ts-node build/download_helm.ts",
-    "download:k8s-proxy": "yarn run ts-node build/download_k8s_proxy.ts",
+    "download:binaries": "yarn run ts-node build/download_binaries.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
     "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
@@ -135,8 +132,8 @@
           "to": "./${arch}/lens-k8s-proxy"
         },
         {
-          "from": "binaries/client/${arch}/helm3/helm3",
-          "to": "./helm3/helm3"
+          "from": "binaries/client/linux/${arch}/helm",
+          "to": "./${arch}/helm"
         }
       ]
     },
@@ -160,8 +157,8 @@
           "to": "./${arch}/lens-k8s-proxy"
         },
         {
-          "from": "binaries/client/${arch}/helm3/helm3",
-          "to": "./helm3/helm3"
+          "from": "binaries/client/darwin/${arch}/helm",
+          "to": "./${arch}/helm"
         }
       ]
     },
@@ -171,24 +168,16 @@
       ],
       "extraResources": [
         {
-          "from": "binaries/client/windows/x64/kubectl.exe",
-          "to": "./x64/kubectl.exe"
+          "from": "binaries/client/windows/${arch}/kubectl.exe",
+          "to": "./${arch}/kubectl.exe"
         },
         {
-          "from": "binaries/client/windows/ia32/kubectl.exe",
-          "to": "./ia32/kubectl.exe"
+          "from": "binaries/client/windows/${arch}/lens-k8s-proxy.exe",
+          "to": "./${arch}/lens-k8s-proxy.exe"
         },
         {
-          "from": "binaries/client/windows/x64/lens-k8s-proxy",
-          "to": "./x64/lens-k8s-proxy.exe"
-        },
-        {
-          "from": "binaries/client/windows/ia32/lens-k8s-proxy",
-          "to": "./ia32/lens-k8s-proxy.exe"
-        },
-        {
-          "from": "binaries/client/x64/helm3/helm3.exe",
-          "to": "./helm3/helm3.exe"
+          "from": "binaries/client/windows/${arch}/helm.exe",
+          "to": "./${arch}/helm.exe"
         }
       ]
     },
@@ -292,12 +281,14 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.34",
+    "@types/cli-progress": "^3.9.2",
     "@types/color": "^3.0.2",
     "@types/crypto-js": "^3.1.47",
     "@types/dompurify": "^2.3.1",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/fs-extra": "^9.0.13",
     "@types/glob-to-regexp": "^0.4.1",
+    "@types/gunzip-maybe": "^1.4.0",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.6",
     "@types/http-proxy": "^1.17.7",
@@ -330,6 +321,7 @@
     "@types/sharp": "^0.29.4",
     "@types/spdy": "^3.4.5",
     "@types/tar": "^4.0.5",
+    "@types/tar-stream": "^2.2.2",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
     "@types/triple-beam": "^1.3.2",
@@ -344,6 +336,7 @@
     "ansi_up": "^5.1.0",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
+    "cli-progress": "^3.10.0",
     "color": "^3.2.1",
     "concurrently": "^7.0.0",
     "css-loader": "^6.5.1",
@@ -362,6 +355,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
+    "gunzip-maybe": "^1.4.2",
     "hoist-non-react-statics": "^3.3.2",
     "html-webpack-plugin": "^5.5.0",
     "ignore-loader": "^0.1.2",
@@ -392,6 +386,7 @@
     "sharp": "^0.29.3",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.7",
+    "tar-stream": "^2.2.0",
     "ts-jest": "26.5.6",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",

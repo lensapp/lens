@@ -13,7 +13,7 @@ import { makeObservable, observable, when } from "mobx";
 
 const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
-interface Dependencies {
+export interface KubeAuthProxyDependencies {
   proxyBinPath: string;
 }
 
@@ -28,7 +28,7 @@ export class KubeAuthProxy {
   protected proxyProcess?: ChildProcess;
   @observable protected ready = false;
 
-  constructor(private dependencies: Dependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
+  constructor(private dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
   }
 
@@ -42,8 +42,8 @@ export class KubeAuthProxy {
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
-    
-    this.proxyProcess = spawn(proxyBin, [], { 
+
+    this.proxyProcess = spawn(proxyBin, [], {
       env: {
         ...this.env,
         KUBECONFIG: this.cluster.kubeConfigPath,
