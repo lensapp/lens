@@ -8,7 +8,7 @@ import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { defineGlobal } from "./utils/defineGlobal";
-import { lazyInitialized } from "./utils/once-cell";
+import { lazyInitialized } from "./utils/lazy-initialized";
 
 export const isMac = process.platform === "darwin";
 export const isWindows = process.platform === "win32";
