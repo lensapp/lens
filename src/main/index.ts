@@ -56,6 +56,7 @@ import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
+import { broadcastNativeThemeOnUpdate } from "./native-theme";
 
 const di = getDi();
 
@@ -108,6 +109,8 @@ di.runSetups().then(() => {
       }
     }
   }
+
+  broadcastNativeThemeOnUpdate();
 
   app.on("second-instance", (event, argv) => {
     logger.debug("second-instance message");

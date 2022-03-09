@@ -26,6 +26,13 @@ const mockHotbars: { [id: string]: any } = {
   },
 };
 
+jest.mock("electron", () => ({
+  ipcRenderer: {
+    on: jest.fn(),
+    invoke: jest.fn(),
+  },
+}));
+
 describe("<HotbarRemoveCommand />", () => {
   let di: DiContainer;
   let render: DiRender;

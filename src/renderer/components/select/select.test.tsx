@@ -17,6 +17,12 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 
+jest.mock("electron", () => ({
+  ipcRenderer: {
+    on: jest.fn(),
+    invoke: jest.fn(),
+  },
+}));
 
 describe("<Select />", () => {
   let di: DiContainer;
