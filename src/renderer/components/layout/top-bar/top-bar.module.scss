@@ -13,8 +13,31 @@
   justify-content: space-between;
 
   /* Use topbar as draggable region */
-  -webkit-user-select: none;
+  user-select: none;
   -webkit-app-region: drag;
+}
+
+.topBar .items {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  -webkit-app-region: no-drag;
+
+  &:first-of-type {
+    padding-left: 1.5rem;
+
+    & > * {
+      margin-right: 1rem;
+    }
+  }
+
+  &:last-of-type {
+    padding-right: 1.5rem;
+
+    & > * {
+      margin-left: 1rem;
+    }
+  }
 }
 
 :global(.is-mac) .topBar {
@@ -39,23 +62,8 @@
   }
 }
 
-.tools {
-  @apply flex items-center;
-  -webkit-app-region: no-drag;
-}
-
-.controls {
-  align-self: flex-end;
-  padding-right: 1.5rem;
-  align-items: center;
-  display: flex;
-  height: 100%;
-  -webkit-app-region: no-drag;
-}
-
 .windowButtons {
   display: flex;
-  margin-left: 1.5rem;
   margin-right: -1.5rem;
 
   > div {
@@ -94,7 +102,8 @@
   }
 }
 
-.minimize, .maximize {
+.minimize,
+.maximize {
   &:hover {
     background-color: var(--borderFaintColor);
   }

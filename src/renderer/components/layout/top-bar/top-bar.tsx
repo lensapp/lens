@@ -22,7 +22,7 @@ import { WindowAction } from "../../../../common/ipc/window";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 
-export interface TopBarProps extends React.HTMLAttributes<any> {}
+export interface TopBarProps {}
 
 interface Dependencies {
   items: IComputedValue<TopBarRegistration[]>;
@@ -41,7 +41,7 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-const NonInjectedTopBar = observer(({ items, children, isWindows, isLinux, ...rest }: TopBarProps & Dependencies) => {
+const NonInjectedTopBar = observer(({ items, isWindows, isLinux }: TopBarProps & Dependencies) => {
   const elem = useRef<HTMLDivElement>();
 
   const openAppContextMenu = () => {
@@ -61,12 +61,9 @@ const NonInjectedTopBar = observer(({ items, children, isWindows, isLinux, ...re
   };
 
   const windowSizeToggle = (evt: React.MouseEvent) => {
-    if (elem.current != evt.target) {
-      // Skip clicking on child elements
-      return;
+    if (elem.current === evt.target) {
+      toggleMaximize();
     }
-
-    toggleMaximize();
   };
 
   const minimizeWindow = () => {
@@ -84,8 +81,8 @@ const NonInjectedTopBar = observer(({ items, children, isWindows, isLinux, ...re
   useEffect(() => watchHistoryState(), []);
 
   return (
-    <div className={styles.topBar} onDoubleClick={windowSizeToggle} ref={elem} {...rest}>
-      <div className={styles.tools}>
+    <div className={styles.topBar} onDoubleClick={windowSizeToggle} ref={elem}>
+      <div className={styles.items}>
         {(isWindows || isLinux) && (
           <div className={styles.winMenu}>
             <div onClick={openAppContextMenu} data-testid="window-menu">
@@ -100,28 +97,24 @@ const NonInjectedTopBar = observer(({ items, children, isWindows, isLinux, ...re
         <Icon
           data-testid="home-button"
           material="home"
-          className="ml-4"
           onClick={goHome}
           disabled={isActiveRoute(catalogRoute)}
         />
         <Icon
           data-testid="history-back"
           material="arrow_back"
-          className="ml-5"
           onClick={goBack}
           disabled={!prevEnabled.get()}
         />
         <Icon
           data-testid="history-forward"
           material="arrow_forward"
-          className="ml-5"
           onClick={goForward}
           disabled={!nextEnabled.get()}
         />
       </div>
-      <div className={styles.controls}>
+      <div className={styles.items}>
         {renderRegisteredItems(items.get())}
-        {children}
         {(isWindows || isLinux) && (
           <div className={cssNames(styles.windowButtons, { [styles.linuxButtons]: isLinux })}>
             <div className={styles.minimize} data-testid="window-minimize" onClick={minimizeWindow}>
@@ -147,22 +140,14 @@ const NonInjectedTopBar = observer(({ items, children, isWindows, isLinux, ...re
 });
 
 const renderRegisteredItems = (items: TopBarRegistration[]) => (
-  <div>
-    {items.map((registration, index) => {
-      if (!registration?.components?.Item) {
-        return null;
-      }
+  items.map((registration, index) => {
+    if (!registration?.components?.Item) {
+      return null;
+    }
 
-      return (
-        <div key={index}>
-          <registration.components.Item />
-        </div>
-      );
-    })}
-  </div>
+    return <registration.components.Item key={index} />;
+  })
 );
-
-
 
 export const TopBar = withInjectables<Dependencies, TopBarProps>(NonInjectedTopBar, {
   getProps: (di, props) => ({
