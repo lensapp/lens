@@ -10,9 +10,10 @@ import { Notifications } from "../../../components/notifications";
 import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
 import type { CatalogEntity } from "../../../../common/catalog";
 import { when } from "mobx";
+import { unmountComponentAtNode } from "react-dom";
 import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import { requestClusterDisconnection, requestSetClusterFrameId } from "../../../ipc";
+import { requestSetClusterFrameId } from "../../../ipc";
 
 interface Dependencies {
   hostedCluster: Cluster;
@@ -29,7 +30,7 @@ const logPrefix = "[CLUSTER-FRAME]:";
 
 export const initClusterFrame =
   ({ hostedCluster, loadExtensions, catalogEntityRegistry, frameRoutingId, emitEvent, clusterFrameContext }: Dependencies) =>
-    async () => {
+    async (rootElem: HTMLElement) => {
 
       // TODO: Make catalogEntityRegistry already initialized when passed as dependency
       catalogEntityRegistry.init();
@@ -74,16 +75,12 @@ export const initClusterFrame =
         });
       });
 
-      window.addEventListener("online", () => {
-        window.location.reload();
-      });
-
       window.onbeforeunload = () => {
         logger.info(
           `${logPrefix} Unload dashboard, clusterId=${(hostedCluster.id)}, frameId=${frameRoutingId}`,
         );
 
-        requestClusterDisconnection(hostedCluster.id);
+        unmountComponentAtNode(rootElem);
       };
 
       // TODO: Make context dependency of KubeObjectStore
