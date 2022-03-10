@@ -36,13 +36,6 @@ describe("HelmChart tests", () => {
         version: "!",
         repo: "!",
       } as any)).toThrowError('"created" is required');
-      expect(() => HelmChart.create({
-        apiVersion: "!",
-        name: "!",
-        version: "!",
-        repo: "!",
-        created: "!",
-      } as any)).toThrowError('"digest" is required');
     });
 
     it("should throw on fields being wrong type", () => {
@@ -62,6 +55,14 @@ describe("HelmChart tests", () => {
         created: "!",
         digest: "!",
       } as any)).toThrowError('"name" must be a string');
+      expect(() => HelmChart.create({
+        apiVersion: "!",
+        name: "!",
+        version: "!",
+        repo: "!",
+        created: "!",
+        digest: 1,
+      } as any)).toThrowError('"digest" must be a string');
       expect(() => HelmChart.create({
         apiVersion: "1",
         name: "",
