@@ -4,17 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { createKubeAuthProxyCertificateFiles, getKubeAuthProxyCertificatePath } from "./kube-auth-proxy-cert";
-import * as selfsigned from "selfsigned";
+import { getKubeAuthProxyCertificatePath } from "./kube-auth-proxy-cert";
+import createKubeAuthProxyCertFilesInjectable from "./create-kube-auth-proxy-cert-files.injectable";
 
 const getKubeAuthProxyCertDirInjectable = getInjectable({
   id: "get-kube-auth-proxy-cert-dir",
 
   setup: async (di) => {
-    const userData = await di.inject(directoryForUserDataInjectable);
-    const certPath = getKubeAuthProxyCertificatePath(userData);
-    
-    await createKubeAuthProxyCertificateFiles(certPath, selfsigned.generate);
+    await di.inject(createKubeAuthProxyCertFilesInjectable);
   },
 
   instantiate: (di) => getKubeAuthProxyCertificatePath(di.inject(directoryForUserDataInjectable)),

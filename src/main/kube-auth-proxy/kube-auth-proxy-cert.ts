@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { access, mkdir, writeFile } from "fs/promises";
 import path from "path";
 import type * as selfsigned from "selfsigned";
 
@@ -31,19 +30,4 @@ export function getKubeAuthProxyCertificate(generate: SelfSignedGenerate): selfs
 
 export function getKubeAuthProxyCertificatePath(baseDir: string) {
   return path.join(baseDir, "kube-auth-proxy");
-}
-
-export async function createKubeAuthProxyCertificateFiles(dir: string, generateFunc: SelfSignedGenerate): Promise<string> {
-  const cert = getKubeAuthProxyCertificate(generateFunc);
-
-  try {
-    await access(dir);
-  } catch {
-    await mkdir(dir);
-  }
-
-  await writeFile(path.join(dir, "proxy.key"), cert.private);
-  await writeFile(path.join(dir, "proxy.crt"), cert.cert);
-
-  return dir;
 }
