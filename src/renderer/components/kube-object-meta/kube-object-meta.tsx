@@ -12,6 +12,7 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import { KubeObjectAge } from "../kube-object/age";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -44,14 +45,16 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
 
     const {
       getNs, getLabels, getResourceVersion, selfLink, getAnnotations,
-      getFinalizers, getId, getAge, getName, metadata: { creationTimestamp },
+      getFinalizers, getId, getName, metadata: { creationTimestamp },
     } = object;
     const ownerRefs = object.getOwnerRefs();
 
     return (
       <>
         <DrawerItem name="Created" hidden={this.isHidden("creationTimestamp")}>
-          {getAge(true, false)} ago ({<LocaleDate date={creationTimestamp} />})
+          <KubeObjectAge object={object} compact={false} />
+          {" ago "}
+          ({<LocaleDate date={creationTimestamp} />})
         </DrawerItem>
         <DrawerItem name="Name" hidden={this.isHidden("name")}>
           {getName()}

@@ -261,10 +261,28 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     return this.metadata.namespace || undefined;
   }
 
+  /**
+   * This function computes the number of milliseconds from the UNIX EPOCH to the
+   * creation timestamp of this object.
+   */
+  getCreationTimestamp() {
+    return new Date(this.metadata.creationTimestamp).getTime();
+  }
+
+  /**
+   * @deprecated This function computes a new "now" on every call which might cause subtle issues if called multiple times
+   *
+   * NOTE: Generally you can use `getCreationTimestamp` instead.
+   */
   getTimeDiffFromNow(): number {
     return Date.now() - new Date(this.metadata.creationTimestamp).getTime();
   }
 
+  /**
+   * @deprecated This function computes a new "now" on every call might cause subtle issues if called multiple times
+   *
+   * NOTE: this function also is not reactive to updates in the current time so it should not be used for renderering
+   */
   getAge(humanize = true, compact = true, fromNow = false): string | number {
     if (fromNow) {
       return moment(this.metadata.creationTimestamp).fromNow(); // "string", getTimeDiffFromNow() cannot be used

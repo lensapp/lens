@@ -16,6 +16,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { showDetails } from "../kube-detail-params";
+import { KubeObjectAge } from "../kube-object/age";
 
 
 enum sortBy {
@@ -71,25 +72,23 @@ export class DeploymentReplicaSets extends React.Component<DeploymentReplicaSets
             <TableCell className="actions"/>
           </TableHead>
           {
-            replicaSets.map(replica => {
-              return (
-                <TableRow
-                  key={replica.getId()}
-                  sortItem={replica}
-                  nowrap
-                  onClick={prevDefault(() => showDetails(replica.selfLink, false))}
-                >
-                  <TableCell className="name">{replica.getName()}</TableCell>
-                  <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={replica}/></TableCell>
-                  <TableCell className="namespace">{replica.getNs()}</TableCell>
-                  <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
-                  <TableCell className="age">{replica.getAge()}</TableCell>
-                  <TableCell className="actions" onClick={stopPropagation}>
-                    <ReplicaSetMenu object={replica}/>
-                  </TableCell>
-                </TableRow>
-              );
-            })
+            replicaSets.map(replica => (
+              <TableRow
+                key={replica.getId()}
+                sortItem={replica}
+                nowrap
+                onClick={prevDefault(() => showDetails(replica.selfLink, false))}
+              >
+                <TableCell className="name">{replica.getName()}</TableCell>
+                <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={replica} /></TableCell>
+                <TableCell className="namespace">{replica.getNs()}</TableCell>
+                <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
+                <TableCell className="age"><KubeObjectAge key="age" object={replica} /></TableCell>
+                <TableCell className="actions" onClick={stopPropagation}>
+                  <ReplicaSetMenu object={replica} />
+                </TableCell>
+              </TableRow>
+            ))
           }
         </Table>
       </div>

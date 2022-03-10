@@ -49,12 +49,18 @@ export class KubeEvent extends KubeObject {
     return `${component} ${host || ""}`;
   }
 
+  /**
+   * @deprecated This function is not reactive to changing of time. If rendering use `<ReactiveDuration />` instead
+   */
   getFirstSeenTime() {
     const diff = moment().diff(this.firstTimestamp);
 
     return formatDuration(diff, true);
   }
 
+  /**
+   * @deprecated This function is not reactive to changing of time. If rendering use `<ReactiveDuration />` instead
+   */
   getLastSeenTime() {
     const diff = moment().diff(this.lastTimestamp);
 

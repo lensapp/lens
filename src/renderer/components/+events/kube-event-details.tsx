@@ -51,44 +51,34 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
 
     const events = eventStore.getEventsByObject(object);
 
-    if (!events.length) {
-      return (
-        <DrawerTitle className="flex gaps align-center">
-          <span>Events</span>
-        </DrawerTitle>
-      );
-    }
-
     return (
       <div>
         <DrawerTitle className="flex gaps align-center">
           <span>Events</span>
         </DrawerTitle>
-        <div className="KubeEventDetails">
-          {events.map(evt => {
-            const { message, count, lastTimestamp, involvedObject } = evt;
-
-            return (
-              <div className="event" key={evt.getId()}>
-                <div className={cssNames("title", { warning: evt.isWarning() })}>
-                  {message}
+        {events.length > 0 && (
+          <div className="KubeEventDetails">
+            {events.map(event => (
+              <div className="event" key={event.getId()}>
+                <div className={cssNames("title", { warning: event.isWarning() })}>
+                  {event.message}
                 </div>
                 <DrawerItem name="Source">
-                  {evt.getSource()}
+                  {event.getSource()}
                 </DrawerItem>
                 <DrawerItem name="Count">
-                  {count}
+                  {event.count}
                 </DrawerItem>
                 <DrawerItem name="Sub-object">
-                  {involvedObject.fieldPath}
+                  {event.involvedObject.fieldPath}
                 </DrawerItem>
                 <DrawerItem name="Last seen">
-                  <LocaleDate date={lastTimestamp} />
+                  <LocaleDate date={event.lastTimestamp} />
                 </DrawerItem>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }

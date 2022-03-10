@@ -92,6 +92,7 @@ const dummyStatefulSet: StatefulSet = {
   getName: jest.fn(),
   getNs: jest.fn(),
   getAge: jest.fn(),
+  getCreationTimestamp: jest.fn(),
   getTimeDiffFromNow: jest.fn(),
   getFinalizers: jest.fn(),
   getLabels: jest.fn(),
