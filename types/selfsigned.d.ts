@@ -4,15 +4,15 @@
  */
 
  declare module "selfsigned" {
-   export type SelfSignedCert = {
+   export interface SelfSignedCert {
      private: string;
      public: string;
      cert: string;
-   };
+   }
 
    type GenerateAttributes = Array<any>;
 
-   type GenerateOptions = {
+   interface GenerateOptions {
      keySize?: number;
      days?: number;
      algorithm?: "sha1" | "sha256";
@@ -20,7 +20,7 @@
      pkcs7?: boolean;
      clientCertificate?: boolean;
      clientCertificateCN?: string;
-   };
+   }
 
    export function generate(GenerateAttributes, GenerateOptions): SelfSignedCert;
  }
