@@ -8,18 +8,15 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack && npm pack",
-    "dev": "webpack --watch",
+    "build": "npx webpack && npm pack",
+    "dev": "npx webpack -- --watch",
     "test": "echo NO TESTS"
   },
   "files": [
     "dist/**/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
-    "ts-loader": "latest",
-    "typescript": "latest",
-    "webpack": "latest"
+    "npm": "^8.5.3"
   }
 }

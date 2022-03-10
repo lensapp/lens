@@ -27,7 +27,7 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<PortForwardsRouteParams> {
+export interface PortForwardsProps extends RouteComponentProps<PortForwardsRouteParams> {
 }
 
 interface Dependencies {
@@ -35,7 +35,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
+class NonInjectedPortForwards extends React.Component<PortForwardsProps & Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -143,7 +143,7 @@ class NonInjectedPortForwards extends React.Component<Props & Dependencies> {
   }
 }
 
-export const PortForwards = withInjectables<Dependencies, Props>(
+export const PortForwards = withInjectables<Dependencies, PortForwardsProps>(
   NonInjectedPortForwards,
 
   {

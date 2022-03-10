@@ -25,7 +25,7 @@ import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
 import { Spinner } from "../../spinner";
 
-interface Props {
+export interface CreateResourceProps {
   tab: DockTab;
 }
 
@@ -35,10 +35,10 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
+class NonInjectedCreateResource extends React.Component<CreateResourceProps & Dependencies> {
   @observable error = "";
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: CreateResourceProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -143,7 +143,7 @@ class NonInjectedCreateResource extends React.Component<Props & Dependencies> {
   }
 }
 
-export const CreateResource = withInjectables<Dependencies, Props>(NonInjectedCreateResource, {
+export const CreateResource = withInjectables<Dependencies, CreateResourceProps>(NonInjectedCreateResource, {
   getPlaceholder: () => <Spinner center />,
 
   getProps: async (di, props) => ({

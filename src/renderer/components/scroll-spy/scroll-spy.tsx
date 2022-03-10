@@ -8,13 +8,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useMutationObserver } from "../../hooks";
 import type { NavigationTree } from "../tree-view";
 
-interface Props extends React.DOMAttributes<HTMLElement> {
+export interface ScrollSpyProps extends React.DOMAttributes<HTMLElement> {
   render: (data: NavigationTree[]) => JSX.Element;
   htmlFor?: string; // Id of the element to put observers on
   rootMargin?: string; // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
 }
 
-export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100% 0px" }: Props) => {
+export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100% 0px" }: ScrollSpyProps) => {
   const parent = useRef<HTMLDivElement>();
   const sections = useRef<NodeListOf<HTMLElement>>();
   const [tree, setTree] = useState<NavigationTree[]>([]);

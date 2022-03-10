@@ -46,7 +46,7 @@ export enum ResizeGrowthDirection {
   RIGHT_TO_LEFT = -1,
 }
 
-interface Props {
+export interface ResizingAnchorProps {
   direction: ResizeDirection;
 
   /**
@@ -148,7 +148,7 @@ function directionDelta(P1: number, P2: number, M: number): number | false {
 }
 
 @observer
-export class ResizingAnchor extends React.PureComponent<Props> {
+export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
   @observable lastMouseEvent?: MouseEvent;
   ref = React.createRef<HTMLDivElement>();
   @observable isDragging = false;
@@ -171,7 +171,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
   };
   static IS_RESIZING = "resizing";
 
-  constructor(props: Props) {
+  constructor(props: ResizingAnchorProps) {
     super(props);
 
     makeObservable(this);

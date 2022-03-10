@@ -17,7 +17,7 @@ import extensionInstallationStateStoreInjectable
   from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
-interface Props {
+export interface InstallProps {
   installPath: string;
   supportedFormats: string[];
   onChange: (path: string) => void;
@@ -42,7 +42,7 @@ const installInputValidator: InputValidator = {
   ),
 };
 
-const NonInjectedInstall: React.FC<Dependencies & Props> = ({
+const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
   installPath,
   supportedFormats,
   onChange,
@@ -99,7 +99,7 @@ const NonInjectedInstall: React.FC<Dependencies & Props> = ({
   </section>
 );
 
-export const Install = withInjectables<Dependencies, Props>(
+export const Install = withInjectables<Dependencies, InstallProps>(
   observer(NonInjectedInstall),
   {
     getProps: (di, props) => ({

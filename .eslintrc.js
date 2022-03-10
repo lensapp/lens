@@ -146,6 +146,29 @@ module.exports = {
           "named": "never",
           "asyncArrow": "always",
         }],
+        "@typescript-eslint/naming-convention": ["error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"],
+            "leadingUnderscore": "forbid",
+            "trailingUnderscore": "forbid",
+            "custom": {
+              "regex": "^Props$",
+              "match": false,
+            },
+          },
+          {
+            "selector": "typeAlias",
+            "format": ["PascalCase"],
+            "leadingUnderscore": "forbid",
+            "trailingUnderscore": "forbid",
+            "custom": {
+              "regex": "^(Props|State)$",
+              "match": false,
+            },
+          },
+        ],
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
         "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {

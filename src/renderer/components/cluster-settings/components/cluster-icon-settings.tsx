@@ -18,13 +18,13 @@ enum GeneralInputStatus {
   ERROR = "error",
 }
 
-interface Props {
+export interface ClusterIconSettingProps {
   cluster: Cluster;
   entity: KubernetesCluster;
 }
 
 @observer
-export class ClusterIconSetting extends React.Component<Props> {
+export class ClusterIconSetting extends React.Component<ClusterIconSettingProps> {
   @observable status = GeneralInputStatus.CLEAN;
   @observable errorText?: string;
 

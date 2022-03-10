@@ -22,7 +22,7 @@ import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-f
 import logger from "../../common/logger";
 import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
 
-interface Props extends Partial<DialogProps> {}
+export interface PortForwardDialogProps extends Partial<DialogProps> {}
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
@@ -30,11 +30,11 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
+class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & Dependencies> {
   @observable currentPort = 0;
   @observable desiredPort = 0;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: PortForwardDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -160,7 +160,7 @@ class NonInjectedPortForwardDialog extends Component<Props & Dependencies> {
   }
 }
 
-export const PortForwardDialog = withInjectables<Dependencies, Props>(
+export const PortForwardDialog = withInjectables<Dependencies, PortForwardDialogProps>(
   NonInjectedPortForwardDialog,
 
   {

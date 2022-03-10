@@ -25,7 +25,7 @@ import extensionInstallationStateStoreInjectable
   from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
-interface Props {
+export interface InstalledExtensionsProps {
   extensions: InstalledExtension[];
   enable: (id: LensExtensionId) => void;
   disable: (id: LensExtensionId) => void;
@@ -45,7 +45,7 @@ function getStatus(extension: InstalledExtension) {
   return extension.isEnabled ? "Enabled" : "Disabled";
 }
 
-const NonInjectedInstalledExtensions : React.FC<Dependencies & Props> = (({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }) => {
+const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }: Dependencies & InstalledExtensionsProps) => {
   const filters = [
     (extension: InstalledExtension) => extension.manifest.name,
     (extension: InstalledExtension) => getStatus(extension),
@@ -175,15 +175,10 @@ const NonInjectedInstalledExtensions : React.FC<Dependencies & Props> = (({ exte
   );
 });
 
-export const InstalledExtensions = withInjectables<Dependencies, Props>(
-  observer(NonInjectedInstalledExtensions),
-
-  {
-    getProps: (di, props) => ({
-      extensionDiscovery: di.inject(extensionDiscoveryInjectable),
-      extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
-
-      ...props,
-    }),
-  },
-);
+export const InstalledExtensions = withInjectables<Dependencies, InstalledExtensionsProps>(NonInjectedInstalledExtensions, {
+  getProps: (di, props) => ({
+    extensionDiscovery: di.inject(extensionDiscoveryInjectable),
+    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+    ...props,
+  }),
+});

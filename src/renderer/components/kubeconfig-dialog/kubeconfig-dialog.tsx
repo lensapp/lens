@@ -24,7 +24,7 @@ interface IKubeconfigDialogData {
   loader?: () => Promise<any>;
 }
 
-interface Props extends Partial<DialogProps> {
+export interface KubeConfigDialogProps extends Partial<DialogProps> {
 }
 
 const dialogState = observable.object({
@@ -33,10 +33,10 @@ const dialogState = observable.object({
 });
 
 @observer
-export class KubeConfigDialog extends React.Component<Props> {
+export class KubeConfigDialog extends React.Component<KubeConfigDialogProps> {
   @observable config = ""; // parsed kubeconfig in yaml format
 
-  constructor(props: Props) {
+  constructor(props: KubeConfigDialogProps) {
     super(props);
     makeObservable(this);
   }

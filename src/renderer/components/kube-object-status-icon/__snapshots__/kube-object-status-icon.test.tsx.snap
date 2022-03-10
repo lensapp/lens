@@ -1,0 +1,332 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`kube-object-status-icon given info and warning statuses are present, when rendered, renders with statuses 1`] = `
+<body>
+  <div>
+    <i
+      class="Icon KubeObjectStatusIcon warning material focusable"
+      id="tooltip_target_5"
+    >
+      <span
+        class="icon"
+        data-icon-name="warning"
+      >
+        warning
+      </span>
+      <div />
+    </i>
+  </div>
+  <div
+    class="Tooltip narrow formatter"
+  >
+    <div
+      class="KubeObjectStatusTooltip"
+    >
+      <div
+        class="level warning"
+      >
+        <span
+          class="title"
+        >
+          Warning
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some warning status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+      <div
+        class="level info"
+      >
+        <span
+          class="title"
+        >
+          Info
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some info status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`kube-object-status-icon given level "critical" status, when rendered, renders with status 1`] = `
+<body>
+  <div>
+    <i
+      class="Icon KubeObjectStatusIcon error material focusable"
+      id="tooltip_target_1"
+    >
+      <span
+        class="icon"
+        data-icon-name="error"
+      >
+        error
+      </span>
+      <div />
+    </i>
+  </div>
+  <div
+    class="Tooltip narrow formatter"
+  >
+    <div
+      class="KubeObjectStatusTooltip"
+    >
+      <div
+        class="level error"
+      >
+        <span
+          class="title"
+        >
+          Critical
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some critical status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`kube-object-status-icon given level "info" status, when rendered, renders with status 1`] = `
+<body>
+  <div>
+    <i
+      class="Icon KubeObjectStatusIcon info material focusable"
+      id="tooltip_target_2"
+    >
+      <span
+        class="icon"
+        data-icon-name="info"
+      >
+        info
+      </span>
+      <div />
+    </i>
+  </div>
+  <div
+    class="Tooltip narrow formatter"
+  >
+    <div
+      class="KubeObjectStatusTooltip"
+    >
+      <div
+        class="level info"
+      >
+        <span
+          class="title"
+        >
+          Info
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some info status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`kube-object-status-icon given level "warning" status, when rendered, renders with status 1`] = `
+<body>
+  <div>
+    <i
+      class="Icon KubeObjectStatusIcon warning material focusable"
+      id="tooltip_target_3"
+    >
+      <span
+        class="icon"
+        data-icon-name="warning"
+      >
+        warning
+      </span>
+      <div />
+    </i>
+  </div>
+  <div
+    class="Tooltip narrow formatter"
+  >
+    <div
+      class="KubeObjectStatusTooltip"
+    >
+      <div
+        class="level warning"
+      >
+        <span
+          class="title"
+        >
+          Warning
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some warning status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`kube-object-status-icon given no statuses, when rendered, renders as empty 1`] = `<div />`;
+
+exports[`kube-object-status-icon given registration for wrong api version, when rendered, renders as empty 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`kube-object-status-icon given registration for wrong kind, when rendered, renders as empty 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`kube-object-status-icon given registration without status for exact kube object, when rendered, renders as empty 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`kube-object-status-icon given status for all levels is present, when rendered, renders with statuses 1`] = `
+<body>
+  <div>
+    <i
+      class="Icon KubeObjectStatusIcon error material focusable"
+      id="tooltip_target_4"
+    >
+      <span
+        class="icon"
+        data-icon-name="error"
+      >
+        error
+      </span>
+      <div />
+    </i>
+  </div>
+  <div
+    class="Tooltip narrow formatter"
+  >
+    <div
+      class="KubeObjectStatusTooltip"
+    >
+      <div
+        class="level error"
+      >
+        <span
+          class="title"
+        >
+          Critical
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some critical status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+      <div
+        class="level warning"
+      >
+        <span
+          class="title"
+        >
+          Warning
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some warning status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+      <div
+        class="level info"
+      >
+        <span
+          class="title"
+        >
+          Info
+        </span>
+        <div
+          class="status msg"
+        >
+          - 
+          Some info status for some-name
+           
+          <span
+            class="age"
+          >
+             · 
+            2d
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

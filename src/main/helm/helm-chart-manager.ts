@@ -8,10 +8,9 @@ import v8 from "v8";
 import * as yaml from "js-yaml";
 import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
-import { promiseExecFile } from "../../common/utils/promise-exec";
-import { helmCli } from "./helm-cli";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
 import { iter, sortCharts } from "../../common/utils";
+import { execHelm } from "./exec";
 
 interface ChartCacheEntry {
   data: Buffer;
@@ -49,21 +48,13 @@ export class HelmChartManager {
   }
 
   private async executeCommand(args: string[], name: string, version?: string) {
-    const helm = await helmCli.binaryPath();
-
     args.push(`${this.repo.name}/${name}`);
 
     if (version) {
       args.push("--version", version);
     }
 
-    try {
-      const { stdout } = await promiseExecFile(helm, args);
-
-      return stdout;
-    } catch (error) {
-      throw error.stderr || error;
-    }
+    return execHelm(args);
   }
 
   public async getReadme(name: string, version?: string) {

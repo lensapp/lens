@@ -20,11 +20,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ConfigMapsRouteParams> {
+export interface ConfigMapsProps extends RouteComponentProps<ConfigMapsRouteParams> {
 }
 
 @observer
-export class ConfigMaps extends React.Component<Props> {
+export class ConfigMaps extends React.Component<ConfigMapsProps> {
   render() {
     return (
       <KubeObjectListLayout

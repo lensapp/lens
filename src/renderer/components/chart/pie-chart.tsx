@@ -11,11 +11,11 @@ import { Chart, ChartProps } from "./chart";
 import { cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 
-interface Props extends ChartProps {
+export interface PieChartProps extends ChartProps {
 }
 
 @observer
-export class PieChart extends React.Component<Props> {
+export class PieChart extends React.Component<PieChartProps> {
   render() {
     const { data, className, options, ...chartProps } = this.props;
     const { contentColor } = ThemeStore.getInstance().activeTheme.colors;

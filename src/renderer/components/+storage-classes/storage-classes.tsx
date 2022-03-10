@@ -21,11 +21,11 @@ enum columnId {
   reclaimPolicy = "reclaim",
 }
 
-interface Props extends RouteComponentProps<StorageClassesRouteParams> {
+export interface StorageClassesProps extends RouteComponentProps<StorageClassesRouteParams> {
 }
 
 @observer
-export class StorageClasses extends React.Component<Props> {
+export class StorageClasses extends React.Component<StorageClassesProps> {
   render() {
     return (
       <KubeObjectListLayout

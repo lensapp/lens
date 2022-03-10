@@ -21,14 +21,14 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Ingress> {
+export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }
 
 @observer
-export class IngressDetails extends React.Component<Props> {
+export class IngressDetails extends React.Component<IngressDetailsProps> {
   @observable metrics: IIngressMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: IngressDetailsProps) {
     super(props);
     makeObservable(this);
   }

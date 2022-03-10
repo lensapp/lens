@@ -10,14 +10,16 @@ import { bytesToUnits } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 
-interface Props {
-  metrics: IPodMetrics<IMetrics>;
+export interface ResourceMetricsTextProps {
+  metrics: IPodMetrics<IMetrics> | null | undefined;
 }
 
-export function ResourceMetricsText(props: Props) {
-  if (!props.metrics) return null;
-  const metrics = getMetricLastPoints(props.metrics);
-  const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = metrics;
+export function ResourceMetricsText({ metrics }: ResourceMetricsTextProps) {
+  if (!metrics) {
+    return null;
+  }
+
+  const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = getMetricLastPoints(metrics);
 
   return (
     <>

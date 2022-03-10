@@ -23,11 +23,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
+export interface PodDisruptionBudgetsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
 
 @observer
-export class PodDisruptionBudgets extends React.Component<Props> {
+export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsProps> {
   render() {
     return (
       <KubeObjectListLayout

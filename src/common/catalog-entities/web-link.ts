@@ -14,9 +14,9 @@ export interface WebLinkStatus extends CatalogEntityStatus {
   phase: WebLinkStatusPhase;
 }
 
-export type WebLinkSpec = {
+export interface WebLinkSpec {
   url: string;
-};
+}
 
 export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
   public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";

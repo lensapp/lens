@@ -20,7 +20,7 @@ import { ThemeStore } from "../../theme.store";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
-interface Props {
+export interface ClusterIssuesProps {
   className?: string;
 }
 
@@ -39,14 +39,14 @@ enum sortBy {
 }
 
 @observer
-export class ClusterIssues extends React.Component<Props> {
+export class ClusterIssues extends React.Component<ClusterIssuesProps> {
   private sortCallbacks = {
     [sortBy.type]: (warning: IWarning) => warning.kind,
     [sortBy.object]: (warning: IWarning) => warning.getName(),
     [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
 
-  constructor(props: Props) {
+  constructor(props: ClusterIssuesProps) {
     super(props);
     makeObservable(this);
   }

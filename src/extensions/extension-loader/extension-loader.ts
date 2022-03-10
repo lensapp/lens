@@ -277,8 +277,6 @@ export class ExtensionLoader {
         registries.ClusterPageRegistry.getInstance().add(extension.clusterPages, extension),
         registries.ClusterPageMenuRegistry.getInstance().add(extension.clusterPageMenus, extension),
         registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
-        registries.KubeObjectStatusRegistry.getInstance().add(extension.kubeObjectStatusTexts),
-        registries.WorkloadsOverviewDetailRegistry.getInstance().add(extension.kubeWorkloadsOverviewItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

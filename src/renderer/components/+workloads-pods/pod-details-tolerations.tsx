@@ -9,11 +9,11 @@ import { DrawerParamToggler, DrawerItem } from "../drawer";
 import type  { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
 import { PodTolerations } from "./pod-tolerations";
 
-interface Props {
+export interface PodDetailsTolerationsProps {
   workload: WorkloadKubeObject;
 }
 
-export class PodDetailsTolerations extends React.Component<Props> {
+export class PodDetailsTolerations extends React.Component<PodDetailsTolerationsProps> {
   render() {
     const { workload } = this.props;
     const tolerations = workload.getTolerations();

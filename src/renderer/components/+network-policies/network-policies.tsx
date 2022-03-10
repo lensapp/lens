@@ -20,11 +20,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<NetworkPoliciesRouteParams> {
+export interface NetworkPoliciesProps extends RouteComponentProps<NetworkPoliciesRouteParams> {
 }
 
 @observer
-export class NetworkPolicies extends React.Component<Props> {
+export class NetworkPolicies extends React.Component<NetworkPoliciesProps> {
   render() {
     return (
       <KubeObjectListLayout

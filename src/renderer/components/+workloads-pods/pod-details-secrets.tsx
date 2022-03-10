@@ -12,12 +12,12 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Pod, Secret, secretsApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 
-interface Props {
+export interface PodDetailsSecretsProps {
   pod: Pod;
 }
 
 @observer
-export class PodDetailsSecrets extends Component<Props> {
+export class PodDetailsSecrets extends Component<PodDetailsSecretsProps> {
   @observable secrets: Map<string, Secret> = observable.map<string, Secret>();
 
   componentDidMount(): void {
@@ -37,7 +37,7 @@ export class PodDetailsSecrets extends Component<Props> {
     ]);
   }
 
-  constructor(props: Props) {
+  constructor(props: PodDetailsSecretsProps) {
     super(props);
     makeObservable(this);
   }

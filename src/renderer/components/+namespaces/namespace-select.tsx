@@ -15,14 +15,14 @@ import type { NamespaceStore } from "./namespace-store/namespace.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
 
-interface Props extends SelectProps {
+export interface NamespaceSelectProps extends SelectProps {
   showIcons?: boolean;
   sort?: (a: SelectOption<string>, b: SelectOption<string>) => number;
   showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
   customizeOptions?(options: SelectOption[]): SelectOption[];
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<NamespaceSelectProps> = {
   showIcons: true,
 };
 
@@ -31,10 +31,10 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedNamespaceSelect extends React.Component<Props & Dependencies> {
+class NonInjectedNamespaceSelect extends React.Component<NamespaceSelectProps & Dependencies> {
   static defaultProps = defaultProps as object;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: NamespaceSelectProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -88,7 +88,7 @@ class NonInjectedNamespaceSelect extends React.Component<Props & Dependencies> {
   }
 }
 
-export const NamespaceSelect = withInjectables<Dependencies, Props>(
+export const NamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps>(
   NonInjectedNamespaceSelect,
 
   {

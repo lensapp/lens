@@ -7,11 +7,11 @@ import React from "react";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 
-interface Props {
+export interface ClusterNoMetricsProps {
   className: string;
 }
 
-export function ClusterNoMetrics({ className }: Props) {
+export function ClusterNoMetrics({ className }: ClusterNoMetricsProps) {
   return (
     <div className={cssNames("ClusterNoMetrics flex column box grow justify-center align-center", className)}>
       <Icon material="info"/>

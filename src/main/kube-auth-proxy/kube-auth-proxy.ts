@@ -13,13 +13,13 @@ import { makeObservable, observable, when } from "mobx";
 
 const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
-interface Dependencies {
+export interface KubeAuthProxyDependencies {
   proxyBinPath: string;
   proxyCertPath: string;
 }
 
 export class KubeAuthProxy {
-  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}/`;
+  public readonly apiPrefix = `/${randomBytes(8).toString("hex")}`;
 
   public get port(): number {
     return this._port;
@@ -29,7 +29,7 @@ export class KubeAuthProxy {
   protected proxyProcess?: ChildProcess;
   @observable protected ready = false;
 
-  constructor(private dependencies: Dependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
+  constructor(private dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
   }
 

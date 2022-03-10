@@ -18,17 +18,17 @@ import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
 import { rolesStore } from "./store";
 
-interface Props extends Partial<DialogProps> {
+export interface AddRoleDialogProps extends Partial<DialogProps> {
 }
 
 @observer
-export class AddRoleDialog extends React.Component<Props> {
+export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
   static isOpen = observable.box(false);
 
   @observable roleName = "";
   @observable namespace = "";
 
-  constructor(props: Props) {
+  constructor(props: AddRoleDialogProps) {
     super(props);
     makeObservable(this);
   }

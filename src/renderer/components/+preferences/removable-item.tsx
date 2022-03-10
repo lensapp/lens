@@ -9,13 +9,13 @@ import React, { DOMAttributes } from "react";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 
-interface Props extends DOMAttributes<any>{
+export interface RemovableItemProps extends DOMAttributes<any>{
   icon?: string;
   onRemove: () => void;
   className?: string;
 }
 
-export function RemovableItem({ icon, onRemove, children, className, ...rest }: Props) {
+export function RemovableItem({ icon, onRemove, children, className, ...rest }: RemovableItemProps) {
   return (
     <div className={cssNames(styles.item, "flex gaps align-center justify-space-between", className)} {...rest}>
       {icon && (

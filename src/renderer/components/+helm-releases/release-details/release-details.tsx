@@ -34,7 +34,7 @@ import releaseDetailsInjectable from "./release-details.injectable";
 import releaseValuesInjectable from "./release-values.injectable";
 import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-shown.injectable";
 
-interface Props {
+export interface ReleaseDetailsProps {
   hideDetails(): void;
 }
 
@@ -48,12 +48,12 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
+class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependencies> {
   @observable saving = false;
 
   private nonSavedValues: string;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: ReleaseDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -261,7 +261,7 @@ class NonInjectedReleaseDetails extends Component<Props & Dependencies> {
   }
 }
 
-export const ReleaseDetails = withInjectables<Dependencies, Props>(
+export const ReleaseDetails = withInjectables<Dependencies, ReleaseDetailsProps>(
   NonInjectedReleaseDetails,
 
   {

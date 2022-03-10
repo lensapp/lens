@@ -24,7 +24,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<StorageClass> {
+export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
 }
 
 interface Dependencies {
@@ -32,7 +32,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedStorageClassDetails extends React.Component<Props & Dependencies> {
+class NonInjectedStorageClassDetails extends React.Component<StorageClassDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -96,7 +96,7 @@ class NonInjectedStorageClassDetails extends React.Component<Props & Dependencie
   }
 }
 
-export const StorageClassDetails = withInjectables<Dependencies, Props>(
+export const StorageClassDetails = withInjectables<Dependencies, StorageClassDetailsProps>(
   NonInjectedStorageClassDetails,
 
   {
