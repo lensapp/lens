@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ChildProcess, spawn } from "child_process";
+import type { ChildProcess, spawn } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -16,6 +16,7 @@ const startingServeRegex = /starting to serve on (?<address>.+)/i;
 export interface KubeAuthProxyDependencies {
   proxyBinPath: string;
   proxyCertPath: string;
+  spawn: typeof spawn;
 }
 
 export class KubeAuthProxy {
@@ -45,7 +46,7 @@ export class KubeAuthProxy {
     const proxyBin = this.dependencies.proxyBinPath;
     const certPath = await this.dependencies.proxyCertPath;
 
-    this.proxyProcess = spawn(proxyBin, [], {
+    this.proxyProcess = this.dependencies.spawn(proxyBin, [], {
       env: {
         ...this.env,
         KUBECONFIG: this.cluster.kubeConfigPath,

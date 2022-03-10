@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { KubeAuthProxy, KubeAuthProxyDependencies } from "./kube-auth-proxy";
+import { spawn } from "child_process";
 import type { Cluster } from "../../common/cluster/cluster";
 import path from "path";
 import { getBinaryName } from "../../common/vars";
@@ -18,6 +19,7 @@ const createKubeAuthProxyInjectable = getInjectable({
     const dependencies: KubeAuthProxyDependencies = {
       proxyBinPath: path.join(di.inject(directoryForBundledBinariesInjectable), binaryName),
       proxyCertPath: di.inject(getKubeAuthProxyCertDirInjectable),
+      spawn,
     };
 
     return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => (

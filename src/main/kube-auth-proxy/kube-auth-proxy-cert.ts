@@ -5,15 +5,17 @@
 
 import { access, mkdir, writeFile } from "fs/promises";
 import path from "path";
-import * as selfsigned from "selfsigned";
+import type * as selfsigned from "selfsigned";
 
-export function getKubeAuthProxyCertificate(): selfsigned.SelfSignedCert {
+type SelfSignedGenerate = typeof selfsigned.generate;
+
+export function getKubeAuthProxyCertificate(generate: SelfSignedGenerate): selfsigned.SelfSignedCert {
   const opts = [
     { name: "commonName", value: "Lens Certificate Authority" },
     { name: "organizationName", value: "Lens" },
   ];
 
-  return selfsigned.generate(opts, {
+  return generate(opts, {
     keySize: 2048,
     algorithm: "sha256",
     days: 365,
@@ -31,8 +33,8 @@ export function getKubeAuthProxyCertificatePath(baseDir: string) {
   return path.join(baseDir, "kube-auth-proxy");
 }
 
-export async function createKubeAuthProxyCertificateFiles(dir: string): Promise<string> {
-  const cert = getKubeAuthProxyCertificate();
+export async function createKubeAuthProxyCertificateFiles(dir: string, generateFunc: SelfSignedGenerate): Promise<string> {
+  const cert = getKubeAuthProxyCertificate(generateFunc);
 
   try {
     await access(dir);
