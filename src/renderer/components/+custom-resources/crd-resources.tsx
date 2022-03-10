@@ -18,7 +18,7 @@ import { apiManager } from "../../../common/k8s-api/api-manager";
 import { parseJsonPath } from "../../utils/jsonPath";
 import type { CRDRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<CRDRouteParams> {
+export interface CustomResourceDefinitionResourcesProps extends RouteComponentProps<CRDRouteParams> {
 }
 
 enum columnId {
@@ -28,8 +28,8 @@ enum columnId {
 }
 
 @observer
-export class CrdResources extends React.Component<Props> {
-  constructor(props: Props) {
+export class CustomResourceDefinitionResources extends React.Component<CustomResourceDefinitionResourcesProps> {
+  constructor(props: CustomResourceDefinitionResourcesProps) {
     super(props);
     makeObservable(this);
   }

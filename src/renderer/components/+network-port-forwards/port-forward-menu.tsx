@@ -14,7 +14,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 
-interface Props extends MenuActionsProps {
+export interface PortForwardMenuProps extends MenuActionsProps {
   portForward: PortForwardItem;
   hideDetails?(): void;
 }
@@ -24,7 +24,7 @@ interface Dependencies {
   openPortForwardDialog: (item: PortForwardItem) => void;
 }
 
-class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
+class NonInjectedPortForwardMenu extends React.Component<PortForwardMenuProps & Dependencies> {
   @boundMethod
   remove() {
     const { portForward } = this.props;
@@ -109,7 +109,7 @@ class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
   }
 }
 
-export const PortForwardMenu = withInjectables<Dependencies, Props>(
+export const PortForwardMenu = withInjectables<Dependencies, PortForwardMenuProps>(
   NonInjectedPortForwardMenu,
 
   {

@@ -43,7 +43,7 @@ users:
       command: foo
 `;
 
-interface kubeconfig {
+interface Kubeconfig {
   apiVersion: string;
   clusters: [{
     name: string;
@@ -66,7 +66,7 @@ interface kubeconfig {
   preferences: {};
 }
 
-let mockKubeConfig: kubeconfig;
+let mockKubeConfig: Kubeconfig;
 
 describe("kube helpers", () => {
   describe("validateKubeconfig", () => {

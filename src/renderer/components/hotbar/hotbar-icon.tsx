@@ -16,7 +16,7 @@ import { Avatar, AvatarProps } from "../avatar";
 import { Icon } from "../icon";
 import { Tooltip } from "../tooltip";
 
-export interface Props extends AvatarProps {
+export interface HotbarIconProps extends AvatarProps {
   uid: string;
   source: string;
   material?: string;
@@ -44,7 +44,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...props }: Props) => {
+export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...props }: HotbarIconProps) => {
   const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);

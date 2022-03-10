@@ -23,11 +23,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<RoleBindingsRouteParams> {
+export interface RoleBindingsProps extends RouteComponentProps<RoleBindingsRouteParams> {
 }
 
 @observer
-export class RoleBindings extends React.Component<Props> {
+export class RoleBindings extends React.Component<RoleBindingsProps> {
   render() {
     return (
       <>

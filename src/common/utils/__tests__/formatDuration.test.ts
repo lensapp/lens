@@ -55,7 +55,7 @@ describe("human format durations", () => {
     });
 
     test("durations less than 8 years returns years and days", () => {
-      const timeValue = Date.now() - new Date(moment().subtract(2, "years").subtract(5, "days").subtract(2, "hours").toDate()).getTime();
+      const timeValue = new Date(2020, 0, 10, 12, 0, 0, 0).getTime() - new Date(2018, 0, 4, 12, 0, 0, 0).getTime();
 
       const res = formatDuration(timeValue);
 

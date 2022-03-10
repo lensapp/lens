@@ -20,17 +20,17 @@ import type { KubeAuthUpdate } from "../../../common/cluster-types";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
 
-interface Props {
+export interface ClusterStatusProps {
   className?: IClassName;
   cluster: Cluster;
 }
 
 @observer
-export class ClusterStatus extends React.Component<Props> {
+export class ClusterStatus extends React.Component<ClusterStatusProps> {
   @observable authOutput: KubeAuthUpdate[] = [];
   @observable isReconnecting = false;
 
-  constructor(props: Props) {
+  constructor(props: ClusterStatusProps) {
     super(props);
     makeObservable(this);
   }

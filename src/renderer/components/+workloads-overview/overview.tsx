@@ -16,9 +16,8 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
-import { makeObservable, observable, reaction } from "mobx";
+import { IComputedValue, makeObservable, observable, reaction } from "mobx";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
@@ -30,20 +29,22 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { Disposer } from "../../../common/utils";
 import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
+import detailComponentsInjectable from "./detail-components.injectable";
 
-interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
+export interface WorkloadsOverviewProps extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 interface Dependencies {
+  detailComponents: IComputedValue<React.ComponentType<{}>[]>;
   clusterFrameContext: ClusterFrameContext;
   subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
 }
 
 @observer
-class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies> {
+class NonInjectedWorkloadsOverview extends React.Component<WorkloadsOverviewProps & Dependencies> {
   @observable loadErrors: string[] = [];
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: WorkloadsOverviewProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -91,13 +92,6 @@ class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies>
   }
 
   render() {
-    const items = WorkloadsOverviewDetailRegistry
-      .getInstance()
-      .getItems()
-      .map(({ components: { Details }}, index) => (
-        <Details key={`workload-overview-${index}`}/>
-      ));
-
     return (
       <div className="WorkloadsOverview flex column gaps">
         <div className="header flex gaps align-center">
@@ -105,17 +99,21 @@ class NonInjectedWorkloadsOverview extends React.Component<Props & Dependencies>
           {this.renderLoadErrors()}
           <NamespaceSelectFilter />
         </div>
-        {items}
+
+        {this.props.detailComponents.get().map((Details, index) => (
+          <Details key={`workload-overview-${index}`} />
+        ))}
       </div>
     );
   }
 }
 
-export const WorkloadsOverview = withInjectables<Dependencies, Props>(
+export const WorkloadsOverview = withInjectables<Dependencies, WorkloadsOverviewProps>(
   NonInjectedWorkloadsOverview,
 
   {
     getProps: (di, props) => ({
+      detailComponents: di.inject(detailComponentsInjectable),
       clusterFrameContext: di.inject(clusterFrameContextInjectable),
       subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
       ...props,

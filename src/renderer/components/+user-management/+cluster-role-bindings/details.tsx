@@ -21,14 +21,14 @@ import { ClusterRoleBindingDialog } from "./dialog";
 import { clusterRoleBindingsStore } from "./store";
 import { hashClusterRoleBindingSubject } from "./hashers";
 
-interface Props extends KubeObjectDetailsProps<ClusterRoleBinding> {
+export interface ClusterRoleBindingDetailsProps extends KubeObjectDetailsProps<ClusterRoleBinding> {
 }
 
 @observer
-export class ClusterRoleBindingDetails extends React.Component<Props> {
+export class ClusterRoleBindingDetails extends React.Component<ClusterRoleBindingDetailsProps> {
   selectedSubjects = new ObservableHashSet<ClusterRoleBindingSubject>([], hashClusterRoleBindingSubject);
 
-  constructor(props: Props) {
+  constructor(props: ClusterRoleBindingDetailsProps) {
     super(props);
     autoBind(this);
   }

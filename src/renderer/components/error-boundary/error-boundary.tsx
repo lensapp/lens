@@ -11,7 +11,7 @@ import { Button } from "../button";
 import { navigation } from "../../navigation";
 import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
 
-interface Props {
+export interface ErrorBoundaryProps {
 }
 
 interface State {
@@ -20,7 +20,7 @@ interface State {
 }
 
 @observer
-export class ErrorBoundary extends React.Component<Props, State> {
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
   public state: State = {};
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {

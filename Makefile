@@ -21,10 +21,7 @@ node_modules: yarn.lock
 	yarn check --verify-tree --integrity
 
 binaries/client: node_modules
-	yarn download-bins
-
-static/build/LensDev.html: node_modules
-	yarn compile:renderer
+	yarn download:binaries
 
 .PHONY: compile-dev
 compile-dev: node_modules
@@ -32,7 +29,8 @@ compile-dev: node_modules
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev: binaries/client build-extensions static/build/LensDev.html
+dev: binaries/client build-extensions
+	rm -rf static/build/
 	yarn dev
 
 .PHONY: lint
@@ -62,10 +60,11 @@ ifeq "$(DETECTED_OS)" "Windows"
 endif
 	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
 
+.NOTPARALLEL: $(extension_node_modules)
 $(extension_node_modules): node_modules
-	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund
+	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
-$(extension_dists): src/extensions/npm/extensions/dist
+$(extension_dists): src/extensions/npm/extensions/dist $(extension_node_modules)
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
 
 .PHONY: clean-old-extensions
@@ -73,7 +72,7 @@ clean-old-extensions:
 	find ./extensions -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/package.json' \; -exec rm -rf {} \;
 
 .PHONY: build-extensions
-build-extensions: node_modules clean-old-extensions $(extension_node_modules) $(extension_dists)
+build-extensions: node_modules clean-old-extensions $(extension_dists)
 
 .PHONY: test-extensions
 test-extensions: $(extension_node_modules)

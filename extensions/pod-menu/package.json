@@ -8,9 +8,9 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack && npm pack",
-    "dev": "webpack --watch",
-    "test": "jest --passWithNoTests --env=jsdom src $@"
+    "build": "npx webpack && npm pack",
+    "dev": "npx webpack -- --watch",
+    "test": "npx jest --passWithNoTests --env=jsdom src $@"
   },
   "files": [
     "dist/**/*"
@@ -18,9 +18,6 @@
   "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
-    "jest": "latest",
-    "ts-loader": "latest",
-    "typescript": "latest",
-    "webpack": "latest"
+    "npm": "^8.5.3"
   }
 }

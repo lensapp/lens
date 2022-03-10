@@ -7,7 +7,7 @@ import type { AppPreferenceRegistration } from "./app-preferences/app-preference
 import React from "react";
 import { cssNames } from "../../../renderer/utils";
 
-interface ExtensionSettingsProps {
+export interface ExtensionSettingsProps {
   setting: AppPreferenceRegistration;
   size: "small" | "normal";
 }

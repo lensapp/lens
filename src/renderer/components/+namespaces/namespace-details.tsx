@@ -29,7 +29,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
 
-interface Props extends KubeObjectDetailsProps<Namespace> {
+export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
 
 interface Dependencies {
@@ -37,10 +37,10 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedNamespaceDetails extends React.Component<Props & Dependencies> {
+class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps & Dependencies> {
   @observable metrics: IPodMetrics = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: NamespaceDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -132,7 +132,7 @@ class NonInjectedNamespaceDetails extends React.Component<Props & Dependencies> 
   }
 }
 
-export const NamespaceDetails = withInjectables<Dependencies, Props>(
+export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsProps>(
   NonInjectedNamespaceDetails,
 
   {

@@ -16,7 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
 
-interface Props {
+export interface TerminalWindowProps {
   tab: DockTab;
 }
 
@@ -26,7 +26,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedTerminalWindow extends React.Component<Props & Dependencies> {
+class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & Dependencies> {
   public elem: HTMLElement;
   public terminal: Terminal;
 
@@ -64,7 +64,7 @@ class NonInjectedTerminalWindow extends React.Component<Props & Dependencies> {
   }
 }
 
-export const TerminalWindow = withInjectables<Dependencies, Props>(NonInjectedTerminalWindow, {
+export const TerminalWindow = withInjectables<Dependencies, TerminalWindowProps>(NonInjectedTerminalWindow, {
   getProps: (di, props) => ({
     dockStore: di.inject(dockStoreInjectable),
     terminalStore: di.inject(terminalStoreInjectable),

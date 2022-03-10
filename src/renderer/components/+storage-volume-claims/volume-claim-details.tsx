@@ -23,14 +23,14 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
+export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
 
 @observer
-export class PersistentVolumeClaimDetails extends React.Component<Props> {
+export class PersistentVolumeClaimDetails extends React.Component<PersistentVolumeClaimDetailsProps> {
   @observable metrics: IPvcMetrics = null;
 
-  constructor(props: Props) {
+  constructor(props: PersistentVolumeClaimDetailsProps) {
     super(props);
     makeObservable(this);
   }

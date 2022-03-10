@@ -16,16 +16,16 @@ import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
 import { clusterRolesStore } from "./store";
 
-interface Props extends Partial<DialogProps> {
+export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
 
 @observer
-export class AddClusterRoleDialog extends React.Component<Props> {
+export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogProps> {
   static isOpen = observable.box(false);
 
   @observable clusterRoleName = "";
 
-  constructor(props: Props) {
+  constructor(props: AddClusterRoleDialogProps) {
     super(props);
     makeObservable(this);
   }

@@ -39,7 +39,7 @@ const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStore
     model.reloadLogs();
 
     return model.stopLoadingLogs;
-  }, []);
+  }, [tab.id]);
   useEffect(() => subscribeStores([
     podsStore,
   ], {

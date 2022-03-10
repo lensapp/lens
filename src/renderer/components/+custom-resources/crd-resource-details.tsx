@@ -19,7 +19,7 @@ import { parseJsonPath } from "../../utils/jsonPath";
 import { KubeObject, KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<KubeObject> {
+export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeObject> {
   crd: CustomResourceDefinition;
 }
 
@@ -44,7 +44,7 @@ function convertSpecValue(value: any): any {
 }
 
 @observer
-export class CrdResourceDetails extends React.Component<Props> {
+export class CustomResourceDetails extends React.Component<CustomResourceDetailsProps> {
   renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
     return columns.map(({ name, jsonPath: jp }) => (
       <DrawerItem key={name} name={name} renderBoolean>

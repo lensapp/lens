@@ -20,7 +20,7 @@ import { Notifications } from "../notifications";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { SubTitle } from "../layout/sub-title";
 
-interface Props extends DialogProps {
+export interface AddQuotaDialogProps extends DialogProps {
 }
 
 const dialogState = observable.object({
@@ -28,7 +28,7 @@ const dialogState = observable.object({
 });
 
 @observer
-export class AddQuotaDialog extends React.Component<Props> {
+export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
   static defaultQuotas: IResourceQuotaValues = {
     "limits.cpu": "",
     "limits.memory": "",
@@ -58,7 +58,7 @@ export class AddQuotaDialog extends React.Component<Props> {
   @observable namespace = this.defaultNamespace;
   @observable quotas = AddQuotaDialog.defaultQuotas;
 
-  constructor(props: Props) {
+  constructor(props: AddQuotaDialogProps) {
     super(props);
     makeObservable(this);
   }

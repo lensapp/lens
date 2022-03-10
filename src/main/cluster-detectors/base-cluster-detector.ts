@@ -7,10 +7,10 @@ import type { RequestPromiseOptions } from "request-promise-native";
 import type { Cluster } from "../../common/cluster/cluster";
 import { k8sRequest } from "../k8s-request";
 
-export type ClusterDetectionResult = {
+export interface ClusterDetectionResult {
   value: string | number | boolean;
   accuracy: number;
-};
+}
 
 export class BaseClusterDetector {
   key: string;

@@ -13,13 +13,13 @@ import { FilterIcon } from "./filter-icon";
 import { Icon } from "../icon";
 import { searchUrlParam } from "../input";
 
-interface Props {
+export interface PageFiltersListProps {
   filters?: Filter[];
 }
 
 @observer
-export class PageFiltersList extends React.Component<Props> {
-  static defaultProps: Props = {
+export class PageFiltersList extends React.Component<PageFiltersListProps> {
+  static defaultProps: PageFiltersListProps = {
     get filters() {
       return pageFilters.activeFilters;
     },

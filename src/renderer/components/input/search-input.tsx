@@ -12,14 +12,14 @@ import { Icon } from "../icon";
 import { Input, InputProps } from "./input";
 import { isMac } from "../../../common/vars";
 
-interface Props extends InputProps {
+export interface SearchInputProps extends InputProps {
   compact?: boolean; // show only search-icon when not focused
   bindGlobalFocusHotkey?: boolean;
   showClearIcon?: boolean;
   onClear?(): void;
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<SearchInputProps> = {
   autoFocus: true,
   bindGlobalFocusHotkey: true,
   showClearIcon: true,
@@ -27,7 +27,7 @@ const defaultProps: Partial<Props> = {
 };
 
 @observer
-export class SearchInput extends React.Component<Props> {
+export class SearchInput extends React.Component<SearchInputProps> {
   static defaultProps = defaultProps as object;
 
   private inputRef = createRef<Input>();

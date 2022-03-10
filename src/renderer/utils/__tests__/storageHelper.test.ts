@@ -7,11 +7,11 @@ import { observable, reaction } from "mobx";
 import { StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
 
-type StorageModel = {
+interface StorageModel {
   [prop: string]: any /*json-serializable*/;
   message?: string;
   description?: any;
-};
+}
 
 describe("renderer/utils/StorageHelper", () => {
   describe("Using custom StorageAdapter", () => {

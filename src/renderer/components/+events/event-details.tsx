@@ -19,11 +19,11 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<KubeEvent> {
+export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {
 }
 
 @observer
-export class EventDetails extends React.Component<Props> {
+export class EventDetails extends React.Component<EventDetailsProps> {
   render() {
     const { object: event } = this.props;
 

@@ -28,11 +28,11 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<VolumeClaimsRouteParams> {
+export interface PersistentVolumeClaimsProps extends RouteComponentProps<VolumeClaimsRouteParams> {
 }
 
 @observer
-export class PersistentVolumeClaims extends React.Component<Props> {
+export class PersistentVolumeClaims extends React.Component<PersistentVolumeClaimsProps> {
   render() {
     return (
       <KubeObjectListLayout

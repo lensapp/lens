@@ -8,11 +8,11 @@ import styles from "./switch.module.scss";
 import React, { ChangeEvent, HTMLProps } from "react";
 import { cssNames } from "../../utils";
 
-interface Props extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
+export interface SwitchProps extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
   onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function Switch({ children, disabled, onChange, ...props }: Props) {
+export function Switch({ children, disabled, onChange, ...props }: SwitchProps) {
   return (
     <label className={cssNames(styles.Switch, { [styles.disabled]: disabled })} data-testid="switch">
       {children}

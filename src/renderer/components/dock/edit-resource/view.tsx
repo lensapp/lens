@@ -20,7 +20,7 @@ import editResourceTabStoreInjectable from "./store.injectable";
 import { noop } from "../../../utils";
 import closeDockTabInjectable from "../dock/close-dock-tab.injectable";
 
-interface Props {
+export interface EditResourceProps {
   tab: DockTab;
 }
 
@@ -30,10 +30,10 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedEditResource extends React.Component<Props & Dependencies> {
+class NonInjectedEditResource extends React.Component<EditResourceProps & Dependencies> {
   @observable error = "";
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: EditResourceProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -153,7 +153,7 @@ class NonInjectedEditResource extends React.Component<Props & Dependencies> {
   }
 }
 
-export const EditResource = withInjectables<Dependencies, Props>(NonInjectedEditResource, {
+export const EditResource = withInjectables<Dependencies, EditResourceProps>(NonInjectedEditResource, {
   getProps: (di, props) => ({
     editResourceStore: di.inject(editResourceTabStoreInjectable),
     closeTab: di.inject(closeDockTabInjectable),

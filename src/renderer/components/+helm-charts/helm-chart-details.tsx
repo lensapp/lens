@@ -21,7 +21,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable from "../dock/install-chart/create-install-chart-tab.injectable";
 import { Notifications } from "../notifications";
 
-interface Props {
+export interface HelmChartDetailsProps {
   chart: HelmChart;
   hideDetails(): void;
 }
@@ -37,14 +37,14 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
+class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Dependencies> {
   @observable chartVersions: HelmChart[];
   @observable selectedChart?: HelmChart;
   @observable readme?: string;
 
   private abortController?: AbortController;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: HelmChartDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -197,7 +197,7 @@ class NonInjectedHelmChartDetails extends Component<Props & Dependencies> {
   }
 }
 
-export const HelmChartDetails = withInjectables<Dependencies, Props>(
+export const HelmChartDetails = withInjectables<Dependencies, HelmChartDetailsProps>(
   NonInjectedHelmChartDetails,
 
   {

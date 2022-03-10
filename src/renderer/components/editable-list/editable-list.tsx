@@ -12,7 +12,7 @@ import { Icon } from "../icon";
 import { Input, InputProps, InputValidator } from "../input";
 import { boundMethod } from "../../utils";
 
-export interface Props<T> {
+export interface EditableListProps<T> {
   items: T[];
   add: (newItem: string) => void;
   remove: (info: { oldItem: T; index: number }) => void;
@@ -25,15 +25,15 @@ export interface Props<T> {
   inputTheme?: InputProps["theme"];
 }
 
-const defaultProps: Partial<Props<any>> = {
+const defaultProps: Partial<EditableListProps<any>> = {
   placeholder: "Add new item...",
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>,
   inputTheme: "round",
 };
 
 @observer
-export class EditableList<T> extends React.Component<Props<T>> {
-  static defaultProps = defaultProps as Props<any>;
+export class EditableList<T> extends React.Component<EditableListProps<T>> {
+  static defaultProps = defaultProps as EditableListProps<any>;
 
   @boundMethod
   onSubmit(val: string, evt: React.KeyboardEvent) {

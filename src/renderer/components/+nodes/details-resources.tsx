@@ -12,12 +12,12 @@ import React from "react";
 import type { Node } from "../../../common/k8s-api/endpoints";
 import { TableCell } from "../table/table-cell";
 
-interface Props {
+export interface NodeDetailsResourcesProps {
   node: Node;
   type: "allocatable" | "capacity";
 }
 
-export class NodeDetailsResources extends React.Component<Props> {
+export class NodeDetailsResources extends React.Component<NodeDetailsResourcesProps> {
   toMi(resource: string) {
     if (resource?.endsWith("Ki")) {
       return `${(parseInt(resource) / 1024).toFixed(1)}Mi`;
