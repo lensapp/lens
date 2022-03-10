@@ -6,25 +6,21 @@
 
 import path from "path";
 import type webpack from "webpack";
-import * as vars from "./src/common/vars";
-import { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./webpack.renderer";
+import { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./renderer";
+import { extensionEntry, extensionOutDir, isDevelopment } from "./vars";
 
 export default function generateExtensionTypes(): webpack.Configuration {
-  const { isDevelopment } = vars;
-  const entry = "./src/extensions/extension-api.ts";
-  const outDir = "./src/extensions/npm/extensions/dist";
-
   return {
     // Compile for Electron for renderer process
     // see <https://webpack.js.org/configuration/target/>
     target: "electron-renderer",
-    entry,
+    entry: extensionEntry,
     // this is the default mode, so we should make it explicit to silence the warning
     mode: isDevelopment ? "development" : "production",
     output: {
       filename: "extension-api.js",
       // need to be an absolute path
-      path: path.resolve(__dirname, `${outDir}/src/extensions`),
+      path: path.resolve(extensionOutDir, "src", "extensions"),
       // can be use in commonjs environments
       // e.g. require('@k8slens/extensions')
       libraryTarget: "commonjs",
@@ -54,7 +50,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
             compilerOptions: {
               declaration: true, // output .d.ts
               sourceMap: false, // to override sourceMap: true in tsconfig.json
-              outDir, // where the .d.ts should be located
+              outDir: extensionOutDir, // where the .d.ts should be located
             },
           },
         },

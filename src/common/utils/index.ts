@@ -20,7 +20,6 @@ export * from "./collection-functions";
 export * from "./convertCpu";
 export * from "./convertMemory";
 export * from "./debouncePromise";
-export * from "./defineGlobal";
 export * from "./delay";
 export * from "./disposer";
 export * from "./downloadFile";

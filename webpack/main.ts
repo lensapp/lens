@@ -7,16 +7,20 @@ import path from "path";
 import type webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import nodeExternals from "webpack-node-externals";
-import * as vars from "./src/common/vars";
-import getTSLoader from "./src/common/getTSLoader";
+import getTypeScriptLoader from "./get-typescript-loader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
-import { iconsAndImagesWebpackRules } from "./webpack.renderer";
+import { iconsAndImagesWebpackRules } from "./renderer";
+import type { WebpackPluginInstance } from "webpack";
+import { buildDir, isDevelopment, mainDir } from "./vars";
 
 const configs: { (): webpack.Configuration }[] = [];
 
 configs.push((): webpack.Configuration => {
-  console.info("WEBPACK:main", { ...vars });
-  const { mainDir, buildDir, isDevelopment } = vars;
+  console.info("WEBPACK:main", {
+    isDevelopment,
+    mainDir,
+    buildDir,
+  });
 
   return {
     name: "lens-app-main",
@@ -44,7 +48,7 @@ configs.push((): webpack.Configuration => {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader({}, /\.ts$/),
+        getTypeScriptLoader({}, /\.ts$/),
         ...iconsAndImagesWebpackRules(),
       ],
     },
@@ -54,8 +58,8 @@ configs.push((): webpack.Configuration => {
         cwd: __dirname,
         exclude: /node_modules/,
         failOnError: true,
-      }),
-    ].filter(Boolean),
+      }) as unknown as WebpackPluginInstance,
+    ],
   };
 });
 
