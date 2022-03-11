@@ -13,6 +13,8 @@ import type { SelectOption } from "./components/select";
 import type { MonacoEditorProps } from "./components/monaco-editor";
 import { defaultTheme } from "../common/vars";
 import { camelCase } from "lodash";
+import { ipcRenderer } from "electron";
+import { getNativeThemeChannel, setNativeThemeChannel } from "../common/ipc/native-theme";
 
 export type ThemeId = string;
 
@@ -34,6 +36,8 @@ export class ThemeStore extends Singleton {
     "lens-light": lensLightThemeJson as Theme,
   });
 
+  @observable osNativeTheme: "dark" | "light" | undefined;
+
   @computed get activeThemeId(): ThemeId {
     return UserStore.getInstance().colorTheme;
   }
@@ -43,7 +47,7 @@ export class ThemeStore extends Singleton {
   }
 
   @computed get activeTheme(): Theme {
-    return this.themes.get(this.activeThemeId) ?? this.themes.get(defaultTheme);
+    return this.systemTheme ?? this.themes.get(this.activeThemeId) ?? this.themes.get(defaultTheme);
   }
 
   @computed get terminalColors(): [string, string][] {
@@ -72,11 +76,25 @@ export class ThemeStore extends Singleton {
     }));
   }
 
+  @computed get systemTheme() {
+    if (this.activeThemeId == "system" && this.osNativeTheme) {
+      return this.themes.get(`lens-${this.osNativeTheme}`);
+    }
+
+    return null;
+  }
+
   constructor() {
     super();
 
     makeObservable(this);
     autoBind(this);
+    this.init();
+  }
+
+  async init() {
+    await this.setNativeTheme();
+    this.bindNativeThemeUpdateEvent();
 
     // auto-apply active theme
     reaction(() => ({
@@ -95,12 +113,26 @@ export class ThemeStore extends Singleton {
     });
   }
 
+  bindNativeThemeUpdateEvent() {
+    ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
+      this.osNativeTheme = theme;
+      this.applyTheme(theme);
+    });
+  }
+
+  async setNativeTheme() {
+    const theme: "dark" | "light" = await ipcRenderer.invoke(getNativeThemeChannel);
+
+    this.osNativeTheme = theme;
+  }
+
   getThemeById(themeId: ThemeId): Theme {
     return this.themes.get(themeId);
   }
 
   protected applyTheme(themeId: ThemeId) {
-    const theme = this.getThemeById(themeId);
+    const theme = this.systemTheme ?? this.getThemeById(themeId);
+
     const colors = Object.entries({
       ...theme.colors,
       ...Object.fromEntries(this.terminalColors),

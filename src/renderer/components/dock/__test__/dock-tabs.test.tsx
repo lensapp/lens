@@ -33,6 +33,10 @@ jest.mock("electron", () => ({
     on: jest.fn(),
     handle: jest.fn(),
   },
+  ipcRenderer: {
+    on: jest.fn(),
+    invoke: jest.fn(),
+  },
 }));
 
 const initialTabs: DockTab[] = [

@@ -45,7 +45,10 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems }) 
       <section id="appearance">
         <SubTitle title="Theme" />
         <Select
-          options={themeStore.themeOptions}
+          options={[
+            { label: "Sync with computer", value: "system" },
+            ...themeStore.themeOptions,
+          ]}
           value={userStore.colorTheme}
           onChange={({ value }) => userStore.colorTheme = value}
           themeName="lens"

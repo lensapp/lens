@@ -6,23 +6,9 @@
 import tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { promiseExecFile } from "../../common/utils/promise-exec";
-import { helmCli } from "./helm-cli";
 import { toCamelCase } from "../../common/utils/camelCase";
-import type { BaseEncodingOptions } from "fs";
-import { execFile, ExecFileOptions } from "child_process";
-
-async function execHelm(args: string[], options?: BaseEncodingOptions & ExecFileOptions): Promise<string> {
-  const helmCliPath = await helmCli.binaryPath();
-
-  try {
-    const { stdout } = await promiseExecFile(helmCliPath, args, options);
-
-    return stdout;
-  } catch (error) {
-    throw error?.stderr || error;
-  }
-}
+import { execFile } from "child_process";
+import { execHelm } from "./exec";
 
 export async function listReleases(pathToKubeconfig: string, namespace?: string): Promise<Record<string, any>[]> {
   const args = [

@@ -6,7 +6,7 @@ export type { StatusBarRegistration } from "../../renderer/components/status-bar
 export type { KubeObjectMenuRegistration, KubeObjectMenuComponents } from "../../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
 export type { AppPreferenceRegistration, AppPreferenceComponents } from "../../renderer/components/+preferences/app-preferences/app-preference-registration";
 export type { KubeObjectDetailRegistration, KubeObjectDetailComponents } from "../registries/kube-object-detail-registry";
-export type { KubeObjectStatusRegistration } from "../registries/kube-object-status-registry";
+export type { KubeObjectStatusRegistration } from "../../renderer/components/kube-object-status-icon/kube-object-status-registration";
 export type { PageRegistration, RegisteredPage, PageParams, PageComponentProps, PageComponents, PageTarget } from "../registries/page-registry";
 export type { ClusterPageMenuRegistration, ClusterPageMenuComponents } from "../registries/page-menu-registry";
 export type { ProtocolHandlerRegistration, RouteParams as ProtocolRouteParams, RouteHandler as ProtocolRouteHandler } from "../registries/protocol-handler";

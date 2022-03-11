@@ -7,10 +7,11 @@
 
 import { injectSystemCAs } from "../common/system-ca";
 import * as Mobx from "mobx";
+import httpProxy from "http-proxy";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName, isDevelopment } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -55,6 +56,7 @@ import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
+import { broadcastNativeThemeOnUpdate } from "./native-theme";
 
 const di = getDi();
 
@@ -107,6 +109,8 @@ di.runSetups().then(() => {
       }
     }
   }
+
+  broadcastNativeThemeOnUpdate();
 
   app.on("second-instance", (event, argv) => {
     logger.debug("second-instance message");
@@ -164,7 +168,7 @@ di.runSetups().then(() => {
     const router = di.inject(routerInjectable);
     const shellApiRequest = di.inject(shellApiRequestInjectable);
 
-    const lensProxy = LensProxy.createInstance(router, {
+    const lensProxy = LensProxy.createInstance(router, httpProxy.createProxy(), {
       getClusterForRequest: (req) => ClusterManager.getInstance().getClusterForRequest(req),
       kubeApiRequest,
       shellApiRequest,
@@ -227,16 +231,6 @@ di.runSetups().then(() => {
 
     logger.info("🖥️  Starting WindowManager");
     const windowManager = WindowManager.createInstance();
-
-    // Override main content view url to local webpack-dev-server to support HMR / live-reload
-    if (isDevelopment) {
-      const { createDevServer } = await import("../../webpack.dev-server");
-      const devServer = createDevServer(lensProxy.port);
-
-      await devServer.start();
-      windowManager.mainContentUrl = `http://localhost:${devServer.options.port}`;
-    }
-
     const menuItems = di.inject(electronMenuItemsInjectable);
     const trayMenuItems = di.inject(trayMenuItemsInjectable);
 

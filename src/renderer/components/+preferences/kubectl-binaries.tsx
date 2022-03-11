@@ -8,13 +8,12 @@ import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { UserStore } from "../../../common/user-store";
-import { bundledKubectlPath } from "../../../main/kubectl/kubectl";
 import { SelectOption, Select } from "../select";
 import { Switch } from "../switch";
 import { packageMirrors } from "../../../common/user-store/preferences-helpers";
-import directoryForBinariesInjectable
-  from "../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
+import directoryForBinariesInjectable from "../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import { kubectlBinaryPath } from "../../../common/vars";
 
 interface Dependencies {
   defaultPathForKubectlBinaries: string;
@@ -80,7 +79,7 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPa
         <SubTitle title="Path to kubectl binary" />
         <Input
           theme="round-black"
-          placeholder={bundledKubectlPath()}
+          placeholder={kubectlBinaryPath.get()}
           value={binariesPath}
           validators={pathValidator}
           onChange={setBinariesPath}

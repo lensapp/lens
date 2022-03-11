@@ -75,10 +75,6 @@ export const initClusterFrame =
         });
       });
 
-      window.addEventListener("online", () => {
-        window.location.reload();
-      });
-
       window.onbeforeunload = () => {
         logger.info(
           `${logPrefix} Unload dashboard, clusterId=${(hostedCluster.id)}, frameId=${frameRoutingId}`,

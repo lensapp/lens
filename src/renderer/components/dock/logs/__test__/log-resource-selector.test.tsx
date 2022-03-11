@@ -36,6 +36,10 @@ jest.mock("electron", () => ({
     on: jest.fn(),
     handle: jest.fn(),
   },
+  ipcRenderer: {
+    on: jest.fn(),
+    invoke: jest.fn(),
+  },
 }));
 
 function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependencies>): LogTabViewModel {
