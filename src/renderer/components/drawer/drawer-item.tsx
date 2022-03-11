@@ -20,12 +20,12 @@ export function DrawerItem({
   title,
   labelsOnly,
   children,
-  hidden,
+  hidden = false,
   className,
   renderBoolean,
   ...elemProps
 }: DrawerItemProps) {
-  if (!hidden) {
+  if (hidden) {
     return null;
   }
 

@@ -389,7 +389,7 @@ export interface HostPathSource {
   type?: "" | "DirectoryOrCreate" | "Directory" | "FileOrCreate" | "File" | "Socket" | "CharDevice" | "BlockDevice";
 }
 
-export interface IscsiSource {
+export interface IScsiSource {
   targetPortal: string;
   iqn: string;
   lun: number;
@@ -410,7 +410,7 @@ export interface NetworkFsSource {
   readOnly?: boolean;
 }
 
-export interface PVCSource {
+export interface PersistentVolumeClaimSource {
   claimName: string;
 }
 
@@ -485,7 +485,7 @@ export interface QuobyteSource {
   tenant?: string;
 }
 
-export interface RbdSource {
+export interface RadosBlockDeviceSource {
   monitors: string[];
   image: string;
   /**
@@ -598,30 +598,30 @@ export interface PodVolumeVariants {
   cephfs: CephfsSource;
   cinder: CinderSource;
   configMap: ConfigMapSource;
+  csi: ContainerStorageInterfaceSource;
   downwardAPI: DownwardApiSource;
-  ephemeral: EphemeralSource;
   emptyDir: EmptyDirSource;
+  ephemeral: EphemeralSource;
   fc: FiberChannelSource;
-  flocker: FlokerSource;
   flexVolume: FlexVolumeSource;
+  flocker: FlokerSource;
   gcePersistentDisk: GcePersistentDiskSource;
   gitRepo: GitRepoSource;
   glusterfs: GlusterFsSource;
   hostPath: HostPathSource;
-  iscsi: IscsiSource;
+  iscsi: IScsiSource;
   local: LocalSource;
   nfs: NetworkFsSource;
-  persistentVolumeClaim: PVCSource;
+  persistentVolumeClaim: PersistentVolumeClaimSource;
   photonPersistentDisk: PhotonPersistentDiskSource;
   portworxVolume: PortworxVolumeSource;
   projected: ProjectedSource;
   quobyte: QuobyteSource;
-  rbd: RbdSource;
+  rbd: RadosBlockDeviceSource;
   scaleIO: ScaleIoSource;
   secret: SecretSource;
   storageos: StorageOsSource;
   vsphereVolume: VsphereVolumeSource;
-  csi: ContainerStorageInterfaceSource;
 }
 
 /**

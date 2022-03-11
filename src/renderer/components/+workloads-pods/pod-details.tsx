@@ -27,7 +27,7 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
-import { PodVolumes } from "./pod-details-volumes";
+import { PodVolumes } from "./details/volumes/view";
 
 export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }
