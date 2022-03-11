@@ -147,7 +147,6 @@ export class ContextHandler {
     const apiPrefix = `${this.kubeAuthProxy.apiPrefix}${clusterPath}`;
 
     return {
-      //target: await this.resolveAuthProxyUrl(),
       target: {
         protocol: "https:",
         host: "127.0.0.1",
