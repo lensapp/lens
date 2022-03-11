@@ -26,7 +26,7 @@
     background-color: hsl(245deg 8% 28%);
     background-image: none;
 
-    .tabIcon {
+    .close {
       opacity: 1;
     }
   }
@@ -39,10 +39,20 @@
     background-color: #343439;
     background-image: none;
 
-    .tabIcon {
+    .close {
       opacity: 1;
+      background: linear-gradient(90deg, transparent 0%, #343439 25%);
     }
   }
+}
+
+.close {
+  position: absolute;
+  right: 0px;
+  width: 5ch;
+  opacity: 0;
+  text-align: center;
+  background: linear-gradient(90deg, transparent 0%, rgba(67,66,77,1) 25%);
 }
 
 .tabIcon {

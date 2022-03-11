@@ -83,12 +83,13 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
         <span className={styles.title} title={title}>{title}</span>
         {moreActions}
         {!pinned && (
-          <Icon
-            className={styles.tabIcon}
-            small material="close"
-            tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
-            onClick={prevDefault(this.close)}
-          />
+          <div className={styles.close}>
+            <Icon
+              small material="close"
+              tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
+              onClick={prevDefault(this.close)}
+            />
+          </div>
         )}
       </div>
     );
