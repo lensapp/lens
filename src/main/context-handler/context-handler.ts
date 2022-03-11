@@ -14,6 +14,7 @@ import logger from "../logger";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import path from "path";
 import { readFile } from "fs/promises";
+import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -28,7 +29,7 @@ interface PrometheusServicePreferences {
 }
 
 interface Dependencies {
-  createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+  createKubeAuthProxy: CreateKubeAuthProxy;
   certPath: string;
 }
 
@@ -121,7 +122,11 @@ export class ContextHandler {
     await this.ensureServer();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `http://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix}${path}`;
+    return `https://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix}${path}`;
+  }
+
+  async resolveAuthProxyCa() {
+    return readFile(path.join(this.dependencies.certPath, "proxy.crt"));
   }
 
   async getApiTarget(isLongRunningRequest = false): Promise<httpProxy.ServerOptions> {
@@ -137,7 +142,9 @@ export class ContextHandler {
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     await this.ensureServer();
 
-    const ca = (await readFile(path.join(this.dependencies.certPath, "proxy.crt"))).toString();
+    const caFileContents = await this.resolveAuthProxyCa();
+    const clusterPath = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
+    const apiPrefix = `${this.kubeAuthProxy.apiPrefix}${clusterPath}`;
 
     return {
       //target: await this.resolveAuthProxyUrl(),
@@ -145,7 +152,8 @@ export class ContextHandler {
         protocol: "https:",
         host: "127.0.0.1",
         port: this.kubeAuthProxy.port,
-        ca,
+        path: apiPrefix,
+        ca: caFileContents.toString(),
       },
       changeOrigin: true,
       timeout,

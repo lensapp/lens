@@ -44,7 +44,7 @@ export class KubeAuthProxy {
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
-    const certPath = await this.dependencies.proxyCertPath;
+    const certPath = this.dependencies.proxyCertPath;
 
     this.proxyProcess = this.dependencies.spawn(proxyBin, [], {
       env: {

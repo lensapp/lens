@@ -39,7 +39,7 @@ import { WeblinkStore } from "../common/weblink-store";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { initMenu } from "./menu/menu";
-import { kubeApiRequest } from "./proxy-functions";
+import { kubeApiUpgradeRequest } from "./proxy-functions";
 import { initTray } from "./tray/tray";
 import { ShellSession } from "./shell-session/shell-session";
 import { getDi } from "./getDi";
@@ -231,7 +231,7 @@ app.on("ready", async () => {
 
   const lensProxy = LensProxy.createInstance(router, httpProxy.createProxy(), {
     getClusterForRequest: (req) => ClusterManager.getInstance().getClusterForRequest(req),
-    kubeApiRequest,
+    kubeApiUpgradeRequest,
     shellApiRequest,
   });
 
