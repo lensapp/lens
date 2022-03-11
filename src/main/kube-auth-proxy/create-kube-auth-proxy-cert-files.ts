@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { access, mkdir, writeFile } from "fs/promises";
+import type { writeFile } from "fs/promises";
+import type { ensureDir } from "fs-extra";
 import path from "path";
 import type * as selfsigned from "selfsigned";
 
@@ -11,8 +12,7 @@ type SelfSignedGenerate = typeof selfsigned.generate;
 
 interface CreateKubeAuthProxyCertificateFilesDependencies {
   generate: SelfSignedGenerate;
-  access: typeof access;
-  mkdir: typeof mkdir;
+  ensureDir: typeof ensureDir;
   writeFile: typeof writeFile;
 }
 
@@ -39,12 +39,7 @@ function getKubeAuthProxyCertificate(generate: SelfSignedGenerate): selfsigned.S
 export async function createKubeAuthProxyCertFiles(dir: string, dependencies: CreateKubeAuthProxyCertificateFilesDependencies): Promise<string> {
   const cert = getKubeAuthProxyCertificate(dependencies.generate);
 
-  try {
-    await dependencies.access(dir);
-  } catch {
-    await dependencies.mkdir(dir);
-  }
-
+  await dependencies.ensureDir(dir);
   await dependencies.writeFile(path.join(dir, "proxy.key"), cert.private);
   await dependencies.writeFile(path.join(dir, "proxy.crt"), cert.cert);
 

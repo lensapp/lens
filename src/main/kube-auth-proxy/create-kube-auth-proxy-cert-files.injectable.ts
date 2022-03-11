@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { access, mkdir, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
+import { ensureDir } from "fs-extra";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getKubeAuthProxyCertificatePath } from "./kube-auth-proxy-cert";
 import * as selfsigned from "selfsigned";
@@ -18,7 +19,8 @@ const createKubeAuthProxyCertFilesInjectable = getInjectable({
     
     return createKubeAuthProxyCertFiles(certPath, {
       generate: selfsigned.generate,
-      access, mkdir, writeFile,
+      ensureDir, 
+      writeFile,
     });
   },
 });
