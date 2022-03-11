@@ -8,12 +8,12 @@ import type http from "http";
 import type httpProxy from "http-proxy";
 import { toPairs } from "lodash/fp";
 import path from "path";
-import type { Cluster } from "../common/cluster/cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 import type { LensApiResultContentType } from "./router-content-types";
 import { contentTypes } from "./router-content-types";
 
 // TODO: Import causes side effect, sets value for __static
-import "../common/vars";
+import "../../common/vars";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;

@@ -3,15 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import routerInjectable, { routeInjectionToken } from "./router/router.injectable";
-import { getDiForUnitTesting } from "./getDiForUnitTesting";
+import routerInjectable, { routeInjectionToken } from "./router.injectable";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { Router, RouteHandler, Route } from "./router";
-import type { Cluster } from "../common/cluster/cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import parseRequestInjectable from "./router/parse-request.injectable";
+import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
 

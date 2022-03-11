@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { Route } from "../../../router";
+import type { Route } from "../../../router/router";
 import { helmService } from "../../../helm/helm-service";
 import { routeInjectionToken } from "../../../router/router.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { getBoolean } from "../../../utils/parse-query";
-import { contentTypes } from "../../../router-content-types";
+import { contentTypes } from "../../../router/router-content-types";
 
 const getReleaseRouteValuesInjectable = getInjectable({
   id: "get-release-values-route",

@@ -5,7 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { Route } from "../../router";
+import type { Route } from "../../router/router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node";

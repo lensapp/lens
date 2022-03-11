@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Route } from "../../router";
+import type { Route } from "../../router/router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import { getAppVersion } from "../../../common/utils";
 

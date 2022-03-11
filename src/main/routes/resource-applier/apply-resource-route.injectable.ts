@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeInjectionToken } from "../../router/router.injectable";
-import type { Route } from "../../router";
+import type { Route } from "../../router/router";
 import { apiPrefix } from "../../../common/vars";
 import { ResourceApplier } from "../../resource-applier";
 

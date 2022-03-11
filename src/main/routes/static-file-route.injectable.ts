@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensApiRequest, Route } from "../router";
-import { contentTypes, SupportedFileExtension } from "../router-content-types";
+import type { LensApiRequest, Route } from "../router/router";
+import { contentTypes, SupportedFileExtension } from "../router/router-content-types";
 import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
 import { appName, publicPath } from "../../common/vars";
