@@ -27,7 +27,7 @@ export class RoleDetails extends React.Component<RoleDetailsProps> {
     return (
       <div className="RoleDetails">
         <KubeObjectMeta object={role}/>
-        <DrawerTitle title="Rules"/>
+        <DrawerTitle>Rules</DrawerTitle>
         {rules.map(({ resourceNames, apiGroups, resources, verbs }, index) => {
           return (
             <div className="rule" key={index}>

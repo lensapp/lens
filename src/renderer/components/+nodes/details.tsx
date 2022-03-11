@@ -169,9 +169,9 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
           }
         </DrawerItem>
         }
-        <DrawerTitle title="Capacity"/>
+        <DrawerTitle>Capacity</DrawerTitle>
         <NodeDetailsResources node={node} type={"capacity"}/>
-        <DrawerTitle title="Allocatable"/>
+        <DrawerTitle>Allocatable</DrawerTitle>
         <NodeDetailsResources node={node} type={"allocatable"}/>
         <PodDetailsList
           pods={childPods}

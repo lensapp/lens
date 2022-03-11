@@ -80,7 +80,7 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
         )}
         {parameters && (
           <>
-            <DrawerTitle title="Parameters"/>
+            <DrawerTitle>Parameters</DrawerTitle>
             {
               Object.entries(parameters).map(([name, value]) => (
                 <DrawerItem key={name + value} name={startCase(name)}>

@@ -161,7 +161,7 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
 
         {allowedHostPaths && (
           <>
-            <DrawerTitle title="Allowed Host Paths"/>
+            <DrawerTitle>Allowed Host Paths</DrawerTitle>
             <Table>
               <TableHead>
                 <TableCell>Path Prefix</TableCell>
@@ -186,7 +186,7 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
 
         {runtimeClass && (
           <>
-            <DrawerTitle title="Runtime Class"/>
+            <DrawerTitle>Runtime Class</DrawerTitle>
             <DrawerItem name="Allowed Runtime Class Names">
               {runtimeClass.allowedRuntimeClassNames?.join(", ") || "-"}
             </DrawerItem>
@@ -198,7 +198,7 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
 
         {seLinux && (
           <>
-            <DrawerTitle title="Se Linux"/>
+            <DrawerTitle>Se Linux</DrawerTitle>
             <DrawerItem name="Rule">
               {seLinux.rule}
             </DrawerItem>

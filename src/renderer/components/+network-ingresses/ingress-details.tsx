@@ -160,10 +160,10 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
           {serviceName}:{servicePort}
         </DrawerItem>
         }
-        <DrawerTitle title="Rules"/>
+        <DrawerTitle>Rules</DrawerTitle>
         {this.renderPaths(ingress)}
 
-        <DrawerTitle title="Load-Balancer Ingress Points"/>
+        <DrawerTitle>Load-Balancer Ingress Points</DrawerTitle>
         {this.renderIngressPoints(ingressPoints)}
       </div>
     );

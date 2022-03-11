@@ -4,12 +4,14 @@
  */
 
 .DrawerTitle {
-  padding: $padding * 1.5 $padding * 3;
   margin: $margin * 3 (-$margin * 3);
   background: var(--drawerSubtitleBackground);
 }
 
-.DrawerSubTitle {
+.DrawerTitle.title {
+  padding: $padding * 1.5 $padding * 3;
+}
+
+.DrawerTitle.sub-title {
   padding: $padding $padding * 2;
-  background: var(--drawerSubtitleBackground);
 }

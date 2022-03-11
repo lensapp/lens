@@ -170,7 +170,7 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
 
         {ingress && (
           <>
-            <DrawerTitle title="Ingress"/>
+            <DrawerTitle>Ingress</DrawerTitle>
             {ingress.map((ingress, i) => (
               <div key={i} data-testid={`ingress-${i}`}>
                 {this.renderNetworkPolicyPorts(ingress.ports)}
@@ -182,7 +182,7 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
 
         {egress && (
           <>
-            <DrawerTitle title="Egress"/>
+            <DrawerTitle>Egress</DrawerTitle>
             {egress.map((egress, i) => (
               <div key={i} data-testid={`egress-${i}`}>
                 {this.renderNetworkPolicyPorts(egress.ports)}

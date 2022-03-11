@@ -68,7 +68,7 @@ export class ClusterRoleBindingDetails extends React.Component<ClusterRoleBindin
       <div className="ClusterRoleBindingDetails">
         <KubeObjectMeta object={clusterRoleBinding} />
 
-        <DrawerTitle title="Reference" />
+        <DrawerTitle>Reference</DrawerTitle>
         <Table>
           <TableHead>
             <TableCell>Kind</TableCell>
@@ -82,7 +82,7 @@ export class ClusterRoleBindingDetails extends React.Component<ClusterRoleBindin
           </TableRow>
         </Table>
 
-        <DrawerTitle title="Bindings" />
+        <DrawerTitle>Bindings</DrawerTitle>
         {subjects.length > 0 && (
           <Table selectable className="bindings box grow">
             <TableHead>

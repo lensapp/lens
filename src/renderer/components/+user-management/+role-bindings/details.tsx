@@ -64,7 +64,7 @@ export class RoleBindingDetails extends React.Component<RoleBindingDetailsProps>
       <div className="RoleBindingDetails">
         <KubeObjectMeta object={roleBinding} />
 
-        <DrawerTitle title="Reference" />
+        <DrawerTitle>Reference</DrawerTitle>
         <Table>
           <TableHead>
             <TableCell>Kind</TableCell>
@@ -78,7 +78,7 @@ export class RoleBindingDetails extends React.Component<RoleBindingDetailsProps>
           </TableRow>
         </Table>
 
-        <DrawerTitle title="Bindings" />
+        <DrawerTitle>Bindings</DrawerTitle>
         {subjects.length > 0 && (
           <Table selectable className="bindings box grow">
             <TableHead>

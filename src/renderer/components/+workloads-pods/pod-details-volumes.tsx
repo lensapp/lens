@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { configMapApi, Pod, PodVolume, PodVolumeKind, PodVolumeVariants, pvcApi, SecretReference, secretsApi } from "../../../common/k8s-api/endpoints";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import type { KubeObject, LocalObjectReference } from "../../../common/k8s-api/kube-object";
-import { DrawerItem, DrawerItemLabels, DrawerSection, DrawerSubSection } from "../drawer";
+import { DrawerItem, DrawerItemLabels, DrawerTitle } from "../drawer";
 import { Icon } from "../icon";
 import { getDetailsUrl } from "../kube-detail-params";
 
@@ -341,7 +341,8 @@ const volumeRenderers: PodVolumeVariantRenderers = {
           sources.map(({ secret, downwardAPI, configMap, serviceAccountToken }, index) => (
             <React.Fragment key={index}>
               {secret && (
-                <DrawerSubSection title="Secret">
+                <>
+                  <DrawerTitle size="sub-title">Secret</DrawerTitle>
                   <DrawerItem name="Name">
                     {secret.name}
                   </DrawerItem>
@@ -352,10 +353,11 @@ const volumeRenderers: PodVolumeVariantRenderers = {
                       </ul>
                     </DrawerItem>
                   )}
-                </DrawerSubSection>
+                </>
               )}
               {downwardAPI && (
-                <DrawerSubSection title="Downward API">
+                <>
+                  <DrawerTitle size="sub-title">Downward API</DrawerTitle>
                   {downwardAPI.items && (
                     <DrawerItem name="Items">
                       <ul>
@@ -363,10 +365,11 @@ const volumeRenderers: PodVolumeVariantRenderers = {
                       </ul>
                     </DrawerItem>
                   )}
-                </DrawerSubSection>
+                </>
               )}
               {configMap && (
-                <DrawerSubSection title="Config Map">
+                <>
+                  <DrawerTitle size="sub-title">Config Map</DrawerTitle>
                   <DrawerItem name="Name">
                     {configMap.name}
                   </DrawerItem>
@@ -377,10 +380,11 @@ const volumeRenderers: PodVolumeVariantRenderers = {
                       </ul>
                     </DrawerItem>
                   )}
-                </DrawerSubSection>
+                </>
               )}
               {serviceAccountToken && (
-                <DrawerSubSection title="Service Account Token">
+                <>
+                  <DrawerTitle size="sub-title">Service Account Token</DrawerTitle>
                   <DrawerItem name="Audience" hidden={!serviceAccountToken.audience}>
                     {serviceAccountToken.audience}
                   </DrawerItem>
@@ -390,7 +394,7 @@ const volumeRenderers: PodVolumeVariantRenderers = {
                   <DrawerItem name="Path">
                     {serviceAccountToken.path}
                   </DrawerItem>
-                </DrawerSubSection>
+                </>
               )}
             </React.Fragment>
           ))
@@ -639,9 +643,14 @@ export const PodVolumes = observer(({ pod }: PodVolumesProps) => {
 
   const volumes = pod.getVolumes();
 
+  if (volumes.length === 0) {
+    return null;
+  }
+
   return (
-    <DrawerSection title="Volumes" hidden={volumes.length === 0}>
+    <>
+      <DrawerTitle>Volumes</DrawerTitle>
       {volumes.map(renderVolume)}
-    </DrawerSection>
+    </>
   );
 });

@@ -85,7 +85,7 @@ export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
         {
           data.length > 0 && (
             <>
-              <DrawerTitle title="Data"/>
+              <DrawerTitle>Data</DrawerTitle>
               {
                 data.map(([name, value]) => (
                   <div key={name} className="data">

@@ -82,7 +82,7 @@ export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsPr
 
         {quota.getScopeSelector().length > 0 && (
           <>
-            <DrawerTitle title="Scope Selector"/>
+            <DrawerTitle>Scope Selector</DrawerTitle>
             <Table className="paths">
               <TableHead>
                 <TableCell>Operator</TableCell>
