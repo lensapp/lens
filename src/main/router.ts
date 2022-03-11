@@ -11,10 +11,13 @@ import path from "path";
 import type { Cluster } from "../common/cluster/cluster";
 import type { LensApiResultContentType } from "./router-content-types";
 import { contentTypes } from "./router-content-types";
+
+// TODO: Import causes side effect, sets value for __static
 import "../common/vars";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
+  res: http.ServerResponse;
   cluster: Cluster;
   params: RouteParams;
   url: URL;
@@ -64,7 +67,7 @@ export class Router {
     const routeFound = !matchingRoute.isBoom;
 
     if (routeFound) {
-      const request = await this.getRequest({ req, cluster, url, params: matchingRoute.params });
+      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
 
       await matchingRoute.route(request, res);
 
@@ -75,7 +78,7 @@ export class Router {
   }
 
   protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest> {
-    const { req, url, cluster, params } = opts;
+    const { req, res, url, cluster, params } = opts;
 
     const { payload } = await this.dependencies.parseRequest(req, null, {
       parse: true,
@@ -127,7 +130,7 @@ const handleRoute = (route: Route<unknown>) => async (request: LensApiRequest, r
     result = await route.handler(request);
   } catch(error) {
     const mappedResult = contentTypes.txt.resultMapper({
-      statusCode: 422,
+      statusCode: 500,
       error: error.toString(),
     });
 

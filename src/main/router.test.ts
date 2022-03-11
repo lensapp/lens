@@ -80,7 +80,7 @@ describe("router", () => {
         path: "/some-path",
         payload: "some-payload",
         query: expect.any(URLSearchParams),
-        raw: { req: requestStub },
+        raw: { req: requestStub, res: responseStub },
       });
     });
 
@@ -133,8 +133,8 @@ describe("router", () => {
         expect(responseStub.setHeader.mock.calls).toEqual([["Content-Type", "text/plain"]]);
       });
 
-      it('resolves with "422" status code', () => {
-        expect(responseStub.statusCode).toBe(422);
+      it('resolves with "500" status code', () => {
+        expect(responseStub.statusCode).toBe(500);
       });
 
       it("resolves with error", () => {
