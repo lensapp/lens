@@ -11,7 +11,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
 import { type IPodMetrics, nodesApi, Pod, getMetricsForPods } from "../../../common/k8s-api/endpoints";
-import { DrawerItem, DrawerSection } from "../drawer";
+import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { boundMethod, cssNames, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
@@ -79,6 +79,7 @@ export class PodDetails extends React.Component<PodDetailsProps> {
     const nodeSelector = pod.getNodeSelectors();
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Pod);
     const initContainers = pod.getInitContainers();
+    const containers = pod.getContainers();
 
     return (
       <div className="PodDetails">
@@ -138,22 +139,28 @@ export class PodDetails extends React.Component<PodDetailsProps> {
           <PodDetailsSecrets pod={pod}/>
         </DrawerItem>
 
-        <DrawerSection title="Init Containers" hidden={initContainers.length === 0}>
-          {initContainers.map(c => <PodDetailsContainer key={c.name} pod={pod} container={c} />)}
-        </DrawerSection>
-
-        <DrawerSection title="Containers">
-          {
-            pod.getContainers().map(container => (
+        {initContainers.length > 0 && (
+          <>
+            <DrawerTitle>Init Containers</DrawerTitle>
+            {initContainers.map(container => (
               <PodDetailsContainer
                 key={container.name}
                 pod={pod}
                 container={container}
-                metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
               />
-            ))
-          }
-        </DrawerSection>
+            ))}
+          </>
+        )}
+
+        <DrawerTitle>Containers</DrawerTitle>
+        {containers.map(container => (
+          <PodDetailsContainer
+            key={container.name}
+            pod={pod}
+            container={container}
+            metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
+          />
+        ))}
 
         <PodVolumes pod={pod} />
       </div>

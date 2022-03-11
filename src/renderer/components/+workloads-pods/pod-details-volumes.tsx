@@ -7,9 +7,11 @@ import jsyaml from "js-yaml";
 import { observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import type { RequireAllOrNone } from "type-fest";
 import { configMapApi, Pod, PodVolume, PodVolumeKind, PodVolumeVariants, pvcApi, SecretReference, secretsApi } from "../../../common/k8s-api/endpoints";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import type { KubeObject, LocalObjectReference } from "../../../common/k8s-api/kube-object";
+import { entries } from "../../utils";
 import { DrawerItem, DrawerItemLabels, DrawerTitle } from "../drawer";
 import { Icon } from "../icon";
 import { getDetailsUrl } from "../kube-detail-params";
@@ -36,7 +38,7 @@ function renderLocalRef(pod: Pod, title: string, ref: LocalObjectReference | Sec
  *
  */
 type PodVolumeVariantRenderers = {
-  [Key in keyof PodVolumeVariants]: (variant: PodVolumeVariants[Key], opts: VariantOptions) => React.ReactNode;
+  [Key in keyof PodVolumeVariants]: (variant: PodVolumeVariants[Key], opts: VariantOptions) => React.ReactChild;
 };
 
 const volumeRenderers: PodVolumeVariantRenderers = {
@@ -583,23 +585,28 @@ const deprecatedVolumeTypes = new Set<PodVolumeKind>([
   "storageos",
 ]);
 
-function getVolumeType(volume: PodVolume): PodVolumeKind | undefined {
-  const keys = new Set(Object.keys(volume));
+interface VolumeRendererPair {
+  kind: PodVolumeKind;
+  render: () => React.ReactChild;
+}
 
-  keys.delete("name"); // This key is not a kind field
-
-  for (const key of keys) {
-    // skip other random keys
-    if (key in volumeRenderers) {
-      const kind = key as PodVolumeKind;
-
-      if (volume[kind] && typeof volume[kind] === "object") {
-        return kind;
-      }
+function getVolumeType(pod: Pod, volume: PodVolume): RequireAllOrNone<VolumeRendererPair, keyof VolumeRendererPair> {
+  for (const [kind, varient] of entries(volume)) {
+    if (kind === "name") {
+      continue; // This key is not a kind field
     }
+
+    if (!varient || typeof varient !== "object") {
+      continue;
+    }
+
+    return {
+      kind,
+      render: () =>  volumeRenderers[kind](varient as never, { pod, volumeName: volume.name }),
+    };
   }
 
-  return undefined;
+  return {};
 }
 
 export const PodVolumes = observer(({ pod }: PodVolumesProps) => {
@@ -608,9 +615,10 @@ export const PodVolumes = observer(({ pod }: PodVolumesProps) => {
   }
 
   const renderVolume = (volume: PodVolume) => {
-    const type = getVolumeType(volume);
-    const isDeprecated = deprecatedVolumeTypes.has(type);
-    const renderVolume = volumeRenderers[type];
+    const { kind, render } = getVolumeType(pod, volume);
+    const isDeprecated = deprecatedVolumeTypes.has(kind);
+
+    console.log(volume, render);
 
     return (
       <div key={volume.name} className="volume">
@@ -619,23 +627,17 @@ export const PodVolumes = observer(({ pod }: PodVolumesProps) => {
           <span>{volume.name}</span>
         </div>
         {
-          renderVolume
+          kind
             ? (
               <>
-                <DrawerItem name="Type">
-                  {type}
+                <DrawerItem name="Kind">
+                  {kind}
                   {isDeprecated && <Icon title="Deprecated" material="warning_amber" />}
                 </DrawerItem>
-                {renderVolume(volume[type] as any, { pod, volumeName: volume.name })}
+                {render?.()}
               </>
             )
-            : type
-              ? (
-                <DrawerItem name="Type">
-                  {type}
-                </DrawerItem>
-              )
-              : <p>Error! Unknown pod volume kind</p>
+            : <p>Error! Unknown pod volume kind</p>
         }
       </div>
     );
