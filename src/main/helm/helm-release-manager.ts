@@ -90,9 +90,11 @@ export async function upgradeRelease(name: string, chart: string, values: any, n
   ];
 
   try {
+    const output = await execHelm(args);
+
     return {
-      log: await execHelm(args),
-      release: getRelease(name, namespace, kubeconfigPath, kubectlPath),
+      log: output,
+      release: await getRelease(name, namespace, kubeconfigPath, kubectlPath),
     };
   } finally {
     await fse.unlink(valuesFilePath);
