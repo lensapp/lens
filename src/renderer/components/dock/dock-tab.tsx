@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./dock-tab.scss";
+import styles from "./dock-tab.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -76,14 +76,15 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
   }
 
   render() {
-    const { className, moreActions, dockStore, ...tabProps } = this.props;
+    const { className, moreActions, dockStore, active, ...tabProps } = this.props;
     const { title, pinned } = tabProps.value;
     const label = (
       <div className="flex gaps align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
-        <span className="title" title={title}>{title}</span>
+        <span className={styles.title} title={title}>{title}</span>
         {moreActions}
         {!pinned && (
           <Icon
+            className={styles.tabIcon}
             small material="close"
             tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
             onClick={prevDefault(this.close)}
@@ -97,7 +98,9 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
         <Tab
           {...tabProps}
           id={`tab-${this.tabId}`}
-          className={cssNames("DockTab", className, { pinned })}
+          className={cssNames(styles.DockTab, className, {
+            [styles.pinned]: pinned,
+          })}
           onContextMenu={() => this.menuVisible = true}
           label={label}
         />
