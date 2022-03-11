@@ -344,7 +344,7 @@
     "deepdash": "^5.3.9",
     "dompurify": "^2.3.4",
     "electron": "^14.2.4",
-    "electron-builder": "^22.14.5",
+    "electron-builder": "^22.14.13",
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.13.15",
     "esbuild-loader": "^2.18.0",
