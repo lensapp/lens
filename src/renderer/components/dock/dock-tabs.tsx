@@ -59,6 +59,10 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     minTabSize.current = cssVars.get("--min-tab-width").valueOf();
   });
 
+  useEffect(() => {
+    updateScrollbarVisibility();
+  }, [tabs]);
+
   useResizeObserver(elem.current, updateScrollbarVisibility);
 
   return (
