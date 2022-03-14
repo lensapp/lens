@@ -58,14 +58,6 @@
     }
   }
 
-  .tabs-wrapper {
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    padding: 0 $padding*2.5;
-  }
-
   .tab-content {
     position: relative;
     flex: 1;
@@ -84,47 +76,4 @@
       bottom: 0;
     }
   }
-
-  .tabs-control {
-    overflow: auto;
-    width: 100%;
-
-    &::-webkit-scrollbar {
-      visibility: hidden;
-      height: 4px;
-      background:transparent;
-      position: absolute;
-      bottom: 0;
-    }
-
-    &:hover::-webkit-scrollbar {
-      visibility: visible;
-    }
-
-    &:hover::-webkit-scrollbar-thumb {
-      background: var(--scrollBarColor);
-    }
-  }
-
-  .DockTab.active {
-    background-color: var(--menuActiveBackground);
-
-    &::after {
-      color: var(--terminalWhite);
-    }
-  }
-
-  .tab-control {
-    position: absolute;
-    z-index: 9999;
-  }
-
-  .scroll-left {
-    left: 0;
-  }
-
-  .scroll-right {
-    right: 0;
-  }
-
 }
