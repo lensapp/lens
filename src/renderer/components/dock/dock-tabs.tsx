@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { Fragment, useRef, useEffect, useState, UIEvent } from "react";
+import React, { Fragment } from "react";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
@@ -19,65 +19,6 @@ export interface DockTabsProps {
 }
 
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabsProps) => {
-  const elem = useRef(null);
-  const contentElem = useRef(null);
-  const [contentWidth, setContentWidth] = useState(0);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const scrollStep = 200;
-
-  const scrollToRight = (): void => {
-    if(!elem || scrollPosition === contentWidth) return;
-    const scroll = scrollPosition + scrollStep;
-
-    setScrollPosition(scroll);
-
-    elem.current.scrollLeft = scroll;
-  };
-
-  const updateStateValues = () => {
-    if(!elem || !contentElem) return;
-
-    setContentWidth(contentElem.current.clientWidth);
-    setContainerWidth(elem.current.clientWidth);
-    setScrollPosition(elem.current.scrollLeft);
-  };
-
-  const scrollToLeft = (): void => {
-    if(!elem) return;
-    const scroll = scrollPosition - scrollStep;
-
-    setScrollPosition(scroll);
-
-    elem.current.scrollLeft = scroll;
-  };
-
-  const  isScrollableRight = (): boolean => {
-    if(!elem || !contentElem) return false;
-
-    // check if element with tabs is wider than the parent element
-    // check if scroll at the end of scrollable area.
-    return contentElem.current?.clientWidth  > containerWidth && scrollPosition  < contentElem.current?.clientWidth - elem.current?.clientWidth;
-  };
-
-  const  isScrollableLeft = (): boolean => {
-    if(!elem || !contentElem) return false;
-
-    return scrollPosition > 0;
-  };
-
-  const updateScrollPosition = ( evt: UIEvent<HTMLDivElement>): void => {
-    const position = evt.currentTarget.scrollLeft;
-
-    if (position!== undefined) {
-      setScrollPosition(position);
-    }
-  };
-
-  const onWindowResize = (): void => {
-    updateStateValues();
-  };
-
   const renderTab = (tab?: DockTabModel) => {
     if (!tab) {
       return null;
@@ -97,55 +38,18 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     }
   };
 
-
-  useEffect(() => {
-    // update values in store on scroll
-    elem?.current.addEventListener("scroll", updateScrollPosition);
-
-    // update current values on resize to show/hide scroll
-    window.addEventListener("resize", onWindowResize);
-
-    return () => {
-      window.removeEventListener("resize", onWindowResize);
-      elem?.current.removeEventListener("scroll", updateScrollPosition);
-    };
-  }, []);
-
-  useEffect(() => {
-    // update scroll state if tabs numbers has changed
-    updateStateValues();
-  }, [tabs]);
-
   return (
     <div className={"tabs-wrapper flex gaps align-center"}>
-      {isScrollableLeft() && (
-        <Icon
-          material="keyboard_arrow_left"
-          tooltip="Show tabs to the left"
-          onClick={scrollToLeft}
-          className={"tab-control scroll-left"}
-        />
-      )}
-      <div ref={elem} className={"tabs-control flex gaps align-center"}>
-        <div ref={contentElem} className={"scrollable"}>
-          <Tabs
-            className="DockTabs"
-            autoFocus={autoFocus}
-            value={selectedTab}
-            onChange={onChangeTab}
-          >
-            {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
-          </Tabs>
-        </div>
+      <div>
+        <Tabs
+          className="DockTabs"
+          autoFocus={autoFocus}
+          value={selectedTab}
+          onChange={onChangeTab}
+        >
+          {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
+        </Tabs>
       </div>
-      {isScrollableRight() && (
-        <Icon
-          material="keyboard_arrow_right"
-          tooltip="Show tabs to the right"
-          onClick={scrollToRight}
-          className={"tab-control scroll-right"}
-        />
-      )}
     </div>
   );
 };
