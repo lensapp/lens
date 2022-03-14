@@ -5,13 +5,15 @@
 
 import styles from "./dock-tabs.module.scss";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
 import type { DockTab as DockTabModel } from "./dock/store";
 import { TabKind } from "./dock/store";
 import { TerminalTab } from "./terminal/dock-tab";
+import { useResizeObserver } from "../../hooks";
+import { cssVar } from "../../utils";
 
 export interface DockTabsProps {
   tabs: DockTabModel[];
@@ -21,6 +23,10 @@ export interface DockTabsProps {
 }
 
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabsProps) => {
+  const elem = useRef<HTMLDivElement>();
+  const minTabSize = useRef<number>(0);
+  const [showScrollbar, setShowScrollbar] = useState<boolean>(false);
+
   const renderTab = (tab?: DockTabModel) => {
     if (!tab) {
       return null;
@@ -40,18 +46,31 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     }
   };
 
+  const updateScrollbarVisibility = () => {
+    const allTabs = Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
+    const allTabsShrinked = allTabs.every(tab => tab.clientWidth == minTabSize.current);
+
+    setShowScrollbar(allTabsShrinked);
+  };
+
+  useEffect(() => {
+    const cssVars = cssVar(elem.current);
+
+    minTabSize.current = cssVars.get("--min-tab-width").valueOf();
+  });
+
+  useResizeObserver(elem.current, updateScrollbarVisibility);
+
   return (
-    <div className={styles.dockTabs}>
-      <div>
-        <Tabs
-          className="DockTabs"
-          autoFocus={autoFocus}
-          value={selectedTab}
-          onChange={onChangeTab}
-        >
-          {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
-        </Tabs>
-      </div>
+    <div className={styles.dockTabs} ref={elem}>
+      <Tabs
+        autoFocus={autoFocus}
+        value={selectedTab}
+        onChange={onChangeTab}
+        scrollable={showScrollbar}
+      >
+        {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
+      </Tabs>
     </div>
   );
 };

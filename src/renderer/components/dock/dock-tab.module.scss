@@ -6,10 +6,16 @@
 .DockTab {
   padding: var(--padding);
   height: 32px;
-  margin-right: 4px;
   position: relative;
   background: no-repeat left 50% linear-gradient(0deg, #43424d, #43424d);
   background-size: 1px 3ch;
+  overflow: hidden;
+
+  /* Allow tabs to shrink and take all parent space */
+  min-width: var(--min-tab-width);
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: fit-content;
 
   &.pinned {
     padding-right: var(--padding);

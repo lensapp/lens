@@ -4,5 +4,12 @@
  */
 
 .dockTabs {
+  --min-tab-width: 120px;
+
   display: flex;
+  overflow: hidden;
+
+  > div {
+    width: 100%;
+  }
 }
