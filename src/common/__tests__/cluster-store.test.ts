@@ -89,8 +89,8 @@ describe("cluster-store", () => {
     mainDi = dis.mainDi;
 
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    mainDi.override(createKubeAuthProxyCertFilesInjectable, () => ({}));
-    mainDi.override(kubeAuthProxyCaInjectable, () => ({}));
+    mainDi.override(createKubeAuthProxyCertFilesInjectable, () => ({} as any));
+    mainDi.override(kubeAuthProxyCaInjectable, () => ({} as any));
 
     await dis.runSetups();
 

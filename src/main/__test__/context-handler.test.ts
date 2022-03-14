@@ -82,8 +82,8 @@ describe("ContextHandler", () => {
       "tmp": {},
     });
 
-    di.override(createKubeAuthProxyInjectable, () => ({}));
-    di.override(kubeAuthProxyCaInjectable, () => ({}));
+    di.override(createKubeAuthProxyInjectable, () => ({} as any));
+    di.override(kubeAuthProxyCaInjectable, () => ({} as any));
 
     await di.runSetups();
 

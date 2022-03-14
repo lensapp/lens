@@ -96,8 +96,8 @@ describe("kube auth proxy tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(spawnInjectable, () => mockSpawn);
-    di.override(createKubeAuthProxyCertFilesInjectable, () => ({}));
-    di.override(kubeAuthProxyCaInjectable, () => ({}));
+    di.override(createKubeAuthProxyCertFilesInjectable, () => ({} as any));
+    di.override(kubeAuthProxyCaInjectable, () => ({} as any));
 
     mockFs(mockMinikubeConfig);
 

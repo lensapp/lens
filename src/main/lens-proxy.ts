@@ -8,7 +8,7 @@ import type http from "http";
 import spdy from "spdy";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../common/vars";
-import type { Router } from "./router";
+import type { Router } from "./router/router";
 import type { ContextHandler } from "./context-handler/context-handler";
 import logger from "./logger";
 import { Singleton } from "../common/utils";
@@ -84,7 +84,7 @@ export class LensProxy extends Singleton {
 
         if (!cluster) {
           logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
-          
+
           return socket.destroy();
         }
 

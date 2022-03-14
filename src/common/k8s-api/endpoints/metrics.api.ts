@@ -7,7 +7,7 @@
 
 import moment from "moment";
 import { apiBase } from "../index";
-import type { IMetricsQuery } from "../../../main/routes/metrics-route";
+import type { IMetricsQuery } from "../../../main/routes/metrics/metrics-query";
 
 export interface IMetrics {
   status: string;
