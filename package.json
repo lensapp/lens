@@ -383,7 +383,7 @@
     "react-table": "^7.7.0",
     "react-window": "^1.8.6",
     "sass": "^1.45.1",
-    "sass-loader": "^12.4.0",
+    "sass-loader": "^12.6.0",
     "sharp": "^0.29.3",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.7",
