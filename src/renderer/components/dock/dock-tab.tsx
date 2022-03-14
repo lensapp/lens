@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import styles from "./dock-tab.module.css";
+import styles from "./dock-tab.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";

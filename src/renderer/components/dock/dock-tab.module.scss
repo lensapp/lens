@@ -6,10 +6,7 @@
 .DockTab {
   padding: var(--padding);
   height: 32px;
-  margin-top: 3px;
-  margin-bottom: 3px;
   margin-right: 4px;
-  border-radius: 3px;
   position: relative;
   background: no-repeat left 50% linear-gradient(0deg, #43424d, #43424d);
   background-size: 1px 3ch;
@@ -25,6 +22,7 @@
   &:global(.active) {
     background-color: hsl(245deg 8% 28%);
     background-image: none;
+    border-bottom: 2px solid var(--primary);
 
     .close {
       opacity: 1;

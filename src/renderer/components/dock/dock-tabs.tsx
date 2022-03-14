@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import styles from "./dock-tabs.module.scss";
+
 import React, { Fragment } from "react";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
@@ -39,7 +41,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   };
 
   return (
-    <div className={"tabs-wrapper flex gaps align-center"}>
+    <div className={styles.dockTabs}>
       <div>
         <Tabs
           className="DockTabs"
