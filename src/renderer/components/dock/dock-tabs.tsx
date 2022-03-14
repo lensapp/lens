@@ -13,7 +13,7 @@ import type { DockTab as DockTabModel } from "./dock/store";
 import { TabKind } from "./dock/store";
 import { TerminalTab } from "./terminal/dock-tab";
 import { useResizeObserver } from "../../hooks";
-import { cssVar } from "../../utils";
+import { cssNames, cssVar } from "../../utils";
 
 export interface DockTabsProps {
   tabs: DockTabModel[];
@@ -62,12 +62,12 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   useResizeObserver(elem.current, updateScrollbarVisibility);
 
   return (
-    <div className={styles.dockTabs} ref={elem}>
+    <div className={cssNames(styles.dockTabs, { [styles.scrollable]: showScrollbar })} ref={elem}>
       <Tabs
         autoFocus={autoFocus}
         value={selectedTab}
         onChange={onChangeTab}
-        scrollable={showScrollbar}
+        scrollable={false}
       >
         {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
       </Tabs>

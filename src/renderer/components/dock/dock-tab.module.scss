@@ -7,7 +7,7 @@
   padding: var(--padding);
   height: 32px;
   position: relative;
-  background: no-repeat left 50% linear-gradient(0deg, #43424d, #43424d);
+  border-right: 1px solid #43424d;
   background-size: 1px 3ch;
   overflow: hidden;
 
@@ -16,6 +16,10 @@
   flex-grow: 1;
   flex-basis: 0;
   max-width: fit-content;
+
+  &:last-child {
+    border-right: none;
+  }
 
   &.pinned {
     padding-right: var(--padding);
@@ -28,7 +32,7 @@
   &:global(.active) {
     background-color: hsl(245deg 8% 28%);
     background-image: none;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 1px solid var(--primary);
 
     .close {
       opacity: 1;
