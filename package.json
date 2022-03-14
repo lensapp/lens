@@ -282,7 +282,7 @@
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.34",
     "@types/cli-progress": "^3.9.2",
-    "@types/color": "^3.0.2",
+    "@types/color": "^3.0.3",
     "@types/crypto-js": "^3.1.47",
     "@types/dompurify": "^2.3.1",
     "@types/electron-devtools-installer": "^2.2.0",
