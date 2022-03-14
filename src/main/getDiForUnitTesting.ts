@@ -15,8 +15,8 @@ import registerChannelInjectable from "./app-paths/register-channel/register-cha
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
-import getKubeAuthProxyCertDirInjectable from "./kube-auth-proxy/kube-auth-proxy-cert.injectable";
-import createKubeAuthProxyCertFilesInjectable from "./kube-auth-proxy/create-kube-auth-proxy-cert-files.injectable";
+import spawnInjectable from "./child-process/spawn.injectable";
+import readFileInjectable from "../common/fs/read-file.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -47,8 +47,13 @@ export const getDiForUnitTesting = (
     di.override(appNameInjectable, () => "some-electron-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
-    di.override(getKubeAuthProxyCertDirInjectable, () => "some-kube-auth-proxy-cert-directory");
-    di.override(createKubeAuthProxyCertFilesInjectable, async () => "does-not-matter");
+    di.override(spawnInjectable, () => () => { 
+      return { 
+        stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
+        stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
+        on: jest.fn(),
+      } as any;
+    });
 
     di.override(writeJsonFileInjectable, () => () => {
       throw new Error("Tried to write JSON file to file system without specifying explicit override.");
@@ -56,6 +61,10 @@ export const getDiForUnitTesting = (
 
     di.override(readJsonFileInjectable, () => () => {
       throw new Error("Tried to read JSON file from file system without specifying explicit override.");
+    });
+
+    di.override(readFileInjectable, () => () => {
+      throw new Error("Tried to read a file from file system without specifying explicit override.");
     });
   }
 

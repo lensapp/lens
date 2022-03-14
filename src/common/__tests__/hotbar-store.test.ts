@@ -10,6 +10,7 @@ import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "..
 import { HotbarStore } from "../hotbar-store";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import writeFileInjectable from "../fs/write-file.injectable";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
@@ -115,6 +116,7 @@ describe("HotbarStore", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    di.override(writeFileInjectable, () => () => undefined);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     await di.runSetups();

@@ -40,15 +40,18 @@ import * as path from "path";
 import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
-  let cluster: Cluster;
+  let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
+  let di: DiContainer; 
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
@@ -78,17 +81,21 @@ describe("kubeconfig manager tests", () => {
 
     await di.runSetups();
 
+    di.override(createContextHandlerInjectable, () => () => {
+      throw new Error("you should never come here");
+    });
+
     const createCluster = di.inject(createClusterInjectionToken);
 
     createKubeconfigManager = di.inject(createKubeconfigManagerInjectable);
 
-    cluster = createCluster({
+    clusterFake = createCluster({
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
 
-    cluster.contextHandler = {
+    clusterFake.contextHandler = {
       ensureServer: () => Promise.resolve(),
     } as any;
 
@@ -100,7 +107,7 @@ describe("kubeconfig manager tests", () => {
   });
 
   it("should create 'temp' kube config with proxy", async () => {
-    const kubeConfManager = createKubeconfigManager(cluster);
+    const kubeConfManager = createKubeconfigManager(clusterFake);
 
     expect(logger.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`some-directory-for-temp${path.sep}kubeconfig-foo`);
@@ -115,7 +122,7 @@ describe("kubeconfig manager tests", () => {
   });
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
-    const kubeConfManager = createKubeconfigManager(cluster);
+    const kubeConfManager = createKubeconfigManager(clusterFake);
 
     const configPath = await kubeConfManager.getPath();
 

@@ -12,8 +12,6 @@ import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
-import path from "path";
-import { readFile } from "fs/promises";
 import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 
 export interface PrometheusDetails {
@@ -30,7 +28,7 @@ interface PrometheusServicePreferences {
 
 interface Dependencies {
   createKubeAuthProxy: CreateKubeAuthProxy;
-  certPath: string;
+  authProxyCa: Promise<Buffer>;
 }
 
 export class ContextHandler {
@@ -126,7 +124,7 @@ export class ContextHandler {
   }
 
   async resolveAuthProxyCa() {
-    return readFile(path.join(this.dependencies.certPath, "proxy.crt"));
+    return this.dependencies.authProxyCa;
   }
 
   async getApiTarget(isLongRunningRequest = false): Promise<httpProxy.ServerOptions> {

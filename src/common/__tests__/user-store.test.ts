@@ -32,6 +32,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultTheme } from "../vars";
+import writeFileInjectable from "../fs/write-file.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -46,6 +47,7 @@ describe("user store tests", () => {
 
     mainDi = dis.mainDi;
 
+    mainDi.override(writeFileInjectable, () => () => undefined);
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     await dis.runSetups();
