@@ -29,6 +29,25 @@
         background-color: rgba(106, 115, 125, 0.2);
       }
     }
+
+    > div {
+      &::before, &::after {
+        content: "\00A0";
+        position: sticky;
+        min-width: 8px;
+        z-index: 1;
+      }
+
+      &::before {
+        left: 0;
+        background: linear-gradient(270deg, transparent 0%, var(--dockHeadBackground) 65%);
+      }
+
+      &::after {
+        right: 0;
+        background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 65%);
+      }
+    }
   }
 
   > div {

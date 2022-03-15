@@ -47,8 +47,8 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   };
 
   const updateScrollbarVisibility = () => {
-    const allTabs = Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
-    const allTabsShrinked = allTabs.every(tab => tab.clientWidth == minTabSize.current);
+    const allTabs: HTMLElement[] = Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
+    const allTabsShrinked = allTabs.every(tab => tab.offsetWidth == minTabSize.current);
 
     setShowScrollbar(allTabsShrinked);
   };
