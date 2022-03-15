@@ -46,7 +46,7 @@ class NonInjectedTerminalTab extends React.Component<TerminalTabProps & Dependen
   }
 
   render() {
-    const tabIcon = <Icon svg="terminal"/>;
+    const tabIcon = <Icon material="terminal"/>;
     const className = cssNames("TerminalTab", this.props.className, {
       disconnected: this.isDisconnected,
     });

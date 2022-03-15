@@ -6,7 +6,6 @@
 import styles from "./dock-tabs.module.scss";
 
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
 import type { DockTab as DockTabModel } from "./dock/store";
@@ -38,7 +37,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
         return <DockTab value={tab} icon="edit" />;
       case TabKind.INSTALL_CHART:
       case TabKind.UPGRADE_CHART:
-        return <DockTab value={tab} icon={<Icon svg="install" />} />;
+        return <DockTab value={tab} icon="install_desktop" />;
       case TabKind.POD_LOGS:
         return <DockTab value={tab} icon="subject" />;
       case TabKind.TERMINAL:
