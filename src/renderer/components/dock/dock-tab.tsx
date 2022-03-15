@@ -94,7 +94,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
         )}
         <Tooltip
           targetId={`tab-${this.tabId}`}
-          preferredPositions={[TooltipPosition.BOTTOM, TooltipPosition.BOTTOM_LEFT]}
+          preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
           style={{ transitionDelay: "500ms" }}
         >{title}</Tooltip>
       </div>
