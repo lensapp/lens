@@ -70,11 +70,15 @@ export class KubeAuthProxy {
       this.exit();
     });
 
-    this.proxyProcess.stderr.on("data", (data) => {
+    this.proxyProcess.stderr.on("data", (data: Buffer) => {
+      if (data.includes("http: TLS handshake error")) {
+        return;
+      }
+
       this.cluster.broadcastConnectUpdate(data.toString(), true);
     });
 
-    this.proxyProcess.stdout.on("data", (data: any) => {
+    this.proxyProcess.stdout.on("data", (data: Buffer) => {
       if (typeof this._port === "number") {
         this.cluster.broadcastConnectUpdate(data.toString());
       }
