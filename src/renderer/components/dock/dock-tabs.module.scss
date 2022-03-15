@@ -6,12 +6,18 @@
 .dockTabs {
   --min-tab-width: 120px;
 
+  overflow: hidden;
+}
+
+.tabs {
+  width: 100%;
+
   display: flex;
   overflow: hidden;
 
-  &.scrollable {
+  &:global(.scrollable) {
     overflow: auto;
-    overflow-x: overlay;
+    overflow-x: overlay;  /* Set scrollbar inside content area */
 
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
@@ -30,27 +36,21 @@
       }
     }
 
-    > div {
-      &::before, &::after {
-        content: "\00A0";
-        position: sticky;
-        min-width: 8px;
-        z-index: 1;
-      }
-
-      &::before {
-        left: 0;
-        background: linear-gradient(270deg, transparent 0%, var(--dockHeadBackground) 65%);
-      }
-
-      &::after {
-        right: 0;
-        background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 65%);
-      }
+    &::before, &::after {
+      content: "\00A0";
+      position: sticky;
+      min-width: 8px;
+      z-index: 1;
     }
-  }
 
-  > div {
-    width: 100%;
+    &::before {
+      left: 0;
+      background: linear-gradient(270deg, transparent 0%, var(--dockHeadBackground) 65%);
+    }
+
+    &::after {
+      right: 0;
+      background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 65%);
+    }
   }
 }
