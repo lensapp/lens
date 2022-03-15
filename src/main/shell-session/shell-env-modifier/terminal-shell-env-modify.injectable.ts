@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { terminalShellEnvModify } from "./terminal-shell-env-modifiers";
 
@@ -14,8 +14,6 @@ const terminalShellEnvModifyInjectable = getInjectable({
     terminalShellEnvModify({
       extensions: di.inject(mainExtensionsInjectable),
     }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default terminalShellEnvModifyInjectable;
