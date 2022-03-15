@@ -16,6 +16,7 @@ import { observable, makeObservable } from "mobx";
 import { isMac } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
+import { Tooltip, TooltipPosition } from "../tooltip";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
@@ -80,7 +81,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
     const { title, pinned } = tabProps.value;
     const label = (
       <div className="flex gaps align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
-        <span className={styles.title} title={title}>{title}</span>
+        <span className={styles.title}>{title}</span>
         {moreActions}
         {!pinned && (
           <div className={styles.close}>
@@ -91,6 +92,11 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
             />
           </div>
         )}
+        <Tooltip
+          targetId={`tab-${this.tabId}`}
+          preferredPositions={[TooltipPosition.BOTTOM, TooltipPosition.BOTTOM_LEFT]}
+          style={{ transitionDelay: "500ms" }}
+        >{title}</Tooltip>
       </div>
     );
 
