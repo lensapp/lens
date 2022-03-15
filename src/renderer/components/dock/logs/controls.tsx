@@ -58,7 +58,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependen
         {since && (
           <span>
             Logs from{" "}
-            <b>{new Date(since[0]).toLocaleString()}</b>
+            <b>{new Date(since).toLocaleString()}</b>
           </span>
         )}
       </div>

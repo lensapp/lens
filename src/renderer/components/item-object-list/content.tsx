@@ -69,66 +69,75 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   }
 
   @boundMethod
+  renderRow(item: I) {
+    return this.getTableRow(item);
+  }
+
+  getTableRow(item: I) {
+    const {
+      isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
+      store, hasDetailsView, onDetails,
+      copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
+    } = this.props;
+    const { isSelected } = store;
+
+    return (
+      <TableRow
+        nowrap
+        searchItem={item}
+        sortItem={item}
+        selected={detailsItem && detailsItem.getId() === item.getId()}
+        onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
+        {...customizeTableRowProps(item)}
+      >
+        {isSelectable && (
+          <TableCell
+            checkbox
+            isChecked={isSelected(item)}
+            onClick={prevDefault(() => store.toggleSelection(item))}
+          />
+        )}
+        {renderTableContents(item).map((content, index) => {
+          const cellProps: TableCellProps = isReactNode(content)
+            ? { children: content }
+            : content;
+          const headCell = renderTableHeader?.[index];
+
+          if (copyClassNameFromHeadCells && headCell) {
+            cellProps.className = cssNames(
+              cellProps.className,
+              headCell.className,
+            );
+          }
+
+          if (!headCell || this.showColumn(headCell)) {
+            return <TableCell key={index} {...cellProps} />;
+          }
+
+          return null;
+        })}
+        {renderItemMenu && (
+          <TableCell className="menu">
+            <div onClick={stopPropagation}>
+              {renderItemMenu(item, store)}
+            </div>
+          </TableCell>
+        )}
+      </TableRow>
+    );
+  }
+
+  @boundMethod
   getRow(uid: string) {
     return (
       <div key={uid}>
         <Observer>
           {() => {
-            const {
-              isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
-              store, hasDetailsView, onDetails,
-              copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
-            } = this.props;
-            const { isSelected } = store;
-            const item = this.props.getItems().find(item => item.getId() == uid);
+            const item = this.props.getItems().find(item => item.getId() === uid);
 
             if (!item) return null;
-            const itemId = item.getId();
 
-            return (
-              <TableRow
-                nowrap
-                searchItem={item}
-                sortItem={item}
-                selected={detailsItem && detailsItem.getId() === itemId}
-                onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-                {...customizeTableRowProps(item)}
-              >
-                {isSelectable && (
-                  <TableCell
-                    checkbox
-                    isChecked={isSelected(item)}
-                    onClick={prevDefault(() => store.toggleSelection(item))}
-                  />
-                )}
-                {renderTableContents(item).map((content, index) => {
-                  const cellProps: TableCellProps = isReactNode(content)
-                    ? { children: content }
-                    : content;
-                  const headCell = renderTableHeader?.[index];
-
-                  if (copyClassNameFromHeadCells && headCell) {
-                    cellProps.className = cssNames(
-                      cellProps.className,
-                      headCell.className,
-                    );
-                  }
-
-                  if (!headCell || this.showColumn(headCell)) {
-                    return <TableCell key={index} {...cellProps} />;
-                  }
-
-                  return null;
-                })}
-                {renderItemMenu && (
-                  <TableCell className="menu">
-                    <div onClick={stopPropagation}>
-                      {renderItemMenu(item, store)}
-                    </div>
-                  </TableCell>
-                )}
-              </TableRow>
-            );
+            return this.getTableRow(item);
           }}
         </Observer>
       </div>
@@ -248,6 +257,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
           selectable={hasDetailsView}
           sortable={sortingCallbacks}
           getTableRow={this.getRow}
+          renderRow={virtual ? undefined : this.renderRow}
           items={items}
           selectedItemId={selectedItemId}
           noItems={this.renderNoItems()}
