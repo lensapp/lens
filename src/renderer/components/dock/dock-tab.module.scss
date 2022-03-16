@@ -37,6 +37,20 @@
     .close {
       opacity: 1;
     }
+
+    &::before {
+      display: none;
+    }
+  }
+
+  &::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    right: 0;
+    background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 25%);
   }
 
   &::after {
@@ -50,6 +64,10 @@
     .close {
       opacity: 1;
       background: linear-gradient(90deg, transparent 0%, var(--dockTabActiveBackground) 25%);
+    }
+
+    &::before {
+      display: none;
     }
   }
 }
