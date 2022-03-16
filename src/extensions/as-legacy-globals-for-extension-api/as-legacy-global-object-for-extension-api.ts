@@ -13,7 +13,7 @@ export const asLegacyGlobalForExtensionApi = ((
     {},
 
     {
-      apply(target, thisArg, argArray) {
+      apply(target: any, thisArg, argArray) {
         const fn = getLegacyGlobalDiForExtensionApi().inject(
           injectable,
           instantiationParameter,
@@ -32,7 +32,7 @@ export const asLegacyGlobalForExtensionApi = ((
           instantiationParameter,
         );
 
-        const propertyValue = instance[propertyName];
+        const propertyValue = instance[propertyName] ?? target[propertyName];
 
         if (typeof propertyValue === "function") {
           return function (...args: any[]) {
