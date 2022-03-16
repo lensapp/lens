@@ -342,7 +342,7 @@
     "concurrently": "^7.0.0",
     "css-loader": "^6.7.1",
     "deepdash": "^5.3.9",
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "electron": "^14.2.4",
     "electron-builder": "^22.14.13",
     "electron-notarize": "^0.3.0",
