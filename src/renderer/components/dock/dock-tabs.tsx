@@ -61,6 +61,14 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     setShowScrollbar(allTabsShrinked);
   };
 
+  const scrollTabsWithMouseWheel = (left: number) => {
+    elem.current?.children[0]?.scrollBy({ left });
+  };
+
+  const onMouseWheel = (event: React.WheelEvent) => {
+    scrollTabsWithMouseWheel(event.deltaY);
+  };
+
   useEffect(() => {
     const cssVars = cssVar(elem.current);
 
@@ -82,6 +90,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
         autoFocus={autoFocus}
         value={selectedTab}
         onChange={onChangeTab}
+        onWheel={onMouseWheel}
         scrollable={showScrollbar}
         className={styles.tabs}
       >
