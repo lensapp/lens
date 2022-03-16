@@ -14,6 +14,7 @@ import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
+import readFileInjectable from "../common/fs/read-file.injectable";
 import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
 
 export const getDiForUnitTesting = (
@@ -52,6 +53,10 @@ export const getDiForUnitTesting = (
 
     di.override(readJsonFileInjectable, () => () => {
       throw new Error("Tried to read JSON file from file system without specifying explicit override.");
+    });
+
+    di.override(readFileInjectable, () => () => {
+      throw new Error("Tried to read file from file system without specifying explicit override.");
     });
   }
 

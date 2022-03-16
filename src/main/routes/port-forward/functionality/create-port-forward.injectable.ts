@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { PortForward, PortForwardArgs } from "./port-forward";
-import bundledKubectlInjectable from "../../kubectl/bundled-kubectl.injectable";
+import bundledKubectlInjectable from "../../../kubectl/bundled-kubectl.injectable";
 
 const createPortForwardInjectable = getInjectable({
   id: "create-port-forward",
