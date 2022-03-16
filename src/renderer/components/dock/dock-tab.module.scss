@@ -4,6 +4,10 @@
  */
 
 .DockTab {
+  --color-active: var(--dockTabActiveBackground);
+  --color-text-active: var(--textColorAccent);
+  --color-border-active: var(--primary);
+
   padding: var(--padding);
   height: 32px;
   position: relative;
@@ -30,9 +34,10 @@
   }
 
   &:global(.active) {
-    background-color: var(--dockTabActiveBackground);
+    background-color: var(--color-active);
     background-image: none;
-    border-bottom: 1px solid var(--primary);
+    border-bottom: 1px solid var(--color-border-active);
+    color: var(--color-text-active)!important;
 
     .close {
       opacity: 1;
@@ -60,6 +65,7 @@
   &:not(:global(.active)):hover {
     background-color: var(--dockTabActiveBackground);
     background-image: none;
+    color: var(--textColorAccent);
 
     .close {
       opacity: 1;
@@ -78,7 +84,7 @@
   width: 5ch;
   opacity: 0;
   text-align: center;
-  background: linear-gradient(90deg, transparent 0%, var(--dockTabActiveBackground) 25%);
+  background: linear-gradient(90deg, transparent 0%, var(--color-active) 25%);
 }
 
 .tabIcon {
