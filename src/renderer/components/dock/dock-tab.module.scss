@@ -52,10 +52,10 @@
     content: " ";
     display: block;
     position: absolute;
-    width: 5px;
+    width: 8px;
     height: 100%;
     right: 0;
-    background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 25%);
+    background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 65%);
   }
 
   &::after {
