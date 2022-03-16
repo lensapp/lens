@@ -26,6 +26,10 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   const minTabSize = useRef<number>(0);
   const [showScrollbar, setShowScrollbar] = useState<boolean>(false);
 
+  const getTabElements = (): HTMLDivElement[] => {
+    return Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
+  };
+
   const renderTab = (tab?: DockTabModel) => {
     if (!tab) {
       return null;
@@ -45,9 +49,14 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     }
   };
 
+  const scrollActiveTabIntoView = () => {
+    const tab = elem.current?.querySelector(".Tab.active");
+
+    tab?.scrollIntoView();
+  };
+
   const updateScrollbarVisibility = () => {
-    const allTabs: HTMLElement[] = Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
-    const allTabsShrinked = allTabs.every(tab => tab.offsetWidth == minTabSize.current);
+    const allTabsShrinked = getTabElements().every(tab => tab.offsetWidth == minTabSize.current);
 
     setShowScrollbar(allTabsShrinked);
   };
@@ -62,7 +71,10 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     updateScrollbarVisibility();
   }, [tabs]);
 
-  useResizeObserver(elem.current, updateScrollbarVisibility);
+  useResizeObserver(elem.current, () => {
+    scrollActiveTabIntoView();
+    updateScrollbarVisibility();
+  });
 
   return (
     <div className={styles.dockTabs} ref={elem}>
