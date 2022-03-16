@@ -85,7 +85,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   });
 
   return (
-    <div className={styles.dockTabs} ref={elem}>
+    <div className={styles.dockTabs} ref={elem} role="tablist">
       <Tabs
         autoFocus={autoFocus}
         value={selectedTab}

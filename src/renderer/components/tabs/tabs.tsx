@@ -137,6 +137,7 @@ export class Tab extends React.PureComponent<TabProps> {
         onClick={this.onClick}
         onFocus={this.onFocus}
         onKeyDown={this.onKeyDown}
+        role="tab"
         ref={this.ref}
       >
         {typeof icon === "string" ? <Icon small material={icon}/> : icon}
