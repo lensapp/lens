@@ -77,14 +77,14 @@ export class CustomResourceDefinitions extends React.Component {
           [columnId.group]: crd => crd.getGroup(),
           [columnId.version]: crd => crd.getVersion(),
           [columnId.scope]: crd => crd.getScope(),
-          [columnId.age]: crd => crd.getCreationTimestamp(),
+          [columnId.age]: crd => -crd.getCreationTimestamp(),
         }}
         searchFilters={[
           crd => crd.getResourceKind(),
           crd => crd.getGroup(),
           crd => crd.getVersion(),
           crd => crd.getScope(),
-          crd => crd.getCreationTimestamp(),
+          crd => -crd.getCreationTimestamp(),
         ]}
         renderHeaderTitle="Custom Resources"
         customizeHeader={({ filters, ...headerPlaceholders }) => {

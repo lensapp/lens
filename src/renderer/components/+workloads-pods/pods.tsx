@@ -90,7 +90,7 @@ export class Pods extends React.Component<PodsProps> {
           [columnId.owners]: pod => pod.getOwnerRefs().map(ref => ref.kind),
           [columnId.qos]: pod => pod.getQosClass(),
           [columnId.node]: pod => pod.getNodeName(),
-          [columnId.age]: pod => pod.getCreationTimestamp(),
+          [columnId.age]: pod => -pod.getCreationTimestamp(),
           [columnId.status]: pod => pod.getStatusMessage(),
         }}
         searchFilters={[

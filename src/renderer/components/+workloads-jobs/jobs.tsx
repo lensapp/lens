@@ -40,7 +40,7 @@ export class Jobs extends React.Component<JobsProps> {
           [columnId.name]: job => job.getName(),
           [columnId.namespace]: job => job.getNs(),
           [columnId.conditions]: job => job.getCondition() != null ? job.getCondition().type : "",
-          [columnId.age]: job => job.getCreationTimestamp(),
+          [columnId.age]: job => -job.getCreationTimestamp(),
         }}
         searchFilters={[
           job => job.getSearchFields(),

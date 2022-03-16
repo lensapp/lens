@@ -64,7 +64,7 @@ export class CustomResourceDefinitionResources extends React.Component<CustomRes
         sortingCallbacks={{
           [columnId.name]: customResource => customResource.getName(),
           [columnId.namespace]: customResource => customResource.getNs(),
-          [columnId.age]: customResource => customResource.getCreationTimestamp(),
+          [columnId.age]: customResource => -customResource.getCreationTimestamp(),
           ...Object.fromEntries(extraColumns.map(({ name, jsonPath }) => [
             name,
             customResource => value(customResource, parseJsonPath(jsonPath.slice(1))),

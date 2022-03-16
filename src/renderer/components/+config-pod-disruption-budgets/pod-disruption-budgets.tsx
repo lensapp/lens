@@ -43,7 +43,7 @@ export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsPr
           [columnId.maxUnavailable]: pdb => pdb.getMaxUnavailable(),
           [columnId.currentHealthy]: pdb => pdb.getCurrentHealthy(),
           [columnId.desiredHealthy]: pdb => pdb.getDesiredHealthy(),
-          [columnId.age]: pdb => pdb.getCreationTimestamp(),
+          [columnId.age]: pdb => -pdb.getCreationTimestamp(),
         }}
         searchFilters={[
           pdb => pdb.getSearchFields(),

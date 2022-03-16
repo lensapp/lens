@@ -49,7 +49,7 @@ export class PersistentVolumeClaims extends React.Component<PersistentVolumeClai
           [columnId.status]: pvc => pvc.getStatus(),
           [columnId.size]: pvc => unitsToBytes(pvc.getStorage()),
           [columnId.storageClass]: pvc => pvc.spec.storageClassName,
-          [columnId.age]: pvc => pvc.getCreationTimestamp(),
+          [columnId.age]: pvc => -pvc.getCreationTimestamp(),
         }}
         searchFilters={[
           pvc => pvc.getSearchFields(),

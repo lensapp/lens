@@ -43,7 +43,7 @@ export class PersistentVolumes extends React.Component<PersistentVolumesProps> {
           [columnId.storageClass]: volume => volume.getStorageClass(),
           [columnId.capacity]: volume => volume.getCapacity(true),
           [columnId.status]: volume => volume.getStatus(),
-          [columnId.age]: volume => volume.getCreationTimestamp(),
+          [columnId.age]: volume => -volume.getCreationTimestamp(),
         }}
         searchFilters={[
           volume => volume.getSearchFields(),

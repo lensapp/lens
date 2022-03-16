@@ -36,7 +36,7 @@ export class StorageClasses extends React.Component<StorageClassesProps> {
         store={storageClassStore}
         sortingCallbacks={{
           [columnId.name]: storageClass => storageClass.getName(),
-          [columnId.age]: storageClass => storageClass.getCreationTimestamp(),
+          [columnId.age]: storageClass => -storageClass.getCreationTimestamp(),
           [columnId.provisioner]: storageClass => storageClass.provisioner,
           [columnId.reclaimPolicy]: storageClass => storageClass.reclaimPolicy,
         }}

@@ -46,7 +46,7 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
       sortingCallbacks={{
         [columnId.name]: namespace => namespace.getName(),
         [columnId.labels]: namespace => namespace.getLabels(),
-        [columnId.age]: namespace => namespace.getCreationTimestamp(),
+        [columnId.age]: namespace => -namespace.getCreationTimestamp(),
         [columnId.status]: namespace => namespace.getStatus(),
       }}
       searchFilters={[

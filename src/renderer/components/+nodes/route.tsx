@@ -192,7 +192,7 @@ export class NodesRoute extends React.Component<NodesRouteProps> {
             [columnId.conditions]: node => node.getNodeConditionText(),
             [columnId.taints]: node => node.getTaints().length,
             [columnId.roles]: node => node.getRoleLabels(),
-            [columnId.age]: node => node.getCreationTimestamp(),
+            [columnId.age]: node => -node.getCreationTimestamp(),
             [columnId.version]: node => node.getKubeletVersion(),
           }}
           searchFilters={[

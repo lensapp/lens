@@ -58,7 +58,7 @@ export class HorizontalPodAutoscalers extends React.Component<HorizontalPodAutos
           [columnId.minPods]: hpa => hpa.getMinPods(),
           [columnId.maxPods]: hpa => hpa.getMaxPods(),
           [columnId.replicas]: hpa => hpa.getReplicas(),
-          [columnId.age]: hpa => hpa.getCreationTimestamp(),
+          [columnId.age]: hpa => -hpa.getCreationTimestamp(),
         }}
         searchFilters={[
           hpa => hpa.getSearchFields(),

@@ -41,7 +41,7 @@ export class ClusterRoleBindings extends React.Component<ClusterRoleBindingsProp
           sortingCallbacks={{
             [columnId.name]: binding => binding.getName(),
             [columnId.bindings]: binding => binding.getSubjectNames(),
-            [columnId.age]: binding => binding.getCreationTimestamp(),
+            [columnId.age]: binding => -binding.getCreationTimestamp(),
           }}
           searchFilters={[
             binding => binding.getSearchFields(),

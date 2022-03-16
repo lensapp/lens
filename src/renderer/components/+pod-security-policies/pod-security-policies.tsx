@@ -32,7 +32,7 @@ export class PodSecurityPolicies extends React.Component {
           [columnId.name]: podSecurityPolicy => podSecurityPolicy.getName(),
           [columnId.volumes]: podSecurityPolicy => podSecurityPolicy.getVolumes(),
           [columnId.privileged]: podSecurityPolicy => +podSecurityPolicy.isPrivileged(),
-          [columnId.age]: podSecurityPolicy => podSecurityPolicy.getCreationTimestamp(),
+          [columnId.age]: podSecurityPolicy => -podSecurityPolicy.getCreationTimestamp(),
         }}
         searchFilters={[
           podSecurityPolicy => podSecurityPolicy.getSearchFields(),

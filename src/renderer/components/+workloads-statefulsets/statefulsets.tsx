@@ -46,7 +46,7 @@ export class StatefulSets extends React.Component<StatefulSetsProps> {
         sortingCallbacks={{
           [columnId.name]: statefulSet => statefulSet.getName(),
           [columnId.namespace]: statefulSet => statefulSet.getNs(),
-          [columnId.age]: statefulSet => statefulSet.getCreationTimestamp(),
+          [columnId.age]: statefulSet => -statefulSet.getCreationTimestamp(),
           [columnId.replicas]: statefulSet => statefulSet.getReplicas(),
         }}
         searchFilters={[

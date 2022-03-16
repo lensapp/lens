@@ -35,7 +35,7 @@ export class LimitRanges extends React.Component<LimitRangesProps> {
         sortingCallbacks={{
           [columnId.name]: limitRange => limitRange.getName(),
           [columnId.namespace]: limitRange => limitRange.getNs(),
-          [columnId.age]: limitRange => limitRange.getCreationTimestamp(),
+          [columnId.age]: limitRange => -limitRange.getCreationTimestamp(),
         }}
         searchFilters={[
           item => item.getName(),

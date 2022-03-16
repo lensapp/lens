@@ -60,7 +60,7 @@ export class Deployments extends React.Component<DeploymentsProps> {
           [columnId.name]: deployment => deployment.getName(),
           [columnId.namespace]: deployment => deployment.getNs(),
           [columnId.replicas]: deployment => deployment.getReplicas(),
-          [columnId.age]: deployment => deployment.getCreationTimestamp(),
+          [columnId.age]: deployment => -deployment.getCreationTimestamp(),
           [columnId.condition]: deployment => deployment.getConditionsText(),
         }}
         searchFilters={[

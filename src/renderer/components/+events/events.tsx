@@ -60,8 +60,8 @@ export class Events extends React.Component<EventsProps> {
     [columnId.type]: event => event.type,
     [columnId.object]: event => event.involvedObject.name,
     [columnId.count]: event => event.count,
-    [columnId.age]: event => event.getCreationTimestamp(),
-    [columnId.lastSeen]: event => new Date(event.lastTimestamp).getTime(),
+    [columnId.age]: event => -event.getCreationTimestamp(),
+    [columnId.lastSeen]: event => -new Date(event.lastTimestamp).getTime(),
   };
 
   constructor(props: EventsProps) {

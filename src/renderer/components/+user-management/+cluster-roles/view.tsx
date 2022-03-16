@@ -36,7 +36,7 @@ export class ClusterRoles extends React.Component<ClusterRolesProps> {
           store={clusterRolesStore}
           sortingCallbacks={{
             [columnId.name]: clusterRole => clusterRole.getName(),
-            [columnId.age]: clusterRole => clusterRole.getCreationTimestamp(),
+            [columnId.age]: clusterRole => -clusterRole.getCreationTimestamp(),
           }}
           searchFilters={[
             clusterRole => clusterRole.getSearchFields(),

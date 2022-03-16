@@ -36,7 +36,7 @@ export class ServiceAccounts extends React.Component<ServiceAccountsProps> {
           sortingCallbacks={{
             [columnId.name]: account => account.getName(),
             [columnId.namespace]: account => account.getNs(),
-            [columnId.age]: account => account.getCreationTimestamp(),
+            [columnId.age]: account => -account.getCreationTimestamp(),
           }}
           searchFilters={[
             account => account.getSearchFields(),

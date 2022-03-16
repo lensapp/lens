@@ -50,7 +50,7 @@ export class CronJobs extends React.Component<CronJobsProps> {
               ? moment().diff(cronJob.status.lastScheduleTime)
               : 0
           ),
-          [columnId.age]: cronJob => cronJob.getCreationTimestamp(),
+          [columnId.age]: cronJob => -cronJob.getCreationTimestamp(),
         }}
         searchFilters={[
           cronJob => cronJob.getSearchFields(),

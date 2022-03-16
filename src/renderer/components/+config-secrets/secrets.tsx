@@ -44,7 +44,7 @@ export class Secrets extends React.Component<SecretsProps> {
             [columnId.labels]: secret => secret.getLabels(),
             [columnId.keys]: secret => secret.getKeys(),
             [columnId.type]: secret => secret.type,
-            [columnId.age]: secret => secret.getCreationTimestamp(),
+            [columnId.age]: secret => -secret.getCreationTimestamp(),
           }}
           searchFilters={[
             secret => secret.getSearchFields(),

@@ -36,7 +36,7 @@ export class NetworkPolicies extends React.Component<NetworkPoliciesProps> {
         sortingCallbacks={{
           [columnId.name]: networkPolicy => networkPolicy.getName(),
           [columnId.namespace]: networkPolicy => networkPolicy.getNs(),
-          [columnId.age]: networkPolicy => networkPolicy.getCreationTimestamp(),
+          [columnId.age]: networkPolicy => -networkPolicy.getCreationTimestamp(),
         }}
         searchFilters={[
           networkPolicy => networkPolicy.getSearchFields(),

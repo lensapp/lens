@@ -57,14 +57,14 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
             kind: node.kind,
             message,
             renderAge: () => <KubeObjectAge key="age" object={node} />,
-            ageMs: node.getCreationTimestamp(),
+            ageMs: -node.getCreationTimestamp(),
           }))
       )),
       ...eventStore.getWarnings().map(warning => ({
         getId: () => warning.involvedObject.uid,
         getName: () => warning.involvedObject.name,
         renderAge: () => <KubeObjectAge key="age" object={warning} />,
-        ageMs: warning.getCreationTimestamp(),
+        ageMs: -warning.getCreationTimestamp(),
         message: warning.message,
         kind: warning.kind,
         selfLink: apiManager.lookupApiLink(warning.involvedObject, warning),

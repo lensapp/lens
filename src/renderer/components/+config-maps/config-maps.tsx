@@ -37,7 +37,7 @@ export class ConfigMaps extends React.Component<ConfigMapsProps> {
           [columnId.name]: configMap => configMap.getName(),
           [columnId.namespace]: configMap => configMap.getNs(),
           [columnId.keys]: configMap => configMap.getKeys(),
-          [columnId.age]: configMap => configMap.getCreationTimestamp(),
+          [columnId.age]: configMap => -configMap.getCreationTimestamp(),
         }}
         searchFilters={[
           configMap => configMap.getSearchFields(),
