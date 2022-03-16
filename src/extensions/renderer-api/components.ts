@@ -62,7 +62,6 @@ export * from "../../renderer/components/layout/sub-title";
 export * from "../../renderer/components/input/search-input";
 export * from "../../renderer/components/chart/bar-chart";
 export * from "../../renderer/components/chart/pie-chart";
-export { ReactiveDuration, type ReactiveDurationProps } from "../../renderer/components/duration/reactive-duration";
 
 // kube helpers
 export * from "../../renderer/components/kube-detail-params";
