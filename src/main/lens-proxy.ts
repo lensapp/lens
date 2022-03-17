@@ -22,7 +22,7 @@ type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 export interface LensProxyFunctions {
   getClusterForRequest: GetClusterForRequest;
   shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
 }
 
 const watchParam = "watch";
@@ -61,7 +61,7 @@ export class LensProxy extends Singleton {
 
   public port: number;
 
-  constructor(protected router: Router, protected proxy: httpProxy, { shellApiRequest, kubeApiRequest, getClusterForRequest }: LensProxyFunctions) {
+  constructor(protected router: Router, protected proxy: httpProxy, { shellApiRequest, kubeApiUpgradeRequest, getClusterForRequest }: LensProxyFunctions) {
     super();
 
     this.configureProxy(proxy);
@@ -88,7 +88,7 @@ export class LensProxy extends Singleton {
           return socket.destroy();
         }
 
-        const reqHandler = isInternal ? shellApiRequest : kubeApiRequest;
+        const reqHandler = isInternal ? shellApiRequest : kubeApiUpgradeRequest;
 
         (async () => reqHandler({ req, socket, head, cluster }))()
           .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));

@@ -15,6 +15,7 @@ import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
+import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -90,6 +91,8 @@ describe("<DeleteClusterDialog />", () => {
 
   beforeEach(async () => {
     const { mainDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
+
+    mainDi.override(createContextHandlerInjectable, () => () => undefined);
 
     mockFs();
 

@@ -16,6 +16,8 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 import directoryForKubeConfigsInjectable
   from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import kubeAuthProxyCaInjectable from "../../kube-auth-proxy/kube-auth-proxy-ca.injectable";
+import createKubeAuthProxyCertFilesInjectable from "../../kube-auth-proxy/create-kube-auth-proxy-cert-files.injectable";
 
 
 jest.mock("electron", () => ({
@@ -39,6 +41,9 @@ describe("kubeconfig-sync.source tests", () => {
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(kubeAuthProxyCaInjectable, () => Promise.resolve(Buffer.from("ca")));
+    di.override(createKubeAuthProxyCertFilesInjectable, () => ({} as any));
 
     mockFs();
 

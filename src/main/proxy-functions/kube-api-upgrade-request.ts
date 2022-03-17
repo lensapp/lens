@@ -4,21 +4,25 @@
  */
 
 import { chunk } from "lodash";
-import net from "net";
+import tls from "tls";
 import url from "url";
 import { apiKubePrefix } from "../../common/vars";
 import type { ProxyApiRequestArgs } from "./types";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 
-export async function kubeApiRequest({ req, socket, head, cluster }: ProxyApiRequestArgs) {
+export async function kubeApiUpgradeRequest({ req, socket, head, cluster }: ProxyApiRequestArgs) {
   const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
+  const proxyCa = await cluster.contextHandler.resolveAuthProxyCa();
   const apiUrl = url.parse(cluster.apiUrl);
   const pUrl = url.parse(proxyUrl);
-  const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
-  const proxySocket = new net.Socket();
+  const connectOpts = { 
+    port: parseInt(pUrl.port), 
+    host: pUrl.hostname,
+    ca: proxyCa,
+  };
 
-  proxySocket.connect(connectOpts, () => {
+  const proxySocket = tls.connect(connectOpts, () => {
     proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
     proxySocket.write(`Host: ${apiUrl.host}\r\n`);
 

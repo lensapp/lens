@@ -39,7 +39,7 @@ import { WeblinkStore } from "../common/weblink-store";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { initMenu } from "./menu/menu";
-import { kubeApiRequest } from "./proxy-functions";
+import { kubeApiUpgradeRequest } from "./proxy-functions";
 import { initTray } from "./tray/tray";
 import { ShellSession } from "./shell-session/shell-session";
 import { getDi } from "./getDi";
@@ -62,9 +62,11 @@ const di = getDi();
 
 app.setName(appName);
 
-di.runSetups().then(() => {
-  injectSystemCAs();
+app.on("ready", async () => {
+  await di.runSetups();
 
+  injectSystemCAs();
+  
   const onCloseCleanup = disposer();
   const onQuitCleanup = disposer();
 
@@ -122,173 +124,6 @@ di.runSetups().then(() => {
     }
 
     WindowManager.getInstance(false)?.ensureMainWindow();
-  });
-
-  app.on("ready", async () => {
-    const directoryForExes = di.inject(directoryForExesInjectable);
-
-    logger.info(`🚀 Starting ${productName} from "${directoryForExes}"`);
-    logger.info("🐚 Syncing shell environment");
-    await shellSync();
-
-    powerMonitor.on("shutdown", () => app.exit());
-
-    registerFileProtocol("static", __static);
-
-    PrometheusProviderRegistry.createInstance();
-    initializers.initPrometheusProviderRegistry();
-
-    /**
-     * The following sync MUST be done before HotbarStore creation, because that
-     * store has migrations that will remove items that previous migrations add
-     * if this is not present
-     */
-    syncGeneralEntities();
-
-    logger.info("💾 Loading stores");
-
-    const userStore = di.inject(userStoreInjectable);
-
-    userStore.startMainReactions();
-
-    // ClusterStore depends on: UserStore
-    const clusterStore = di.inject(clusterStoreInjectable);
-
-    clusterStore.provideInitialFromMain();
-
-    // HotbarStore depends on: ClusterStore
-    HotbarStore.createInstance();
-
-    WeblinkStore.createInstance();
-
-    syncWeblinks();
-
-    HelmRepoManager.createInstance(); // create the instance
-
-    const router = di.inject(routerInjectable);
-    const shellApiRequest = di.inject(shellApiRequestInjectable);
-
-    const lensProxy = LensProxy.createInstance(router, httpProxy.createProxy(), {
-      getClusterForRequest: (req) => ClusterManager.getInstance().getClusterForRequest(req),
-      kubeApiRequest,
-      shellApiRequest,
-    });
-
-    ClusterManager.createInstance().init();
-
-    initializers.initClusterMetadataDetectors();
-
-    try {
-      logger.info("🔌 Starting LensProxy");
-      await lensProxy.listen(); // lensProxy.port available
-    } catch (error) {
-      dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
-
-      return app.exit();
-    }
-
-    // test proxy connection
-    try {
-      logger.info("🔎 Testing LensProxy connection ...");
-      const versionFromProxy = await getAppVersionFromProxyServer(lensProxy.port);
-
-      if (getAppVersion() !== versionFromProxy) {
-        logger.error("Proxy server responded with invalid response");
-
-        return app.exit();
-      }
-
-      logger.info("⚡ LensProxy connection OK");
-    } catch (error) {
-      logger.error(`🛑 LensProxy: failed connection test: ${error}`);
-
-      const hostsPath = isWindows
-        ? "C:\\windows\\system32\\drivers\\etc\\hosts"
-        : "/etc/hosts";
-      const message = [
-        `Failed connection test: ${error}`,
-        "Check to make sure that no other versions of Lens are running",
-        `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
-        "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
-      ];
-
-      dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
-
-      return app.exit();
-    }
-
-    const extensionLoader = di.inject(extensionLoaderInjectable);
-
-    extensionLoader.init();
-
-    const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-
-    extensionDiscovery.init();
-
-    // Start the app without showing the main window when auto starting on login
-    // (On Windows and Linux, we get a flag. On MacOS, we get special API.)
-    const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
-
-    logger.info("🖥️  Starting WindowManager");
-    const windowManager = WindowManager.createInstance();
-    const menuItems = di.inject(electronMenuItemsInjectable);
-    const trayMenuItems = di.inject(trayMenuItemsInjectable);
-
-    onQuitCleanup.push(
-      initMenu(windowManager, menuItems),
-      initTray(windowManager, trayMenuItems),
-      () => ShellSession.cleanup(),
-    );
-
-    installDeveloperTools();
-
-    if (!startHidden) {
-      windowManager.ensureMainWindow();
-    }
-
-    ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
-      onCloseCleanup.push(startCatalogSyncToRenderer(catalogEntityRegistry));
-
-      const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
-
-      await ensureDir(directoryForKubeConfigs);
-
-      const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
-
-      kubeConfigSyncManager.startSync();
-
-      startUpdateChecking();
-      lensProtocolRouterMain.rendererLoaded = true;
-    });
-
-    logger.info("🧩 Initializing extensions");
-
-    // call after windowManager to see splash earlier
-    try {
-      const extensions = await extensionDiscovery.load();
-
-      // Start watching after bundled extensions are loaded
-      extensionDiscovery.watchExtensions();
-
-      // Subscribe to extensions that are copied or deleted to/from the extensions folder
-      extensionDiscovery.events
-        .on("add", (extension: InstalledExtension) => {
-          extensionLoader.addExtension(extension);
-        })
-        .on("remove", (lensExtensionId: LensExtensionId) => {
-          extensionLoader.removeExtension(lensExtensionId);
-        });
-
-      extensionLoader.initExtensions(extensions);
-    } catch (error) {
-      dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
-      console.error(error);
-      console.trace();
-    }
-
-    setTimeout(() => {
-      appEventBus.emit({ name: "service", action: "start" });
-    }, 1000);
   });
 
   app.on("activate", (event, hasVisibleWindows) => {
@@ -349,7 +184,172 @@ di.runSetups().then(() => {
     lensProtocolRouterMain.route(rawUrl);
   });
 
-  logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
+  logger.debug("[APP-MAIN] waiting for 'ready' and other messages");  
+
+  const directoryForExes = di.inject(directoryForExesInjectable);
+
+  logger.info(`🚀 Starting ${productName} from "${directoryForExes}"`);
+  logger.info("🐚 Syncing shell environment");
+  await shellSync();
+
+  powerMonitor.on("shutdown", () => app.exit());
+
+  registerFileProtocol("static", __static);
+
+  PrometheusProviderRegistry.createInstance();
+  initializers.initPrometheusProviderRegistry();
+
+  /**
+   * The following sync MUST be done before HotbarStore creation, because that
+   * store has migrations that will remove items that previous migrations add
+   * if this is not present
+   */
+  syncGeneralEntities();
+
+  logger.info("💾 Loading stores");
+
+  const userStore = di.inject(userStoreInjectable);
+
+  userStore.startMainReactions();
+
+  // ClusterStore depends on: UserStore
+  const clusterStore = di.inject(clusterStoreInjectable);
+
+  clusterStore.provideInitialFromMain();
+
+  // HotbarStore depends on: ClusterStore
+  HotbarStore.createInstance();
+
+  WeblinkStore.createInstance();
+
+  syncWeblinks();
+
+  HelmRepoManager.createInstance(); // create the instance
+
+  const router = di.inject(routerInjectable);
+  const shellApiRequest = di.inject(shellApiRequestInjectable);
+
+  const lensProxy = LensProxy.createInstance(router, httpProxy.createProxy(), {
+    getClusterForRequest: (req) => ClusterManager.getInstance().getClusterForRequest(req),
+    kubeApiUpgradeRequest,
+    shellApiRequest,
+  });
+
+  ClusterManager.createInstance().init();
+
+  initializers.initClusterMetadataDetectors();
+
+  try {
+    logger.info("🔌 Starting LensProxy");
+    await lensProxy.listen(); // lensProxy.port available
+  } catch (error) {
+    dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
+
+    return app.exit();
+  }
+
+  // test proxy connection
+  try {
+    logger.info("🔎 Testing LensProxy connection ...");
+    const versionFromProxy = await getAppVersionFromProxyServer(lensProxy.port);
+
+    if (getAppVersion() !== versionFromProxy) {
+      logger.error("Proxy server responded with invalid response");
+
+      return app.exit();
+    }
+
+    logger.info("⚡ LensProxy connection OK");
+  } catch (error) {
+    logger.error(`🛑 LensProxy: failed connection test: ${error}`);
+
+    const hostsPath = isWindows
+      ? "C:\\windows\\system32\\drivers\\etc\\hosts"
+      : "/etc/hosts";
+    const message = [
+      `Failed connection test: ${error}`,
+      "Check to make sure that no other versions of Lens are running",
+      `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
+      "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
+    ];
+
+    dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
+
+    return app.exit();
+  }
+
+  const extensionLoader = di.inject(extensionLoaderInjectable);
+
+  extensionLoader.init();
+
+  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+
+  extensionDiscovery.init();
+
+  // Start the app without showing the main window when auto starting on login
+  // (On Windows and Linux, we get a flag. On MacOS, we get special API.)
+  const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
+
+  logger.info("🖥️  Starting WindowManager");
+  const windowManager = WindowManager.createInstance();
+  const menuItems = di.inject(electronMenuItemsInjectable);
+  const trayMenuItems = di.inject(trayMenuItemsInjectable);
+
+  onQuitCleanup.push(
+    initMenu(windowManager, menuItems),
+    initTray(windowManager, trayMenuItems),
+    () => ShellSession.cleanup(),
+  );
+
+  installDeveloperTools();
+
+  if (!startHidden) {
+    windowManager.ensureMainWindow();
+  }
+
+  ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
+    onCloseCleanup.push(startCatalogSyncToRenderer(catalogEntityRegistry));
+
+    const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
+
+    await ensureDir(directoryForKubeConfigs);
+
+    const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
+
+    kubeConfigSyncManager.startSync();
+
+    startUpdateChecking();
+    lensProtocolRouterMain.rendererLoaded = true;
+  });
+
+  logger.info("🧩 Initializing extensions");
+
+  // call after windowManager to see splash earlier
+  try {
+    const extensions = await extensionDiscovery.load();
+
+    // Start watching after bundled extensions are loaded
+    extensionDiscovery.watchExtensions();
+
+    // Subscribe to extensions that are copied or deleted to/from the extensions folder
+    extensionDiscovery.events
+      .on("add", (extension: InstalledExtension) => {
+        extensionLoader.addExtension(extension);
+      })
+      .on("remove", (lensExtensionId: LensExtensionId) => {
+        extensionLoader.removeExtension(lensExtensionId);
+      });
+
+    extensionLoader.initExtensions(extensions);
+  } catch (error) {
+    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+    console.error(error);
+    console.trace();
+  }
+
+  setTimeout(() => {
+    appEventBus.emit({ name: "service", action: "start" });
+  }, 1000);
 });
 
 /**

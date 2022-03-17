@@ -10,6 +10,8 @@ import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
+import kubeAuthProxyCaInjectable from "../kube-auth-proxy/kube-auth-proxy-ca.injectable";
+import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -79,6 +81,9 @@ describe("ContextHandler", () => {
     mockFs({
       "tmp": {},
     });
+
+    di.override(createKubeAuthProxyInjectable, () => ({} as any));
+    di.override(kubeAuthProxyCaInjectable, () => ({} as any));
 
     await di.runSetups();
 

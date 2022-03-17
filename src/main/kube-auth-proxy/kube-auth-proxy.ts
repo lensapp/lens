@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ChildProcess, spawn } from "child_process";
+import type { ChildProcess, spawn } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -15,6 +15,8 @@ const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
 export interface KubeAuthProxyDependencies {
   proxyBinPath: string;
+  proxyCertPath: Promise<string>;
+  spawn: typeof spawn;
 }
 
 export class KubeAuthProxy {
@@ -42,13 +44,15 @@ export class KubeAuthProxy {
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
+    const certPath = await this.dependencies.proxyCertPath;
 
-    this.proxyProcess = spawn(proxyBin, [], {
+    this.proxyProcess = this.dependencies.spawn(proxyBin, [], {
       env: {
         ...this.env,
         KUBECONFIG: this.cluster.kubeConfigPath,
         KUBECONFIG_CONTEXT: this.cluster.contextName,
         API_PREFIX: this.apiPrefix,
+        CERT_PATH: certPath,
       },
     });
     this.proxyProcess.on("error", (error) => {
@@ -66,11 +70,15 @@ export class KubeAuthProxy {
       this.exit();
     });
 
-    this.proxyProcess.stderr.on("data", (data) => {
+    this.proxyProcess.stderr.on("data", (data: Buffer) => {
+      if (data.includes("http: TLS handshake error")) {
+        return;
+      }
+
       this.cluster.broadcastConnectUpdate(data.toString(), true);
     });
 
-    this.proxyProcess.stdout.on("data", (data: any) => {
+    this.proxyProcess.stdout.on("data", (data: Buffer) => {
       if (typeof this._port === "number") {
         this.cluster.broadcastConnectUpdate(data.toString());
       }

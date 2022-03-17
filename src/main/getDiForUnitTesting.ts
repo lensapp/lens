@@ -16,6 +16,7 @@ import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
 import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
+import spawnInjectable from "./child-process/spawn.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -46,6 +47,13 @@ export const getDiForUnitTesting = (
     di.override(appNameInjectable, () => "some-electron-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
+    di.override(spawnInjectable, () => () => { 
+      return { 
+        stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
+        stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
+        on: jest.fn(),
+      } as any;
+    });
 
     di.override(writeJsonFileInjectable, () => () => {
       throw new Error("Tried to write JSON file to file system without specifying explicit override.");
