@@ -2462,12 +2462,7 @@ acorn@^7.0.0, acorn@^7.1.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
-acorn@^8.2.4, acorn@^8.4.1:
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.5.0.tgz#4512ccb99b3698c752591e9bb4472e38ad43cee2"
-  integrity sha512-yXbYeFy+jUuYd3/CDcg2NkIYE991XYX/bje7LmjJigUciaeO1JR4XxXgCIV1/Zc/dRuFEyw1L0pbA+qynJkW5Q==
-
-acorn@^8.7.0:
+acorn@^8.2.4, acorn@^8.4.1, acorn@^8.7.0:
   version "8.7.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.0.tgz#90951fde0f8f09df93549481e5fc141445b791cf"
   integrity sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==
@@ -13089,10 +13084,10 @@ ts-loader@^9.2.6:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-ts-node@^10.4.0:
-  version "10.4.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.4.0.tgz#680f88945885f4e6cf450e7f0d6223dd404895f7"
-  integrity sha512-g0FlPvvCXSIO1JDF6S232P5jPYqBkRL9qly81ZgAOSU7rwI0stphCgd2kLiCrU9DjQCrJMWEqcNSjQL02s6d8A==
+ts-node@^10.7.0:
+  version "10.7.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.7.0.tgz#35d503d0fab3e2baa672a0e94f4b40653c2463f5"
+  integrity sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==
   dependencies:
     "@cspotcode/source-map-support" "0.7.0"
     "@tsconfig/node10" "^1.0.7"
@@ -13105,6 +13100,7 @@ ts-node@^10.4.0:
     create-require "^1.1.0"
     diff "^4.0.1"
     make-error "^1.1.1"
+    v8-compile-cache-lib "^3.0.0"
     yn "3.1.1"
 
 tsconfig-paths@^3.12.0:
@@ -13532,6 +13528,11 @@ uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+v8-compile-cache-lib@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.0.tgz#0582bcb1c74f3a2ee46487ceecf372e46bce53e8"
+  integrity sha512-mpSYqfsFvASnSn5qMiwrr4VKfumbPyONLCOPmsR3A6pTY/r0+tSaVbgPWSAIuzbk3lCTa+FForeTiO+wBQGkjA==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
