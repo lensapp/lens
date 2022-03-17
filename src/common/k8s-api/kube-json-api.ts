@@ -6,7 +6,7 @@
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
 import type { Response } from "node-fetch";
 import { apiKubePrefix, isDebugging } from "../vars";
-import { apiBase } from "./apis";
+import { apiBase } from "./api-base";
 
 export interface KubeJsonApiListMetadata {
   resourceVersion: string;

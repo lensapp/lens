@@ -3,4 +3,5 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export { apiBase, apiKube } from "./apis";
+export { apiBase } from "./api-base";
+export { apiKube } from "./api-kube";
