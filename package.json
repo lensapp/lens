@@ -372,7 +372,7 @@
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.15",
     "playwright": "^1.17.1",
-    "postcss": "^8.4.5",
+    "postcss": "^8.4.12",
     "postcss-loader": "^6.2.1",
     "randomcolor": "^0.6.2",
     "react-beautiful-dnd": "^13.1.0",
