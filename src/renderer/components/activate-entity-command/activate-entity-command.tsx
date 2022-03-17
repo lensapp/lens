@@ -21,24 +21,22 @@ interface Dependencies {
 }
 
 const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entities }: Dependencies) => {
-  const options = entities.get().map(entity => ({
-    label: `${entity.kind}: ${entity.getName()}`,
-    value: entity,
-  }));
-
-  const onSelect = (entity: CatalogEntity): void => {
-    broadcastMessage(catalogEntityRunListener, entity.getId());
-    closeCommandOverlay();
+  const onSelect = (entity: CatalogEntity | null): void => {
+    if (entity) {
+      broadcastMessage(catalogEntityRunListener, entity.getId());
+      closeCommandOverlay();
+    }
   };
 
   return (
     <Select
       id="activate-entity-input"
       menuPortalTarget={null}
-      onChange={(v) => onSelect(v.value)}
+      onChange={onSelect}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
       menuIsOpen={true}
-      options={options}
+      options={entities.get()}
+      getOptionLabel={entity => `${entity.kind}: ${entity.getName()}`}
       autoFocus={true}
       escapeClearsValue={false}
       placeholder="Activate entity ..."

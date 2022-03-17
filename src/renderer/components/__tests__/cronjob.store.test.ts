@@ -3,9 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
+import type { CronJobSpec } from "../../../common/k8s-api/endpoints";
 import { CronJob } from "../../../common/k8s-api/endpoints";
 
-const spec = {
+const spec: CronJobSpec = {
   schedule: "test",
   concurrencyPolicy: "test",
   suspend: true,
@@ -15,7 +16,7 @@ const spec = {
       template: {
         metadata: {},
         spec: {
-          containers: [] as any,
+          containers: [],
           restartPolicy: "restart",
           terminationGracePeriodSeconds: 1,
           dnsPolicy: "no",
@@ -37,7 +38,9 @@ const scheduledCronJob = new CronJob({
     resourceVersion: "scheduledCronJob",
     uid: "scheduledCronJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1beta1/cronjobs/default/scheduledCronJob",
   },
+  spec,
 });
 
 const suspendedCronJob = new CronJob({
@@ -48,7 +51,9 @@ const suspendedCronJob = new CronJob({
     resourceVersion: "suspendedCronJob",
     uid: "suspendedCronJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1beta1/cronjobs/default/suspendedCronJob",
   },
+  spec,
 });
 
 const otherSuspendedCronJob = new CronJob({
@@ -59,12 +64,11 @@ const otherSuspendedCronJob = new CronJob({
     resourceVersion: "otherSuspendedCronJob",
     uid: "otherSuspendedCronJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1beta1/cronjobs/default/otherSuspendedCronJob",
   },
+  spec,
 });
 
-scheduledCronJob.spec = { ...spec };
-suspendedCronJob.spec = { ...spec };
-otherSuspendedCronJob.spec = { ...spec };
 scheduledCronJob.spec.suspend = false;
 
 describe("CronJob Store tests", () => {

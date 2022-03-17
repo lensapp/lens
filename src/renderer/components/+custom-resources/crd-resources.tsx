@@ -47,7 +47,7 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
   render() {
     const { crd, store } = this;
 
-    if (!crd) {
+    if (!crd || !store) {
       return null;
     }
 
@@ -85,7 +85,9 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
           })}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
-            isNamespaced && { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            isNamespaced
+              ? { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace }
+              : undefined,
             ...extraColumns.map(({ name }) => ({
               title: name,
               className: name.toLowerCase(),
@@ -102,9 +104,13 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
           ]}
           failedToLoadMessage={(
             <>
-              <p>Failed to load {crd.getPluralName()}</p>
+              <p>
+                {`Failed to load ${crd.getPluralName()}`}
+              </p>
               {!version.served && (
-                <p>Prefered version ({crd.getGroup()}/{version.name}) is not served</p>
+                <p>
+                  {`Prefered version (${crd.getGroup()}/${version.name}) is not served`}
+                </p>
               )}
             </>
           )}

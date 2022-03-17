@@ -66,8 +66,11 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, exten
       } else {
         Notifications.error(
           <p>
-            The <em>{name}</em> extension does not have a version or tag{" "}
-            <code>{version}</code>.
+            {"The "}
+            <em>{name}</em>
+            {" extension does not have a version or tag "}
+            <code>{version}</code>
+            .
           </p>,
         );
 
@@ -82,20 +85,24 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, exten
       )
       // ignore pre-releases for auto picking the version
       .filter(version => version.prerelease.length === 0);
+    const latestVersion = lodash.reduce(versions, (prev, curr) => prev.compareMain(curr) === -1 ? curr : prev);
 
-    version = lodash.reduce(versions, (prev, curr) =>
-      prev.compareMain(curr) === -1 ? curr : prev,
-    ).format();
+    if (!latestVersion) {
+      console.error("No versions supplied for that extension", { name });
+      Notifications.error(`No versions found for ${name}`);
+
+      return disposer();
+    }
+
+    version = latestVersion.format();
   }
 
   if (requireConfirmation) {
     const proceed = await ConfirmDialog.confirm({
       message: (
         <p>
-          Are you sure you want to install{" "}
-          <b>
-            {name}@{version}
-          </b>
+          {"Are you sure you want to install "}
+          <b>{`${name}@${version}`}</b>
           ?
         </p>
       ),
@@ -108,7 +115,8 @@ export const attemptInstallByInfo = ({ attemptInstall, getBaseRegistryUrl, exten
     }
   }
 
-  const url = json.versions[version].dist.tarball;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const url = json.versions[version!].dist.tarball;
   const fileName = path.basename(url);
   const { promise: dataP } = downloadFile({ url, timeout: 10 * 60 * 1000 });
 

@@ -9,6 +9,8 @@ import type { LensRendererExtension } from "../../extensions/lens-renderer-exten
 
 export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
   ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
-    extensionLoader.getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
+    const ext = extensionLoader.getInstanceById(extId) as LensRendererExtension | undefined;
+
+    ext?.navigate(pageId, params);
   });
 }

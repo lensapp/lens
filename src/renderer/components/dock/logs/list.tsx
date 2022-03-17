@@ -16,6 +16,7 @@ import type { Align, ListOnScrollProps } from "react-window";
 import { SearchStore } from "../../../search-store/search-store";
 import { UserStore } from "../../../../common/user-store";
 import { array, autoBind, cssNames } from "../../../utils";
+import type { VirtualListRef } from "../../virtual-list";
 import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
@@ -33,7 +34,7 @@ export class LogList extends React.Component<LogListProps> {
   @observable isLastLineVisible = true;
 
   private virtualListDiv = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
-  private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
+  private virtualListRef = React.createRef<VirtualListRef>(); // A reference for VirtualList component
   private lineHeight = 18; // Height of a log line. Should correlate with styles in pod-log-list.scss
 
   constructor(props: LogListProps) {
@@ -87,7 +88,7 @@ export class LogList extends React.Component<LogListProps> {
    */
   @computed
   get logs(): string[] {
-    const { showTimestamps } = this.props.model.logTabData.get();
+    const { showTimestamps } = this.props.model.logTabData.get() ?? {};
 
     if (!showTimestamps) {
       return this.props.model.logsWithoutTimestamps.get();
@@ -102,10 +103,8 @@ export class LogList extends React.Component<LogListProps> {
    * Checks if JumpToBottom button should be visible and sets its observable
    * @param props Scrolling props from virtual list core
    */
-  setButtonVisibility = action((props: ListOnScrollProps) => {
+  setButtonVisibility = action(({ scrollOffset }: ListOnScrollProps, { scrollHeight }: HTMLDivElement) => {
     const offset = 100 * this.lineHeight;
-    const { scrollHeight } = this.virtualListDiv.current;
-    const { scrollOffset } = props;
 
     if (scrollHeight - scrollOffset < offset) {
       this.isJumpButtonVisible = false;
@@ -118,10 +117,7 @@ export class LogList extends React.Component<LogListProps> {
    * Checks if last log line considered visible to user, setting its observable
    * @param props Scrolling props from virtual list core
    */
-  setLastLineVisibility = action((props: ListOnScrollProps) => {
-    const { scrollHeight, clientHeight } = this.virtualListDiv.current;
-    const { scrollOffset } = props;
-
+  setLastLineVisibility = action(({ scrollOffset }: ListOnScrollProps, { scrollHeight, clientHeight }: HTMLDivElement) => {
     this.isLastLineVisible = (clientHeight + scrollOffset) === scrollHeight;
   });
 
@@ -143,7 +139,7 @@ export class LogList extends React.Component<LogListProps> {
   };
 
   scrollToItem = (index: number, align: Align) => {
-    this.virtualListRef.current.scrollToItem(index, align);
+    this.virtualListRef.current?.scrollToItem(index, align);
   };
 
   onScroll = (props: ListOnScrollProps) => {
@@ -152,10 +148,13 @@ export class LogList extends React.Component<LogListProps> {
   };
 
   onScrollDebounced = debounce((props: ListOnScrollProps) => {
-    if (!this.virtualListDiv.current) return;
-    this.setButtonVisibility(props);
-    this.setLastLineVisibility(props);
-    this.checkLoadIntent(props);
+    const virtualList = this.virtualListDiv.current;
+
+    if (virtualList) {
+      this.setButtonVisibility(props, virtualList);
+      this.setLastLineVisibility(props, virtualList);
+      this.checkLoadIntent(props);
+    }
   }, 700); // Increasing performance and giving some time for virtual list to settle down
 
   /**
@@ -182,10 +181,12 @@ export class LogList extends React.Component<LogListProps> {
         const lastItem = index === pieces.length - 1;
         const overlayValue = matches.next().value;
         const overlay = !lastItem
-          ? <span
-            className={cssNames("overlay", { active })}
-            dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
-          />
+          ? (
+            <span
+              className={cssNames("overlay", { active })}
+              dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
+            />
+          )
           : null;
 
         contents.push(
@@ -220,7 +221,9 @@ export class LogList extends React.Component<LogListProps> {
     if (!this.logs.length) {
       return (
         <div className="LogList flex box grow align-center justify-center">
-          There are no logs available for container {this.props.model.logTabData.get()?.selectedContainer}
+          There are no logs available for container
+          {" "}
+          {this.props.model.logTabData.get()?.selectedContainer}
         </div>
       );
     }

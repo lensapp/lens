@@ -8,6 +8,8 @@ import logger from "../logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";
+import type { JsonObject } from "type-fest";
+import { object } from "../../common/utils";
 
 interface GetReleaseValuesArgs {
   cluster: Cluster;
@@ -15,8 +17,22 @@ interface GetReleaseValuesArgs {
   all: boolean;
 }
 
+export interface InstallChartArgs {
+  chart: string;
+  values: JsonObject;
+  name: string;
+  namespace: string;
+  version: string;
+}
+
+export interface UpdateChartArgs {
+  chart: string;
+  values: JsonObject;
+  version: string;
+}
+
 class HelmService {
-  public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
+  public async installChart(cluster: Cluster, data: InstallChartArgs) {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
     return installChart(data.chart, data.values, data.name, data.namespace, data.version, proxyKubeconfig);
@@ -25,13 +41,18 @@ class HelmService {
   public async listCharts() {
     const repositories = await HelmRepoManager.getInstance().repositories();
 
-    return Object.fromEntries(
-      await Promise.all(repositories.map(async repo => [repo.name, await HelmChartManager.forRepo(repo).charts()])),
+    return object.fromEntries(
+      await Promise.all(repositories.map(async repo => [repo.name, await HelmChartManager.forRepo(repo).charts()] as const)),
     );
   }
 
   public async getChart(repoName: string, chartName: string, version = "") {
     const repo = await HelmRepoManager.getInstance().repo(repoName);
+
+    if (!repo) {
+      return undefined;
+    }
+
     const chartManager = HelmChartManager.forRepo(repo);
 
     return {
@@ -43,10 +64,14 @@ class HelmService {
   public async getChartValues(repoName: string, chartName: string, version = "") {
     const repo = await HelmRepoManager.getInstance().repo(repoName);
 
+    if (!repo) {
+      return undefined;
+    }
+
     return HelmChartManager.forRepo(repo).getValues(chartName, version);
   }
 
-  public async listReleases(cluster: Cluster, namespace: string = null) {
+  public async listReleases(cluster: Cluster, namespace?: string) {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
     logger.debug("list releases");
@@ -88,7 +113,7 @@ class HelmService {
     return deleteRelease(releaseName, namespace, proxyKubeconfig);
   }
 
-  public async updateRelease(cluster: Cluster, releaseName: string, namespace: string, data: { chart: string; values: {}; version: string }) {
+  public async updateRelease(cluster: Cluster, releaseName: string, namespace: string, data: UpdateChartArgs) {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
     const kubectl = await cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();

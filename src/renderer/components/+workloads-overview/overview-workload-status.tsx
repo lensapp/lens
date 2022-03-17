@@ -19,7 +19,7 @@ export interface OverviewWorkloadStatusProps {
 
 @observer
 export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStatusProps> {
-  elem?: HTMLElement;
+  private elem: HTMLElement | null = null;
 
   renderChart() {
     if (!this.elem) {

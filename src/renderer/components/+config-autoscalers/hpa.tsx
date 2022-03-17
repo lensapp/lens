@@ -38,7 +38,13 @@ export class HorizontalPodAutoscalers extends React.Component {
 
     const metricsRemain = metrics.length > 1 ? `+${metrics.length - 1} more...` : "";
 
-    return <p>{hpa.getMetricValues(metrics[0])} {metricsRemain}</p>;
+    return (
+      <p>
+        {hpa.getMetricValues(metrics[0])} 
+        {" "}
+        {metricsRemain}
+      </p>
+    );
   }
 
   render() {

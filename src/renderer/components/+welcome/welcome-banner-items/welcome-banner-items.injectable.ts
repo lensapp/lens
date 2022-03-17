@@ -12,9 +12,11 @@ const welcomeBannerItemsInjectable = getInjectable({
   instantiate: (di) => {
     const extensions = di.inject(rendererExtensionsInjectable);
 
-    return computed(() => [
-      ...extensions.get().flatMap((extension) => extension.welcomeBanners),
-    ]);
+    return computed(() => (
+      extensions
+        .get()
+        .flatMap((extension) => extension.welcomeBanners)
+    ));
   },
 });
 

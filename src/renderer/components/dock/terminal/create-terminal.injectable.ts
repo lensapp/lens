@@ -7,9 +7,11 @@ import { Terminal } from "./terminal";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
 
+export type CreateTerminal = (tabId: TabId, api: TerminalApi) => Terminal;
+
 const createTerminalInjectable = getInjectable({
   id: "create-terminal",
-  instantiate: () => (tabId: TabId, api: TerminalApi) => new Terminal(tabId, api),
+  instantiate: (): CreateTerminal => (tabId, api) => new Terminal(tabId, api),
 });
 
 export default createTerminalInjectable;

@@ -23,7 +23,7 @@ export const overrideFsWithFakes = (di: DiContainer) => {
     (di) => {
       di.override(
         writeJsonFileInjectable,
-        () => (filePath: string, contents: object) => {
+        () => (filePath, contents) => {
           state.set(filePath, JSON.stringify(contents));
 
           return Promise.resolve();

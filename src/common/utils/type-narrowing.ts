@@ -3,6 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { ExecException, ExecFileException } from "child_process";
+import type { IncomingMessage } from "http";
+
 /**
  * Narrows `val` to include the property `key` (if true is returned)
  * @param val The object to be tested
@@ -38,7 +41,7 @@ export function hasTypedProperty<S extends object, K extends PropertyKey, V>(val
  * @param key The key to test if it is present on the object (must be a literal for tsc to do any meaningful typing)
  * @param isValid a function to check if the field (when present) is valid
  */
-export function hasOptionalProperty<S extends object, K extends PropertyKey, V>(val: S, key: K, isValid: (value: unknown) => value is V): val is (S & { [key in K]?: V }) {
+export function hasOptionalTypedProperty<S extends object, K extends PropertyKey, V>(val: S, key: K, isValid: (value: unknown) => value is V): val is (S & { [key in K]?: V }) {
   if (hasOwnProperty(val, key)) {
     return typeof val[key] === "undefined" || isValid(val[key]);
   }
@@ -74,11 +77,48 @@ export function isString(val: unknown): val is string {
 }
 
 /**
+ * checks if val is of type Buffer
+ * @param val the value to be checked
+ */export function isBuffer(val: unknown): val is Buffer {
+  return val instanceof Buffer;
+}
+
+/**
+ * checks if val is of type number
+ * @param val the value to be checked
+ */
+export function isNumber(val: unknown): val is number {
+  return typeof val === "number";
+}
+
+/**
+ * checks if val is of type boolean
+ * @param val the value to be checked
+ */
+export function isBoolean(val: unknown): val is boolean {
+  return typeof val === "boolean";
+}
+
+/**
  * checks if val is of type object and isn't null
  * @param val the value to be checked
  */
 export function isObject(val: unknown): val is object {
   return typeof val === "object" && val !== null;
+}
+
+/**
+ * checks if `val` is defined, useful for filtering out undefined values in a strict manner
+ */
+export function isDefined<T>(val: T | undefined | null): val is T {
+  return val != null;
+}
+
+/**
+ * Checks if the value in the second position is non-nullable
+ */
+export function hasDefinedTupleValue<K, V>(pair: [K, V | undefined | null]): pair is [K, V] {
+  return pair[1] != null;
 }
 
 /**
@@ -91,4 +131,78 @@ export function isObject(val: unknown): val is object {
  */
 export function bindPredicate<FnArgs extends any[], T>(fn: (arg1: unknown, ...args: FnArgs) => arg1 is T, ...boundArgs: FnArgs): (arg1: unknown) => arg1 is T {
   return (arg1: unknown): arg1 is T => fn(arg1, ...boundArgs);
+}
+
+export function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
+  return isObject(error)
+    && hasOptionalTypedProperty(error, "code", isString)
+    && hasOptionalTypedProperty(error, "path", isString)
+    && hasOptionalTypedProperty(error, "syscall", isString)
+    && hasOptionalTypedProperty(error, "errno", isNumber)
+    && error instanceof Error;
+}
+
+export function isExecException(error: unknown): error is ExecException {
+  return isObject(error)
+    && hasOptionalTypedProperty(error, "cmd", isString)
+    && hasOptionalTypedProperty(error, "killed", isBoolean)
+    && hasOptionalTypedProperty(error, "signal", isString)
+    && hasOptionalTypedProperty(error, "code", isNumber)
+    && error instanceof Error;
+}
+
+export function isExecFileException(error: unknown): error is ExecFileException {
+  return isExecException(error) && isErrnoException(error);
+}
+
+export type OutputFormat = "string" | "buffer";
+export type ComputeOutputFormat<Format> = Format extends "string"
+  ? string
+  : Format extends "buffer"
+    ? Buffer
+    : string | Buffer;
+
+export interface ChildProcessExecpetion<Format> extends ExecFileException {
+  stderr: ComputeOutputFormat<Format>;
+  stdout: ComputeOutputFormat<Format>;
+}
+
+const isStringOrBuffer = (val: unknown): val is string | Buffer => isString(val) || isBuffer(val);
+
+export function isChildProcessError(error: unknown, format?: OutputFormat): error is ChildProcessExecpetion<typeof format> {
+  if (!isExecFileException(error)) {
+    return false;
+  }
+
+  if (format === "string") {
+    return hasTypedProperty(error, "stderr", isString)
+      && hasTypedProperty(error, "stdout", isString);
+  } else if (format === "buffer") {
+    return hasTypedProperty(error, "stderr", isBuffer)
+      && hasTypedProperty(error, "stdout", isBuffer);
+  } else {
+    return hasTypedProperty(error, "stderr", isStringOrBuffer)
+      && hasTypedProperty(error, "stdout", isStringOrBuffer);
+  }
+}
+
+export interface RequestLikeError extends Error {
+  statusCode?: number;
+  failed?: boolean;
+  timedOut?: boolean;
+  error?: string;
+  response?: IncomingMessage & { body?: any };
+}
+
+/**
+ * A type guard for checking if the error is similar in shape to a request package error
+ */
+export function isRequestError(error: unknown): error is RequestLikeError {
+  return isObject(error)
+    && hasOptionalTypedProperty(error, "statusCode", isNumber)
+    && hasOptionalTypedProperty(error, "failed", isBoolean)
+    && hasOptionalTypedProperty(error, "timedOut", isBoolean)
+    && hasOptionalTypedProperty(error, "error", isString)
+    && hasOptionalTypedProperty(error, "response", isObject)
+    && error instanceof Error;
 }

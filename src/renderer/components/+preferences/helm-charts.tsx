@@ -6,14 +6,13 @@
 import styles from "./helm-charts.module.scss";
 
 import React from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 import type { HelmRepo } from "../../../main/helm/helm-repo-manager";
 import { HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
-import type { SelectOption } from "../select";
 import { Select } from "../select";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
@@ -32,13 +31,6 @@ export class HelmCharts extends React.Component {
   constructor(props: {}) {
     super(props);
     makeObservable(this);
-  }
-
-  @computed get options(): SelectOption<HelmRepo>[] {
-    return this.repos.map(repo => ({
-      label: repo.name,
-      value: repo,
-    }));
   }
 
   componentDidMount() {
@@ -79,7 +71,14 @@ export class HelmCharts extends React.Component {
       await HelmRepoManager.getInstance().addRepo(repo);
       this.addedRepos.set(repo.name, repo);
     } catch (err) {
-      Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
+      Notifications.error((
+        <>
+          {"Adding helm branch "}
+          <b>{repo.name}</b>
+          {" has failed: "}
+          {String(err)}
+        </>
+      ));
     }
   }
 
@@ -89,28 +88,47 @@ export class HelmCharts extends React.Component {
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(
-        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>,
+        <>
+          {"Removing helm branch "}
+          <b>{repo.name}</b>
+          {" has failed: "}
+          {String(err)}
+        </>,
       );
     }
   }
 
-  onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>): Promise<void> => {
-    const isAdded = this.addedRepos.has(repo.name);
+  onRepoSelect = async (repo: HelmRepo | null): Promise<void> => {
+    if (!repo) {
+      return;
+    }
 
-    if (isAdded) {
-      return void Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
+    if (this.addedRepos.has(repo.name)) {
+      return void Notifications.ok((
+        <>
+          {"Helm repo "}
+          <b>{repo.name}</b>
+          {" already in use."}
+        </>
+      ));
     }
 
     await this.addRepo(repo);
   };
 
-  formatOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
+  formatOptionLabel = (repo: HelmRepo) => {
     const isAdded = this.addedRepos.has(repo.name);
 
     return (
       <div className="flex gaps">
         <span>{repo.name}</span>
-        {isAdded && <Icon small material="check" className="box right"/>}
+        {isAdded && (
+          <Icon
+            small
+            material="check"
+            className="box right"
+          />
+        )}
       </div>
     );
   };
@@ -132,7 +150,11 @@ export class HelmCharts extends React.Component {
 
     return repos.map(([name, repo]) => {
       return (
-        <RemovableItem key={name} onRemove={() => this.removeRepo(repo)} className="mt-3">
+        <RemovableItem
+          key={name}
+          onRemove={() => this.removeRepo(repo)}
+          className="mt-3"
+        >
           <div>
             <div data-testid="repository-name" className={styles.repoName}>{name}</div>
             <div className={styles.repoUrl}>{repo.url}</div>
@@ -151,9 +173,10 @@ export class HelmCharts extends React.Component {
             placeholder="Repositories"
             isLoading={this.loadingAvailableRepos}
             isDisabled={this.loadingAvailableRepos}
-            options={this.options}
+            options={this.repos}
             onChange={this.onRepoSelect}
             formatOptionLabel={this.formatOptionLabel}
+            getOptionLabel={repo => repo.name}
             controlShouldRenderValue={false}
             className="box grow"
             themeName="lens"

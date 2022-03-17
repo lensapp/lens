@@ -14,7 +14,7 @@ import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import isEqual from "lodash/isEqual";
 
-export const MenuContext = React.createContext<MenuContextValue>(null);
+export const MenuContext = React.createContext<MenuContextValue | null>(null);
 export type MenuContextValue = Menu;
 
 export interface MenuPosition {
@@ -67,8 +67,8 @@ export class Menu extends React.Component<MenuProps, State> {
     super(props);
     autoBind(this);
   }
-  public opener: HTMLElement;
-  public elem: HTMLUListElement;
+  public opener: HTMLElement | null = null;
+  public elem: HTMLUListElement | null = null;
   protected items: { [index: number]: MenuItem } = {};
   public state: State = {};
 
@@ -81,18 +81,31 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   componentDidMount() {
-    if (!this.props.usePortal) {
-      const parent = this.elem.parentElement;
+    const {
+      usePortal,
+      htmlFor,
+      toggleEvent,
+    } = this.props;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const elem = this.elem!;
+
+    if (!usePortal) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const parent = elem.parentElement!;
       const position = window.getComputedStyle(parent).position;
 
       if (position === "static") parent.style.position = "relative";
     } else if (this.isOpen) {
       this.refreshPosition();
     }
-    this.opener = document.getElementById(this.props.htmlFor); // might not exist in sub-menus
+
+    if (htmlFor) {
+      this.opener = document.getElementById(htmlFor); // might not exist in sub-menus
+    }
 
     if (this.opener) {
-      this.opener.addEventListener(this.props.toggleEvent, this.toggle);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.opener.addEventListener(toggleEvent!, this.toggle);
       this.opener.addEventListener("keydown", this.onKeyDown);
     }
     window.addEventListener("resize", this.onWindowResize);
@@ -104,7 +117,8 @@ export class Menu extends React.Component<MenuProps, State> {
 
   componentWillUnmount() {
     if (this.opener) {
-      this.opener.removeEventListener(this.props.toggleEvent, this.toggle);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.opener.removeEventListener(this.props.toggleEvent!, this.toggle);
       this.opener.removeEventListener("keydown", this.onKeyDown);
     }
     window.removeEventListener("resize", this.onWindowResize);
@@ -138,9 +152,9 @@ export class Menu extends React.Component<MenuProps, State> {
       let nextItem = reverse ? items[activeIndex - 1] : items[activeIndex + 1];
 
       if (!nextItem) nextItem = items[activeIndex];
-      nextItem.elem.focus();
+      nextItem.elem?.focus();
     } else {
-      items[0].elem.focus();
+      items[0].elem?.focus();
     }
   }
 
@@ -233,7 +247,7 @@ export class Menu extends React.Component<MenuProps, State> {
         const focusedItem = this.focusedItem;
 
         if (focusedItem) {
-          focusedItem.elem.click();
+          focusedItem.elem?.click();
           evt.preventDefault();
         }
         break;
@@ -258,7 +272,7 @@ export class Menu extends React.Component<MenuProps, State> {
     this.refreshPosition();
   }
 
-  onScrollOutside(evt: UIEvent) {
+  onScrollOutside(evt: Event) {
     if (!this.isOpen) return;
     const target = evt.target as HTMLElement;
     const { usePortal, closeOnScroll } = this.props;
@@ -272,7 +286,7 @@ export class Menu extends React.Component<MenuProps, State> {
     if (!this.props.closeOnClickOutside) return;
     if (!this.isOpen || evt.target === document.body) return;
     const target = evt.target as HTMLElement;
-    const clickInsideMenu = this.elem.contains(target);
+    const clickInsideMenu = this.elem?.contains(target);
     const clickOnOpener = this.opener && this.opener.contains(target);
 
     if (!clickInsideMenu && !clickOnOpener) {
@@ -309,9 +323,9 @@ export class Menu extends React.Component<MenuProps, State> {
     if (children.type === Fragment) {
       children = children.props.children;
     }
-    const menuItems = React.Children.toArray(children).map((item: ReactElement<MenuItemProps>, index) => {
-      if (item.type === MenuItem) {
-        return React.cloneElement(item, {
+    const menuItems = React.Children.toArray(children).map((item, index) => {
+      if (typeof item === "object" && (item as ReactElement).type === MenuItem) {
+        return React.cloneElement(item as ReactElement, {
           ref: (item: MenuItem) => this.bindItemRef(item, index),
         });
       }
@@ -350,7 +364,9 @@ export function SubMenu(props: Partial<MenuProps>) {
   return (
     <Menu
       className={cssNames("SubMenu", className)}
-      isOpen open={noop} close={noop}
+      isOpen
+      open={noop}
+      close={noop}
       position={{}} // reset position, must be handled in css
       closeOnClickOutside={false}
       closeOnClickItem={false}
@@ -376,7 +392,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
   static contextType = MenuContext;
 
   declare context: MenuContextValue;
-  public elem: HTMLElement;
+  public elem: HTMLElement | null = null;
 
   constructor(props: MenuItemProps) {
     super(props);
@@ -398,7 +414,8 @@ export class MenuItem extends React.Component<MenuItemProps> {
     const { spacer, onClick } = this.props;
 
     if (spacer) return;
-    onClick(evt);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    onClick!(evt);
 
     if (menu.props.closeOnClickItem && !evt.defaultPrevented) {
       menu.close();
@@ -411,19 +428,28 @@ export class MenuItem extends React.Component<MenuItemProps> {
 
   render() {
     const { className, disabled, active, spacer, icon, children, ...props } = this.props;
-    let iconProps: Partial<IconProps>;
+    const iconProps: Partial<IconProps> = {};
 
     if (icon) {
-      iconProps = {};
-      if (typeof icon === "string") iconProps.material = icon;
-      else Object.assign(iconProps, icon);
+      if (typeof icon === "string") {
+        iconProps.material = icon;
+      } else {
+        Object.assign(iconProps, icon);
+      }
     }
+
     const elemProps: React.HTMLProps<any> = {
       tabIndex: this.isFocusable ? 0 : -1,
       ...props,
       className: cssNames("MenuItem", className, { disabled, active, spacer }),
       onClick: this.onClick,
-      children: icon ? <><Icon {...iconProps}/> {children}</> : children,
+      children: icon ? (
+        <>
+          <Icon {...iconProps}/>
+          {" "}
+          {children}
+        </>
+      ) : children,
       ref: this.bindRef,
     };
 

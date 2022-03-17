@@ -14,6 +14,8 @@ describe("Pod tests", () => {
         name: "foobar",
         resourceVersion: "foobar",
         uid: "foobar",
+        namespace: "default",
+        selfLink: "/api/v1/pods/default/foobar",
       },
     });
 

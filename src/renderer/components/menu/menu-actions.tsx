@@ -23,8 +23,8 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   autoCloseOnSelect?: boolean;
   triggerIcon?: string | IconProps | React.ReactNode;
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
-  updateAction?(): void;
-  removeAction?(): void;
+  updateAction?: () => void | Promise<void>;
+  removeAction?: () => void | Promise<void>;
   onOpen?(): void;
 }
 
@@ -73,7 +73,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     if (isValidElement<HTMLElement>(triggerIcon)) {
       className = cssNames(triggerIcon.props.className, { active: this.isOpen });
 
-      return React.cloneElement(triggerIcon, { id: this.id, className } as any);
+      return React.cloneElement(triggerIcon, { id: this.id, className });
     }
     const iconProps: Partial<IconProps> = {
       id: this.id,
@@ -113,7 +113,9 @@ export class MenuActions extends React.Component<MenuActionsProps> {
 
         <Menu
           htmlFor={this.id}
-          isOpen={this.isOpen} open={this.toggle} close={this.toggle}
+          isOpen={this.isOpen}
+          open={this.toggle}
+          close={this.toggle}
           className={menuClassName}
           usePortal={autoClose}
           closeOnScroll={autoClose}
@@ -124,13 +126,21 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
+              <Icon
+                material="edit"
+                interactive={toolbar}
+                tooltip="Edit"
+              />
               <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove} data-testid="menu-action-remove">
-              <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
+              <Icon
+                material="delete"
+                interactive={toolbar}
+                tooltip="Delete"
+              />
               <span className="title">Delete</span>
             </MenuItem>
           )}

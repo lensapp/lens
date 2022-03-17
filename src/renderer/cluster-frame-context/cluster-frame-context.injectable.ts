@@ -5,7 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterFrameContext } from "./cluster-frame-context";
 import namespaceStoreInjectable from "../components/+namespaces/namespace-store/namespace-store.injectable";
-import hostedClusterInjectable from "../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../cluster/hosted-cluster.injectable";
+import assert from "assert";
 
 const clusterFrameContextInjectable = getInjectable({
   id: "cluster-frame-context",
@@ -13,13 +14,11 @@ const clusterFrameContextInjectable = getInjectable({
   instantiate: (di) => {
     const cluster = di.inject(hostedClusterInjectable);
 
-    return new ClusterFrameContext(
-      cluster,
+    assert(cluster, "This can only be injected within a cluster frame");
 
-      {
-        namespaceStore: di.inject(namespaceStoreInjectable),
-      },
-    );
+    return new ClusterFrameContext(cluster, {
+      namespaceStore: di.inject(namespaceStoreInjectable),
+    });
   },
 });
 

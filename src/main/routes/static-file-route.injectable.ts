@@ -2,12 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import type { LensApiRequest, Route } from "../router/router";
 import type { SupportedFileExtension } from "../router/router-content-types";
 import { contentTypes } from "../router/router-content-types";
 import logger from "../logger";
-import { routeInjectionToken } from "../router/router.injectable";
+import { getRouteInjectable } from "../router/router.injectable";
 import { appName, publicPath, staticFilesDirectory } from "../../common/vars";
 import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
@@ -18,6 +16,8 @@ import getAbsolutePathInjectable from "../../common/path/get-absolute-path.injec
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { webpackDevServerPort } from "../../../webpack/vars";
+import type { LensApiRequest, RouteResponse } from "../router/route";
+import { route } from "../router/route";
 
 interface ProductionDependencies {
   readFileBuffer: (path: string) => Promise<Buffer>;
@@ -27,7 +27,7 @@ interface ProductionDependencies {
 
 const handleStaticFileInProduction =
   ({ readFileBuffer, getAbsolutePath, joinPaths }: ProductionDependencies) =>
-    async ({ params }: LensApiRequest) => {
+    async ({ params }: LensApiRequest<"/{path*}">): Promise<RouteResponse<Buffer>> => {
       const staticPath = getAbsolutePath(staticFilesDirectory);
       let filePath = params.path;
 
@@ -49,7 +49,7 @@ const handleStaticFileInProduction =
           return { response: await readFileBuffer(asset), contentType };
         } catch (err) {
           if (retryCount > 5) {
-            logger.error("handleStaticFile:", err.toString());
+            logger.error("handleStaticFile:", String(err));
 
             return { statusCode: 404 };
           }
@@ -67,10 +67,8 @@ interface DevelopmentDependencies {
 
 const handleStaticFileInDevelopment =
   ({ proxy }: DevelopmentDependencies) =>
-    (apiReq: LensApiRequest) => {
-      const { req, res } = apiReq.raw;
-
-      if (req.url === "/" || !req.url.startsWith("/build/")) {
+    ({ raw: { req, res }}: LensApiRequest<"/{path*}">): RouteResponse<Buffer> => {
+      if (req.url === "/" || !req.url?.startsWith("/build/")) {
         req.url = `${publicPath}/${appName}.html`;
       }
 
@@ -81,25 +79,27 @@ const handleStaticFileInDevelopment =
       return { proxy };
     };
 
-const staticFileRouteInjectable = getInjectable({
+const staticFileRouteInjectable = getRouteInjectable({
   id: "static-file-route",
 
-  instantiate: (di): Route<Buffer> => {
+  instantiate: (di) => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
-    const readFileBuffer = di.inject(readFileBufferInjectable);
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
-    const joinPaths = di.inject(joinPathsInjectable);
 
-    return {
+    return route({
       method: "get",
       path: `/{path*}`,
-      handler: isDevelopment
-        ? handleStaticFileInDevelopment({ proxy: httpProxy.createProxy() })
-        : handleStaticFileInProduction({ readFileBuffer, getAbsolutePath, joinPaths }),
-    };
+    })(
+      isDevelopment
+        ? handleStaticFileInDevelopment({
+          proxy: httpProxy.createProxy(),
+        })
+        : handleStaticFileInProduction({
+          readFileBuffer: di.inject(readFileBufferInjectable),
+          getAbsolutePath: di.inject(getAbsolutePathInjectable),
+          joinPaths: di.inject(joinPathsInjectable),
+        }),
+    );
   },
-
-  injectionToken: routeInjectionToken,
 });
 
 export default staticFileRouteInjectable;

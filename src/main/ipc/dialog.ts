@@ -4,10 +4,12 @@
  */
 
 import type { OpenDialogOptions } from "electron";
-import { BrowserWindow, dialog } from "electron";
+import { dialog } from "electron";
+import { WindowManager } from "../window-manager";
 
 export async function showOpenDialog(dialogOptions: OpenDialogOptions): Promise<{ canceled: boolean; filePaths: string[] }> {
-  const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOptions);
+  const window = await WindowManager.getInstance().ensureMainWindow();
+  const { canceled, filePaths } = await dialog.showOpenDialog(window, dialogOptions);
 
   return { canceled, filePaths };
 }

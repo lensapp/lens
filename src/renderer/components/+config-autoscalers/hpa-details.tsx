@@ -12,7 +12,7 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { cssNames } from "../../utils";
-import type { IHpaMetric } from "../../../common/k8s-api/endpoints/hpa.api";
+import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTarget } from "../../../common/k8s-api/endpoints/hpa.api";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints/hpa.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { apiManager } from "../../../common/k8s-api/api-manager";
@@ -25,38 +25,75 @@ export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAut
 
 @observer
 export class HpaDetails extends React.Component<HpaDetailsProps> {
+  private renderTargetLink(target: HorizontalPodAutoscalerMetricTarget | undefined) {
+    if (!target) {
+      return null;
+    }
+
+    const { object: hpa } = this.props;
+    const { kind, name } = target;
+    const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
+
+    return (
+      <>
+        on
+        <Link to={objectUrl}>
+          {`${kind}/${name}`}
+        </Link>
+      </>
+    );
+  }
+
   renderMetrics() {
     const { object: hpa } = this.props;
 
-    const renderName = (metric: IHpaMetric) => {
+    const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
       switch (metric.type) {
+        case HpaMetricType.ContainerResource:
+
+        // fallthrough
         case HpaMetricType.Resource: {
-          const addition = metric.resource.targetAverageUtilization
+          const metricSpec = metric.resource ?? metric.containerResource;
+          const addition = metricSpec.targetAverageUtilization
             ? "(as a percentage of request)"
             : "";
 
-          return <>Resource {metric.resource.name} on Pods {addition}</>;
-        }
-        case HpaMetricType.Pods:
-          return <>{metric.pods.metricName} on Pods</>;
-
-        case HpaMetricType.Object: {
-          const { target } = metric.object;
-          const { kind, name } = target;
-          const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
-
           return (
             <>
-              {metric.object.metricName} on{" "}
-              <Link to={objectUrl}>{kind}/{name}</Link>
+              Resource
+              {metricSpec.name}
+              {" "}
+              on Pods
+              {addition}
+            </>
+          );
+        }
+        case HpaMetricType.Pods:
+          return (
+            <>
+              {metric.pods.metricName}
+              {" "}
+              on Pods
+            </>
+          );
+
+        case HpaMetricType.Object: {
+          return (
+            <>
+              {metric.object.metricName}
+              {" "}
+              {this.renderTargetLink(metric.object.target)}
             </>
           );
         }
         case HpaMetricType.External:
           return (
             <>
-              {metric.external.metricName} on{" "}
-              {JSON.stringify(metric.external.selector)}
+              {metric.external.metricName}
+              {" "}
+              on
+              {" "}
+              {JSON.stringify(metric.external.metricSelector)}
             </>
           );
       }
@@ -103,7 +140,9 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
         <DrawerItem name="Reference">
           {scaleTargetRef && (
             <Link to={getDetailsUrl(apiManager.lookupApiLink(scaleTargetRef, hpa))}>
-              {scaleTargetRef.kind}/{scaleTargetRef.name}
+              {scaleTargetRef.kind}
+              /
+              {scaleTargetRef.name}
             </Link>
           )}
         </DrawerItem>
@@ -120,19 +159,20 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
           {hpa.getReplicas()}
         </DrawerItem>
 
-        <DrawerItem name="Status" className="status" labelsOnly>
-          {hpa.getConditions().map(({ type, tooltip, isReady }) => {
-            if (!isReady) return null;
-
-            return (
+        <DrawerItem
+          name="Status"
+          className="status"
+          labelsOnly
+        >
+          {hpa.getReadyConditions()
+            .map(({ type, tooltip, isReady }) => (
               <Badge
                 key={type}
                 label={type}
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            );
-          })}
+            ))}
         </DrawerItem>
 
         <DrawerTitle>Metrics</DrawerTitle>

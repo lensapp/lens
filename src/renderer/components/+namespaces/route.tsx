@@ -6,7 +6,7 @@
 import "./namespaces.scss";
 
 import React from "react";
-import { NamespaceStatus } from "../../../common/k8s-api/endpoints";
+import { NamespaceStatusKind } from "../../../common/k8s-api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout-2";
 import { Badge } from "../badge";
@@ -58,7 +58,13 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
       renderTableContents={namespace => [
         namespace.getName(),
         <KubeObjectStatusIcon key="icon" object={namespace} />,
-        namespace.getLabels().map(label => <Badge scrollable key={label} label={label}/>),
+        namespace.getLabels().map(label => (
+          <Badge
+            scrollable
+            key={label}
+            label={label}
+          />
+        )),
         <KubeObjectAge key="age" object={namespace} />,
         { title: namespace.getStatus(), className: namespace.getStatus().toLowerCase() },
       ]}
@@ -67,7 +73,7 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
         onAdd: openAddNamespaceDialog,
       }}
       customizeTableRowProps={item => ({
-        disabled: item.getStatus() === NamespaceStatus.TERMINATING,
+        disabled: item.getStatus() === NamespaceStatusKind.TERMINATING,
       })}
     />
     <AddNamespaceDialog/>

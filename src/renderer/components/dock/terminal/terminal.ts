@@ -18,15 +18,22 @@ import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
+import assert from "assert";
 
 export class Terminal {
   private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
 
-  public static get spawningPool() {
-    return document.getElementById("terminal-init");
+  public static spawningPool: HTMLElement;
+
+  static {
+    const pool = document.getElementById("terminal-init");
+
+    assert(pool, "FATAL: missing #terminal-init tag in DOM");
+
+    this.spawningPool = pool;
   }
 
-  private xterm: XTerm | null = new XTerm({
+  private xterm: XTerm = new XTerm({
     cursorBlink: true,
     cursorStyle: "bar",
     fontSize: this.terminalConfig.fontSize,
@@ -37,14 +44,17 @@ export class Terminal {
   private disposer = disposer();
 
   get elem() {
-    return this.xterm?.element;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.xterm.element!;
   }
 
   get viewport() {
-    return this.xterm.element.querySelector(".xterm-viewport");
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.elem.querySelector(".xterm-viewport")!;
   }
 
   attachTo(parentElem: HTMLElement) {
+    assert(this.elem, "Terminal should always be mounted somewhere");
     parentElem.appendChild(this.elem);
     this.onActivate();
   }
@@ -98,11 +108,8 @@ export class Terminal {
   }
 
   destroy() {
-    if (this.xterm) {
-      this.disposer();
-      this.xterm.dispose();
-      this.xterm = null;
-    }
+    this.disposer();
+    this.xterm.dispose();
   }
 
   fit = () => {

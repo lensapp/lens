@@ -21,11 +21,11 @@ import getConfigurationFileModelInjectable from "../../../../common/get-configur
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import type { HotbarStore } from "../../../../common/hotbar-store";
 
-const mockHotbars: { [id: string]: any } = {
+const mockHotbars: Partial<Record<string, any>> = {
   "1": {
     id: "1",
     name: "Default",
-    items: [] as any,
+    items: [],
   },
 };
 
@@ -71,7 +71,7 @@ describe("<HotbarRemoveCommand />", () => {
       },
       hotbarIndex: () => 0,
       getDisplayLabel: () => "1: Default",
-    }) as any as HotbarStore);
+    }) as unknown as HotbarStore);
 
     await di.runSetups();
 
@@ -89,7 +89,7 @@ describe("<HotbarRemoveCommand />", () => {
       remove: removeMock,
       hotbarIndex: () => 0,
       getDisplayLabel: () => "1: Default",
-    }) as any as HotbarStore);
+    }) as unknown as HotbarStore);
 
     await di.runSetups();
 

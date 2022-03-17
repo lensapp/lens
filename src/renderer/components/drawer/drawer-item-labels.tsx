@@ -10,7 +10,7 @@ import { Badge } from "../badge";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 
 export interface DrawerItemLabelsProps extends DrawerItemProps {
-  labels: string[] | Record<string, string>;
+  labels: string[] | Partial<Record<string, string>>;
 }
 
 export function DrawerItemLabels(props: DrawerItemLabelsProps) {
@@ -30,7 +30,13 @@ export function DrawerItemLabels(props: DrawerItemLabelsProps) {
 
   return (
     <DrawerItem {...itemProps} labelsOnly>
-      {labelStrings.map(label => <Badge key={label} label={label} title={label}/>)}
+      {labelStrings.map(label => (
+        <Badge
+          key={label}
+          label={label}
+          title={label}
+        />
+      ))}
     </DrawerItem>
   );
 }

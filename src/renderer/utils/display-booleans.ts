@@ -5,7 +5,7 @@
 
 import type React from "react";
 
-export function displayBooleans(shouldShow: boolean, from: React.ReactNode): React.ReactNode {
+export function displayBooleans(shouldShow: boolean | undefined, from: React.ReactNode): React.ReactNode {
   if (shouldShow) {
     if (typeof from === "boolean") {
       return from.toString();

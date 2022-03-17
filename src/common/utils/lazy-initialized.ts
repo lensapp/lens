@@ -23,7 +23,8 @@ export function lazyInitialized<T>(builder: () => T): LazyInitialized<T> {
   return {
     get() {
       if (called) {
-        return value;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return value!;
       }
 
       value = builder();

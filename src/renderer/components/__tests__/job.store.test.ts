@@ -16,6 +16,7 @@ const runningJob = new Job({
     resourceVersion: "runningJob",
     uid: "runningJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1/jobs/default/runningJob",
   },
 });
 
@@ -27,6 +28,7 @@ const failedJob = new Job({
     resourceVersion: "failedJob",
     uid: "failedJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1/jobs/default/failedJob",
   },
 });
 
@@ -38,6 +40,7 @@ const pendingJob = new Job({
     resourceVersion: "pendingJob",
     uid: "pendingJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1/jobs/default/pendingJob",
   },
 });
 
@@ -49,6 +52,7 @@ const succeededJob = new Job({
     resourceVersion: "succeededJob",
     uid: "succeededJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1/jobs/default/succeededJob",
   },
 });
 
@@ -61,33 +65,36 @@ const runningPod = new Pod({
     uid: "foobar",
     ownerReferences: [{
       uid: "runningJob",
+      apiVersion: "v1",
+      kind: "Pod",
+      name: "running",
     }],
     namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar",
+  },
+  status: {
+    phase: "Running",
+    conditions: [
+      {
+        type: "Initialized",
+        status: "True",
+        lastProbeTime: 1,
+        lastTransitionTime: "1",
+      },
+      {
+        type: "Ready",
+        status: "True",
+        lastProbeTime: 1,
+        lastTransitionTime: "1",
+      },
+    ],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
+    containerStatuses: [],
+    initContainerStatuses: [],
   },
 });
-
-runningPod.status = {
-  phase: "Running",
-  conditions: [
-    {
-      type: "Initialized",
-      status: "True",
-      lastProbeTime: 1,
-      lastTransitionTime: "1",
-    },
-    {
-      type: "Ready",
-      status: "True",
-      lastProbeTime: 1,
-      lastTransitionTime: "1",
-    },
-  ],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-  containerStatuses: [],
-  initContainerStatuses: [],
-};
 
 const pendingPod = new Pod({
   apiVersion: "foo",
@@ -98,8 +105,12 @@ const pendingPod = new Pod({
     uid: "foobar-pending",
     ownerReferences: [{
       uid: "pendingJob",
+      apiVersion: "v1",
+      kind: "Pod",
+      name: "pending",
     }],
     namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar-pending",
   },
 });
 
@@ -112,18 +123,21 @@ const failedPod = new Pod({
     uid: "foobar-failed",
     ownerReferences: [{
       uid: "failedJob",
+      apiVersion: "v1",
+      kind: "Pod",
+      name: "failed",
     }],
     namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar-failed",
+  },
+  status: {
+    phase: "Failed",
+    conditions: [],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
   },
 });
-
-failedPod.status = {
-  phase: "Failed",
-  conditions: [],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-};
 
 const succeededPod = new Pod({
   apiVersion: "foo",
@@ -134,17 +148,21 @@ const succeededPod = new Pod({
     uid: "foobar-succeeded",
     ownerReferences: [{
       uid: "succeededJob",
+      apiVersion: "v1",
+      kind: "Pod",
+      name: "succeeded",
     }],
+    namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar-succeeded",
+  },
+  status: {
+    phase: "Succeeded",
+    conditions: [],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
   },
 });
-
-succeededPod.status = {
-  phase: "Succeeded",
-  conditions: [],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-};
 
 describe("Job Store tests", () => {
   beforeAll(() => {

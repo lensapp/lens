@@ -103,7 +103,11 @@ export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
         onMenuOpen={() => this.onMenuOpen()}
         disabled={!entity}
         menuItems={this.contextMenu.menuItems}
-        tooltip={`${entity.getName()} (${entity.metadata.source})`}
+        tooltip={(
+          entity.metadata.source
+            ? `${entity.getName()} (${entity.metadata.source})`
+            : entity.getName()
+        )}
         {...elemProps}
       >
         { this.ledIcon }

@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { DiContainerForInstantiate } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
@@ -17,19 +17,17 @@ import { SiblingsInTabLayout } from "../components/layout/siblings-in-tab-layout
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
 import { routeSpecificComponentInjectionToken } from "./route-specific-component-injection-token";
 import { computed } from "mobx";
-import { getExtensionRoutePath } from "./get-extension-route-path";
 import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import { getExtensionRoutePath } from "./for-extension";
 
 const extensionRouteRegistratorInjectable = getInjectable({
   id: "extension-route-registrator",
 
-  instantiate: (di: DiContainer) => {
+  instantiate: (di) => {
     const observableHistory = di.inject(observableHistoryInjectable);
 
-    return (
-      extension: LensRendererExtension,
-      extensionInstallationCount: number,
-    ) => {
+    return (ext, extensionInstallationCount) => {
+      const extension = ext as LensRendererExtension;
       const toRouteInjectable = toRouteInjectableFor(
         di,
         extension,
@@ -42,7 +40,7 @@ const extensionRouteRegistratorInjectable = getInjectable({
         ...extension.clusterPages.map(toRouteInjectable(true)),
       ].flat();
 
-      routeInjectables.forEach(di.register);
+      routeInjectables.forEach(di.register as never);
     };
   },
 
@@ -53,9 +51,9 @@ export default extensionRouteRegistratorInjectable;
 
 const toRouteInjectableFor =
   (
-    di: DiContainer,
+    di: DiContainerForInstantiate,
     extension: LensRendererExtension,
-    observableHistory: ObservableHistory,
+    observableHistory: ObservableHistory<unknown>,
     extensionInstallationCount: number,
   ) =>
     (clusterFrame: boolean) =>

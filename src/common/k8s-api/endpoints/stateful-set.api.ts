@@ -3,17 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { IAffinity } from "../workload-kube-object";
-import { WorkloadKubeObject } from "../workload-kube-object";
-import { autoBind } from "../../utils";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { IPodMetrics } from "./pods.api";
-import type { KubeJsonApiData } from "../kube-json-api";
+import type { PodMetricData } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { LabelSelector } from "../kube-object";
+import { KubeObject } from "../kube-object";
+import type { PodTemplateSpec } from "./types/pod-template-spec";
+import type { PersistentVolumeClaimTemplateSpec } from "./types/persistent-volume-claim-template-spec";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: StatefulSet,
+    });
+  }
+
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
@@ -40,7 +47,7 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
   }
 }
 
-export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
+export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<PodMetricData> {
   const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
   const opts = { category: "pods", pods: podSelector, namespace, selector };
 
@@ -57,74 +64,52 @@ export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace
   });
 }
 
-export class StatefulSet extends WorkloadKubeObject {
-  static kind = "StatefulSet";
-  static namespaced = true;
-  static apiBase = "/apis/apps/v1/statefulsets";
+export interface StatefulSetSpec {
+  serviceName: string;
+  replicas: number;
+  selector: LabelSelector;
+  template: PodTemplateSpec;
+  volumeClaimTemplates: PersistentVolumeClaimTemplateSpec[];
+}
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
+export interface StatefulSetStatus {
+  observedGeneration: number;
+  replicas: number;
+  currentReplicas: number;
+  readyReplicas: number;
+  currentRevision: string;
+  updateRevision: string;
+  collisionCount: number;
+}
+
+export class StatefulSet extends KubeObject<StatefulSetStatus, StatefulSetSpec, "namespace-scoped"> {
+  static readonly kind = "StatefulSet";
+  static readonly namespaced = true;
+  static readonly apiBase = "/apis/apps/v1/statefulsets";
+
+  getSelectors(): string[] {
+    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
   }
 
-  declare spec: {
-    serviceName: string;
-    replicas: number;
-    selector: LabelSelector;
-    template: {
-      metadata: {
-        labels: {
-          app: string;
-        };
-      };
-      spec: {
-        containers: null | {
-          name: string;
-          image: string;
-          ports: {
-            containerPort: number;
-            name: string;
-          }[];
-          volumeMounts: {
-            name: string;
-            mountPath: string;
-          }[];
-        }[];
-        affinity?: IAffinity;
-        nodeSelector?: {
-          [selector: string]: string;
-        };
-        tolerations: {
-          key: string;
-          operator: string;
-          effect: string;
-          tolerationSeconds: number;
-        }[];
-      };
-    };
-    volumeClaimTemplates: {
-      metadata: {
-        name: string;
-      };
-      spec: {
-        accessModes: string[];
-        resources: {
-          requests: {
-            storage: string;
-          };
-        };
-      };
-    }[];
-  };
-  declare status: {
-    observedGeneration: number;
-    replicas: number;
-    currentReplicas: number;
-    readyReplicas: number;
-    currentRevision: string;
-    updateRevision: string;
-    collisionCount: number;
-  };
+  getNodeSelectors(): string[] {
+    return KubeObject.stringifyLabels(this.spec.template.spec?.nodeSelector);
+  }
+
+  getTemplateLabels(): string[] {
+    return KubeObject.stringifyLabels(this.spec.template.metadata?.labels);
+  }
+
+  getTolerations() {
+    return this.spec.template.spec?.tolerations ?? [];
+  }
+
+  getAffinity() {
+    return this.spec.template.spec?.affinity ?? {};
+  }
+
+  getAffinityNumber() {
+    return Object.keys(this.getAffinity()).length;
+  }
 
   getReplicas() {
     return this.spec.replicas || 0;
@@ -137,14 +122,6 @@ export class StatefulSet extends WorkloadKubeObject {
   }
 }
 
-let statefulSetApi: StatefulSetApi;
-
-if (isClusterPageContext()) {
-  statefulSetApi = new StatefulSetApi({
-    objectConstructor: StatefulSet,
-  });
-}
-
-export {
-  statefulSetApi,
-};
+export const statefulSetApi = isClusterPageContext()
+  ? new StatefulSetApi()
+  : undefined as never;

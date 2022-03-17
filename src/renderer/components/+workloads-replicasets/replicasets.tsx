@@ -31,7 +31,8 @@ export class ReplicaSets extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="workload_replicasets"
-          className="ReplicaSets" store={replicaSetStore}
+          className="ReplicaSets"
+          store={replicaSetStore}
           dependentStores={[eventStore]} // status icon component uses event store
           sortingCallbacks={{
             [columnId.name]: replicaSet => replicaSet.getName(),
@@ -56,7 +57,7 @@ export class ReplicaSets extends React.Component {
           ]}
           renderTableContents={replicaSet => [
             replicaSet.getName(),
-            <KubeObjectStatusIcon key="icon" object={replicaSet}/>,
+            <KubeObjectStatusIcon key="icon" object={replicaSet} />,
             replicaSet.getNs(),
             replicaSet.getDesired(),
             replicaSet.getCurrent(),

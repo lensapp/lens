@@ -24,7 +24,7 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
 
 // Common handler for all Badge instances
 document.addEventListener("selectionchange", () => {
-  Badge.badgeMeta.hasTextSelected ||= window.getSelection().toString().trim().length > 0;
+  Badge.badgeMeta.hasTextSelected ||= (window.getSelection()?.toString().trim().length ?? 0) > 0;
 });
 
 @withTooltip
@@ -38,7 +38,7 @@ export class Badge extends React.Component<BadgeProps> {
     hasTextSelected: false,
   });
 
-  @observable.ref elem: HTMLElement;
+  @observable.ref elem: HTMLDivElement | null = null;
   @observable isExpanded = false;
 
   constructor(props: BadgeProps) {
@@ -48,9 +48,9 @@ export class Badge extends React.Component<BadgeProps> {
   }
 
   @computed get isExpandable() {
-    if (!this.props.expandable) return false;
-
-    return this.elem?.clientWidth < this.elem?.scrollWidth;
+    return this.props.expandable && this.elem
+      ? this.elem.clientWidth < this.elem.scrollWidth
+      : false;
   }
 
   onMouseUp() {
@@ -59,10 +59,6 @@ export class Badge extends React.Component<BadgeProps> {
     } else {
       this.isExpanded = !this.isExpanded;
     }
-  }
-
-  bindRef(elem: HTMLElement) {
-    this.elem = elem;
   }
 
   render() {
@@ -79,7 +75,12 @@ export class Badge extends React.Component<BadgeProps> {
     });
 
     return (
-      <div {...elemProps} className={classNames} onMouseUp={this.onMouseUp} ref={this.bindRef}>
+      <div
+        {...elemProps}
+        className={classNames}
+        onMouseUp={this.onMouseUp}
+        ref={elem => this.elem = elem}
+      >
         {label}
         {children}
       </div>

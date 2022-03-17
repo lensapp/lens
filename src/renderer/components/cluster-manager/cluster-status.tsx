@@ -76,7 +76,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
       await requestClusterActivation(this.cluster.id, true);
     } catch (error) {
       this.authOutput.push({
-        message: error.toString(),
+        message: String(error),
         isError: true,
       });
     } finally {
@@ -111,7 +111,10 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
       <>
         <Spinner singleColor={false} className={styles.spinner} />
         <pre className="kube-auth-out">
-          <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
+          <p>
+            {this.isReconnecting ? "Reconnecting" : "Connecting"}
+            &hellip;
+          </p>
         </pre>
       </>
     );

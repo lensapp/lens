@@ -52,14 +52,22 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
         <section id="terminalTheme">
           <SubTitle title="Terminal theme" />
           <Select
-            id="terminal-theme-input"
             themeName="lens"
             options={[
-              { label: "Match theme", value: "" },
-              ...themeStore.themeOptions,
+              "",
+              ...themeStore.themes.keys(),
             ]}
+            getOptionLabel={themeName => {
+              const theme = themeStore.themes.get(themeName);
+
+              if (theme) {
+                return theme.name;
+              }
+
+              return "Match System Theme";
+            }}
             value={userStore.terminalTheme}
-            onChange={({ value }) => userStore.terminalTheme = value}
+            onChange={value => userStore.terminalTheme = value ?? ""}
           />
         </section>
 

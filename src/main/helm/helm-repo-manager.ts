@@ -11,9 +11,9 @@ import orderBy from "lodash/orderBy";
 import logger from "../logger";
 import { execHelm } from "./exec";
 
-export type HelmEnv = Record<string, string> & {
-  HELM_REPOSITORY_CACHE?: string;
-  HELM_REPOSITORY_CONFIG?: string;
+export type HelmEnv = Partial<Record<string, string>> & {
+  HELM_REPOSITORY_CACHE: string;
+  HELM_REPOSITORY_CONFIG: string;
 };
 
 export interface HelmRepoConfig {
@@ -32,10 +32,14 @@ export interface HelmRepo {
   password?: string;
 }
 
+interface EnsuredHelmRepoManagerData {
+  helmEnv: HelmEnv;
+  didUpdateOnce: boolean;
+}
+
 export class HelmRepoManager extends Singleton {
-  protected repos: HelmRepo[];
-  protected helmEnv: HelmEnv;
-  protected didUpdateOnce: boolean;
+  protected helmEnv?: HelmEnv;
+  protected didUpdateOnce?: boolean;
 
   public async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({
@@ -48,10 +52,10 @@ export class HelmRepoManager extends Singleton {
     return orderBy(res.body as HelmRepo[], repo => repo.name);
   }
 
-  private async ensureInitialized() {
+  private async ensureInitialized(): Promise<EnsuredHelmRepoManagerData> {
     this.helmEnv ??= await this.parseHelmEnv();
 
-    const repos = await this.list();
+    const repos = await this.list(this.helmEnv);
 
     if (repos.length === 0) {
       await this.addRepo({
@@ -64,12 +68,17 @@ export class HelmRepoManager extends Singleton {
       await this.update();
       this.didUpdateOnce = true;
     }
+
+    return {
+      didUpdateOnce: this.didUpdateOnce,
+      helmEnv: this.helmEnv,
+    };
   }
 
   protected async parseHelmEnv() {
     const output = await execHelm(["env"]);
     const lines = output.split(/\r?\n/); // split by new line feed
-    const env: HelmEnv = {};
+    const env: Partial<Record<string, string>> = {};
 
     lines.forEach((line: string) => {
       const [key, value] = line.split("=");
@@ -79,18 +88,18 @@ export class HelmRepoManager extends Singleton {
       }
     });
 
-    return env;
+    return env as HelmEnv;
   }
 
-  public async repo(name: string): Promise<HelmRepo> {
+  public async repo(name: string): Promise<HelmRepo | undefined> {
     const repos = await this.repositories();
 
     return repos.find(repo => repo.name === name);
   }
 
-  private async list(): Promise<HelmRepo[]> {
+  private async list(helmEnv: HelmEnv): Promise<HelmRepo[]> {
     try {
-      const rawConfig = await readFile(this.helmEnv.HELM_REPOSITORY_CONFIG, "utf8");
+      const rawConfig = await readFile(helmEnv.HELM_REPOSITORY_CONFIG, "utf8");
       const parsedConfig = yaml.load(rawConfig) as HelmRepoConfig;
 
       if (typeof parsedConfig === "object" && parsedConfig) {
@@ -105,13 +114,13 @@ export class HelmRepoManager extends Singleton {
 
   public async repositories(): Promise<HelmRepo[]> {
     try {
-      await this.ensureInitialized();
+      const { helmEnv } = await this.ensureInitialized();
 
-      const repos = await this.list();
+      const repos = await this.list(helmEnv);
 
       return repos.map(repo => ({
         ...repo,
-        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
+        cacheFilePath: `${helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
       }));
     } catch (error) {
       logger.error(`[HELM]: repositories listing error`, error);

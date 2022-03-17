@@ -4,22 +4,26 @@
  */
 
 // Convert object's keys to camelCase format
-import { camelCase, isPlainObject } from "lodash";
+import { camelCase } from "lodash";
+import type { SingleOrMany } from ".";
+import { isObject } from "./type-narrowing";
 
-export function toCamelCase(obj: Record<string, any>): any {
+export function toCamelCase<T extends Record<string, unknown>[]>(obj: T): T;
+export function toCamelCase<T extends Record<string, unknown>>(obj: T): T;
+
+export function toCamelCase(obj: SingleOrMany<Record<string, unknown> | unknown>): SingleOrMany<Record<string, unknown> | unknown> {
   if (Array.isArray(obj)) {
     return obj.map(toCamelCase);
   }
-  else if (isPlainObject(obj)) {
-    return Object.keys(obj).reduce((result, key) => {
-      const value = obj[key];
 
-      result[camelCase(key)] = typeof value === "object" ? toCamelCase(value) : value;
+  if (isObject(obj)) {
+    return Object.fromEntries(
+      Object.entries(obj)
+        .map(([key, value]) => {
+          return [camelCase(key), toCamelCase(value)];
+        }),
+    );
+  }
 
-      return result;
-    }, {} as any);
-  }
-  else {
-    return obj;
-  }
+  return obj;
 }

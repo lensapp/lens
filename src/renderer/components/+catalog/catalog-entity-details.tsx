@@ -36,7 +36,7 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Cat
     const { onRun, hideDetails } = this.props;
     const detailItems = CatalogEntityDetailRegistry.getInstance().getItemsForKind(entity.kind, entity.apiVersion);
     const details = detailItems.map(({ components }, index) => <components.Details entity={entity} key={index} />);
-    const showDefaultDetails = detailItems.find((item) => item.priority > 999) === undefined;
+    const showDefaultDetails = detailItems.find((item) => item.priority ?? 50 > 999) === undefined;
 
     return (
       <>

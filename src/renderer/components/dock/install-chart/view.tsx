@@ -18,11 +18,10 @@ import { Spinner } from "../../spinner";
 import { Icon } from "../../icon";
 import { Button } from "../../button";
 import { LogsDialog } from "../../dialog/logs-dialog";
-import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { Input } from "../../input";
 import { EditorPanel } from "../editor-panel";
-import type { IReleaseCreatePayload, IReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import type { HelmReleaseCreatePayload, HelmReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import installChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
@@ -30,13 +29,14 @@ import createReleaseInjectable from "../../+helm-releases/create-release/create-
 import { Notifications } from "../../notifications";
 import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
+import assert from "assert";
 
 export interface InstallCharProps {
   tab: DockTab;
 }
 
 interface Dependencies {
-  createRelease: (payload: IReleaseCreatePayload) => Promise<IReleaseUpdateDetails>;
+  createRelease: (payload: HelmReleaseCreatePayload) => Promise<HelmReleaseUpdateDetails>;
   installChartStore: InstallChartTabStore;
   dockStore: DockStore;
   navigateToHelmReleases: NavigateToHelmReleases;
@@ -73,28 +73,25 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     return this.props.installChartStore.details.getData(this.tabId);
   }
 
-  viewRelease = () => {
-    const { release } = this.releaseDetails;
-
+  viewRelease = ({ release }: HelmReleaseUpdateDetails) => {
     this.props.navigateToHelmReleases({
       name: release.name,
       namespace: release.namespace,
     });
-
     this.props.dockStore.closeTab(this.tabId);
   };
 
   save(data: Partial<IChartInstallData>) {
-    const chart = { ...this.chartData, ...data };
+    assert(this.chartData, "Cannot update data before data exists");
 
-    this.props.installChartStore.setData(this.tabId, chart);
+    this.props.installChartStore.setData(this.tabId, { ...this.chartData, ...data });
   }
 
-  onVersionChange = (option: SelectOption) => {
-    const version = option.value;
-
-    this.save({ version, values: "" });
-    this.props.installChartStore.loadValues(this.tabId);
+  onVersionChange = (version: string | null) => {
+    if (version) {
+      this.save({ version, values: "" });
+      this.props.installChartStore.loadValues(this.tabId);
+    }
   };
 
   onChange = action((values: string) => {
@@ -106,51 +103,66 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     this.error = error.toString();
   });
 
-  onNamespaceChange = (opt: SelectOption) => {
-    this.save({ namespace: opt.value });
+  onNamespaceChange = (namespace: string | null) => {
+    if (namespace) {
+      this.save({ namespace });
+    }
   };
 
   onReleaseNameChange = (name: string) => {
     this.save({ releaseName: name });
   };
 
-  install = async () => {
-    const { repo, name, version, namespace, values, releaseName } = this.chartData;
+  install = async ({ repo, name, version, namespace, values = "", releaseName }: IChartInstallData) => {
     const details = await this.props.createRelease({
       name: releaseName || undefined,
       chart: name,
-      repo, namespace, version, values,
+      repo,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      namespace: namespace!,
+      version,
+      values,
     });
 
     this.props.installChartStore.details.setData(this.tabId, details);
 
     return (
-      <p>Chart Release <b>{details.release.name}</b> successfully created.</p>
+      <p>
+        {"Chart Release "}
+        <b>{details.release.name}</b>
+        {" successfully created."}
+      </p>
     );
   };
 
   render() {
-    const { tabId, chartData, versions, install } = this;
+    const { tabId, chartData, versions, install, releaseDetails } = this;
 
     if (chartData?.values === undefined || !versions) {
-      return <Spinner center/>;
+      return <Spinner center />;
     }
 
-    if (this.releaseDetails) {
+    if (releaseDetails) {
       return (
         <div className="InstallChartDone flex column gaps align-center justify-center">
           <p>
-            <Icon material="check" big sticker/>
+            <Icon
+              material="check"
+              big
+              sticker
+            />
           </p>
           <p>Installation complete!</p>
           <div className="flex gaps align-center">
             <Button
-              autoFocus primary
+              autoFocus
+              primary
               label="View Helm Release"
-              onClick={prevDefault(this.viewRelease)}
+              onClick={prevDefault(() => this.viewRelease(releaseDetails))}
             />
             <Button
-              plain active
+              plain
+              active
               label="Show Notes"
               onClick={() => this.showNotes = true}
             />
@@ -159,53 +171,51 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
             title="Helm Chart Install"
             isOpen={this.showNotes}
             close={() => this.showNotes = false}
-            logs={this.releaseDetails.log}
+            logs={releaseDetails.log}
           />
         </div>
       );
     }
 
     const { repo, name, version, namespace, releaseName } = chartData;
-    const panelControls = (
-      <div className="install-controls flex gaps align-center">
-        <span>Chart</span>
-        <Badge label={`${repo}/${name}`} title="Repo/Name"/>
-        <span>Version</span>
-        <Select
-          id="chart-version-input"
-          className="chart-version"
-          value={version}
-          options={versions}
-          onChange={this.onVersionChange}
-          menuPlacement="top"
-          themeName="outlined"
-        />
-        <span>Namespace</span>
-        <NamespaceSelect
-          id="install-chart-namespace-select-input"
-          showIcons={false}
-          menuPlacement="top"
-          themeName="outlined"
-          value={namespace}
-          onChange={this.onNamespaceChange}
-        />
-        <Input
-          placeholder="Name (optional)"
-          title="Release name"
-          maxLength={50}
-          value={releaseName}
-          onChange={this.onReleaseNameChange}
-        />
-      </div>
-    );
 
     return (
       <div className="InstallChart flex column">
         <InfoPanel
           tabId={tabId}
-          controls={panelControls}
+          controls={(
+            <div className="install-controls flex gaps align-center">
+              <span>Chart</span>
+              <Badge label={`${repo}/${name}`} title="Repo/Name" />
+              <span>Version</span>
+              <Select
+                className="chart-version"
+                value={version}
+                options={versions}
+                onChange={this.onVersionChange}
+                menuPlacement="top"
+                themeName="outlined"
+              />
+              <span>Namespace</span>
+              <NamespaceSelect
+                showIcons={false}
+                menuPlacement="top"
+                themeName="outlined"
+                value={namespace}
+                onChange={this.onNamespaceChange}
+              />
+              <Input
+                placeholder="Name (optional)"
+                title="Release name"
+                maxLength={50}
+                value={releaseName}
+                onChange={this.onReleaseNameChange}
+              />
+            </div>
+          )}
           error={this.error}
-          submit={install}
+          submit={() => install(chartData)}
+          disableSubmit={!chartData.namespace}
           submitLabel="Install"
           submittingMessage="Installing..."
           showSubmitClose={false}

@@ -7,18 +7,18 @@
 // API docs: https://react-window.now.sh
 import "./virtual-list.scss";
 
-import React, { Component } from "react";
+import type { ForwardedRef, PropsWithoutRef, RefObject } from "react";
+import React, { createRef, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import type { Align, ListChildComponentProps, ListOnScrollProps } from "react-window";
 import { VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
 import type { TableRowProps } from "../table/table-row";
-import type { ItemObject } from "../../../common/item.store";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import AutoSizer from "react-virtualized-auto-sizer";
 
-export interface VirtualListProps<T extends ItemObject = any> {
+export interface VirtualListProps<T extends { getId(): string } | string> {
   items: T[];
   rowHeights: number[];
   className?: string;
@@ -26,7 +26,7 @@ export interface VirtualListProps<T extends ItemObject = any> {
   initialOffset?: number;
   readyOffset?: number;
   selectedItemId?: string;
-  getRow?: (uid: string | number) => React.ReactElement<any>;
+  getRow?: (uid: T extends string ? number : string) => React.ReactElement | undefined | null;
   onScroll?: (props: ListOnScrollProps) => void;
   outerRef?: React.Ref<any>;
 
@@ -37,117 +37,125 @@ export interface VirtualListProps<T extends ItemObject = any> {
   fixedHeight?: number;
 }
 
-interface State {
-  overscanCount: number;
+export interface VirtualListRef {
+  scrollToItem: (index: number, align: Align) => void;
 }
 
-const defaultProps: Partial<VirtualListProps> = {
-  width: "100%",
-  initialOffset: 1,
-  readyOffset: 10,
-  onScroll: noop,
-};
-
-export class VirtualList extends Component<VirtualListProps, State> {
-  static defaultProps = defaultProps as object;
-
-  private listRef = React.createRef<VariableSizeList>();
-
-  public state: State = {
-    overscanCount: this.props.initialOffset,
-  };
-
-  componentDidMount() {
-    this.scrollToSelectedItem();
-    this.setState({ overscanCount: this.props.readyOffset });
-  }
-
-  componentDidUpdate(prevProps: VirtualListProps) {
-    const { items, rowHeights } = this.props;
-
-    if (prevProps.items.length !== items.length || !isEqual(prevProps.rowHeights, rowHeights)) {
-      this.listRef.current?.resetAfterIndex(0, false);
-    }
-  }
-
-  getItemSize = (index: number) => this.props.rowHeights[index];
-
-  scrollToSelectedItem = debounce(() => {
-    if (!this.props.selectedItemId) {
+function VirtualListInner<T extends { getId(): string } | string>({
+  items,
+  rowHeights,
+  className,
+  width = "100%",
+  initialOffset = 1,
+  readyOffset = 10,
+  selectedItemId,
+  getRow,
+  onScroll = noop,
+  outerRef,
+  fixedHeight,
+}: VirtualListProps<T>, ref: ForwardedRef<VirtualListRef>) {
+  const [overscanCount, setOverscanCount] = useState(initialOffset);
+  const listRef = createRef<VariableSizeList>();
+  const prevItems = useRef(items);
+  const prevRowHeights = useRef(rowHeights);
+  const scrollToSelectedItem = useCallback(debounce(() => {
+    if (!selectedItemId) {
       return;
     }
 
-    const { items, selectedItemId } = this.props;
-    const index = items.findIndex(item => item.getId() == selectedItemId);
+    const index = items.findIndex(item => selectedItemId === (
+      typeof item === "string"
+        ? item
+        : item.getId()
+    ));
 
     if (index >= 0) {
-      this.listRef.current?.scrollToItem(index, "start");
+      listRef.current?.scrollToItem(index, "start");
     }
+  }), [selectedItemId, [items]]);
+  const getItemSize = (index: number) => rowHeights[index];
+
+  useImperativeHandle(ref, () => ({
+    scrollToItem: (index, align) => listRef.current?.scrollToItem(index, align),
+  }));
+
+  useEffect(() => {
+    scrollToSelectedItem();
+    setOverscanCount(readyOffset);
   });
 
-  scrollToItem = (index: number, align: Align) => {
-    this.listRef.current?.scrollToItem(index, align);
-  };
+  useEffect(() => {
+    try {
+      if (prevItems.current.length !== items.length || !isEqual(prevRowHeights.current, rowHeights)) {
+        listRef.current?.resetAfterIndex(0, false);
+      }
+    } finally {
+      prevItems.current = items;
+      prevRowHeights.current = rowHeights;
+    }
+  }, [items, rowHeights]);
 
-  renderList(height: number | undefined) {
-    const { width, items, getRow, onScroll, outerRef } = this.props;
-    const { overscanCount } = this.state;
+  const renderList = (height: number) => (
+    <VariableSizeList
+      className="list"
+      width={width}
+      height={height}
+      itemSize={getItemSize}
+      itemCount={items.length}
+      itemData={{
+        items,
+        getRow: getRow as never,
+      }}
+      overscanCount={overscanCount}
+      ref={listRef}
+      outerRef={outerRef}
+      onScroll={onScroll}
+    >
+      {Row}
+    </VariableSizeList>
+  );
 
-    return (
-      <VariableSizeList
-        className="list"
-        width={width}
-        height={height}
-        itemSize={this.getItemSize}
-        itemCount={items.length}
-        itemData={{
-          items,
-          getRow,
-        }}
-        overscanCount={overscanCount}
-        ref={this.listRef}
-        outerRef={outerRef}
-        onScroll={onScroll}
-      >
-        {Row}
-      </VariableSizeList>
-    );
-  }
-
-  render() {
-    const { className, fixedHeight } = this.props;
-
-    return (
-      <div className={cssNames("VirtualList", className)}>
-        {
-          typeof fixedHeight === "number"
-            ? this.renderList(fixedHeight)
-            : (
-              <AutoSizer disableWidth>
-                {({ height }) => this.renderList(height)}
-              </AutoSizer>
-            )
-        }
-      </div>
-    );
-  }
+  return (
+    <div className={cssNames("VirtualList", className)}>
+      {
+        typeof fixedHeight === "number"
+          ? renderList(fixedHeight)
+          : (
+            <AutoSizer disableWidth>
+              {({ height }) => renderList(height)}
+            </AutoSizer>
+          )
+      }
+    </div>
+  );
 }
 
-interface RowData {
-  items: ItemObject[];
-  getRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
+const ForwardedVirtualList = forwardRef(VirtualListInner);
+
+export function VirtualList<T extends { getId(): string } | string>(
+  props: PropsWithoutRef<VirtualListProps<T>> & { ref?: RefObject<VirtualListRef> },
+) {
+  return <ForwardedVirtualList {...props as never} />;
 }
 
-export interface RowProps extends ListChildComponentProps {
-  data: RowData;
+interface RowData<T extends { getId(): string } | string> {
+  items: T[];
+  getRow?: (uid: T extends string ? number : string) => React.ReactElement<TableRowProps<T>>;
 }
 
-const Row = observer((props: RowProps) => {
+export interface RowProps<T extends { getId(): string } | string> extends ListChildComponentProps {
+  data: RowData<T>;
+}
+
+const Row = observer(<T extends { getId(): string } | string>(props: RowProps<T>) => {
   const { index, style, data } = props;
   const { items, getRow } = data;
   const item = items[index];
-  const uid = typeof item == "string" ? index : items[index].getId();
-  const row = getRow(uid);
+  const row = getRow?.((
+    typeof item == "string"
+      ? index
+      : item.getId()
+  ) as never);
 
   if (!row) return null;
 

@@ -23,7 +23,9 @@ export class SubTitle extends React.Component<SubTitleProps> {
 
     return (
       <div className={classNames} id={id}>
-        {title} {children}
+        {title} 
+        {" "}
+        {children}
       </div>
     );
   }

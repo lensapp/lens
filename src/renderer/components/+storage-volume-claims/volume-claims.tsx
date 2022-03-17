@@ -8,7 +8,7 @@ import "./volume-claims.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { volumeClaimStore } from "./volume-claim.store";
+import { persistentVolumeClaimStore } from "./volume-claim.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../../common/utils/convertMemory";
@@ -38,7 +38,7 @@ export class PersistentVolumeClaims extends React.Component {
           isConfigurable
           tableId="storage_volume_claims"
           className="PersistentVolumeClaims"
-          store={volumeClaimStore}
+          store={persistentVolumeClaimStore}
           dependentStores={[podsStore]}
           sortingCallbacks={{
             [columnId.name]: pvc => pvc.getName(),
@@ -75,12 +75,20 @@ export class PersistentVolumeClaims extends React.Component {
               pvc.getName(),
               <KubeObjectStatusIcon key="icon" object={pvc} />,
               pvc.getNs(),
-              <Link key="link" to={storageClassDetailsUrl} onClick={stopPropagation}>
+              <Link
+                key="link"
+                to={storageClassDetailsUrl}
+                onClick={stopPropagation}
+              >
                 {storageClassName}
               </Link>,
               pvc.getStorage(),
               pods.map(pod => (
-                <Link key={pod.getId()} to={getDetailsUrl(pod.selfLink)} onClick={stopPropagation}>
+                <Link
+                  key={pod.getId()}
+                  to={getDetailsUrl(pod.selfLink)}
+                  onClick={stopPropagation}
+                >
                   {pod.getName()}
                 </Link>
               )),

@@ -68,10 +68,10 @@ export class LensExtension {
     return this.manifest.description;
   }
 
-  private dependencies: LensExtensionDependencies;
+  private readonly dependencies!: LensExtensionDependencies;
 
   [setLensExtensionDependencies] = (dependencies: LensExtensionDependencies) => {
-    this.dependencies = dependencies;
+    (this as unknown as { dependencies: LensExtensionDependencies }).dependencies = dependencies;
   };
 
   /**
@@ -86,7 +86,7 @@ export class LensExtension {
   }
 
   @action
-  async enable(register: (ext: LensExtension) => Promise<Disposer[]>) {
+  async enable(register: (ext: this) => Promise<Disposer[]>) {
     if (this._isEnabled) {
       return;
     }
@@ -136,11 +136,13 @@ export function sanitizeExtensionName(name: string) {
   return name.replace("@", "").replace("/", "--");
 }
 
-export const getSanitizedPath = (...parts: string[]) => parts
-  .filter(Boolean)
-  .join("/")
-  .replace(/\/+/g, "/")
-  .replace(/\/$/, ""); // normalize multi-slashes (e.g. coming from page.id)
+export function getSanitizedPath(...parts: string[]) {
+  return parts
+    .filter(Boolean)
+    .join("/")
+    .replace(/\/+/g, "/")
+    .replace(/\/$/, "");
+} // normalize multi-slashes (e.g. coming from page.id)
 
 export function extensionDisplayName(name: string, version: string) {
   return `${name}@${version}`;

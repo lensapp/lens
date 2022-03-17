@@ -14,12 +14,12 @@ import { ConfirmDialog } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName } from "../../utils";
-import { autoBind, cssNames, isReactNode, prevDefault, stopPropagation } from "../../utils";
+import { autoBind, cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import type { ItemObject, ItemStore } from "../../../common/item.store";
+import type { ItemObject } from "../../../common/item.store";
 import type { Filter } from "./page-filters.store";
 import { pageFilters } from "./page-filters.store";
 import { ThemeStore } from "../../theme.store";
@@ -27,23 +27,24 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
+import type { ItemListStore } from "./list-layout";
 
-export interface ItemListLayoutContentProps<I extends ItemObject> {
+export interface ItemListLayoutContentProps<I extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
   tableId?: string;
   className: IClassName;
   getItems: () => I[];
-  store: ItemStore<I>;
+  store: ItemListStore<I, PreLoadStores>;
   getIsReady: () => boolean; // show loading indicator while not ready
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
   sortingCallbacks?: TableSortCallbacks<I>;
   tableProps?: Partial<TableProps<I>>; // low-level table configuration
-  renderTableHeader: TableCellProps[] | null;
+  renderTableHeader?: (TableCellProps | undefined | null)[];
   renderTableContents: (item: I) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: I, store: ItemStore<I>) => ReactNode;
-  customizeTableRowProps?: (item: I) => Partial<TableRowProps>;
+  renderItemMenu?: (item: I, store: ItemListStore<I, PreLoadStores>) => ReactNode;
+  customizeTableRowProps?: (item: I) => Partial<TableRowProps<I>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
 
@@ -64,8 +65,8 @@ export interface ItemListLayoutContentProps<I extends ItemObject> {
 }
 
 @observer
-export class ItemListLayoutContent<I extends ItemObject> extends React.Component<ItemListLayoutContentProps<I>> {
-  constructor(props: ItemListLayoutContentProps<I>) {
+export class ItemListLayoutContent<I extends ItemObject, PreLoadStores extends boolean> extends React.Component<ItemListLayoutContentProps<I, PreLoadStores>> {
+  constructor(props: ItemListLayoutContentProps<I, PreLoadStores>) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -83,7 +84,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
       store, hasDetailsView, onDetails,
-      copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
+      copyClassNameFromHeadCells, customizeTableRowProps = () => ({}), detailsItem,
     } = this.props;
     const { isSelected } = store;
 
@@ -93,7 +94,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
         searchItem={item}
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === item.getId()}
-        onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
+        onClick={hasDetailsView ? prevDefault(() => onDetails?.(item)) : undefined}
         {...customizeTableRowProps(item)}
       >
         {isSelectable && (
@@ -159,14 +160,38 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       ? selectedCount - visibleMaxNamesCount
       : 0;
     const tail = tailCount > 0
-      ? <>, and <b>{tailCount}</b> more</>
+      ? (
+        <>
+          {", and "}
+          <b>{tailCount}</b>
+          {" more"}
+        </>
+      )
       : null;
     const message = selectedCount <= 1
-      ? <p>Remove item <b>{selectedNames}</b>?</p>
-      : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
-    const onConfirm = store.removeItems
-      ? () => store.removeItems(selectedItems)
-      : store.removeSelectedItems;
+      ? (
+        <p>
+          {"Remove item "}
+          <b>{selectedNames}</b>
+          ?
+        </p>
+      )
+      : (
+        <p>
+          Remove
+          <b>{selectedCount}</b>
+          {" items "}
+          <b>{selectedNames}</b>
+          {tail}
+          ?
+        </p>
+      );
+    const { removeSelectedItems, removeItems } = store;
+    const onConfirm = typeof removeItems === "function"
+      ? () => removeItems.apply(store, [selectedItems])
+      : typeof removeSelectedItems === "function"
+        ? removeSelectedItems.bind(store)
+        : noop;
 
     ConfirmDialog.open({
       ok: onConfirm,
@@ -216,7 +241,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       return null;
     }
 
-    const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps(item).disabled);
+    const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps?.(item).disabled);
 
     return (
       <TableHead showTopLine nowrap>
@@ -231,11 +256,15 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
             )}
           </Observer>
         )}
-        {renderTableHeader.map((cellProps, index) => (
-          this.showColumn(cellProps) && (
-            <TableCell key={cellProps.id ?? index} {...cellProps} />
-          )
-        ))}
+        {
+          renderTableHeader
+            .filter(isDefined)
+            .map((cellProps, index) => (
+              this.showColumn(cellProps) && (
+                <TableCell key={cellProps.id ?? index} {...cellProps} />
+              )
+            ))
+        }
         <TableCell className="menu">
           {isConfigurable && this.renderColumnVisibilityMenu()}
         </TableCell>
@@ -278,7 +307,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
               onRemove={
                 (store.removeItems || store.removeSelectedItems) && selectedItems.length > 0
                   ? () => this.removeItemsDialog(selectedItems)
-                  : null
+                  : undefined
               }
               removeTooltip={`Remove selected items (${selectedItems.length})`}
               {...addRemoveButtons}
@@ -292,25 +321,37 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
     const { tableId, isConfigurable } = this.props;
 
-    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
+    return !isConfigurable || !tableId || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu() {
-    const { renderTableHeader, tableId } = this.props;
+    const { renderTableHeader = [], tableId } = this.props;
 
     return (
-      <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
-        {renderTableHeader.map((cellProps, index) => (
-          !cellProps.showWithColumn && (
-            <MenuItem key={index} className="input">
-              <Checkbox
-                label={cellProps.title ?? `<${cellProps.className}>`}
-                value={this.showColumn(cellProps)}
-                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
-              />
-            </MenuItem>
-          )
-        ))}
+      <MenuActions
+        className="ItemListLayoutVisibilityMenu"
+        toolbar={false}
+        autoCloseOnSelect={false}
+      >
+        {
+          renderTableHeader
+            .filter(isDefined)
+            .map((cellProps, index) => (
+              !cellProps.showWithColumn && (
+                <MenuItem key={index} className="input">
+                  <Checkbox
+                    label={cellProps.title ?? `<${cellProps.className}>`}
+                    value={this.showColumn(cellProps)}
+                    onChange={(
+                      tableId
+                        ? (() => cellProps.id && UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id))
+                        : undefined
+                    )}
+                  />
+                </MenuItem>
+              )
+            ))
+        }
       </MenuActions>
     );
   }

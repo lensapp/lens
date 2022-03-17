@@ -25,9 +25,9 @@ export interface ClusterIssuesProps {
   className?: string;
 }
 
-interface IWarning extends ItemObject {
+interface Warning extends ItemObject {
   kind: string;
-  message: string;
+  message: string | undefined;
   selfLink: string;
   renderAge: () => React.ReactElement;
   ageMs: number;
@@ -46,7 +46,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     makeObservable(this);
   }
 
-  @computed get warnings(): IWarning[] {
+  @computed get warnings(): Warning[] {
     return [
       ...nodesStore.items.flatMap(node => (
         node.getWarningConditions()
@@ -75,6 +75,11 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
   getTableRow = (uid: string) => {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);
+
+    if (!warning) {
+      return undefined;
+    }
+
     const { getId, getName, message, kind, selfLink, renderAge } = warning;
 
     return (
@@ -85,7 +90,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
         onClick={prevDefault(() => toggleDetails(selfLink))}
       >
         <TableCell className={styles.message}>
-          {message}
+          {message ?? "<unknown>"}
         </TableCell>
         <TableCell className={styles.object}>
           {getName()}
@@ -112,7 +117,12 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     if (!warnings.length) {
       return (
         <div className={cssNames(styles.noIssues, "flex column box grow gaps align-center justify-center")}>
-          <Icon className={styles.Icon} material="check" big sticker/>
+          <Icon
+            className={styles.Icon}
+            material="check"
+            big
+            sticker
+          />
           <p className={styles.title}>No issues found</p>
           <p>Everything is fine in the Cluster</p>
         </div>
@@ -122,7 +132,8 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     return (
       <>
         <SubHeader className={styles.SubHeader}>
-          <Icon material="error_outline"/> Warnings: {warnings.length}
+          <Icon material="error_outline"/>
+          {` Warnings: ${warnings.length}`}
         </SubHeader>
         <Table
           tableId="cluster_issues"

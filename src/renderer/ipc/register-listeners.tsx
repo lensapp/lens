@@ -27,13 +27,28 @@ function RenderYesButtons(props: { backchannel: string; notificationId: string }
      *
      * See: https://github.com/electron-userland/electron-builder/blob/master/packages/electron-updater/src/AppUpdater.ts#L27-L32
      */
-    return <Button light label="Yes" onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })} />;
+    return (
+      <Button
+        light
+        label="Yes"
+        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })} 
+      />
+    );
   }
 
   return (
     <>
-      <Button light label="Yes, now" onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })} />
-      <Button active outlined label="Yes, later" onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: false })} />
+      <Button
+        light
+        label="Yes, now"
+        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })} 
+      />
+      <Button
+        active
+        outlined
+        label="Yes, later"
+        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: false })} 
+      />
     </>
   );
 }
@@ -45,11 +60,20 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
     (
       <div className="flex column gaps">
         <b>Update Available</b>
-        <p>Version {updateInfo.version} of Lens IDE is available and ready to be installed. Would you like to update now?</p>
+        <p>
+          {"Version "}
+          {updateInfo.version}
+          {" of Lens IDE is available and ready to be installed. Would you like to update now?"}
+        </p>
         <p>Lens should restart automatically, if it doesn&apos;t please restart manually. Installed extensions might require updating.</p>
         <div className="flex gaps row align-left box grow">
           <RenderYesButtons backchannel={backchannel} notificationId={notificationId} />
-          <Button active outlined label="No" onClick={() => sendToBackchannel(backchannel, notificationId, { doUpdate: false })} />
+          <Button
+            active
+            outlined
+            label="No"
+            onClick={() => sendToBackchannel(backchannel, notificationId, { doUpdate: false })} 
+          />
         </div>
       </div>
     ),

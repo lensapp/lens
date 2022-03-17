@@ -53,7 +53,7 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
       showDetails(serviceAccount.selfLink);
       CreateServiceAccountDialog.close();
     } catch (err) {
-      Notifications.error(err);
+      Notifications.checkedError(err, "Unknown error occured while creating service account");
     }
   };
 
@@ -78,14 +78,15 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
               placeholder="Enter a name"
               trim
               validators={systemName}
-              value={name} onChange={v => this.name = v.toLowerCase()}
+              value={name}
+              onChange={v => this.name = v.toLowerCase()}
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
               id="create-dialog-namespace-select-input"
               themeName="light"
               value={namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={namespace => this.namespace = namespace ?? "default"}
             />
           </WizardStep>
         </Wizard>

@@ -22,10 +22,7 @@ export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
   statefulSetApi: StatefulSetApi;
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-  data: null as StatefulSet,
-});
+const dialogState = observable.box<StatefulSet | undefined>();
 
 @observer
 export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProps> {
@@ -42,25 +39,18 @@ export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProp
   }
 
   static open(statefulSet: StatefulSet) {
-    dialogState.isOpen = true;
-    dialogState.data = statefulSet;
+    dialogState.set(statefulSet);
   }
 
   static close() {
-    dialogState.isOpen = false;
-  }
-
-  get statefulSet() {
-    return dialogState.data;
+    dialogState.set(undefined);
   }
 
   close = () => {
     StatefulSetScaleDialog.close();
   };
 
-  onOpen = async () => {
-    const { statefulSet } = this;
-
+  onOpen = async (statefulSet: StatefulSet) => {
     this.currentReplicas = await this.props.statefulSetApi.getReplicas({
       namespace: statefulSet.getNs(),
       name: statefulSet.getName(),
@@ -86,8 +76,7 @@ export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProp
       : currentReplicas * 2;
   }
 
-  scale = async () => {
-    const { statefulSet } = this;
+  scale = async (statefulSet: StatefulSet) => {
     const { currentReplicas, desiredReplicas, close } = this;
 
     try {
@@ -98,8 +87,8 @@ export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProp
         }, desiredReplicas);
       }
       close();
-    } catch (err) {
-      Notifications.error(err);
+    } catch (error) {
+      Notifications.checkedError(error, "Unknown error occured while scaling StatefulSet");
     }
   };
 
@@ -113,75 +102,78 @@ export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProp
     this.desiredReplicas = Math.max(this.scaleMin, this.desiredReplicas - 1);
   };
 
-  renderContents() {
+  renderContents(statefulSet: StatefulSet) {
     const { currentReplicas, desiredReplicas, onChange, scaleMax } = this;
     const warning = currentReplicas < 10 && desiredReplicas > 90;
 
     return (
-      <>
-        <div className="current-scale" data-testid="current-scale">
-          Current replica scale: {currentReplicas}
-        </div>
-        <div className="flex gaps align-center">
-          <div className="desired-scale" data-testid="desired-scale">
-            Desired number of replicas: {desiredReplicas}
+      <Wizard
+        header={(
+          <h5>
+            Scale Stateful Set
+            <span>{statefulSet.getName()}</span>
+          </h5>
+        )}
+        done={this.close}
+      >
+        <WizardStep
+          contentClass="flex gaps column"
+          next={() => this.scale(statefulSet)}
+          nextLabel="Scale"
+          disabledNext={!this.ready}
+        >
+          <div className="current-scale" data-testid="current-scale">
+            {`Current replica scale: ${currentReplicas}`}
           </div>
-          <div className="slider-container flex align-center" data-testid="slider">
-            <Slider value={desiredReplicas} max={scaleMax}
-              onChange={onChange as any /** see: https://github.com/mui-org/material-ui/issues/20191 */}
-            />
+          <div className="flex gaps align-center">
+            <div className="desired-scale" data-testid="desired-scale">
+              {`Desired number of replicas: ${desiredReplicas}`}
+            </div>
+            <div className="slider-container flex align-center" data-testid="slider">
+              <Slider
+                value={desiredReplicas}
+                max={scaleMax}
+                onChange={onChange}
+              />
+            </div>
+            <div className="plus-minus-container flex gaps">
+              <Icon
+                material="add_circle_outline"
+                onClick={this.desiredReplicasUp}
+                data-testid="desired-replicas-up"
+              />
+              <Icon
+                material="remove_circle_outline"
+                onClick={this.desiredReplicasDown}
+                data-testid="desired-replicas-down"
+              />
+            </div>
           </div>
-          <div className="plus-minus-container flex gaps">
-            <Icon
-              material="add_circle_outline"
-              onClick={this.desiredReplicasUp}
-              data-testid="desired-replicas-up"
-            />
-            <Icon
-              material="remove_circle_outline"
-              onClick={this.desiredReplicasDown}
-              data-testid="desired-replicas-down"
-            />
-          </div>
-        </div>
-        {warning &&
-        <div className="warning" data-testid="warning">
-          <Icon material="warning"/>
-          High number of replicas may cause cluster performance issues
-        </div>
-        }
-      </>
+          {warning && (
+            <div className="warning" data-testid="warning">
+              <Icon material="warning"/>
+              High number of replicas may cause cluster performance issues
+            </div>
+          )}
+        </WizardStep>
+      </Wizard>
     );
   }
 
   render() {
     const { className, ...dialogProps } = this.props;
-    const statefulSetName = this.statefulSet ? this.statefulSet.getName() : "";
-    const header = (
-      <h5>
-        Scale Stateful Set <span>{statefulSetName}</span>
-      </h5>
-    );
+    const statefulSet = dialogState.get();
 
     return (
       <Dialog
         {...dialogProps}
-        isOpen={dialogState.isOpen}
+        isOpen={Boolean(statefulSet)}
         className={cssNames("StatefulSetScaleDialog", className)}
-        onOpen={this.onOpen}
+        onOpen={statefulSet && (() => this.onOpen(statefulSet))}
         onClose={this.onClose}
         close={this.close}
       >
-        <Wizard header={header} done={this.close}>
-          <WizardStep
-            contentClass="flex gaps column"
-            next={this.scale}
-            nextLabel="Scale"
-            disabledNext={!this.ready}
-          >
-            {this.renderContents()}
-          </WizardStep>
-        </Wizard>
+        {statefulSet && this.renderContents(statefulSet)}
       </Dialog>
     );
   }

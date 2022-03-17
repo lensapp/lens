@@ -139,6 +139,28 @@ module.exports = {
             "requireLast": false,
           },
         }],
+        "react/jsx-max-props-per-line": ["error", {
+          "maximum": {
+            "single": 2,
+            "multi": 1,
+          },
+        }],
+        "react/jsx-first-prop-new-line": ["error", "multiline"],
+        "react/jsx-one-expression-per-line": ["error", {
+          "allow": "single-child",
+        }],
+        "react/jsx-indent": ["error", 2],
+        "react/jsx-indent-props": ["error", 2],
+        "react/jsx-closing-tag-location": "error",
+        "react/jsx-wrap-multilines": ["error", {
+          "declaration": "parens-new-line",
+          "assignment": "parens-new-line",
+          "return": "parens-new-line",
+          "arrow": "parens-new-line",
+          "condition": "parens-new-line",
+          "logical": "parens-new-line",
+          "prop": "parens-new-line",
+        }],
         "react/display-name": "off",
         "space-before-function-paren": "off",
         "@typescript-eslint/space-before-function-paren": ["error", {

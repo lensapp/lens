@@ -11,9 +11,9 @@ import migrations, { fileNameMigration } from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../app-event-bus/event-bus";
-import { getOrInsertSet, toggle, toJS, entries, fromEntries } from "../../renderer/utils";
+import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
-import type { EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel, TerminalConfig } from "./preferences-helpers";
+import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
 
 export interface UserStoreModel {
@@ -42,47 +42,61 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   /**
    * used in add-cluster page for providing context
+   * @deprecated No longer used
    */
   @observable kubeConfigPath = kubeConfigDefaultPath;
+
+  /**
+   * @deprecated No longer used
+   */
   @observable seenContexts = observable.set<string>();
+
+  /**
+   * @deprecated No longer used
+   */
   @observable newContexts = observable.set<string>();
-  @observable allowTelemetry: boolean;
-  @observable allowErrorReporting: boolean;
-  @observable allowUntrustedCAs: boolean;
-  @observable colorTheme: string;
-  @observable terminalTheme: string;
-  @observable localeTimezone: string;
-  @observable downloadMirror: string;
-  @observable httpsProxy?: string;
-  @observable shell?: string;
-  @observable downloadBinariesPath?: string;
-  @observable kubectlBinariesPath?: string;
-  @observable terminalCopyOnSelect: boolean;
-  @observable terminalConfig: TerminalConfig;
-  @observable updateChannel?: string;
-  @observable extensionRegistryUrl: ExtensionRegistry;
+
+  @observable allowTelemetry!: StoreType<typeof DESCRIPTORS["allowTelemetry"]>;
+  @observable allowErrorReporting!: StoreType<typeof DESCRIPTORS["allowErrorReporting"]>;
+  @observable allowUntrustedCAs!: StoreType<typeof DESCRIPTORS["allowUntrustedCAs"]>;
+  @observable colorTheme!: StoreType<typeof DESCRIPTORS["colorTheme"]>;
+  @observable terminalTheme!: StoreType<typeof DESCRIPTORS["terminalTheme"]>;
+  @observable localeTimezone!: StoreType<typeof DESCRIPTORS["localeTimezone"]>;
+  @observable downloadMirror!: StoreType<typeof DESCRIPTORS["downloadMirror"]>;
+  @observable httpsProxy!: StoreType<typeof DESCRIPTORS["httpsProxy"]>;
+  @observable shell!: StoreType<typeof DESCRIPTORS["shell"]>;
+  @observable downloadBinariesPath!: StoreType<typeof DESCRIPTORS["downloadBinariesPath"]>;
+  @observable kubectlBinariesPath!: StoreType<typeof DESCRIPTORS["kubectlBinariesPath"]>;
+  @observable terminalCopyOnSelect!: StoreType<typeof DESCRIPTORS["terminalCopyOnSelect"]>;
+  @observable terminalConfig!: StoreType<typeof DESCRIPTORS["terminalConfig"]>;
+  @observable updateChannel!: StoreType<typeof DESCRIPTORS["updateChannel"]>;
+  @observable extensionRegistryUrl!: StoreType<typeof DESCRIPTORS["extensionRegistryUrl"]>;
 
   /**
    * Download kubectl binaries matching cluster version
    */
-  @observable downloadKubectlBinaries: boolean;
-  @observable openAtLogin: boolean;
+  @observable downloadKubectlBinaries!: StoreType<typeof DESCRIPTORS["downloadKubectlBinaries"]>;
+
+  /**
+   * Whether the application should open itself at login.
+   */
+  @observable openAtLogin!: StoreType<typeof DESCRIPTORS["openAtLogin"]>;
 
   /**
    * The column IDs under each configurable table ID that have been configured
    * to not be shown
    */
-  hiddenTableColumns = observable.map<string, Set<string>>();
+  @observable hiddenTableColumns!: StoreType<typeof DESCRIPTORS["hiddenTableColumns"]>;
 
   /**
    * Monaco editor configs
    */
-  @observable editorConfiguration: EditorConfiguration;
+  @observable editorConfiguration!: StoreType<typeof DESCRIPTORS["editorConfiguration"]>;
 
   /**
    * The set of file/folder paths to be synced
    */
-  syncKubeconfigEntries = observable.map<string, KubeconfigSyncValue>();
+  @observable syncKubeconfigEntries!: StoreType<typeof DESCRIPTORS["syncKubeconfigEntries"]>;
 
   @computed get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
@@ -120,7 +134,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * @param columnIds The list of IDs the check if one is hidden
    * @returns true if at least one column under the table is set to hidden
    */
-  isTableColumnHidden(tableId: string, ...columnIds: string[]): boolean {
+  isTableColumnHidden(tableId: string, ...columnIds: (string | undefined)[]): boolean {
     if (columnIds.length === 0) {
       return false;
     }
@@ -131,7 +145,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       return false;
     }
 
-    return columnIds.some(columnId => config.has(columnId));
+    return columnIds.some(columnId => columnId && config.has(columnId));
   }
 
   /**
@@ -153,11 +167,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  setLocaleTimezone(tz: string) {
-    this.localeTimezone = tz;
-  }
-
-  @action
   protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
     logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
 
@@ -165,7 +174,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
 
-    for (const [key, { fromStore }] of entries(DESCRIPTORS)) {
+    for (const [key, { fromStore }] of object.entries(DESCRIPTORS)) {
       const curVal = this[key];
       const newVal = fromStore((preferences)?.[key] as never) as never;
 
@@ -180,8 +189,8 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   toJSON(): UserStoreModel {
-    const preferences = fromEntries(
-      entries(DESCRIPTORS)
+    const preferences = object.fromEntries(
+      object.entries(DESCRIPTORS)
         .map(([key, { toStore }]) => [key, toStore(this[key] as never)]),
     ) as UserPreferencesModel;
 

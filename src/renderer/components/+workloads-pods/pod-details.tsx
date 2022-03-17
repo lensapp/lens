@@ -10,7 +10,8 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import { type IPodMetrics, nodesApi, Pod, getMetricsForPods } from "../../../common/k8s-api/endpoints";
+import type { PodMetricData } from "../../../common/k8s-api/endpoints";
+import { nodeApi, Pod, getMetricsForPods } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { cssNames, toJS } from "../../utils";
@@ -34,8 +35,8 @@ export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 
 @observer
 export class PodDetails extends React.Component<PodDetailsProps> {
-  @observable metrics: IPodMetrics;
-  @observable containerMetrics: IPodMetrics;
+  @observable metrics: PodMetricData | null = null;
+  @observable containerMetrics: PodMetricData | null = null;
 
   constructor(props: PodDetailsProps) {
     super(props);
@@ -85,26 +86,34 @@ export class PodDetails extends React.Component<PodDetailsProps> {
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={pod} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={pod}
+            metrics={this.metrics}
           >
-            <PodCharts/>
+            <PodCharts />
           </ResourceMetrics>
         )}
 
-        <KubeObjectMeta object={pod}/>
+        <KubeObjectMeta object={pod} />
 
         <DrawerItem name="Status">
-          <span className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</span>
+          <span className={cssNames("status", kebabCase(pod.getStatusMessage()))}>
+            {pod.getStatusMessage()}
+          </span>
         </DrawerItem>
         <DrawerItem name="Node" hidden={!nodeName}>
-          <Link to={getDetailsUrl(nodesApi.getUrl({ name: nodeName }))}>
+          <Link to={getDetailsUrl(nodeApi.getUrl({ name: nodeName }))}>
             {nodeName}
           </Link>
         </DrawerItem>
         <DrawerItem name="Pod IP">
           {podIP}
         </DrawerItem>
-        <DrawerItem name="Pod IPs" hidden={podIPs.length === 0} labelsOnly>
+        <DrawerItem
+          name="Pod IPs"
+          hidden={podIPs.length === 0}
+          labelsOnly
+        >
           {podIPs.map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
         <DrawerItem name="Priority Class">
@@ -114,7 +123,12 @@ export class PodDetails extends React.Component<PodDetailsProps> {
           {pod.getQosClass()}
         </DrawerItem>
 
-        <DrawerItem name="Conditions" className="conditions" hidden={conditions.length === 0} labelsOnly>
+        <DrawerItem
+          name="Conditions"
+          className="conditions"
+          hidden={conditions.length === 0}
+          labelsOnly
+        >
           {
             conditions.map(({ type, status, lastTransitionTime }) => (
               <Badge
@@ -131,11 +145,11 @@ export class PodDetails extends React.Component<PodDetailsProps> {
           {nodeSelector.map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
 
-        <PodDetailsTolerations workload={pod}/>
-        <PodDetailsAffinities workload={pod}/>
+        <PodDetailsTolerations workload={pod} />
+        <PodDetailsAffinities workload={pod} />
 
         <DrawerItem name="Secrets" hidden={pod.getSecrets().length === 0}>
-          <PodDetailsSecrets pod={pod}/>
+          <PodDetailsSecrets pod={pod} />
         </DrawerItem>
 
         {initContainers.length > 0 && (

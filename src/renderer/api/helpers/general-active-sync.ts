@@ -7,12 +7,15 @@ import { when } from "mobx";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { catalogEntityRegistry } from "../catalog-entity-registry";
 import { isActiveRoute } from "../../navigation";
-import type { GeneralEntity } from "../../../common/catalog-entities";
+import assert from "assert";
 
 export async function setEntityOnRouteMatch() {
   await when(() => catalogEntityRegistry.entities.size > 0);
 
-  const entities: GeneralEntity[] = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
+  const generalCategory = catalogCategoryRegistry.getByName("General");
+
+  assert(generalCategory);
+  const entities = catalogEntityRegistry.getItemsForCategory(generalCategory);
   const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
 
   if (activeEntity) {

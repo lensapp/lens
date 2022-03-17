@@ -3,16 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { LensApiRequest, Route } from "../../router/router";
-import { routeInjectionToken } from "../../router/router.injectable";
+import { getRouteInjectable } from "../../router/router.injectable";
 import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import logger from "../../logger";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { getMetrics } from "../../k8s-request";
 import type { IMetricsQuery } from "./metrics-query";
+import { clusterRoute } from "../../router/route";
+import { isObject } from "lodash";
+import { isRequestError } from "../../../common/utils";
 
 // This is used for backoff retry tracking.
 const ATTEMPTS = [false, false, false, false, true];
@@ -27,8 +28,13 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
         try {
           return await getMetrics(cluster, prometheusPath, { query, ...queryParams });
         } catch (error) {
-          if (lastAttempt || (error?.statusCode >= 400 && error?.statusCode < 500)) {
-            logger.error("[Metrics]: metrics not available", error?.response ? error.response?.body : error);
+          if (isRequestError(error)) {
+            if (lastAttempt || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500)) {
+              logger.error("[Metrics]: metrics not available", error?.response ? error.response?.body : error);
+              throw new Error("Metrics not available");
+            }
+          } else {
+            logger.error("[Metrics]: metrics not available", error);
             throw new Error("Metrics not available");
           }
 
@@ -43,67 +49,66 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   return Promise.all(queries.map(loadMetric));
 }
 
-const addMetricsRoute = async ({ cluster, payload, query }: LensApiRequest) => {
-  const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
-  const prometheusMetadata: ClusterPrometheusMetadata = {};
-
-  try {
-    const { prometheusPath, provider } = await cluster.contextHandler.getPrometheusDetails();
-
-    prometheusMetadata.provider = provider?.id;
-    prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
-
-    if (!prometheusPath) {
-      prometheusMetadata.success = false;
-
-      return { response: {}};
-    }
-
-    // return data in same structure as query
-    if (typeof payload === "string") {
-      const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
-
-      return { response: data };
-    }
-
-    if (Array.isArray(payload)) {
-      const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
-
-      return { response: data };
-    }
-
-    const queries = Object.entries<Record<string, string>>(payload)
-      .map(([queryName, queryOpts]) => (
-        provider.getQuery(queryOpts, queryName)
-      ));
-
-    const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
-    const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
-
-    prometheusMetadata.success = true;
-
-    return { response: data };
-  } catch (error) {
-    prometheusMetadata.success = false;
-
-    logger.warn(`[METRICS-ROUTE]: failed to get metrics for clusterId=${cluster.id}:`, error);
-
-    return { response: {}};
-  } finally {
-    cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
-  }
-};
-
-const addMetricsRouteInjectable = getInjectable({
+const addMetricsRouteInjectable = getRouteInjectable({
   id: "add-metrics-route",
 
-  instantiate: (): Route<any> => ({
+  instantiate: () => clusterRoute({
     method: "post",
     path: `${apiPrefix}/metrics`,
-    handler: addMetricsRoute,
-  }),
+  })(async ({ cluster, payload, query }) => {
+    const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
+    const prometheusMetadata: ClusterPrometheusMetadata = {};
 
-  injectionToken: routeInjectionToken,
+    try {
+      const { prometheusPath, provider } = await cluster.contextHandler.getPrometheusDetails();
+
+      prometheusMetadata.provider = provider?.id;
+      prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
+
+      if (!prometheusPath) {
+        prometheusMetadata.success = false;
+
+        return { response: {}};
+      }
+
+      // return data in same structure as query
+      if (typeof payload === "string") {
+        const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
+
+        return { response: data };
+      }
+
+      if (Array.isArray(payload)) {
+        const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
+
+        return { response: data };
+      }
+
+      if (isObject(payload)) {
+        const queries = Object.entries(payload as Record<string, Record<string, string>>)
+          .map(([queryName, queryOpts]) => (
+            provider.getQuery(queryOpts, queryName)
+          ));
+
+        const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
+        const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
+
+        prometheusMetadata.success = true;
+
+        return { response: data };
+      }
+
+      return { response: {}};
+    } catch (error) {
+      prometheusMetadata.success = false;
+
+      logger.warn(`[METRICS-ROUTE]: failed to get metrics for clusterId=${cluster.id}:`, error);
+
+      return { response: {}};
+    } finally {
+      cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
+    }
+  }),
 });
 
 export default addMetricsRouteInjectable;

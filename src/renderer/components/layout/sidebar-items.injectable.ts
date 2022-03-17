@@ -68,12 +68,8 @@ const sidebarItemsInjectable = getInjectable({
         ),
       );
 
-      const getSidebarItemsHierarchy = (
-        registrations: SidebarItemRegistration[],
-      ) => {
-        const _getSidebarItemsHierarchy = (
-          parentId: string,
-        ): HierarchicalSidebarItem[] =>
+      const getSidebarItemsHierarchy = (registrations: SidebarItemRegistration[]) => {
+        const _getSidebarItemsHierarchy = (parentId: string | null): HierarchicalSidebarItem[] =>
           pipeline(
             registrations,
 

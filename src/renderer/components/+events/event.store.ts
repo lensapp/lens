@@ -6,21 +6,17 @@
 import groupBy from "lodash/groupBy";
 import compact from "lodash/compact";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
-import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import { autoBind, isClusterPageContext } from "../../utils";
+import type { KubeEvent, KubeEventApi } from "../../../common/k8s-api/endpoints/events.api";
 import { eventApi } from "../../../common/k8s-api/endpoints/events.api";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Pod } from "../../../common/k8s-api/endpoints/pods.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
-export class EventStore extends KubeObjectStore<KubeEvent> {
-  api = eventApi;
-  limit = 1000;
-  saveLimit = 50000;
-
-  constructor() {
-    super();
+export class EventStore extends KubeObjectStore<KubeEvent, KubeEventApi> {
+  constructor(api: KubeEventApi) {
+    super(api, { limit: 1000 });
     autoBind(this);
   }
 
@@ -54,7 +50,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
       if (kind == Pod.kind) {  // Wipe out running pods
         const pod = podsStore.items.find(pod => pod.getId() == uid);
 
-        if (!pod || (!pod.hasIssues() && pod.spec.priority < 500000)) return undefined;
+        if (!pod || (!pod.hasIssues() && (pod.spec?.priority ?? 0) < 500000)) return undefined;
       }
 
       return recent;
@@ -68,5 +64,10 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
   }
 }
 
-export const eventStore = new EventStore();
-apiManager.registerStore(eventStore);
+export const eventStore = isClusterPageContext()
+  ? new EventStore(eventApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(eventStore);
+}

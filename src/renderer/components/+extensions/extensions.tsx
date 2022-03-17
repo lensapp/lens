@@ -72,15 +72,33 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
 
     return (
       <DropFileInput onDropFiles={this.props.installOnDrop}>
-        <SettingLayout className="Extensions" contentGaps={false} data-testid="extensions-page">
+        <SettingLayout
+          className="Extensions"
+          contentGaps={false}
+          data-testid="extensions-page"
+        >
           <section>
             <h1>Extensions</h1>
 
             <Notice className="mb-14 mt-3">
               <p>
-                Add new features via Lens Extensions.{" "}
-                Check out <a href={`${docsUrl}/extensions/`} target="_blank" rel="noreferrer">docs</a>{" "}
-                and list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+                {"Add new features via Lens Extensions. Check out the "}
+                <a
+                  href={`${docsUrl}/extensions/`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  docs
+                </a>
+                {" and list of "}
+                <a
+                  href="https://github.com/lensapp/lens-extensions/blob/main/README.md"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  available extensions
+                </a>
+                .
               </p>
             </Notice>
 

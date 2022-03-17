@@ -15,21 +15,24 @@ import { broadcastMessage } from "../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
 import type { RegisteredCommand } from "./registered-commands/commands";
 import { iter } from "../../utils";
-import { orderBy } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import registeredCommandsInjectable from "./registered-commands/registered-commands.injectable";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 interface Dependencies {
   commands: IComputedValue<Map<string, RegisteredCommand>>;
-  activeEntity?: CatalogEntity;
+  activeEntity: CatalogEntity;
   closeCommandOverlay: () => void;
 }
 
 const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeCommandOverlay }: Dependencies) => {
   const [searchValue, setSearchValue] = useState("");
 
-  const executeAction = (commandId: string) => {
+  const executeAction = (commandId: string | null) => {
+    if (!commandId) {
+      return;
+    }
+
     const command = commands.get().get(commandId);
 
     if (!command) {
@@ -58,36 +61,37 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
   const context = {
     entity: activeEntity,
   };
-  const activeCommands = iter.filter(commands.get().values(), command => {
-    try {
-      return command.isActive(context);
-    } catch (error) {
-      console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
-    }
 
-    return false;
-  });
-  const options = Array.from(activeCommands, ({ id, title }) => ({
-    value: id,
-    label: typeof title === "function"
-      ? title(context)
-      : title,
-  }));
-
-  // Make sure the options are in the correct order
-  orderBy(options, "label", "asc");
+  const activeCommands = iter.pipeline(commands.get().values())
+    .filter(command => {
+      try {
+        return command.isActive(context);
+      } catch (error) {
+        return void console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
+      }
+    })
+    .map(({ id, ...rest }) => [id, rest] as const)
+    .collect(items => new Map(items));
 
   return (
     <Select
       id="command-palette-search-input"
       menuPortalTarget={null}
-      onChange={v => executeAction(v.value)}
+      onChange={executeAction}
       components={{
         DropdownIndicator: null,
         IndicatorSeparator: null,
       }}
       menuIsOpen
-      options={options}
+      options={Array.from(activeCommands.keys())}
+      getOptionLabel={commandId => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { title } = activeCommands.get(commandId)!;
+
+        return typeof title === "string"
+          ? title
+          : title(context);
+      }}
       autoFocus={true}
       escapeClearsValue={false}
       data-test-id="command-palette-search"
@@ -106,7 +110,8 @@ export const CommandDialog = withInjectables<Dependencies>(NonInjectedCommandDia
   getProps: di => ({
     commands: di.inject(registeredCommandsInjectable),
     // TODO: replace with injection
-    activeEntity: catalogEntityRegistry.activeEntity,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    activeEntity: catalogEntityRegistry.activeEntity!,
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
   }),
 });

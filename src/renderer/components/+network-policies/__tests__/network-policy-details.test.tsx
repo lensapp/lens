@@ -5,7 +5,6 @@
 
 import React from "react";
 import { findByTestId, findByText, render } from "@testing-library/react";
-import type { NetworkPolicySpec } from "../../../../common/k8s-api/endpoints";
 import { NetworkPolicy } from "../../../../common/k8s-api/endpoints";
 import { NetworkPolicyDetails } from "../network-policy-details";
 
@@ -13,26 +12,35 @@ jest.mock("../../kube-object-meta");
 
 describe("NetworkPolicyDetails", () => {
   it("should render w/o errors", () => {
-    const policy = new NetworkPolicy({ metadata: {} as any, spec: {}} as any);
+    const policy = new NetworkPolicy({
+      metadata: {} as never,
+      spec: {} as never,
+      apiVersion: "networking.k8s.io/v1",
+      kind: "NetworkPolicy",
+    });
     const { container } = render(<NetworkPolicyDetails object={policy} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("should render egress nodeSelector", async () => {
-    const spec: NetworkPolicySpec = {
-      egress: [{
-        to: [{
-          namespaceSelector: {
-            matchLabels: {
-              foo: "bar",
+    const policy = new NetworkPolicy({
+      metadata: {} as never,
+      spec: {
+        egress: [{
+          to: [{
+            namespaceSelector: {
+              matchLabels: {
+                foo: "bar",
+              },
             },
-          },
+          }],
         }],
-      }],
-      podSelector: {},
-    };
-    const policy = new NetworkPolicy({ metadata: {} as any, spec } as any);
+        podSelector: {},
+      },
+      apiVersion: "networking.k8s.io/v1",
+      kind: "NetworkPolicy",
+    });
     const { container } = render(<NetworkPolicyDetails object={policy} />);
 
     expect(await findByTestId(container, "egress-0")).toBeInstanceOf(HTMLElement);
@@ -40,15 +48,19 @@ describe("NetworkPolicyDetails", () => {
   });
 
   it("should not crash if egress nodeSelector doesn't have matchLabels", async () => {
-    const spec: NetworkPolicySpec = {
-      egress: [{
-        to: [{
-          namespaceSelector: {},
+    const policy = new NetworkPolicy({
+      metadata: {} as never,
+      spec: {
+        egress: [{
+          to: [{
+            namespaceSelector: {},
+          }],
         }],
-      }],
-      podSelector: {},
-    };
-    const policy = new NetworkPolicy({ metadata: {} as any, spec } as any);
+        podSelector: {},
+      },
+      apiVersion: "networking.k8s.io/v1",
+      kind: "NetworkPolicy",
+    });
     const { container } = render(<NetworkPolicyDetails object={policy} />);
 
     expect(container).toBeInstanceOf(HTMLElement);

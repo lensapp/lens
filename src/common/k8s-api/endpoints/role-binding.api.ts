@@ -3,38 +3,32 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autoBind } from "../../utils";
+import type { KubeObjectMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { RoleRef } from "./types/role-ref";
+import type { Subject } from "./types/subject";
 
-export type RoleBindingSubjectKind = "Group" | "ServiceAccount" | "User";
-
-export interface RoleBindingSubject {
-  kind: RoleBindingSubjectKind;
-  name: string;
-  namespace?: string;
-  apiGroup?: string;
+export interface RoleBindingData extends KubeJsonApiData<KubeObjectMetadata<"namespace-scoped">, void, void> {
+  subjects?: Subject[];
+  roleRef: RoleRef;
 }
 
-export interface RoleBinding {
-  subjects?: RoleBindingSubject[];
-  roleRef: {
-    kind: string;
-    name: string;
-    apiGroup?: string;
-  };
-}
+export class RoleBinding extends KubeObject<void, void, "namespace-scoped"> {
+  static readonly kind = "RoleBinding";
+  static readonly namespaced = true;
+  static readonly apiBase = "/apis/rbac.authorization.k8s.io/v1/rolebindings";
 
-export class RoleBinding extends KubeObject {
-  static kind = "RoleBinding";
-  static namespaced = true;
-  static apiBase = "/apis/rbac.authorization.k8s.io/v1/rolebindings";
+  subjects?: Subject[];
+  roleRef: RoleRef;
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
+  constructor({ subjects, roleRef, ...rest }: RoleBindingData) {
+    super(rest);
+    this.subjects = subjects;
+    this.roleRef = roleRef;
   }
 
   getSubjects() {
@@ -46,14 +40,15 @@ export class RoleBinding extends KubeObject {
   }
 }
 
-let roleBindingApi: KubeApi<RoleBinding>;
-
-if (isClusterPageContext()) {
-  roleBindingApi = new KubeApi({
-    objectConstructor: RoleBinding,
-  });
+export class RoleBindingApi extends KubeApi<RoleBinding, RoleBindingData> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: RoleBinding,
+    });
+  }
 }
 
-export {
-  roleBindingApi,
-};
+export const roleBindingApi = isClusterPageContext()
+  ? new RoleBindingApi()
+  : undefined as never;

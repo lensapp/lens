@@ -11,7 +11,7 @@ import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import { joinPathsFake } from "../../../common/test-utils/join-paths-fake";
 
 describe("get-electron-app-path", () => {
-  let getElectronAppPath: (name: string) => string | null;
+  let getElectronAppPath: (name: string) => string;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: false });
@@ -37,7 +37,7 @@ describe("get-electron-app-path", () => {
 
     await di.runSetups();
 
-    getElectronAppPath = di.inject(getElectronAppPathInjectable);
+    getElectronAppPath = di.inject(getElectronAppPathInjectable) as (name: string) => string;
   });
 
   it("given app path exists, when called, returns app path", () => {

@@ -11,7 +11,7 @@ import { makeObservable, observable, reaction, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
-import { toJS } from "../../common/utils";
+import { isErrnoException, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
@@ -81,7 +81,7 @@ interface LoadFromFolderOptions {
  * - "remove": When extension is removed. The event is of type LensExtensionId
  */
 export class ExtensionDiscovery {
-  protected bundledFolderPath: string;
+  protected bundledFolderPath!: string;
 
   private loadStarted = false;
   private extensions: Map<string, InstalledExtension> = new Map();
@@ -271,7 +271,13 @@ export class ExtensionDiscovery {
    * @param extensionId The ID of the extension to uninstall.
    */
   async uninstallExtension(extensionId: LensExtensionId): Promise<void> {
-    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
+    const extension = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
+
+    if (!extension) {
+      return void logger.warn(`${logModule} could not uninstall extension, not found`, { id: extensionId });
+    }
+
+    const { manifest, absolutePath } = extension;
 
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
 
@@ -369,7 +375,7 @@ export class ExtensionDiscovery {
         isCompatible,
       };
     } catch (error) {
-      if (error.code === "ENOTDIR") {
+      if (isErrnoException(error) && error.code === "ENOTDIR") {
         // ignore this error, probably from .DS_Store file
         logger.debug(`${logModule}: failed to load extension manifest through a not-dir-like at ${manifestPath}`);
       } else {
@@ -392,10 +398,12 @@ export class ExtensionDiscovery {
         try {
           await this.dependencies.installExtension(extension.absolutePath);
         } catch (error) {
-          const message = error.message || error || "unknown error";
+          const message = error instanceof Error
+            ? error.message
+            : String(error || "unknown error");
           const { name, version } = extension.manifest;
 
-          logger.error(`${logModule}: failed to install user extension ${name}@${version}`, message);
+          logger.error(`${logModule}: failed to install user extension ${name}@${version}: ${message}`);
         }
       }
     }

@@ -5,14 +5,67 @@
 
 export type Falsey = false | 0 | "" | null | undefined;
 
+export function pipeline<T>(src: Iterable<T>) {
+  return Iterator[createPipeline](src);
+}
+
+const createPipeline = Symbol("create-pipeline");
+
+export class Iterator<T> {
+  #inner: Iterable<any>;
+
+  static [createPipeline]<T>(inner: Iterable<T>) {
+    return new Iterator(inner);
+  }
+
+  private constructor(inner: Iterable<T>) {
+    this.#inner = inner;
+  }
+
+  /**
+   * Wrap the interior iterator with an filter
+   */
+  public filter(fn: (val: T) => any): Iterator<T> {
+    this.#inner = filter(this.#inner, fn);
+
+    return this;
+  }
+
+  /**
+   * Wrap the interior iterator with an filterMap
+   */
+  public filterMap<U>(fn: (val: T) => Falsey | U): Iterator<U> {
+    this.#inner = filterMap(this.#inner, fn);
+
+    return this as never;
+  }
+
+  /**
+   * Consume the interior iterator until an element matches the callback and return that
+   */
+  public find(fn: (val: T) => any): T | undefined {
+    return find(this.#inner, fn);
+  }
+
+  /**
+   * Consume the interior iterator and produce a new type
+   */
+  public collect<U>(fn: (values: Iterable<T>) => U): U {
+    return fn(this.#inner);
+  }
+
+  public map<U>(fn: (val: T) => U): Iterator<U> {
+    this.#inner = map(this.#inner, fn);
+
+    return this as never;
+  }
+}
+
 /**
  * Create a new type safe empty Iterable
  * @returns An `Iterable` that yields 0 items
  */
-// eslint-disable-next-line require-yield
-export function* newEmpty<T>(): IterableIterator<T> {
-  return;
-}
+export function* newEmpty<T>(): IterableIterator<T> {}
 
 /**
  * Creates a new `Iterable` that yields at most n items from src.
@@ -167,25 +220,31 @@ export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => 
  * @param connector The string value to intersperse between the yielded values
  * @returns The concatenated entries of `src` interspersed with copies of `connector`
  */
-export function join(src: Iterable<string>, connector = ","): string {
+export function join(src: Iterable<unknown>, connector = ","): string {
   return reduce(src, (acc, cur) => `${acc}${connector}${cur}`, "");
 }
 
 /**
- * Returns the next value after iterating over the iterable `index` times.
- *
- * For example: `nth(["a", "b"], 0)` will return `"a"`
- * For example: `nth(["a", "b"], 1)` will return `"b"`
- * For example: `nth(["a", "b"], 2)` will return `undefined`
+ * Iterate `n` times and then return the next value.
+ * @param src The value to iterate over
+ * @param n The zero-index value for the item to return to.
  */
-export function nth<T>(src: Iterable<T>, index: number): T | undefined {
-  const iteree = src[Symbol.iterator]();
+export function nth<T>(src: Iterable<T>, n: number): T | undefined {
+  const iterator = src[Symbol.iterator]();
 
-  while (index-- > 0) {
-    iteree.next();
+  while (n --> 0) {
+    iterator.next();
   }
 
-  return iteree.next().value;
+  return iterator.next().value;
+}
+
+/**
+ * A convenience function to get the first item of an iterator
+ * @param src The value to iterate over
+ */
+export function first<T>(src: Iterable<T>): T | undefined {
+  return nth(src, 0);
 }
 
 /**

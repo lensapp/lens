@@ -7,7 +7,7 @@ import "./endpoint-subset-list.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { EndpointSubset, Endpoint, EndpointAddress } from "../../../common/k8s-api/endpoints";
+import type { EndpointSubset, Endpoints, EndpointAddress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
@@ -15,8 +15,8 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { autoBind } from "../../../common/utils";
 
 export interface EndpointSubsetListProps {
-  subset: EndpointSubset;
-  endpoint: Endpoint;
+  subset: Required<EndpointSubset>;
+  endpoint: Endpoints;
 }
 
 @observer
@@ -27,15 +27,13 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
   }
 
   getAddressTableRow(ip: string) {
-    const { subset } = this.props;
-    const address = subset.getAddresses().find(address => address.getId() == ip);
+    const address = this.props.subset.addresses.find(address => address.ip == ip);
 
     return this.renderAddressTableRow(address);
   }
 
   getNotReadyAddressTableRow(ip: string) {
-    const { subset } = this.props;
-    const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
+    const address = this.props.subset.notReadyAddresses.find(address => address.ip == ip);
 
     return this.renderAddressTableRow(address);
   }
@@ -58,26 +56,30 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
             <TableCell className="target">Target</TableCell>
           </TableHead>
           {
-            !virtual && addresses.map(address => this.getAddressTableRow(address.getId()))
+            !virtual && addresses.map(address => this.getAddressTableRow(address.ip))
           }
         </Table>
       </div>
     );
   }
 
-  renderAddressTableRow(address: EndpointAddress) {
+  renderAddressTableRow(address: EndpointAddress | undefined) {
+    if (!address) {
+      return undefined;
+    }
+
     const { endpoint } = this.props;
 
     return (
       <TableRow
-        key={address.getId()}
+        key={address.ip}
         nowrap
       >
         <TableCell className="ip">{address.ip}</TableCell>
         <TableCell className="name">{address.hostname}</TableCell>
         <TableCell className="target">
           { address.targetRef && (
-            <Link to={getDetailsUrl(apiManager.lookupApiLink(address.getTargetRef(), endpoint))}>
+            <Link to={getDetailsUrl(apiManager.lookupApiLink(address.targetRef, endpoint))}>
               {address.targetRef.name}
             </Link>
           )}
@@ -87,9 +89,7 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
   }
 
   render() {
-    const { subset } = this.props;
-    const addresses = subset.getAddresses();
-    const notReadyAddresses = subset.getNotReadyAddresses();
+    const { subset: { addresses, ports, notReadyAddresses }} = this.props;
     const addressesVirtual = addresses.length > 100;
     const notReadyAddressesVirtual = notReadyAddresses.length > 100;
 
@@ -111,7 +111,7 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
                 <TableCell className="host">Hostname</TableCell>
                 <TableCell className="target">Target</TableCell>
               </TableHead>
-              { !addressesVirtual && addresses.map(address => this.getAddressTableRow(address.getId())) }
+              { !addressesVirtual && addresses.map(address => this.getAddressTableRow(address.ip)) }
             </Table>
           </div>
         )}
@@ -132,7 +132,7 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
                 <TableCell className="host">Hostname</TableCell>
                 <TableCell className="target">Target</TableCell>
               </TableHead>
-              { !notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.getId())) }
+              { !notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.ip)) }
             </Table>
           </div>
         )}
@@ -150,18 +150,16 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
             <TableCell className="protocol">Protocol</TableCell>
           </TableHead>
           {
-            subset.ports.map(port => {
-              return (
-                <TableRow
-                  key={port.port}
-                  nowrap
-                >
-                  <TableCell className="name">{port.port}</TableCell>
-                  <TableCell className="name">{port.name}</TableCell>
-                  <TableCell className="node">{port.protocol}</TableCell>
-                </TableRow>
-              );
-            })
+            ports.map(port => (
+              <TableRow
+                key={port.port}
+                nowrap
+              >
+                <TableCell className="name">{port.port}</TableCell>
+                <TableCell className="name">{port.name}</TableCell>
+                <TableCell className="node">{port.protocol}</TableCell>
+              </TableRow>
+            ))
           }
         </Table>
       </div>

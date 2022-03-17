@@ -10,7 +10,7 @@ import { tuple } from "./utils";
 export interface HotbarItem {
   entity: {
     uid: string;
-    name?: string;
+    name: string;
     source?: string;
   };
   params?: {

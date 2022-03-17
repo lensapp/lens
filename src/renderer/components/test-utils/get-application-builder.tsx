@@ -33,6 +33,8 @@ import preferenceNavigationItemsInjectable from "../+preferences/preferences-nav
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
+import type { MenuItemConstructorOptions } from "electron";
+import { MenuItem } from "electron";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -149,7 +151,7 @@ export const getApplicationBuilder = () => {
           );
         }
 
-        menuItem.click(undefined, undefined, undefined);
+        menuItem.click?.(new MenuItem(menuItem), undefined, {});
       },
     },
 
@@ -302,16 +304,21 @@ export const getApplicationBuilder = () => {
   return builder;
 };
 
-const toFlatChildren =
-  (parentId: string) =>
-    ({
-      submenu = [],
-      ...menuItem
-    }: MenuItemOpts): (MenuItemOpts & { path: string })[] =>
-      [
-        {
-          ...menuItem,
+export type ToFlatChildren = (opts: MenuItemConstructorOptions) => (MenuItemOpts & { path: string })[];
+
+function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
+  return ({ submenu = [], ...menuItem }) => [
+    {
+      ...menuItem,
+      path: pipeline([parentId, menuItem.id], compact, join(".")),
+    },
+    ...(
+      Array.isArray(submenu)
+        ? submenu.flatMap(toFlatChildren(menuItem.id))
+        : [{
+          ...submenu,
           path: pipeline([parentId, menuItem.id], compact, join(".")),
-        },
-        ...submenu.flatMap(toFlatChildren(menuItem.id)),
-      ];
+        }]
+    ),
+  ];
+}

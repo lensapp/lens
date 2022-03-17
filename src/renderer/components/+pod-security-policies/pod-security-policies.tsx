@@ -8,7 +8,7 @@ import "./pod-security-policies.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { podSecurityPoliciesStore } from "./pod-security-policies.store";
+import { podSecurityPolicyStore } from "./pod-security-policies.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
@@ -29,7 +29,7 @@ export class PodSecurityPolicies extends React.Component {
           isConfigurable
           tableId="access_pod_security_policies"
           className="PodSecurityPolicies"
-          store={podSecurityPoliciesStore}
+          store={podSecurityPolicyStore}
           sortingCallbacks={{
             [columnId.name]: podSecurityPolicy => podSecurityPolicy.getName(),
             [columnId.volumes]: podSecurityPolicy => podSecurityPolicy.getVolumes(),

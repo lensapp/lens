@@ -7,10 +7,10 @@ import "./table.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autoBind, cssNames } from "../../utils";
+import { autoBind, cssNames, isDefined } from "../../utils";
 import type { TableRowElem, TableRowProps } from "./table-row";
 import { TableRow } from "./table-row";
-import type { TableHeadElem, TableHeadProps } from "./table-head";
+import type { TableHeadElem } from "./table-head";
 import { TableHead } from "./table-head";
 import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
@@ -20,14 +20,16 @@ import { getSorted } from "./sorting";
 import type { TableModel } from "./table-model/table-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import tableModelInjectable from "./table-model/table-model.injectable";
+import type { ItemObject } from "../../../common/item.store";
+import assert from "assert";
 
 export type TableSortBy = string;
-export type TableOrderBy = "asc" | "desc" | string;
+export type TableOrderBy = "asc" | "desc";
 export interface TableSortParams {
   sortBy: TableSortBy;
   orderBy: TableOrderBy;
 }
-export type TableSortCallback<Item> = (data: Item) => string | number | (string | number)[];
+export type TableSortCallback<Item> = (data: Item) => undefined | string | number | (string | number)[];
 export type TableSortCallbacks<Item> = Record<string, TableSortCallback<Item>>;
 
 export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
@@ -69,8 +71,8 @@ export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
    */
   rowLineHeight?: number;
   customRowHeights?: (item: Item, lineHeight: number, paddings: number) => number;
-  getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
-  renderRow?: (item: Item) => React.ReactElement<TableRowProps>;
+  getTableRow?: (uid: string) => React.ReactElement<TableRowProps<Item>> | undefined | null;
+  renderRow?: (item: Item) => React.ReactElement<TableRowProps<Item>> | undefined | null;
 }
 
 export const sortByUrlParam = createPageParam({
@@ -86,7 +88,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependencies> {
+class NonInjectedTable<Item extends ItemObject> extends React.Component<TableProps<Item> & Dependencies> {
   static defaultProps: TableProps<any> = {
     scrollable: true,
     autoSize: true,
@@ -117,13 +119,17 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
   }
 
   @computed get sortParams() {
-    return Object.assign({}, this.props.sortByDefault, this.props.model.getSortParams(this.props.tableId));
+    const modelParams = this.props.tableId
+      ? this.props.model.getSortParams(this.props.tableId)
+      : {};
+
+    return Object.assign({}, this.props.sortByDefault, modelParams);
   }
 
   renderHead() {
     const { children } = this.props;
-    const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
-    const headElem: React.ReactElement<TableHeadProps> = content.find(elem => elem.type === TableHead);
+    const content = React.Children.toArray(children) as (TableRowElem<Item> | TableHeadElem)[];
+    const headElem = content.find(elem => elem.type === TableHead);
 
     if (!headElem) {
       return null;
@@ -157,12 +163,17 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
   }
 
   getSorted(rawItems: Item[]) {
-    const { sortBy, orderBy: orderByRaw } = this.sortParams;
+    const { sortBy, orderBy } = this.sortParams;
 
-    return getSorted(rawItems, this.props.sortable[sortBy], orderByRaw);
+    if (!sortBy || !orderBy) {
+      return rawItems;
+    }
+
+    return getSorted(rawItems, this.props.sortable?.[sortBy], orderBy);
   }
 
   protected onSort({ sortBy, orderBy }: TableSortParams) {
+    assert(this.props.tableId);
     this.props.model.setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
 
@@ -187,11 +198,11 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
   }
 
   private getContent() {
-    const { items, renderRow, children } = this.props;
-    const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
+    const { items = [], renderRow, children } = this.props;
+    const content = React.Children.toArray(children) as (TableRowElem<Item> | TableHeadElem)[];
 
     if (renderRow) {
-      content.push(...items.map(renderRow));
+      content.push(...items.map(renderRow).filter(isDefined));
     }
 
     return content;
@@ -199,18 +210,24 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
 
   renderRows() {
     const {
-      noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items,
+      noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items = [],
       getTableRow, selectedItemId, className, virtualHeight,
     } = this.props;
     const content = this.getContent();
-    let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);
-    let sortedItems = rows.length ? rows.map(row => row.props.sortItem) : [...items];
+    let rows: React.ReactElement<TableRowProps<Item>>[] = content.filter(elem => elem.type === TableRow);
+    let sortedItems = (
+      rows.length
+        ? rows.map(row => row.props.sortItem)
+        : items
+    ).filter(isDefined);
 
     if (this.isSortable) {
       sortedItems = this.getSorted(sortedItems);
 
       if (rows.length) {
-        rows = sortedItems.map(item => rows.find(row => item == row.props.sortItem));
+        rows = sortedItems
+          .map(item => rows.find(row => item == row.props.sortItem))
+          .filter(isDefined);
       }
     }
 
@@ -219,6 +236,7 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
     }
 
     if (virtual) {
+      assert(customRowHeights && rowLineHeight && rowPadding);
       const rowHeights = sortedItems.map(item => customRowHeights(item, rowLineHeight, rowPadding * 2));
 
       return (

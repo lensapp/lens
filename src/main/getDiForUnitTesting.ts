@@ -83,13 +83,12 @@ export const getDiForUnitTesting = (
     di.override(appNameInjectable, () => "some-electron-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
-
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
-      } as any;
+      } as never;
     });
 
     di.override(writeJsonFileInjectable, () => () => {

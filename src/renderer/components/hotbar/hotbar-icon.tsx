@@ -19,7 +19,7 @@ import { Tooltip } from "../tooltip";
 
 export interface HotbarIconProps extends AvatarProps {
   uid: string;
-  source: string;
+  source?: string;
   material?: string;
   onMenuOpen?: () => void;
   active?: boolean;
@@ -56,12 +56,16 @@ export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...pro
 
   return (
     <div className={cssNames(styles.HotbarIcon, className, { [styles.contextMenuAvailable]: menuItems.length > 0 })}>
-      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
+      {tooltip && (
+        <Tooltip targetId={id}>
+          {tooltip}
+        </Tooltip>
+      )}
       <Avatar
         {...rest}
         id={id}
         title={title}
-        colorHash={`${title}-${source}`}
+        colorHash={source ? `${title}-${source}` : title}
         className={cssNames(styles.avatar, { [styles.active]: active, [styles.hasImage]: !!src })}
         disabled={disabled}
         size={size}
@@ -81,7 +85,8 @@ export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...pro
           onMenuOpen?.();
           toggleMenu();
         }}
-        close={() => toggleMenu()}>
+        close={() => toggleMenu()}
+      >
         {
           menuItems.map((menuItem) => (
             <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem)}>

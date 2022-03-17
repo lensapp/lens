@@ -4,7 +4,7 @@
  */
 
 import { action, computed, type IComputedValue, type IObservableArray, makeObservable, observable } from "mobx";
-import type { CatalogCategoryRegistry, CatalogEntity, CatalogEntityConstructor } from "../../common/catalog";
+import type { CatalogCategoryRegistry, CatalogEntity } from "../../common/catalog";
 import { catalogCategoryRegistry } from "../../common/catalog";
 import { iter } from "../../common/utils";
 
@@ -36,16 +36,16 @@ export class CatalogEntityRegistry {
     );
   }
 
-  getById<T extends CatalogEntity>(id: string): T | undefined {
-    return this.items.find(entity => entity.getId() === id) as T | undefined;
+  findById(id: string): CatalogEntity | undefined {
+    return this.items.find(entity => entity.getId() === id);
   }
 
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as T[];
+  filterItemsForApiKind(apiVersion: string, kind: string): CatalogEntity[] {
+    return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
   }
 
-  getItemsByEntityClass<T extends CatalogEntity>(constructor: CatalogEntityConstructor<T>): T[] {
-    return this.items.filter((item) => item instanceof constructor) as T[];
+  filterItemsByPredicate<E extends CatalogEntity>(filter: (item: CatalogEntity) => item is E): E[] {
+    return this.items.filter(filter);
   }
 }
 

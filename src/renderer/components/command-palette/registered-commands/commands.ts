@@ -9,7 +9,7 @@ import type { CatalogEntity } from "../../../../common/catalog";
  * The context given to commands when executed
  */
 export interface CommandContext {
-  entity?: CatalogEntity;
+  readonly entity: CatalogEntity;
 }
 
 export interface CommandActionNavigateOptions {

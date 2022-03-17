@@ -9,9 +9,8 @@ import React from "react";
 import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
-import type { Disposer } from "../../utils";
-import {  cssNames } from "../../utils";
-import { getMetricsForNamespace, type IPodMetrics, Namespace } from "../../../common/k8s-api/endpoints";
+import { cssNames } from "../../utils";
+import { getMetricsForNamespace, type PodMetricData, Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
@@ -24,22 +23,21 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
 }
 
 @observer
 class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps & Dependencies> {
-  @observable metrics: IPodMetrics = null;
+  @observable metrics: PodMetricData | null = null;
 
   constructor(props: NamespaceDetailsProps & Dependencies) {
     super(props);
@@ -96,7 +94,9 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={namespace} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={namespace}
+            metrics={this.metrics}
           >
             <PodCharts />
           </ResourceMetrics>
@@ -110,7 +110,7 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
         <DrawerItem name="Resource Quotas" className="quotas flex align-center">
           {!this.quotas && resourceQuotaStore.isLoading && <Spinner/>}
           {this.quotas.map(quota => {
-            return (
+            return quota.selfLink && (
               <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
                 {quota.getName()}
               </Link>
@@ -120,7 +120,7 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
         <DrawerItem name="Limit Ranges">
           {!this.limitranges && limitRangeStore.isLoading && <Spinner/>}
           {this.limitranges.map(limitrange => {
-            return (
+            return limitrange.selfLink && (
               <Link key={limitrange.getId()} to={getDetailsUrl(limitrange.selfLink)}>
                 {limitrange.getName()}
               </Link>

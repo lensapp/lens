@@ -5,10 +5,10 @@
 
 import "./namespace-select.scss";
 
-import React from "react";
-import { computed, makeObservable } from "mobx";
+import React, { useEffect, useState } from "react";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
-import type { SelectOption, SelectProps } from "../select";
+import type { SelectProps } from "../select";
 import { Select } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
@@ -16,87 +16,69 @@ import type { NamespaceStore } from "./namespace-store/namespace.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
 
-export interface NamespaceSelectProps extends SelectProps {
-  showIcons?: boolean;
-  sort?: (a: SelectOption<string>, b: SelectOption<string>) => number;
-  showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
-  customizeOptions?(options: SelectOption[]): SelectOption[];
-}
+export type NamespaceSelectSort = (left: string, right: string) => number;
 
-const defaultProps: Partial<NamespaceSelectProps> = {
-  showIcons: true,
-};
+export interface NamespaceSelectProps<IsMulti extends boolean> extends SelectProps<string, IsMulti> {
+  showIcons?: boolean;
+  sort?: NamespaceSelectSort;
+  options?: undefined;
+}
 
 interface Dependencies {
   namespaceStore: NamespaceStore;
 }
 
-@observer
-class NonInjectedNamespaceSelect extends React.Component<NamespaceSelectProps & Dependencies> {
-  static defaultProps = defaultProps as object;
-
-  constructor(props: NamespaceSelectProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  // No subscribe here because the subscribe is in <App /> (the cluster frame root component)
-
-  @computed.struct get options(): SelectOption[] {
-    const { customizeOptions, showAllNamespacesOption, sort } = this.props;
-    let options: SelectOption[] = this.props.namespaceStore.items.map(ns => ({ value: ns.getName() }));
-
-    if (sort) {
-      options.sort(sort);
-    }
-
-    if (showAllNamespacesOption) {
-      options.unshift({ label: "All Namespaces", value: "" });
-    }
-
-    if (customizeOptions) {
-      options = customizeOptions(options);
-    }
-
-    return options;
-  }
-
-  formatOptionLabel = (option: SelectOption) => {
-    const { showIcons } = this.props;
-    const { value, label } = option;
-
-    return label || (
-      <>
-        {showIcons && <Icon small material="layers"/>}
-        {value}
-      </>
-    );
-  };
-
-  render() {
-    const { className, showIcons, customizeOptions, components = {}, namespaceStore, ...selectProps } = this.props;
-
-    return (
-      <Select
-        id="namespace-input"
-        className={cssNames("NamespaceSelect", className)}
-        menuClass="NamespaceSelectMenu"
-        formatOptionLabel={this.formatOptionLabel}
-        options={this.options}
-        components={components}
-        {...selectProps}
-      />
-    );
-  }
+export function formatNamespaceOptionWithIcon(namespace: string) {
+  return (
+    <>
+      <Icon small material="layers" />
+      {namespace}
+    </>
+  );
 }
 
-export const NamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps>(
-  NonInjectedNamespaceSelect,
+function getOptions(namespaceStore: NamespaceStore, sort: NamespaceSelectSort | undefined) {
+  return computed(() => {
+    const baseOptions = namespaceStore.items.map(ns => ns.getName());
 
-  {
-    getProps: (di, props) => ({
-      namespaceStore: di.inject(namespaceStoreInjectable),
-      ...props,
-    }),
-  },
-);
+    if (sort) {
+      baseOptions.sort(sort);
+    }
+
+    return baseOptions;
+  });
+}
+
+const NonInjectedNamespaceSelect = observer(({
+  namespaceStore,
+  showIcons,
+  formatOptionLabel,
+  sort,
+  className,
+  ...selectProps
+}: Dependencies & NamespaceSelectProps<boolean>) => {
+  const [baseOptions, setBaseOptions] = useState(getOptions(namespaceStore, sort));
+
+  useEffect(() => setBaseOptions(getOptions(namespaceStore, sort)), [sort]);
+
+  return (
+    <Select
+      className={cssNames("NamespaceSelect", className)}
+      menuClass="NamespaceSelectMenu"
+      formatOptionLabel={showIcons ? formatNamespaceOptionWithIcon : undefined}
+      options={baseOptions.get()}
+      {...selectProps}
+    />
+  );
+});
+
+const InjectedNamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps<boolean>>(NonInjectedNamespaceSelect, {
+  getProps: (di, props) => ({
+    ...props,
+    namespaceStore: di.inject(namespaceStoreInjectable),
+  }),
+});
+
+export function NamespaceSelect<IsMulti extends boolean = false>(props: NamespaceSelectProps<IsMulti>): JSX.Element {
+  return <InjectedNamespaceSelect {...(props as never)} />;
+}

@@ -5,14 +5,13 @@
 
 import "./details.scss";
 
-import { autorun, observable, makeObservable } from "mobx";
+import { autorun, observable, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { secretsStore } from "../../+config-secrets/secrets.store";
-import type { ServiceAccount } from "../../../../common/k8s-api/endpoints";
-import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
+import { secretStore } from "../../+config-secrets/secrets.store";
+import type { Secret, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "../../icon";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
@@ -24,39 +23,48 @@ import { getDetailsUrl } from "../../kube-detail-params";
 export interface ServiceAccountsDetailsProps extends KubeObjectDetailsProps<ServiceAccount> {
 }
 
+const defensiveLoadSecretIn = (namespace: string) => (
+  ({ name }: { name: string }) => (
+    secretStore.load({ name, namespace })
+      .catch(() => name)
+  )
+);
+
 @observer
 export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetailsProps> {
-  @observable secrets: Secret[];
-  @observable imagePullSecrets: Secret[];
+  readonly secrets = observable.array<Secret | string>();
+  readonly imagePullSecrets = observable.array<Secret | string>();
 
   componentDidMount(): void {
     disposeOnUnmount(this, [
       autorun(async () => {
-        this.secrets = null;
-        this.imagePullSecrets = null;
-        const { object: serviceAccount } = this.props;
+        runInAction(() => {
+          this.secrets.clear();
+          this.imagePullSecrets.clear();
+        });
 
-        if (!serviceAccount) {
+        const { object: serviceAccount } = this.props;
+        const namespace = serviceAccount?.getNs();
+
+        if (!namespace) {
           return;
         }
-        const namespace = serviceAccount.getNs();
-        const secrets = serviceAccount.getSecrets().map(({ name }) => {
-          return secretsStore.load({ name, namespace });
-        });
 
-        this.secrets = await Promise.all(secrets);
-        const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async ({ name }) => {
-          return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
-        });
+        const defensiveLoadSecret = defensiveLoadSecretIn(namespace);
 
-        this.imagePullSecrets = await Promise.all(imagePullSecrets);
+        const secretLoaders = Promise.all(serviceAccount.getSecrets().map(defensiveLoadSecret));
+        const imagePullSecretLoaders = Promise.all(serviceAccount.getImagePullSecrets().map(defensiveLoadSecret));
+        const [secrets, imagePullSecrets] = await Promise.all([
+          secretLoaders,
+          imagePullSecretLoaders,
+        ]);
+
+        runInAction(() => {
+          this.secrets.replace(secrets);
+          this.imagePullSecrets.replace(imagePullSecrets);
+        });
       }),
     ]);
-  }
-
-  constructor(props: ServiceAccountsDetailsProps) {
-    super(props);
-    makeObservable(this);
   }
 
   renderSecrets() {
@@ -66,9 +74,12 @@ export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetai
       return <Spinner center/>;
     }
 
-    return secrets.map(secret =>
-      <ServiceAccountsSecret key={secret.getId()} secret={secret}/>,
-    );
+    return secrets.map(secret => (
+      <ServiceAccountsSecret
+        key={typeof secret === "string" ? secret : secret.getName()}
+        secret={secret}
+      />
+    ));
   }
 
   renderImagePullSecrets() {
@@ -81,14 +92,15 @@ export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetai
     return this.renderSecretLinks(imagePullSecrets);
   }
 
-  renderSecretLinks(secrets: Secret[]) {
+  renderSecretLinks(secrets: (Secret | string)[]) {
     return secrets.map((secret) => {
-      if (secret.getId() === null) {
+      if (typeof secret === "string") {
         return (
-          <div key={secret.getName()}>
-            {secret.getName()}
+          <div key={secret}>
+            {secret}
             <Icon
-              small material="warning"
+              small
+              material="warning"
               tooltip="Secret is not found"
             />
           </div>
@@ -103,27 +115,13 @@ export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetai
     });
   }
 
-  generateDummySecretObject(name: string) {
-    return new Secret({
-      apiVersion: "v1",
-      kind: "Secret",
-      metadata: {
-        name,
-        uid: null,
-        selfLink: null,
-        resourceVersion: null,
-      },
-      type: SecretType.Opaque,
-    });
-  }
-
   render() {
     const { object: serviceAccount } = this.props;
 
     if (!serviceAccount) {
       return null;
     }
-    const tokens = secretsStore.items.filter(secret =>
+    const tokens = secretStore.items.filter(secret =>
       secret.getNs() == serviceAccount.getNs() &&
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`),
     );
@@ -133,16 +131,16 @@ export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetai
       <div className="ServiceAccountsDetails">
         <KubeObjectMeta object={serviceAccount}/>
 
-        {tokens.length > 0 &&
-        <DrawerItem name="Tokens" className="links">
-          {this.renderSecretLinks(tokens)}
-        </DrawerItem>
-        }
-        {imagePullSecrets.length > 0 &&
-        <DrawerItem name="ImagePullSecrets" className="links">
-          {this.renderImagePullSecrets()}
-        </DrawerItem>
-        }
+        {tokens.length > 0 && (
+          <DrawerItem name="Tokens" className="links">
+            {this.renderSecretLinks(tokens)}
+          </DrawerItem>
+        )}
+        {imagePullSecrets.length > 0 && (
+          <DrawerItem name="ImagePullSecrets" className="links">
+            {this.renderImagePullSecrets()}
+          </DrawerItem>
+        )}
 
         <DrawerTitle>Mountable secrets</DrawerTitle>
         <div className="secrets">

@@ -6,15 +6,24 @@
 import type { KubeObjectStore } from "./kube-object.store";
 
 import { action, observable, makeObservable } from "mobx";
-import { autoBind, iter } from "../utils";
+import { autoBind, isDefined, iter } from "../utils";
 import type { KubeApi } from "./kube-api";
-import type { KubeObject } from "./kube-object";
-import type { IKubeObjectRef } from "./kube-api-parse";
+import type { KubeJsonApiDataFor, KubeObject, ObjectReference } from "./kube-object";
 import { parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
+export type RegisterableStore<S> = S extends KubeObjectStore<any, any, any>
+  ? S
+  : never;
+export type RegisterableApi<A> = A extends KubeApi<any, any>
+  ? A
+  : never;
+export type KubeObjectStoreFrom<A> = A extends KubeApi<infer K, infer D>
+  ? KubeObjectStore<K, A, D>
+  : never;
+
 export class ApiManager {
-  private apis = observable.map<string, KubeApi<KubeObject>>();
-  private stores = observable.map<string, KubeObjectStore<KubeObject>>();
+  private readonly apis = observable.map<string, KubeApi>();
+  private readonly stores = observable.map<string, KubeObjectStore>();
 
   constructor() {
     makeObservable(this);
@@ -33,27 +42,27 @@ export class ApiManager {
     return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi<K extends KubeObject>(apiBase: string, api: KubeApi<K>) {
+  registerApi<A>(apiBase: string, api: RegisterableApi<A>) {
     if (!api.apiBase) return;
 
     if (!this.apis.has(apiBase)) {
       this.stores.forEach((store) => {
-        if (store.api === api) {
+        if (store.api as never === api) {
           this.stores.set(apiBase, store);
         }
       });
 
-      this.apis.set(apiBase, api);
+      this.apis.set(apiBase, api as never);
     }
   }
 
-  protected resolveApi(api?: string | KubeApi<KubeObject>): KubeApi<KubeObject> | undefined {
+  protected resolveApi(api: undefined | string | KubeApi): KubeApi | undefined {
     if (!api) {
       return undefined;
     }
 
     if (typeof api === "string") {
-      return this.getApi(api) as KubeApi<KubeObject>;
+      return this.getApi(api);
     }
 
     return api;
@@ -69,20 +78,40 @@ export class ApiManager {
     }
   }
 
+  registerStore<K>(store: RegisterableStore<K>): void;
+  /**
+   * @deprecated KubeObjectStore's should only every be about a single KubeApi type
+   */
+  registerStore<K extends KubeObject>(store: KubeObjectStore<K, KubeApi<K>, KubeJsonApiDataFor<K>>, apis: KubeApi<K>[]): void;
+
   @action
-  registerStore<K extends KubeObject>(store: KubeObjectStore<K>, apis: KubeApi<K>[] = [store.api]) {
-    apis.filter(Boolean).forEach(api => {
-      if (api.apiBase) this.stores.set(api.apiBase, store);
-    });
+  registerStore<K extends KubeObject>(store: KubeObjectStore<K, KubeApi<K>, KubeJsonApiDataFor<K>>, apis: KubeApi<K>[] = [store.api]): void {
+    for (const api of apis.filter(isDefined)) {
+      if (api.apiBase) {
+        this.stores.set(api.apiBase, store as never);
+      }
+    }
   }
 
-  getStore<S extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): S | undefined {
-    return this.stores.get(this.resolveApi(api)?.apiBase) as S;
+  getStore(api: string | undefined): KubeObjectStore | undefined;
+  getStore<A>(api: RegisterableApi<A>): KubeObjectStoreFrom<A> | undefined;
+  /**
+   * @deprecated use an actual cast instead of hiding it with this unused type param
+   */
+  getStore<S extends KubeObjectStore>(api: string | KubeApi): S | undefined ;
+  getStore(api: string | KubeApi | undefined): KubeObjectStore | undefined {
+    const { apiBase } = this.resolveApi(api) ?? {};
+
+    if (apiBase) {
+      return this.stores.get(apiBase);
+    }
+
+    return undefined;
   }
 
-  lookupApiLink(ref: IKubeObjectRef, parentObject?: KubeObject): string {
+  lookupApiLink(ref: ObjectReference, parentObject?: KubeObject): string {
     const {
-      kind, apiVersion, name,
+      kind, apiVersion = "v1", name,
       namespace = parentObject?.getNs(),
     } = ref;
 

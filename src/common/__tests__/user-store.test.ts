@@ -49,7 +49,7 @@ describe("user store tests", () => {
 
     mockFs();
 
-    di.override(writeFileInjectable, () => () => undefined);
+    di.override(writeFileInjectable, () => () => Promise.resolve());
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(userStoreInjectable, () => UserStore.createInstance());
 

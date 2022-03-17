@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
-import { secretsStore } from "./secrets.store";
+import { secretStore } from "./secrets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
@@ -33,7 +33,7 @@ export class Secrets extends React.Component {
           isConfigurable
           tableId="configuration_secrets"
           className="Secrets"
-          store={secretsStore}
+          store={secretStore}
           sortingCallbacks={{
             [columnId.name]: secret => secret.getName(),
             [columnId.namespace]: secret => secret.getNs(),
@@ -60,7 +60,14 @@ export class Secrets extends React.Component {
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),
-            secret.getLabels().map(label => <Badge scrollable key={label} label={label} expandable={false}/>),
+            secret.getLabels().map(label => (
+              <Badge
+                scrollable
+                key={label}
+                label={label}
+                expandable={false}
+              />
+            )),
             secret.getKeys().join(", "),
             secret.type,
             <KubeObjectAge key="age" object={secret} />,

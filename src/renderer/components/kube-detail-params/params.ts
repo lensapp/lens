@@ -25,7 +25,7 @@ export const kubeSelectedUrlParam = createPageParam({
   },
 });
 
-export function toggleDetails(selfLink: string, resetSelected = true) {
+export function toggleDetails(selfLink: string | undefined, resetSelected = true) {
   const current = kubeSelectedUrlParam.get() === selfLink;
 
   if (current) {

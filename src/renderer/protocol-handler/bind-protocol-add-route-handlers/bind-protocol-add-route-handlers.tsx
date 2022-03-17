@@ -17,6 +17,9 @@ import type { ExtensionInfo } from "../../components/+extensions/attempt-install
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
+import assert from "assert";
+
+// TODO: make it so that the handlers are type safe and we don't need to do the asserts
 
 interface Dependencies {
   attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>;
@@ -34,14 +37,20 @@ export const bindProtocolAddRouteHandlers =
     () => {
       lensProtocolRouterRenderer
         .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
-          navigateToPreferenceTabId(tabId);
+          if (tabId) {
+            navigateToPreferenceTabId(tabId);
+          }
         })
         .addInternalHandler("/", ({ tail }) => {
           if (tail) {
             Notifications.shortInfo(
               <p>
-              Unknown Action for <code>lens://app/{tail}</code>. Are you on the
-              latest version?
+                {"Unknown Action for "}
+                <code>
+                  lens://app/
+                  {tail}
+                </code>
+                . Are you on the latest version?
               </p>,
             );
           }
@@ -63,6 +72,7 @@ export const bindProtocolAddRouteHandlers =
         .addInternalHandler(
           "/entity/:entityId/settings",
           ({ pathname: { entityId }}) => {
+            assert(entityId);
             const entity = catalogEntityRegistry.getById(entityId);
 
             if (entity) {
@@ -70,7 +80,9 @@ export const bindProtocolAddRouteHandlers =
             } else {
               Notifications.shortInfo(
                 <p>
-                Unknown catalog entity <code>{entityId}</code>.
+                  {"Unknown catalog entity "}
+                  <code>{entityId}</code>
+                  .
                 </p>,
               );
             }
@@ -80,6 +92,7 @@ export const bindProtocolAddRouteHandlers =
         .addInternalHandler(
           "/cluster/:clusterId",
           ({ pathname: { clusterId }}) => {
+            assert(clusterId);
             const cluster = ClusterStore.getInstance().getById(clusterId);
 
             if (cluster) {
@@ -87,7 +100,9 @@ export const bindProtocolAddRouteHandlers =
             } else {
               Notifications.shortInfo(
                 <p>
-                Unknown catalog entity <code>{clusterId}</code>.
+                  {"Unknown catalog entity "}
+                  <code>{clusterId}</code>
+                  .
                 </p>,
               );
             }
@@ -96,6 +111,7 @@ export const bindProtocolAddRouteHandlers =
         .addInternalHandler(
           "/cluster/:clusterId/settings",
           ({ pathname: { clusterId }}) => {
+            assert(clusterId);
             const cluster = ClusterStore.getInstance().getById(clusterId);
 
             if (cluster) {
@@ -103,7 +119,9 @@ export const bindProtocolAddRouteHandlers =
             } else {
               Notifications.shortInfo(
                 <p>
-                Unknown catalog entity <code>{clusterId}</code>.
+                  {"Unknown catalog entity "}
+                  <code>{clusterId}</code>
+                  .
                 </p>,
               );
             }

@@ -14,10 +14,9 @@ import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import catalogCatalogEntityInjectable
-  from "../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import catalogCatalogEntityInjectable from "../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import { isDefined, isErrnoException } from "../../common/utils";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -58,7 +57,7 @@ export default {
 
     try {
       const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
-      const { clusters }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
+      const { clusters = [] }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
       const workspaceHotbars = new Map<string, PartialHotbar>(); // mapping from WorkspaceId to HotBar
 
       for (const { id, name } of workspaceStoreData.workspaces) {
@@ -78,14 +77,14 @@ export default {
         workspaceHotbars.set("default", {
           name,
           id,
-          items: items.filter(Boolean),
+          items: items.filter(isDefined),
         });
       }
 
       for (const cluster of clusters) {
         const uid = generateNewIdFor(cluster);
 
-        for (const workspaceId of cluster.workspaces ?? [cluster.workspace].filter(Boolean)) {
+        for (const workspaceId of cluster.workspaces ?? [cluster.workspace].filter(isDefined)) {
           const workspaceHotbar = workspaceHotbars.get(workspaceId);
 
           if (!workspaceHotbar) {
@@ -99,7 +98,7 @@ export default {
             workspaceHotbar.items.push({
               entity: {
                 uid: generateNewIdFor(cluster),
-                name: cluster.preferences.clusterName || cluster.contextName,
+                name: cluster.preferences?.clusterName || cluster.contextName,
               },
             });
           }
@@ -156,7 +155,7 @@ export default {
 
     } catch (error) {
       // ignore files being missing
-      if (error.code !== "ENOENT") {
+      if (isErrnoException(error) && error.code !== "ENOENT") {
         throw error;
       }
     }

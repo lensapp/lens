@@ -8,6 +8,7 @@ import path from "path";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { isErrnoException } from "../../common/utils";
 
 export function fileNameMigration() {
   const di = getLegacyGlobalDiForExtensionApi();
@@ -19,10 +20,11 @@ export function fileNameMigration() {
   try {
     fse.moveSync(configJsonPath, lensUserStoreJsonPath);
   } catch (error) {
-    if (error.code === "ENOENT" && error.path === configJsonPath) { // (No such file or directory)
-      return; // file already moved
-    } else if (error.message === "dest already exists.") {
+    if (error instanceof Error && error.message === "dest already exists.") {
       fse.removeSync(configJsonPath);
+    } else if (isErrnoException(error) && error.code === "ENOENT" && error.path === configJsonPath) {
+      // (No such file or directory)
+      return; // file already moved
     } else {
       // pass other errors along
       throw error;

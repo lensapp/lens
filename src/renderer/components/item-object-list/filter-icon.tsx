@@ -17,9 +17,21 @@ export function FilterIcon(props: FilterIconProps) {
 
   switch (type) {
     case FilterType.SEARCH:
-      return <Icon small material="search" {...iconProps}/>;
+      return (
+        <Icon
+          small
+          material="search"
+          {...iconProps}
+        />
+      );
 
     default:
-      return <Icon small material="filter_list" {...iconProps}/>;
+      return (
+        <Icon
+          small
+          material="filter_list"
+          {...iconProps}
+        />
+      );
   }
 }

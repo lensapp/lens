@@ -21,10 +21,9 @@ import { renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
-import getConfigurationFileModelInjectable
-  from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import assert from "assert";
 
 mockWindow();
 
@@ -98,9 +97,16 @@ describe("Extensions", () => {
   it("disables uninstall and disable buttons while uninstalling", async () => {
     extensionDiscovery.isLoaded = true;
 
-    const res = render(<><Extensions /><ConfirmDialog /></>);
+    const res = render((
+      <>
+        <Extensions />
+        <ConfirmDialog />
+      </>
+    ));
     const table = res.getByTestId("extensions-table");
     const menuTrigger = table.querySelector("div[role=row]:first-of-type .actions .Icon");
+
+    assert(menuTrigger);
 
     fireEvent.click(menuTrigger);
 
@@ -125,7 +131,7 @@ describe("Extensions", () => {
   it("disables install button while installing", async () => {
     const res = render(<Extensions />);
 
-    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
+    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve());
 
     fireEvent.change(res.getByPlaceholderText("File path or URL", {
       exact: false,

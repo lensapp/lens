@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
-  create({ namespace = "default" }): Promise<SelfSubjectRulesReview> {
+  create({ namespace = "default" }) {
     return super.create({}, {
       spec: {
         namespace,

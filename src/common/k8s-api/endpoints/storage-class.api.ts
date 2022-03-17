@@ -4,29 +4,64 @@
  */
 
 import { autoBind } from "../../utils";
+import type { KubeObjectMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
-export interface StorageClass {
-  provisioner: string; // e.g. "storage.k8s.io/v1"
-  mountOptions?: string[];
-  volumeBindingMode: string;
-  reclaimPolicy: string;
-  parameters: {
-    [param: string]: string; // every provisioner has own set of these parameters
-  };
+export interface TopologySelectorLabelRequirement {
+  key: string;
+  values: string[];
 }
 
-export class StorageClass extends KubeObject {
-  static kind = "StorageClass";
-  static namespaced = false;
-  static apiBase = "/apis/storage.k8s.io/v1/storageclasses";
+export interface TopologySelectorTerm {
+  matchLabelExpressions?: TopologySelectorLabelRequirement[];
+}
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
+export interface StorageClassData extends KubeJsonApiData<KubeObjectMetadata<"cluster-scoped">, void, void> {
+  allowVolumeExpansion?: boolean;
+  allowedTopologies?: TopologySelectorTerm[];
+  mountOptions?: string[];
+  parameters?: Partial<Record<string, string>>;
+  provisioner: string;
+  reclaimPolicy?: string;
+  volumeBindingMode?: string;
+}
+
+export class StorageClass extends KubeObject<void, void, "cluster-scoped"> {
+  static readonly kind = "StorageClass";
+  static readonly namespaced = false;
+  static readonly apiBase = "/apis/storage.k8s.io/v1/storageclasses";
+
+  allowVolumeExpansion?: boolean;
+  allowedTopologies: TopologySelectorTerm[];
+  mountOptions: string[];
+  parameters: Partial<Record<string, string>>;
+  provisioner: string;
+  reclaimPolicy: string;
+  volumeBindingMode?: string;
+
+  constructor({
+    allowVolumeExpansion,
+    allowedTopologies = [],
+    mountOptions = [],
+    parameters = {},
+    provisioner,
+    reclaimPolicy = "Delete",
+    volumeBindingMode,
+    ...rest
+  }: StorageClassData) {
+    super(rest);
     autoBind(this);
+    this.allowVolumeExpansion = allowVolumeExpansion;
+    this.allowedTopologies = allowedTopologies;
+    this.mountOptions = mountOptions;
+    this.parameters = parameters;
+    this.provisioner = provisioner;
+    this.reclaimPolicy = reclaimPolicy;
+    this.volumeBindingMode = volumeBindingMode;
   }
 
   isDefault() {
@@ -47,14 +82,15 @@ export class StorageClass extends KubeObject {
   }
 }
 
-let storageClassApi: KubeApi<StorageClass>;
-
-if (isClusterPageContext()) {
-  storageClassApi = new KubeApi({
-    objectConstructor: StorageClass,
-  });
+export class StorageClassApi extends KubeApi<StorageClass, StorageClassData> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: StorageClass,
+    });
+  }
 }
 
-export {
-  storageClassApi,
-};
+export const storageClassApi = isClusterPageContext()
+  ? new StorageClassApi()
+  : undefined as never;

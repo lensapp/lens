@@ -6,7 +6,7 @@
 import { computed, reaction, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
-import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import type { CustomResourceDefinition, CustomResourceDefinitionApi } from "../../../common/k8s-api/endpoints/crd.api";
 import { crdApi } from "../../../common/k8s-api/endpoints/crd.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { KubeApi } from "../../../common/k8s-api/kube-api";
@@ -28,11 +28,9 @@ function initStore(crd: CustomResourceDefinition) {
   }
 }
 
-export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
-  api = crdApi;
-
+export class CRDStore extends KubeObjectStore<CustomResourceDefinition, CustomResourceDefinitionApi> {
   constructor() {
-    super();
+    super(crdApi);
 
     makeObservable(this);
     autoBind(this);

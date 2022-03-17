@@ -44,14 +44,14 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
     return this.props.hotbarStore.getActive();
   }
 
-  getEntity(item: HotbarItem) {
+  getEntity(item: HotbarItem | null) {
     const hotbar = this.props.hotbarStore.getActive();
 
-    if (!hotbar) {
+    if (!hotbar || !item) {
       return null;
     }
 
-    return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
+    return catalogEntityRegistry.getById(item.entity.uid) ?? null;
   }
 
   @action
@@ -87,7 +87,11 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
     hotbar.addToHotbar(entity, index);
   };
 
-  getMoveAwayDirection(entityId: string, cellIndex: number) {
+  getMoveAwayDirection(entityId: string | undefined, cellIndex: number) {
+    if (!entityId) {
+      return "animateDown";
+    }
+
     const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);
 
     return draggableItemIndex > cellIndex ? "animateDown" : "animateUp";
@@ -111,7 +115,11 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
               {...provided.droppableProps}
             >
               {item && (
-                <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0} >
+                <Draggable
+                  draggableId={item.entity.uid}
+                  key={item.entity.uid}
+                  index={0} 
+                >
                   {(provided, snapshot) => {
                     const style = {
                       zIndex: defaultHotbarCells - index,
@@ -142,7 +150,7 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
                           <HotbarIcon
                             uid={`hotbar-icon-${item.entity.uid}`}
                             title={item.entity.name}
-                            source={item.entity.source}
+                            source={item.entity.source ?? "local"}
                             tooltip={`${item.entity.name} (${item.entity.source})`}
                             menuItems={[
                               {
@@ -178,7 +186,7 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
             {this.renderGrid()}
           </DragDropContext>
         </div>
-        <HotbarSelector hotbar={hotbar}/>
+        <HotbarSelector hotbar={hotbar} />
       </div>
     );
   }

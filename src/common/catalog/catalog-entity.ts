@@ -11,19 +11,19 @@ import type { Disposer } from "../utils";
 import { iter } from "../utils";
 import type { CategoryColumnRegistration } from "../../renderer/components/+catalog/custom-category-columns";
 
-type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
-type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
-type ExtractEntitySpecType<Entity> = Entity extends CatalogEntity<any, any, infer Spec> ? Spec : never;
+export type CatalogEntityDataFor<Entity> = Entity extends CatalogEntity<infer Metadata, infer Status, infer Spec>
+  ? CatalogEntityData<Metadata, Status, Spec>
+  : never;
+
+export type CatalogEntityInstanceFrom<Constructor> = Constructor extends CatalogEntityConstructor<infer Entity>
+  ? Entity
+  : never;
 
 export type CatalogEntityConstructor<Entity extends CatalogEntity> = (
-  (new (data: CatalogEntityData<
-    ExtractEntityMetadataType<Entity>,
-    ExtractEntityStatusType<Entity>,
-    ExtractEntitySpecType<Entity>
-  >) => Entity)
+  new (data: CatalogEntityDataFor<Entity>) => Entity
 );
 
-export interface CatalogCategoryVersion<Entity extends CatalogEntity> {
+export interface CatalogCategoryVersion {
   /**
    * The specific version that the associated constructor is for. This MUST be
    * a DNS label and SHOULD be of the form `vN`, `vNalphaY`, or `vNbetaY` where
@@ -35,19 +35,19 @@ export interface CatalogCategoryVersion<Entity extends CatalogEntity> {
    * - `v1alpha2`
    * - `v3beta2`
    */
-  name: string;
+  readonly name: string;
 
   /**
    * The constructor for the entities.
    */
-  entityClass: CatalogEntityConstructor<Entity>;
+  readonly entityClass: CatalogEntityConstructor<CatalogEntity>;
 }
 
 export interface CatalogCategorySpec {
   /**
    * The grouping for for the category. This MUST be a DNS label.
    */
-  group: string;
+  readonly group: string;
 
   /**
    * The specific versions of the constructors.
@@ -56,18 +56,18 @@ export interface CatalogCategorySpec {
    * For example, if `group = "entity.k8slens.dev"` and there is an entry in `.versions` with
    * `name = "v1alpha1"` then the resulting `.apiVersion` MUST be `entity.k8slens.dev/v1alpha1`
    */
-  versions: CatalogCategoryVersion<CatalogEntity>[];
+  readonly versions: CatalogCategoryVersion[];
 
   /**
    * This is the concerning the category
    */
-  names: {
+  readonly names: {
     /**
      * The kind of entity that this category is for. This value MUST be a DNS
      * label and MUST be equal to the `kind` fields that are produced by the
      * `.versions.[] | .entityClass` fields.
      */
-    kind: string;
+    readonly kind: string;
   };
 
   /**
@@ -81,7 +81,7 @@ export interface CatalogCategorySpec {
    *
    * These columns will not be used in the "Browse" view.
    */
-  displayColumns?: CategoryColumnRegistration[];
+  readonly displayColumns?: CategoryColumnRegistration[];
 }
 
 /**
@@ -109,6 +109,30 @@ export interface CatalogCategoryEvents {
   contextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
 }
 
+export interface CatalogCategoryMetadata {
+  /**
+   * The name of your category. The category can be searched for by this
+   * value. This will also be used for the catalog menu.
+   */
+  readonly name: string;
+  /**
+   * Either an `<svg>` or the name of an icon from {@link IconProps}
+   */
+  readonly icon: string;
+}
+
+export function categoryVersion<
+  T extends CatalogEntity<Metadata, Status, Spec>,
+  Metadata extends CatalogEntityMetadata,
+  Status extends CatalogEntityStatus,
+  Spec extends CatalogEntitySpec,
+>(name: string, entityClass: new (data: CatalogEntityData<Metadata, Status, Spec>) => T): CatalogCategoryVersion {
+  return {
+    name,
+    entityClass: entityClass as CatalogEntityConstructor<T>,
+  };
+}
+
 export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
   /**
    * The version of category that you are wanting to declare.
@@ -131,28 +155,17 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
   /**
    * The data about the category itself
    */
-  abstract readonly metadata: {
-    /**
-     * The name of your category. The category can be searched for by this
-     * value. This will also be used for the catalog menu.
-     */
-    name: string;
-
-    /**
-     * Either an `<svg>` or the name of an icon from {@link IconProps}
-     */
-    icon: string;
-  };
+  abstract readonly metadata: CatalogCategoryMetadata;
 
   /**
    * The most important part of a category, as it is where entity versions are declared.
    */
-  abstract spec: CatalogCategorySpec;
+  abstract readonly spec: CatalogCategorySpec;
 
   /**
    * @internal
    */
-  protected filters = observable.set<AddMenuFilter>([], {
+  protected readonly filters = observable.set<AddMenuFilter>([], {
     deep: false,
   });
 
@@ -217,14 +230,16 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
   }
 }
 
-export interface CatalogEntityMetadata {
+export type EntityMetadataObject = { [Key in string]?: EntityMetadataValue };
+export type EntityMetadataValue = string | number | boolean | EntityMetadataObject | undefined;
+
+export interface CatalogEntityMetadata extends EntityMetadataObject {
   uid: string;
   name: string;
   shortName?: string;
   description?: string;
   source?: string;
   labels: Record<string, string>;
-  [key: string]: string | object;
 }
 
 export interface CatalogEntityStatus {

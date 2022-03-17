@@ -3,41 +3,32 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autoBind } from "../../utils";
 import type { LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
-export interface PodDisruptionBudget {
-  spec: {
-    minAvailable: string;
-    maxUnavailable: string;
-    selector: LabelSelector;
-  };
-  status: {
-    currentHealthy: number;
-    desiredHealthy: number;
-    disruptionsAllowed: number;
-    expectedPods: number;
-  };
+export interface PodDisruptionBudgetSpec {
+  minAvailable: string;
+  maxUnavailable: string;
+  selector: LabelSelector;
 }
 
-export class PodDisruptionBudget extends KubeObject {
-  static kind = "PodDisruptionBudget";
-  static namespaced = true;
-  static apiBase = "/apis/policy/v1beta1/poddisruptionbudgets";
+export interface PodDisruptionBudgetStatus {
+  currentHealthy: number;
+  desiredHealthy: number;
+  disruptionsAllowed: number;
+  expectedPods: number;
+}
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
+export class PodDisruptionBudget extends KubeObject<PodDisruptionBudgetStatus, PodDisruptionBudgetSpec, "namespace-scoped"> {
+  static readonly kind = "PodDisruptionBudget";
+  static readonly namespaced = true;
+  static readonly apiBase = "/apis/policy/v1beta1/poddisruptionbudgets";
 
   getSelectors() {
-    const selector = this.spec.selector;
-
-    return KubeObject.stringifyLabels(selector ? selector.matchLabels : null);
+    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
   }
 
   getMinAvailable() {
@@ -49,23 +40,23 @@ export class PodDisruptionBudget extends KubeObject {
   }
 
   getCurrentHealthy() {
-    return this.status.currentHealthy;
+    return this.status?.currentHealthy ?? 0;
   }
 
   getDesiredHealthy() {
-    return this.status.desiredHealthy;
+    return this.status?.desiredHealthy ?? 0;
   }
-
 }
 
-let pdbApi: KubeApi<PodDisruptionBudget>;
-
-if (isClusterPageContext()) {
-  pdbApi = new KubeApi({
-    objectConstructor: PodDisruptionBudget,
-  });
+export class PodDisruptionBudgetApi extends KubeApi<PodDisruptionBudget> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      objectConstructor: PodDisruptionBudget,
+      ...opts,
+    });
+  }
 }
 
-export {
-  pdbApi,
-};
+export const podDisruptionBudgetApi = isClusterPageContext()
+  ? new PodDisruptionBudgetApi()
+  : undefined as never;

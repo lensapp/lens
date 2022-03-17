@@ -9,29 +9,21 @@ import { staticKubeObjectMenuItems as staticMenuItems } from "./static-kube-obje
 
 interface Dependencies {
   extensions: LensRendererExtension[];
-  kubeObject: KubeObject;
+  kubeObject: KubeObject | null | undefined;
 }
 
 export const getKubeObjectMenuItems = ({
   extensions,
   kubeObject,
 }: Dependencies) => {
-  if (!kubeObject) {
-    return [];
-  }
-
-  const extensionMenuItems = extensions.flatMap(
-    (extension) => extension.kubeObjectMenuItems,
-  );
-
-  return [...staticMenuItems, ...extensionMenuItems]
+  return staticMenuItems
+    .concat(extensions.flatMap((extension) => extension.kubeObjectMenuItems))
     .filter(
       conforms({
-        kind: eq(kubeObject.kind),
-        apiVersions: includes(kubeObject.apiVersion),
+        kind: eq(kubeObject?.kind),
+        apiVersions: includes(kubeObject?.apiVersion),
       }),
     )
-
     .map((item) => item.components.MenuItem);
 };
 

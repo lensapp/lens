@@ -16,6 +16,7 @@ const runningReplicaSet = new ReplicaSet({
     resourceVersion: "runningReplicaSet",
     uid: "runningReplicaSet",
     namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/runningReplicaSet",
   },
 });
 
@@ -27,6 +28,7 @@ const failedReplicaSet = new ReplicaSet({
     resourceVersion: "failedReplicaSet",
     uid: "failedReplicaSet",
     namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/failedReplicaSet",
   },
 });
 
@@ -38,6 +40,7 @@ const pendingReplicaSet = new ReplicaSet({
     resourceVersion: "pendingReplicaSet",
     uid: "pendingReplicaSet",
     namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/pendingReplicaSet",
   },
 });
 
@@ -50,33 +53,36 @@ const runningPod = new Pod({
     uid: "foobar",
     ownerReferences: [{
       uid: "runningReplicaSet",
+      apiVersion: "v1",
+      kind: "ReplicaSet",
+      name: "running",
     }],
     namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/foobar",
+  },
+  status: {
+    phase: "Running",
+    conditions: [
+      {
+        type: "Initialized",
+        status: "True",
+        lastProbeTime: 1,
+        lastTransitionTime: "1",
+      },
+      {
+        type: "Ready",
+        status: "True",
+        lastProbeTime: 1,
+        lastTransitionTime: "1",
+      },
+    ],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
+    containerStatuses: [],
+    initContainerStatuses: [],
   },
 });
-
-runningPod.status = {
-  phase: "Running",
-  conditions: [
-    {
-      type: "Initialized",
-      status: "True",
-      lastProbeTime: 1,
-      lastTransitionTime: "1",
-    },
-    {
-      type: "Ready",
-      status: "True",
-      lastProbeTime: 1,
-      lastTransitionTime: "1",
-    },
-  ],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-  containerStatuses: [],
-  initContainerStatuses: [],
-};
 
 const pendingPod = new Pod({
   apiVersion: "foo",
@@ -87,8 +93,12 @@ const pendingPod = new Pod({
     uid: "foobar-pending",
     ownerReferences: [{
       uid: "pendingReplicaSet",
+      apiVersion: "v1",
+      kind: "ReplicaSet",
+      name: "pending",
     }],
     namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/foobar-pending",
   },
 });
 
@@ -101,18 +111,21 @@ const failedPod = new Pod({
     uid: "foobar-failed",
     ownerReferences: [{
       uid: "failedReplicaSet",
+      apiVersion: "v1",
+      kind: "ReplicaSet",
+      name: "failed",
     }],
     namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/foobar-failed",
+  },
+  status: {
+    phase: "Failed",
+    conditions: [],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
   },
 });
-
-failedPod.status = {
-  phase: "Failed",
-  conditions: [],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-};
 
 describe("ReplicaSet Store tests", () => {
   beforeAll(() => {

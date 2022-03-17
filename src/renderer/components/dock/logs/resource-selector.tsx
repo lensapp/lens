@@ -9,20 +9,17 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import { Badge } from "../../badge";
-import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
 import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
+import type { GroupBase } from "react-select";
 
 export interface LogResourceSelectorProps {
   model: LogTabViewModel;
 }
 
-function getSelectOptions(containers: IPodContainer[]): SelectOption<string>[] {
-  return containers.map(container => ({
-    value: container.name,
-    label: container.name,
-  }));
+function getSelectOptions(containers: IPodContainer[]) {
+  return containers.map(container => container.name);
 }
 
 export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps) => {
@@ -40,14 +37,22 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     return null;
   }
 
-  const onContainerChange = (option: SelectOption<string>) => {
+  const onContainerChange = (container: string | null) => {
+    if (!container) {
+      return;
+    }
+
     model.updateLogTabData({
-      selectedContainer: option.value,
+      selectedContainer: container,
     });
     model.reloadLogs();
   };
 
-  const onPodChange = ({ value }: SelectOption<Pod>) => {
+  const onPodChange = (value: Pod | null) => {
+    if (!value) {
+      return;
+    }
+
     model.updateLogTabData({
       selectedPodId: value.getId(),
       selectedContainer: value.getAllContainers()[0]?.name,
@@ -67,39 +72,35 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     },
   ];
 
-  const podSelectOptions = pods.map(pod => ({
-    label: pod.getName(),
-    value: pod,
-  }));
-
   return (
     <div className="LogResourceSelector flex gaps align-center">
-      <span>Namespace</span> <Badge data-testid="namespace-badge" label={pod.getNs()}/>
+      <span>Namespace</span> 
+      {" "}
+      <Badge data-testid="namespace-badge" label={pod.getNs()} />
       {
         owner && (
           <>
-            <span>Owner</span> <Badge data-testid="namespace-badge" label={`${owner.kind} ${owner.name}`}/>
+            <span>Owner</span> 
+            {" "}
+            <Badge data-testid="namespace-badge" label={`${owner.kind} ${owner.name}`} />
           </>
         )
       }
       <span>Pod</span>
       <Select
-        id="pod-selection-input"
-        options={podSelectOptions}
-        value={podSelectOptions.find(opt => opt.value === pod)}
-        formatOptionLabel={option => option.label}
+        options={pods}
+        value={pod}
+        formatOptionLabel={option => option.getName()}
         onChange={onPodChange}
-        autoConvertOptions={false}
         className="pod-selector"
         menuClass="pod-selector-menu"
       />
       <span>Container</span>
-      <Select
+      <Select<string, false, GroupBase<string>>
         id="container-selector-input"
         options={containerSelectOptions}
-        value={{ label: selectedContainer, value: selectedContainer }}
+        value={selectedContainer}
         onChange={onContainerChange}
-        autoConvertOptions={false}
         className="container-selector"
         menuClass="container-selector-menu"
       />

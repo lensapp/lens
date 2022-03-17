@@ -8,13 +8,13 @@ import "./pod-details-container.scss";
 import React from "react";
 import type { IPodContainer, IPodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
-import { cssNames } from "../../utils";
+import { cssNames, isDefined } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
 import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
-import type { IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
+import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
@@ -27,7 +27,7 @@ import portForwardStoreInjectable from "../../port-forward/port-forward-store/po
 export interface PodDetailsContainerProps {
   pod: Pod;
   container: IPodContainer;
-  metrics?: { [key: string]: IMetrics };
+  metrics?: Partial<Record<string, MetricData>>;
 }
 
 interface Dependencies {
@@ -43,25 +43,37 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
     ]);
   }
 
-  renderStatus(state: string, status: IPodContainerStatus) {
-    const ready = status ? status.ready : "";
+  renderStatus(state: string, status: IPodContainerStatus | null | undefined) {
+    const { ready = false, state: containerState = {}} = status ?? {};
+    const { terminated } = containerState;
 
     return (
       <span className={cssNames("status", state)}>
-        {state}{ready ? `, ready` : ""}
-        {state === "terminated" ? ` - ${status.state.terminated.reason} (exit code: ${status.state.terminated.exitCode})` : ""}
+        {state}
+        {ready ? ", ready" : ""}
+        {terminated ? ` - ${terminated.reason} (exit code: ${terminated.exitCode})` : ""}
       </span>
     );
   }
 
-  renderLastState(lastState: string, status: IPodContainerStatus) {
-    if (lastState === "terminated") {
+  renderLastState(lastState: string, status: IPodContainerStatus | null | undefined) {
+    const { lastState: lastContainerState = {}} = status ?? {};
+    const { terminated } = lastContainerState;
+
+    if (lastState === "terminated" && terminated) {
       return (
         <span>
-          {lastState}<br/>
-          Reason: {status.lastState.terminated.reason} - exit code: {status.lastState.terminated.exitCode}<br/>
-          Started at: {<LocaleDate date={status.lastState.terminated.startedAt} />}<br/>
-          Finished at: {<LocaleDate date={status.lastState.terminated.finishedAt} />}<br/>
+          {lastState}
+          <br/>
+          Reason:
+          {`Reason: ${terminated.reason} - exit code: ${terminated.exitCode}`}
+          <br/>
+          {"Started at: "}
+          {<LocaleDate date={terminated.startedAt} />}
+          <br/>
+          {"Finished at: "}
+          {<LocaleDate date={terminated.finishedAt} />}
+          <br/>
         </span>
       );
     }
@@ -75,117 +87,125 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
     if (!pod || !container) return null;
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container;
     const status = pod.getContainerStatuses().find(status => status.name === container.name);
-    const state = status ? Object.keys(status.state)[0] : "";
-    const lastState = status ? Object.keys(status.lastState)[0] : "";
+    const state = status ? Object.keys(status?.state ?? {})[0] : "";
+    const lastState = status ? Object.keys(status?.lastState ?? {})[0] : "";
     const ready = status ? status.ready : "";
     const imageId = status? status.imageID : "";
     const liveness = pod.getLivenessProbe(container);
     const readiness = pod.getReadinessProbe(container);
     const startup = pod.getStartupProbe(container);
     const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
-    const metricTabs = [
-      "CPU",
-      "Memory",
-      "Filesystem",
-    ];
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Container);
 
     return (
       <div className="PodDetailsContainer">
         <div className="pod-container-title">
-          <StatusBrick className={cssNames(state, { ready })}/>{name}
+          <StatusBrick className={cssNames(state, { ready })}/>
+          {name}
         </div>
-        {!isMetricHidden && !isInitContainer &&
-        <ResourceMetrics tabs={metricTabs} params={{ metrics }}>
-          <ContainerCharts/>
-        </ResourceMetrics>
-        }
-        {status &&
-        <DrawerItem name="Status">
-          {this.renderStatus(state, status)}
-        </DrawerItem>
-        }
-        {lastState &&
-        <DrawerItem name="Last Status">
-          {this.renderLastState(lastState, status)}
-        </DrawerItem>
-        }
+        {!isMetricHidden && !isInitContainer && (
+          <ResourceMetrics
+            object={pod}
+            tabs={[
+              "CPU",
+              "Memory",
+              "Filesystem",
+            ]}
+            metrics={metrics}
+          >
+            <ContainerCharts/>
+          </ResourceMetrics>
+        )}
+        {status && (
+          <DrawerItem name="Status">
+            {this.renderStatus(state, status)}
+          </DrawerItem>
+        )}
+        {lastState && (
+          <DrawerItem name="Last Status">
+            {this.renderLastState(lastState, status)}
+          </DrawerItem>
+        )}
         <DrawerItem name="Image">
           <Badge label={image} tooltip={imageId}/>
         </DrawerItem>
-        {imagePullPolicy && imagePullPolicy !== "IfNotPresent" &&
-        <DrawerItem name="ImagePullPolicy">
-          {imagePullPolicy}
-        </DrawerItem>
-        }
-        {ports && ports.length > 0 &&
-        <DrawerItem name="Ports">
-          {
-            ports.map((port) => {
-              const key = `${container.name}-port-${port.containerPort}-${port.protocol}`;
-
-              return (
-                <PodContainerPort pod={pod} port={port} key={key}/>
-              );
-            })
-          }
-        </DrawerItem>
-        }
+        {imagePullPolicy && imagePullPolicy !== "IfNotPresent" && (
+          <DrawerItem name="ImagePullPolicy">
+            {imagePullPolicy}
+          </DrawerItem>
+        )}
+        {ports && ports.length > 0 && (
+          <DrawerItem name="Ports">
+            {
+              ports
+                .filter(isDefined)
+                .map((port) => (
+                  <PodContainerPort
+                    pod={pod}
+                    port={port}
+                    key={`${container.name}-port-${port.containerPort}-${port.protocol}`}
+                  />
+                ))
+            }
+          </DrawerItem>
+        )}
         {<ContainerEnvironment container={container} namespace={pod.getNs()}/>}
-        {volumeMounts && volumeMounts.length > 0 &&
-        <DrawerItem name="Mounts">
-          {
-            volumeMounts.map(mount => {
-              const { name, mountPath, readOnly } = mount;
+        {volumeMounts && volumeMounts.length > 0 && (
+          <DrawerItem name="Mounts">
+            {
+              volumeMounts.map(mount => {
+                const { name, mountPath, readOnly } = mount;
 
-              return (
-                <React.Fragment key={name + mountPath}>
-                  <span className="mount-path">{mountPath}</span>
-                  <span className="mount-from">from {name} ({readOnly ? "ro" : "rw"})</span>
-                </React.Fragment>
-              );
-            })
-          }
-        </DrawerItem>
-        }
-        {liveness.length > 0 &&
-        <DrawerItem name="Liveness" labelsOnly>
-          {
-            liveness.map((value, index) => (
-              <Badge key={index} label={value}/>
-            ))
-          }
-        </DrawerItem>
-        }
-        {readiness.length > 0 &&
-        <DrawerItem name="Readiness" labelsOnly>
-          {
-            readiness.map((value, index) => (
-              <Badge key={index} label={value}/>
-            ))
-          }
-        </DrawerItem>
-        }
-        {startup.length > 0 &&
-        <DrawerItem name="Startup" labelsOnly>
-          {
-            startup.map((value, index) => (
-              <Badge key={index} label={value}/>
-            ))
-          }
-        </DrawerItem>
-        }
-        {command &&
-        <DrawerItem name="Command">
-          {command.join(" ")}
-        </DrawerItem>
-        }
+                return (
+                  <React.Fragment key={name + mountPath}>
+                    <span className="mount-path">{mountPath}</span>
+                    <span className="mount-from">
+                      {`from ${name} (${readOnly ? "ro" : "rw"})`}
+                    </span>
+                  </React.Fragment>
+                );
+              })
+            }
+          </DrawerItem>
+        )}
+        {liveness.length > 0 && (
+          <DrawerItem name="Liveness" labelsOnly>
+            {
+              liveness.map((value, index) => (
+                <Badge key={index} label={value}/>
+              ))
+            }
+          </DrawerItem>
+        )}
+        {readiness.length > 0 && (
+          <DrawerItem name="Readiness" labelsOnly>
+            {
+              readiness.map((value, index) => (
+                <Badge key={index} label={value}/>
+              ))
+            }
+          </DrawerItem>
+        )}
+        {startup.length > 0 && (
+          <DrawerItem name="Startup" labelsOnly>
+            {
+              startup.map((value, index) => (
+                <Badge key={index} label={value}/>
+              ))
+            }
+          </DrawerItem>
+        )}
+        {command && (
+          <DrawerItem name="Command">
+            {command.join(" ")}
+          </DrawerItem>
+        )}
 
-        {args &&
-        <DrawerItem name="Arguments">
-          {args.join(" ")}
-        </DrawerItem>
-        }
+        {args && (
+          <DrawerItem name="Arguments">
+            {args.join(" ")}
+          </DrawerItem>
+        )}
       </div>
     );
   }

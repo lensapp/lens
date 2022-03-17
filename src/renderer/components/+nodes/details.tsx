@@ -14,7 +14,7 @@ import { Badge } from "../badge";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { IClusterMetrics } from "../../../common/k8s-api/endpoints";
+import type { ClusterMetricData } from "../../../common/k8s-api/endpoints";
 import { formatNodeTaint, getMetricsByNodeNames, Node } from "../../../common/k8s-api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { makeObservable, observable, reaction } from "mobx";
@@ -24,24 +24,21 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { NodeDetailsResources } from "./details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
-import type { Disposer } from "../../utils";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
 }
 
 @observer
 class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependencies> {
-  @observable metrics: Partial<IClusterMetrics>;
+  @observable metrics: Partial<ClusterMetricData> | null = null;
 
   constructor(props: NodeDetailsProps & Dependencies) {
     super(props);
@@ -79,18 +76,11 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
       return null;
     }
 
-    const { status } = node;
-    const { nodeInfo, addresses } = status;
+    const { nodeInfo, addresses } = node.status ?? {};
     const conditions = node.getActiveConditions();
     const taints = node.getTaints();
     const childPods = podsStore.getPodsByNode(node.getName());
     const { metrics } = this;
-    const metricTabs = [
-      "CPU",
-      "Memory",
-      "Disk",
-      "Pods",
-    ];
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Node);
 
     return (
@@ -98,36 +88,49 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={metricTabs} object={node} params={{ metrics }}
+            tabs={[
+              "CPU",
+              "Memory",
+              "Disk",
+              "Pods",
+            ]}
+            object={node}
+            metrics={metrics}
           >
             <NodeCharts/>
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={node} hideFields={["labels", "annotations", "uid", "resourceVersion", "selfLink"]}/>
-        {addresses &&
-        <DrawerItem name="Addresses">
-          {
-            addresses.map(({ type, address }) => (
-              <p key={type}>{type}: {address}</p>
-            ))
-          }
-        </DrawerItem>
-        }
-        <DrawerItem name="OS">
-          {nodeInfo.operatingSystem} ({nodeInfo.architecture})
-        </DrawerItem>
-        <DrawerItem name="OS Image">
-          {nodeInfo.osImage}
-        </DrawerItem>
-        <DrawerItem name="Kernel version">
-          {nodeInfo.kernelVersion}
-        </DrawerItem>
-        <DrawerItem name="Container runtime">
-          {nodeInfo.containerRuntimeVersion}
-        </DrawerItem>
-        <DrawerItem name="Kubelet version">
-          {nodeInfo.kubeletVersion}
-        </DrawerItem>
+        {addresses && (
+          <DrawerItem name="Addresses">
+            {
+              addresses.map(({ type, address }) => (
+                <p key={type}>
+                  {`${type}: ${address}`}
+                </p>
+              ))
+            }
+          </DrawerItem>
+        )}
+        {nodeInfo && (
+          <>
+            <DrawerItem name="OS">
+              {`${nodeInfo.operatingSystem} (${nodeInfo.architecture})`}
+            </DrawerItem>
+            <DrawerItem name="OS Image">
+              {nodeInfo.osImage}
+            </DrawerItem>
+            <DrawerItem name="Kernel version">
+              {nodeInfo.kernelVersion}
+            </DrawerItem>
+            <DrawerItem name="Container runtime">
+              {nodeInfo.containerRuntimeVersion}
+            </DrawerItem>
+            <DrawerItem name="Kubelet version">
+              {nodeInfo.kubeletVersion}
+            </DrawerItem>
+          </>
+        )}
         <DrawerItemLabels
           name="Labels"
           labels={node.getLabels()}
@@ -141,38 +144,37 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
             {taints.map(taint => <Badge key={taint.key} label={formatNodeTaint(taint)} />)}
           </DrawerItem>
         )}
-        {conditions &&
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
-          {
-            conditions.map(condition => {
-              const { type } = condition;
-
-              return (
-                <Badge
-                  key={type}
-                  label={type}
-                  className={kebabCase(type)}
-                  tooltip={{
-                    formatters: {
-                      tableView: true,
-                    },
-                    children: Object.entries(condition).map(([key, value]) =>
+        {conditions && (
+          <DrawerItem
+            name="Conditions"
+            className="conditions"
+            labelsOnly
+          >
+            {conditions.map(condition => (
+              <Badge
+                key={condition.type}
+                label={condition.type}
+                className={kebabCase(condition.type)}
+                tooltip={{
+                  formatters: {
+                    tableView: true,
+                  },
+                  children: Object.entries(condition)
+                    .map(([key, value]) => (
                       <div key={key} className="flex gaps align-center">
                         <div className="name">{upperFirst(key)}</div>
                         <div className="value">{value}</div>
-                      </div>,
-                    ),
-                  }}
-                />
-              );
-            })
-          }
-        </DrawerItem>
-        }
+                      </div>
+                    )),
+                }}
+              />
+            ))}
+          </DrawerItem>
+        )}
         <DrawerTitle>Capacity</DrawerTitle>
-        <NodeDetailsResources node={node} type={"capacity"}/>
+        <NodeDetailsResources node={node} type="capacity"/>
         <DrawerTitle>Allocatable</DrawerTitle>
-        <NodeDetailsResources node={node} type={"allocatable"}/>
+        <NodeDetailsResources node={node} type="allocatable"/>
         <PodDetailsList
           pods={childPods}
           owner={node}

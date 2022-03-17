@@ -3,7 +3,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "5.5.0-alpha.0",
+  "version": "5.5.0-alpha.0.1649256751918",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -269,13 +269,14 @@
     "tar": "^6.1.11",
     "tcp-port-used": "^1.0.2",
     "tempy": "1.0.1",
+    "typed-regex": "^0.0.8",
     "url-parse": "^1.5.10",
     "uuid": "^8.3.2",
     "win-ca": "^3.5.0",
     "winston": "^3.6.0",
     "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
-    "ws": "^7.5.7"
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "@async-fn/jest": "1.5.3",
@@ -289,6 +290,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.36",
+    "@types/circular-dependency-plugin": "5.0.5",
     "@types/cli-progress": "^3.9.2",
     "@types/color": "^3.0.3",
     "@types/crypto-js": "^3.1.47",

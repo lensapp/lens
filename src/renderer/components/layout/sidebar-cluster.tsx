@@ -67,7 +67,7 @@ interface Dependencies {
 }
 
 interface SidebarClusterProps {
-  clusterEntity: CatalogEntity;
+  clusterEntity: CatalogEntity | undefined;
 }
 
 const NonInjectedSidebarCluster = observer(({ clusterEntity, hotbarStore }: Dependencies & SidebarClusterProps) => {
@@ -127,7 +127,7 @@ const NonInjectedSidebarCluster = observer(({ clusterEntity, hotbarStore }: Depe
       <Tooltip targetId={tooltipId}>
         {clusterEntity.getName()}
       </Tooltip>
-      <Icon material="arrow_drop_down" className={styles.dropdown}/>
+      <Icon material="arrow_drop_down" className={styles.dropdown} />
       <Menu
         usePortal
         htmlFor={id}

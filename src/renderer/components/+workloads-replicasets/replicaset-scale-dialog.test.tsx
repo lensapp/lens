@@ -10,7 +10,7 @@ import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
 import { ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
-const dummyReplicaSet: ReplicaSet = {
+const dummyReplicaSet = new ReplicaSet({
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -18,9 +18,9 @@ const dummyReplicaSet: ReplicaSet = {
     name: "dummy",
     creationTimestamp: "dummy",
     resourceVersion: "dummy",
-    selfLink: "link",
+    namespace: "default",
+    selfLink: "/apis/apps/v1/replicasets/default/dummy",
   },
-  selfLink: "link",
   spec: {
     replicas: 1,
     selector: {
@@ -60,40 +60,13 @@ const dummyReplicaSet: ReplicaSet = {
     observedGeneration: 1,
     conditions: [{
       type: "dummy",
-      status: "dummy",
-      lastUpdateTime: "dummy",
+      status: "True",
       lastTransitionTime: "dummy",
       reason: "dummy",
       message: "dummy",
     }],
   },
-  getDesired: jest.fn(),
-  getCurrent: jest.fn(),
-  getReady: jest.fn(),
-  getImages: jest.fn(),
-  getSelectors: jest.fn(),
-  getTemplateLabels: jest.fn(),
-  getAffinity: jest.fn(),
-  getTolerations: jest.fn(),
-  getNodeSelectors: jest.fn(),
-  getAffinityNumber: jest.fn(),
-  getId: jest.fn(),
-  getResourceVersion: jest.fn(),
-  getName: jest.fn(),
-  getNs: jest.fn(),
-  getAge: jest.fn(),
-  getCreationTimestamp: jest.fn(),
-  getTimeDiffFromNow: jest.fn(),
-  getFinalizers: jest.fn(),
-  getLabels: jest.fn(),
-  getAnnotations: jest.fn(),
-  getOwnerRefs: jest.fn(),
-  getSearchFields: jest.fn(),
-  toPlainObject: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  patch: jest.fn(),
-};
+});
 
 describe("<ReplicaSetScaleDialog />", () => {
   let replicaSetApi: ReplicaSetApi;
@@ -142,7 +115,7 @@ describe("<ReplicaSetScaleDialog />", () => {
     await waitFor(async () => {
       expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
       expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
-      expect((await component.baseElement.querySelector("input").value)).toBe(`${initReplicas}`);
+      expect((component.baseElement.querySelector("input")?.value)).toBe(`${initReplicas}`);
     });
 
     const up = await component.findByTestId("desired-replicas-up");
@@ -151,12 +124,12 @@ describe("<ReplicaSetScaleDialog />", () => {
     fireEvent.click(up);
     expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas + 1}`);
     expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
-    expect((await component.baseElement.querySelector("input").value)).toBe(`${initReplicas + 1}`);
+    expect((component.baseElement.querySelector("input")?.value)).toBe(`${initReplicas + 1}`);
 
     fireEvent.click(down);
     expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
     expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
-    expect((await component.baseElement.querySelector("input").value)).toBe(`${initReplicas}`);
+    expect((component.baseElement.querySelector("input")?.value)).toBe(`${initReplicas}`);
 
     // edge case, desiredScale must >= 0
     let times = 10;
@@ -165,7 +138,7 @@ describe("<ReplicaSetScaleDialog />", () => {
       fireEvent.click(down);
     }
     expect(await component.findByTestId("desired-scale")).toHaveTextContent("0");
-    expect((await component.baseElement.querySelector("input").value)).toBe("0");
+    expect((component.baseElement.querySelector("input")?.value)).toBe("0");
 
     // edge case, desiredScale must <= scaleMax (100)
     times = 120;
@@ -174,7 +147,7 @@ describe("<ReplicaSetScaleDialog />", () => {
       fireEvent.click(up);
     }
     expect(await component.findByTestId("desired-scale")).toHaveTextContent("100");
-    expect((component.baseElement.querySelector("input").value)).toBe("100");
+    expect((component.baseElement.querySelector("input")?.value)).toBe("100");
     expect(await component.findByTestId("warning"))
       .toHaveTextContent("High number of replicas may cause cluster performance issues");
   });

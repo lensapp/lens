@@ -7,7 +7,7 @@ import "./config-maps.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { configMapsStore } from "./config-maps.store";
+import { configMapStore } from "./config-maps.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -29,7 +29,7 @@ export class ConfigMaps extends React.Component {
           isConfigurable
           tableId="configuration_configmaps"
           className="ConfigMaps"
-          store={configMapsStore}
+          store={configMapStore}
           sortingCallbacks={{
             [columnId.name]: configMap => configMap.getName(),
             [columnId.namespace]: configMap => configMap.getNs(),

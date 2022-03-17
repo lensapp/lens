@@ -6,7 +6,7 @@
 import { ipcMain } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage } from "../ipc";
-import type { ContextHandler } from "../../main/context-handler/context-handler";
+import type { ClusterContextHandler } from "../../main/context-handler/context-handler";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { HttpError } from "@kubernetes/client-node";
 import type { Kubectl } from "../../main/kubectl/kubectl";
@@ -20,16 +20,17 @@ import { DetectorRegistry } from "../../main/cluster-detectors/detector-registry
 import plimit from "p-limit";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../cluster-types";
-import { disposer, toJS } from "../utils";
+import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
+import assert from "assert";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
   createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  createContextHandler: (cluster: Cluster) => ContextHandler;
+  createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
@@ -43,17 +44,31 @@ export interface ClusterDependencies {
 export class Cluster implements ClusterModel, ClusterState {
   /** Unique id for a cluster */
   public readonly id: ClusterId;
-  private kubeCtl: Kubectl;
+  private kubeCtl: Kubectl | undefined;
   /**
    * Context handler
    *
    * @internal
    */
-  public contextHandler: ContextHandler;
-  protected proxyKubeconfigManager: KubeconfigManager;
-  protected eventsDisposer = disposer();
+  protected readonly _contextHandler: ClusterContextHandler | undefined;
+  protected readonly _proxyKubeconfigManager: KubeconfigManager | undefined;
+  protected readonly eventsDisposer = disposer();
   protected activated = false;
-  private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
+  private readonly resourceAccessStatuses = new Map<KubeApiResource, boolean>();
+
+  public get contextHandler() {
+    // TODO: remove these once main/renderer are seperate classes
+    assert(this._contextHandler);
+
+    return this._contextHandler;
+  }
+
+  protected get proxyKubeconfigManager() {
+    // TODO: remove these once main/renderer are seperate classes
+    assert(this._proxyKubeconfigManager);
+
+    return this._proxyKubeconfigManager;
+  }
 
   get whenReady() {
     return when(() => this.ready);
@@ -64,21 +79,21 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @observable
    */
-  @observable contextName: string;
+  @observable contextName!: string;
   /**
    * Path to kubeconfig
    *
    * @observable
    */
-  @observable kubeConfigPath: string;
+  @observable kubeConfigPath!: string;
   /**
    * @deprecated
    */
-  @observable workspace: string;
+  @observable workspace?: string;
   /**
    * @deprecated
    */
-  @observable workspaces: string[];
+  @observable workspaces?: string[];
   /**
    * Kubernetes API server URL
    *
@@ -215,7 +230,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @computed
    * @internal
    */
-  @computed get defaultNamespace(): string {
+  @computed get defaultNamespace(): string | undefined {
     return this.preferences.defaultNamespace;
   }
 
@@ -231,12 +246,20 @@ export class Cluster implements ClusterModel, ClusterState {
       throw validationError;
     }
 
-    this.apiUrl = config.getCluster(config.getContextObject(this.contextName).cluster).server;
+    const context = config.getContextObject(this.contextName);
+
+    assert(context);
+
+    const cluster = config.getCluster(context.cluster);
+
+    assert(cluster);
+
+    this.apiUrl = cluster.server;
 
     if (ipcMain) {
       // for the time being, until renderer gets its own cluster type
-      this.contextHandler = this.dependencies.createContextHandler(this);
-      this.proxyKubeconfigManager = this.dependencies.createKubeconfigManager(this);
+      this._contextHandler = this.dependencies.createContextHandler(this);
+      this._proxyKubeconfigManager = this.dependencies.createKubeconfigManager(this);
 
       logger.debug(`[CLUSTER]: Cluster init success`, {
         id: this.id,
@@ -255,6 +278,7 @@ export class Cluster implements ClusterModel, ClusterState {
     // Note: do not assign ID as that should never be updated
 
     this.kubeConfigPath = model.kubeConfigPath;
+    this.contextName = model.contextName;
 
     if (model.workspace) {
       this.workspace = model.workspace;
@@ -262,10 +286,6 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (model.workspaces) {
       this.workspaces = model.workspaces;
-    }
-
-    if (model.contextName) {
-      this.contextName = model.contextName;
     }
 
     if (model.preferences) {
@@ -373,8 +393,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @action
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
-    this.contextHandler?.stopServer();
-    await this.contextHandler?.ensureServer();
+    await this.contextHandler?.restartServer();
     this.disconnected = false;
   }
 
@@ -497,31 +516,35 @@ export class Cluster implements ClusterModel, ClusterState {
     } catch (error) {
       logger.error(`[CLUSTER]: Failed to connect to "${this.contextName}": ${error}`);
 
-      if (error.statusCode) {
-        if (error.statusCode >= 400 && error.statusCode < 500) {
-          this.broadcastConnectUpdate("Invalid credentials", true);
+      if (isRequestError(error)) {
+        if (error.statusCode) {
+          if (error.statusCode >= 400 && error.statusCode < 500) {
+            this.broadcastConnectUpdate("Invalid credentials", true);
 
-          return ClusterStatus.AccessDenied;
-        }
+            return ClusterStatus.AccessDenied;
+          }
 
-        this.broadcastConnectUpdate(error.error || error.message, true);
-
-        return ClusterStatus.Offline;
-      }
-
-      if (error.failed === true) {
-        if (error.timedOut === true) {
-          this.broadcastConnectUpdate("Connection timed out", true);
+          this.broadcastConnectUpdate(error.error || error.message, true);
 
           return ClusterStatus.Offline;
         }
 
-        this.broadcastConnectUpdate("Failed to fetch credentials", true);
+        if (error.failed === true) {
+          if (error.timedOut === true) {
+            this.broadcastConnectUpdate("Connection timed out", true);
 
-        return ClusterStatus.AccessDenied;
+            return ClusterStatus.Offline;
+          }
+
+          this.broadcastConnectUpdate("Failed to fetch credentials", true);
+
+          return ClusterStatus.AccessDenied;
+        }
+
+        this.broadcastConnectUpdate(error.message, true);
+      } else {
+        this.broadcastConnectUpdate("Unknown error has occurred", true);
       }
-
-      this.broadcastConnectUpdate(error.message, true);
 
       return ClusterStatus.Offline;
     }
@@ -609,7 +632,7 @@ export class Cluster implements ClusterModel, ClusterState {
       return await listNamespaces();
     } catch (error) {
       const ctx = proxyConfig.getContextObject(this.contextName);
-      const namespaceList = [ctx.namespace].filter(Boolean);
+      const namespaceList = [ctx?.namespace].filter(isDefined);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
         const { response } = error as HttpError & { response: Response };

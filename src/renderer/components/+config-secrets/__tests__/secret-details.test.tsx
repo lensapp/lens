@@ -20,6 +20,8 @@ describe("SecretDetails tests", () => {
         name: "test",
         resourceVersion: "1",
         uid: "uid",
+        namespace: "default",
+        selfLink: "/api/v1/secrets/default/test",
       },
       data: {
         foobar: "",

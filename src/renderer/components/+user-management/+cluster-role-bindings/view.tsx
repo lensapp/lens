@@ -10,7 +10,7 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingsStore } from "./store";
+import { clusterRoleBindingStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { serviceAccountsStore } from "../+service-accounts/store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
@@ -32,7 +32,7 @@ export class ClusterRoleBindings extends React.Component {
           isConfigurable
           tableId="access_cluster_role_bindings"
           className="ClusterRoleBindings"
-          store={clusterRoleBindingsStore}
+          store={clusterRoleBindingStore}
           dependentStores={[clusterRolesStore, serviceAccountsStore]}
           sortingCallbacks={{
             [columnId.name]: binding => binding.getName(),

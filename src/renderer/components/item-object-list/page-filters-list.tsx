@@ -33,7 +33,7 @@ export class PageFiltersList extends React.Component<PageFiltersListProps> {
   };
 
   renderContent() {
-    const { filters } = this.props;
+    const { filters = [] } = this.props;
 
     if (!filters.length) {
       return null;

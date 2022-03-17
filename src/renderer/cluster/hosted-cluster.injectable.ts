@@ -3,16 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getHostedClusterId } from "../utils";
-import clusterStoreInjectable from "./cluster-store.injectable";
+import hostedClusterIdInjectable from "./hosted-cluster-id.injectable";
+import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
 
 const hostedClusterInjectable = getInjectable({
   id: "hosted-cluster",
 
   instantiate: (di) => {
-    const hostedClusterId = getHostedClusterId();
+    const hostedClusterId = di.inject(hostedClusterIdInjectable);
+    const store = di.inject(clusterStoreInjectable);
 
-    return di.inject(clusterStoreInjectable).getById(hostedClusterId);
+    return store.getById(hostedClusterId);
   },
 });
 

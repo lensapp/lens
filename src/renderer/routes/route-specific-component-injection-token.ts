@@ -7,7 +7,7 @@ import type { Route } from "../../common/front-end-routing/route-injection-token
 
 export const routeSpecificComponentInjectionToken = getInjectionToken<{
   route: Route<unknown>;
-  Component: React.ElementType;
+  Component: React.ElementType<any>;
 }>({
   id: "route-specific-component-injection-token",
 });

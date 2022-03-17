@@ -50,10 +50,14 @@ export class CatalogEntityRegistry {
   }
 
   protected getActiveEntityById() {
-    return this._entities.get(this.activeEntityId) || null;
+    if (!this.activeEntityId) {
+      return undefined;
+    }
+
+    return this._entities.get(this.activeEntityId);
   }
 
-  get activeEntity(): CatalogEntity | null {
+  get activeEntity(): CatalogEntity | undefined {
     const entity = this.getActiveEntityById();
 
     // If the entity was not found but there are rawEntities to be processed,
@@ -68,7 +72,7 @@ export class CatalogEntityRegistry {
     return entity;
   }
 
-  set activeEntity(raw: CatalogEntity | string | null) {
+  set activeEntity(raw: CatalogEntity | string | undefined) {
     if (raw) {
       const id = typeof raw === "string"
         ? raw

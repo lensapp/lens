@@ -8,15 +8,17 @@ import { computed } from "mobx";
 import type { TabId } from "../dock/store";
 import type { SearchStore } from "../../../search-store/search-store";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
+import { isDefined } from "../../../utils";
+import assert from "assert";
 
 export interface LogTabViewModelDependencies {
   getLogs: (tabId: TabId) => string[];
   getLogsWithoutTimestamps: (tabId: TabId) => string[];
   getTimestampSplitLogs: (tabId: TabId) => [string, string][];
-  getLogTabData: (tabId: TabId) => LogTabData;
+  getLogTabData: (tabId: TabId) => LogTabData | undefined;
   setLogTabData: (tabId: TabId, data: LogTabData) => void;
-  loadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>) => Promise<void>;
-  reloadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>) => Promise<void>;
+  loadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>) => Promise<void>;
+  reloadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>) => Promise<void>;
   renameTab: (tabId: TabId, title: string) => void;
   stopLoadingLogs: (tabId: TabId) => void;
   getPodById: (id: string) => Pod | undefined;
@@ -48,7 +50,7 @@ export class LogTabViewModel {
       return this.dependencies.getPodsByOwnerId(data.owner.uid);
     }
 
-    return [this.dependencies.getPodById(data.selectedPodId)];
+    return [this.dependencies.getPodById(data.selectedPodId)].filter(isDefined);
   });
   readonly pod = computed(() => {
     const data = this.logTabData.get();
@@ -61,7 +63,11 @@ export class LogTabViewModel {
   });
 
   updateLogTabData = (partialData: Partial<LogTabData>) => {
-    this.dependencies.setLogTabData(this.tabId, { ...this.logTabData.get(), ...partialData });
+    const data = this.logTabData.get();
+
+    assert(data, "Can only update data once it is set");
+
+    this.dependencies.setLogTabData(this.tabId, { ...data, ...partialData });
   };
 
   loadLogs = () => this.dependencies.loadLogs(this.tabId, this.pod, this.logTabData);

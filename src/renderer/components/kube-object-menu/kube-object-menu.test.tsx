@@ -99,7 +99,7 @@ describe("kube-object-menu", () => {
       apiManagerInjectable,
       () =>
         ({
-          getStore: (api) => void api,
+          getStore: (api: any) => void api,
         } as ApiManager),
     );
 
@@ -112,13 +112,13 @@ describe("kube-object-menu", () => {
     di.override(clusterInjectable, () => null);
 
     expect(() => {
-      render(<KubeObjectMenu object={null} toolbar={true} />);
+      render(<KubeObjectMenu object={null as never} toolbar={true} />);
     }).not.toThrow();
   });
 
   it("given no kube object, renders", () => {
     const { baseElement } = render(
-      <KubeObjectMenu object={null} toolbar={true} />,
+      <KubeObjectMenu object={null as never} toolbar={true} />,
     );
 
     expect(baseElement).toMatchSnapshot();
@@ -137,6 +137,7 @@ describe("kube-object-menu", () => {
           name: "some-name",
           resourceVersion: "some-resource-version",
           namespace: "some-namespace",
+          selfLink: "/foo",
         },
       });
 
@@ -214,6 +215,7 @@ describe("kube-object-menu", () => {
           name: "some-name",
           resourceVersion: "some-resource-version",
           namespace: "some-namespace",
+          selfLink: "/foo",
         },
       });
 
@@ -251,6 +253,7 @@ describe("kube-object-menu", () => {
           name: "some-name",
           resourceVersion: "some-resource-version",
           namespace: undefined,
+          selfLink: "/foo",
         },
       });
 

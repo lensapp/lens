@@ -24,15 +24,18 @@ describe("ClusterRoleBindingDialog tests", () => {
 
     render = renderFor(di);
 
-    (clusterRolesStore as any).items = [new ClusterRole({
-      apiVersion: "rbac.authorization.k8s.io/v1",
-      kind: "ClusterRole",
-      metadata: {
-        name: "foobar",
-        resourceVersion: "1",
-        uid: "1",
-      },
-    })];
+    clusterRolesStore.items.replace([
+      new ClusterRole({
+        apiVersion: "rbac.authorization.k8s.io/v1",
+        kind: "ClusterRole",
+        metadata: {
+          name: "foobar",
+          resourceVersion: "1",
+          uid: "1",
+          selfLink: "/apis/rbac.authorization.k8s.io/v1/clusterroles/foobar",
+        },
+      }),
+    ]);
   });
 
   afterEach(() => {

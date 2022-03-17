@@ -14,12 +14,9 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import logsViewModelInjectable from "./logs-view-model.injectable";
 import type { LogTabViewModel } from "./logs-view-model";
 import type { DockTab } from "../dock/store";
-import type { Disposer } from "../../../utils";
 import { cssNames } from "../../../utils";
-import type { KubeWatchSubscribeStoreOptions } from "../../../kube-watch-api/kube-watch-api";
+import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
-import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../../common/k8s-api/kube-object";
 import { podsStore } from "../../+workloads-pods/pods.store";
 
 export interface LogsDockTabProps {
@@ -29,7 +26,7 @@ export interface LogsDockTabProps {
 
 interface Dependencies {
   model: LogTabViewModel;
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;
+  subscribeStores: SubscribeStores;
 }
 
 const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStores }: Dependencies & LogsDockTabProps) => {

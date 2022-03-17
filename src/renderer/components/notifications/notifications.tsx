@@ -17,7 +17,7 @@ import { Icon } from "../icon";
 
 @observer
 export class Notifications extends React.Component {
-  public elem: HTMLElement;
+  public elem: HTMLDivElement | null = null;
 
   static ok(message: NotificationMessage) {
     return notificationsStore.add({
@@ -27,7 +27,17 @@ export class Notifications extends React.Component {
     });
   }
 
-  static error(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
+  static checkedError(message: unknown, fallback: string, customOpts?: Partial<Omit<Notification, "message">>) {
+    if (typeof message === "string" || message instanceof Error) {
+      return Notifications.error(message, customOpts);
+    }
+
+    console.warn("Unknown notification error message, falling back to default", message);
+
+    return Notifications.error(fallback, customOpts);
+  }
+
+  static error(message: NotificationMessage, customOpts: Partial<Omit<Notification, "message">> = {}) {
     return notificationsStore.add({
       message,
       timeout: 10_000,
@@ -36,14 +46,14 @@ export class Notifications extends React.Component {
     });
   }
 
-  static shortInfo(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
+  static shortInfo(message: NotificationMessage, customOpts: Partial<Omit<Notification, "message">> = {}) {
     return this.info(message, {
       timeout: 5_000,
       ...customOpts,
     });
   }
 
-  static info(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
+  static info(message: NotificationMessage, customOpts: Partial<Omit<Notification, "message">> = {}) {
     return notificationsStore.add({
       status: NotificationStatus.INFO,
       timeout: 0,
@@ -94,14 +104,16 @@ export class Notifications extends React.Component {
               <div
                 className={cssNames("notification flex", status)}
                 onMouseLeave={() => addAutoHideTimer(id)}
-                onMouseEnter={() => removeAutoHideTimer(id)}>
+                onMouseEnter={() => removeAutoHideTimer(id)}
+              >
                 <div className="box">
-                  <Icon material="info_outline"/>
+                  <Icon material="info_outline" />
                 </div>
                 <div className="message box grow">{msgText}</div>
                 <div className="box">
                   <Icon
-                    material="close" className="close"
+                    material="close"
+                    className="close"
                     onClick={prevDefault(() => {
                       remove(id);
                       onClose?.();

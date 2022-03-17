@@ -31,15 +31,17 @@ function NonInjectedHotbarToggleMenuItem({
   const [itemInHotbar, setItemInHotbar] = useState(hotbarStore.isAddedToActive(entity));
 
   return (
-    <MenuItem onClick={() => {
-      if (itemInHotbar) {
-        hotbarStore.removeFromHotbar(entity.getId());
-        setItemInHotbar(false);
-      } else {
-        hotbarStore.addToHotbar(entity);
-        setItemInHotbar(true);
-      }
-    }}>
+    <MenuItem
+      onClick={() => {
+        if (itemInHotbar) {
+          hotbarStore.removeFromHotbar(entity.getId());
+          setItemInHotbar(false);
+        } else {
+          hotbarStore.addToHotbar(entity);
+          setItemInHotbar(true);
+        }
+      }}
+    >
       {itemInHotbar ? removeContent : addContent }
     </MenuItem>
   );

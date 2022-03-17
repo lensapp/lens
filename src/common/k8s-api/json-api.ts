@@ -13,6 +13,8 @@ import fetch from "node-fetch";
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import logger from "../../common/logger";
+import type { Defaulted } from "../utils";
+import { json } from "../utils";
 
 export interface JsonApiData {}
 
@@ -35,38 +37,40 @@ export interface JsonApiLog {
   error?: any;
 }
 
+export type GetRequestOptions = () => Promise<RequestInit>;
+
 export interface JsonApiConfig {
   apiBase: string;
   serverAddress: string;
   debug?: boolean;
-  getRequestOptions?: () => Promise<RequestInit>;
+  getRequestOptions?: GetRequestOptions;
 }
 
 const httpAgent = new HttpAgent({ keepAlive: true });
 const httpsAgent = new HttpsAgent({ keepAlive: true });
 
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
-  static reqInitDefault: RequestInit = {
+  static readonly reqInitDefault = {
     headers: {
       "content-type": "application/json",
     },
   };
+  protected readonly reqInit: Defaulted<RequestInit, keyof typeof JsonApi["reqInitDefault"]>;
 
-  static configDefault: Partial<JsonApiConfig> = {
+  static readonly configDefault: Partial<JsonApiConfig> = {
     debug: false,
   };
 
-  constructor(public readonly config: JsonApiConfig, protected reqInit?: RequestInit) {
+  constructor(public readonly config: JsonApiConfig, reqInit?: RequestInit) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
     this.getRequestOptions = config.getRequestOptions ?? (() => Promise.resolve({}));
   }
 
-  public onData = new EventEmitter<[D, Response]>();
-  public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
-
-  private getRequestOptions: JsonApiConfig["getRequestOptions"];
+  public readonly onData = new EventEmitter<[D, Response]>();
+  public readonly onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
+  private readonly getRequestOptions: GetRequestOptions;
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
@@ -74,21 +78,16 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   async getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit: RequestInit = merge(
-      {},
+    const reqInit = merge(
+      {
+        method: "get",
+        agent: reqUrl.startsWith("https:") ? httpsAgent : httpAgent,
+      },
       this.reqInit,
       await this.getRequestOptions(),
       init,
     );
     const { query } = params || {} as P;
-
-    if (!reqInit.method) {
-      reqInit.method = "get";
-    }
-
-    if (!reqInit.agent) {
-      reqInit.agent = reqUrl.startsWith("https:") ? httpsAgent : httpAgent;
-    }
 
     if (query) {
       const queryString = stringify(query);
@@ -115,9 +114,9 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected async request<D>(path: string, params?: P, init: RequestInit = {}) {
+  protected async request<D>(path: string, params: P | undefined, init: Defaulted<RequestInit, "method">) {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit: RequestInit = merge(
+    const reqInit = merge(
       {},
       this.reqInit,
       await this.getRequestOptions(),
@@ -149,10 +148,10 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     const { status } = res;
 
     const text = await res.text();
-    let data;
+    let data: any;
 
     try {
-      data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
+      data = text ? json.parse(text) : ""; // DELETE-requests might not have response-body
     } catch (e) {
       data = text;
     }

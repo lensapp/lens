@@ -59,9 +59,6 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   renderCpuUsage(id: string, usage: number) {
     const { maxCpu } = this.props;
     const value = usage.toFixed(3);
-    const tooltip = (
-      <p>CPU: {Math.ceil(usage * 100) / maxCpu}%<br/>{usage.toFixed(3)}</p>
-    );
 
     if (!maxCpu) {
       if (parseFloat(value) === 0) return 0;
@@ -69,9 +66,18 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
       return value;
     }
 
+    const tooltip = (
+      <p>
+        {`CPU: ${Math.ceil(usage * 100 / maxCpu)}%`}
+        <br/>
+        {usage.toFixed(3)}
+      </p>
+    );
+
     return (
       <LineProgress
-        max={maxCpu} value={usage}
+        max={maxCpu}
+        value={usage}
         tooltip={parseFloat(value) !== 0 ? tooltip : null}
       />
     );
@@ -79,15 +85,21 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
 
   renderMemoryUsage(id: string, usage: number) {
     const { maxMemory } = this.props;
-    const tooltip = (
-      <p>Memory: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, { precision: 3 })}</p>
-    );
 
     if (!maxMemory) return usage ? bytesToUnits(usage) : 0;
 
+    const tooltip = (
+      <p>
+        {`Memory: ${Math.ceil(usage * 100 / maxMemory)}%`}
+        <br/>
+        {bytesToUnits(usage, { precision: 3 })}
+      </p>
+    );
+
     return (
       <LineProgress
-        max={maxMemory} value={usage}
+        max={maxMemory}
+        value={usage}
         tooltip={usage != 0 ? tooltip : null}
       />
     );
@@ -96,6 +108,11 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   getTableRow(uid: string) {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
+
+    if (!pod) {
+      return;
+    }
+
     const metrics = podsStore.getPodKubeMetrics(pod);
 
     return (
@@ -108,7 +125,9 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
         <TableCell className="name">{pod.getName()}</TableCell>
         <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
         <TableCell className="namespace">{pod.getNs()}</TableCell>
-        <TableCell className="ready">{pod.getRunningContainers().length}/{pod.getContainers().length}</TableCell>
+        <TableCell className="ready">
+          {`${pod.getRunningContainers().length} / ${pod.getContainers().length}`}
+        </TableCell>
         <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
         <TableCell className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
@@ -153,7 +172,11 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          renderRow={!virtual && (pod => this.getTableRow(pod.getId()))}
+          renderRow={(
+            virtual
+              ? undefined
+              : (pod => this.getTableRow(pod.getId()))
+          )}
           className="box grow"
         >
           <TableHead>

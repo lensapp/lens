@@ -16,6 +16,7 @@ const runningDaemonSet = new DaemonSet({
     resourceVersion: "runningDaemonSet",
     uid: "runningDaemonSet",
     namespace: "default",
+    selfLink: "/apis/apps/v1/daemonsets/default/runningDaemonSet",
   },
 });
 
@@ -27,6 +28,7 @@ const failedDaemonSet = new DaemonSet({
     resourceVersion: "failedDaemonSet",
     uid: "failedDaemonSet",
     namespace: "default",
+    selfLink: "/apis/apps/v1/daemonsets/default/failedDaemonSet",
   },
 });
 
@@ -38,6 +40,7 @@ const pendingDaemonSet = new DaemonSet({
     resourceVersion: "pendingDaemonSet",
     uid: "pendingDaemonSet",
     namespace: "default",
+    selfLink: "/apis/apps/v1/daemonsets/default/pendingDaemonSet",
   },
 });
 
@@ -50,33 +53,36 @@ const runningPod = new Pod({
     uid: "foobar",
     ownerReferences: [{
       uid: "runningDaemonSet",
+      apiVersion: "apps/v1",
+      kind: "DaemonSet",
+      name: "running",
     }],
     namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar",
+  },
+  status: {
+    phase: "Running",
+    conditions: [
+      {
+        type: "Initialized",
+        status: "True",
+        lastProbeTime: 1,
+        lastTransitionTime: "1",
+      },
+      {
+        type: "Ready",
+        status: "True",
+        lastProbeTime: 1,
+        lastTransitionTime: "1",
+      },
+    ],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
+    containerStatuses: [],
+    initContainerStatuses: [],
   },
 });
-
-runningPod.status = {
-  phase: "Running",
-  conditions: [
-    {
-      type: "Initialized",
-      status: "True",
-      lastProbeTime: 1,
-      lastTransitionTime: "1",
-    },
-    {
-      type: "Ready",
-      status: "True",
-      lastProbeTime: 1,
-      lastTransitionTime: "1",
-    },
-  ],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-  containerStatuses: [],
-  initContainerStatuses: [],
-};
 
 const pendingPod = new Pod({
   apiVersion: "foo",
@@ -87,8 +93,12 @@ const pendingPod = new Pod({
     uid: "foobar-pending",
     ownerReferences: [{
       uid: "pendingDaemonSet",
+      apiVersion: "apps/v1",
+      kind: "DaemonSet",
+      name: "pending",
     }],
     namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar-pending",
   },
 });
 
@@ -101,18 +111,21 @@ const failedPod = new Pod({
     uid: "foobar-failed",
     ownerReferences: [{
       uid: "failedDaemonSet",
+      apiVersion: "apps/v1",
+      kind: "DaemonSet",
+      name: "failed",
     }],
     namespace: "default",
+    selfLink: "/api/v1/pods/default/foobar-failed",
+  },
+  status: {
+    phase: "Failed",
+    conditions: [],
+    hostIP: "10.0.0.1",
+    podIP: "10.0.0.1",
+    startTime: "now",
   },
 });
-
-failedPod.status = {
-  phase: "Failed",
-  conditions: [],
-  hostIP: "10.0.0.1",
-  podIP: "10.0.0.1",
-  startTime: "now",
-};
 
 describe("DaemonSet Store tests", () => {
   beforeAll(() => {

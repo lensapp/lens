@@ -5,25 +5,35 @@
 
 import moment from "moment";
 
-import type { IAffinity } from "../workload-kube-object";
-import { WorkloadKubeObject } from "../workload-kube-object";
-import { autoBind } from "../../utils";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { IPodMetrics } from "./pods.api";
-import type { KubeJsonApiData } from "../kube-json-api";
+import type { PodMetricData, PodSpec } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { LabelSelector } from "../kube-object";
+import type { KubeObjectStatus, LabelSelector } from "../kube-object";
+import { KubeObject } from "../kube-object";
+import { hasTypedProperty, isNumber, isObject } from "../../utils";
 
 export class DeploymentApi extends KubeApi<Deployment> {
+  constructor(opts?: DerivedKubeApiOptions) {
+    super({
+      objectConstructor: Deployment,
+      ...opts ?? {},
+    });
+  }
+
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
 
-  getReplicas(params: { namespace: string; name: string }): Promise<number> {
-    return this.request
-      .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status?.replicas);
+  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    const { status } = await this.request.get(this.getScaleApiUrl(params));
+
+    if (isObject(status) && hasTypedProperty(status, "replicas", isNumber)) {
+      return status.replicas;
+    }
+
+    return 0;
   }
 
   scale(params: { namespace: string; name: string }, replicas: number) {
@@ -61,7 +71,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
   }
 }
 
-export function getMetricsForDeployments(deployments: Deployment[], namespace: string, selector = ""): Promise<IPodMetrics> {
+export function getMetricsForDeployments(deployments: Deployment[], namespace: string, selector = ""): Promise<PodMetricData> {
   const podSelector = deployments.map(deployment => `${deployment.getName()}-[[:alnum:]]{9,}-[[:alnum:]]{5}`).join("|");
   const opts = { category: "pods", pods: podSelector, namespace, selector };
 
@@ -78,136 +88,66 @@ export function getMetricsForDeployments(deployments: Deployment[], namespace: s
   });
 }
 
-interface IContainerProbe {
-  httpGet?: {
-    path?: string;
-    port: number;
-    scheme: string;
-    host?: string;
+export interface DeploymentSpec {
+  replicas: number;
+  selector: LabelSelector;
+  template: {
+    metadata: {
+      creationTimestamp?: string;
+      labels: Record<string, string | undefined>;
+      annotations?: Record<string, string | undefined>;
+    };
+    spec: PodSpec;
   };
-  exec?: {
-    command: string[];
+  strategy: {
+    type: string;
+    rollingUpdate: {
+      maxUnavailable: number;
+      maxSurge: number;
+    };
   };
-  tcpSocket?: {
-    port: number;
-  };
-  initialDelaySeconds?: number;
-  timeoutSeconds?: number;
-  periodSeconds?: number;
-  successThreshold?: number;
-  failureThreshold?: number;
 }
 
-export class Deployment extends WorkloadKubeObject {
+export interface DeploymentStatus extends KubeObjectStatus {
+  observedGeneration: number;
+  replicas: number;
+  updatedReplicas: number;
+  readyReplicas: number;
+  availableReplicas?: number;
+  unavailableReplicas?: number;
+}
+
+export class Deployment extends KubeObject<DeploymentStatus, DeploymentSpec, "namespace-scoped"> {
   static kind = "Deployment";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/deployments";
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
+  getSelectors(): string[] {
+    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
   }
 
-  declare spec: {
-    replicas: number;
-    selector: LabelSelector;
-    template: {
-      metadata: {
-        creationTimestamp?: string;
-        labels: { [app: string]: string };
-        annotations?: { [app: string]: string };
-      };
-      spec: {
-        containers: {
-          name: string;
-          image: string;
-          args?: string[];
-          ports?: {
-            name: string;
-            containerPort: number;
-            protocol: string;
-          }[];
-          env?: {
-            name: string;
-            value: string;
-          }[];
-          resources: {
-            limits?: {
-              cpu: string;
-              memory: string;
-            };
-            requests: {
-              cpu: string;
-              memory: string;
-            };
-          };
-          volumeMounts?: {
-            name: string;
-            mountPath: string;
-          }[];
-          livenessProbe?: IContainerProbe;
-          readinessProbe?: IContainerProbe;
-          startupProbe?: IContainerProbe;
-          terminationMessagePath: string;
-          terminationMessagePolicy: string;
-          imagePullPolicy: string;
-        }[];
-        restartPolicy: string;
-        terminationGracePeriodSeconds: number;
-        dnsPolicy: string;
-        affinity?: IAffinity;
-        nodeSelector?: {
-          [selector: string]: string;
-        };
-        serviceAccountName: string;
-        serviceAccount: string;
-        securityContext: {};
-        schedulerName: string;
-        tolerations?: {
-          key: string;
-          operator: string;
-          effect: string;
-          tolerationSeconds: number;
-        }[];
-        volumes?: {
-          name: string;
-          configMap: {
-            name: string;
-            defaultMode: number;
-            optional: boolean;
-          };
-        }[];
-      };
-    };
-    strategy: {
-      type: string;
-      rollingUpdate: {
-        maxUnavailable: number;
-        maxSurge: number;
-      };
-    };
-  };
-  declare status: {
-    observedGeneration: number;
-    replicas: number;
-    updatedReplicas: number;
-    readyReplicas: number;
-    availableReplicas?: number;
-    unavailableReplicas?: number;
-    conditions: {
-      type: string;
-      status: string;
-      lastUpdateTime: string;
-      lastTransitionTime: string;
-      reason: string;
-      message: string;
-    }[];
-  };
+  getNodeSelectors(): string[] {
+    return KubeObject.stringifyLabels(this.spec.template.spec.nodeSelector);
+  }
+
+  getTemplateLabels(): string[] {
+    return KubeObject.stringifyLabels(this.spec.template.metadata.labels);
+  }
+
+  getTolerations() {
+    return this.spec.template.spec.tolerations ?? [];
+  }
+
+  getAffinity() {
+    return this.spec.template.spec.affinity;
+  }
+
+  getAffinityNumber() {
+    return Object.keys(this.getAffinity() ?? {}).length;
+  }
 
   getConditions(activeOnly = false) {
-    const { conditions } = this.status;
-
-    if (!conditions) return [];
+    const { conditions = [] } = this.status ?? {};
 
     if (activeOnly) {
       return conditions.filter(c => c.status === "True");
@@ -217,7 +157,9 @@ export class Deployment extends WorkloadKubeObject {
   }
 
   getConditionsText(activeOnly = true) {
-    return this.getConditions(activeOnly).map(({ type }) => type).join(" ");
+    return this.getConditions(activeOnly)
+      .map(({ type }) => type)
+      .join(" ");
   }
 
   getReplicas() {
@@ -225,14 +167,6 @@ export class Deployment extends WorkloadKubeObject {
   }
 }
 
-let deploymentApi: DeploymentApi;
-
-if (isClusterPageContext()) {
-  deploymentApi = new DeploymentApi({
-    objectConstructor: Deployment,
-  });
-}
-
-export {
-  deploymentApi,
-};
+export const deploymentApi = isClusterPageContext()
+  ? new DeploymentApi()
+  : undefined as never;

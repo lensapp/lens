@@ -4,7 +4,7 @@
  */
 
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { CatalogCategory, CatalogEntity } from "../catalog";
+import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
@@ -47,7 +47,7 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     }
 
     catalogCategoryRegistry
-      .getCategoryForEntity<WebLinkCategory>(this)
+      .getCategoryForEntity(this)
       ?.emit("contextMenuOpen", this, context);
   }
 }
@@ -62,10 +62,7 @@ export class WebLinkCategory extends CatalogCategory {
   public spec = {
     group: "entity.k8slens.dev",
     versions: [
-      {
-        name: "v1alpha1",
-        entityClass: WebLink,
-      },
+      categoryVersion("v1alpha1", WebLink),
     ],
     names: {
       kind: "WebLink",

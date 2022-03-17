@@ -5,12 +5,12 @@
 
 import type WebSocket from "ws";
 import { v4 as uuid } from "uuid";
-import * as k8s from "@kubernetes/client-node";
+import { Watch, CoreV1Api } from "@kubernetes/client-node";
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { ShellOpenError, ShellSession } from "../shell-session";
-import { get } from "lodash";
-import { Node, NodesApi } from "../../../common/k8s-api/endpoints";
+import { get, once } from "lodash";
+import { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../../common/k8s-api/kube-json-api";
 import logger from "../../logger";
 import { TerminalChannels } from "../../../renderer/api/terminal-api";
@@ -20,7 +20,6 @@ export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
 
   protected readonly podName = `node-shell-${uuid()}`;
-  protected kc: KubeConfig;
 
   protected readonly cwd: string | undefined = undefined;
 
@@ -29,17 +28,27 @@ export class NodeShellSession extends ShellSession {
   }
 
   public async open() {
-    this.kc = await this.cluster.getProxyKubeconfig();
+    const kc = await this.cluster.getProxyKubeconfig();
+    const coreApi = kc.makeApiClient(CoreV1Api);
     const shell = await this.kubectl.getPath();
 
+    const cleanup = once(() => {
+      coreApi
+        .deleteNamespacedPod(this.podName, "kube-system")
+        .catch(error => logger.warn(`[NODE-SHELL]: failed to remove pod shell`, error));
+    });
+
+    this.websocket.once("close", cleanup);
+
     try {
-      await this.createNodeShellPod();
-      await this.waitForRunningPod();
+      await this.createNodeShellPod(coreApi);
+      await this.waitForRunningPod(kc);
     } catch (error) {
-      this.deleteNodeShellPod();
+      cleanup();
+
       this.send({
         type: TerminalChannels.STDOUT,
-        data: `Error occurred: ${get(error, "response.body.message", error?.toString() || "unknown error")}`,
+        data: `Error occurred: ${get(error, "response.body.message", error ? String(error) : "unknown error")}`,
       });
 
       throw new ShellOpenError("failed to create node pod", error);
@@ -47,11 +56,16 @@ export class NodeShellSession extends ShellSession {
 
     const env = await this.getCachedShellEnv();
     const args = ["exec", "-i", "-t", "-n", "kube-system", this.podName, "--"];
-    const nodeApi = new NodesApi({
+    const nodeApi = new NodeApi({
       objectConstructor: Node,
       request: KubeJsonApi.forCluster(this.cluster.id),
     });
     const node = await nodeApi.get({ name: this.nodeName });
+
+    if (!node) {
+      throw new Error(`No node with name=${this.nodeName} found`);
+    }
+
     const nodeOs = node.getOperatingSystem();
 
     switch (nodeOs) {
@@ -69,16 +83,14 @@ export class NodeShellSession extends ShellSession {
     await this.openShellProcess(shell, args, env);
   }
 
-  protected createNodeShellPod() {
+  protected createNodeShellPod(coreApi: CoreV1Api) {
     const imagePullSecrets = this.cluster.imagePullSecret
       ? [{
         name: this.cluster.imagePullSecret,
       }]
       : undefined;
 
-    return this
-      .kc
-      .makeApiClient(k8s.CoreV1Api)
+    return coreApi
       .createNamespacedPod("kube-system", {
         metadata: {
           name: this.podName,
@@ -109,11 +121,11 @@ export class NodeShellSession extends ShellSession {
       });
   }
 
-  protected waitForRunningPod(): Promise<void> {
+  protected waitForRunningPod(kc: KubeConfig): Promise<void> {
     logger.debug(`[NODE-SHELL]: waiting for ${this.podName} to be running`);
 
     return new Promise((resolve, reject) => {
-      new k8s.Watch(this.kc)
+      new Watch(kc)
         .watch(`/api/v1/namespaces/kube-system/pods`,
           {},
           // callback is called for each received object.
@@ -145,18 +157,5 @@ export class NodeShellSession extends ShellSession {
           reject(error);
         });
     });
-  }
-
-  protected exit() {
-    super.exit();
-    this.deleteNodeShellPod();
-  }
-
-  protected deleteNodeShellPod() {
-    this
-      .kc
-      .makeApiClient(k8s.CoreV1Api)
-      .deleteNamespacedPod(this.podName, "kube-system")
-      .catch(error => logger.warn(`[NODE-SHELL]: failed to remove pod shell`, error));
   }
 }

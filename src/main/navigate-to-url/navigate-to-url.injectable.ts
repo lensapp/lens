@@ -13,7 +13,7 @@ const navigateToUrlInjectable = getInjectable({
     const windowManager = di.inject(windowManagerInjectable);
 
     return (url) => {
-      windowManager.navigateSync(url);
+      windowManager.navigate(url);
     };
   },
 

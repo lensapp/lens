@@ -43,8 +43,14 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-const NonInjectedTopBar = observer(({ items, navigateToCatalog, catalogRouteIsActive, isWindows, isLinux }: Dependencies) => {
-  const elem = useRef<HTMLDivElement>();
+const NonInjectedTopBar = observer(({
+  items,
+  navigateToCatalog,
+  catalogRouteIsActive,
+  isWindows,
+  isLinux,
+}: Dependencies) => {
+  const elem = useRef<HTMLDivElement | null>(null);
 
   const openAppContextMenu = () => {
     emitOpenAppMenuAsContextMenu();
@@ -83,15 +89,24 @@ const NonInjectedTopBar = observer(({ items, navigateToCatalog, catalogRouteIsAc
   useEffect(() => watchHistoryState(), []);
 
   return (
-    <div className={styles.topBar} onDoubleClick={windowSizeToggle} ref={elem}>
+    <div
+      className={styles.topBar}
+      onDoubleClick={windowSizeToggle}
+      ref={elem}
+    >
       <div className={styles.items}>
         {(isWindows || isLinux) && (
           <div className={styles.winMenu}>
             <div onClick={openAppContextMenu} data-testid="window-menu">
-              <svg width="12" height="12" viewBox="0 0 12 12" shapeRendering="crispEdges">
-                <path fill="currentColor" d="M0,8.5h12v1H0V8.5z"/>
-                <path fill="currentColor" d="M0,5.5h12v1H0V5.5z"/>
-                <path fill="currentColor" d="M0,2.5h12v1H0V2.5z"/>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                shapeRendering="crispEdges"
+              >
+                <path fill="currentColor" d="M0,8.5h12v1H0V8.5z" />
+                <path fill="currentColor" d="M0,5.5h12v1H0V5.5z" />
+                <path fill="currentColor" d="M0,2.5h12v1H0V2.5z" />
               </svg>
             </div>
           </div>
@@ -119,17 +134,42 @@ const NonInjectedTopBar = observer(({ items, navigateToCatalog, catalogRouteIsAc
         {renderRegisteredItems(items.get())}
         {(isWindows || isLinux) && (
           <div className={cssNames(styles.windowButtons, { [styles.linuxButtons]: isLinux })}>
-            <div className={styles.minimize} data-testid="window-minimize" onClick={minimizeWindow}>
+            <div
+              className={styles.minimize}
+              data-testid="window-minimize"
+              onClick={minimizeWindow}
+            >
               <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
-                <rect fill="currentColor" width="10" height="1" x="1" y="9" />
+                <rect
+                  fill="currentColor"
+                  width="10"
+                  height="1"
+                  x="1"
+                  y="9" 
+                />
               </svg>
             </div>
-            <div className={styles.maximize} data-testid="window-maximize" onClick={toggleMaximize}>
+            <div
+              className={styles.maximize}
+              data-testid="window-maximize"
+              onClick={toggleMaximize}
+            >
               <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
-                <rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor" />
+                <rect
+                  width="9"
+                  height="9"
+                  x="1.5"
+                  y="1.5"
+                  fill="none"
+                  stroke="currentColor" 
+                />
               </svg>
             </div>
-            <div className={styles.close} data-testid="window-close" onClick={closeWindow}>
+            <div
+              className={styles.close}
+              data-testid="window-close"
+              onClick={closeWindow}
+            >
               <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
                 <polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1" />
               </svg>

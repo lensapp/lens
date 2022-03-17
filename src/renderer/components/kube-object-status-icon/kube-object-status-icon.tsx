@@ -7,7 +7,7 @@ import "./kube-object-status-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames, formatDuration } from "../../utils";
+import { cssNames, formatDuration, getOrInsert } from "../../utils";
 import type { KubeObject, KubeObjectStatus } from "../../..//extensions/renderer-api/k8s-api";
 import { KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -35,7 +35,7 @@ function statusTitle(level: KubeObjectStatusLevel): string {
   }
 }
 
-function getAge(timestamp: string) {
+function getAge(timestamp: string | undefined) {
   return timestamp
     ? formatDuration(Date.now() - new Date(timestamp).getTime(), true)
     : "";
@@ -51,16 +51,20 @@ interface SplitStatusesByLevel {
 /**
  * This function returns the class level for corresponding to the highest status level
  * and the statuses split by their levels.
- * @param src a list of status items
+ * @param statuses a list of status items
  */
-function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
-  const parts = new Map(Object.values(KubeObjectStatusLevel).map(v => [v, []]));
+function splitByLevel(statuses: KubeObjectStatus[]): SplitStatusesByLevel {
+  const parts = new Map<KubeObjectStatusLevel, KubeObjectStatus[]>();
 
-  src.forEach(status => parts.get(status.level).push(status));
+  for (const status of statuses) {
+    const part = getOrInsert(parts, status.level, []);
 
-  const criticals = parts.get(KubeObjectStatusLevel.CRITICAL);
-  const warnings = parts.get(KubeObjectStatusLevel.WARNING);
-  const infos = parts.get(KubeObjectStatusLevel.INFO);
+    part.push(status);
+  }
+
+  const criticals = parts.get(KubeObjectStatusLevel.CRITICAL) ?? [];
+  const warnings = parts.get(KubeObjectStatusLevel.WARNING) ?? [];
+  const infos = parts.get(KubeObjectStatusLevel.INFO) ?? [];
   const maxLevel = statusClassName(criticals[0]?.level ?? warnings[0]?.level ?? infos[0].level);
 
   return { maxLevel, criticals, warnings, infos };
@@ -86,7 +90,11 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
         {
           filteredStatuses.map((status, index) => (
             <div key={`kube-resource-status-${level}-${index}`} className={cssNames("status", "msg")}>
-              - {status.text} <span className="age"> · {getAge(status.timestamp)}</span>
+              {`- ${status.text} `}
+              <span className="age">
+                {" . "}
+                {getAge(status.timestamp)}
+              </span>
             </div>
           ))
         }

@@ -5,8 +5,8 @@
 
 import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import type { Cluster } from "../../../../common/k8s-api/endpoints";
-import { clusterApi, getMetricsByNodeNames, type IClusterMetrics } from "../../../../common/k8s-api/endpoints";
+import type { Cluster, ClusterApi } from "../../../../common/k8s-api/endpoints";
+import { getMetricsByNodeNames, type ClusterMetricData } from "../../../../common/k8s-api/endpoints";
 import type { StorageHelper } from "../../../utils";
 import { autoBind } from "../../../utils";
 import { type IMetricsReqParams, normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
@@ -31,10 +31,8 @@ interface Dependencies {
   storage: StorageHelper<ClusterOverviewStorageState>;
 }
 
-export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {
-  api = clusterApi;
-
-  @observable metrics: Partial<IClusterMetrics> = {};
+export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> implements ClusterOverviewStorageState {
+  @observable metrics: Partial<ClusterMetricData> = {};
   @observable metricsLoaded = false;
 
   get metricType(): MetricType {
@@ -53,8 +51,8 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
     this.dependencies.storage.merge({ metricNodeRole: value });
   }
 
-  constructor(private dependencies: Dependencies ) {
-    super();
+  constructor(protected readonly dependencies: Dependencies, api: ClusterApi) {
+    super(api);
     makeObservable(this);
     autoBind(this);
 
@@ -89,7 +87,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
     this.metricsLoaded = true;
   }
 
-  getMetricsValues(source: Partial<IClusterMetrics>): [number, string][] {
+  getMetricsValues(source: Partial<ClusterMetricData>): [number, string][] {
     switch (this.metricType) {
       case MetricType.CPU:
         return normalizeMetrics(source.cpuUsage).data.result[0].values;

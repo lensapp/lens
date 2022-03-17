@@ -18,10 +18,6 @@ import { isMac, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { bundledExtensionsLoaded } from "../common/ipc/extension-handling";
 
-function isHideable(window: BrowserWindow | null): boolean {
-  return Boolean(window && !window.isDestroyed());
-}
-
 export interface SendToViewArgs {
   channel: string;
   frameInfo?: ClusterFrameInfo;
@@ -31,12 +27,11 @@ export interface SendToViewArgs {
 export class WindowManager extends Singleton {
   public mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
 
-  protected mainWindow: BrowserWindow;
-  protected splashWindow: BrowserWindow;
-  protected windowState: windowStateKeeper.State;
-  protected disposers: Record<string, Function> = {};
+  protected mainWindow?: BrowserWindow;
+  protected splashWindow?: BrowserWindow;
+  protected windowState?: windowStateKeeper.State;
 
-  @observable activeClusterId: ClusterId;
+  @observable activeClusterId?: ClusterId;
 
   constructor() {
     super();
@@ -44,7 +39,7 @@ export class WindowManager extends Singleton {
     this.bindEvents();
   }
 
-  private async initMainWindow(showSplash: boolean) {
+  private async initMainWindow(showSplash: boolean): Promise<BrowserWindow> {
     // Manage main window size and position with state persistence
     if (!this.windowState) {
       this.windowState = windowStateKeeper({
@@ -88,9 +83,9 @@ export class WindowManager extends Singleton {
         })
         .on("closed", () => {
           // clean up
-          this.windowState.unmanage();
-          this.mainWindow = null;
-          this.splashWindow = null;
+          this.windowState?.unmanage();
+          this.mainWindow = undefined;
+          this.splashWindow = undefined;
           app.dock?.hide(); // hide icon in dock (mac-os)
         })
         .webContents
@@ -142,13 +137,17 @@ export class WindowManager extends Singleton {
     }
 
     try {
-      if (showSplash) await this.showSplash();
+      if (showSplash) {
+        await this.showSplash();
+      }
       logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainContentUrl} ...`);
       await this.mainWindow.loadURL(this.mainContentUrl);
     } catch (error) {
       logger.error("Loading main window failed", { error });
-      dialog.showErrorBox("ERROR!", error.toString());
+      dialog.showErrorBox("ERROR!", String(error));
     }
+
+    return this.mainWindow;
   }
 
   protected bindEvents() {
@@ -166,7 +165,7 @@ export class WindowManager extends Singleton {
       viewHasLoaded = new Promise<void>(resolve => {
         ipcMain.once(bundledExtensionsLoaded, () => resolve());
       });
-      await this.initMainWindow(showSplash);
+      this.mainWindow = await this.initMainWindow(showSplash);
     }
 
     try {
@@ -181,27 +180,26 @@ export class WindowManager extends Singleton {
         appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
     } catch (error) {
-      logger.error(`Showing main window failed: ${error.stack || error}`);
-      dialog.showErrorBox("ERROR!", error.toString());
+      logger.error(`Showing main window failed`, error);
+      dialog.showErrorBox("ERROR!", String(error));
     }
 
     return this.mainWindow;
   }
 
-  sendToView({ channel, frameInfo, data = [] }: SendToViewArgs) {
+  private sendToView(window: BrowserWindow, { channel, frameInfo, data = [] }: SendToViewArgs) {
     if (frameInfo) {
-      this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
+      window.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
-      this.mainWindow.webContents.send(channel, ...data);
+      window.webContents.send(channel, ...data);
     }
   }
 
   async navigateExtension(extId: string, pageId?: string, params?: Record<string, any>, frameId?: number) {
-    await this.ensureMainWindow();
-
+    const window = await this.ensureMainWindow();
     const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
 
-    this.sendToView({
+    this.sendToView(window, {
       channel: "extension:navigate",
       frameInfo,
       data: [extId, pageId, params],
@@ -209,34 +207,44 @@ export class WindowManager extends Singleton {
   }
 
   async navigate(url: string, frameId?: number) {
-    await this.ensureMainWindow();
+    const window = await this.ensureMainWindow();
 
-    this.navigateSync(url, frameId);
+    this.navigateSync(window, url, frameId);
   }
 
-  navigateSync(url: string, frameId?: number) {
+  navigateSync(window: BrowserWindow, url: string, frameId?: number) {
     const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
     const channel = frameInfo
       ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
       : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
 
-    this.sendToView({
+    this.sendToView(window, {
       channel,
       frameInfo,
       data: [url],
     });
   }
 
-  reload() {
-    const frameInfo = clusterFrameMap.get(this.activeClusterId);
+  private getActiveClusterFrameInfo() {
+    if (this.activeClusterId) {
+      return clusterFrameMap.get(this.activeClusterId);
+    }
 
-    if (frameInfo) {
-      this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
+    return undefined;
+  }
+
+  reload() {
+    const frameInfo = this.getActiveClusterFrameInfo();
+
+    if (frameInfo && this.mainWindow) {
+      this.sendToView(this.mainWindow, { channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
     } else {
-      webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => {
-        wc.reload();
-        wc.clearHistory();
-      });
+      webContents.getAllWebContents()
+        .filter(wc => wc.getType() === "window")
+        .forEach(wc => {
+          wc.reload();
+          wc.clearHistory();
+        });
     }
   }
 
@@ -263,23 +271,19 @@ export class WindowManager extends Singleton {
   }
 
   hide() {
-    if (isHideable(this.mainWindow)) {
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
       this.mainWindow.hide();
     }
 
-    if (isHideable(this.splashWindow)) {
+    if (this.splashWindow && !this.splashWindow.isDestroyed()) {
       this.splashWindow.hide();
     }
   }
 
   destroy() {
-    this.mainWindow.destroy();
-    this.splashWindow.destroy();
-    this.mainWindow = null;
-    this.splashWindow = null;
-    Object.entries(this.disposers).forEach(([name, dispose]) => {
-      dispose();
-      delete this.disposers[name];
-    });
+    this.mainWindow?.destroy();
+    this.splashWindow?.destroy();
+    this.mainWindow = undefined;
+    this.splashWindow = undefined;
   }
 }

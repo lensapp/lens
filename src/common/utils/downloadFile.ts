@@ -4,6 +4,8 @@
  */
 
 import request from "request";
+import type { JsonValue } from "type-fest";
+import { parse } from "./json";
 
 export interface DownloadFileOptions {
   url: string;
@@ -41,11 +43,11 @@ export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions)
   };
 }
 
-export function downloadJson(args: DownloadFileOptions): DownloadFileTicket<any> {
+export function downloadJson(args: DownloadFileOptions): DownloadFileTicket<JsonValue> {
   const { promise, ...rest } = downloadFile(args);
 
   return {
-    promise: promise.then(res => JSON.parse(res.toString())),
+    promise: promise.then(res => parse(res.toString())),
     ...rest,
   };
 }

@@ -27,6 +27,7 @@ import getConfigurationFileModelInjectable from "../../../common/get-configurati
 import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import { computed } from "mobx";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -86,6 +87,8 @@ describe("<Catalog />", () => {
   let catalogEntityStore: CatalogEntityStore;
   let catalogEntityRegistry: CatalogEntityRegistry;
   let emitEvent: (event: AppEvent) => void;
+  let onRun: jest.MockedFunction<(context: CatalogEntityActionContext) => void | Promise<void>>;
+  let catalogEntityItem: MockCatalogEntity;
   let render: DiRender;
 
   beforeEach(async () => {
@@ -105,6 +108,8 @@ describe("<Catalog />", () => {
     CatalogEntityDetailRegistry.createInstance();
 
     render = renderFor(di);
+    onRun = jest.fn();
+    catalogEntityItem = createMockCatalogEntity(onRun);
 
     const catalogCategoryRegistry = new CatalogCategoryRegistry();
 
@@ -119,6 +124,9 @@ describe("<Catalog />", () => {
     }));
 
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
+    jest
+      .spyOn(catalogEntityStore, "selectedItem", "get")
+      .mockImplementation(() => computed(() => catalogEntityItem));
   });
 
   afterEach(() => {
@@ -132,14 +140,6 @@ describe("<Catalog />", () => {
   });
 
   it("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       (event) => {
         expect(event.target.getId()).toBe("a_catalogEntity_uid");
@@ -160,14 +160,6 @@ describe("<Catalog />", () => {
   });
 
   it("onBeforeRun prevents event => onRun wont be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       (e) => {
         setTimeout(() => {
@@ -184,14 +176,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnBeforeRun throw an exception => onRun will be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       () => {
         setTimeout(() => {
@@ -209,13 +193,7 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
-    const onRun = jest.fn(() => done());
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
+    onRun.mockImplementation(() => done());
 
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
@@ -229,14 +207,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and prevents event wont be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       async (e) => {
         expect(onRun).not.toBeCalled();
@@ -256,14 +226,6 @@ describe("<Catalog />", () => {
   });
 
   it("addOnRunHook return a promise and reject => onRun will be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
         setTimeout(() => {

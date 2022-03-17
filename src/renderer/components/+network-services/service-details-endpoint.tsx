@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { observer } from "mobx-react";
 import React from "react";
 import { Table, TableHead, TableCell, TableRow } from "../table";
@@ -11,21 +10,29 @@ import { prevDefault } from "../../utils";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { Spinner } from "../spinner";
 import { showDetails } from "../kube-detail-params";
+import logger from "../../../common/logger";
+import { Endpoints } from "../../../common/k8s-api/endpoints";
 
 export interface ServiceDetailsEndpointProps {
-  endpoint: KubeObject;
+  endpoints: Endpoints;
 }
 
 @observer
 export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpointProps> {
   render() {
-    const { endpoint } = this.props;
+    const { endpoints } = this.props;
 
-    if (!endpoint && !endpointStore.isLoaded) return (
+    if (!endpoints && !endpointStore.isLoaded) return (
       <div className="PodDetailsList flex justify-center"><Spinner/></div>
     );
 
-    if (!endpoint) {
+    if (!endpoints) {
+      return null;
+    }
+
+    if (!(endpoints instanceof Endpoints)) {
+      logger.error("[ServiceDetailsEndpoint]: passed object that is not an instanceof Endpoints", endpoints);
+
       return null;
     }
 
@@ -42,12 +49,12 @@ export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpoi
             <TableCell className="endpoints">Endpoints</TableCell>
           </TableHead>
           <TableRow
-            key={endpoint.getId()}
+            key={endpoints.getId()}
             nowrap
-            onClick={prevDefault(() => showDetails(endpoint.selfLink, false))}
+            onClick={prevDefault(() => showDetails(endpoints.selfLink, false))}
           >
-            <TableCell className="name">{endpoint.getName()}</TableCell>
-            <TableCell className="endpoints">{ endpoint.toString()}</TableCell>
+            <TableCell className="name">{endpoints.getName()}</TableCell>
+            <TableCell className="endpoints">{ endpoints.toString()}</TableCell>
           </TableRow>
         </Table>
       </div>

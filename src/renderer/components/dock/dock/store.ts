@@ -70,7 +70,7 @@ export interface DockStorageState {
   height: number;
   tabs: DockTab[];
   selectedTabId?: TabId;
-  isOpen?: boolean;
+  isOpen: boolean;
 }
 
 export interface DockTabChangeEvent {
@@ -157,7 +157,7 @@ export class DockStore implements DockStorageState {
     );
   }
 
-  set selectedTabId(tabId: TabId) {
+  set selectedTabId(tabId: TabId | undefined) {
     if (tabId && !this.getTabById(tabId)) return; // skip invalid ids
 
     this.dependencies.storage.merge({ selectedTabId: tabId });
@@ -283,7 +283,7 @@ export class DockStore implements DockStorageState {
     const tabNumbers = this.tabs
       .filter(tab => tab.kind === kind)
       .map(tab => {
-        const tabNumber = +tab.title.match(/\d+/);
+        const tabNumber = Number(tab.title.match(/\d+/));
 
         return tabNumber === 0 ? 1 : tabNumber; // tab without a number is first
       });
@@ -343,7 +343,7 @@ export class DockStore implements DockStorageState {
 
         this.selectTab(newTab.id);
       } else {
-        this.selectedTabId = null;
+        this.selectedTabId = undefined;
         this.close();
       }
     }
@@ -375,12 +375,14 @@ export class DockStore implements DockStorageState {
   renameTab(tabId: TabId, title: string) {
     const tab = this.getTabById(tabId);
 
-    tab.title = title;
+    if (tab) {
+      tab.title = title;
+    }
   }
 
   @action
   selectTab(tabId: TabId) {
-    this.selectedTabId = this.getTabById(tabId)?.id ?? null;
+    this.selectedTabId = this.getTabById(tabId)?.id;
   }
 
   @action

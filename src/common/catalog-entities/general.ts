@@ -5,7 +5,7 @@
 
 import { navigate } from "../../renderer/navigation";
 import type { CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
-import { CatalogCategory, CatalogEntity } from "../catalog";
+import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 interface GeneralEntitySpec extends CatalogEntitySpec {
@@ -47,10 +47,7 @@ export class GeneralCategory extends CatalogCategory {
   public spec = {
     group: "entity.k8slens.dev",
     versions: [
-      {
-        name: "v1alpha1",
-        entityClass: GeneralEntity,
-      },
+      categoryVersion("v1alpha1", GeneralEntity),
     ],
     names: {
       kind: "General",

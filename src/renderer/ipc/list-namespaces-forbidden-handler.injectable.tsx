@@ -28,7 +28,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
       const now = Date.now();
 
       if (
-        !notificationLastDisplayedAt.has(clusterId) ||
+        typeof lastDisplayedAt !== "number" ||
           now - lastDisplayedAt > intervalBetweenNotifications
       ) {
         notificationLastDisplayedAt.set(clusterId, now);
@@ -49,8 +49,9 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
           <div className="flex column gaps">
             <b>Add Accessible Namespaces</b>
             <p>
-          Cluster <b>{ClusterStore.getInstance().getById(clusterId).name}</b> does not have permissions to list namespaces.{" "}
-          Please add the namespaces you have access to.
+              {"Cluster "}
+              <b>{ClusterStore.getInstance().getById(clusterId)?.name ?? "<unknown cluster>"}</b>
+              {" does not have permissions to list namespaces. Please add the namespaces you have access to."}
             </p>
             <div className="flex gaps row align-left box grow">
               <Button

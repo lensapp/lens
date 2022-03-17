@@ -3,28 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { KubeObjectMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { autoBind } from "../../utils";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
-export interface ConfigMap {
-  data: {
-    [param: string]: string;
-  };
+export interface ConfigMapData extends KubeJsonApiData<KubeObjectMetadata<"namespace-scoped">, void, void> {
+  data?: Partial<Record<string, string>>;
+  binaryData?: Partial<Record<string, string>>;
+  immutable?: boolean;
 }
 
-export class ConfigMap extends KubeObject {
+export class ConfigMap extends KubeObject<void, void, "namespace-scoped"> {
   static kind = "ConfigMap";
   static namespaced = true;
   static apiBase = "/api/v1/configmaps";
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
+  data: Partial<Record<string, string>>;
+  binaryData: Partial<Record<string, string>>;
+  immutable?: boolean;
+
+  constructor({ data, binaryData, immutable, ...rest }: ConfigMapData) {
+    super(rest);
     autoBind(this);
 
-    this.data ??= {};
+    this.data = data ?? {};
+    this.binaryData = binaryData ?? {};
+    this.immutable = immutable;
   }
 
   getKeys(): string[] {
@@ -32,17 +40,15 @@ export class ConfigMap extends KubeObject {
   }
 }
 
-/**
- * Only available within kubernetes cluster pages
- */
-let configMapApi: KubeApi<ConfigMap>;
-
-if (isClusterPageContext()) {
-  configMapApi = new KubeApi({
-    objectConstructor: ConfigMap,
-  });
+export class ConfigMapApi extends KubeApi<ConfigMap, ConfigMapData> {
+  constructor(opts?: DerivedKubeApiOptions) {
+    super({
+      objectConstructor: ConfigMap,
+      ...opts ?? {},
+    });
+  }
 }
 
-export {
-  configMapApi,
-};
+export const configMapApi = isClusterPageContext()
+  ? new ConfigMapApi()
+  : undefined as never;

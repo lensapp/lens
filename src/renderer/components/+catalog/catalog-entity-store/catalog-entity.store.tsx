@@ -3,61 +3,78 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { computed, makeObservable, observable, reaction } from "mobx";
+import type { IComputedValue, IObservableValue } from "mobx";
+import { computed, observable, reaction } from "mobx";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../../api/catalog-entity";
-import { ItemStore } from "../../../../common/item.store";
 import type { CatalogCategory } from "../../../../common/catalog";
 import { catalogCategoryRegistry } from "../../../../common/catalog";
-import { autoBind, disposer } from "../../../../common/utils";
+import type { Disposer } from "../../../../common/utils";
+import { disposer } from "../../../../common/utils";
+import type { ItemListStore } from "../../item-object-list";
 
 interface Dependencies {
   registry: CatalogEntityRegistry;
 }
 
-export class CatalogEntityStore extends ItemStore<CatalogEntity> {
-  constructor(private dependencies: Dependencies) {
-    super();
-    makeObservable(this);
-    autoBind(this);
-  }
+export type CatalogEntityStore = ItemListStore<CatalogEntity, false> & {
+  readonly entities: IComputedValue<CatalogEntity[]>;
+  readonly activeCategory: IObservableValue<CatalogCategory | undefined>;
+  readonly selectedItemId: IObservableValue<string | undefined>;
+  readonly selectedItem: IComputedValue<CatalogEntity | undefined>;
+  watch(): Disposer;
+  onRun(entity: CatalogEntity): void;
+};
 
-  @observable activeCategory?: CatalogCategory;
-  @observable selectedItemId?: string;
+export function catalogEntityStore({ registry }: Dependencies): CatalogEntityStore {
+  const activeCategory = observable.box<CatalogCategory | undefined>(undefined);
+  const selectedItemId = observable.box<string | undefined>(undefined);
+  const entities = computed(() => {
+    const category = activeCategory.get();
 
-  @computed get entities() {
-    if (!this.activeCategory) {
-      return this.dependencies.registry.filteredItems;
+    return category
+      ? registry.getItemsForCategory(category, { filtered: true })
+      : registry.filteredItems;
+  });
+  const selectedItem = computed(() => {
+    const id = selectedItemId.get();
+
+    if (!id) {
+      return undefined;
     }
 
-    return this.dependencies.registry.getItemsForCategory(this.activeCategory, { filtered: true });
-  }
+    return entities.get().find(entity => entity.getId() === id);
+  });
+  const loadAll = () => {
+    const category = activeCategory.get();
 
-  @computed get selectedItem() {
-    return this.entities.find(e => e.getId() === this.selectedItemId);
-  }
-
-  watch() {
-    return disposer(
-      reaction(() => this.entities, () => this.loadAll()),
-      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100 }),
-    );
-  }
-
-  loadAll() {
-    if (this.activeCategory) {
-      this.activeCategory.emit("load");
+    if (category) {
+      category.emit("load");
     } else {
       for (const category of catalogCategoryRegistry.items) {
         category.emit("load");
       }
     }
+  };
 
-    // concurrency is true to fix bug if catalog filter is removed and added at the same time
-    return this.loadItems(() => this.entities, undefined, true);
-  }
-
-  onRun(entity: CatalogEntity): void {
-    this.dependencies.registry.onRun(entity);
-  }
+  return {
+    entities,
+    selectedItem,
+    activeCategory,
+    selectedItemId,
+    watch: () => disposer(
+      reaction(() => entities.get(), loadAll),
+      reaction(() => activeCategory.get(), loadAll, { delay: 100 }),
+    ),
+    onRun: entity => registry.onRun(entity),
+    failedLoading: false,
+    getTotalCount: () => registry.filteredItems.length,
+    isLoaded: true,
+    isSelected: (item) => item.getId() === selectedItemId.get(),
+    isSelectedAll: () => false,
+    pickOnlySelected: () => [],
+    toggleSelection: () => {},
+    toggleSelectionAll: () => {},
+    removeSelectedItems: async () => {},
+  };
 }

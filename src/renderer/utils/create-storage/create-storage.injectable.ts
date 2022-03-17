@@ -10,6 +10,7 @@ import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectab
 import { observable } from "mobx";
 import loggerInjectable from "../../../common/logger.injectable";
 import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
+import hostedClusterIdInjectable from "../../cluster/hosted-cluster-id.injectable";
 
 const createStorageInjectable = getInjectable({
   id: "create-storage",
@@ -21,16 +22,12 @@ const createStorageInjectable = getInjectable({
         loaded: false,
         data: {} as Record<string /*key*/, any>, // json-serializable
       }),
-
       readJsonFile: di.inject(readJsonFileInjectable),
       writeJsonFile: di.inject(writeJsonFileInjectable),
       logger: di.inject(loggerInjectable),
-
-      directoryForLensLocalStorage: di.inject(
-        directoryForLensLocalStorageInjectable,
-      ),
-
+      directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
       getAbsolutePath: di.inject(getAbsolutePathInjectable),
+      hostedClusterId: di.inject(hostedClusterIdInjectable),
     }),
 });
 

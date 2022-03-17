@@ -30,7 +30,8 @@ export class Ingresses extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="network_ingresses"
-          className="Ingresses" store={ingressStore}
+          className="Ingresses"
+          store={ingressStore}
           sortingCallbacks={{
             [columnId.name]: ingress => ingress.getName(),
             [columnId.namespace]: ingress => ingress.getNs(),
@@ -65,10 +66,15 @@ export class Ingresses extends React.Component {
                       onClick={e => e.stopPropagation()}
                     >
                       {decl.url}
-                    </a> ⇢ {decl.service}
+                    </a>
+                    {` ⇢ ${decl.service}`}
                   </span>
                 )
-                : <span key={decl.url}>{decl.url} ⇢ {decl.service}</span>
+                : (
+                  <span key={decl.url}>
+                    {`${decl.url} ⇢ ${decl.service}`}
+                  </span>
+                )
             )),
             <KubeObjectAge key="age" object={ingress} />,
           ]}

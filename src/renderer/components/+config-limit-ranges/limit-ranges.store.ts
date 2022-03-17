@@ -5,12 +5,17 @@
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import type { LimitRange } from "../../../common/k8s-api/endpoints/limit-range.api";
+import type { LimitRange, LimitRangeApi } from "../../../common/k8s-api/endpoints/limit-range.api";
 import { limitRangeApi } from "../../../common/k8s-api/endpoints/limit-range.api";
+import { isClusterPageContext } from "../../utils";
 
-export class LimitRangesStore extends KubeObjectStore<LimitRange> {
-  api = limitRangeApi;
+export class LimitRangeStore extends KubeObjectStore<LimitRange, LimitRangeApi> {
 }
 
-export const limitRangeStore = new LimitRangesStore();
-apiManager.registerStore(limitRangeStore);
+export const limitRangeStore = isClusterPageContext()
+  ? new LimitRangeStore(limitRangeApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(limitRangeStore);
+}

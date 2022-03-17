@@ -17,7 +17,7 @@ const loadLogsInjectable = getInjectable({
     return (
       tabId: string,
       pod: IComputedValue<Pod | undefined>,
-      logTabData: IComputedValue<LogTabData>,
+      logTabData: IComputedValue<LogTabData | undefined>,
     ): Promise<void> => logStore.load(tabId, pod, logTabData);
   },
 });

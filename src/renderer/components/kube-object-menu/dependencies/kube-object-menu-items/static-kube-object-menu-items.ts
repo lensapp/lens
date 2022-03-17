@@ -7,6 +7,7 @@ import { CronJobMenu } from "../../../+workloads-cronjobs/cron-job-menu";
 import { DeploymentMenu } from "../../../+workloads-deployments/deployment-menu";
 import { ReplicaSetMenu } from "../../../+workloads-replicasets/replica-set-menu";
 import { StatefulSetMenu } from "../../../+workloads-statefulsets/stateful-set-menu";
+import type { KubeObjectMenuRegistration } from "./kube-object-menu-registration";
 
 export const staticKubeObjectMenuItems = [
   {
@@ -44,4 +45,4 @@ export const staticKubeObjectMenuItems = [
       MenuItem: StatefulSetMenu,
     },
   },
-];
+] as KubeObjectMenuRegistration[];

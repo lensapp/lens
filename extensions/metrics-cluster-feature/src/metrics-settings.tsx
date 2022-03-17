@@ -208,14 +208,14 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
         <section>
           <SubTitle title="Prometheus" />
           <FormSwitch
-            control={
+            control={(
               <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.prometheus && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.togglePrometheus(v.target.checked)}
                 name="prometheus"
               />
-            }
+            )}
             label="Enable bundled Prometheus metrics stack"
           />
           <small className="hint">
@@ -226,14 +226,14 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
         <section>
           <SubTitle title="Kube State Metrics" />
           <FormSwitch
-            control={
+            control={(
               <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.toggleKubeStateMetrics(v.target.checked)}
                 name="node-exporter"
               />
-            }
+            )}
             label="Enable bundled kube-state-metrics stack"
           />
           <small className="hint">
@@ -245,14 +245,14 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
         <section>
           <SubTitle title="Node Exporter" />
           <FormSwitch
-            control={
+            control={(
               <Switcher
                 disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
                 checked={!!this.featureStates.nodeExporter && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.toggleNodeExporter(v.target.checked)}
                 name="node-exporter"
               />
-            }
+            )}
             label="Enable bundled node-exporter stack"
           />
           <small className="hint">
@@ -271,9 +271,11 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
             className="w-60 h-14"
           />
 
-          {this.canUpgrade && (<small className="hint">
-            An update is available for enabled metrics components.
-          </small>)}
+          {this.canUpgrade && (
+            <small className="hint">
+              An update is available for enabled metrics components.
+            </small>
+          )}
         </section>
       </>
     );

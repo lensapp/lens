@@ -3,37 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { Route } from "../../../router/router";
 import { helmService } from "../../../helm/helm-service";
-import { routeInjectionToken } from "../../../router/router.injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getRouteInjectable } from "../../../router/router.injectable";
 import { getBoolean } from "../../../utils/parse-query";
 import { contentTypes } from "../../../router/router-content-types";
+import { clusterRoute } from "../../../router/route";
 
-const getReleaseRouteValuesInjectable = getInjectable({
+const getReleaseRouteValuesInjectable = getRouteInjectable({
   id: "get-release-values-route",
 
-  instantiate: (): Route<string> => ({
+  instantiate: () => clusterRoute({
     method: "get",
     path: `${apiPrefix}/v2/releases/{namespace}/{release}/values`,
+  })(async ({ cluster, params: { namespace, release }, query }) => ({
+    response: await helmService.getReleaseValues(release, {
+      cluster,
+      namespace,
+      all: getBoolean(query, "all"),
+    }),
 
-    handler: async (request) => {
-      const { cluster, params: { namespace, release }, query } = request;
-      const all = getBoolean(query, "all");
-
-      return {
-        response: await helmService.getReleaseValues(release, {
-          cluster,
-          namespace,
-          all,
-        }),
-
-        contentType: contentTypes.txt,
-      };
-    },
-  }),
-
-  injectionToken: routeInjectionToken,
+    contentType: contentTypes.txt,
+  })),
 });
 
 export default getReleaseRouteValuesInjectable;

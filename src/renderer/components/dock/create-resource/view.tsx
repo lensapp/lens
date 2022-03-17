@@ -4,7 +4,6 @@
  */
 
 import React from "react";
-import type { GroupSelectOption, SelectOption } from "../../select";
 import { Select } from "../../select";
 import yaml from "js-yaml";
 import type { IComputedValue } from "mobx";
@@ -17,22 +16,22 @@ import { InfoPanel } from "../info-panel";
 import * as resourceApplierApi from "../../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../../notifications";
 import logger from "../../../../common/logger";
-import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
 import { getDetailsUrl } from "../../kube-detail-params";
 import { apiManager } from "../../../../common/k8s-api/api-manager";
-import { prevDefault } from "../../../utils";
+import { isString, prevDefault } from "../../../utils";
 import { navigate } from "../../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
 import { Spinner } from "../../spinner";
+import type { GroupBase } from "react-select";
 
 export interface CreateResourceProps {
   tab: DockTab;
 }
 
 interface Dependencies {
-  createResourceTemplates: IComputedValue<GroupSelectOption<SelectOption>[]>;
+  createResourceTemplates: IComputedValue<GroupBase<{ label: string; value: string }>[]>;
   createResourceTabStore: CreateResourceTabStore;
 }
 
@@ -50,7 +49,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
   }
 
   get data() {
-    return this.props.createResourceTabStore.getData(this.tabId);
+    return this.props.createResourceTabStore.getData(this.tabId) ?? "";
   }
 
   onChange = (value: string) => {
@@ -62,26 +61,22 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
     this.error = error.toString();
   };
 
-  onSelectTemplate = (item: SelectOption<string>) => {
-    this.props.createResourceTabStore.setData(this.tabId, item.value);
-  };
-
   create = async (): Promise<void> => {
-    if (this.error || !this.data.trim()) {
+    if (this.error || !this.data?.trim()) {
       // do not save when field is empty or there is an error
       return;
     }
 
     // skip empty documents
-    const resources = yaml.loadAll(this.data).filter(Boolean);
+    const resources = yaml.loadAll(this.data).filter(isString);
 
     if (resources.length === 0) {
       return void logger.info("Nothing to create");
     }
 
-    const creatingResources = resources.map(async (resource: string) => {
+    const creatingResources = resources.map(async (resource) => {
       try {
-        const data = await resourceApplierApi.update(resource) as KubeJsonApiData;
+        const data = await resourceApplierApi.update(resource);
         const { kind, apiVersion, metadata: { name, namespace }} = data;
 
         const showDetails = () => {
@@ -93,11 +88,16 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
 
         const close = Notifications.ok(
           <p>
-            {kind} <a onClick={prevDefault(showDetails)}>{name}</a> successfully created.
+            {kind}
+            {" "}
+            <a onClick={prevDefault(showDetails)}>
+              {name}
+            </a>
+            {" successfully created."}
           </p>,
         );
       } catch (error) {
-        Notifications.error(error?.toString() ?? "Unknown error occured");
+        Notifications.checkedError(error, "Unknown error occured while creating resources");
       }
     });
 
@@ -107,16 +107,20 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
   renderControls() {
     return (
       <div className="flex gaps align-center">
-        <Select
+        <Select<{ label: string; value: string }, false>
           id="create-resource-resource-templates-input"
-          autoConvertOptions={false}
           controlShouldRenderValue={false} // always keep initial placeholder
           className="TemplateSelect"
           placeholder="Select Template ..."
           options={this.props.createResourceTemplates.get()}
+          formatGroupLabel={group => group.label}
           menuPlacement="top"
           themeName="outlined"
-          onChange={ this.onSelectTemplate}
+          onChange={(item) => {
+            if (item) {
+              this.props.createResourceTabStore.setData(this.tabId, item.value);
+            }
+          }}
         />
       </div>
     );

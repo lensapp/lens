@@ -71,7 +71,7 @@ export const getDiForUnitTesting = (
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
     di.override(userStoreInjectable, () => ({}) as UserStore);
 
-    di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
+    di.override(getValueFromRegisteredChannelInjectable, () => () => Promise.resolve(undefined as never));
     di.override(registerIpcChannelListenerInjectable, () => () => undefined);
 
     overrideFsWithFakes(di);

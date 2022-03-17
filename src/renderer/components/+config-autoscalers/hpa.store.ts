@@ -4,13 +4,18 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/hpa.api";
-import { hpaApi } from "../../../common/k8s-api/endpoints/hpa.api";
+import type { HorizontalPodAutoscaler, HorizontalPodAutoscalerApi } from "../../../common/k8s-api/endpoints/hpa.api";
+import { horizontalPodAutoscalerApi } from "../../../common/k8s-api/endpoints/hpa.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import { isClusterPageContext } from "../../utils";
 
-export class HPAStore extends KubeObjectStore<HorizontalPodAutoscaler> {
-  api = hpaApi;
+export class HorizontalPodAutoscalerStore extends KubeObjectStore<HorizontalPodAutoscaler, HorizontalPodAutoscalerApi> {
 }
 
-export const hpaStore = new HPAStore();
-apiManager.registerStore(hpaStore);
+export const hpaStore = isClusterPageContext()
+  ? new HorizontalPodAutoscalerStore(horizontalPodAutoscalerApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(hpaStore);
+}

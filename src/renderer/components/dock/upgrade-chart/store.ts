@@ -9,6 +9,7 @@ import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import { getReleaseValues } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import type { StorageHelper } from "../../../utils";
+import assert from "assert";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -40,13 +41,17 @@ export class UpgradeChartTabStore extends DockTabStore<IChartUpgradeData> {
   @action
   async reloadValues(tabId: TabId) {
     this.values.clearData(tabId); // reset
-    const { releaseName, releaseNamespace } = this.getData(tabId);
+    const data =  this.getData(tabId);
+
+    assert(data, "cannot reload values if no data");
+
+    const { releaseName, releaseNamespace } = data;
     const values = await getReleaseValues(releaseName, releaseNamespace, true);
 
     this.values.setData(tabId, values);
   }
 
-  getTabIdByRelease(releaseName: string): TabId {
+  getTabIdByRelease(releaseName: string) {
     return this.releaseNameReverseLookup.get(releaseName);
   }
 }

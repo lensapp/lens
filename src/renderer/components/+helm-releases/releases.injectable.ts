@@ -21,7 +21,7 @@ const releasesInjectable = getInjectable({
 
       const isLoadingAll =
         clusterContext.allNamespaces?.length > 1 &&
-        clusterContext.cluster.accessibleNamespaces.length === 0 &&
+        clusterContext.cluster?.accessibleNamespaces.length === 0 &&
         clusterContext.allNamespaces.every((namespace) =>
           contextNamespaces.includes(namespace),
         );

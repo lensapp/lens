@@ -4,33 +4,29 @@
  */
 
 import { KubeApi } from "../kube-api";
+import type { KubeObjectStatus } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { autoBind } from "../../../renderer/utils";
 import { metricsApi } from "./metrics.api";
-import type { IPodMetrics } from "./pods.api";
-import type { KubeJsonApiData } from "../kube-json-api";
+import type { PodMetricData } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
-export enum NamespaceStatus {
+export enum NamespaceStatusKind {
   ACTIVE = "Active",
   TERMINATING = "Terminating",
 }
 
-export interface Namespace {
-  status?: {
-    phase: string;
-  };
+export interface NamespaceSpec {
+  finalizers?: string[];
 }
 
-export class Namespace extends KubeObject {
-  static kind = "Namespace";
-  static namespaced = false;
-  static apiBase = "/api/v1/namespaces";
+export interface NamespaceStatus extends KubeObjectStatus {
+  phase?: string;
+}
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
+export class Namespace extends KubeObject<NamespaceStatus, NamespaceSpec, "cluster-scoped"> {
+  static readonly kind = "Namespace";
+  static readonly namespaced = false;
+  static readonly apiBase = "/api/v1/namespaces";
 
   getStatus() {
     return this.status?.phase ?? "-";
@@ -40,7 +36,7 @@ export class Namespace extends KubeObject {
 export class NamespaceApi extends KubeApi<Namespace> {
 }
 
-export function getMetricsForNamespace(namespace: string, selector = ""): Promise<IPodMetrics> {
+export function getMetricsForNamespace(namespace: string, selector = ""): Promise<PodMetricData> {
   const opts = { category: "pods", pods: ".*", namespace, selector };
 
   return metricsApi.getMetrics({

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, comparer, observable, makeObservable, computed } from "mobx";
+import { action, comparer, observable, makeObservable, computed, runInAction } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import { toJS } from "./utils";
@@ -33,7 +33,7 @@ interface Dependencies {
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   readonly displayName = "HotbarStore";
   @observable hotbars: Hotbar[] = [];
-  @observable private _activeHotbarId: string;
+  @observable private _activeHotbarId!: string;
 
   constructor(private dependencies: Dependencies) {
     super({
@@ -120,8 +120,22 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return toJS(model);
   }
 
-  getActive() {
-    return this.getById(this.activeHotbarId);
+  getActive(): Hotbar {
+    const hotbar = this.getById(this.activeHotbarId);
+
+    if (hotbar) {
+      return hotbar;
+    }
+
+    runInAction(() => {
+      if (this.hotbars.length === 0) {
+        this.hotbars.push(getEmptyHotbar("Default"));
+      }
+
+      this._activeHotbarId = this.hotbars[0].id;
+    });
+
+    return this.hotbars[0];
   }
 
   getByName(name: string) {
@@ -147,7 +161,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     },
   );
 
-  setHotbarName = action((id: string, name: string) => {
+  setHotbarName = action((id: string, name: string): void => {
     const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
 
     if (index < 0) {

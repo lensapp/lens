@@ -5,9 +5,8 @@
 
 import type { LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { autoBind } from "../../utils";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface IPolicyIpBlock {
@@ -105,15 +104,10 @@ export interface NetworkPolicy {
   spec: NetworkPolicySpec;
 }
 
-export class NetworkPolicy extends KubeObject {
-  static kind = "NetworkPolicy";
-  static namespaced = true;
-  static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
+export class NetworkPolicy extends KubeObject<void, NetworkPolicySpec, "namespace-scoped"> {
+  static readonly kind = "NetworkPolicy";
+  static readonly namespaced = true;
+  static readonly apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
 
   getMatchLabels(): string[] {
     if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];
@@ -130,14 +124,15 @@ export class NetworkPolicy extends KubeObject {
   }
 }
 
-let networkPolicyApi: KubeApi<NetworkPolicy>;
-
-if (isClusterPageContext()) {
-  networkPolicyApi = new KubeApi<NetworkPolicy>({
-    objectConstructor: NetworkPolicy,
-  });
+export class NetworkPolicyApi extends KubeApi<NetworkPolicy> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      objectConstructor: NetworkPolicy,
+      ...opts,
+    });
+  }
 }
 
-export {
-  networkPolicyApi,
-};
+export const networkPolicyApi = isClusterPageContext()
+  ? new NetworkPolicyApi()
+  : undefined as never;

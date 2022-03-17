@@ -30,7 +30,7 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: De
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableRoles })}
           value={clusterOverviewStore.metricNodeRole}
-          onChange={(metric: MetricNodeRole) => clusterOverviewStore.metricNodeRole = metric}
+          onChange={metric => clusterOverviewStore.metricNodeRole = metric}
         >
           <Radio label="Master" value={MetricNodeRole.MASTER}/>
           <Radio label="Worker" value={MetricNodeRole.WORKER}/>
@@ -41,7 +41,7 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: De
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableMetrics })}
           value={clusterOverviewStore.metricType}
-          onChange={(value: MetricType) => clusterOverviewStore.metricType = value}
+          onChange={value => clusterOverviewStore.metricType = value}
         >
           <Radio label="CPU" value={MetricType.CPU}/>
           <Radio label="Memory" value={MetricType.MEMORY}/>

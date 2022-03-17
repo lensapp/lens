@@ -13,7 +13,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
 
 interface Dependencies {
-  authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string) => boolean;
+  authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string | undefined) => boolean;
 
   createShellSession: (args: {
     webSocket: WebSocket;
@@ -27,7 +27,7 @@ export const shellApiRequest = ({ createShellSession, authenticateRequest }: Dep
   const cluster = ClusterManager.getInstance().getClusterForRequest(req);
   const { query: { node: nodeName, shellToken, id: tabId }} = new URLParse(req.url, true);
 
-  if (!cluster || !authenticateRequest(cluster.id, tabId, shellToken)) {
+  if (!tabId || !cluster || !authenticateRequest(cluster.id, tabId, shellToken)) {
     socket.write("Invalid shell request");
 
     return void socket.end();

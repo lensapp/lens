@@ -4,52 +4,49 @@
  */
 import { comparer, reaction } from "mobx";
 import type { Disposer } from "../../common/utils";
-import { disposer, noop, WrappedAbortController } from "../../common/utils";
-import type { KubeObject } from "../../common/k8s-api/kube-object";
+import { disposer, getOrInsert, noop, WrappedAbortController } from "../../common/utils";
 import AbortController from "abort-controller";
 import { once } from "lodash";
 import type { ClusterFrameContext } from "../cluster-frame-context/cluster-frame-context";
-import type { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 import logger from "../../common/logger";
+import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
 
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
 
 interface SubscribeStoreParams {
-  store: KubeObjectStore<KubeObject>;
+  store: SubscribableStore;
   parent: AbortController;
-  namespaces: string[];
+  namespaces: string[] | undefined;
   onLoadFailure?: (err: any) => void;
 }
 
 class WatchCount {
-  #data = new Map<KubeObjectStore<KubeObject>, number>();
+  readonly #data = new Map<SubscribableStore, number>();
 
-  public inc(store: KubeObjectStore<KubeObject>): number {
-    if (!this.#data.has(store)) {
-      this.#data.set(store, 0);
-    }
+  public inc(store: SubscribableStore): number {
+    const newCount = getOrInsert(this.#data, store, 0) + 1;
 
-    const newCount = this.#data.get(store) + 1;
-
-    logger.info(`[KUBE-WATCH-API]: inc() count for ${store.api.objectConstructor.apiBase} is now ${newCount}`);
+    logger.info(`[KUBE-WATCH-API]: inc() count for ${store.api.apiBase} is now ${newCount}`);
     this.#data.set(store, newCount);
 
     return newCount;
   }
 
-  public dec(store: KubeObjectStore<KubeObject>): number {
-    if (!this.#data.has(store)) {
-      throw new Error(`Cannot dec count for store that has never been inc: ${store.api.objectConstructor.kind}`);
+  public dec(store: SubscribableStore): number {
+    const oldCount = this.#data.get(store);
+
+    if (oldCount === undefined) {
+      throw new Error(`Cannot dec count for store that has never been inc: ${store.api.kind}`);
     }
 
-    const newCount = this.#data.get(store) - 1;
+    const newCount = oldCount - 1;
 
     if (newCount < 0) {
-      throw new Error(`Cannot dec count more times than it has been inc: ${store.api.objectConstructor.kind}`);
+      throw new Error(`Cannot dec count more times than it has been inc: ${store.api.kind}`);
     }
 
-    logger.info(`[KUBE-WATCH-API]: dec() count for ${store.api.objectConstructor.apiBase} is now ${newCount}`);
+    logger.info(`[KUBE-WATCH-API]: dec() count for ${store.api.apiBase} is now ${newCount}`);
     this.#data.set(store, newCount);
 
     return newCount;
@@ -74,10 +71,20 @@ interface Dependencies {
   clusterFrameContext: ClusterFrameContext;
 }
 
-export type SubscribeStores = (stores: KubeObjectStore<KubeObject>[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;
+export interface SubscribableStore {
+  readonly api: {
+    readonly isNamespaced: boolean;
+    readonly apiBase: string;
+    readonly kind: string;
+  };
+  loadAll(opts?: KubeObjectStoreLoadAllParams): Promise<any>;
+  subscribe(opts?: KubeObjectStoreSubscribeParams): Disposer;
+}
+
+export type SubscribeStores = (stores: SubscribableStore[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;
 
 export class KubeWatchApi {
-  #watch = new WatchCount();
+  readonly #watch = new WatchCount();
 
   constructor(private dependencies: Dependencies) {}
 
@@ -94,7 +101,7 @@ export class KubeWatchApi {
     let childController = new WrappedAbortController(parent);
     const unsubscribe = disposer();
 
-    const loadThenSubscribe = async (namespaces: string[]) => {
+    const loadThenSubscribe = async (namespaces: string[] | undefined) => {
       try {
         await store.loadAll({ namespaces, reqInit: { signal: childController.signal }, onLoadFailure });
         unsubscribe.push(store.subscribe({ onLoadFailure, abortController: childController }));

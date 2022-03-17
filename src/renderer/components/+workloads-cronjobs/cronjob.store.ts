@@ -4,24 +4,17 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
-import type { CronJob } from "../../../common/k8s-api/endpoints/cron-job.api";
+import type { CronJob, CronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
 import { cronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import { isClusterPageContext } from "../../utils";
 
-export class CronJobStore extends KubeObjectStore<CronJob> {
-  api = cronJobApi;
-
-  constructor() {
-    super();
-    autoBind(this);
-  }
-
+export class CronJobStore extends KubeObjectStore<CronJob, CronJobApi> {
   getStatuses(cronJobs?: CronJob[]) {
     const status = { scheduled: 0, suspended: 0 };
 
-    cronJobs.forEach(cronJob => {
+    cronJobs?.forEach(cronJob => {
       if (cronJob.spec.suspend) {
         status.suspended++;
       }
@@ -43,5 +36,10 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
   }
 }
 
-export const cronJobStore = new CronJobStore();
-apiManager.registerStore(cronJobStore);
+export const cronJobStore = isClusterPageContext()
+  ? new CronJobStore(cronJobApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(cronJobStore);
+}

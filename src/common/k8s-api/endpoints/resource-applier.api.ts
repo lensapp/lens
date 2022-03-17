@@ -16,7 +16,7 @@ export async function update(resource: object | string): Promise<KubeJsonApiData
   if (typeof resource === "string") {
     const parsed = yaml.load(resource);
 
-    if (typeof parsed !== "object") {
+    if (!parsed || typeof parsed !== "object") {
       throw new Error("Cannot update resource to string or number");
     }
 
@@ -26,7 +26,7 @@ export async function update(resource: object | string): Promise<KubeJsonApiData
   return apiBase.post<KubeJsonApiData>("/stack", { data: resource });
 }
 
-export async function patch(name: string, kind: string, ns: string, patch: Patch): Promise<KubeJsonApiData> {
+export async function patch(name: string, kind: string, ns: string | undefined, patch: Patch): Promise<KubeJsonApiData> {
   return apiBase.patch<KubeJsonApiData>("/stack", {
     data: {
       name,

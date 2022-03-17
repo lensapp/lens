@@ -46,12 +46,6 @@ function getStatus(extension: InstalledExtension) {
 }
 
 const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }: Dependencies & InstalledExtensionsProps) => {
-  const filters = [
-    (extension: InstalledExtension) => extension.manifest.name,
-    (extension: InstalledExtension) => getStatus(extension),
-    (extension: InstalledExtension) => extension.manifest.version,
-  ];
-
   const columns = useMemo(
     () => [
       {
@@ -169,7 +163,11 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
         columns={columns}
         data={data}
         items={extensions}
-        filters={filters}
+        filters={[
+          (extension) => extension.manifest.name,
+          (extension) => getStatus(extension),
+          (extension) => extension.manifest.version,
+        ]}
       />
     </section>
   );

@@ -30,7 +30,7 @@ enum columnId {
 @observer
 export class Deployments extends React.Component {
   renderPods(deployment: Deployment) {
-    const { replicas, availableReplicas } = deployment.status;
+    const { replicas, availableReplicas } = deployment.status ?? {};
 
     return `${availableReplicas || 0}/${replicas || 0}`;
   }
@@ -39,7 +39,11 @@ export class Deployments extends React.Component {
     const conditions = orderBy(deployment.getConditions(true), "type", "asc");
 
     return conditions.map(({ type, message }) => (
-      <span key={type} className={cssNames("condition", kebabCase(type))} title={message}>
+      <span
+        key={type}
+        className={cssNames("condition", kebabCase(type))}
+        title={message}
+      >
         {type}
       </span>
     ));
@@ -51,7 +55,8 @@ export class Deployments extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="workload_deployments"
-          className="Deployments" store={deploymentStore}
+          className="Deployments"
+          store={deploymentStore}
           dependentStores={[eventStore]} // status icon component uses event store
           sortingCallbacks={{
             [columnId.name]: deployment => deployment.getName(),
@@ -76,7 +81,7 @@ export class Deployments extends React.Component {
           ]}
           renderTableContents={deployment => [
             deployment.getName(),
-            <KubeObjectStatusIcon key="icon" object={deployment}/>,
+            <KubeObjectStatusIcon key="icon" object={deployment} />,
             deployment.getNs(),
             this.renderPods(deployment),
             deployment.getReplicas(),

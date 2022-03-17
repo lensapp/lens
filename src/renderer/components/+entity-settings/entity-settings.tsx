@@ -27,7 +27,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedEntitySettings extends React.Component<Dependencies> {
-  @observable activeTab: string;
+  @observable activeTab?: string;
 
   constructor(props: Dependencies) {
     super(props);
@@ -94,7 +94,12 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
             {this.entity.getName()}
           </div>
         </div>
-        <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+        <Tabs
+          className="flex column"
+          scrollable={false}
+          onChange={this.onTabChange}
+          value={this.activeTab}
+        >
           { groups.map((group, groupIndex) => (
             <React.Fragment key={`group-${groupIndex}`}>
               <hr/>

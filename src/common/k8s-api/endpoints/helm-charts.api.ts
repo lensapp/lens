@@ -7,7 +7,7 @@ import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
 import type { RequestInit } from "node-fetch";
-import { autoBind, bifurcateArray } from "../../utils";
+import { autoBind, bifurcateArray, isDefined } from "../../utils";
 import Joi from "joi";
 
 export type RepoHelmChartList = Record<string, RawHelmChart[]>;
@@ -30,9 +30,9 @@ export async function listCharts(): Promise<HelmChart[]> {
 
   return Object
     .values(data)
-    .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
+    .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), new Array<RawHelmChart[]>())
     .map(([chart]) => HelmChart.create(chart, { onError: "log" }))
-    .filter(Boolean);
+    .filter(isDefined);
 }
 
 export interface GetChartDetailsOptions {
@@ -51,7 +51,7 @@ export async function getChartDetails(repo: string, name: string, { version, req
   const path = endpoint({ repo, name });
 
   const { readme, ...data } = await apiBase.get<IHelmChartDetails>(`${path}?${stringify({ version })}`, undefined, reqInit);
-  const versions = data.versions.map(version => HelmChart.create(version, { onError: "log" })).filter(Boolean);
+  const versions = data.versions.map(version => HelmChart.create(version, { onError: "log" })).filter(isDefined);
 
   return {
     readme,
@@ -242,7 +242,7 @@ export interface RawHelmChartDependency {
 export type HelmChartDependency = Required<Omit<RawHelmChartDependency, "condition">>
   & Pick<RawHelmChartDependency, "condition">;
 
-export interface HelmChart {
+export interface HelmChartData {
   apiVersion: string;
   name: string;
   version: string;
@@ -266,8 +266,30 @@ export interface HelmChart {
   tillerVersion?: string;
 }
 
-export class HelmChart {
-  private constructor(value: HelmChart) {
+export class HelmChart implements HelmChartData {
+  apiVersion: string;
+  name: string;
+  version: string;
+  repo: string;
+  created: string;
+  description: string;
+  keywords: string[];
+  sources: string[];
+  urls: string[];
+  annotations: Record<string, string>;
+  dependencies: HelmChartDependency[];
+  maintainers: HelmChartMaintainer[];
+  deprecated: boolean;
+  kubeVersion?: string;
+  digest?: string;
+  home?: string;
+  engine?: string;
+  icon?: string;
+  appVersion?: string;
+  type?: string;
+  tillerVersion?: string;
+
+  private constructor(value: HelmChart | HelmChartData) {
     this.apiVersion = value.apiVersion;
     this.name = value.name;
     this.version = value.version;
@@ -294,25 +316,25 @@ export class HelmChart {
   }
 
   static create(data: RawHelmChart, { onError = "throw" }: HelmChartCreateOpts = {}): HelmChart | undefined {
-    const { value, error } = helmChartValidator.validate(data, {
+    const result = helmChartValidator.validate(data, {
       abortEarly: false,
     });
 
-    if (!error) {
-      return new HelmChart(value);
+    if (!result.error) {
+      return new HelmChart(result.value);
     }
 
-    const [actualErrors, unknownDetails] = bifurcateArray(error.details, ({ type }) => type === "object.unknown");
+    const [actualErrors, unknownDetails] = bifurcateArray(result.error.details, ({ type }) => type === "object.unknown");
 
     if (unknownDetails.length > 0) {
       console.warn("HelmChart data has unexpected fields", { original: data, unknownFields: unknownDetails.flatMap(d => d.path) });
     }
 
     if (actualErrors.length === 0) {
-      return new HelmChart(value);
+      return new HelmChart(result.value as unknown as HelmChartData);
     }
 
-    const validationError = new Joi.ValidationError(actualErrors.map(er => er.message).join(". "), actualErrors, error._original);
+    const validationError = new Joi.ValidationError(actualErrors.map(er => er.message).join(". "), actualErrors, result.error._original);
 
     if (onError === "throw") {
       throw validationError;
@@ -347,7 +369,7 @@ export class HelmChart {
     return this.icon;
   }
 
-  getHome(): string {
+  getHome(): string | undefined {
     return this.home;
   }
 

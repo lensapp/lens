@@ -53,7 +53,7 @@ describe("kubeconfig-sync.source tests", () => {
     });
 
     di.override(clusterStoreInjectable, () =>
-      ClusterStore.createInstance({ createCluster: () => null }),
+      ClusterStore.createInstance({ createCluster: () => null as never }),
     );
 
     di.permitSideEffects(getConfigurationFileModelInjectable);

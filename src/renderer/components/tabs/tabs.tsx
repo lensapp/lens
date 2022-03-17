@@ -26,9 +26,7 @@ export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttribu
 }
 
 export class Tabs extends React.PureComponent<TabsProps> {
-  public elem: HTMLElement;
-
-  bindRef = (elem: HTMLElement) => this.elem = elem;
+  public elem: HTMLDivElement | null = null;
 
   render() {
     const { center, wrap, onChange, value, autoFocus, scrollable = true, withBorder, ...elemProps } = this.props;
@@ -44,7 +42,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
         <div
           {...elemProps}
           className={className}
-          ref={this.bindRef}
+          ref={elem => this.elem = elem}
         />
       </TabsContext.Provider>
     );

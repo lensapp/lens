@@ -43,6 +43,8 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import type { ClusterContextHandler } from "../context-handler/context-handler";
+import { parse } from "url";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -83,9 +85,17 @@ describe("create clusters", () => {
 
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
-    di.override(createContextHandlerInjectable, () => () => {
-      throw new Error("you should never come here");
-    });
+    di.override(createContextHandlerInjectable, () => (cluster) => ({
+      restartServer: jest.fn(),
+      stopServer: jest.fn(),
+      clusterUrl: parse(cluster.apiUrl),
+      getApiTarget: jest.fn(),
+      getPrometheusDetails: jest.fn(),
+      resolveAuthProxyCa: jest.fn(),
+      resolveAuthProxyUrl: jest.fn(),
+      setupPrometheus: jest.fn(),
+      ensureServer: jest.fn(),
+    } as ClusterContextHandler));
 
     createCluster = di.inject(createClusterInjectionToken);
 
@@ -120,11 +130,6 @@ describe("create clusters", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
-
-    cluster.contextHandler = {
-      ensureServer: jest.fn(),
-      stopServer: jest.fn(),
-    } as any;
 
     jest.spyOn(cluster, "reconnect");
     jest.spyOn(cluster, "refreshConnectionStatus");

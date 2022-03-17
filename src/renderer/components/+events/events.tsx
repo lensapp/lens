@@ -5,7 +5,7 @@
 
 import "./events.scss";
 
-import React, { Fragment } from "react";
+import React from "react";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
@@ -14,7 +14,7 @@ import type { EventStore } from "./event.store";
 import { eventStore } from "./event.store";
 import type { KubeObjectListLayoutProps } from "../kube-object-list-layout";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import type { KubeEvent, KubeEventApi, KubeEventData } from "../../../common/k8s-api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
@@ -40,7 +40,7 @@ enum columnId {
   lastSeen = "last-seen",
 }
 
-export interface EventsProps extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
+export interface EventsProps extends Partial<KubeObjectListLayoutProps<KubeEvent, KubeEventApi, KubeEventData>> {
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
@@ -69,7 +69,7 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
     [columnId.object]: event => event.involvedObject.name,
     [columnId.count]: event => event.count,
     [columnId.age]: event => -event.getCreationTimestamp(),
-    [columnId.lastSeen]: event => -new Date(event.lastTimestamp).getTime(),
+    [columnId.lastSeen]: event => event.lastTimestamp ? -new Date(event.lastTimestamp).getTime() : 0,
   };
 
   constructor(props: Dependencies & EventsProps) {
@@ -87,7 +87,7 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
 
     // we must sort items before passing to "KubeObjectListLayout -> Table"
     // to make it work with "compact=true" (proper table sorting actions + initial items)
-    return orderBy(items, this.sortingCallbacks[sortBy], order as any);
+    return orderBy(items, this.sortingCallbacks[sortBy], order);
   }
 
   @computed get visibleItems(): KubeEvent[] {
@@ -113,20 +113,30 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
 
       return {
         title,
-        info: <span> ({visibleItems.length} of <a onClick={this.props.navigateToEvents}>{items.length}</a>)</span>,
+        info: (
+          <span>
+            {"("}
+            {visibleItems.length}
+            {" of "}
+            <a onClick={this.props.navigateToEvents}>{items.length}</a>
+            {")"}
+          </span>
+        ),
       };
     }
 
     return {
-      info: <>
-        {info}
-        <Icon
-          small
-          material="help_outline"
-          className="help-icon"
-          tooltip={`Limited to ${store.limit}`}
-        />
-      </>,
+      info: (
+        <>
+          {info}
+          <Icon
+            small
+            material="help_outline"
+            className="help-icon"
+            tooltip={`Limited to ${store.limit}`}
+          />
+        </>
+      ),
       title,
       ...headerPlaceholders,
     };
@@ -180,22 +190,28 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
             {
               className: { warning: isWarning },
               title: (
-                <Fragment>
+                <>
                   <span id={tooltipId}>{message}</span>
                   <Tooltip targetId={tooltipId} formatters={{ narrow: true, warning: isWarning }}>
                     {message}
                   </Tooltip>
-                </Fragment>
+                </>
               ),
             },
             event.getNs(),
-            <Link key="link" to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
-              {involvedObject.kind}: {involvedObject.name}
+            <Link
+              key="link"
+              to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))}
+              onClick={stopPropagation}
+            >
+              {`${involvedObject.kind}: ${involvedObject.name}`}
             </Link>,
             event.getSource(),
             event.count,
             <KubeObjectAge key="age" object={event} />,
-            <ReactiveDuration key="last-seen" timestamp={event.lastTimestamp} />,
+            event.lastTimestamp
+              ? <ReactiveDuration key="last-seen" timestamp={event.lastTimestamp} />
+              : "<unknown>",
           ];
         }}
       />

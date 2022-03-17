@@ -39,7 +39,6 @@ const dialogState = observable.object({
 function getEmptyRepo(): HelmRepo {
   return { name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile: "", keyFile: "", certFile: "" };
 }
-
 @observer
 export class AddHelmRepoDialog extends React.Component<AddHelmRepoDialogProps> {
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
@@ -72,7 +71,7 @@ export class AddHelmRepoDialog extends React.Component<AddHelmRepoDialogProps> {
     this.helmRepo[type] = value;
   }
 
-  getFilePath(type: FileType) : string {
+  getFilePath(type: FileType) {
     return this.helmRepo[type];
   }
 
@@ -96,16 +95,29 @@ export class AddHelmRepoDialog extends React.Component<AddHelmRepoDialogProps> {
   async addCustomRepo() {
     try {
       await HelmRepoManager.getInstance().addRepo(this.helmRepo);
-      Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has been added</>);
+      Notifications.ok((
+        <>
+          {"Helm repository "}
+          <b>{this.helmRepo.name}</b>
+          {" has been added."}
+        </>
+      ));
       this.props.onAddRepo();
       this.close();
     } catch (err) {
-      Notifications.error(<>Adding helm branch <b>{this.helmRepo.name}</b> has failed: {String(err)}</>);
+      Notifications.error((
+        <>
+          {"Adding helm branch "}
+          <b>{this.helmRepo.name}</b>
+          {" has failed: "}
+          {String(err)}
+        </>
+      ));
     }
   }
 
   renderFileInput(placeholder:string, fileType:FileType, fileExtensions:string[]){
-    return(
+    return (
       <div className="flex gaps align-center">
         <Input
           placeholder={placeholder}
@@ -119,7 +131,8 @@ export class AddHelmRepoDialog extends React.Component<AddHelmRepoDialogProps> {
           onClick={() => this.selectFileDialog(fileType, { name: placeholder, extensions: fileExtensions })}
           tooltip="Browse"
         />
-      </div>);
+      </div>
+    );
   }
 
   renderOptions() {
@@ -137,14 +150,17 @@ export class AddHelmRepoDialog extends React.Component<AddHelmRepoDialogProps> {
         <SubTitle title="Chart Repository Credentials" />
         <Input
           placeholder="Username"
-          value={this.helmRepo.username} onChange= {v => this.helmRepo.username = v}
+          value={this.helmRepo.username}
+          onChange= {v => this.helmRepo.username = v}
         />
         <Input
           type="password"
           placeholder="Password"
-          value={this.helmRepo.password} onChange={v => this.helmRepo.password = v}
+          value={this.helmRepo.password}
+          onChange={v => this.helmRepo.password = v}
         />
-      </>);
+      </>
+    );
   }
 
   render() {
@@ -160,22 +176,33 @@ export class AddHelmRepoDialog extends React.Component<AddHelmRepoDialogProps> {
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel="Add" next={() => this.addCustomRepo()}>
+          <WizardStep
+            contentClass="flow column"
+            nextLabel="Add"
+            next={() => this.addCustomRepo()}
+          >
             <div className="flex column gaps">
               <Input
-                autoFocus required
+                autoFocus
+                required
                 placeholder="Helm repo name"
                 trim
                 validators={systemName}
-                value={this.helmRepo.name} onChange={v => this.helmRepo.name = v}
+                value={this.helmRepo.name}
+                onChange={v => this.helmRepo.name = v}
               />
               <Input
                 required
                 placeholder="URL"
                 validators={isUrl}
-                value={this.helmRepo.url} onChange={v => this.helmRepo.url = v}
+                value={this.helmRepo.url}
+                onChange={v => this.helmRepo.url = v}
               />
-              <Button plain className="accordion" onClick={() => this.showOptions = !this.showOptions} >
+              <Button
+                plain
+                className="accordion"
+                onClick={() => this.showOptions = !this.showOptions}
+              >
                 More
                 <Icon
                   small

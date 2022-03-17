@@ -18,11 +18,12 @@ export interface AnimateProps {
   onLeave?: () => void;
   enterDuration?: number;
   leaveDuration?: number;
+  children?: React.ReactNode;
 }
 
 @observer
-export class Animate extends React.Component<AnimateProps> {
-  static defaultProps: AnimateProps = {
+class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAnimate.defaultProps> {
+  static defaultProps = {
     name: "opacity",
     enter: true,
     onEnter: noop,
@@ -37,7 +38,7 @@ export class Animate extends React.Component<AnimateProps> {
     leave: false,
   };
 
-  constructor(props: AnimateProps) {
+  constructor(props: AnimateProps & typeof DefaultedAnimate.defaultProps) {
     super(props);
     makeObservable(this);
   }
@@ -104,3 +105,5 @@ export class Animate extends React.Component<AnimateProps> {
     });
   }
 }
+
+export const Animate = (props: AnimateProps) => <DefaultedAnimate {...props as never} />;

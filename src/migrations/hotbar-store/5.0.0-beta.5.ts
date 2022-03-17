@@ -16,14 +16,19 @@ export default {
     for (const hotbar of hotbars) {
       for (let i = 0; i < hotbar.items.length; i += 1) {
         const item = hotbar.items[i];
-        const entity = catalogEntityRegistry.items.find((entity) => entity.getId() === item?.entity.uid);
+
+        if (!item) {
+          continue;
+        }
+
+        const entity = catalogEntityRegistry.findById(item.entity.uid);
 
         if (!entity) {
           // Clear disabled item
           hotbar.items[i] = null;
         } else {
           // Save additional data
-          hotbar.items[i].entity = {
+          item.entity = {
             ...item.entity,
             name: entity.metadata.name,
             source: entity.metadata.source,

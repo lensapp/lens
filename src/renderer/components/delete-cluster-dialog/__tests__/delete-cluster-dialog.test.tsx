@@ -8,19 +8,17 @@ import { fireEvent } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
-
 import type { Cluster } from "../../../../common/cluster/cluster";
-import { DeleteClusterDialog } from "../delete-cluster-dialog";
-
+import { DeleteClusterDialog } from "../view";
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
-import deleteClusterDialogModelInjectable from "../delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
-import type { DeleteClusterDialogModel } from "../delete-cluster-dialog-model/delete-cluster-dialog-model";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import type { OpenDeleteClusterDialog } from "../open.injectable";
+import openDeleteClusterDialogInjectable from "../open.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -93,7 +91,7 @@ let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
   let createCluster: (model: ClusterModel) => Cluster;
-  let deleteClusterDialogModel: DeleteClusterDialogModel;
+  let openDeleteClusterDialog: OpenDeleteClusterDialog;
   let render: DiRender;
 
   beforeEach(async () => {
@@ -101,7 +99,7 @@ describe("<DeleteClusterDialog />", () => {
 
     render = renderFor(rendererDi);
 
-    mainDi.override(createContextHandlerInjectable, () => () => undefined);
+    mainDi.override(createContextHandlerInjectable, () => () => undefined as never);
 
     mockFs();
 
@@ -109,7 +107,7 @@ describe("<DeleteClusterDialog />", () => {
 
     await runSetups();
 
-    deleteClusterDialogModel = rendererDi.inject(deleteClusterDialogModelInjectable);
+    openDeleteClusterDialog = rendererDi.inject(openDeleteClusterDialogInjectable);
     createCluster = mainDi.inject(createClusterInjectionToken);
   });
 
@@ -149,7 +147,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      deleteClusterDialogModel.open({ cluster, config });
+      openDeleteClusterDialog({ cluster, config });
       const { getByText } = render(<DeleteClusterDialog />);
 
       const message = "The contents of kubeconfig file will be changed!";
@@ -167,7 +165,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      deleteClusterDialogModel.open({ cluster, config });
+      openDeleteClusterDialog({ cluster, config });
 
       const { getByTestId } = render(<DeleteClusterDialog />);
 
@@ -184,7 +182,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      deleteClusterDialogModel.open({ cluster, config });
+      openDeleteClusterDialog({ cluster, config });
 
       const { getByText } = render(<DeleteClusterDialog />);
 
@@ -205,7 +203,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      deleteClusterDialogModel.open({ cluster, config });
+      openDeleteClusterDialog({ cluster, config });
 
       const { getByText, getByTestId } = render(<DeleteClusterDialog />);
       const link = getByTestId("context-switch");
@@ -232,7 +230,7 @@ describe("<DeleteClusterDialog />", () => {
 
       const spy = jest.spyOn(cluster, "isInLocalKubeconfig").mockImplementation(() => true);
 
-      deleteClusterDialogModel.open({ cluster, config });
+      openDeleteClusterDialog({ cluster, config });
 
       const { getByTestId } = render(<DeleteClusterDialog />);
 
@@ -268,7 +266,7 @@ describe("<DeleteClusterDialog />", () => {
         kubeConfigPath: "./temp-kube-config",
       });
 
-      deleteClusterDialogModel.open({ cluster, config });
+      openDeleteClusterDialog({ cluster, config });
 
       const { getByTestId } = render(<DeleteClusterDialog />);
 

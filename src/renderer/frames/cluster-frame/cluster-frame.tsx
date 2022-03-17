@@ -2,9 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import React from "react";
+import React, { useEffect } from "react";
 import type { IComputedValue } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { Redirect } from "react-router";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { DeploymentScaleDialog } from "../../components/+workloads-deployments/deployment-scale-dialog";
@@ -25,71 +25,66 @@ import { DeleteClusterDialog } from "../../components/delete-cluster-dialog";
 import type { NamespaceStore } from "../../components/+namespaces/namespace-store/namespace.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable  from "../../components/+namespaces/namespace-store/namespace-store.injectable";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { Disposer } from "../../../common/utils";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import { disposer } from "../../utils";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import startUrlInjectable from "./start-url.injectable";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 
 interface Dependencies {
   namespaceStore: NamespaceStore;
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
-  currentRouteComponent: IComputedValue<React.ElementType>;
+  currentRouteComponent: IComputedValue<React.ElementType<{}> | undefined | null>;
   startUrl: IComputedValue<string>;
+  subscribeStores: SubscribeStores;
 }
 
-@observer
-class NonInjectedClusterFrame extends React.Component<Dependencies> {
-  static displayName = "ClusterFrame";
+export const NonInjectedClusterFrame = observer(({
+  namespaceStore,
+  currentRouteComponent,
+  startUrl,
+  subscribeStores,
+}: Dependencies) => {
+  useEffect(() => disposer(
+    subscribeStores([
+      namespaceStore,
+    ]),
+    watchHistoryState(),
+  ), []);
 
-  constructor(props: Dependencies) {
-    super(props);
-  }
+  const Component = currentRouteComponent.get();
 
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      this.props.subscribeStores([
-        this.props.namespaceStore,
-      ]),
-      watchHistoryState(),
-    ]);
-  }
+  return (
+    <ErrorBoundary>
+      <MainLayout sidebar={<Sidebar />} footer={<Dock />}>
+        {
+          Component
+            ? <Component />
+            : <Redirect to={startUrl.get()} />
+        }
+      </MainLayout>
 
-  render() {
-    const Component = this.props.currentRouteComponent.get();
-
-    if (!Component) {
-      return <Redirect to={this.props.startUrl.get()} />;
-    }
-
-    return (
-      <ErrorBoundary>
-        <MainLayout sidebar={<Sidebar />} footer={<Dock />}>
-          <Component />
-        </MainLayout>
-
-        <Notifications />
-        <ConfirmDialog />
-        <KubeObjectDetails />
-        <KubeConfigDialog />
-        <DeploymentScaleDialog />
-        <StatefulSetScaleDialog />
-        <ReplicaSetScaleDialog />
-        <CronJobTriggerDialog />
-        <PortForwardDialog />
-        <DeleteClusterDialog />
-        <CommandContainer />
-      </ErrorBoundary>
-    );
-  }
-}
+      <Notifications />
+      <ConfirmDialog />
+      <KubeObjectDetails />
+      <KubeConfigDialog />
+      <DeploymentScaleDialog />
+      <StatefulSetScaleDialog />
+      <ReplicaSetScaleDialog />
+      <CronJobTriggerDialog />
+      <PortForwardDialog />
+      <DeleteClusterDialog />
+      <CommandContainer />
+    </ErrorBoundary>
+  );
+});
 
 export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFrame, {
   getProps: di => ({
     namespaceStore: di.inject(namespaceStoreInjectable),
-    subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
+    subscribeStores: di.inject(subscribeStoresInjectable),
     startUrl: di.inject(startUrlInjectable),
     currentRouteComponent: di.inject(currentRouteComponentInjectable),
   }),
 });
+
+ClusterFrame.displayName = "ClusterFrame";

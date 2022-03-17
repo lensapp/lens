@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { noop, some } from "lodash/fp";
+import { noop } from "lodash/fp";
 import { computed } from "mobx";
 
 import type {
@@ -55,7 +55,7 @@ const customResourceSidebarItemsInjectable = getInjectable({
         title: "Custom Resources",
         getIcon: () => <Icon material="extension" />,
         onClick: noop,
-        isVisible: computed(() => some(item => item.isVisible.get(), childrenAndGrandChildren)),
+        isVisible: computed(() => childrenAndGrandChildren.some(item => item.isVisible?.get())),
         orderNumber: 110,
       };
 

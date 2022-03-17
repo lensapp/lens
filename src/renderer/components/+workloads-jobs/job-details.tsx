@@ -17,7 +17,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForJobs, type IPodMetrics, Job } from "../../../common/k8s-api/endpoints";
+import { getMetricsForJobs, type PodMetricData, Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable, reaction } from "mobx";
@@ -28,23 +28,20 @@ import { ResourceMetrics } from "../resource-metrics";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { Disposer } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
 }
 
 @observer
 class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependencies> {
-  @observable metrics: IPodMetrics = null;
+  @observable metrics: PodMetricData | null = null;
 
   constructor(props: JobDetailsProps & Dependencies) {
     super(props);
@@ -94,7 +91,9 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={job} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={job}
+            metrics={this.metrics}
           >
             <PodCharts />
           </ResourceMetrics>
@@ -105,39 +104,45 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
             Object.keys(selectors).map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
-        {nodeSelector.length > 0 &&
-        <DrawerItem name="Node Selector" labelsOnly>
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
-        </DrawerItem>
-        }
-        {images.length > 0 &&
-        <DrawerItem name="Images">
-          {
-            images.map(image => <p key={image}>{image}</p>)
-          }
-        </DrawerItem>
-        }
-        {ownerRefs.length > 0 &&
-        <DrawerItem name="Controlled by">
-          {
-            ownerRefs.map(ref => {
-              const { name, kind } = ref;
-              const detailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, job));
+        {nodeSelector.length > 0 && (
+          <DrawerItem name="Node Selector" labelsOnly>
+            {
+              nodeSelector.map(label => (
+                <Badge key={label} label={label}/>
+              ))
+            }
+          </DrawerItem>
+        )}
+        {images.length > 0 && (
+          <DrawerItem name="Images">
+            {
+              images.map(image => <p key={image}>{image}</p>)
+            }
+          </DrawerItem>
+        )}
+        {ownerRefs.length > 0 && (
+          <DrawerItem name="Controlled by">
+            {
+              ownerRefs.map(ref => {
+                const { name, kind } = ref;
+                const detailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, job));
 
-              return (
-                <p key={name}>
-                  {kind} <Link to={detailsUrl}>{name}</Link>
-                </p>
-              );
-            })
-          }
-        </DrawerItem>
-        }
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
+                return (
+                  <p key={name}>
+                    {kind} 
+                    {" "}
+                    <Link to={detailsUrl}>{name}</Link>
+                  </p>
+                );
+              })
+            }
+          </DrawerItem>
+        )}
+        <DrawerItem
+          name="Conditions"
+          className="conditions"
+          labelsOnly
+        >
           {condition && (
             <Badge
               className={kebabCase(condition.type)}

@@ -36,19 +36,29 @@ export class EditResourceTabStore extends DockTabStore<EditingResource> {
     return super.isReady(tabId) && Boolean(this.getResource(tabId)); // ready to edit resource
   }
 
-  getStore(tabId: TabId): KubeObjectStore<KubeObject> | undefined {
-    return apiManager.getStore(this.getResourcePath(tabId));
+  getStore(tabId: TabId): KubeObjectStore | undefined {
+    const apiPath = this.getResourcePath(tabId);
+
+    return apiPath
+      ? apiManager.getStore(apiPath)
+      : undefined;
   }
 
   getResource(tabId: TabId): KubeObject | undefined {
-    return this.getStore(tabId)?.getByPath(this.getResourcePath(tabId));
+    const apiPath = this.getResourcePath(tabId);
+
+    if (apiPath) {
+      return apiManager.getStore(apiPath)?.getByPath(apiPath);
+    }
+
+    return undefined;
   }
 
   getResourcePath(tabId: TabId): string | undefined {
     return this.getData(tabId)?.resource;
   }
 
-  getTabIdByResource(object: KubeObject): TabId {
+  getTabIdByResource(object: KubeObject): string | undefined {
     return this.findTabIdFromData(({ resource }) => object.selfLink === resource);
   }
 

@@ -33,13 +33,6 @@ export interface DeploymentReplicaSetsProps {
 
 @observer
 export class DeploymentReplicaSets extends React.Component<DeploymentReplicaSetsProps> {
-  private sortingCallbacks = {
-    [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
-    [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
-    [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
-    [sortBy.pods]: (replicaSet: ReplicaSet) => this.getPodsLength(replicaSet),
-  };
-
   getPodsLength(replicaSet: ReplicaSet) {
     return replicaSetStore.getChildPods(replicaSet).length;
   }
@@ -59,7 +52,12 @@ export class DeploymentReplicaSets extends React.Component<DeploymentReplicaSets
           selectable
           tableId="deployment_replica_sets_view"
           scrollable={false}
-          sortable={this.sortingCallbacks}
+          sortable={{
+            [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
+            [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
+            [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
+            [sortBy.pods]: (replicaSet: ReplicaSet) => this.getPodsLength(replicaSet),
+          }}
           sortByDefault={{ sortBy: sortBy.pods, orderBy: "desc" }}
           sortSyncWithUrl={false}
           className="box grow"

@@ -34,23 +34,27 @@ export interface ConfirmDialogBooleanParams {
   cancelButtonProps?: Partial<ButtonProps>;
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-  params: null as ConfirmDialogParams,
-});
+const defaultParams = {
+  ok: noop,
+  cancel: noop,
+  labelOk: "Ok",
+  labelCancel: "Cancel",
+  icon: <Icon big material="warning"/>,
+};
+
+const dialogState = observable.box<ConfirmDialogParams | undefined>();
 
 @observer
 export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   @observable isSaving = false;
 
-  constructor(props: ConfirmDialogProps) {
+  constructor(props: ConfirmDialogProps & typeof defaultParams) {
     super(props);
     makeObservable(this);
   }
 
   static open(params: ConfirmDialogParams) {
-    dialogState.isOpen = true;
-    dialogState.params = params;
+    dialogState.set(params);
   }
 
   static confirm(params: ConfirmDialogBooleanParams): Promise<boolean> {
@@ -63,7 +67,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     });
   }
 
-  static defaultParams: Partial<ConfirmDialogParams> = {
+  static defaultParams = {
     ok: noop,
     cancel: noop,
     labelOk: "Ok",
@@ -71,8 +75,8 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     icon: <Icon big material="warning"/>,
   };
 
-  get params(): ConfirmDialogParams {
-    return Object.assign({}, ConfirmDialog.defaultParams, dialogState.params);
+  get params() {
+    return Object.assign({}, ConfirmDialog.defaultParams, dialogState.get());
   }
 
   ok = async () => {
@@ -83,12 +87,20 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       Notifications.error(
         <>
           <p>Confirmation action failed:</p>
-          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
+          <p>
+            {(
+              error instanceof Error
+                ? error.message
+                : typeof error === "string"
+                  ? error
+                  : "Unknown error occured while ok-ing"
+            )}
+          </p>
         </>,
       );
     } finally {
       this.isSaving = false;
-      dialogState.isOpen = false;
+      dialogState.set(undefined);
     }
   };
 
@@ -103,12 +115,20 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       Notifications.error(
         <>
           <p>Cancelling action failed:</p>
-          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
+          <p>
+            {(
+              error instanceof Error
+                ? error.message
+                : typeof error === "string"
+                  ? error
+                  : "Unknown error occured while cancelling"
+            )}
+          </p>
         </>,
       );
     } finally {
       this.isSaving = false;
-      dialogState.isOpen = false;
+      dialogState.set(undefined);
     }
   };
 
@@ -119,18 +139,21 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       okButtonProps = {},
       cancelButtonProps = {},
     } = this.params;
+    const isOpen = Boolean(dialogState.get());
 
     return (
       <Dialog
         {...dialogProps}
         className={cssNames("ConfirmDialog", className)}
-        isOpen={dialogState.isOpen}
+        isOpen={isOpen}
         onClose={this.onClose}
         close={this.close}
-        {...(dialogState.isOpen ? { "data-testid":"confirmation-dialog" } : {})}
+        {...(isOpen ? { "data-testid": "confirmation-dialog" } : {})}
       >
         <div className="confirm-content">
-          {icon} {message}
+          {icon} 
+          {" "}
+          {message}
         </div>
         <div className="confirm-buttons">
           <Button
@@ -141,7 +164,8 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
             {...cancelButtonProps}
           />
           <Button
-            autoFocus primary
+            autoFocus
+            primary
             className="ok"
             label={labelOk}
             onClick={prevDefault(this.ok)}

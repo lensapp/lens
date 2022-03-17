@@ -24,7 +24,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { get: () => string };
-  currentRouteComponent: IComputedValue<React.ElementType>;
+  currentRouteComponent: IComputedValue<React.ElementType | undefined>;
   welcomeUrl: string;
 }
 
@@ -48,7 +48,6 @@ class NonInjectedClusterManager extends React.Component<Dependencies> {
         <TopBar />
         <main>
           <div id="lens-views" />
-
           <Component />
         </main>
         <HotbarMenu />
@@ -59,20 +58,14 @@ class NonInjectedClusterManager extends React.Component<Dependencies> {
   }
 }
 
-export const ClusterManager = withInjectables<Dependencies>(
-  NonInjectedClusterManager,
-  {
-    getProps: (di) => {
-      const welcomeRoute = di.inject(welcomeRouteInjectable);
+export const ClusterManager = withInjectables<Dependencies>(NonInjectedClusterManager, {
+  getProps: (di) => {
+    const welcomeRoute = di.inject(welcomeRouteInjectable);
 
-      return {
-        catalogPreviousActiveTabStorage: di.inject(
-          catalogPreviousActiveTabStorageInjectable,
-        ),
-
-        currentRouteComponent: di.inject(currentRouteComponentInjectable),
-        welcomeUrl: buildURL(welcomeRoute.path),
-      };
-    },
+    return {
+      catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
+      currentRouteComponent: di.inject(currentRouteComponentInjectable),
+      welcomeUrl: buildURL(welcomeRoute.path),
+    };
   },
-);
+});

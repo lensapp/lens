@@ -7,7 +7,8 @@ import { StatefulSet, StatefulSetApi } from "../endpoints/stateful-set.api";
 import type { KubeJsonApi } from "../kube-json-api";
 
 class StatefulSetApiTest extends StatefulSetApi {
-  public setRequest(request: any) {
+  declare protected request: KubeJsonApi;
+  public setRequest(request: KubeJsonApi) {
     this.request = request;
   }
 }

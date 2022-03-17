@@ -10,12 +10,12 @@ import React, { Component } from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import type { ItemListStore } from "../item-object-list";
 import { ItemListLayout } from "../item-object-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { kebabCase } from "lodash/fp";
 import { HelmReleaseMenu } from "./release-menu";
-import type { ItemStore } from "../../../common/item.store";
-import { ReleaseRollbackDialog } from "./release-rollback-dialog";
+import { ReleaseRollbackDialog } from "./dialog/dialog";
 import { ReleaseDetails } from "./release-details/release-details";
 import removableReleasesInjectable from "./removable-releases.injectable";
 import type { RemovableHelmRelease } from "./removable-releases";
@@ -75,7 +75,11 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
 
     return (
       <div>
-        <>Remove <b>{releaseNames}</b>?</>
+        <>
+          Remove
+          <b>{releaseNames}</b>
+          ?
+        </>
         <p className="warning">
           Note: StatefulSet Volumes won&apos;t be deleted automatically
         </p>
@@ -88,13 +92,7 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
     const releasesArePending = this.props.releasesArePending;
 
     // TODO: Implement ItemListLayout without stateful stores
-    const legacyReleaseStore = {
-      get items() {
-        return releases.get();
-      },
-
-      loadAll: () => Promise.resolve(),
-
+    const legacyReleaseStore: ItemListStore<RemovableHelmRelease, false> = {
       get isLoaded() {
         return !releasesArePending.get();
       },
@@ -103,49 +101,45 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
 
       getTotalCount: () => releases.get().length,
 
-      toggleSelection: (item) => {
-        item.toggle();
-      },
+      toggleSelection: (release) => release.toggle(),
 
-      isSelectedAll: (visibleItems: RemovableHelmRelease[]) => (
-        visibleItems.length > 0
-        && visibleItems.every((release) => release.isSelected)
+      isSelectedAll: (releases) => (
+        releases.length > 0
+        && releases.every((release) => release.isSelected)
       ),
 
-      toggleSelectionAll: (visibleItems: RemovableHelmRelease[]) => {
+      toggleSelectionAll: (releases) => {
         let selected = false;
 
-        if (!legacyReleaseStore.isSelectedAll(visibleItems)) {
+        if (!legacyReleaseStore.isSelectedAll(releases)) {
           selected = true;
         }
 
-        visibleItems.forEach((release) => {
+        for (const release of releases) {
           if (release.isSelected !== selected) {
             release.toggle();
           }
-        });
+        }
       },
 
-      isSelected: (item) => item.isSelected,
+      isSelected: (release) => release.isSelected,
 
-      get selectedItems() {
-        return releases.get().filter((release) => release.isSelected);
+      removeSelectedItems: async () => {
+        await Promise.all(
+          releases.get()
+            .filter((release) => release.isSelected)
+            .map(release => release.delete()),
+        );
       },
 
-      pickOnlySelected: (releases) => {
-        return releases.filter(release => release.isSelected);
-      },
-
-      removeItems: async (releases) => {
-        await Promise.all(releases.map(release => release.delete()));
-      },
-    } as ItemStore<RemovableHelmRelease>;
+      pickOnlySelected: (releases) => releases.filter(release => release.isSelected),
+    };
 
     return (
       <SiblingsInTabLayout>
-        <ItemListLayout
+        <ItemListLayout<RemovableHelmRelease, false>
           store={legacyReleaseStore}
-          getItems={() => legacyReleaseStore.items}
+          getItems={() => releases.get()}
           preloadStores={false}
           isConfigurable
           tableId="helm_releases"

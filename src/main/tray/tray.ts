@@ -25,7 +25,7 @@ import { JSDOM } from "jsdom";
 const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
-export let tray: Tray;
+export let tray: Tray | null = null;
 
 interface CreateTrayIconArgs {
   shouldUseDarkColors: boolean;
@@ -103,7 +103,7 @@ export async function initTray(
       try {
         const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
 
-        tray.setContextMenu(menu);
+        tray?.setContextMenu(menu);
       } catch (error) {
         logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
       }
@@ -122,7 +122,7 @@ function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron
     ...trayItem,
     submenu: trayItem.submenu ? trayItem.submenu.map(getMenuItemConstructorOptions) : undefined,
     click: trayItem.click ? () => {
-      trayItem.click(trayItem);
+      trayItem.click?.(trayItem);
     } : undefined,
   };
 }

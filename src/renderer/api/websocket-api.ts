@@ -8,6 +8,7 @@ import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
 import { isDevelopment } from "../../common/vars";
+import type { Defaulted } from "../utils";
 
 interface WebsocketApiParams {
   /**
@@ -62,18 +63,16 @@ export interface WebSocketEvents {
   close: () => void;
 }
 
-type Defaulted<Params, DefaultParams extends keyof Params> = Required<Pick<Params, DefaultParams>> & Omit<Params, DefaultParams>;
-
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
-  protected socket?: WebSocket | null;
+  protected socket: WebSocket | null = null;
   protected pendingCommands: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
-  protected reconnectTimer?: any;
-  protected pingTimer?: any;
+  protected reconnectTimer?: number;
+  protected pingTimer?: number;
   protected params: Defaulted<WebsocketApiParams, keyof typeof WebSocketApi["defaultParams"]>;
 
   @observable readyState = WebSocketApiState.PENDING;
 
-  private static defaultParams = {
+  private static readonly defaultParams = {
     logging: isDevelopment,
     reconnectDelay: 10,
     flushOnOpen: true,
@@ -83,16 +82,23 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   constructor(params: WebsocketApiParams) {
     super();
     makeObservable(this);
-    this.params = Object.assign({}, WebSocketApi.defaultParams, params);
+    this.params = {
+      ...WebSocketApi.defaultParams,
+      ...params,
+    };
     const { pingInterval } = this.params;
 
     if (pingInterval) {
-      this.pingTimer = setInterval(() => this.ping(), pingInterval * 1000);
+      this.pingTimer = window.setInterval(() => this.ping(), pingInterval * 1000);
     }
   }
 
-  get isConnected() {
+  protected getIsConnected(): this is (WebSocketApi<Events> & { socket: WebSocket }) {
     return this.socket?.readyState === WebSocket.OPEN && this.isOnline;
+  }
+
+  get isConnected() {
+    return this.getIsConnected();
   }
 
   get isOnline() {
@@ -144,7 +150,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   send(command: string | ArrayBufferLike | Blob | ArrayBufferView) {
-    if (this.isConnected) {
+    if (this.getIsConnected()) {
       this.socket.send(command);
     } else {
       this.pendingCommands.push(command);
@@ -186,7 +192,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
 
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
 
-        this.reconnectTimer = setTimeout(() => this.connect(url), reconnectDelay * 1000);
+        this.reconnectTimer = window.setTimeout(() => this.connect(url), reconnectDelay * 1000);
         this.readyState = WebSocketApiState.RECONNECTING;
       }
     } else {

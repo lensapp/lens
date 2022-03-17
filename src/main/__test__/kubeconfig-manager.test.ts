@@ -43,13 +43,14 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { parse } from "url";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  let di: DiContainer; 
+  let di: DiContainer;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -82,9 +83,17 @@ describe("kubeconfig manager tests", () => {
 
     await di.runSetups();
 
-    di.override(createContextHandlerInjectable, () => () => {
-      throw new Error("you should never come here");
-    });
+    di.override(createContextHandlerInjectable, () => (cluster) => ({
+      restartServer: jest.fn(),
+      stopServer: jest.fn(),
+      clusterUrl: parse(cluster.apiUrl),
+      getApiTarget: jest.fn(),
+      getPrometheusDetails: jest.fn(),
+      resolveAuthProxyCa: jest.fn(),
+      resolveAuthProxyUrl: jest.fn(),
+      setupPrometheus: jest.fn(),
+      ensureServer: jest.fn(),
+    }));
 
     const createCluster = di.inject(createClusterInjectionToken);
 
@@ -95,10 +104,6 @@ describe("kubeconfig manager tests", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
-
-    clusterFake.contextHandler = {
-      ensureServer: () => Promise.resolve(),
-    } as any;
 
     jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });

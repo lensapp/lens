@@ -22,21 +22,22 @@ interface Dependencies {
     setHotbarName: (id: string, name: string) => void;
     getDisplayLabel: (hotbar: Hotbar) => string;
   };
-  uniqueHotbarName: InputValidator;
+  uniqueHotbarName: InputValidator<false>;
 }
 
-const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarStore, uniqueHotbarName }: Dependencies) => {
+const NonInjectedHotbarRenameCommand = observer(({
+  closeCommandOverlay,
+  hotbarStore,
+  uniqueHotbarName,
+}: Dependencies) => {
   const [hotbarId, setHotbarId] = useState("");
   const [hotbarName, setHotbarName] = useState("");
 
-  const options = hotbarStore.hotbars.map(hotbar => ({
-    value: hotbar.id,
-    label: hotbarStore.getDisplayLabel(hotbar),
-  }));
-
-  const onSelect = (id: string) => {
-    setHotbarId(id);
-    setHotbarName(hotbarStore.getById(id).name);
+  const onSelect = (hotbar: Hotbar | null) => {
+    if (hotbar) {
+      setHotbarId(hotbar.id);
+      setHotbarName(hotbar.name);
+    }
   };
   const onSubmit = (name: string) => {
     if (!name.trim()) {
@@ -72,10 +73,11 @@ const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarSt
     <Select
       id="rename-hotbar-input"
       menuPortalTarget={null}
-      onChange={(v) => onSelect(v.value)}
+      onChange={onSelect}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
       menuIsOpen={true}
-      options={options}
+      options={hotbarStore.hotbars}
+      getOptionLabel={hotbar => hotbarStore.getDisplayLabel(hotbar)}
       autoFocus={true}
       escapeClearsValue={false}
       placeholder="Rename hotbar"

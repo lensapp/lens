@@ -4,9 +4,8 @@
  */
 
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { autoBind } from "../../utils";
-import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum LimitType {
@@ -36,21 +35,14 @@ export interface LimitRangeItem extends LimitRangeParts {
   type: string;
 }
 
-export interface LimitRange {
-  spec: {
-    limits: LimitRangeItem[];
-  };
+export interface LimitRangeSpec {
+  limits: LimitRangeItem[];
 }
 
-export class LimitRange extends KubeObject {
-  static kind = "LimitRange";
-  static namespaced = true;
-  static apiBase = "/api/v1/limitranges";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
+export class LimitRange extends KubeObject<void, LimitRangeSpec, "namespace-scoped"> {
+  static readonly kind = "LimitRange";
+  static readonly namespaced = true;
+  static readonly apiBase = "/api/v1/limitranges";
 
   getContainerLimits() {
     return this.spec.limits.filter(limit => limit.type === LimitType.CONTAINER);
@@ -65,14 +57,15 @@ export class LimitRange extends KubeObject {
   }
 }
 
-let limitRangeApi: KubeApi<LimitRange>;
-
-if (isClusterPageContext()) {
-  limitRangeApi = new KubeApi<LimitRange>({
-    objectConstructor: LimitRange,
-  });
+export class LimitRangeApi extends KubeApi<LimitRange> {
+  constructor(opts?: DerivedKubeApiOptions) {
+    super({
+      objectConstructor: LimitRange,
+      ...opts ?? {},
+    });
+  }
 }
 
-export {
-  limitRangeApi,
-};
+export const limitRangeApi = isClusterPageContext()
+  ? new LimitRangeApi()
+  : undefined as never;

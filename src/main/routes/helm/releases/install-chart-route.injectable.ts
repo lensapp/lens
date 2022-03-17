@@ -3,34 +3,42 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { Route } from "../../../router/router";
+import type { InstallChartArgs } from "../../../helm/helm-service";
 import { helmService } from "../../../helm/helm-service";
-import { routeInjectionToken } from "../../../router/router.injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getRouteInjectable } from "../../../router/router.injectable";
+import Joi from "joi";
+import { payloadValidatedClusterRoute } from "../../../router/route";
 
-interface InstallChartResponse {
-  log: string;
-  release: { name: string; namespace: string };
-}
+const installChartArgsValidator = Joi.object<InstallChartArgs, true, InstallChartArgs>({
+  chart: Joi
+    .string()
+    .required(),
+  values: Joi
+    .object()
+    .required()
+    .unknown(true),
+  name: Joi
+    .string()
+    .required(),
+  namespace: Joi
+    .string()
+    .required(),
+  version: Joi
+    .string()
+    .required(),
+});
 
-const installChartRouteInjectable = getInjectable({
+const installChartRouteInjectable = getRouteInjectable({
   id: "install-chart-route",
 
-  instantiate: () : Route<InstallChartResponse> => ({
+  instantiate: () => payloadValidatedClusterRoute({
     method: "post",
     path: `${apiPrefix}/v2/releases`,
-
-    handler: async (request) => {
-      const { payload, cluster } = request;
-
-      return {
-        response: await helmService.installChart(cluster, payload),
-        statusCode: 201,
-      };
-    },
-  }),
-
-  injectionToken: routeInjectionToken,
+    payloadValidator: installChartArgsValidator,
+  })(async ({ payload, cluster }) => ({
+    response: await helmService.installChart(cluster, payload),
+    statusCode: 201,
+  })),
 });
 
 export default installChartRouteInjectable;

@@ -11,7 +11,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
   ({ variant: { sources, defaultMode }}) => (
     <>
       <DrawerItem name="Default Mount Mode">
-          0o{defaultMode.toString(8)}
+        {`0o${defaultMode.toString(8)}`}
       </DrawerItem>
       <DrawerItem name="Sources">
         {
@@ -27,7 +27,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                     <ul>
                       {secret.items?.map(({ key, path }) => (
                         <li key={key}>
-                          {key} ⇢ {path}
+                          {`${key}⇢${path}`}
                         </li>
                       ))}
                     </ul>
@@ -58,7 +58,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                     <ul>
                       {configMap.items?.map(({ key, path }) => (
                         <li key={key}>
-                          {key} ⇢ {path}
+                          {`${key}⇢${path}`}
                         </li>
                       ))}
                     </ul>
@@ -72,7 +72,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                     {serviceAccountToken.audience}
                   </DrawerItem>
                   <DrawerItem name="Expiration">
-                    {String(serviceAccountToken.expirationSeconds || (60*60 /* an hour */))}s
+                    {`${serviceAccountToken.expirationSeconds ?? 60*60 /* an hour */}s`}
                   </DrawerItem>
                   <DrawerItem name="Path">
                     {serviceAccountToken.path}

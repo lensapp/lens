@@ -23,20 +23,16 @@ const extensionPageParametersInjectable = getInjectable({
     const observableHistory = di.inject(observableHistoryInjectable);
 
     return pipeline(
-      registration.params,
-      (params) => toPairs(params),
-
+      registration.params ?? {},
+      toPairs,
       map(([key, value]): [string, PageParamInit] => [
         key,
-
         typeof value === "string"
           ? convertStringToPageParamInit(key, value)
           : convertPartialPageParamInitToFull(key, value as PageParamInit),
       ]),
-
       map(([key, value]) => [key, new PageParam(value, observableHistory)]),
-
-      (paramsTuple) => fromPairs(paramsTuple),
+      fromPairs,
     );
   },
 

@@ -4,15 +4,22 @@
  */
 
 import moment from "moment";
+import type { ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { IPodContainer } from "./pods.api";
 import { formatDuration } from "../../utils/formatDuration";
-import { autoBind } from "../../utils";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { JobTemplateSpec } from "./types/job-template-spec";
 
 export class CronJobApi extends KubeApi<CronJob> {
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: CronJob,
+    });
+  }
+
   suspend(params: { namespace: string; name: string }) {
     return this.request.patch(this.getUrl(params), {
       data: {
@@ -44,61 +51,33 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 }
 
-export interface CronJob {
-  spec: {
-    schedule: string;
-    concurrencyPolicy: string;
-    suspend: boolean;
-    jobTemplate: {
-      metadata: {
-        creationTimestamp?: string;
-        labels?: {
-          [key: string]: string;
-        };
-        annotations?: {
-          [key: string]: string;
-        };
-      };
-      spec: {
-        template: {
-          metadata: {
-            creationTimestamp?: string;
-          };
-          spec: {
-            containers: IPodContainer[];
-            restartPolicy: string;
-            terminationGracePeriodSeconds: number;
-            dnsPolicy: string;
-            hostPID: boolean;
-            schedulerName: string;
-          };
-        };
-      };
-    };
-    successfulJobsHistoryLimit: number;
-    failedJobsHistoryLimit: number;
-  };
-  status: {
-    lastScheduleTime?: string;
-  };
+export interface CronJobSpec {
+  concurrencyPolicy?: string;
+  failedJobsHistoryLimit?: number;
+  jobTemplate?: JobTemplateSpec;
+  schedule: string;
+  startingDeadlineSeconds?: number;
+  successfulJobsHistoryLimit?: number;
+  suspend?: boolean;
 }
 
-export class CronJob extends KubeObject {
-  static kind = "CronJob";
-  static namespaced = true;
-  static apiBase = "/apis/batch/v1beta1/cronjobs";
+export interface CronJobStatus {
+  lastScheduleTime?: string;
+  lastSuccessfulTime?: string;
+  active?: ObjectReference[];
+}
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
+export class CronJob extends KubeObject<CronJobStatus, CronJobSpec, "namespace-scoped"> {
+  static readonly kind = "CronJob";
+  static readonly namespaced = true;
+  static readonly apiBase = "/apis/batch/v1beta1/cronjobs";
 
   getSuspendFlag() {
-    return this.spec.suspend.toString();
+    return (this.spec.suspend ?? false).toString();
   }
 
   getLastScheduleTime() {
-    if (!this.status.lastScheduleTime) return "-";
+    if (!this.status?.lastScheduleTime) return "-";
     const diff = moment().diff(this.status.lastScheduleTime);
 
     return formatDuration(diff, true);
@@ -125,17 +104,6 @@ export class CronJob extends KubeObject {
   }
 }
 
-/**
- * Only available within kubernetes cluster pages
- */
-let cronJobApi: CronJobApi;
-
-if (isClusterPageContext()) {
-  cronJobApi = new CronJobApi({
-    objectConstructor: CronJob,
-  });
-}
-
-export {
-  cronJobApi,
-};
+export const cronJobApi = isClusterPageContext()
+  ? new CronJobApi()
+  : undefined as never;

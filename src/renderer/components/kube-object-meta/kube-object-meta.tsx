@@ -55,7 +55,13 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
         <DrawerItem name="Created" hidden={this.isHidden("creationTimestamp")}>
           <KubeObjectAge object={object} compact={false} />
           {" ago "}
-          ({<LocaleDate date={creationTimestamp} />})
+          {creationTimestamp && (
+            <>
+              (
+              <LocaleDate date={creationTimestamp} />
+              )
+            </>
+          )}
         </DrawerItem>
         <DrawerItem name="Name" hidden={this.isHidden("name")}>
           {getName()}
@@ -88,22 +94,24 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           labels={getFinalizers()}
           hidden={this.isHidden("finalizers")}
         />
-        {ownerRefs?.length > 0 &&
-        <DrawerItem name="Controlled By" hidden={this.isHidden("ownerReferences")}>
-          {
-            ownerRefs.map(ref => {
-              const { name, kind } = ref;
-              const ownerDetailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, object));
+        {ownerRefs?.length > 0 && (
+          <DrawerItem name="Controlled By" hidden={this.isHidden("ownerReferences")}>
+            {
+              ownerRefs.map(ref => {
+                const { name, kind } = ref;
+                const ownerDetailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, object));
 
-              return (
-                <p key={name}>
-                  {kind} <Link to={ownerDetailsUrl}>{name}</Link>
-                </p>
-              );
-            })
-          }
-        </DrawerItem>
-        }
+                return (
+                  <p key={name}>
+                    {kind}
+                    {" "}
+                    <Link to={ownerDetailsUrl}>{name}</Link>
+                  </p>
+                );
+              })
+            }
+          </DrawerItem>
+        )}
       </>
     );
   }

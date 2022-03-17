@@ -53,12 +53,11 @@ interface Dependencies {
 
 export class Kubectl {
   public kubectlVersion: string;
-  protected directory: string;
   protected url: string;
   protected path: string;
   protected dirname: string;
 
-  public static readonly bundledKubectlVersion: string = bundledVersion;
+  public static readonly bundledKubectlVersion = bundledVersion;
   public static invalidBundle = false;
 
   constructor(private dependencies: Dependencies, clusterVersion: string) {
@@ -70,12 +69,14 @@ export class Kubectl {
       version = new SemVer(Kubectl.bundledKubectlVersion);
     }
 
-    const minorVersion = `${version.major}.${version.minor}`;
+    const fromMajorMinor = kubectlMap.get(`${version.major}.${version.minor}`);
 
-    /* minorVersion is the first two digits of kube server version
-       if the version map includes that, use that version, if not, fallback to the exact x.y.z of kube version */
-    if (kubectlMap.has(minorVersion)) {
-      this.kubectlVersion = kubectlMap.get(minorVersion);
+    /**
+     * minorVersion is the first two digits of kube server version if the version map includes that,
+     * use that version, if not, fallback to the exact x.y.z of kube version
+     */
+    if (fromMajorMinor) {
+      this.kubectlVersion = fromMajorMinor;
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
       this.kubectlVersion = version.format();
@@ -176,8 +177,8 @@ export class Kubectl {
           return true;
         }
         logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`);
-      } catch (err) {
-        logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`);
+      } catch (error) {
+        logger.error(`Local kubectl failed to run properly (${error}), unlinking`);
       }
       await fs.promises.unlink(this.path);
     }
@@ -348,7 +349,8 @@ export class Kubectl {
     // MacOS packages are only available from default
 
     const { url } = packageMirrors.get(this.dependencies.userStore.downloadMirror)
-      ?? packageMirrors.get(defaultPackageMirror);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ?? packageMirrors.get(defaultPackageMirror)!;
 
     return url;
   }

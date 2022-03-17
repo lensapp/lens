@@ -3,25 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import get from "lodash/get";
-import { autoBind } from "../../../renderer/utils";
-import { WorkloadKubeObject } from "../workload-kube-object";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { IPodContainer, IPodMetrics, Pod } from "./pods.api";
-import type { KubeJsonApiData } from "../kube-json-api";
+import type { PodMetricData } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { LabelSelector } from "../kube-object";
+import type { KubeObjectStatus, LabelSelector } from "../kube-object";
+import { KubeObject } from "../kube-object";
+import type { PodTemplateSpec } from "./types/pod-template-spec";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: ReplicaSet,
+    });
+  }
+
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
 
-  getReplicas(params: { namespace: string; name: string }): Promise<number> {
-    return this.request
-      .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status?.replicas);
+  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    const { status } = await this.request.get(this.getScaleApiUrl(params));
+
+    return (status as { replicas: number })?.replicas;
   }
 
   scale(params: { namespace: string; name: string }, replicas: number) {
@@ -36,7 +42,7 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   }
 }
 
-export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
+export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<PodMetricData> {
   const podSelector = replicasets.map(replicaset => `${replicaset.getName()}-[[:alnum:]]{5}`).join("|");
   const opts = { category: "pods", pods: podSelector, namespace, selector };
 
@@ -53,72 +59,69 @@ export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: s
   });
 }
 
-export class ReplicaSet extends WorkloadKubeObject {
+export interface ReplicaSetSpec {
+  replicas?: number;
+  selector: LabelSelector;
+  template?: PodTemplateSpec;
+  minReadySeconds?: number;
+}
+
+export interface ReplicaSetStatus extends KubeObjectStatus {
+  replicas: number;
+  fullyLabeledReplicas?: number;
+  readyReplicas?: number;
+  availableReplicas?: number;
+  observedGeneration?: number;
+}
+
+export class ReplicaSet extends KubeObject<ReplicaSetStatus, ReplicaSetSpec, "namespace-scoped"> {
   static kind = "ReplicaSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/replicasets";
 
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
+  getSelectors(): string[] {
+    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
   }
 
-  declare spec: {
-    replicas?: number;
-    selector: LabelSelector;
-    template?: {
-      metadata: {
-        labels: {
-          app: string;
-        };
-      };
-      spec?: Pod["spec"];
-    };
-    minReadySeconds?: number;
-  };
-  declare status: {
-    replicas: number;
-    fullyLabeledReplicas?: number;
-    readyReplicas?: number;
-    availableReplicas?: number;
-    observedGeneration?: number;
-    conditions?: {
-      type: string;
-      status: string;
-      lastUpdateTime: string;
-      lastTransitionTime: string;
-      reason: string;
-      message: string;
-    }[];
-  };
+  getNodeSelectors(): string[] {
+    return KubeObject.stringifyLabels(this.spec.template?.spec?.nodeSelector);
+  }
+
+  getTemplateLabels(): string[] {
+    return KubeObject.stringifyLabels(this.spec.template?.metadata?.labels);
+  }
+
+  getTolerations() {
+    return this.spec.template?.spec?.tolerations ?? [];
+  }
+
+  getAffinity() {
+    return this.spec.template?.spec?.affinity;
+  }
+
+  getAffinityNumber() {
+    return Object.keys(this.getAffinity() ?? {}).length;
+  }
 
   getDesired() {
-    return this.spec.replicas || 0;
+    return this.spec.replicas ?? 0;
   }
 
   getCurrent() {
-    return this.status.availableReplicas || 0;
+    return this.status?.availableReplicas ?? 0;
   }
 
   getReady() {
-    return this.status.readyReplicas || 0;
+    return this.status?.readyReplicas ?? 0;
   }
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    const containers = this.spec.template?.spec?.containers ?? [];
 
-    return [...containers].map(container => container.image);
+    return containers.map(container => container.image);
   }
 }
 
-let replicaSetApi: ReplicaSetApi;
-
-if (isClusterPageContext()) {
-  replicaSetApi = new ReplicaSetApi({
-    objectConstructor: ReplicaSet,
-  });
-}
-
-export {
-  replicaSetApi,
-};
+export const replicaSetApi = isClusterPageContext()
+  ? new ReplicaSetApi()
+  : undefined as never;

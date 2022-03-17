@@ -42,7 +42,8 @@ import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import { bindEvents } from "./navigation/events";
-import deleteClusterDialogModelInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
+import assert from "assert";
+import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import { init } from "@sentry/electron/renderer";
 
 configurePackages(); // global packages
@@ -70,6 +71,9 @@ export async function bootstrap(di: DiContainer) {
   bindEvents();
 
   const rootElem = document.getElementById("app");
+
+  assert(rootElem);
+
   const rootNode = createRoot(rootElem);
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
@@ -103,7 +107,7 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing Catalog`);
   initializers.initCatalog({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
-    deleteClusterDialogModel: di.inject(deleteClusterDialogModelInjectable),
+    openDeleteClusterDialog: di.inject(openDeleteClusterDialogInjectable),
   });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
@@ -146,7 +150,6 @@ export async function bootstrap(di: DiContainer) {
   // TODO: Introduce proper architectural boundaries between root and cluster iframes
   if (process.isMainFrame) {
     initializeApp = di.inject(initRootFrameInjectable);
-
     App = (await import("./frames/root-frame/root-frame")).RootFrame;
   } else {
     initializeApp = di.inject(initClusterFrameInjectable);

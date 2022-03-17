@@ -2,25 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { makeObservable } from "mobx";
 
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import type { Deployment } from "../../../common/k8s-api/endpoints";
-import { deploymentApi, PodStatus } from "../../../common/k8s-api/endpoints";
+import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
+import { deploymentApi, PodStatusPhase } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
+import { isClusterPageContext } from "../../utils";
 
-export class DeploymentStore extends KubeObjectStore<Deployment> {
-  api = deploymentApi;
-
-  constructor() {
-    super();
-
-    makeObservable(this);
-    autoBind(this);
-  }
-
+export class DeploymentStore extends KubeObjectStore<Deployment, DeploymentApi> {
   protected sortItems(items: Deployment[]) {
     return super.sortItems(items, [
       item => item.getReplicas(),
@@ -30,13 +20,13 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   getStatuses(deployments?: Deployment[]) {
     const status = { running: 0, failed: 0, pending: 0 };
 
-    deployments.forEach(deployment => {
+    deployments?.forEach(deployment => {
       const pods = this.getChildPods(deployment);
 
-      if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
+      if (pods.some(pod => pod.getStatus() === PodStatusPhase.FAILED)) {
         status.failed++;
       }
-      else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
+      else if (pods.some(pod => pod.getStatus() === PodStatusPhase.PENDING)) {
         status.pending++;
       }
       else {
@@ -54,5 +44,10 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   }
 }
 
-export const deploymentStore = new DeploymentStore();
-apiManager.registerStore(deploymentStore);
+export const deploymentStore = isClusterPageContext()
+  ? new DeploymentStore(deploymentApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(deploymentStore);
+}

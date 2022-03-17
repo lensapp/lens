@@ -41,6 +41,10 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
     const { persistentVolumes } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);
 
+    if (!volume) {
+      return undefined;
+    }
+
     return (
       <TableRow
         key={volume.getId()}

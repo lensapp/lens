@@ -4,6 +4,7 @@
  */
 
 import { runInAction } from "mobx";
+import { isDefined } from "./type-narrowing";
 
 /**
  * Get the value behind `key`. If it was not present, first insert `value`
@@ -17,7 +18,17 @@ export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
     map.set(key, value);
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
+}
+
+/**
+ * Updates map and returns the value that was just inserted
+ */
+export function put<K, V>(map: Map<K, V>, key: K, value: V): V {
+  map.set(key, value);
+
+  return value;
 }
 
 /**
@@ -45,7 +56,8 @@ export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, builder: () => V):
     map.set(key, builder());
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
 }
 
 /**
@@ -83,7 +95,8 @@ export function strictGet<K, V>(map: Map<K, V>, key: K): V {
     throw new TypeError("key not in map");
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
 }
 
 /**
@@ -98,4 +111,11 @@ export function toggle<K>(set: Set<K>, key: K): void {
       set.add(key);
     }
   });
+}
+
+/**
+ * A helper function to also check for defined-ness
+ */
+export function includes<T>(src: T[], value: T | null | undefined): boolean {
+  return isDefined(value) && src.includes(value);
 }

@@ -5,22 +5,33 @@
 
 import routerInjectable, { routeInjectionToken } from "./router.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { Router, RouteHandler, Route } from "./router";
+import type { Router } from "./router";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
+import type { MockInstance } from "jest-mock";
+import type { SetRequired } from "type-fest";
+import type { Route, RouteHandler } from "./route";
+
+type AsyncFnMock<
+  TToBeMocked extends (...args: any[]) => any,
+  TArguments extends Parameters<TToBeMocked> = Parameters<TToBeMocked>,
+  TResolve extends Awaited<ReturnType<TToBeMocked>> = Awaited<ReturnType<TToBeMocked>>,
+> = MockInstance<(...args: TArguments) => Promise<TResolve>, TArguments> & {
+  resolve: (resolvedValue: TResolve) => Promise<void>;
+  reject: (rejectValue?: any) => Promise<void>;
+} & ((...args: TArguments) => Promise<TResolve>);
 
 describe("router", () => {
   let router: Router;
-  let routeHandlerMock: AsyncFnMock<RouteHandler<any>>;
+  let routeHandlerMock: AsyncFnMock<RouteHandler<any, string>>;
 
   beforeEach(async () => {
-    routeHandlerMock = asyncFn();
+    routeHandlerMock = asyncFn() as AsyncFnMock<RouteHandler<any, string>>;
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
@@ -37,7 +48,7 @@ describe("router", () => {
         method: "get",
         path: "/some-path",
         handler: routeHandlerMock,
-      } as Route<any>),
+      } as Route<any, string>),
 
       injectionToken: routeInjectionToken,
     });
@@ -54,7 +65,7 @@ describe("router", () => {
   describe("when navigating to the route", () => {
     let actualPromise: Promise<boolean>;
     let clusterStub: Cluster;
-    let requestStub: Request;
+    let requestStub: SetRequired<Request, "url" | "method">;
     let responseStub: any;
 
     beforeEach(() => {
@@ -64,7 +75,7 @@ describe("router", () => {
         headers: {
           "content-type": "application/json",
         },
-      });
+      }) as SetRequired<Request, "url" | "method">;
 
       responseStub = { end: jest.fn(), setHeader: jest.fn(), write: jest.fn(), statusCode: undefined };
 

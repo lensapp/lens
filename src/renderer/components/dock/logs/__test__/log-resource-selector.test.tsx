@@ -6,7 +6,6 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import * as selectEvent from "react-select-event";
-import { Pod } from "../../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../resource-selector";
 import { dockerPod, deploymentPod1, deploymentPod2 } from "./pod.mock";
 import { ThemeStore } from "../../../../theme.store";
@@ -22,10 +21,9 @@ import { LogTabViewModel } from "../logs-view-model";
 import type { TabId } from "../../dock/store";
 import userEvent from "@testing-library/user-event";
 import { SearchStore } from "../../../../search-store/search-store";
-import getConfigurationFileModelInjectable
-  from "../../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import assert from "assert";
 
 jest.mock("electron", () => ({
   app: {
@@ -67,7 +65,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
 }
 
 const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
-  const selectedPod = new Pod(dockerPod);
+  const selectedPod = dockerPod;
 
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
@@ -89,8 +87,8 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
 };
 
 const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
-  const selectedPod = new Pod(deploymentPod1);
-  const anotherPod = new Pod(deploymentPod2);
+  const selectedPod = deploymentPod1;
+  const anotherPod = deploymentPod2;
 
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
@@ -183,8 +181,11 @@ describe("<LogResourceSelector />", () => {
   it("renders sibling pods in dropdown", async () => {
     const model = getFewPodsTabData("foobar");
     const { container, findByText } = render(<LogResourceSelector model={model} />);
+    const selector = container.querySelector<HTMLElement>(".pod-selector");
 
-    selectEvent.openMenu(container.querySelector(".pod-selector"));
+    assert(selector);
+
+    selectEvent.openMenu(selector);
     expect(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
     expect(await findByText("deploymentPod1", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
   });
@@ -192,8 +193,12 @@ describe("<LogResourceSelector />", () => {
   it("renders sibling containers in dropdown", async () => {
     const model = getFewPodsTabData("foobar");
     const { findByText, container } = render(<LogResourceSelector model={model} />);
+    const selector = container.querySelector<HTMLElement>(".container-selector");
 
-    selectEvent.openMenu(container.querySelector(".container-selector"));
+    assert(selector);
+
+    selectEvent.openMenu(selector);
+
     expect(await findByText("node-exporter-1")).toBeInTheDocument();
     expect(await findByText("init-node-exporter")).toBeInTheDocument();
     expect(await findByText("init-node-exporter-1")).toBeInTheDocument();
@@ -212,9 +217,11 @@ describe("<LogResourceSelector />", () => {
     const renameTab = jest.fn();
     const model = getFewPodsTabData("foobar", { renameTab });
     const { findByText, container } = render(<LogResourceSelector model={model} />);
+    const selector = container.querySelector<HTMLElement>(".pod-selector");
 
-    selectEvent.openMenu(container.querySelector(".pod-selector"));
+    assert(selector);
 
+    selectEvent.openMenu(selector);
     userEvent.click(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" }));
     expect(renameTab).toBeCalledWith("foobar", "Pod deploymentPod2");
   });

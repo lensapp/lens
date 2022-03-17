@@ -11,7 +11,7 @@ import type { IComputedValue } from "mobx";
 import { computed, makeObservable, observable } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
-import type { HelmRelease, IReleaseDetails, IReleaseUpdateDetails, IReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import type { HelmRelease, HelmReleaseDetails, HelmReleaseUpdateDetails, HelmReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "../release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../../drawer";
 import { Badge } from "../../badge";
@@ -35,18 +35,19 @@ import releaseInjectable from "./release.injectable";
 import releaseDetailsInjectable from "./release-details.injectable";
 import releaseValuesInjectable from "./release-values.injectable";
 import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-shown.injectable";
-import type { KubeObject } from "../../../../common/k8s-api/kube-object";
 import { KubeObjectAge } from "../../kube-object/age";
+import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
+import { entries } from "../../../../common/utils/objects";
 
 export interface ReleaseDetailsProps {
   hideDetails(): void;
 }
 
 interface Dependencies {
-  release: IComputedValue<HelmRelease>;
-  releaseDetails: IAsyncComputed<IReleaseDetails>;
+  release: IComputedValue<HelmRelease | null | undefined>;
+  releaseDetails: IAsyncComputed<HelmReleaseDetails>;
   releaseValues: IAsyncComputed<string>;
-  updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>;
+  updateRelease: (name: string, namespace: string, payload: HelmReleaseUpdatePayload) => Promise<HelmReleaseUpdateDetails>;
   createUpgradeChartTab: (release: HelmRelease) => void;
   userSuppliedValuesAreShown: { toggle: () => void; value: boolean };
 }
@@ -55,28 +56,24 @@ interface Dependencies {
 class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependencies> {
   @observable saving = false;
 
-  private nonSavedValues: string;
+  private nonSavedValues = "";
 
   constructor(props: ReleaseDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  @computed get release() {
-    return this.props.release.get();
-  }
-
   @computed get details() {
     return this.props.releaseDetails.value.get();
   }
 
-  updateValues = async () => {
-    const name = this.release.getName();
-    const namespace = this.release.getNs();
+  updateValues = async (release: HelmRelease) => {
+    const name = release.getName();
+    const namespace = release.getNs();
     const data = {
-      chart: this.release.getChart(),
-      repo: await this.release.getRepo(),
-      version: this.release.getVersion(),
+      chart: release.getChart(),
+      repo: await release.getRepo(),
+      version: release.getVersion(),
       values: this.nonSavedValues,
     };
 
@@ -85,24 +82,28 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
     try {
       await this.props.updateRelease(name, namespace, data);
       Notifications.ok(
-        <p>Release <b>{name}</b> successfully updated!</p>,
+        <p>
+          Release
+          <b>{name}</b>
+          {" successfully updated!"}
+        </p>,
       );
 
       this.props.releaseValues.invalidate();
     } catch (err) {
-      Notifications.error(err);
+      Notifications.checkedError(err, "Unknown error occured while updating release");
     }
     this.saving = false;
   };
 
-  upgradeVersion = () => {
-    const { hideDetails } = this.props;
+  upgradeVersion = (release: HelmRelease) => {
+    const { hideDetails, createUpgradeChartTab } = this.props;
 
-    this.props.createUpgradeChartTab(this.release);
+    createUpgradeChartTab(release);
     hideDetails();
   };
 
-  renderValues() {
+  renderValues(release: HelmRelease) {
     return (
       <Observer>
         {() => {
@@ -133,7 +134,7 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
                   label="Save"
                   waiting={saving}
                   disabled={releaseValuesArePending}
-                  onClick={this.updateValues}
+                  onClick={() => this.updateValues(release)}
                 />
               </div>
             </div>
@@ -154,28 +155,27 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
     );
   }
 
-  renderResources(resources: KubeObject[]) {
+  renderResources(resources: KubeJsonApiData[]) {
     return (
       <div className="resources">
         {
-          Object.entries(groupBy(resources, item => item.kind))
+          entries(groupBy(resources, item => item.kind))
             .map(([kind, items]) => (
               <React.Fragment key={kind}>
                 <SubTitle title={kind} />
                 <Table scrollable={false}>
                   <TableHead sticky={false}>
                     <TableCell className="name">Name</TableCell>
-                    {items[0].getNs() && <TableCell className="namespace">Namespace</TableCell>}
+                    {items[0].metadata.namespace && <TableCell className="namespace">Namespace</TableCell>}
                     <TableCell className="age">Age</TableCell>
                   </TableHead>
                   {items.map(item => {
-                    const name = item.getName();
-                    const namespace = item.getNs();
+                    const { name, namespace, uid } = item.metadata;
                     const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == item.apiVersion);
                     const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
 
                     return (
-                      <TableRow key={item.getId()}>
+                      <TableRow key={uid}>
                         <TableCell className="name">
                           {detailsUrl ? <Link to={detailsUrl}>{name}</Link> : name}
                         </TableCell>
@@ -198,9 +198,7 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
     );
   }
 
-  renderContent() {
-    if (!this.release) return null;
-
+  renderContent(release: HelmRelease) {
     if (!this.details) {
       return <Spinner center/>;
     }
@@ -211,35 +209,40 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
       <div>
         <DrawerItem name="Chart" className="chart">
           <div className="flex gaps align-center">
-            <span>{this.release.getChart()}</span>
+            <span>{release.getChart()}</span>
             <Button
               primary
               label="Upgrade"
               className="box right upgrade"
-              onClick={this.upgradeVersion}
+              onClick={() => this.upgradeVersion(release)}
             />
           </div>
         </DrawerItem>
         <DrawerItem name="Updated">
-          {this.release.getUpdated()} ago ({this.release.updated})
+          {release.getUpdated()}
+          {` ago (${release.updated})`}
         </DrawerItem>
         <DrawerItem name="Namespace">
-          {this.release.getNs()}
+          {release.getNs()}
         </DrawerItem>
         <DrawerItem name="Version" onClick={stopPropagation}>
           <div className="version flex gaps align-center">
             <span>
-              {this.release.getVersion()}
+              {release.getVersion()}
             </span>
           </div>
         </DrawerItem>
-        <DrawerItem name="Status" className="status" labelsOnly>
+        <DrawerItem
+          name="Status"
+          className="status"
+          labelsOnly
+        >
           <Badge
-            label={this.release.getStatus()}
-            className={kebabCase(this.release.getStatus())}
+            label={release.getStatus()}
+            className={kebabCase(release.getStatus())}
           />
         </DrawerItem>
-        {this.renderValues()}
+        {this.renderValues(release)}
         <DrawerTitle>Notes</DrawerTitle>
         {this.renderNotes()}
         <DrawerTitle>Resources</DrawerTitle>
@@ -250,38 +253,37 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
 
   render() {
     const { hideDetails } = this.props;
-    const title = this.release ? `Release: ${this.release.getName()}` : "";
-    const toolbar = <HelmReleaseMenu release={this.release} toolbar hideDetails={hideDetails}/>;
+    const release = this.props.release.get();
 
     return (
       <Drawer
         className={cssNames("ReleaseDetails", ThemeStore.getInstance().activeTheme.type)}
         usePortal={true}
-        open={!!this.release}
-        title={title}
+        open={Boolean(release)}
+        title={release ? `Release: ${release.getName()}` : ""}
         onClose={hideDetails}
-        toolbar={toolbar}
+        toolbar={release && (
+          <HelmReleaseMenu
+            release={release}
+            toolbar
+            hideDetails={hideDetails}
+          />
+        )}
       >
-        {this.renderContent()}
+        {release && this.renderContent(release)}
       </Drawer>
     );
   }
 }
 
-export const ReleaseDetails = withInjectables<Dependencies, ReleaseDetailsProps>(
-  NonInjectedReleaseDetails,
-
-  {
-    getProps: (di, props) => ({
-      release: di.inject(releaseInjectable),
-      releaseDetails: di.inject(releaseDetailsInjectable),
-      releaseValues: di.inject(releaseValuesInjectable),
-
-      userSuppliedValuesAreShown: di.inject(userSuppliedValuesAreShownInjectable),
-
-      updateRelease: di.inject(updateReleaseInjectable),
-      createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
-      ...props,
-    }),
-  },
-);
+export const ReleaseDetails = withInjectables<Dependencies, ReleaseDetailsProps>(NonInjectedReleaseDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    release: di.inject(releaseInjectable),
+    releaseDetails: di.inject(releaseDetailsInjectable),
+    releaseValues: di.inject(releaseValuesInjectable),
+    userSuppliedValuesAreShown: di.inject(userSuppliedValuesAreShownInjectable),
+    updateRelease: di.inject(updateReleaseInjectable),
+    createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
+  }),
+});

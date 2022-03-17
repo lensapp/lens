@@ -8,7 +8,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { cpuUnitsToNumber, cssNames, unitsToBytes, metricUnitsToNumber } from "../../utils";
+import { cpuUnitsToNumber, cssNames, unitsToBytes, metricUnitsToNumber, object, hasDefinedTupleValue } from "../../utils";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceQuota } from "../../../common/k8s-api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
@@ -32,25 +32,29 @@ function transformUnit(name: string, value: string): number {
 }
 
 function renderQuotas(quota: ResourceQuota): JSX.Element[] {
-  const { hard = {}, used = {}} = quota.status;
+  const { hard = {}, used = {}} = quota.status ?? {};
 
-  return Object.entries(hard)
-    .filter(([name]) => used[name])
+  return object.entries(hard)
+    .filter(hasDefinedTupleValue)
     .map(([name, value]) => {
-      const current = transformUnit(name, used[name]);
+      const current = transformUnit(name, value);
       const max = transformUnit(name, value);
       const usage = max === 0 ? 100 : Math.ceil(current / max * 100); // special case 0 max as always 100% usage
 
       return (
         <div key={name} className={cssNames("param", kebabCase(name))}>
           <span className="title">{name}</span>
-          <span className="value">{used[name]} / {value}</span>
+          <span className="value">
+            {`${used[name]} / ${value}`}
+          </span>
           <LineProgress
             max={max}
             value={current}
-            tooltip={
-              <p>Set: {value}. Usage: {`${usage}%`}</p>
-            }
+            tooltip={(
+              <p>
+                {`Set: ${value}. Usage: ${usage}%`}
+              </p>
+            )}
           />
         </div>
       );

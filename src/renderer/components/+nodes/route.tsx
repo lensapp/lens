@@ -10,7 +10,7 @@ import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout-2";
 import { nodesStore } from "./nodes.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
+import type { NodeMetricData, Node } from "../../../common/k8s-api/endpoints/nodes.api";
 import { formatNodeTaint, getMetricsForAllNodes } from "../../../common/k8s-api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../../common/utils/convertMemory";
@@ -48,7 +48,7 @@ interface UsageArgs {
 
 @observer
 export class NodesRoute extends React.Component {
-  @observable.ref metrics: Partial<INodeMetrics> = {};
+  @observable.ref metrics: Partial<NodeMetricData> = {};
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
   constructor(props: any) {
@@ -74,7 +74,7 @@ export class NodesRoute extends React.Component {
     return metricNames.map(metricName => {
       try {
         const metric = this.metrics[metricName];
-        const result = metric.data.result.find(({ metric: { node, instance, kubernetes_node }}) => (
+        const result = metric?.data.result.find(({ metric: { node, instance, kubernetes_node }}) => (
           nodeName === node
           || nodeName === instance
           || nodeName === kubernetes_node
@@ -145,7 +145,7 @@ export class NodesRoute extends React.Component {
   }
 
   renderConditions(node: Node) {
-    if (!node.status.conditions) {
+    if (!node.status?.conditions) {
       return null;
     }
 
@@ -154,14 +154,19 @@ export class NodesRoute extends React.Component {
       const tooltipId = `node-${node.getName()}-condition-${type}`;
 
       return (
-        <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
+        <div
+          key={type}
+          id={tooltipId}
+          className={cssNames("condition", kebabCase(type))}
+        >
           {type}
           <Tooltip targetId={tooltipId} formatters={{ tableView: true }}>
-            {Object.entries(condition).map(([key, value]) =>
+            {Object.entries(condition).map(([key, value]) => (
               <div key={key} className="flex gaps align-center">
                 <div className="name">{upperFirst(key)}</div>
                 <div className="value">{value}</div>
-              </div>,
+              </div>
+            ),
             )}
           </Tooltip>
         </div>
@@ -215,19 +220,28 @@ export class NodesRoute extends React.Component {
             const taints = node.getTaints();
 
             return [
-              <Badge flat key="name" label={node.getName()} tooltip={node.getName()} />,
+              <Badge
+                flat
+                key="name"
+                label={node.getName()}
+                tooltip={node.getName()} 
+              />,
               <KubeObjectStatusIcon key="icon" object={node} />,
               this.renderCpuUsage(node),
               this.renderMemoryUsage(node),
               this.renderDiskUsage(node),
               <>
                 <span id={tooltipId}>{taints.length}</span>
-                <Tooltip targetId={tooltipId} tooltipOnParentHover={true} style={{ whiteSpace: "pre-line" }}>
+                <Tooltip
+                  targetId={tooltipId}
+                  tooltipOnParentHover={true}
+                  style={{ whiteSpace: "pre-line" }}
+                >
                   {taints.map(formatNodeTaint).join("\n")}
                 </Tooltip>
               </>,
               node.getRoleLabels(),
-              node.status.nodeInfo.kubeletVersion,
+              node.getKubeletVersion(),
               <KubeObjectAge key="age" object={node} />,
               this.renderConditions(node),
             ];

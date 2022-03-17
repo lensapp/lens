@@ -17,18 +17,15 @@ import { storageClassStore } from "./storage-class.store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import { volumesStore } from "../+storage-volumes/volumes.store";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { Disposer } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
 }
 
 @observer

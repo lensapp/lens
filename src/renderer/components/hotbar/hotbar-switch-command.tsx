@@ -14,64 +14,76 @@ import { HotbarRenameCommand } from "./hotbar-rename-command";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import type { HotbarStore } from "../../../common/hotbar-store";
+import type { Hotbar } from "../../../common/hotbar-types";
 
-const addActionId = "__add__";
-const removeActionId = "__remove__";
-const renameActionId = "__rename__";
+const hotbarAddAction = Symbol("hotbar-add");
+const hotbarRemoveAction = Symbol("hotbar-remove");
+const hotbarRenameAction = Symbol("hotbar-rename");
 
 interface Dependencies {
   hotbarStore: HotbarStore;
   commandOverlay: CommandOverlay;
 }
 
-function getHotbarSwitchOptions(hotbarStore: HotbarStore) {
-  const options = hotbarStore.hotbars.map(hotbar => ({
-    value: hotbar.id,
-    label: hotbarStore.getDisplayLabel(hotbar),
-  }));
-
-  options.push({ value: addActionId, label: "Add hotbar ..." });
-
-  if (hotbarStore.hotbars.length > 1) {
-    options.push({ value: removeActionId, label: "Remove hotbar ..." });
-  }
-
-  options.push({ value: renameActionId, label: "Rename hotbar ..." });
-
-  return options;
+function ignoreIf<T>(check: boolean, menuItems: T) {
+  return check ? [] : menuItems;
 }
 
-const NonInjectedHotbarSwitchCommand = observer(({ hotbarStore, commandOverlay }: Dependencies) => {
-  const options = getHotbarSwitchOptions(hotbarStore);
+function getHotbarSwitchOptions(hotbars: Hotbar[]): (Hotbar | typeof hotbarAddAction | typeof hotbarRemoveAction | typeof hotbarRenameAction)[] {
+  return [
+    ...hotbars,
+    hotbarAddAction,
+    ...ignoreIf(hotbars.length > 1, [
+      hotbarRemoveAction,
+    ] as const),
+    hotbarRenameAction,
+  ];
+}
 
-  const onChange = (idOrAction: string): void  => {
-    switch (idOrAction) {
-      case addActionId:
-        return commandOverlay.open(<HotbarAddCommand />);
-      case removeActionId:
-        return commandOverlay.open(<HotbarRemoveCommand />);
-      case renameActionId:
-        return commandOverlay.open(<HotbarRenameCommand />);
-      default:
-        hotbarStore.setActiveHotbar(idOrAction);
-        commandOverlay.close();
-    }
-  };
+const NonInjectedHotbarSwitchCommand = observer(({
+  hotbarStore,
+  commandOverlay,
+}: Dependencies) => (
+  <Select
+    id="switch-to-hotbar-input"
+    menuPortalTarget={null}
+    onChange={(value) => {
+      switch (value) {
+        case hotbarAddAction:
+          return commandOverlay.open(<HotbarAddCommand />);
+        case hotbarRemoveAction:
+          return commandOverlay.open(<HotbarRemoveCommand />);
+        case hotbarRenameAction:
+          return commandOverlay.open(<HotbarRenameCommand />);
 
-  return (
-    <Select
-      id="switch-to-hotbar-input"
-      menuPortalTarget={null}
-      onChange={(v) => onChange(v.value)}
-      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-      menuIsOpen={true}
-      options={options}
-      autoFocus={true}
-      escapeClearsValue={false}
-      placeholder="Switch to hotbar"
-    />
-  );
-});
+        default: {
+          if (value) {
+            hotbarStore.setActiveHotbar(value);
+            commandOverlay.close();
+          }
+        }
+      }
+    } }
+    components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+    menuIsOpen={true}
+    options={getHotbarSwitchOptions(hotbarStore.hotbars)}
+    getOptionLabel={actionOrId => {
+      switch (actionOrId) {
+        case hotbarAddAction:
+          return "Add hotbar ...";
+        case hotbarRemoveAction:
+          return "Remove hotbar ...";
+        case hotbarRenameAction:
+          return "Rename hotbar ...";
+        default:
+          return hotbarStore.getDisplayLabel(actionOrId);
+      }
+    } }
+    autoFocus={true}
+    escapeClearsValue={false}
+    placeholder="Switch to hotbar"
+  />
+));
 
 export const HotbarSwitchCommand = withInjectables<Dependencies>(NonInjectedHotbarSwitchCommand, {
   getProps: (di, props) => ({

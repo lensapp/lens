@@ -59,7 +59,7 @@ export class ResourceStack {
         throw new Error(response.stderr);
       }
 
-      return response.stdout;
+      return response.stdout ?? "";
     }
   }
 
@@ -83,7 +83,7 @@ export class ResourceStack {
         throw new Error(response.stderr);
       }
 
-      return response.stdout;
+      return response.stdout ?? "";
     }
   }
 

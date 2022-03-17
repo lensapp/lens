@@ -9,7 +9,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
-import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../../common/k8s-api/endpoints";
+import type { ClusterRoleBinding } from "../../../../common/k8s-api/endpoints";
 import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { ConfirmDialog } from "../../confirm-dialog";
@@ -18,15 +18,15 @@ import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingsStore } from "./store";
-import { hashClusterRoleBindingSubject } from "./hashers";
+import { clusterRoleBindingStore } from "./store";
+import { hashSubject } from "../hashers";
 
 export interface ClusterRoleBindingDetailsProps extends KubeObjectDetailsProps<ClusterRoleBinding> {
 }
 
 @observer
 export class ClusterRoleBindingDetails extends React.Component<ClusterRoleBindingDetailsProps> {
-  selectedSubjects = new ObservableHashSet<ClusterRoleBindingSubject>([], hashClusterRoleBindingSubject);
+  selectedSubjects = new ObservableHashSet([], hashSubject);
 
   constructor(props: ClusterRoleBindingDetailsProps) {
     super(props);
@@ -46,10 +46,14 @@ export class ClusterRoleBindingDetails extends React.Component<ClusterRoleBindin
     const { selectedSubjects } = this;
 
     ConfirmDialog.open({
-      ok: () => clusterRoleBindingsStore.removeSubjects(clusterRoleBinding, selectedSubjects),
+      ok: () => clusterRoleBindingStore.removeSubjects(clusterRoleBinding, selectedSubjects),
       labelOk: `Remove`,
       message: (
-        <p>Remove selected bindings for <b>{clusterRoleBinding.getName()}</b>?</p>
+        <p>
+          Remove selected bindings for
+          <b>{clusterRoleBinding.getName()}</b>
+          ?
+        </p>
       ),
     });
   }
@@ -115,7 +119,7 @@ export class ClusterRoleBindingDetails extends React.Component<ClusterRoleBindin
 
         <AddRemoveButtons
           onAdd={() => ClusterRoleBindingDialog.open(clusterRoleBinding)}
-          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : null}
+          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : undefined}
           addTooltip={`Add bindings to ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />

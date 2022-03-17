@@ -8,18 +8,18 @@ import { DrawerItem, DrawerItemLabels } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 
 export const Ephemeral: VolumeVariantComponent<"ephemeral"> = (
-  ({ pod, volumeName, variant: { volumeClaimTemplate: { metadata, spec }}}) => (
+  ({ pod, volumeName, variant: { volumeClaimTemplate: { metadata = {}, spec }}}) => (
     <>
       <DrawerItem name="PVC Template Name">
-        {pod.getName()}-{volumeName}
+        {`${pod.getName()}-${volumeName}`}
       </DrawerItem>
       <DrawerItemLabels
         name="Template Labels"
-        labels={metadata.labels}
+        labels={metadata.labels ?? {}}
       />
       <DrawerItemLabels
         name="Template Annotations"
-        labels={metadata.annotations}
+        labels={metadata.annotations ?? {}}
       />
       <DrawerItem name="Template PVC Spec">
         {dump(spec)}

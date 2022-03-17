@@ -19,7 +19,7 @@ export class PageParam<V = any> {
   readonly name: string;
   readonly isMulti: boolean;
 
-  constructor(private init: PageParamInit<V>, private history: ObservableHistory) {
+  constructor(private init: PageParamInit<V>, private history: ObservableHistory<unknown>) {
     makeObservable(this);
     const { name, defaultValue } = init;
 
@@ -54,7 +54,9 @@ export class PageParam<V = any> {
   }
 
   get(): V {
-    return this.parse(this.getRaw()) ?? this.defaultValue;
+    // TODO: cleanup
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.parse(this.getRaw()) ?? this.defaultValue!;
   }
 
   @action

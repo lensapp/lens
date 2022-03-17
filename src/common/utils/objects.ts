@@ -8,9 +8,16 @@
  * be a specific subset
  */
 export function fromEntries<T, Key extends string>(entries: Iterable<readonly [Key, T]>): Record<Key, T> {
-  return Object.fromEntries(entries) as { [k in Key]: T };
+  return Object.fromEntries(entries) as Record<Key, T>;
 }
 
-export function entries<T extends Record<string, any>>(obj: T): [keyof T, T[keyof T]][] {
-  return Object.entries(obj);
+export function entries<K extends string | number | symbol, V>(obj: Record<K, V> | null | undefined): [K, V][];
+export function entries<K extends string | number | symbol, V>(obj: Partial<Record<K, V>> | null | undefined): [K, V | undefined][];
+
+export function entries<K extends string | number | symbol, V>(obj: Record<K, V> | null | undefined): [K, V][] {
+  if (obj && typeof obj == "object") {
+    return Object.entries(obj) as never;
+  }
+
+  return [] as never;
 }

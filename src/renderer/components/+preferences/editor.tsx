@@ -13,13 +13,8 @@ import { Input, InputValidators } from "../input";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-
-enum EditorLineNumbersStyles {
-  on = "On",
-  off = "Off",
-  relative = "Relative",
-  interval = "Interval",
-}
+import { string } from "../../utils";
+import { defaultEditorConfig } from "../../../common/user-store/preferences-helpers";
 
 interface Dependencies {
   userStore: UserStore;
@@ -33,7 +28,7 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
       <section id="editor">
         <h2 data-testid="editor-configuration-header">Editor configuration</h2>
 
-        <SubTitle title="Minimap" />
+        <SubTitle title="Minimap"/>
         <section>
           <div className="flex gaps justify-space-between">
             <div className="flex gaps align-center">
@@ -47,26 +42,27 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
             <div className="flex gaps align-center">
               <SubHeader compact>Position</SubHeader>
               <Select
-                id="minimap-input"
                 themeName="lens"
                 options={["left", "right"]}
                 value={editorConfiguration.minimap.side}
-                onChange={({ value }) => editorConfiguration.minimap.side = value}
+                onChange={value => editorConfiguration.minimap.side = value ?? undefined}
               />
             </div>
           </div>
         </section>
 
         <section>
-          <SubTitle title="Line numbers" />
+          <SubTitle title="Line numbers"/>
           <Select
-            id="editor-line-numbers-input"
-            options={Object.entries(EditorLineNumbersStyles).map(([value, label]) => ({
-              label,
-              value,
-            }))}
+            options={[
+              "on",
+              "off",
+              "relative",
+              "interval",
+            ]}
+            getOptionLabel={string.uppercaseFirst}
             value={editorConfiguration.lineNumbers}
-            onChange={({ value }) => editorConfiguration.lineNumbers = value}
+            onChange={value => editorConfiguration.lineNumbers = value ?? defaultEditorConfig.lineNumbers}
             themeName="lens"
           />
         </section>

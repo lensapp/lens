@@ -17,20 +17,16 @@ import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import type { PortForwardStore } from "../../port-forward";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { Disposer } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
-import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
+  subscribeStores: SubscribeStores;
   portForwardStore: PortForwardStore;
 }
 
@@ -63,7 +59,7 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
     }
 
     const { spec } = service;
-    const endpoint = endpointStore.getByName(service.getName(), service.getNs());
+    const endpoints = endpointStore.getByName(service.getName(), service.getNs());
     const externalIps = service.getExternalIps();
 
     if (externalIps.length === 0 && spec?.externalName) {
@@ -92,7 +88,11 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
           {spec.clusterIP}
         </DrawerItem>
 
-        <DrawerItem name="Cluster IPs" hidden={!service.getClusterIps().length} labelsOnly>
+        <DrawerItem
+          name="Cluster IPs"
+          hidden={!service.getClusterIps().length}
+          labelsOnly
+        >
           {
             service.getClusterIps().map(label => (
               <Badge key={label} label={label}/>
@@ -118,7 +118,11 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
           <div>
             {
               service.getPorts().map((port) => (
-                <ServicePortComponent service={service} port={port} key={port.toString()}/>
+                <ServicePortComponent
+                  service={service}
+                  port={port}
+                  key={port.toString()}
+                />
               ))
             }
           </div>
@@ -129,9 +133,13 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
             {spec.loadBalancerIP}
           </DrawerItem>
         )}
-        <DrawerTitle>Endpoint</DrawerTitle>
 
-        <ServiceDetailsEndpoint endpoint={endpoint}/>
+        {endpoints && (
+          <>
+            <DrawerTitle>Endpoint</DrawerTitle>
+            <ServiceDetailsEndpoint endpoints={endpoints}/>
+          </>
+        )}
       </div>
     );
   }

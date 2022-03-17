@@ -4,19 +4,12 @@
  */
 
 import { apiManager } from "../../../../common/k8s-api/api-manager";
-import type { ServiceAccount } from "../../../../common/k8s-api/endpoints";
-import { serviceAccountsApi } from "../../../../common/k8s-api/endpoints";
+import type { ServiceAccount, ServiceAccountApi, ServiceAccountData } from "../../../../common/k8s-api/endpoints";
+import { serviceAccountApi } from "../../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../../utils";
+import { isClusterPageContext } from "../../../utils";
 
-export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
-  api = serviceAccountsApi;
-
-  constructor() {
-    super();
-    autoBind(this);
-  }
-
+export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount, ServiceAccountApi, ServiceAccountData> {
   protected async createItem(params: { name: string; namespace?: string }) {
     await super.createItem(params);
 
@@ -24,5 +17,10 @@ export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
   }
 }
 
-export const serviceAccountsStore = new ServiceAccountsStore();
-apiManager.registerStore(serviceAccountsStore);
+export const serviceAccountsStore = isClusterPageContext()
+  ? new ServiceAccountsStore(serviceAccountApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(serviceAccountsStore);
+}

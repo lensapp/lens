@@ -5,16 +5,19 @@
 
 import { action, observable } from "mobx";
 import type { Terminal } from "./terminal";
-import { TerminalApi } from "../../../api/terminal-api";
+import type { TerminalApi } from "../../../api/terminal-api";
 import type { DockTab, TabId } from "../dock/store";
 import { WebSocketApiState } from "../../../api/websocket-api";
+import type { CreateTerminalApi } from "../../../api/create-terminal-api.injectable";
+import type { CreateTerminal } from "./create-terminal.injectable";
 
 export interface ITerminalTab extends DockTab {
   node?: string; // activate node shell mode
 }
 
 interface Dependencies {
-  createTerminal: (tabId: TabId, api: TerminalApi) => Terminal;
+  createTerminal: CreateTerminal;
+  createTerminalApi: CreateTerminalApi;
 }
 
 export class TerminalStore {
@@ -29,7 +32,7 @@ export class TerminalStore {
     if (this.isConnected(tab.id)) {
       return;
     }
-    const api = new TerminalApi({
+    const api = this.dependencies.createTerminalApi({
       id: tab.id,
       node: tab.node,
     });

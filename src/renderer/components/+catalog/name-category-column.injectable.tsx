@@ -37,7 +37,6 @@ const renderEntityName = (hotbarStore: HotbarStore) => (entity: CatalogEntity) =
       <Icon
         small
         className={styles.pinIcon}
-        material={!isItemInHotbar && "push_pin"}
         svg={isItemInHotbar ? "push_off" : "push_pin"}
         tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
         onClick={onClick}

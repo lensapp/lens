@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import fetch from "node-fetch";
+import type { JsonValue } from "type-fest";
 
-export {
-  fetch,
-};
+export function parse(input: string): JsonValue {
+  return JSON.parse(input);
+}

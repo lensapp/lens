@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getHostedClusterId } from "../utils";
 import type { WebSocketEvents } from "./websocket-api";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
@@ -49,23 +48,27 @@ enum TerminalColor {
   NO_COLOR = "\u001b[0m",
 }
 
-export type TerminalApiQuery = Record<string, string> & {
+export interface TerminalApiQuery extends Record<string, string | undefined> {
   id: string;
   node?: string;
   type?: string;
-};
+}
 
 export interface TerminalEvents extends WebSocketEvents {
   ready: () => void;
   connected: () => void;
 }
 
+export interface TerminalApiDependencies {
+  readonly hostedClusterId: string;
+}
+
 export class TerminalApi extends WebSocketApi<TerminalEvents> {
-  protected size: { width: number; height: number };
+  protected size?: { width: number; height: number };
 
   @observable public isReady = false;
 
-  constructor(protected query: TerminalApiQuery) {
+  constructor(protected readonly dependencies: TerminalApiDependencies, protected readonly query: TerminalApiQuery) {
     super({
       flushOnOpen: false,
       pingInterval: 30,
@@ -86,7 +89,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       this.emitStatus("Connecting ...");
     }
 
-    const authTokenArray = await ipcRenderer.invoke("cluster:shell-api", getHostedClusterId(), this.query.id);
+    const authTokenArray = await ipcRenderer.invoke("cluster:shell-api", this.dependencies.hostedClusterId, this.query.id);
 
     if (!(authTokenArray instanceof Uint8Array)) {
       throw new TypeError("ShellApi token is not a Uint8Array");
@@ -114,11 +117,15 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
 
       // data is undefined if the event that was handled is "connected"
       if (data === undefined) {
-        /**
-         * Output the last line, the makes sure that the terminal isn't completely
-         * empty when the user refreshes.
-         */
-        this.emit("data", window.localStorage.getItem(`${this.query.id}:last-data`));
+        const lastData = window.localStorage.getItem(`${this.query.id}:last-data`);
+
+        if (lastData) {
+          /**
+           * Output the last line, the makes sure that the terminal isn't completely
+           * empty when the user refreshes.
+           */
+          this.emit("data", lastData);
+        }
       }
     });
 
@@ -126,7 +133,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     this.prependListener("connected", onReady);
 
     super.connect(socketUrl);
-    this.socket.binaryType = "arraybuffer";
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.socket!.binaryType = "arraybuffer";
   }
 
   sendMessage(message: TerminalMessage) {

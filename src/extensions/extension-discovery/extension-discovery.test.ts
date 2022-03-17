@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { FSWatcher } from "chokidar";
 import { watch } from "chokidar";
 import path from "path";
 import os from "os";
@@ -66,7 +67,7 @@ describe("ExtensionDiscovery", () => {
   });
 
   it("emits add for added extension", async (done) => {
-    let addHandler: (filePath: string) => void;
+    let addHandler!: (filePath: string) => void;
 
     mockedFse.readJson.mockImplementation((p) => {
       expect(p).toBe(path.join(os.homedir(), ".k8slens/extensions/my-extension/package.json"));
@@ -79,7 +80,7 @@ describe("ExtensionDiscovery", () => {
 
     mockedFse.pathExists.mockImplementation(() => true);
 
-    const mockWatchInstance: any = {
+    const mockWatchInstance = {
       on: jest.fn((event: string, handler: typeof addHandler) => {
         if (event === "add") {
           addHandler = handler;
@@ -87,11 +88,9 @@ describe("ExtensionDiscovery", () => {
 
         return mockWatchInstance;
       }),
-    };
+    } as unknown as FSWatcher;
 
-    mockedWatch.mockImplementationOnce(() =>
-        (mockWatchInstance) as any,
-    );
+    mockedWatch.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
@@ -118,9 +117,9 @@ describe("ExtensionDiscovery", () => {
   });
 
   it("doesn't emit add for added file under extension", async done => {
-    let addHandler: (filePath: string) => void;
+    let addHandler!: (filePath: string) => void;
 
-    const mockWatchInstance: any = {
+    const mockWatchInstance = {
       on: jest.fn((event: string, handler: typeof addHandler) => {
         if (event === "add") {
           addHandler = handler;
@@ -128,11 +127,9 @@ describe("ExtensionDiscovery", () => {
 
         return mockWatchInstance;
       }),
-    };
+    } as unknown as FSWatcher;
 
-    mockedWatch.mockImplementationOnce(() =>
-        (mockWatchInstance) as any,
-    );
+    mockedWatch.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;

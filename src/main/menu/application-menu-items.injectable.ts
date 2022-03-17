@@ -11,8 +11,6 @@ import { openBrowser } from "../../common/utils";
 import { showAbout } from "./menu";
 import windowManagerInjectable from "../window-manager.injectable";
 import type {
-  BrowserWindow,
-  MenuItem,
   MenuItemConstructorOptions } from "electron";
 import {
   webContents,
@@ -29,7 +27,7 @@ import navigateToAddClusterInjectable from "../../common/front-end-routing/route
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
 
-function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
+function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
 }
 
@@ -69,8 +67,10 @@ const applicationMenuItemsInjectable = getInjectable({
           {
             label: `About ${productName}`,
             id: "about",
-            click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-              showAbout(browserWindow);
+            click(menuItem, browserWindow) {
+              if (browserWindow) {
+                showAbout(browserWindow);
+              }
             },
           },
           ...ignoreIf(autoUpdateDisabled, [
@@ -145,19 +145,14 @@ const applicationMenuItemsInjectable = getInjectable({
               },
             },
           ]),
-
           { type: "separator" },
-
-          ...(isMac
-            ? ([
-              {
-                role: "close",
-                label: "Close Window",
-                accelerator: "Shift+Cmd+W",
-              },
-            ] as MenuItemConstructorOptions[])
-            : []),
-
+          ...ignoreIf(!isMac, [
+            {
+              role: "close",
+              label: "Close Window",
+              accelerator: "Shift+Cmd+W",
+            },
+          ]),
           ...ignoreIf(isMac, [
             {
               label: "Exit",
@@ -286,8 +281,10 @@ const applicationMenuItemsInjectable = getInjectable({
             {
               label: `About ${productName}`,
               id: "about",
-              click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-                showAbout(browserWindow);
+              click(menuItem, browserWindow) {
+                if (browserWindow) {
+                  showAbout(browserWindow);
+                }
               },
             },
             ...ignoreIf(autoUpdateDisabled, [
@@ -314,7 +311,9 @@ const applicationMenuItemsInjectable = getInjectable({
 
       // Modify menu from extensions-api
       for (const menuItem of electronMenuItems.get()) {
-        if (!appMenu.has(menuItem.parentId)) {
+        const parentMenu = appMenu.get(menuItem.parentId);
+
+        if (!parentMenu) {
           logger.error(
             `[MENU]: cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
             { menuItem },
@@ -323,7 +322,7 @@ const applicationMenuItemsInjectable = getInjectable({
           continue;
         }
 
-        appMenu.get(menuItem.parentId).submenu.push(menuItem);
+        (parentMenu.submenu ??= []).push(menuItem);
       }
 
       if (!isMac) {

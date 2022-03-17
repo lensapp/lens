@@ -63,9 +63,13 @@ export class DaemonSets extends React.Component {
             daemonSet.getName(),
             daemonSet.getNs(),
             this.getPodsLength(daemonSet),
-            <KubeObjectStatusIcon key="icon" object={daemonSet}/>,
+            <KubeObjectStatusIcon key="icon" object={daemonSet} />,
             daemonSet.getNodeSelectors().map(selector => (
-              <Badge key={selector} label={selector} scrollable/>
+              <Badge
+                key={selector}
+                label={selector}
+                scrollable 
+              />
             )),
             <KubeObjectAge key="age" object={daemonSet} />,
           ]}

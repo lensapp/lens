@@ -42,7 +42,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     return isBundled || Boolean(this.state.get(id)?.enabled);
   }
 
-  mergeState = action((extensionsState: Record<LensExtensionId, LensExtensionState>) => {
+  mergeState = action((extensionsState: Record<LensExtensionId, LensExtensionState> | [LensExtensionId, LensExtensionState][]) => {
     this.state.merge(extensionsState);
   });
 

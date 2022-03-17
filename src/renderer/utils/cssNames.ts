@@ -5,7 +5,7 @@
 
 // Helper for combining css classes inside components
 
-export type IClassName = string | string[] | IClassNameMap;
+export type IClassName = string | string[] | IClassNameMap | undefined | false;
 export type IClassNameMap = Record<string, any>;
 
 export function cssNames(...args: IClassName[]): string {
@@ -13,7 +13,7 @@ export function cssNames(...args: IClassName[]): string {
 
   args.forEach(className => {
     if (typeof className === "string" || Array.isArray(className)) {
-      [].concat(className).forEach(name => map[name] = true);
+      [className].flat().forEach(name => map[name] = true);
     }
     else {
       Object.assign(map, className);

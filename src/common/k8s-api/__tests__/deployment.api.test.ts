@@ -3,11 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Deployment, DeploymentApi } from "../endpoints/deployment.api";
+import { DeploymentApi } from "../endpoints/deployment.api";
 import type { KubeJsonApi } from "../kube-json-api";
 
 class DeploymentApiTest extends DeploymentApi {
-  public setRequest(request: any) {
+  declare protected request: KubeJsonApi;
+
+  public setRequest(request: KubeJsonApi) {
     this.request = request;
   }
 }
@@ -18,7 +20,7 @@ describe("DeploymentApi", () => {
       patch: () => ({}),
     } as unknown as KubeJsonApi;
 
-    const sub = new DeploymentApiTest({ objectConstructor: Deployment });
+    const sub = new DeploymentApiTest();
 
     sub.setRequest(requestMock);
 

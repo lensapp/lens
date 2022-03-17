@@ -12,7 +12,15 @@ interface GetPortArgs {
    * Should be case insensitive
    * Must have a named matching group called `address`
    */
-  lineRegex: RegExp;
+  lineRegex: {
+    match: (line: string) => {
+        matched: boolean;
+        groups?: {
+          address?: string;
+        };
+        raw?: RegExpExecArray;
+    };
+  };
   /**
    * Called when the port is found
    */
@@ -35,15 +43,15 @@ export function getPortFrom(stream: Readable, args: GetPortArgs): Promise<number
   const logLines: string[] = [];
 
   return new Promise<number>((resolve, reject) => {
-    const handler = (data: any) => {
-      const logItem: string = data.toString();
-      const match = logItem.match(args.lineRegex);
+    const handler = (data: unknown) => {
+      const logItem = String(data);
+      const match = args.lineRegex.match(logItem);
 
       logLines.push(logItem);
 
-      if (match) {
+      if (match.matched) {
         // use unknown protocol so that there is no default port
-        const addr = new URLParse(`s://${match.groups.address.trim()}`);
+        const addr = new URLParse(`s://${match.groups?.address?.trim()}`);
 
         args.onFind?.();
         stream.off("data", handler);

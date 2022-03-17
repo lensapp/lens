@@ -14,7 +14,6 @@ export * from "./abort-controller";
 export * from "./app-version";
 export * from "./autobind";
 export * from "./camelCase";
-export * from "./cloneJson";
 export * from "./cluster-id-url-parsing";
 export * from "./collection-functions";
 export * from "./convertCpu";
@@ -28,7 +27,6 @@ export * from "./formatDuration";
 export * from "./getRandId";
 export * from "./hash-set";
 export * from "./n-fircate";
-export * from "./objects";
 export * from "./openBrowser";
 export * from "./paths";
 export * from "./promise-exec";
@@ -39,7 +37,9 @@ export * from "./splitArray";
 export * from "./tar";
 export * from "./toJS";
 export * from "./type-narrowing";
+export * from "./types";
 export * from "./wait-for-path";
+export * from "./wait";
 
 export type { Tuple } from "./tuple";
 
@@ -47,10 +47,16 @@ import * as iter from "./iter";
 import * as array from "./array";
 import * as tuple from "./tuple";
 import * as base64 from "./base64";
+import * as object from "./objects";
+import * as json from "./json";
+import * as string from "./string";
 
 export {
   iter,
   array,
   tuple,
   base64,
+  object,
+  json,
+  string,
 };

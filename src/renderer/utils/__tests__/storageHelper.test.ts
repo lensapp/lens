@@ -103,7 +103,7 @@ describe("renderer/utils/StorageHelper", () => {
 
       // returning object modifies `draft` as well
       storageHelper.merge(draft => ({
-        message: draft.message.replace("2", "3"),
+        message: draft.message?.replace("2", "3"),
       }));
       expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated3" });
     });

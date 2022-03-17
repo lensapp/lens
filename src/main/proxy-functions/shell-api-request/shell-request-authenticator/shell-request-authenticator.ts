@@ -31,10 +31,10 @@ export class ShellRequestAuthenticator {
    * @param token The value that is being presented as a one time authentication token
    * @returns `true` if `token` was valid, false otherwise
    */
-  authenticate = (clusterId: ClusterId, tabId: string, token: string): boolean => {
+  authenticate = (clusterId: ClusterId, tabId: string, token: string | undefined): boolean => {
     const clusterTokens = this.tokens.get(clusterId);
 
-    if (!clusterTokens) {
+    if (!clusterTokens || !tabId || !token) {
       return false;
     }
 

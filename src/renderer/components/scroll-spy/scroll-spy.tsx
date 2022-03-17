@@ -10,20 +10,20 @@ import type { NavigationTree } from "../tree-view";
 
 export interface ScrollSpyProps extends React.DOMAttributes<HTMLElement> {
   render: (data: NavigationTree[]) => JSX.Element;
-  htmlFor?: string; // Id of the element to put observers on
+  htmlFor: string; // Id of the element to put observers on
   rootMargin?: string; // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
 }
 
 export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100% 0px" }: ScrollSpyProps) => {
-  const parent = useRef<HTMLDivElement>();
+  const parent = useRef<HTMLDivElement>(null);
   const sections = useRef<NodeListOf<HTMLElement>>();
   const [tree, setTree] = useState<NavigationTree[]>([]);
   const [activeElementId, setActiveElementId] = useState("");
 
   const setSections = () => {
-    sections.current = parent.current.querySelectorAll("section");
+    sections.current = parent.current?.querySelectorAll("section");
 
-    if (!sections.current.length) {
+    if (!sections.current?.length) {
       throw new Error("No <section/> tag founded! Content should be placed inside <section></section> elements to activate navigation.");
     }
   };
@@ -33,7 +33,11 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   };
 
   const updateNavigation = () => {
-    setTree(getNavigation(getSectionsParentElement()));
+    const parentSection = getSectionsParentElement();
+
+    if (parentSection) {
+      setTree(getNavigation(parentSection));
+    }
   };
 
   const getNavigation = (element: Element) => {
@@ -42,11 +46,11 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
 
     sections.forEach(section => {
       const id = section.getAttribute("id");
-      const parentId = section.parentElement.id;
+      const parentId = section.parentElement?.id;
       const name = section.querySelector("h1, h2, h3, h4, h5, h6")?.textContent;
       const selected = id === activeElementId;
 
-      if (!name || !id) {
+      if (!name || !id || !parentId) {
         return;
       }
 
@@ -63,8 +67,10 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   };
 
   const handleIntersect = ([entry]: IntersectionObserverEntry[]) => {
-    if (entry.isIntersecting) {
-      setActiveElementId(entry.target.closest("section[id]").id);
+    const closest = entry.target.closest("section[id]");
+
+    if (entry.isIntersecting && closest) {
+      setActiveElementId(closest.id);
     }
   };
 
@@ -74,7 +80,7 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
       rootMargin,
     };
 
-    sections.current.forEach((section) => {
+    sections.current?.forEach((section) => {
       const observer = new IntersectionObserver(handleIntersect, options);
       const target = section.querySelector("section") || section;
 

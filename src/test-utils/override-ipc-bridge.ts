@@ -38,7 +38,7 @@ export const overrideIpcBridge = ({
         });
       }
 
-      return fakeChannelMap.get(key).resolve(callback);
+      return fakeChannelMap.get(key)?.resolve(callback);
     },
 
     get: <TChannel extends Channel<TInstance>, TInstance>(key: TChannel) => {
@@ -51,7 +51,7 @@ export const overrideIpcBridge = ({
         });
       }
 
-      return fakeChannelMap.get(key).promise;
+      return fakeChannelMap.get(key)?.promise;
     },
   };
 
@@ -82,18 +82,19 @@ export const overrideIpcBridge = ({
 
   mainDi.override(
     windowManagerInjectable,
-    () =>
-      ({
-        sendToView: ({ channel: channelName, data }: SendToViewArgs) => {
-          const handles = rendererIpcFakeHandles.get(channelName);
+    () => {
+      const sendToView = ({ channel: channelName, data }: SendToViewArgs) => {
+        const handles = rendererIpcFakeHandles.get(channelName);
 
-          handles.forEach(handle => handle(...data));
-        },
+        handles?.forEach(handle => handle(...data ?? []));
+      };
+      const navigate: WindowManager["navigate"] = async (url) => {
+        sendToView({ channel: appNavigationIpcChannel.name, data: [url] });
+      };
 
-        navigateSync(url: string) {
-          this.sendToView({ channel: appNavigationIpcChannel.name, data: [url] });
-        },
-
-      } as unknown as WindowManager),
+      return {
+        navigate,
+      } as WindowManager;
+    },
   );
 };

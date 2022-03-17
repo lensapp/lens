@@ -4,6 +4,7 @@
  */
 
 import type React from "react";
+import type { Disposer } from "../../common/utils";
 import type { CatalogEntity } from "../common-api/catalog";
 import { BaseRegistry } from "./base-registry";
 
@@ -23,6 +24,10 @@ export interface CatalogEntityDetailRegistration<T extends CatalogEntity> {
 }
 
 export class CatalogEntityDetailRegistry extends BaseRegistry<CatalogEntityDetailRegistration<CatalogEntity>> {
+  add<T extends CatalogEntity>(items: CatalogEntityDetailRegistration<T> | CatalogEntityDetailRegistration<T>[]): Disposer {
+    return super.add(items as never);
+  }
+
   getItemsForKind(kind: string, apiVersion: string) {
     const items = this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion);

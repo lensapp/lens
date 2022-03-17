@@ -71,7 +71,11 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
 
     return (
       <MenuItem onClick={Util.prevDefault(() => this.attachToPod(containers[0].name))}>
-        <Icon material="pageview" interactive={toolbar} tooltip={toolbar && "Attach to Pod"}/>
+        <Icon
+          material="pageview"
+          interactive={toolbar}
+          tooltip={toolbar && "Attach to Pod"}
+        />
         <span className="title">Attach Pod</span>
         {containers.length > 1 && (
           <>
@@ -82,7 +86,11 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
                   const { name } = container;
 
                   return (
-                    <MenuItem key={name} onClick={Util.prevDefault(() => this.attachToPod(name))} className="flex align-center">
+                    <MenuItem
+                      key={name}
+                      onClick={Util.prevDefault(() => this.attachToPod(name))}
+                      className="flex align-center"
+                    >
                       <StatusBrick/>
                       <span>{name}</span>
                     </MenuItem>

@@ -1,6 +1,6 @@
 {
   "name": "kube-object-event-status",
-  "version": "0.0.1",
+  "version": "5.5.0-alpha.0.1649256751918",
   "description": "Adds kube object status from events",
   "renderer": "dist/renderer.js",
   "lens": {

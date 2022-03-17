@@ -24,6 +24,9 @@ type TupleOfImpl<T, N extends number, R extends unknown[]> = R["length"] extends
  * @yields A tuple of the next element from each of the sources
  * @returns The tuple of all the sources as soon as at least one of the sources is exausted
  */
+export function zip<T>(src1: T[]): Iterator<[T], Tuple<T[], 1>>;
+export function zip<T>(src1: T[], src2: T[]): Iterator<[T, T], Tuple<T[], 2>>;
+
 export function* zip<T, N extends number>(...sources: Tuple<T[], N>): Iterator<Tuple<T, N>, Tuple<T[], N>> {
   const maxSafeLength = Math.min(...sources.map(source => source.length));
 

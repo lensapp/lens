@@ -1,4 +1,11 @@
-{
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+import type { Theme } from "../theme.store";
+
+const lensDarkTheme: Theme = {
   "name": "Dark",
   "type": "dark",
   "description": "Original Lens dark theme",
@@ -137,6 +144,8 @@
     "navSelectedBackground": "#262b2e",
     "navHoverColor": "#dcddde",
     "hrColor": "#ffffff0f",
-    "tooltipBackground": "#18191c"
-  }
-}
+    "tooltipBackground": "#18191c",
+  },
+};
+
+export default lensDarkTheme;

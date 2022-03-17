@@ -14,7 +14,7 @@ import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { base64, toggle } from "../../utils";
 import { Icon } from "../icon";
-import { secretsStore } from "./secrets.store";
+import { secretStore } from "./secrets.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Secret } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
@@ -26,7 +26,7 @@ export interface SecretDetailsProps extends KubeObjectDetailsProps<Secret> {
 @observer
 export class SecretDetails extends React.Component<SecretDetailsProps> {
   @observable isSaving = false;
-  @observable data: { [name: string]: string } = {};
+  @observable data: Partial<Record<string, string>> = {};
   @observable revealSecret = observable.set<string>();
 
   constructor(props: SecretDetailsProps) {
@@ -53,10 +53,10 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
     this.isSaving = true;
 
     try {
-      await secretsStore.update(secret, { ...secret, data: this.data });
+      await secretStore.update(secret, { ...secret, data: this.data });
       Notifications.ok("Secret successfully updated.");
     } catch (err) {
-      Notifications.error(err);
+      Notifications.checkedError(err, "Unknown error occured while updating the secret");
     }
     this.isSaving = false;
   };
@@ -65,11 +65,11 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
     this.data[name] = encoded ? value : base64.encode(value);
   };
 
-  renderSecret = ([name, value]: [string, string]) => {
+  renderSecret = ([name, value]: [string, string | undefined]) => {
     let decodedVal: string | undefined;
 
     try {
-      decodedVal = base64.decode(value);
+      decodedVal = value ? base64.decode(value) : undefined;
     } catch {
       /**
        * The value failed to be decoded, so don't show the visibility
@@ -85,7 +85,11 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
     }
 
     return (
-      <div key={name} className="data" data-testid={`${name}-secret-entry`}>
+      <div
+        key={name}
+        className="data"
+        data-testid={`${name}-secret-entry`}
+      >
         <div className="name">{name}</div>
         <div className="flex gaps align-center">
           <Input
@@ -120,7 +124,8 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
         {secrets.map(this.renderSecret)}
         <Button
           primary
-          label="Save" waiting={this.isSaving}
+          label="Save"
+          waiting={this.isSaving}
           className="save-btn"
           onClick={this.saveSecret}
         />

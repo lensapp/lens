@@ -7,7 +7,7 @@ import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
-export class CRDResourceStore<K extends KubeObject> extends KubeObjectStore<K> {
+export class CRDResourceStore<K extends KubeObject> extends KubeObjectStore<K, KubeApi<K>> {
   constructor(api: KubeApi<K>) {
     super(api);
   }

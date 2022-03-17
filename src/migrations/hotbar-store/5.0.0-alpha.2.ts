@@ -14,9 +14,9 @@ export default {
     const rawHotbars = store.get("hotbars");
     const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars : [];
 
-    store.set("hotbars", hotbars.map((hotbar) => ({
-      id: uuid.v4(),
-      ...hotbar,
+    store.set("hotbars", hotbars.map(({ id, ...rest }) => ({
+      id: id || uuid.v4(),
+      ...rest,
     })));
   },
 } as MigrationDeclaration;

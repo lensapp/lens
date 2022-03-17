@@ -4,34 +4,39 @@
  */
 
 import moment from "moment";
+import type { KubeObjectMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-export interface KubeEvent {
-  involvedObject: {
-    kind: string;
-    namespace: string;
-    name: string;
-    uid: string;
-    apiVersion: string;
-    resourceVersion: string;
-    fieldPath: string;
-  };
-  reason: string;
-  message: string;
-  source: {
-    component: string;
-    host: string;
-  };
-  firstTimestamp: string;
-  lastTimestamp: string;
-  count: number;
-  type: "Normal" | "Warning" | string;
-  eventTime: null;
-  reportingComponent: string;
-  reportingInstance: string;
+export interface EventSeries {
+  count?: number;
+  lastObservedTime?: string;
+}
+
+export interface EventSource {
+  component?: string;
+  host?: string;
+}
+
+export interface KubeEventData extends KubeJsonApiData<KubeObjectMetadata, void, void> {
+  action?: string;
+  count?: number;
+  eventTime?: string;
+  firstTimestamp?: string;
+  involvedObject: Required<ObjectReference>;
+  lastTimestamp?: string;
+  message?: string;
+  reason?: string;
+  related?: ObjectReference;
+  reportingComponent?: string;
+  reportingInstance?: string;
+  series?: EventSeries;
+  source?: EventSource;
+  type?: string;
 }
 
 export class KubeEvent extends KubeObject {
@@ -39,14 +44,73 @@ export class KubeEvent extends KubeObject {
   static namespaced = true;
   static apiBase = "/api/v1/events";
 
+  action?: string;
+  count?: number;
+  eventTime?: string;
+  firstTimestamp?: string;
+  involvedObject: Required<ObjectReference>;
+  lastTimestamp?: string;
+  message?: string;
+  reason?: string;
+  related?: ObjectReference;
+  reportingComponent?: string;
+  reportingInstance?: string;
+  series?: EventSeries;
+  source?: EventSource;
+
+  /**
+   * Current supported values are:
+   * - "Normal"
+   * - "Warning"
+   */
+  type?: string;
+
+  constructor({
+    action,
+    count,
+    eventTime,
+    firstTimestamp,
+    involvedObject,
+    lastTimestamp,
+    message,
+    reason,
+    related,
+    reportingComponent,
+    reportingInstance,
+    series,
+    source,
+    type,
+    ...rest
+  }: KubeEventData) {
+    super(rest);
+    this.action = action;
+    this.count = count;
+    this.eventTime = eventTime;
+    this.firstTimestamp = firstTimestamp;
+    this.involvedObject = involvedObject;
+    this.lastTimestamp = lastTimestamp;
+    this.message = message;
+    this.reason = reason;
+    this.related = related;
+    this.reportingComponent = reportingComponent;
+    this.reportingInstance = reportingInstance;
+    this.series = series;
+    this.source = source;
+    this.type = type;
+  }
+
   isWarning() {
     return this.type === "Warning";
   }
 
   getSource() {
-    const { component, host } = this.source;
+    if (!this.source?.component) {
+      return "<unknown>";
+    }
 
-    return `${component} ${host || ""}`;
+    const { component, host = "" } = this.source;
+
+    return `${component} ${host}`;
   }
 
   /**
@@ -68,14 +132,15 @@ export class KubeEvent extends KubeObject {
   }
 }
 
-let eventApi: KubeApi<KubeEvent>;
-
-if (isClusterPageContext()) {
-  eventApi = new KubeApi<KubeEvent>({
-    objectConstructor: KubeEvent,
-  });
+export class KubeEventApi extends KubeApi<KubeEvent, KubeEventData> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      objectConstructor: KubeEvent,
+      ...opts,
+    });
+  }
 }
 
-export {
-  eventApi,
-};
+export const eventApi = isClusterPageContext()
+  ? new KubeEventApi()
+  : undefined as never;

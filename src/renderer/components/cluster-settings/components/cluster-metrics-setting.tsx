@@ -5,7 +5,6 @@
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { SelectOption } from "../../select/select";
 import { Select } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
@@ -41,8 +40,8 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
     this.props.cluster.preferences.hiddenMetrics = Array.from(this.hiddenMetrics);
   };
 
-  onChangeSelect = (values: SelectOption<ClusterMetricsResourceType>[]) => {
-    for (const { value } of values) {
+  onChangeSelect = (values: readonly ClusterMetricsResourceType[]) => {
+    for (const value of values) {
       if (this.hiddenMetrics.has(value)) {
         this.hiddenMetrics.delete(value);
       } else {
@@ -64,10 +63,16 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
     this.save();
   };
 
-  formatOptionLabel = ({ value: resource }: SelectOption<ClusterMetricsResourceType>) => (
+  formatOptionLabel = (resource: ClusterMetricsResourceType) => (
     <div className="flex gaps align-center">
       <span>{resource}</span>
-      {this.hiddenMetrics.has(resource) && <Icon smallest material="check" className="box right" />}
+      {this.hiddenMetrics.has(resource) && (
+        <Icon
+          smallest
+          material="check"
+          className="box right" 
+        />
+      )}
     </div>
   );
 

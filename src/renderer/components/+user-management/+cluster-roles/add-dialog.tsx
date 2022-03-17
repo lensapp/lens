@@ -50,8 +50,8 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
       showDetails(role.selfLink);
       this.reset();
       AddClusterRoleDialog.close();
-    } catch (err) {
-      Notifications.error(err.toString());
+    } catch (error) {
+      Notifications.checkedError(error, "Unknown error occured while creating the role");
     }
   };
 
@@ -76,7 +76,8 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
           >
             <SubTitle title="ClusterRole Name" />
             <Input
-              required autoFocus
+              required
+              autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
               value={this.clusterRoleName}

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
+import { secretApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
@@ -22,7 +22,7 @@ export const ScaleIo: VolumeVariantComponent<"scaleIO"> = (
         pod={pod}
         title="Name"
         kubeRef={secretRef}
-        api={secretsApi}
+        api={secretApi}
       />
       <DrawerItem name="SSL Enabled">
         {sslEnabled.toString()}

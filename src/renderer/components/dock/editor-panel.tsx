@@ -36,7 +36,7 @@ const defaultProps: Partial<EditorPanelProps> = {
 class NonInjectedEditorPanel extends React.Component<EditorPanelProps & Dependencies> {
   static defaultProps = defaultProps as object;
 
-  @observable.ref editor?: MonacoEditor;
+  @observable.ref editor: MonacoEditor | null = null;
 
   constructor(props: EditorPanelProps & Dependencies) {
     super(props);

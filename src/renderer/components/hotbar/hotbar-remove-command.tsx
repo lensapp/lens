@@ -16,58 +16,54 @@ interface Dependencies {
   closeCommandOverlay: () => void;
   hotbarStore: {
     hotbars: Hotbar[];
-    getById: (id: string) => Hotbar | undefined;
     remove: (hotbar: Hotbar) => void;
     getDisplayLabel: (hotbar: Hotbar) => string;
   };
 }
 
-const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarStore }: Dependencies) => {
-  const options = hotbarStore.hotbars.map(hotbar => ({
-    value: hotbar.id,
-    label: hotbarStore.getDisplayLabel(hotbar),
-  }));
+const NonInjectedHotbarRemoveCommand = observer(({
+  closeCommandOverlay,
+  hotbarStore,
+}: Dependencies) => (
+  <Select
+    menuPortalTarget={null}
+    onChange={hotbar => {
+      if (!hotbar) {
+        return;
+      }
 
-  const onChange = (id: string): void => {
-    const hotbar = hotbarStore.getById(id);
-
-    if (!hotbar) {
-      return;
-    }
-
-    closeCommandOverlay();
-    // TODO: make confirm dialog injectable
-    ConfirmDialog.open({
-      okButtonProps: {
-        label: "Remove Hotbar",
-        primary: false,
-        accent: true,
-      },
-      ok: () => hotbarStore.remove(hotbar),
-      message: (
-        <div className="confirm flex column gaps">
-          <p>
-            Are you sure you want remove hotbar <b>{hotbar.name}</b>?
-          </p>
-        </div>
-      ),
-    });
-  };
-
-  return (
-    <Select
-      id="remove-hotbar-input"
-      menuPortalTarget={null}
-      onChange={(v) => onChange(v.value)}
-      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-      menuIsOpen={true}
-      options={options}
-      autoFocus={true}
-      escapeClearsValue={false}
-      placeholder="Remove hotbar"
-    />
-  );
-});
+      closeCommandOverlay();
+      // TODO: make confirm dialog injectable
+      ConfirmDialog.open({
+        okButtonProps: {
+          label: "Remove Hotbar",
+          primary: false,
+          accent: true,
+        },
+        ok: () => hotbarStore.remove(hotbar),
+        message: (
+          <div className="confirm flex column gaps">
+            <p>
+              Are you sure you want remove hotbar
+              {" "}
+              <b>
+                {hotbar.name}
+              </b>
+              ?
+            </p>
+          </div>
+        ),
+      });
+    } }
+    components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+    menuIsOpen={true}
+    options={hotbarStore.hotbars}
+    getOptionLabel={hotbar => hotbarStore.getDisplayLabel(hotbar)}
+    autoFocus={true}
+    escapeClearsValue={false}
+    placeholder="Remove hotbar"
+  />
+));
 
 export const HotbarRemoveCommand = withInjectables<Dependencies>(NonInjectedHotbarRemoveCommand, {
   getProps: (di, props) => ({

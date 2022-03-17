@@ -16,7 +16,7 @@ import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { computeRuleDeclarations, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
+import { computeRuleDeclarations, getMetricsForIngress, type IngressMetricData } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
@@ -26,7 +26,7 @@ export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 
 @observer
 export class IngressDetails extends React.Component<IngressDetailsProps> {
-  @observable metrics: IIngressMetrics = null;
+  @observable metrics: IngressMetricData | null = null;
 
   constructor(props: IngressDetailsProps) {
     super(props);
@@ -53,7 +53,7 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
         <div className="rules" key={index}>
           {rule.host && (
             <div className="host-title">
-              <>Host: {rule.host}</>
+              {`Host: ${rule.host}`}
             </div>
           )}
           {rule.http && (
@@ -72,7 +72,11 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
                         {
                           displayAsLink
                             ? (
-                              <a href={url} rel="noreferrer" target="_blank">
+                              <a
+                                href={url}
+                                rel="noreferrer"
+                                target="_blank"
+                              >
                                 {url}
                               </a>
                             )
@@ -125,22 +129,20 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
       return null;
     }
 
-    const { spec, status } = ingress;
-    const ingressPoints = status?.loadBalancer?.ingress;
-    const { metrics } = this;
-    const metricTabs = [
-      "Network",
-      "Duration",
-    ];
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Ingress);
-    const { serviceName, servicePort } = ingress.getServiceNamePort();
+    const port = ingress.getServiceNamePort();
 
     return (
       <div className="IngressDetails">
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={metricTabs} object={ingress} params={{ metrics }}
+            tabs={[
+              "Network",
+              "Duration",
+            ]}
+            object={ingress}
+            metrics={this.metrics}
           >
             <IngressCharts/>
           </ResourceMetrics>
@@ -149,21 +151,21 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
         <DrawerItem name="Ports">
           {ingress.getPorts()}
         </DrawerItem>
-        {spec.tls &&
-        <DrawerItem name="TLS">
-          {spec.tls.map((tls, index) => <p key={index}>{tls.secretName}</p>)}
-        </DrawerItem>
-        }
-        {serviceName && servicePort &&
-        <DrawerItem name="Service">
-          {serviceName}:{servicePort}
-        </DrawerItem>
-        }
+        {ingress.spec.tls && (
+          <DrawerItem name="TLS">
+            {ingress.spec.tls.map((tls, index) => <p key={index}>{tls.secretName}</p>)}
+          </DrawerItem>
+        )}
+        {port && (
+          <DrawerItem name="Service">
+            {`${port.serviceName}:${port.servicePort}`}
+          </DrawerItem>
+        )}
         <DrawerTitle>Rules</DrawerTitle>
         {this.renderPaths(ingress)}
 
         <DrawerTitle>Load-Balancer Ingress Points</DrawerTitle>
-        {this.renderIngressPoints(ingressPoints)}
+        {this.renderIngressPoints(ingress.status?.loadBalancer?.ingress ?? [])}
       </div>
     );
   }

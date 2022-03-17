@@ -4,13 +4,18 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { ConfigMap } from "../../../common/k8s-api/endpoints/configmap.api";
+import type { ConfigMap, ConfigMapApi, ConfigMapData } from "../../../common/k8s-api/endpoints/configmap.api";
 import { configMapApi } from "../../../common/k8s-api/endpoints/configmap.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import { isClusterPageContext } from "../../utils";
 
-export class ConfigMapsStore extends KubeObjectStore<ConfigMap> {
-  api = configMapApi;
+export class ConfigMapStore extends KubeObjectStore<ConfigMap, ConfigMapApi, ConfigMapData> {
 }
 
-export const configMapsStore = new ConfigMapsStore();
-apiManager.registerStore(configMapsStore);
+export const configMapStore = isClusterPageContext()
+  ? new ConfigMapStore(configMapApi)
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(configMapStore);
+}

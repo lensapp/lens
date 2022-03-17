@@ -3,13 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import type { PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
-import { pvcApi } from "../../../common/k8s-api/endpoints";
+import type { PersistentVolumeClaim, PersistentVolumeClaimApi } from "../../../common/k8s-api/endpoints";
+import { persistentVolumeClaimApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
-export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
-  api = pvcApi;
+export class PersistentVolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim, PersistentVolumeClaimApi> {
 }
 
-export const volumeClaimStore = new VolumeClaimStore();
-apiManager.registerStore(volumeClaimStore);
+export const persistentVolumeClaimStore = new PersistentVolumeClaimStore(persistentVolumeClaimApi);
+apiManager.registerStore(persistentVolumeClaimStore);

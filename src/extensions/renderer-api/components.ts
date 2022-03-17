@@ -33,9 +33,7 @@ export * from "../../renderer/components/switch";
 export * from "../../renderer/components/input/input";
 
 // command-overlay
-export const CommandOverlay = asLegacyGlobalForExtensionApi(
-  commandOverlayInjectable,
-);
+export const CommandOverlay = asLegacyGlobalForExtensionApi(commandOverlayInjectable);
 
 export type {
   CategoryColumnRegistration,
@@ -81,39 +79,30 @@ export * from "../../renderer/components/+events/kube-event-details";
 // specific exports
 export * from "../../renderer/components/status-brick";
 
-export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(
-  createTerminalTabInjectable,
+export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(createTerminalTabInjectable);
+
+export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModifications(
+  terminalStoreInjectable,
+  {
+    sendCommand: asLegacyGlobalFunctionForExtensionApi(sendCommandInjectable),
+  },
 );
 
-export const terminalStore =
-  asLegacyGlobalObjectForExtensionApiWithModifications(
-    terminalStoreInjectable,
-    {
-      sendCommand: asLegacyGlobalFunctionForExtensionApi(sendCommandInjectable),
-    },
-  );
+const renameTab = asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
 
 export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(
   logTabStoreInjectable,
   {
-    createPodTab: asLegacyGlobalFunctionForExtensionApi(
-      createPodLogsTabInjectable,
-    ),
-
-    createWorkloadTab: asLegacyGlobalFunctionForExtensionApi(
-      createWorkloadLogsTabInjectable,
-    ),
-
+    createPodTab: asLegacyGlobalFunctionForExtensionApi(createPodLogsTabInjectable),
+    createWorkloadTab: asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),
     renameTab: (tabId: string): void => {
-      const renameTab =
-        asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
-
       const tabData = logTabStore.getData(tabId);
-      const pod = podsStore.getById(tabData.selectedPodId);
+      const pod = podsStore.getById(tabData?.selectedPodId);
 
-      renameTab(tabId, `Pod ${pod.getName()}`);
+      if (pod) {
+        renameTab(tabId, `Pod ${pod.getName()}`);
+      }
     },
-
     tabs: undefined,
   },
 );

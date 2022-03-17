@@ -6,16 +6,15 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { SubTitle } from "../layout/sub-title";
-import type { SelectOption } from "../select";
 import { Select } from "../select";
 import type { ThemeStore } from "../../theme.store";
 import type { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { Switch } from "../switch";
 import moment from "moment-timezone";
-import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
+import { updateChannels, defaultExtensionRegistryUrl, defaultUpdateChannel, defaultLocaleTimezone, defaultExtensionRegistryUrlLocation } from "../../../common/user-store/preferences-helpers";
 import type { IComputedValue } from "mobx";
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import { isUrl } from "../input/input_validators";
 import { ExtensionSettings } from "./extension-settings";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
@@ -24,15 +23,7 @@ import appPreferencesInjectable from "./app-preferences/app-preferences.injectab
 import { Preferences } from "./preferences";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import themeStoreInjectable from "../../theme-store.injectable";
-
-const timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
-  label: zone,
-  value: zone,
-}));
-const updateChannelOptions: SelectOption<string>[] = Array.from(
-  CONSTANTS.updateChannels.entries(),
-  ([value, { label }]) => ({ value, label }),
-);
+import { defaultTheme } from "../../../common/vars";
 
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
@@ -51,38 +42,52 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="appearance">
           <SubTitle title="Theme" />
           <Select
-            id="theme-input"
             options={[
-              { label: "Sync with computer", value: "system" },
-              ...themeStore.themeOptions,
+              "system",
+              ...themeStore.themes.keys(),
             ]}
+            getOptionLabel={option => themeStore.themes.get(option)?.name ?? "Sync with computer"}
             value={userStore.colorTheme}
-            onChange={({ value }) => userStore.colorTheme = value}
+            onChange={value => userStore.colorTheme = value ?? defaultTheme}
             themeName="lens"
           />
         </section>
 
-        <hr />
+        <hr/>
 
         <section id="extensionRegistryUrl">
           <SubTitle title="Extension Install Registry" />
           <Select
-            id="extension-install-registry-input"
-            options={Object.values(ExtensionRegistryLocation)}
+            options={[
+              "default",
+              "npmrc",
+              "custom",
+            ]}
             value={userStore.extensionRegistryUrl.location}
-            onChange={action(({ value }) => {
-              userStore.extensionRegistryUrl.location = value;
+            getOptionLabel={option => {
+              switch (option) {
+                case "custom":
+                  return "Custom Url";
+                case "default":
+                  return "Default Url";
+                case "npmrc":
+                  return "Global .npmrc file's Url";
+              }
+            }}
+            onChange={value => runInAction(() => {
+              userStore.extensionRegistryUrl.location = value ?? defaultExtensionRegistryUrlLocation;
 
-              if (userStore.extensionRegistryUrl.location === ExtensionRegistryLocation.CUSTOM) {
+              if (userStore.extensionRegistryUrl.location === "custom") {
                 userStore.extensionRegistryUrl.customUrl = "";
               }
             })}
             themeName="lens"
           />
           <p className="mt-4 mb-5 leading-relaxed">
-            This setting is to change the registry URL for installing extensions by name.{" "}
-            If you are unable to access the default registry ({defaultExtensionRegistryUrl}){" "}
-            you can change it in your <b>.npmrc</b>&nbsp;file or in the input below.
+            {"This setting is to change the registry URL for installing extensions by name. "}
+            {`If you are unable to access the default registry (${defaultExtensionRegistryUrl}) you can change it in your `}
+            <b>.npmrc</b>
+            {" file or in the input below."}
           </p>
 
           <Input
@@ -92,7 +97,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
             onChange={setCustomUrl}
             onBlur={() => userStore.extensionRegistryUrl.customUrl = customUrl}
             placeholder="Custom Extension Registry URL..."
-            disabled={userStore.extensionRegistryUrl.location !== ExtensionRegistryLocation.CUSTOM}
+            disabled={userStore.extensionRegistryUrl.location !== "custom"}
           />
         </section>
 
@@ -108,16 +113,19 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <hr />
 
         {extensionSettings.map(setting => (
-          <ExtensionSettings key={setting.id} setting={setting} size="normal" />
+          <ExtensionSettings
+            key={setting.id}
+            setting={setting}
+            size="normal"
+          />
         ))}
 
         <section id="update-channel">
           <SubTitle title="Update Channel" />
           <Select
-            id="update-channel-input"
-            options={updateChannelOptions}
+            options={[...updateChannels.keys()]}
             value={userStore.updateChannel}
-            onChange={({ value }) => userStore.updateChannel = value}
+            onChange={value => userStore.updateChannel = value ?? defaultUpdateChannel}
             themeName="lens"
           />
         </section>
@@ -127,10 +135,10 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="locale">
           <SubTitle title="Locale Timezone" />
           <Select
-            id="timezone-input"
-            options={timezoneOptions}
+            options={moment.tz.names()}
             value={userStore.localeTimezone}
-            onChange={({ value }) => userStore.setLocaleTimezone(value)}
+            getOptionLabel={timeZone => moment.tz.zone(timeZone)?.name ?? "<unknown>"}
+            onChange={value => userStore.localeTimezone = value ?? defaultLocaleTimezone}
             themeName="lens"
           />
         </section>

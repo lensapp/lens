@@ -9,22 +9,21 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { Disposer } from "../../utils";
 import { cssNames } from "../../utils";
 import { LocaleDate } from "../locale-date";
 import { eventStore } from "./event.store";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeWatchApiInjectable
   from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
 }
 
 @observer
@@ -73,9 +72,11 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
                 <DrawerItem name="Sub-object">
                   {event.involvedObject.fieldPath}
                 </DrawerItem>
-                <DrawerItem name="Last seen">
-                  <LocaleDate date={event.lastTimestamp} />
-                </DrawerItem>
+                {event.lastTimestamp && (
+                  <DrawerItem name="Last seen">
+                    <LocaleDate date={event.lastTimestamp} />
+                  </DrawerItem>
+                )}
               </div>
             ))}
           </div>

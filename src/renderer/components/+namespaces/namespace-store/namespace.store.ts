@@ -9,17 +9,16 @@ import type { StorageHelper } from "../../../utils";
 import { autoBind, noop, toggle } from "../../../utils";
 import type { KubeObjectStoreLoadingParams } from "../../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import { Namespace, namespacesApi } from "../../../../common/k8s-api/endpoints/namespaces.api";
+import type { NamespaceApi } from "../../../../common/k8s-api/endpoints/namespaces.api";
+import { Namespace } from "../../../../common/k8s-api/endpoints/namespaces.api";
 
 interface Dependencies {
   storage: StorageHelper<string[] | undefined>;
 }
 
-export class NamespaceStore extends KubeObjectStore<Namespace> {
-  api = namespacesApi;
-
-  constructor(private dependencies: Dependencies) {
-    super();
+export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
+  constructor(protected readonly dependencies: Dependencies, api: NamespaceApi) {
+    super(api);
     makeObservable(this);
     autoBind(this);
 
@@ -115,7 +114,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
      * if user has given static list of namespaces let's not start watches
      * because watch adds stuff that's not wanted or will just fail
      */
-    if (this.context?.cluster.accessibleNamespaces.length > 0) {
+    if (!this.context?.cluster?.accessibleNamespaces.length) {
       return noop;
     }
 
@@ -146,7 +145,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   clearSelected(namespaces?: string | string[]) {
     if (namespaces) {
       const resettingNamespaces = [namespaces].flat();
-      const newNamespaces = this.dependencies.storage.get().filter(ns => !resettingNamespaces.includes(ns));
+      const newNamespaces = this.dependencies.storage.get()?.filter(ns => !resettingNamespaces.includes(ns));
 
       this.dependencies.storage.set(newNamespaces);
     } else {

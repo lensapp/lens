@@ -29,7 +29,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
   }
 
   back = () => {
-    this.setState({ error: null, errorInfo: null });
+    this.setState({ error: undefined, errorInfo: undefined });
     navigation.goBack();
   };
 
@@ -37,22 +37,36 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
     const { error, errorInfo } = this.state;
 
     if (error) {
-      const slackLink = <a href={slackUrl} rel="noreferrer" target="_blank">Slack</a>;
-      const githubLink = <a href={issuesTrackerUrl} rel="noreferrer" target="_blank">Github</a>;
-      const pageUrl = location.pathname;
-
       return (
         <div className="ErrorBoundary flex column gaps">
           <h5>
-            App crash at <span className="contrast">{pageUrl}</span>
+            {"App crash at "}
+            <span className="contrast">{location.pathname}</span>
           </h5>
           <p>
-            To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
+
+            {"To help us improve the product please report bugs to "}
+            <a
+              href={slackUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Slack
+            </a>
+            {" community or "}
+            <a
+              href={issuesTrackerUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Github
+            </a>
+            {" issues tracker."}
           </p>
           <div className="wrapper">
             <code className="block">
               <p className="contrast">Component stack:</p>
-              {errorInfo.componentStack}
+              {errorInfo?.componentStack}
             </code>
             <code className="block">
               <p className="contrast">Error stack:</p>
@@ -61,7 +75,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
           </div>
           <Button
             className="box self-flex-start"
-            primary label="Back"
+            primary
+            label="Back"
             onClick={this.back}
           />
         </div>

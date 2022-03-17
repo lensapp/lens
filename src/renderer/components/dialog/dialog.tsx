@@ -34,7 +34,7 @@ interface DialogState {
 
 @observer
 export class Dialog extends React.PureComponent<DialogProps, DialogState> {
-  private contentElem: HTMLElement;
+  private contentElem: HTMLElement | null = null;
   ref = React.createRef<HTMLDivElement>();
 
   static defaultProps: DialogProps = {
@@ -49,10 +49,10 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   public state: DialogState = {
-    isOpen: this.props.isOpen,
+    isOpen: this.props.isOpen ?? false,
   };
 
-  get elem(): HTMLElement {
+  get elem() {
     return this.ref.current;
   }
 
@@ -74,7 +74,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     const { isOpen } = this.props;
 
     if (isOpen !== prevProps.isOpen) {
-      this.toggle(isOpen);
+      this.toggle(isOpen ?? false);
     }
   }
 
@@ -90,17 +90,17 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   open() {
     requestAnimationFrame(this.onOpen); // wait for render(), bind close-event to this.elem
     this.setState({ isOpen: true });
-    this.props.open();
+    this.props.open?.();
   }
 
   close() {
     this.onClose(); // must be first to get access to dialog's content from outside
     this.setState({ isOpen: false });
-    this.props.close();
+    this.props.close?.();
   }
 
   onOpen = () => {
-    this.props.onOpen();
+    this.props.onOpen?.();
 
     if (!this.props.pinned) {
       if (this.elem) this.elem.addEventListener("click", this.onClickOutside);
@@ -110,7 +110,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   onClose = () => {
-    this.props.onClose();
+    this.props.onClose?.();
 
     if (!this.props.pinned) {
       if (this.elem) this.elem.removeEventListener("click", this.onClickOutside);
@@ -130,7 +130,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
 
-    if (!this.contentElem.contains(target)) {
+    if (!this.contentElem?.contains(target)) {
       this.close();
       evt.stopPropagation();
     }

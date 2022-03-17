@@ -28,8 +28,8 @@ import routesInjectable from "../renderer/routes/routes.injectable";
 import { fromPairs, map, matches, toPairs } from "lodash/fp";
 import extensionPageParametersInjectable from "../renderer/routes/extension-page-parameters.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { getExtensionRoutePath } from "../renderer/routes/get-extension-route-path";
 import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
+import { getExtensionRoutePath } from "../renderer/routes/for-extension";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -50,49 +50,41 @@ export class LensRendererExtension extends LensExtension {
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
 
-  async navigate<P extends object>(pageId?: string, params?: P) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(
-      Environments.renderer,
-    );
-
+  async navigate(pageId?: string, params: object = {}) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const routes = di.inject(routesInjectable).get();
+    const targetRegistration = [...this.globalPages, ...this.clusterPages]
+      .find(registration => registration.id === (pageId || undefined));
 
-    const targetRegistration = [...this.globalPages, ...this.clusterPages].find(
-      registration => registration.id === (pageId || undefined),
-    );
+    if (!targetRegistration) {
+      return;
+    }
 
     const targetRoutePath = getExtensionRoutePath(this, targetRegistration.id);
-
     const targetRoute = routes.find(matches({ path: targetRoutePath }));
 
-    if (targetRoute) {
-      const normalizedParams = di.inject(extensionPageParametersInjectable, {
-        extension: this,
-        registration: targetRegistration,
-      });
-
-      const query = pipeline(
-        params,
-
-        toPairs,
-
-        map(([key, value]) => {
-          const normalizedParam = normalizedParams[key];
-
-          return [
-            key,
-            normalizedParam.stringify(value),
-          ];
-        }),
-
-        fromPairs,
-      );
-
-      navigateToRoute(targetRoute, {
-        query,
-      });
+    if (!targetRoute) {
+      return;
     }
+
+    const normalizedParams = di.inject(extensionPageParametersInjectable, {
+      extension: this,
+      registration: targetRegistration,
+    });
+    const query = pipeline(
+      params,
+      toPairs,
+      map(([key, value]) => [
+        key,
+        normalizedParams[key].stringify(value),
+      ]),
+      fromPairs,
+    );
+
+    navigateToRoute(targetRoute, {
+      query,
+    });
   }
 
   /**
