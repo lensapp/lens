@@ -29,7 +29,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 
   protected sortItems(items: KubeEvent[]) {
     return super.sortItems(items, [
-      event => event.getTimeDiffFromNow(), // keep events order as timeline ("fresh" on top)
+      event => -event.getCreationTimestamp(), // keep events order as timeline ("fresh" on top)
     ], "asc");
   }
 

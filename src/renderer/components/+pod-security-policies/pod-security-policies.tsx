@@ -10,6 +10,7 @@ import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -28,15 +29,15 @@ export class PodSecurityPolicies extends React.Component {
         className="PodSecurityPolicies"
         store={podSecurityPoliciesStore}
         sortingCallbacks={{
-          [columnId.name]: item => item.getName(),
-          [columnId.volumes]: item => item.getVolumes(),
-          [columnId.privileged]: item => +item.isPrivileged(),
-          [columnId.age]: item => item.getTimeDiffFromNow(),
+          [columnId.name]: podSecurityPolicy => podSecurityPolicy.getName(),
+          [columnId.volumes]: podSecurityPolicy => podSecurityPolicy.getVolumes(),
+          [columnId.privileged]: podSecurityPolicy => +podSecurityPolicy.isPrivileged(),
+          [columnId.age]: podSecurityPolicy => -podSecurityPolicy.getCreationTimestamp(),
         }}
         searchFilters={[
-          item => item.getSearchFields(),
-          item => item.getVolumes(),
-          item => Object.values(item.getRules()),
+          podSecurityPolicy => podSecurityPolicy.getSearchFields(),
+          podSecurityPolicy => podSecurityPolicy.getVolumes(),
+          podSecurityPolicy => Object.values(podSecurityPolicy.getRules()),
         ]}
         renderHeaderTitle="Pod Security Policies"
         renderTableHeader={[
@@ -46,15 +47,13 @@ export class PodSecurityPolicies extends React.Component {
           { title: "Volumes", className: "volumes", sortBy: columnId.volumes, id: columnId.volumes },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={item => {
-          return [
-            item.getName(),
-            <KubeObjectStatusIcon key="icon" object={item} />,
-            item.isPrivileged() ? "Yes" : "No",
-            item.getVolumes().join(", "),
-            item.getAge(),
-          ];
-        }}
+        renderTableContents={podSecurityPolicy => [
+          podSecurityPolicy.getName(),
+          <KubeObjectStatusIcon key="icon" object={podSecurityPolicy} />,
+          podSecurityPolicy.isPrivileged() ? "Yes" : "No",
+          podSecurityPolicy.getVolumes().join(", "),
+          <KubeObjectAge key="age" object={podSecurityPolicy} />,
+        ]}
       />
     );
   }

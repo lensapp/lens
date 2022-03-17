@@ -12,6 +12,7 @@ import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { IngressRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -35,7 +36,7 @@ export class Ingresses extends React.Component<IngressesProps> {
         sortingCallbacks={{
           [columnId.name]: ingress => ingress.getName(),
           [columnId.namespace]: ingress => ingress.getNs(),
-          [columnId.age]: ingress => ingress.getTimeDiffFromNow(),
+          [columnId.age]: ingress => -ingress.getCreationTimestamp(),
         }}
         searchFilters={[
           ingress => ingress.getSearchFields(),
@@ -56,7 +57,7 @@ export class Ingresses extends React.Component<IngressesProps> {
           ingress.getNs(),
           ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
           ingress.getRoutes().map(route => <p key={route}>{route}</p>),
-          ingress.getAge(),
+          <KubeObjectAge key="age" object={ingress} />,
         ]}
         tableProps={{
           customRowHeights: (item, lineHeight, paddings) => {

@@ -15,6 +15,7 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { StatefulSetsRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -45,7 +46,7 @@ export class StatefulSets extends React.Component<StatefulSetsProps> {
         sortingCallbacks={{
           [columnId.name]: statefulSet => statefulSet.getName(),
           [columnId.namespace]: statefulSet => statefulSet.getNs(),
-          [columnId.age]: statefulSet => statefulSet.getTimeDiffFromNow(),
+          [columnId.age]: statefulSet => -statefulSet.getCreationTimestamp(),
           [columnId.replicas]: statefulSet => statefulSet.getReplicas(),
         }}
         searchFilters={[
@@ -66,7 +67,7 @@ export class StatefulSets extends React.Component<StatefulSetsProps> {
           this.renderPods(statefulSet),
           statefulSet.getReplicas(),
           <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
-          statefulSet.getAge(),
+          <KubeObjectAge key="age" object={statefulSet} />,
         ]}
       />
     );

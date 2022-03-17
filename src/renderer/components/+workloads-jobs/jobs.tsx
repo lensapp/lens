@@ -14,6 +14,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { JobsRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -39,7 +40,7 @@ export class Jobs extends React.Component<JobsProps> {
           [columnId.name]: job => job.getName(),
           [columnId.namespace]: job => job.getNs(),
           [columnId.conditions]: job => job.getCondition() != null ? job.getCondition().type : "",
-          [columnId.age]: job => job.getTimeDiffFromNow(),
+          [columnId.age]: job => -job.getCreationTimestamp(),
         }}
         searchFilters={[
           job => job.getSearchFields(),
@@ -61,7 +62,7 @@ export class Jobs extends React.Component<JobsProps> {
             job.getNs(),
             `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
             <KubeObjectStatusIcon key="icon" object={job}/>,
-            job.getAge(),
+            <KubeObjectAge key="age" object={job} />,
             condition && {
               title: condition.type,
               className: kebabCase(condition.type),

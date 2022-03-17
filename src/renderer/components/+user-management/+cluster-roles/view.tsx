@@ -13,6 +13,7 @@ import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddClusterRoleDialog } from "./add-dialog";
 import { clusterRolesStore } from "./store";
 import type { ClusterRolesRouteParams } from "../../../../common/routes";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -35,7 +36,7 @@ export class ClusterRoles extends React.Component<ClusterRolesProps> {
           store={clusterRolesStore}
           sortingCallbacks={{
             [columnId.name]: clusterRole => clusterRole.getName(),
-            [columnId.age]: clusterRole => clusterRole.getTimeDiffFromNow(),
+            [columnId.age]: clusterRole => -clusterRole.getCreationTimestamp(),
           }}
           searchFilters={[
             clusterRole => clusterRole.getSearchFields(),
@@ -49,7 +50,7 @@ export class ClusterRoles extends React.Component<ClusterRolesProps> {
           renderTableContents={clusterRole => [
             clusterRole.getName(),
             <KubeObjectStatusIcon key="icon" object={clusterRole} />,
-            clusterRole.getAge(),
+            <KubeObjectAge key="age" object={clusterRole} />,
           ]}
           addRemoveButtons={{
             onAdd: () => AddClusterRoleDialog.open(),

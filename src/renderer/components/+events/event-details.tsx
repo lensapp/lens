@@ -18,6 +18,7 @@ import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
+import { ReactiveDuration } from "../duration/reactive-duration";
 
 export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -54,10 +55,14 @@ export class EventDetails extends React.Component<EventDetailsProps> {
           {event.getSource()}
         </DrawerItem>
         <DrawerItem name="First seen">
-          {event.getFirstSeenTime()} ago (<LocaleDate date={event.firstTimestamp} />)
+          <ReactiveDuration timestamp={event.firstTimestamp} />
+          {" ago "}
+          (<LocaleDate date={event.firstTimestamp} />)
         </DrawerItem>
         <DrawerItem name="Last seen">
-          {event.getLastSeenTime()} ago (<LocaleDate date={event.lastTimestamp} />)
+          <ReactiveDuration timestamp={event.lastTimestamp} />
+          {" ago "}
+          (<LocaleDate date={event.lastTimestamp} />)
         </DrawerItem>
         <DrawerItem name="Count">
           {count}

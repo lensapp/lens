@@ -19,6 +19,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
 import addNamespaceDialogModelInjectable
   from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -43,14 +44,14 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
       className="Namespaces"
       store={namespaceStore}
       sortingCallbacks={{
-        [columnId.name]: ns => ns.getName(),
-        [columnId.labels]: ns => ns.getLabels(),
-        [columnId.age]: ns => ns.getTimeDiffFromNow(),
-        [columnId.status]: ns => ns.getStatus(),
+        [columnId.name]: namespace => namespace.getName(),
+        [columnId.labels]: namespace => namespace.getLabels(),
+        [columnId.age]: namespace => -namespace.getCreationTimestamp(),
+        [columnId.status]: namespace => namespace.getStatus(),
       }}
       searchFilters={[
-        item => item.getSearchFields(),
-        item => item.getStatus(),
+        namespace => namespace.getSearchFields(),
+        namespace => namespace.getStatus(),
       ]}
       renderHeaderTitle="Namespaces"
       renderTableHeader={[
@@ -60,12 +61,12 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
         { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
       ]}
-      renderTableContents={item => [
-        item.getName(),
-        <KubeObjectStatusIcon key="icon" object={item} />,
-        item.getLabels().map(label => <Badge scrollable key={label} label={label}/>),
-        item.getAge(),
-        { title: item.getStatus(), className: item.getStatus().toLowerCase() },
+      renderTableContents={namespace => [
+        namespace.getName(),
+        <KubeObjectStatusIcon key="icon" object={namespace} />,
+        namespace.getLabels().map(label => <Badge scrollable key={label} label={label}/>),
+        <KubeObjectAge key="age" object={namespace} />,
+        { title: namespace.getStatus(), className: namespace.getStatus().toLowerCase() },
       ]}
       addRemoveButtons={{
         addTooltip: "Add Namespace",

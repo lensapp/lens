@@ -17,6 +17,7 @@ import { storageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumeClaimsRouteParams } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -48,11 +49,11 @@ export class PersistentVolumeClaims extends React.Component<PersistentVolumeClai
           [columnId.status]: pvc => pvc.getStatus(),
           [columnId.size]: pvc => unitsToBytes(pvc.getStorage()),
           [columnId.storageClass]: pvc => pvc.spec.storageClassName,
-          [columnId.age]: pvc => pvc.getTimeDiffFromNow(),
+          [columnId.age]: pvc => -pvc.getCreationTimestamp(),
         }}
         searchFilters={[
-          item => item.getSearchFields(),
-          item => item.getPods(podsStore.items).map(pod => pod.getName()),
+          pvc => pvc.getSearchFields(),
+          pvc => pvc.getPods(podsStore.items).map(pod => pod.getName()),
         ]}
         renderHeaderTitle="Persistent Volume Claims"
         renderTableHeader={[
@@ -85,7 +86,7 @@ export class PersistentVolumeClaims extends React.Component<PersistentVolumeClai
                 {pod.getName()}
               </Link>
             )),
-            pvc.getAge(),
+            <KubeObjectAge key="age" object={pvc} />,
             { title: pvc.getStatus(), className: pvc.getStatus().toLowerCase() },
           ];
         }}

@@ -33,6 +33,8 @@ import releaseInjectable from "./release.injectable";
 import releaseDetailsInjectable from "./release-details.injectable";
 import releaseValuesInjectable from "./release-values.injectable";
 import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-shown.injectable";
+import type { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { KubeObjectAge } from "../../kube-object/age";
 
 export interface ReleaseDetailsProps {
   hideDetails(): void;
@@ -150,45 +152,46 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
     );
   }
 
-  renderResources() {
-    const { resources } = this.details;
-
-    if (!resources) return null;
-    const groups = groupBy(resources, item => item.kind);
-    const tables = Object.entries(groups).map(([kind, items]) => {
-      return (
-        <React.Fragment key={kind}>
-          <SubTitle title={kind}/>
-          <Table scrollable={false}>
-            <TableHead sticky={false}>
-              <TableCell className="name">Name</TableCell>
-              {items[0].getNs() && <TableCell className="namespace">Namespace</TableCell>}
-              <TableCell className="age">Age</TableCell>
-            </TableHead>
-            {items.map(item => {
-              const name = item.getName();
-              const namespace = item.getNs();
-              const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == item.apiVersion);
-              const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
-
-              return (
-                <TableRow key={item.getId()}>
-                  <TableCell className="name">
-                    {detailsUrl ? <Link to={detailsUrl}>{name}</Link> : name}
-                  </TableCell>
-                  {namespace && <TableCell className="namespace">{namespace}</TableCell>}
-                  <TableCell className="age">{item.getAge()}</TableCell>
-                </TableRow>
-              );
-            })}
-          </Table>
-        </React.Fragment>
-      );
-    });
-
+  renderResources(resources: KubeObject[]) {
     return (
       <div className="resources">
-        {tables}
+        {
+          Object.entries(groupBy(resources, item => item.kind))
+            .map(([kind, items]) => (
+              <React.Fragment key={kind}>
+                <SubTitle title={kind} />
+                <Table scrollable={false}>
+                  <TableHead sticky={false}>
+                    <TableCell className="name">Name</TableCell>
+                    {items[0].getNs() && <TableCell className="namespace">Namespace</TableCell>}
+                    <TableCell className="age">Age</TableCell>
+                  </TableHead>
+                  {items.map(item => {
+                    const name = item.getName();
+                    const namespace = item.getNs();
+                    const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == item.apiVersion);
+                    const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
+
+                    return (
+                      <TableRow key={item.getId()}>
+                        <TableCell className="name">
+                          {detailsUrl ? <Link to={detailsUrl}>{name}</Link> : name}
+                        </TableCell>
+                        {namespace && (
+                          <TableCell className="namespace">
+                            {namespace}
+                          </TableCell>
+                        )}
+                        <TableCell className="age">
+                          <KubeObjectAge key="age" object={item} />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </Table>
+              </React.Fragment>
+            ))
+        }
       </div>
     );
   }
@@ -199,6 +202,8 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
     if (!this.details) {
       return <Spinner center/>;
     }
+
+    const { resources } = this.details;
 
     return (
       <div>
@@ -236,7 +241,7 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
         <DrawerTitle title="Notes"/>
         {this.renderNotes()}
         <DrawerTitle title="Resources"/>
-        {this.renderResources()}
+        {resources && this.renderResources(resources)}
       </div>
     );
   }

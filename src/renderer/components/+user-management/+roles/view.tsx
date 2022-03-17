@@ -13,6 +13,7 @@ import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddRoleDialog } from "./add-dialog";
 import { rolesStore } from "./store";
 import type { RolesRouteParams } from "../../../../common/routes";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -36,7 +37,7 @@ export class Roles extends React.Component<RolesProps> {
           sortingCallbacks={{
             [columnId.name]: role => role.getName(),
             [columnId.namespace]: role => role.getNs(),
-            [columnId.age]: role => role.getTimeDiffFromNow(),
+            [columnId.age]: role => -role.getCreationTimestamp(),
           }}
           searchFilters={[
             role => role.getSearchFields(),
@@ -52,7 +53,7 @@ export class Roles extends React.Component<RolesProps> {
             role.getName(),
             <KubeObjectStatusIcon key="icon" object={role} />,
             role.getNs(),
-            role.getAge(),
+            <KubeObjectAge key="age" object={role} />,
           ]}
           addRemoveButtons={{
             onAdd: () => AddRoleDialog.open(),

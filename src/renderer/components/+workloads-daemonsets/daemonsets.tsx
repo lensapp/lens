@@ -16,6 +16,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { DaemonSetsRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -39,13 +40,14 @@ export class DaemonSets extends React.Component<DaemonSetsProps> {
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_daemonsets"
-        className="DaemonSets" store={daemonSetStore}
+        className="DaemonSets"
+        store={daemonSetStore}
         dependentStores={[podsStore, eventStore]} // status icon component uses event store
         sortingCallbacks={{
           [columnId.name]: daemonSet => daemonSet.getName(),
           [columnId.namespace]: daemonSet => daemonSet.getNs(),
           [columnId.pods]: daemonSet => this.getPodsLength(daemonSet),
-          [columnId.age]: daemonSet => daemonSet.getTimeDiffFromNow(),
+          [columnId.age]: daemonSet => -daemonSet.getCreationTimestamp(),
         }}
         searchFilters={[
           daemonSet => daemonSet.getSearchFields(),
@@ -68,7 +70,7 @@ export class DaemonSets extends React.Component<DaemonSetsProps> {
           daemonSet.getNodeSelectors().map(selector => (
             <Badge key={selector} label={selector} scrollable/>
           )),
-          daemonSet.getAge(),
+          <KubeObjectAge key="age" object={daemonSet} />,
         ]}
       />
     );

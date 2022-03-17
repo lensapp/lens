@@ -13,6 +13,7 @@ import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ResourceQuotaRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -31,15 +32,16 @@ export class ResourceQuotas extends React.Component<ResourceQuotasProps> {
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_quotas"
-          className="ResourceQuotas" store={resourceQuotaStore}
+          className="ResourceQuotas"
+          store={resourceQuotaStore}
           sortingCallbacks={{
-            [columnId.name]: item => item.getName(),
-            [columnId.namespace]: item => item.getNs(),
-            [columnId.age]: item => item.getTimeDiffFromNow(),
+            [columnId.name]: resourceQuota => resourceQuota.getName(),
+            [columnId.namespace]: resourceQuota => resourceQuota.getNs(),
+            [columnId.age]: resourceQuota => -resourceQuota.getCreationTimestamp(),
           }}
           searchFilters={[
-            item => item.getSearchFields(),
-            item => item.getName(),
+            resourceQuota => resourceQuota.getSearchFields(),
+            resourceQuota => resourceQuota.getName(),
           ]}
           renderHeaderTitle="Resource Quotas"
           renderTableHeader={[
@@ -52,7 +54,7 @@ export class ResourceQuotas extends React.Component<ResourceQuotasProps> {
             resourceQuota.getName(),
             <KubeObjectStatusIcon key="icon" object={resourceQuota}/>,
             resourceQuota.getNs(),
-            resourceQuota.getAge(),
+            <KubeObjectAge key="age" object={resourceQuota} />,
           ]}
           addRemoveButtons={{
             onAdd: () => AddQuotaDialog.open(),

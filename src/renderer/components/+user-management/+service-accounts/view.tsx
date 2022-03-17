@@ -13,6 +13,7 @@ import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { CreateServiceAccountDialog } from "./create-dialog";
 import { serviceAccountsStore } from "./store";
 import type { ServiceAccountsRouteParams } from "../../../../common/routes";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -35,7 +36,7 @@ export class ServiceAccounts extends React.Component<ServiceAccountsProps> {
           sortingCallbacks={{
             [columnId.name]: account => account.getName(),
             [columnId.namespace]: account => account.getNs(),
-            [columnId.age]: account => account.getTimeDiffFromNow(),
+            [columnId.age]: account => -account.getCreationTimestamp(),
           }}
           searchFilters={[
             account => account.getSearchFields(),
@@ -51,7 +52,7 @@ export class ServiceAccounts extends React.Component<ServiceAccountsProps> {
             account.getName(),
             <KubeObjectStatusIcon key="icon" object={account} />,
             account.getNs(),
-            account.getAge(),
+            <KubeObjectAge key="age" object={account} />,
           ]}
           addRemoveButtons={{
             onAdd: () => CreateServiceAccountDialog.open(),

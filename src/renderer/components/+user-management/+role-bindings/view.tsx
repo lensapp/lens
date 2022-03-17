@@ -15,6 +15,7 @@ import { rolesStore } from "../+roles/store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { serviceAccountsStore } from "../+service-accounts/store";
 import type { RoleBindingsRouteParams } from "../../../../common/routes";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -41,7 +42,7 @@ export class RoleBindings extends React.Component<RoleBindingsProps> {
             [columnId.name]: binding => binding.getName(),
             [columnId.namespace]: binding => binding.getNs(),
             [columnId.bindings]: binding => binding.getSubjectNames(),
-            [columnId.age]: binding => binding.getTimeDiffFromNow(),
+            [columnId.age]: binding => -binding.getCreationTimestamp(),
           }}
           searchFilters={[
             binding => binding.getSearchFields(),
@@ -60,7 +61,7 @@ export class RoleBindings extends React.Component<RoleBindingsProps> {
             <KubeObjectStatusIcon key="icon" object={binding} />,
             binding.getNs(),
             binding.getSubjectNames(),
-            binding.getAge(),
+            <KubeObjectAge key="age" object={binding} />,
           ]}
           addRemoveButtons={{
             onAdd: () => RoleBindingDialog.open(),

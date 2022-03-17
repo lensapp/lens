@@ -13,6 +13,7 @@ import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ServicesRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -44,7 +45,7 @@ export class Services extends React.Component<ServicesProps> {
           [columnId.ports]: service => (service.spec.ports || []).map(({ port }) => port)[0],
           [columnId.clusterIp]: service => service.getClusterIp(),
           [columnId.type]: service => service.getType(),
-          [columnId.age]: service => service.getTimeDiffFromNow(),
+          [columnId.age]: service => -service.getCreationTimestamp(),
           [columnId.status]: service => service.getStatus(),
         }}
         searchFilters={[
@@ -81,7 +82,7 @@ export class Services extends React.Component<ServicesProps> {
             service.getPorts().join(", "),
             externalIps.join(", ") || "-",
             service.getSelector().map(label => <Badge key={label} label={label} />),
-            service.getAge(),
+            <KubeObjectAge key="age" object={service} />,
             { title: service.getStatus(), className: service.getStatus().toLowerCase() },
           ];
         }}

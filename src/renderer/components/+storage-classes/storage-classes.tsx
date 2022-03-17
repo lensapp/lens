@@ -12,6 +12,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { storageClassStore } from "./storage-class.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { StorageClassesRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -34,14 +35,14 @@ export class StorageClasses extends React.Component<StorageClassesProps> {
         className="StorageClasses"
         store={storageClassStore}
         sortingCallbacks={{
-          [columnId.name]: item => item.getName(),
-          [columnId.age]: item => item.getTimeDiffFromNow(),
-          [columnId.provisioner]: item => item.provisioner,
-          [columnId.reclaimPolicy]: item => item.reclaimPolicy,
+          [columnId.name]: storageClass => storageClass.getName(),
+          [columnId.age]: storageClass => -storageClass.getCreationTimestamp(),
+          [columnId.provisioner]: storageClass => storageClass.provisioner,
+          [columnId.reclaimPolicy]: storageClass => storageClass.reclaimPolicy,
         }}
         searchFilters={[
-          item => item.getSearchFields(),
-          item => item.provisioner,
+          storageClass => storageClass.getSearchFields(),
+          storageClass => storageClass.provisioner,
         ]}
         renderHeaderTitle="Storage Classes"
         renderTableHeader={[
@@ -58,7 +59,7 @@ export class StorageClasses extends React.Component<StorageClassesProps> {
           storageClass.provisioner,
           storageClass.getReclaimPolicy(),
           storageClass.isDefault() ? "Yes" : null,
-          storageClass.getAge(),
+          <KubeObjectAge key="age" object={storageClass} />,
         ]}
       />
     );

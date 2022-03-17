@@ -22,6 +22,8 @@ import { Icon } from "../icon";
 import { eventsURL } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import { KubeObjectAge } from "../kube-object/age";
+import { ReactiveDuration } from "../duration/reactive-duration";
 
 enum columnId {
   message = "message",
@@ -47,7 +49,6 @@ const defaultProps: Partial<EventsProps> = {
 @observer
 export class Events extends React.Component<EventsProps> {
   static defaultProps = defaultProps as object;
-  now = Date.now();
 
   @observable sorting: TableSortParams = {
     sortBy: columnId.age,
@@ -59,8 +60,8 @@ export class Events extends React.Component<EventsProps> {
     [columnId.type]: event => event.type,
     [columnId.object]: event => event.involvedObject.name,
     [columnId.count]: event => event.count,
-    [columnId.age]: event => event.getTimeDiffFromNow(),
-    [columnId.lastSeen]: event => this.now - new Date(event.lastTimestamp).getTime(),
+    [columnId.age]: event => -event.getCreationTimestamp(),
+    [columnId.lastSeen]: event => -new Date(event.lastTimestamp).getTime(),
   };
 
   constructor(props: EventsProps) {
@@ -185,8 +186,8 @@ export class Events extends React.Component<EventsProps> {
             </Link>,
             event.getSource(),
             event.count,
-            event.getAge(),
-            event.getLastSeenTime(),
+            <KubeObjectAge key="age" object={event} />,
+            <ReactiveDuration key="last-seen" timestamp={event.lastTimestamp} />,
           ];
         }}
       />

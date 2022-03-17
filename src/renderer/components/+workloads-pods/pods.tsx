@@ -23,6 +23,7 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
 import type { PodsRouteParams } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -89,7 +90,7 @@ export class Pods extends React.Component<PodsProps> {
           [columnId.owners]: pod => pod.getOwnerRefs().map(ref => ref.kind),
           [columnId.qos]: pod => pod.getQosClass(),
           [columnId.node]: pod => pod.getNodeName(),
-          [columnId.age]: pod => pod.getTimeDiffFromNow(),
+          [columnId.age]: pod => -pod.getCreationTimestamp(),
           [columnId.status]: pod => pod.getStatusMessage(),
         }}
         searchFilters={[
@@ -137,7 +138,7 @@ export class Pods extends React.Component<PodsProps> {
             </Badge>
             : "",
           pod.getQosClass(),
-          pod.getAge(),
+          <KubeObjectAge key="age" object={pod} />,
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) },
         ]}
       />

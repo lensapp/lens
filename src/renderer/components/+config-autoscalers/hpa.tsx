@@ -15,6 +15,7 @@ import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { HpaRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -49,17 +50,18 @@ export class HorizontalPodAutoscalers extends React.Component<HorizontalPodAutos
       <KubeObjectListLayout
         isConfigurable
         tableId="configuration_hpa"
-        className="HorizontalPodAutoscalers" store={hpaStore}
+        className="HorizontalPodAutoscalers"
+        store={hpaStore}
         sortingCallbacks={{
-          [columnId.name]: item => item.getName(),
-          [columnId.namespace]: item => item.getNs(),
-          [columnId.minPods]: item => item.getMinPods(),
-          [columnId.maxPods]: item => item.getMaxPods(),
-          [columnId.replicas]: item => item.getReplicas(),
-          [columnId.age]: item => item.getTimeDiffFromNow(),
+          [columnId.name]: hpa => hpa.getName(),
+          [columnId.namespace]: hpa => hpa.getNs(),
+          [columnId.minPods]: hpa => hpa.getMinPods(),
+          [columnId.maxPods]: hpa => hpa.getMaxPods(),
+          [columnId.replicas]: hpa => hpa.getReplicas(),
+          [columnId.age]: hpa => -hpa.getCreationTimestamp(),
         }}
         searchFilters={[
-          item => item.getSearchFields(),
+          hpa => hpa.getSearchFields(),
         ]}
         renderHeaderTitle="Horizontal Pod Autoscalers"
         renderTableHeader={[
@@ -81,11 +83,10 @@ export class HorizontalPodAutoscalers extends React.Component<HorizontalPodAutos
           hpa.getMinPods(),
           hpa.getMaxPods(),
           hpa.getReplicas(),
-          hpa.getAge(),
-          hpa.getConditions().map(({ type, tooltip, isReady }) => {
-            if (!isReady) return null;
-
-            return (
+          <KubeObjectAge key="age" object={hpa} />,
+          hpa.getConditions()
+            .filter(({ isReady }) => isReady)
+            .map(({ type, tooltip }) => (
               <Badge
                 key={type}
                 label={type}
@@ -94,8 +95,7 @@ export class HorizontalPodAutoscalers extends React.Component<HorizontalPodAutos
                 expandable={false}
                 scrollable={true}
               />
-            );
-          }),
+            )),
         ]}
       />
     );

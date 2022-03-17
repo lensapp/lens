@@ -13,6 +13,7 @@ import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { ReplicaSetsRouteParams } from "../../../common/routes";
 import { eventStore } from "../+events/event.store";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -41,7 +42,7 @@ export class ReplicaSets extends React.Component<ReplicaSetsProps> {
           [columnId.desired]: replicaSet => replicaSet.getDesired(),
           [columnId.current]: replicaSet => replicaSet.getCurrent(),
           [columnId.ready]: replicaSet => replicaSet.getReady(),
-          [columnId.age]: replicaSet => replicaSet.getTimeDiffFromNow(),
+          [columnId.age]: replicaSet => -replicaSet.getCreationTimestamp(),
         }}
         searchFilters={[
           replicaSet => replicaSet.getSearchFields(),
@@ -63,7 +64,7 @@ export class ReplicaSets extends React.Component<ReplicaSetsProps> {
           replicaSet.getDesired(),
           replicaSet.getCurrent(),
           replicaSet.getReady(),
-          replicaSet.getAge(),
+          <KubeObjectAge key="age" object={replicaSet} />,
         ]}
       />
     );

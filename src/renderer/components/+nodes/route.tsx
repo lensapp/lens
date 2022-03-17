@@ -23,6 +23,7 @@ import { eventStore } from "../+events/event.store";
 import type { NodesRouteParams } from "../../../common/routes";
 import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -191,7 +192,7 @@ export class NodesRoute extends React.Component<NodesRouteProps> {
             [columnId.conditions]: node => node.getNodeConditionText(),
             [columnId.taints]: node => node.getTaints().length,
             [columnId.roles]: node => node.getRoleLabels(),
-            [columnId.age]: node => node.getTimeDiffFromNow(),
+            [columnId.age]: node => -node.getCreationTimestamp(),
             [columnId.version]: node => node.getKubeletVersion(),
           }}
           searchFilters={[
@@ -231,7 +232,7 @@ export class NodesRoute extends React.Component<NodesRouteProps> {
               </>,
               node.getRoleLabels(),
               node.status.nodeInfo.kubeletVersion,
-              node.getAge(),
+              <KubeObjectAge key="age" object={node} />,
               this.renderConditions(node),
             ];
           }}

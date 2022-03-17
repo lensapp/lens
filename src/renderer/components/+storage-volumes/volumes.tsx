@@ -15,6 +15,7 @@ import { volumesStore } from "./volumes.store";
 import { pvcApi, storageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumesRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -38,15 +39,15 @@ export class PersistentVolumes extends React.Component<PersistentVolumesProps> {
         className="PersistentVolumes"
         store={volumesStore}
         sortingCallbacks={{
-          [columnId.name]: item => item.getName(),
-          [columnId.storageClass]: item => item.getStorageClass(),
-          [columnId.capacity]: item => item.getCapacity(true),
-          [columnId.status]: item => item.getStatus(),
-          [columnId.age]: item => item.getTimeDiffFromNow(),
+          [columnId.name]: volume => volume.getName(),
+          [columnId.storageClass]: volume => volume.getStorageClass(),
+          [columnId.capacity]: volume => volume.getCapacity(true),
+          [columnId.status]: volume => volume.getStatus(),
+          [columnId.age]: volume => -volume.getCreationTimestamp(),
         }}
         searchFilters={[
-          item => item.getSearchFields(),
-          item => item.getClaimRefName(),
+          volume => volume.getSearchFields(),
+          volume => volume.getClaimRefName(),
         ]}
         renderHeaderTitle="Persistent Volumes"
         renderTableHeader={[
@@ -76,7 +77,7 @@ export class PersistentVolumes extends React.Component<PersistentVolumesProps> {
                 {claimRef.name}
               </Link>
             ),
-            volume.getAge(),
+            <KubeObjectAge key="age" object={volume} />,
             { title: volume.getStatus(), className: volume.getStatus().toLowerCase() },
           ];
         }}

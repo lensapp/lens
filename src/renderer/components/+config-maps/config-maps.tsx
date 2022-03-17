@@ -12,6 +12,7 @@ import { configMapsStore } from "./config-maps.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ConfigMapsRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -30,16 +31,17 @@ export class ConfigMaps extends React.Component<ConfigMapsProps> {
       <KubeObjectListLayout
         isConfigurable
         tableId="configuration_configmaps"
-        className="ConfigMaps" store={configMapsStore}
+        className="ConfigMaps"
+        store={configMapsStore}
         sortingCallbacks={{
-          [columnId.name]: item => item.getName(),
-          [columnId.namespace]: item => item.getNs(),
-          [columnId.keys]: item => item.getKeys(),
-          [columnId.age]: item => item.getTimeDiffFromNow(),
+          [columnId.name]: configMap => configMap.getName(),
+          [columnId.namespace]: configMap => configMap.getNs(),
+          [columnId.keys]: configMap => configMap.getKeys(),
+          [columnId.age]: configMap => -configMap.getCreationTimestamp(),
         }}
         searchFilters={[
-          item => item.getSearchFields(),
-          item => item.getKeys(),
+          configMap => configMap.getSearchFields(),
+          configMap => configMap.getKeys(),
         ]}
         renderHeaderTitle="Config Maps"
         renderTableHeader={[
@@ -54,7 +56,7 @@ export class ConfigMaps extends React.Component<ConfigMapsProps> {
           <KubeObjectStatusIcon key="icon" object={configMap}/>,
           configMap.getNs(),
           configMap.getKeys().join(", "),
-          configMap.getAge(),
+          <KubeObjectAge key="age" object={configMap} />,
         ]}
       />
     );

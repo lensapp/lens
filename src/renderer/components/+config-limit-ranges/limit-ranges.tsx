@@ -12,6 +12,7 @@ import { limitRangeStore } from "./limit-ranges.store";
 import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { LimitRangeRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -32,9 +33,9 @@ export class LimitRanges extends React.Component<LimitRangesProps> {
         className="LimitRanges"
         store={limitRangeStore}
         sortingCallbacks={{
-          [columnId.name]: item => item.getName(),
-          [columnId.namespace]: item => item.getNs(),
-          [columnId.age]: item => item.getTimeDiffFromNow(),
+          [columnId.name]: limitRange => limitRange.getName(),
+          [columnId.namespace]: limitRange => limitRange.getNs(),
+          [columnId.age]: limitRange => -limitRange.getCreationTimestamp(),
         }}
         searchFilters={[
           item => item.getName(),
@@ -51,7 +52,7 @@ export class LimitRanges extends React.Component<LimitRangesProps> {
           limitRange.getName(),
           <KubeObjectStatusIcon key="icon" object={limitRange}/>,
           limitRange.getNs(),
-          limitRange.getAge(),
+          <KubeObjectAge key="age" object={limitRange} />,
         ]}
       />
     );

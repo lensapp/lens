@@ -19,6 +19,7 @@ import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import { KubeObjectAge } from "../kube-object/age";
 
 export interface ClusterIssuesProps {
   className?: string;
@@ -28,8 +29,8 @@ interface IWarning extends ItemObject {
   kind: string;
   message: string;
   selfLink: string;
-  age: string | number;
-  timeDiffFromNow: number;
+  renderAge: () => React.ReactElement;
+  ageMs: number;
 }
 
 enum sortBy {
@@ -40,63 +41,42 @@ enum sortBy {
 
 @observer
 export class ClusterIssues extends React.Component<ClusterIssuesProps> {
-  private sortCallbacks = {
-    [sortBy.type]: (warning: IWarning) => warning.kind,
-    [sortBy.object]: (warning: IWarning) => warning.getName(),
-    [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
-  };
-
   constructor(props: ClusterIssuesProps) {
     super(props);
     makeObservable(this);
   }
 
-  @computed get warnings() {
-    const warnings: IWarning[] = [];
-
-    // Node bad conditions
-    nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName, getAge, getTimeDiffFromNow } = node;
-
-      node.getWarningConditions().forEach(({ message }) => {
-        warnings.push({
-          age: getAge(),
-          getId,
-          getName,
-          timeDiffFromNow: getTimeDiffFromNow(),
-          kind,
-          message,
-          selfLink,
-        });
-      });
-    });
-
-    // Warning events for Workloads
-    const events = eventStore.getWarnings();
-
-    events.forEach(error => {
-      const { message, involvedObject, getAge, getTimeDiffFromNow } = error;
-      const { uid, name, kind } = involvedObject;
-
-      warnings.push({
-        getId: () => uid,
-        getName: () => name,
-        timeDiffFromNow: getTimeDiffFromNow(),
-        age: getAge(),
-        message,
-        kind,
-        selfLink: apiManager.lookupApiLink(involvedObject, error),
-      });
-    });
-
-    return warnings;
+  @computed get warnings(): IWarning[] {
+    return [
+      ...nodesStore.items.flatMap(node => (
+        node.getWarningConditions()
+          .map(({ message }) => ({
+            selfLink: node.selfLink,
+            getId: node.getId,
+            getName: node.getName,
+            kind: node.kind,
+            message,
+            renderAge: () => <KubeObjectAge key="age" object={node} />,
+            ageMs: -node.getCreationTimestamp(),
+          }))
+      )),
+      ...eventStore.getWarnings().map(warning => ({
+        getId: () => warning.involvedObject.uid,
+        getName: () => warning.involvedObject.name,
+        renderAge: () => <KubeObjectAge key="age" object={warning} />,
+        ageMs: -warning.getCreationTimestamp(),
+        message: warning.message,
+        kind: warning.kind,
+        selfLink: apiManager.lookupApiLink(warning.involvedObject, warning),
+      })),
+    ];
   }
 
   @boundMethod
   getTableRow(uid: string) {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);
-    const { getId, getName, message, kind, selfLink, age } = warning;
+    const { getId, getName, message, kind, selfLink, renderAge } = warning;
 
     return (
       <TableRow
@@ -115,7 +95,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
           {kind}
         </TableCell>
         <TableCell className="age">
-          {age}
+          {renderAge()}
         </TableCell>
       </TableRow>
     );
@@ -143,15 +123,18 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     return (
       <>
         <SubHeader className={styles.SubHeader}>
-          <Icon material="error_outline"/>{" "}
-          <>Warnings: {warnings.length}</>
+          <Icon material="error_outline"/> Warnings: {warnings.length}
         </SubHeader>
         <Table
           tableId="cluster_issues"
           items={warnings}
           virtual
           selectable
-          sortable={this.sortCallbacks}
+          sortable={{
+            [sortBy.type]: warning => warning.kind,
+            [sortBy.object]: warning => warning.getName(),
+            [sortBy.age]: warning => warning.ageMs,
+          }}
           sortByDefault={{ sortBy: sortBy.object, orderBy: "asc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}

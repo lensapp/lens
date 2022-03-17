@@ -15,6 +15,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { CronJobsRouteParams } from "../../../common/routes";
 import moment from "moment";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -36,7 +37,8 @@ export class CronJobs extends React.Component<CronJobsProps> {
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_cronjobs"
-        className="CronJobs" store={cronJobStore}
+        className="CronJobs"
+        store={cronJobStore}
         dependentStores={[jobStore, eventStore]}
         sortingCallbacks={{
           [columnId.name]: cronJob => cronJob.getName(),
@@ -48,7 +50,7 @@ export class CronJobs extends React.Component<CronJobsProps> {
               ? moment().diff(cronJob.status.lastScheduleTime)
               : 0
           ),
-          [columnId.age]: cronJob => cronJob.getTimeDiffFromNow(),
+          [columnId.age]: cronJob => -cronJob.getCreationTimestamp(),
         }}
         searchFilters={[
           cronJob => cronJob.getSearchFields(),
@@ -73,7 +75,7 @@ export class CronJobs extends React.Component<CronJobsProps> {
           cronJob.getSuspendFlag(),
           cronJobStore.getActiveJobsNum(cronJob),
           cronJob.getLastScheduleTime(),
-          cronJob.getAge(),
+          <KubeObjectAge key="age" object={cronJob} />,
         ]}
       />
     );

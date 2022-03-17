@@ -12,11 +12,10 @@ import { Link } from "react-router-dom";
 import { stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { crdStore } from "./crd.store";
-import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";
 import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
-import type { TableSortCallbacks } from "../table";
+import { KubeObjectAge } from "../kube-object/age";
 
 export const crdGroupsUrlParam = createPageParam<string[]>({
   name: "groups",
@@ -63,12 +62,6 @@ export class CustomResourceDefinitions extends React.Component {
 
   render() {
     const { items, selectedGroups } = this;
-    const sortingCallbacks: TableSortCallbacks<CustomResourceDefinition> = {
-      [columnId.kind]: crd => crd.getResourceKind(),
-      [columnId.group]: crd => crd.getGroup(),
-      [columnId.version]: crd => crd.getVersion(),
-      [columnId.scope]: crd => crd.getScope(),
-    };
 
     return (
       <KubeObjectListLayout
@@ -79,8 +72,20 @@ export class CustomResourceDefinitions extends React.Component {
         // Don't subscribe the `crdStore` because <Sidebar> already has and is always mounted
         subscribeStores={false}
         items={items}
-        sortingCallbacks={sortingCallbacks}
-        searchFilters={Object.values(sortingCallbacks)}
+        sortingCallbacks={{
+          [columnId.kind]: crd => crd.getResourceKind(),
+          [columnId.group]: crd => crd.getGroup(),
+          [columnId.version]: crd => crd.getVersion(),
+          [columnId.scope]: crd => crd.getScope(),
+          [columnId.age]: crd => -crd.getCreationTimestamp(),
+        }}
+        searchFilters={[
+          crd => crd.getResourceKind(),
+          crd => crd.getGroup(),
+          crd => crd.getVersion(),
+          crd => crd.getScope(),
+          crd => -crd.getCreationTimestamp(),
+        ]}
         renderHeaderTitle="Custom Resources"
         customizeHeader={({ filters, ...headerPlaceholders }) => {
           let placeholder = <>All groups</>;
@@ -131,7 +136,7 @@ export class CustomResourceDefinitions extends React.Component {
           crd.getGroup(),
           crd.getVersion(),
           crd.getScope(),
-          crd.getAge(),
+          <KubeObjectAge key="age" object={crd} />,
         ]}
       />
     );

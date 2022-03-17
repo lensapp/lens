@@ -12,6 +12,7 @@ import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { EndpointRouteParams } from "../../../common/routes";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -34,7 +35,7 @@ export class Endpoints extends React.Component<EndpointsProps> {
         sortingCallbacks={{
           [columnId.name]: endpoint => endpoint.getName(),
           [columnId.namespace]: endpoint => endpoint.getNs(),
-          [columnId.age]: endpoint => endpoint.getTimeDiffFromNow(),
+          [columnId.age]: endpoint => -endpoint.getCreationTimestamp(),
         }}
         searchFilters={[
           endpoint => endpoint.getSearchFields(),
@@ -52,7 +53,7 @@ export class Endpoints extends React.Component<EndpointsProps> {
           <KubeObjectStatusIcon key="icon" object={endpoint} />,
           endpoint.getNs(),
           endpoint.toString(),
-          endpoint.getAge(),
+          <KubeObjectAge key="age" object={endpoint} />,
         ]}
         tableProps={{
           customRowHeights: (item, lineHeight, paddings) => {
