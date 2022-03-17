@@ -120,7 +120,7 @@ export class LogStore {
       previous: showPrevious,
     });
 
-    return result.trimEnd().split("\n");
+    return result.trimEnd().replace(/\r/g, "\n").split("\n");
   }
 
   /**
