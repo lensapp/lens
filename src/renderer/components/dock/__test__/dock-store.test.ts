@@ -77,4 +77,11 @@ describe("DockStore", () => {
 
     expect(dockStore.selectedTabId).toBeUndefined();
   });
+
+  it("doesn't change selected tab if other tab closed", () => {
+    dockStore.tabs = initialTabs;
+    dockStore.closeTab("install");
+
+    expect(dockStore.selectedTabId).toBe("terminal");
+  });
 });
