@@ -2,44 +2,18 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Injectable, TentativeTuple } from "@ogre-tools/injectable";
-import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
-
-type MapInjectables<T> = {
-  [Key in keyof T]: T[Key] extends () => infer Res ? Res : never;
-};
+import { asLegacyGlobalForExtensionApi } from "./as-legacy-global-object-for-extension-api";
+import type { Injectable } from "@ogre-tools/injectable";
 
 export const asLegacyGlobalObjectForExtensionApiWithModifications = <
-  TInjectable extends Injectable<unknown, unknown, TInstantiationParameter>,
-  TInstantiationParameter,
-  OtherFields extends Record<string, () => any>,
+  InjectableInstance extends InjectionTokenInstance,
+  InjectionTokenInstance,
+  ModificationObject extends object,
 >(
-    injectableKey: TInjectable,
-    otherFields: OtherFields,
-    ...instantiationParameter: TentativeTuple<TInstantiationParameter>
+    injectable: Injectable<InjectableInstance, InjectionTokenInstance, void>,
+    modificationObject: ModificationObject,
   ) =>
-  new Proxy(
-    {},
-    {
-      get(target, propertyName) {
-        if (propertyName === "$$typeof") {
-          return undefined;
-        }
-
-        const instance: any = getLegacyGlobalDiForExtensionApi().inject(
-          injectableKey,
-          ...instantiationParameter,
-        );
-
-        const propertyValue = instance[propertyName] ?? otherFields[propertyName as any]();
-
-        if (typeof propertyValue === "function") {
-          return function (...args: any[]) {
-            return propertyValue.apply(instance, args);
-          };
-        }
-
-        return propertyValue;
-      },
-    },
-  ) as ReturnType<TInjectable["instantiate"]> & MapInjectables<OtherFields>;
+    Object.assign(
+      asLegacyGlobalForExtensionApi(injectable),
+      modificationObject,
+    );

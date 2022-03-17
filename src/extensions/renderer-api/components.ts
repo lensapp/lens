@@ -5,16 +5,16 @@
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import createTerminalTabInjectable from "../../renderer/components/dock/terminal/create-terminal-tab.injectable";
 import terminalStoreInjectable from "../../renderer/components/dock/terminal/store.injectable";
-import { asLegacyGlobalObjectForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import logTabStoreInjectable from "../../renderer/components/dock/logs/tab-store.injectable";
 
 import commandOverlayInjectable from "../../renderer/components/command-palette/command-overlay.injectable";
-import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
 import createPodLogsTabInjectable from "../../renderer/components/dock/logs/create-pod-logs-tab.injectable";
 import createWorkloadLogsTabInjectable from "../../renderer/components/dock/logs/create-workload-logs-tab.injectable";
 import sendCommandInjectable from "../../renderer/components/dock/terminal/send-command.injectable";
 import { podsStore } from "../../renderer/components/+workloads-pods/pods.store";
 import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
+import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -33,7 +33,9 @@ export * from "../../renderer/components/switch";
 export * from "../../renderer/components/input/input";
 
 // command-overlay
-export const CommandOverlay = asLegacyGlobalObjectForExtensionApi(commandOverlayInjectable);
+export const CommandOverlay = asLegacyGlobalForExtensionApi(
+  commandOverlayInjectable,
+);
 
 export type {
   CategoryColumnRegistration,
@@ -74,30 +76,52 @@ export * from "../../renderer/components/+events/kube-event-details";
 // specific exports
 export * from "../../renderer/components/status-brick";
 
-export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(createTerminalTabInjectable);
-export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModifications(terminalStoreInjectable, {
-  sendCommand: () => asLegacyGlobalFunctionForExtensionApi(sendCommandInjectable),
-});
-export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(logTabStoreInjectable, {
-  createPodTab: () => asLegacyGlobalFunctionForExtensionApi(createPodLogsTabInjectable),
-  createWorkloadTab: () => asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),
-  renameTab: () => (tabId: string): void => {
-    const renameTab = asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
-    const tabData = logTabStore.getData(tabId);
-    const pod = podsStore.getById(tabData.selectedPodId);
+export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(
+  createTerminalTabInjectable,
+);
 
-    renameTab(tabId, `Pod ${pod.getName()}`);
+export const terminalStore =
+  asLegacyGlobalObjectForExtensionApiWithModifications(
+    terminalStoreInjectable,
+    {
+      sendCommand: asLegacyGlobalFunctionForExtensionApi(sendCommandInjectable),
+    },
+  );
+
+export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(
+  logTabStoreInjectable,
+  {
+    createPodTab: asLegacyGlobalFunctionForExtensionApi(
+      createPodLogsTabInjectable,
+    ),
+
+    createWorkloadTab: asLegacyGlobalFunctionForExtensionApi(
+      createWorkloadLogsTabInjectable,
+    ),
+
+    renameTab: (tabId: string): void => {
+      const renameTab =
+        asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
+
+      const tabData = logTabStore.getData(tabId);
+      const pod = podsStore.getById(tabData.selectedPodId);
+
+      renameTab(tabId, `Pod ${pod.getName()}`);
+    },
+
+    tabs: undefined,
   },
-  tabs: () => undefined,
-});
+);
 
 export class TerminalStore {
   static getInstance() {
     return terminalStore;
   }
+
   static createInstance() {
     return terminalStore;
   }
+
   static resetInstance() {
     console.warn("TerminalStore.resetInstance() does nothing");
   }

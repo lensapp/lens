@@ -3,9 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
-import type { StatusBarItemProps, StatusBarRegistration } from "./status-bar-registration";
+import type {
+  StatusBarItemProps,
+  StatusBarRegistration,
+} from "./status-bar-registration";
 import statusBarItemsInjectable from "./status-bar-items.injectable";
 
 export interface RegisteredStatusBarItems {
@@ -69,7 +72,6 @@ const registeredStatusBarItemsInjectable = getInjectable({
     registrations: di.inject(statusBarItemsInjectable),
   }),
 
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default registeredStatusBarItemsInjectable;
