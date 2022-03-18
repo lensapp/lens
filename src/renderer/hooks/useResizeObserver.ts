@@ -22,5 +22,5 @@ export function useResizeObserver(
     }
 
     return undefined;
-  }, [callback]);
+  }, [element, callback]);
 }
