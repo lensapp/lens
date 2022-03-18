@@ -80,7 +80,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
     const { className, moreActions, dockStore, active, ...tabProps } = this.props;
     const { title, pinned } = tabProps.value;
     const label = (
-      <div className="flex gaps align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
+      <div className="flex align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
         <span className={styles.title}>{title}</span>
         {moreActions}
         {!pinned && (
