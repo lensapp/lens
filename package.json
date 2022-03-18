@@ -249,7 +249,7 @@
     "proper-lockfile": "^4.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-material-ui-carousel": "^2.3.8",
+    "react-material-ui-carousel": "^2.3.11",
     "react-router": "^5.2.0",
     "react-virtualized-auto-sizer": "^1.0.6",
     "readable-stream": "^3.6.0",
