@@ -15,6 +15,10 @@
   display: flex;
   overflow: hidden;
 
+  &:empty {
+    display: none;
+  }
+
   &:global(.scrollable) {
     overflow: auto;
     overflow-x: overlay;  /* Set scrollbar inside content area */

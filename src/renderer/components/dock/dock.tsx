@@ -157,7 +157,7 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
             autoFocus={isOpen}
             onChangeTab={this.onChangeTab}
           />
-          <div className="toolbar flex gaps align-center box grow">
+          <div className={cssNames("toolbar flex gaps align-center box grow", { "pl-0": tabs.length == 0 })}>
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>

@@ -57,6 +57,10 @@
       min-height: $unit * 4;
       padding-left: $padding;
       user-select: none;
+
+      &.pl-0 {
+        padding-left: 0;
+      }
     }
   }
 
