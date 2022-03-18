@@ -24,7 +24,7 @@ export interface DockTabsProps {
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabsProps) => {
   const elem = useRef<HTMLDivElement>();
   const minTabSize = useRef<number>(0);
-  const [showScrollbar, setShowScrollbar] = useState<boolean>(false);
+  const [showScrollbar, setShowScrollbar] = useState(false);
 
   const getTabElements = (): HTMLDivElement[] => {
     return Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
@@ -74,10 +74,6 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
 
     minTabSize.current = cssVars.get("--min-tab-width").valueOf();
   });
-
-  useEffect(() => {
-    updateScrollbarVisibility();
-  }, [tabs]);
 
   useResizeObserver(elem.current, () => {
     scrollActiveTabIntoView();
