@@ -81,10 +81,7 @@ export class Tab extends React.PureComponent<TabProps> {
   }
 
   scrollIntoView() {
-    this.ref.current?.scrollIntoView?.({
-      behavior: "smooth",
-      inline: "center",
-    });
+    this.ref.current?.scrollIntoViewIfNeeded();
   }
 
   @boundMethod
