@@ -2001,10 +2001,10 @@
     "@types/minipass" "*"
     "@types/node" "*"
 
-"@types/tcp-port-used@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/tcp-port-used/-/tcp-port-used-1.0.0.tgz#2a7b674fe81580d7c205297e26594ee12d07100f"
-  integrity sha512-UbspV5WZNhfM55HyvLEFyVc5n6K6OKuKep0mzvsgoUXQU1FS42GbePjreBnTCoKXfNzK/3/RJVCRlUDTuszFPg==
+"@types/tcp-port-used@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/tcp-port-used/-/tcp-port-used-1.0.1.tgz#4e15eada6d9f63a5e6c5ef73348d6023f1e91157"
+  integrity sha512-6pwWTx8oUtWvsiZUCrhrK/53MzKVLnuNSSaZILPy3uMes9QnTrLMar9BDlJArbMOjDcjb3QXFk6Rz8qmmuySZw==
 
 "@types/tempy@^0.3.0":
   version "0.3.0"
