@@ -101,6 +101,7 @@ export class CustomResourceDefinitions extends React.Component {
                 <>
                   {filters}
                   <Select
+                    id="crd-input"
                     className="group-select"
                     placeholder={placeholder}
                     options={Object.keys(crdStore.groups)}

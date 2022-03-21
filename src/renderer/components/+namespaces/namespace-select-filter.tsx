@@ -30,6 +30,7 @@ const NonInjectedNamespaceSelectFilter = observer(({ model }: SelectProps & Depe
     onClick={model.onClick}
   >
     <NamespaceSelect
+      id="namespace-select-filter-input"
       isMulti={true}
       menuIsOpen={model.menuIsOpen}
       components={{ Placeholder }}

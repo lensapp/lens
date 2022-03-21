@@ -94,7 +94,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
           <div className="header flex gaps align-center">
             <h5 className="box grow">Overview</h5>
             {this.renderLoadErrors()}
-            <NamespaceSelectFilter />
+            <NamespaceSelectFilter id="overview-namespace-select-filter-input" />
           </div>
 
           {this.props.detailComponents.get().map((Details, index) => (

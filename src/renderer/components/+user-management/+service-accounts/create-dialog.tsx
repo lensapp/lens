@@ -81,6 +81,7 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
+              id="create-dialog-namespace-select-input"
               themeName="light"
               value={namespace}
               onChange={({ value }) => this.namespace = value}

@@ -49,6 +49,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="appearance">
           <SubTitle title="Theme" />
           <Select
+            id="theme-input"
             options={[
               { label: "Sync with computer", value: "system" },
               ...themeStore.themeOptions,
@@ -64,6 +65,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="extensionRegistryUrl">
           <SubTitle title="Extension Install Registry" />
           <Select
+            id="extension-install-registry-input"
             options={Object.values(ExtensionRegistryLocation)}
             value={userStore.extensionRegistryUrl.location}
             onChange={action(({ value }) => {
@@ -110,6 +112,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="update-channel">
           <SubTitle title="Update Channel" />
           <Select
+            id="update-channel-input"
             options={updateChannelOptions}
             value={userStore.updateChannel}
             onChange={({ value }) => userStore.updateChannel = value}
@@ -122,6 +125,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="locale">
           <SubTitle title="Locale Timezone" />
           <Select
+            id="timezone-input"
             options={timezoneOptions}
             value={userStore.localeTimezone}
             onChange={({ value }) => userStore.setLocaleTimezone(value)}

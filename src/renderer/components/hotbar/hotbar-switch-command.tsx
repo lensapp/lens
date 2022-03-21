@@ -63,6 +63,7 @@ const NonInjectedHotbarSwitchCommand = observer(({ hotbarStore, commandOverlay }
 
   return (
     <Select
+      id="switch-to-hotbar-input"
       menuPortalTarget={null}
       onChange={(v) => onChange(v.value)}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}

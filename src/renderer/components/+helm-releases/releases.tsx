@@ -178,7 +178,7 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
             filters: (
               <>
                 {filters}
-                <NamespaceSelectFilter />
+                <NamespaceSelectFilter id="namespace-select-filter" />
               </>
             ),
             searchProps: {

@@ -47,6 +47,7 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
             <div className="flex gaps align-center">
               <SubHeader compact>Position</SubHeader>
               <Select
+                id="minimap-input"
                 themeName="lens"
                 options={["left", "right"]}
                 value={editorConfiguration.minimap.side}
@@ -59,6 +60,7 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
         <section>
           <SubTitle title="Line numbers" />
           <Select
+            id="editor-line-numbers-input"
             options={Object.entries(EditorLineNumbersStyles).map(([value, label]) => ({
               label,
               value,

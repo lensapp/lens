@@ -24,9 +24,13 @@ import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-f
 import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
 
-type ItemListLayoutPropsWithoutGetItems<K extends KubeObject> = Omit<ItemListLayoutProps<K>, "getItems">;
+type ItemListLayoutPropsWithoutGetItems<K extends KubeObject> = Omit<
+  ItemListLayoutProps<K>,
+  "getItems"
+>;
 
-export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutPropsWithoutGetItems<K> {
+export interface KubeObjectListLayoutProps<K extends KubeObject>
+  extends ItemListLayoutPropsWithoutGetItems<K> {
   items?: K[];
   getItems?: () => K[];
   store: KubeObjectStore<K>;
@@ -41,7 +45,10 @@ const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
 
 interface Dependencies {
   clusterFrameContext: ClusterFrameContext;
-  subscribeToStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
+  subscribeToStores: (
+    stores: KubeObjectStore<KubeObject>[],
+    options: KubeWatchSubscribeStoreOptions
+  ) => Disposer;
 }
 
 @observer
@@ -63,10 +70,12 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
     const { store, dependentStores = [], subscribeStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
     const reactions: Disposer[] = [
-      reaction(() => this.props.clusterFrameContext.contextNamespaces.slice(), () => {
-        // clear load errors
-        this.loadErrors.length = 0;
-      }),
+      reaction(
+        () => this.props.clusterFrameContext.contextNamespaces.slice(),
+        () => {
+          // clear load errors
+          this.loadErrors.length = 0;
+        }),
     ];
 
     if (subscribeStores) {
@@ -102,8 +111,10 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
   }
 
   render() {
-    const { className, customizeHeader, store, items, ...layoutProps } = this.props;
-    const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
+    const { className, customizeHeader, store, items, ...layoutProps } =
+      this.props;
+    const placeholderString =
+      ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
 
     return (
       <ItemListLayout
@@ -117,7 +128,7 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
             filters: (
               <>
                 {filters}
-                {store.api.isNamespaced && <NamespaceSelectFilter />}
+                {store.api.isNamespaced && <NamespaceSelectFilter id="kube-object-list-layout-namespace-select-input" />}
               </>
             ),
             searchProps: {
@@ -141,7 +152,10 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
   }
 }
 
-const InjectedKubeObjectListLayout = withInjectables<Dependencies, KubeObjectListLayoutProps<KubeObject>>(NonInjectedKubeObjectListLayout, {
+const InjectedKubeObjectListLayout = withInjectables<
+  Dependencies,
+  KubeObjectListLayoutProps<KubeObject>
+>(NonInjectedKubeObjectListLayout, {
   getProps: (di, props) => ({
     clusterFrameContext: di.inject(clusterFrameContextInjectable),
     subscribeToStores: di.inject(kubeWatchApiInjectable).subscribeStores,

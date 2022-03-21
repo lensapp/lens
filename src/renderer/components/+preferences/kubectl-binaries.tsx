@@ -30,35 +30,38 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(({ defaultPa
     ([value, { label, platforms }]) => ({ value, label, platforms }),
   );
 
-  const save = () => {
-    userStore.downloadBinariesPath = downloadPath;
-    userStore.kubectlBinariesPath = binariesPath;
-  };
+    const save = () => {
+      userStore.downloadBinariesPath = downloadPath;
+      userStore.kubectlBinariesPath = binariesPath;
+    };
 
-  return (
-    <>
-      <section>
-        <SubTitle title="Kubectl binary download"/>
-        <Switch
-          checked={userStore.downloadKubectlBinaries}
+    return (
+      <>
+        <section>
+          <SubTitle title="Kubectl binary download" />
+          <Switch
+            checked={userStore.downloadKubectlBinaries}
           onChange={() => userStore.downloadKubectlBinaries = !userStore.downloadKubectlBinaries}
-        >
-          Download kubectl binaries matching the Kubernetes cluster version
-        </Switch>
-      </section>
+          >
+            Download kubectl binaries matching the Kubernetes cluster version
+          </Switch>
+        </section>
 
-      <section>
-        <SubTitle title="Download mirror" />
-        <Select
-          placeholder="Download mirror for kubectl"
-          options={downloadMirrorOptions}
-          value={userStore.downloadMirror}
-          onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
-          disabled={!userStore.downloadKubectlBinaries}
-          isOptionDisabled={({ platforms }) => !platforms.has(process.platform)}
-          themeName="lens"
-        />
-      </section>
+        <section>
+          <SubTitle title="Download mirror" />
+          <Select
+            id="download-mirror-input"
+            placeholder="Download mirror for kubectl"
+            options={downloadMirrorOptions}
+            value={userStore.downloadMirror}
+            onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
+            disabled={!userStore.downloadKubectlBinaries}
+            isOptionDisabled={({ platforms }) =>
+              !platforms.has(process.platform)
+            }
+            themeName="lens"
+          />
+        </section>
 
       <section>
         <SubTitle title="Directory for binaries" />

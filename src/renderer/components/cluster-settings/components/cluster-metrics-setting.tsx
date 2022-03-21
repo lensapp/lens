@@ -75,6 +75,7 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
     return (
       <>
         <Select
+          id="cluster-metric-resource-type-input"
           className="box grow"
           placeholder="Select metrics to hide..."
           isMulti

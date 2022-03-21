@@ -147,6 +147,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
         <span>Version</span> <Badge label={currentVersion}/>
         <span>Upgrade version</span>
         <Select
+          id="char-version-input"
           className="chart-version"
           menuPlacement="top"
           themeName="outlined"

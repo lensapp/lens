@@ -134,6 +134,7 @@ export class DeleteClusterDialog extends React.Component<DeleteClusterDialogProp
     return (
       <div className="mt-4">
         <Select
+          id="delete-cluster-input"
           options={options}
           value={this.newCurrentContext}
           onChange={({ value }) => this.newCurrentContext = value}

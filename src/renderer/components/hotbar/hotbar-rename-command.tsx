@@ -69,6 +69,7 @@ const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarSt
 
   return (
     <Select
+      id="rename-hotbar-input"
       menuPortalTarget={null}
       onChange={(v) => onSelect(v.value)}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}

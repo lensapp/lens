@@ -171,6 +171,7 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
         <Badge label={`${repo}/${name}`} title="Repo/Name"/>
         <span>Version</span>
         <Select
+          id="chart-version-input"
           className="chart-version"
           value={version}
           options={versions}
@@ -180,6 +181,7 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
         />
         <span>Namespace</span>
         <NamespaceSelect
+          id="install-chart-namespace-select-input"
           showIcons={false}
           menuPlacement="top"
           themeName="outlined"

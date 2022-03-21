@@ -56,6 +56,7 @@ const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarSt
 
   return (
     <Select
+      id="remove-hotbar-input"
       menuPortalTarget={null}
       onChange={(v) => onChange(v.value)}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
