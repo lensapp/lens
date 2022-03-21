@@ -30,7 +30,10 @@ export interface SelectOption<T = any> {
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
+export interface SelectProps<T = any>
+  extends ReactSelectProps<T, boolean>,
+    CreatableProps<T, boolean> {
+  id: string;
   value?: T;
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
@@ -41,7 +44,7 @@ export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, Crea
 
 @observer
 export class Select extends React.Component<SelectProps> {
-  static defaultProps: SelectProps = {
+  static defaultProps: Omit<SelectProps, "id"> = {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
     menuPlacement: "auto",
@@ -53,7 +56,8 @@ export class Select extends React.Component<SelectProps> {
   }
 
   @computed get themeClass() {
-    const themeName = this.props.themeName || ThemeStore.getInstance().activeTheme.type;
+    const themeName =
+      this.props.themeName || ThemeStore.getInstance().activeTheme.type;
 
     return `theme-${themeName}`;
   }
@@ -88,7 +92,9 @@ export class Select extends React.Component<SelectProps> {
 
     if (autoConvertOptions && Array.isArray(options)) {
       return options.map(opt => {
-        return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
+        return this.isValidOption(opt)
+          ? opt
+          : { value: opt, label: String(opt) };
       });
     }
 
@@ -114,13 +120,21 @@ export class Select extends React.Component<SelectProps> {
 
   render() {
     const {
-      className, menuClass, isCreatable, autoConvertOptions,
-      value, options, components = {}, ...props
+      className,
+      menuClass,
+      isCreatable,
+      autoConvertOptions,
+      value,
+      options,
+      components = {},
+      id: inputId,
+      ...props
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
 
     const selectProps: Partial<SelectProps> = {
       ...props,
+      inputId,
       styles: this.styles,
       value: autoConvertOptions ? this.selectedOption : value,
       options: autoConvertOptions ? this.options : options,
