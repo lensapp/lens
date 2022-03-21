@@ -4,11 +4,9 @@
  */
 
 import "./dock.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
-
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
@@ -37,6 +35,11 @@ interface Dependencies {
   dockStore: DockStore;
 }
 
+enum Direction {
+  NEXT = 1,
+  PREV = -1,
+}
+
 @observer
 class NonInjectedDock extends React.Component<DockProps & Dependencies> {
   private element = React.createRef<HTMLDivElement>();
@@ -52,6 +55,7 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
   onKeyDown = (evt: KeyboardEvent) => {
     const { close, selectedTab, closeTab } = this.props.dockStore;
     const { code, ctrlKey, metaKey, shiftKey } = evt;
+
     // Determine if user working inside <Dock/> or using any other areas in app
     const dockIsFocused = this.element?.current.contains(document.activeElement);
 
@@ -65,6 +69,14 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
       closeTab(selectedTab.id);
       this.element?.current.focus();  // Avoid loosing focus when closing tab
     }
+
+    if(ctrlKey && code === "Period") {
+      this.switchToNextTab();
+    }
+
+    if(ctrlKey && code === "Comma") {
+      this.switchToNextTab(Direction.PREV);
+    }
   };
 
   onChangeTab = (tab: DockTab) => {
@@ -73,6 +85,19 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
     open();
     selectTab(tab.id);
     this.element?.current.focus();
+  };
+
+  switchToNextTab = (direction: Direction = Direction.NEXT) => {
+    const { tabs, selectedTab } = this.props.dockStore;
+    const currentIndex = tabs.indexOf(selectedTab);
+    const nextIndex = currentIndex + direction;
+
+    // check if moving to the next or previous tab is possible.
+    if (nextIndex >= tabs.length || nextIndex < 0) return;
+
+    const nextElement = tabs[nextIndex];
+
+    this.onChangeTab(nextElement);
   };
 
   renderTab(tab: DockTab) {
@@ -125,14 +150,14 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
           onMinExtentExceed={dockStore.open}
           onDrag={extent => dockStore.height = extent}
         />
-        <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
+        <div className="tabs-container flex align-center">
           <DockTabs
             tabs={tabs}
             selectedTab={selectedTab}
             autoFocus={isOpen}
             onChangeTab={this.onChangeTab}
           />
-          <div className="toolbar flex gaps align-center box grow">
+          <div className={cssNames("toolbar flex gaps align-center box grow", { "pl-0": tabs.length == 0 })}>
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>

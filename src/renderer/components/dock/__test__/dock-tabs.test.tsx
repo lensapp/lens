@@ -39,6 +39,14 @@ jest.mock("electron", () => ({
   },
 }));
 
+Object.defineProperty(window, "ResizeObserver", {
+  writable: true,
+  value: jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    disconnect: jest.fn(),
+  })),
+});
+
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
   { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource", pinned: false },

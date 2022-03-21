@@ -162,6 +162,10 @@ export class DockStore implements DockStorageState {
     this.dependencies.storage.merge({ selectedTabId: tabId });
   }
 
+  @computed get tabsNumber() : number {
+    return this.tabs.length;
+  }
+
   @computed get selectedTab() {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
   }
@@ -323,6 +327,7 @@ export class DockStore implements DockStorageState {
   @action
   closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
+    const tabIndex = this.getTabIndex(tabId);
 
     if (!tab || tab.pinned) {
       return;
@@ -333,7 +338,7 @@ export class DockStore implements DockStorageState {
 
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
-        const newTab = this.tabs.slice(-1)[0]; // last
+        const newTab = tabIndex < this.tabsNumber ? this.tabs[tabIndex] : this.tabs[tabIndex - 1];
 
         this.selectTab(newTab.id);
       } else {

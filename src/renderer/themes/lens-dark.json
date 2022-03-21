@@ -73,6 +73,8 @@
     "dockEditorComment": "#808080",
     "dockEditorActiveLineBackground": "#3a3d41",
     "dockBadgeBackground": "#36393e",
+    "dockTabBorderColor": "#43424d",
+    "dockTabActiveBackground": "#3a3e45",
     "logsBackground": "#000000",
     "logsForeground": "#ffffff",
     "logRowHoverBackground": "#35373a",

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./dock-tab.scss";
+import styles from "./dock-tab.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -16,6 +16,7 @@ import { observable, makeObservable } from "mobx";
 import { isMac } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
+import { Tooltip, TooltipPosition } from "../tooltip";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
@@ -76,19 +77,26 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
   }
 
   render() {
-    const { className, moreActions, dockStore, ...tabProps } = this.props;
+    const { className, moreActions, dockStore, active, ...tabProps } = this.props;
     const { title, pinned } = tabProps.value;
     const label = (
-      <div className="flex gaps align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
-        <span className="title" title={title}>{title}</span>
+      <div className="flex align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
+        <span className={styles.title}>{title}</span>
         {moreActions}
         {!pinned && (
-          <Icon
-            small material="close"
-            tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
-            onClick={prevDefault(this.close)}
-          />
+          <div className={styles.close}>
+            <Icon
+              small material="close"
+              tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
+              onClick={prevDefault(this.close)}
+            />
+          </div>
         )}
+        <Tooltip
+          targetId={`tab-${this.tabId}`}
+          preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
+          style={{ transitionDelay: "700ms" }}
+        >{title}</Tooltip>
       </div>
     );
 
@@ -97,7 +105,9 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
         <Tab
           {...tabProps}
           id={`tab-${this.tabId}`}
-          className={cssNames("DockTab", className, { pinned })}
+          className={cssNames(styles.DockTab, className, {
+            [styles.pinned]: pinned,
+          })}
           onContextMenu={() => this.menuVisible = true}
           label={label}
         />

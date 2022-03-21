@@ -81,10 +81,7 @@ export class Tab extends React.PureComponent<TabProps> {
   }
 
   scrollIntoView() {
-    this.ref.current?.scrollIntoView?.({
-      behavior: "smooth",
-      inline: "center",
-    });
+    this.ref.current?.scrollIntoViewIfNeeded();
   }
 
   @boundMethod
@@ -137,6 +134,7 @@ export class Tab extends React.PureComponent<TabProps> {
         onClick={this.onClick}
         onFocus={this.onFocus}
         onKeyDown={this.onKeyDown}
+        role="tab"
         ref={this.ref}
       >
         {typeof icon === "string" ? <Icon small material={icon}/> : icon}
