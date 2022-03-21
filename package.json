@@ -232,7 +232,7 @@
     "mac-ca": "^1.0.6",
     "marked": "^4.0.12",
     "md5-file": "^5.0.0",
-    "mobx": "^6.3.7",
+    "mobx": "^6.5.0",
     "mobx-observable-history": "^2.0.3",
     "mobx-react": "^7.3.0",
     "mobx-utils": "^6.0.4",

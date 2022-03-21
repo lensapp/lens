@@ -11,7 +11,7 @@ import { Notice } from "../+extensions/notice";
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
 import logger from "../../../main/logger";
-import { iter } from "../../utils";
+import { iter, tuple } from "../../utils";
 import { SubTitle } from "../layout/sub-title";
 import { PathPicker } from "../path-picker/path-picker";
 import { Spinner } from "../spinner";
@@ -79,9 +79,12 @@ export class KubeconfigSyncs extends React.Component {
     this.loaded = true;
 
     disposeOnUnmount(this, [
-      reaction(() => Array.from(this.syncs.entries(), ([filePath, { data }]) => [filePath, data]), syncs => {
-        UserStore.getInstance().syncKubeconfigEntries.replace(syncs);
-      }),
+      reaction(
+        () => Array.from(this.syncs.entries(), ([filePath, { data }]) => tuple.from(filePath, data)),
+        syncs => {
+          UserStore.getInstance().syncKubeconfigEntries.replace(syncs);
+        },
+      ),
     ]);
   }
 
