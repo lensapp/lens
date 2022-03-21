@@ -8,7 +8,7 @@ import React from "react";
 import type { Pod } from "../../../../../common/k8s-api/endpoints";
 import { DrawerTitle } from "../../../drawer";
 import { Icon } from "../../../icon";
-import { VolumeVarient } from "./variant";
+import { VolumeVariant } from "./variant";
 
 export interface PodVolumesProps {
   pod: Pod;
@@ -30,7 +30,7 @@ export const PodVolumes = observer(({ pod }: PodVolumesProps) => {
             <Icon small material="storage" />
             <span>{volume.name}</span>
           </div>
-          <VolumeVarient pod={pod} volume={volume} />
+          <VolumeVariant pod={pod} volume={volume} />
         </div>
       ))}
     </>

@@ -34,7 +34,7 @@ export const RadosBlockDevice: VolumeVariantComponent<"rbd"> = (
             <LocalRef
               pod={pod}
               title="Authentication Secret"
-              ref={secretRef}
+              kubeRef={secretRef}
               api={secretsApi}
             />
           )

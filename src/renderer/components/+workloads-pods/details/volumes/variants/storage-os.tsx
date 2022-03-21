@@ -30,7 +30,7 @@ export const StorageOs: VolumeVariantComponent<"storageos"> = (
       <LocalRef
         pod={pod}
         title="Secret"
-        ref={secretRef}
+        kubeRef={secretRef}
         api={secretsApi}
       />
     </>

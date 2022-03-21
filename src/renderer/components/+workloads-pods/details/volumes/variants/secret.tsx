@@ -14,7 +14,7 @@ export const Secret: VolumeVariantComponent<"secret"> = (
       <LocalRef
         pod={pod}
         title="Name"
-        ref={{ name: secretName }}
+        kubeRef={{ name: secretName }}
         api={secretsApi}
       />
       <DrawerItem name="Items" hidden={items.length === 0}>

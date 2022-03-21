@@ -12,7 +12,7 @@ export const PersistentVolumeClaim: VolumeVariantComponent<"persistentVolumeClai
     <LocalRef
       pod={pod}
       title="Name"
-      ref={{ name: claimName }}
+      kubeRef={{ name: claimName }}
       api={pvcApi}
     />
   )

@@ -20,7 +20,7 @@ export const ScaleIo: VolumeVariantComponent<"scaleIO"> = (
       <LocalRef
         pod={pod}
         title="Name"
-        ref={secretRef}
+        kubeRef={secretRef}
         api={secretsApi}
       />
       <DrawerItem name="SSL Enabled">

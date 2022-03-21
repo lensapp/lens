@@ -45,17 +45,17 @@ const deprecatedVolumeTypes = new Set<PodVolumeKind>([
   "storageos",
 ]);
 
-interface VolumeVarientProps {
+interface VolumeVariantProps {
   pod: Pod;
   volume: PodVolume;
 }
 
-interface VolumeVarientRender {
+interface VolumeVariantRender {
   kind: PodVolumeKind;
   element: JSX.Element;
 }
 
-function renderVolumeVarient({ pod, volume }: VolumeVarientProps): VolumeVarientRender | null {
+function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariantRender | null {
   if (volume.awsElasticBlockStore) {
     return {
       kind: "awsElasticBlockStore",
@@ -269,8 +269,8 @@ function renderVolumeVarient({ pod, volume }: VolumeVarientProps): VolumeVarient
   return null;
 }
 
-export function VolumeVarient(props: VolumeVarientProps) {
-  const result = renderVolumeVarient(props);
+export function VolumeVariant(props: VolumeVariantProps) {
+  const result = renderVolumeVariant(props);
 
   if (!result) {
     return <p>Error! Unknown pod volume kind</p>;

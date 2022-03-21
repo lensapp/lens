@@ -21,11 +21,11 @@ export type VolumeVariantComponent<Kind extends keyof PodVolumeVariants> = React
 export interface LocalRefProps {
   pod: Pod;
   title: string;
-  ref: LocalObjectReference | SecretReference | undefined;
+  kubeRef: LocalObjectReference | SecretReference | undefined;
   api: KubeApi<KubeObject>;
 }
 
-export const LocalRef = ({ pod, title, ref, api }: LocalRefProps) => {
+export const LocalRef = ({ pod, title, kubeRef: ref, api }: LocalRefProps) => {
   if (!ref) {
     return null;
   }

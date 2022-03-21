@@ -28,7 +28,7 @@ export const CephFs: VolumeVariantComponent<"cephfs"> = (
             <LocalRef
               pod={pod}
               title="Secret"
-              ref={secretRef}
+              kubeRef={secretRef}
               api={secretsApi}
             />
           )

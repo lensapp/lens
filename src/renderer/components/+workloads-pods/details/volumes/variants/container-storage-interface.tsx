@@ -34,25 +34,25 @@ export const ContainerStorageInterface: VolumeVariantComponent<"csi"> = ({
     <LocalRef
       pod={pod}
       title="Controller Publish Secret"
-      ref={controllerPublishSecretRef}
+      kubeRef={controllerPublishSecretRef}
       api={secretsApi}
     />
     <LocalRef
       pod={pod}
       title="Controller Expand Secret"
-      ref={controllerExpandSecretRef}
+      kubeRef={controllerExpandSecretRef}
       api={secretsApi}
     />
     <LocalRef
       pod={pod}
       title="Node Publish Secret"
-      ref={nodePublishSecretRef}
+      kubeRef={nodePublishSecretRef}
       api={secretsApi}
     />
     <LocalRef
       pod={pod}
       title="Node Stage Secret"
-      ref={nodeStageSecretRef}
+      kubeRef={nodeStageSecretRef}
       api={secretsApi}
     />
     {

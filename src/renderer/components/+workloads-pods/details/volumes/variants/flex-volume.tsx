@@ -20,7 +20,7 @@ export const FlexVolume: VolumeVariantComponent<"flexVolume"> = (
       <LocalRef
         pod={pod}
         title="Secret"
-        ref={secretRef}
+        kubeRef={secretRef}
         api={secretsApi}
       />
       <DrawerItem name="Readonly">

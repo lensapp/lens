@@ -12,7 +12,7 @@ export const ConfigMap: VolumeVariantComponent<"configMap"> = (
     <LocalRef
       pod={pod}
       title="Name"
-      ref={{ name }}
+      kubeRef={{ name }}
       api={configMapApi}
     />
   )
