@@ -56,9 +56,9 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   };
 
   const updateScrollbarVisibility = () => {
-    const allTabsShrinked = getTabElements().every(tab => tab.offsetWidth == minTabSize.current);
+    const allTabsShrunk = getTabElements().every(tab => tab.offsetWidth == minTabSize.current);
 
-    setShowScrollbar(allTabsShrinked);
+    setShowScrollbar(allTabsShrunk);
   };
 
   const scrollTabsWithMouseWheel = (left: number) => {
