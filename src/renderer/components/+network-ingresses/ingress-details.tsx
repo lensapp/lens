@@ -15,7 +15,7 @@ import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getBackendServiceNamePort, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
+import { computeRuleDeclarations, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
@@ -49,53 +49,45 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules = [], tls = [] }} = ingress;
-    const protocol = tls.length === 0
-      ? "http"
-      : "https";
-
-    return rules.map((rule, index) => (
-      <div className="rules" key={index}>
-        {rule.host && (
-          <div className="host-title">
-            <>Host: {rule.host}</>
-          </div>
-        )}
-        {rule.http && (
-          <Table className="paths">
-            <TableHead>
-              <TableCell className="path">Path</TableCell>
-              <TableCell className="link">Link</TableCell>
-              <TableCell className="backends">Backends</TableCell>
-            </TableHead>
-            {
-              rule.http.paths
-                .map(({ path = "/", backend }, index) => {
-                  const link = `${protocol}://${rule.host || "*"}${path}`;
-
-                  return (
+    return ingress.getRules()
+      .map((rule, index) => (
+        <div className="rules" key={index}>
+          {rule.host && (
+            <div className="host-title">
+              <>Host: {rule.host}</>
+            </div>
+          )}
+          {rule.http && (
+            <Table className="paths">
+              <TableHead>
+                <TableCell className="path">Path</TableCell>
+                <TableCell className="link">Link</TableCell>
+                <TableCell className="backends">Backends</TableCell>
+              </TableHead>
+              {
+                computeRuleDeclarations(ingress, rule)
+                  .map(({ displayAsLink, service, url, pathname }) => (
                     <TableRow key={index}>
-                      <TableCell className="path">{path}</TableCell>
+                      <TableCell className="path">{pathname}</TableCell>
                       <TableCell className="link">
                         {
-                          rule.host
+                          displayAsLink
                             ? (
-                              <a href={link} rel="noreferrer" target="_blank">
-                                {link}
+                              <a href={url} rel="noreferrer" target="_blank">
+                                {url}
                               </a>
                             )
-                            : link
+                            : url
                         }
                       </TableCell>
-                      <TableCell className="backends">{getBackendServiceNamePort(backend)}</TableCell>
+                      <TableCell className="backends">{service}</TableCell>
                     </TableRow>
-                  );
-                })
-            }
-          </Table>
-        )}
-      </div>
-    ));
+                  ))
+              }
+            </Table>
+          )}
+        </div>
+      ));
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
