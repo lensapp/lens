@@ -42,3 +42,10 @@ export function* zip<T, N extends number>(...sources: Tuple<T[], N>): Iterator<T
 export function filled<T, L extends number>(length: L, value: T): Tuple<T, L> {
   return array.filled(length, value) as Tuple<T, L>;
 }
+
+/**
+ * A function for converting an explicit array to a tuple but without the `readonly` typing
+ */
+export function from<T extends any[]>(...args: T): [...T] {
+  return args;
+}

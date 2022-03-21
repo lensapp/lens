@@ -169,11 +169,9 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       const curVal = this[key];
       const newVal = fromStore((preferences)?.[key] as never) as never;
 
-      if (
-        isObservableArray(curVal)
-        || isObservableSet(curVal)
-        || isObservableMap(curVal)
-      ) {
+      if (isObservableArray(curVal)) {
+        curVal.replace(newVal);
+      } else if (isObservableSet(curVal) || isObservableMap(curVal)) {
         curVal.replace(newVal);
       } else {
         this[key] = newVal;
