@@ -334,7 +334,7 @@
     "@types/webpack-env": "^1.16.3",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
-    "@typescript-eslint/parser": "^5.15.0",
+    "@typescript-eslint/parser": "^5.16.0",
     "ansi_up": "^5.1.0",
     "mock-http": "^1.1.0",
     "chart.js": "^2.9.4",
