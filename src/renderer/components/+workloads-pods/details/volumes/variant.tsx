@@ -14,7 +14,7 @@ import { CephFs } from "./variants/ceph-fs";
 import { Cinder } from "./variants/cinder";
 import { ConfigMap } from "./variants/config-map";
 import { ContainerStorageInterface } from "./variants/container-storage-interface";
-import { DownwardApi } from "./variants/downward-api";
+import { DownwardAPI } from "./variants/downward-api";
 import { EmptyDir } from "./variants/empty-dir";
 import { Ephemeral } from "./variants/ephemeral";
 import { FiberChannel } from "./variants/fiber-channel";
@@ -108,7 +108,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
   if (volume.downwardAPI) {
     return {
       kind: "downwardAPI",
-      element: <DownwardApi variant={volume.downwardAPI} pod={pod} volumeName={volume.name} />,
+      element: <DownwardAPI variant={volume.downwardAPI} pod={pod} volumeName={volume.name} />,
     };
   }
 

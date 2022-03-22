@@ -26,9 +26,6 @@ export const ScaleIo: VolumeVariantComponent<"scaleIO"> = (
       <DrawerItem name="SSL Enabled">
         {sslEnabled.toString()}
       </DrawerItem>
-      <DrawerItem name="SSL Enabled">
-        {sslEnabled.toString()}
-      </DrawerItem>
       <DrawerItem name="Protection Domain Name" hidden={!protectionDomain}>
         {protectionDomain}
       </DrawerItem>

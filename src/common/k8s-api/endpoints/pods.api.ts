@@ -340,7 +340,7 @@ export interface FiberChannelSource {
   readOnly: boolean;
 }
 
-export interface FlokerSource {
+export interface FlockerSource {
   datasetName: string;
 }
 
@@ -604,7 +604,7 @@ export interface PodVolumeVariants {
   ephemeral: EphemeralSource;
   fc: FiberChannelSource;
   flexVolume: FlexVolumeSource;
-  flocker: FlokerSource;
+  flocker: FlockerSource;
   gcePersistentDisk: GcePersistentDiskSource;
   gitRepo: GitRepoSource;
   glusterfs: GlusterFsSource;

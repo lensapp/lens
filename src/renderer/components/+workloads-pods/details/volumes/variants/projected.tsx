@@ -23,25 +23,21 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   <DrawerItem name="Name">
                     {secret.name}
                   </DrawerItem>
-                  {secret.items && (
-                    <DrawerItem name="Items">
-                      <ul>
-                        {secret.items.map(({ key }) => <li key={key}>{key}</li>)}
-                      </ul>
-                    </DrawerItem>
-                  )}
+                  <DrawerItem name="Items">
+                    <ul>
+                      {secret.items?.map(({ key }) => <li key={key}>{key}</li>)}
+                    </ul>
+                  </DrawerItem>
                 </>
               )}
               {downwardAPI && (
                 <>
                   <DrawerTitle size="sub-title">Downward API</DrawerTitle>
-                  {downwardAPI.items && (
-                    <DrawerItem name="Items">
-                      <ul>
-                        {downwardAPI.items.map(({ path }) => <li key={path}>{path}</li>)}
-                      </ul>
-                    </DrawerItem>
-                  )}
+                  <DrawerItem name="Items">
+                    <ul>
+                      {downwardAPI.items?.map(({ path }) => <li key={path}>{path}</li>)}
+                    </ul>
+                  </DrawerItem>
                 </>
               )}
               {configMap && (
@@ -50,13 +46,11 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   <DrawerItem name="Name">
                     {configMap.name}
                   </DrawerItem>
-                  {configMap.items && (
-                    <DrawerItem name="Items">
-                      <ul>
-                        {configMap.items.map(({ path }) => <li key={path}>{path}</li>)}
-                      </ul>
-                    </DrawerItem>
-                  )}
+                  <DrawerItem name="Items">
+                    <ul>
+                      {configMap.items?.map(({ path }) => <li key={path}>{path}</li>)}
+                    </ul>
+                  </DrawerItem>
                 </>
               )}
               {serviceAccountToken && (
@@ -65,8 +59,8 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   <DrawerItem name="Audience" hidden={!serviceAccountToken.audience}>
                     {serviceAccountToken.audience}
                   </DrawerItem>
-                  <DrawerItem name="Expiration" hidden={!serviceAccountToken.expirationSeconds}>
-                    {serviceAccountToken.expirationSeconds}s
+                  <DrawerItem name="Expiration">
+                    {String(serviceAccountToken.expirationSeconds || (60*60 /* an hour */))}s
                   </DrawerItem>
                   <DrawerItem name="Path">
                     {serviceAccountToken.path}

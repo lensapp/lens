@@ -7,7 +7,7 @@ import React from "react";
 import { DrawerItem } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 
-export const DownwardApi: VolumeVariantComponent<"downwardAPI"> = (
+export const DownwardAPI: VolumeVariantComponent<"downwardAPI"> = (
   ({ variant: { items }}) => (
     <>
       <DrawerItem name="Items">
