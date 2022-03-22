@@ -4,7 +4,7 @@
  */
 
 import path from "path";
-import Config from "conf";
+import type Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { ipcMain, ipcRenderer } from "electron";
 import { IEqualsComparer, makeObservable, reaction, runInAction } from "mobx";
@@ -15,8 +15,8 @@ import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable from "./get-configuration-file-model/get-configuration-file-model.injectable";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
@@ -48,10 +48,17 @@ export abstract class BaseStore<T> extends Singleton {
    */
   load() {
     if (!isTestEnv) {
-      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
+      logger.info(
+        `[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${
+          this.path
+        } ...`,
+      );
     }
+    const di = getLegacyGlobalDiForExtensionApi();
 
-    this.storeConfig = new Config({
+    const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
+
+    this.storeConfig = getConfigurationFileModel({
       ...this.params,
       projectName: "lens",
       projectVersion: getAppVersion(),
@@ -60,14 +67,23 @@ export abstract class BaseStore<T> extends Singleton {
 
     const res: any = this.fromStore(this.storeConfig.store);
 
-    if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-      console.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+    if (
+      res instanceof Promise ||
+      (typeof res === "object" && res && typeof res.then === "function")
+    ) {
+      console.error(
+        `${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`,
+      );
     }
 
     this.enableSync();
 
     if (!isTestEnv) {
-      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
+      logger.info(
+        `[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${
+          this.path
+        }`,
+      );
     }
   }
 
@@ -108,23 +124,27 @@ export abstract class BaseStore<T> extends Singleton {
     this.syncDisposers.push(
       reaction(
         () => toJS(this.toJSON()), // unwrap possible observables and react to everything
-        model => this.onModelChange(model),
+        (model) => this.onModelChange(model),
         this.params.syncOptions,
       ),
     );
 
     if (ipcMain) {
-      this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
-        logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
-        this.onSync(model);
-      }));
+      this.syncDisposers.push(
+        ipcMainOn(this.syncMainChannel, (event, model: T) => {
+          logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
+          this.onSync(model);
+        }),
+      );
     }
 
     if (ipcRenderer) {
-      this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-        logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
-        this.onSyncFromMain(model);
-      }));
+      this.syncDisposers.push(
+        ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
+          logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
+          this.onSyncFromMain(model);
+        }),
+      );
     }
   }
 
@@ -140,7 +160,7 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   disableSync() {
-    this.syncDisposers.forEach(dispose => dispose());
+    this.syncDisposers.forEach((dispose) => dispose());
     this.syncDisposers.length = 0;
   }
 
