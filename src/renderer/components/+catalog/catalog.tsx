@@ -158,7 +158,7 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
       name: "catalog",
       action: "change-category",
       params: {
-        category: activeCategory ? activeCategory?.metadata?.name : "Browse",
+        category: activeCategory ? activeCategory.getName() : "Browse",
       },
     });
 
