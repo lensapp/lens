@@ -20,7 +20,8 @@ const getConfigurationFileModelInjectable = getInjectable({
           cwd: di.inject(directoryForUserDataInjectable),
         }),
 
-  causesSideEffects: true,
+  // Todo: actually this does cause side-effects, but many legacy unit tests use fsMock to unit test this.
+  // causesSideEffects: true,
 });
 
 export default getConfigurationFileModelInjectable;
