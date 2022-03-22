@@ -16,6 +16,10 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
+import getConfigurationFileModelInjectable
+  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -51,6 +55,12 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(clusterStoreInjectable, () =>
       ClusterStore.createInstance({ createCluster: () => null }),
     );
+
+    // @ts-ignore
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+
+    // @ts-ignore
+    di.permitSideEffects(appVersionInjectable);
 
     di.inject(clusterStoreInjectable);
 

@@ -18,7 +18,6 @@ import type {
   DiContainer,
 } from "@ogre-tools/injectable";
 
-
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 
 import directoryForUserDataInjectable
@@ -26,6 +25,10 @@ import directoryForUserDataInjectable
 import kubeAuthProxyCaInjectable from "../../main/kube-auth-proxy/kube-auth-proxy-ca.injectable";
 import createKubeAuthProxyCertFilesInjectable from "../../main/kube-auth-proxy/create-kube-auth-proxy-cert-files.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable
+  from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -88,6 +91,12 @@ describe("cluster-store", () => {
 
     mainDi.override(clusterStoreInjectable, (di) => ClusterStore.createInstance({ createCluster: di.inject(createClusterInjectionToken) }));
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    // @ts-ignore
+    mainDi.permitSideEffects(getConfigurationFileModelInjectable);
+
+    // @ts-ignore
+    mainDi.permitSideEffects(appVersionInjectable);
 
     await mainDi.runSetups();
 

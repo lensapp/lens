@@ -16,6 +16,10 @@ import directoryForUserDataInjectable
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
+import getConfigurationFileModelInjectable
+  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 jest.mock("electron", () => ({
   ipcRenderer: {
@@ -37,6 +41,12 @@ describe("<Select />", () => {
     await di.runSetups();
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
+
+    // @ts-ignore
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+
+    // @ts-ignore
+    di.permitSideEffects(appVersionInjectable);
 
     UserStore.createInstance();
     ThemeStore.createInstance();

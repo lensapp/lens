@@ -24,6 +24,10 @@ import { UserStore } from "../../../common/user-store";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable
   from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable
+  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
@@ -94,6 +98,12 @@ describe("<Catalog />", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    // @ts-ignore
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+
+    // @ts-ignore
+    di.permitSideEffects(appVersionInjectable);
 
     await di.runSetups();
 
@@ -281,11 +291,7 @@ describe("<Catalog />", () => {
 
   it("emits catalog open AppEvent", () => {
     render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
+      <Catalog />,
     );
 
     expect(emitEvent).toHaveBeenCalledWith( {
@@ -296,11 +302,7 @@ describe("<Catalog />", () => {
 
   it("emits catalog change AppEvent when changing the category", () => {
     render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
+      <Catalog />,
     );
 
     userEvent.click(screen.getByText("Web Links"));

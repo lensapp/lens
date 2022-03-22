@@ -11,6 +11,10 @@ import { readFileSync } from "fs";
 import directoryForUserDataInjectable
   from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable
+  from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../get-configuration-file-model/app-version/app-version.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -81,6 +85,12 @@ describe("BaseStore", () => {
     const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+
+    // @ts-ignore
+    mainDi.permitSideEffects(getConfigurationFileModelInjectable);
+
+    // @ts-ignore
+    mainDi.permitSideEffects(appVersionInjectable);
 
     await mainDi.runSetups();
 

@@ -33,6 +33,10 @@ import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultTheme } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable
+  from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -48,6 +52,12 @@ describe("user store tests", () => {
     di.override(writeFileInjectable, () => () => undefined);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(userStoreInjectable, () => UserStore.createInstance());
+
+    // @ts-ignore
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+
+    // @ts-ignore
+    di.permitSideEffects(appVersionInjectable);
 
     await di.runSetups();
   });
