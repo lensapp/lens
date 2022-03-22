@@ -65,6 +65,9 @@ if (ipcMain) {
 }
 
 export default winston.createLogger({
-  format: format.simple(),
+  format: format.combine(
+    format.splat(),
+    format.simple(),
+  ),
   transports,
 });
