@@ -5,6 +5,9 @@
 import { asLegacyGlobalForExtensionApi } from "./as-legacy-global-object-for-extension-api";
 import type { Injectable } from "@ogre-tools/injectable";
 
+/**
+ * @deprecated use asLegacyGlobalForExtensionApi instead, and use proper implementations instead of "modifications".
+ */
 export const asLegacyGlobalObjectForExtensionApiWithModifications = <
   InjectableInstance extends InjectionTokenInstance,
   InjectionTokenInstance,
