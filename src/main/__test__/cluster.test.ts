@@ -20,6 +20,7 @@ jest.mock("winston", () => ({
     label: jest.fn(),
     timestamp: jest.fn(),
     printf: jest.fn(),
+    splat: jest.fn(),
   },
   createLogger: jest.fn().mockReturnValue(logger),
   transports: {
