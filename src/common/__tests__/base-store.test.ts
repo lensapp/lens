@@ -85,11 +85,7 @@ describe("BaseStore", () => {
     const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
-
-    // @ts-ignore
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     mainDi.permitSideEffects(appVersionInjectable);
 
     await mainDi.runSetups();

@@ -56,10 +56,7 @@ describe("kubeconfig-sync.source tests", () => {
       ClusterStore.createInstance({ createCluster: () => null }),
     );
 
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
 
     di.inject(clusterStoreInjectable);

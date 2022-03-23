@@ -98,10 +98,7 @@ describe("kube auth proxy tests", () => {
 
     di.override(spawnInjectable, () => mockSpawn);
 
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
 
     mockFs(mockMinikubeConfig);

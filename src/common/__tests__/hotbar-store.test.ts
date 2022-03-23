@@ -134,13 +134,8 @@ describe("HotbarStore", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    // @ts-ignore
     di.permitSideEffects(hotbarStoreInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
   });
 

@@ -92,10 +92,7 @@ describe("cluster-store", () => {
     mainDi.override(clusterStoreInjectable, (di) => ClusterStore.createInstance({ createCluster: di.inject(createClusterInjectionToken) }));
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    // @ts-ignore
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     mainDi.permitSideEffects(appVersionInjectable);
 
     await mainDi.runSetups();

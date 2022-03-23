@@ -45,13 +45,8 @@ describe("<HotbarRemoveCommand />", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    // @ts-ignore
     di.permitSideEffects(hotbarStoreInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);

@@ -48,10 +48,7 @@ describe("protocol router tests", () => {
 
     di.override(extensionsStoreInjectable, () => ExtensionsStore.createInstance());
 
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
 
     await di.runSetups();

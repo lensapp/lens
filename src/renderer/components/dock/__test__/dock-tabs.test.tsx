@@ -84,10 +84,7 @@ describe("<DockTabs />", () => {
       () => "some-test-suite-specific-directory-for-user-data",
     );
 
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
 
     await di.runSetups();

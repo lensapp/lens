@@ -135,10 +135,7 @@ describe("<LogResourceSelector />", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
 
-    // @ts-ignore
     di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    // @ts-ignore
     di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);
