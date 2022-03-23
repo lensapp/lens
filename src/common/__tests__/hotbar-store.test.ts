@@ -150,6 +150,8 @@ describe("HotbarStore", () => {
 
   describe("given no migrations", () => {
     beforeEach(async () => {
+      mockFs();
+
       await di.runSetups();
     });
 
