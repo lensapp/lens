@@ -14,9 +14,8 @@ import { ClusterManager } from "../../cluster-manager";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
-import directoryForKubeConfigsInjectable
-  from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-
+import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 
 jest.mock("electron", () => ({
   app: {
@@ -57,6 +56,7 @@ describe("kubeconfig-sync.source tests", () => {
   afterEach(() => {
     mockFs.restore();
     ClusterManager.resetInstance();
+    ClusterStore.resetInstance();
   });
 
   describe("configsToModels", () => {
