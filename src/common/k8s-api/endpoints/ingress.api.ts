@@ -42,8 +42,8 @@ export interface ILoadBalancerIngress {
 
 // extensions/v1beta1
 export interface ExtensionsBackend {
-  serviceName: string;
-  servicePort: number | string;
+  serviceName?: string;
+  servicePort?: number | string;
 }
 
 // networking.k8s.io/v1
@@ -96,7 +96,7 @@ export interface IngressRule {
 }
 
 export interface Ingress {
-  spec: {
+  spec?: {
     tls?: {
       secretName: string;
     }[];
@@ -200,7 +200,7 @@ export class Ingress extends KubeObject {
 
 export function computeRuleDeclarations(ingress: Ingress, rule: IngressRule): ComputedIngressRoute[] {
   const { host = "*", http: { paths } = { paths: [] }} = rule;
-  const protocol = (ingress.spec.tls?.length ?? 0) > 0
+  const protocol = (ingress.spec?.tls?.length ?? 0) === 0
     ? "http"
     : "https";
 
