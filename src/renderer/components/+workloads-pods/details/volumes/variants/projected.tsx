@@ -25,7 +25,11 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   </DrawerItem>
                   <DrawerItem name="Items">
                     <ul>
-                      {secret.items?.map(({ key }) => <li key={key}>{key}</li>)}
+                      {secret.items?.map(({ key, path }) => (
+                        <li key={key}>
+                          {key} ⇢ {path}
+                        </li>
+                      ))}
                     </ul>
                   </DrawerItem>
                 </>
@@ -35,7 +39,11 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   <DrawerTitle size="sub-title">Downward API</DrawerTitle>
                   <DrawerItem name="Items">
                     <ul>
-                      {downwardAPI.items?.map(({ path }) => <li key={path}>{path}</li>)}
+                      {downwardAPI.items?.map(({ path }) => (
+                        <li key={path}>
+                          {path}
+                        </li>
+                      ))}
                     </ul>
                   </DrawerItem>
                 </>
@@ -48,7 +56,11 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   </DrawerItem>
                   <DrawerItem name="Items">
                     <ul>
-                      {configMap.items?.map(({ path }) => <li key={path}>{path}</li>)}
+                      {configMap.items?.map(({ key, path }) => (
+                        <li key={key}>
+                          {key} ⇢ {path}
+                        </li>
+                      ))}
                     </ul>
                   </DrawerItem>
                 </>
