@@ -58,11 +58,11 @@ import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 import { broadcastNativeThemeOnUpdate } from "./native-theme";
 
-const di = getDi();
-
 app.setName(appName);
 
 app.on("ready", async () => {
+  const di = getDi();
+
   await di.runSetups();
 
   injectSystemCAs();
