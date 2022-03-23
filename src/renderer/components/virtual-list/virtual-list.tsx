@@ -134,7 +134,7 @@ export class VirtualList extends Component<VirtualListProps, State> {
 
 interface RowData {
   items: ItemObject[];
-  getRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
+  getRow?: (uid: string | number, item?: ItemObject) => React.ReactElement<TableRowProps>;
 }
 
 export interface RowProps extends ListChildComponentProps {
@@ -146,7 +146,7 @@ const Row = observer((props: RowProps) => {
   const { items, getRow } = data;
   const item = items[index];
   const uid = typeof item == "string" ? index : items[index].getId();
-  const row = getRow(uid);
+  const row = getRow(uid, item);
 
   if (!row) return null;
 

@@ -9,8 +9,8 @@ import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
-import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
-import { boundMethod, cssNames, IClassName, isReactNode, prevDefault, stopPropagation } from "../../utils";
+import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRowProps, TableSortCallbacks } from "../table";
+import { boundMethod, cssNames, IClassName, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -21,6 +21,7 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
+import { Row } from "./row";
 
 export interface ItemListLayoutContentProps<I extends ItemObject> {
   getFilters: () => Filter[];
@@ -75,66 +76,43 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
 
   getTableRow(item: I) {
     const {
-      isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
+      renderTableHeader, renderTableContents, renderItemMenu,
       store, hasDetailsView, onDetails,
-      copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
+      customizeTableRowProps, detailsItem, isSelectable,
     } = this.props;
     const { isSelected } = store;
+    const selected = detailsItem && detailsItem.getId() === item.getId();
+    const onCheckboxChange = isSelectable ? prevDefault(() => store.toggleSelection(item)) : null;
+    const itemMenu = renderItemMenu && (
+      <TableCell className="menu">
+        <div onClick={stopPropagation}>
+          {renderItemMenu(item, store)}
+        </div>
+      </TableCell>
+    );
 
     return (
-      <TableRow
-        nowrap
-        searchItem={item}
-        sortItem={item}
-        selected={detailsItem && detailsItem.getId() === item.getId()}
+      <Row
+        selected={selected}
+        checked={isSelected(item)}
+        renderTableHeader={renderTableHeader}
+        cells={renderTableContents}
+        itemMenu={itemMenu}
+        onCheckboxChange={onCheckboxChange}
         onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
+        item={item}
+        showColumn={this.showColumn}
         {...customizeTableRowProps(item)}
-      >
-        {isSelectable && (
-          <TableCell
-            checkbox
-            isChecked={isSelected(item)}
-            onClick={prevDefault(() => store.toggleSelection(item))}
-          />
-        )}
-        {renderTableContents(item).map((content, index) => {
-          const cellProps: TableCellProps = isReactNode(content)
-            ? { children: content }
-            : content;
-          const headCell = renderTableHeader?.[index];
-
-          if (copyClassNameFromHeadCells && headCell) {
-            cellProps.className = cssNames(
-              cellProps.className,
-              headCell.className,
-            );
-          }
-
-          if (!headCell || this.showColumn(headCell)) {
-            return <TableCell key={index} {...cellProps} />;
-          }
-
-          return null;
-        })}
-        {renderItemMenu && (
-          <TableCell className="menu">
-            <div onClick={stopPropagation}>
-              {renderItemMenu(item, store)}
-            </div>
-          </TableCell>
-        )}
-      </TableRow>
+      />
     );
   }
 
   @boundMethod
-  getRow(uid: string) {
+  getRow(uid: string, item: I) {
     return (
       <div key={uid}>
         <Observer>
           {() => {
-            const item = this.props.getItems().find(item => item.getId() === uid);
-
             if (!item) return null;
 
             return this.getTableRow(item);
@@ -202,7 +180,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       return null;
     }
 
-    return this.props.getItems().map(item => this.getRow(item.getId()));
+    return this.props.getItems().map(item => this.getRow(item.getId(), item));
   }
 
   renderTableHeader() {
@@ -285,11 +263,11 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     );
   }
 
-  showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
+  showColumn = ({ id: columnId, showWithColumn }: TableCellProps): boolean => {
     const { tableId, isConfigurable } = this.props;
 
     return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
-  }
+  };
 
   renderColumnVisibilityMenu() {
     const { renderTableHeader, tableId } = this.props;
