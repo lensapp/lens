@@ -28,7 +28,7 @@ interface PrometheusServicePreferences {
 
 interface Dependencies {
   createKubeAuthProxy: CreateKubeAuthProxy;
-  authProxyCa: Promise<Buffer>;
+  authProxyCa: string;
 }
 
 export class ContextHandler {
@@ -123,7 +123,7 @@ export class ContextHandler {
     return `https://127.0.0.1:${this.kubeAuthProxy.port}${this.kubeAuthProxy.apiPrefix}${path}`;
   }
 
-  async resolveAuthProxyCa() {
+  resolveAuthProxyCa() {
     return this.dependencies.authProxyCa;
   }
 
@@ -140,7 +140,7 @@ export class ContextHandler {
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     await this.ensureServer();
 
-    const caFileContents = await this.resolveAuthProxyCa();
+    const ca = this.dependencies.authProxyCa;
     const clusterPath = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
     const apiPrefix = `${this.kubeAuthProxy.apiPrefix}${clusterPath}`;
 
@@ -150,7 +150,7 @@ export class ContextHandler {
         host: "127.0.0.1",
         port: this.kubeAuthProxy.port,
         path: apiPrefix,
-        ca: caFileContents.toString(),
+        ca,
       },
       changeOrigin: true,
       timeout,
