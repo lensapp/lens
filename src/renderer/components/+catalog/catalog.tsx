@@ -36,6 +36,8 @@ import getCategoryColumnsInjectable from "./get-category-columns.injectable";
 import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable";
 import customCategoryViewsInjectable from "./custom-views.injectable";
 import type { CustomCategoryViewComponents } from "./custom-views";
+import type { AppEvent } from "../../../common/app-event-bus/event-bus";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
 export interface CatalogProps extends RouteComponentProps<CatalogViewRouteParam> {}
 
@@ -44,6 +46,7 @@ interface Dependencies {
   catalogEntityStore: CatalogEntityStore;
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
+  emitEvent: (event: AppEvent) => void;
 }
 
 @observer
@@ -104,6 +107,11 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
         });
       }
     }));
+
+    this.props.emitEvent({
+      name: "catalog",
+      action: "open",
+    });
   }
 
   addToHotbar(entity: CatalogEntity): void {
@@ -145,6 +153,14 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
 
   onTabChange = action((tabId: string | null) => {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
+
+    this.props.emitEvent({
+      name: "catalog",
+      action: "change-category",
+      params: {
+        category: activeCategory ? activeCategory.getName() : "Browse",
+      },
+    });
 
     if (activeCategory) {
       navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
@@ -311,6 +327,7 @@ export const Catalog = withInjectables<Dependencies, CatalogProps>( NonInjectedC
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
     customCategoryViews: di.inject(customCategoryViewsInjectable),
+    emitEvent: di.inject(appEventBusInjectable).emit,
     ...props,
   }),
 });
