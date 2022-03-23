@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`welcome - navigation using application menu renders 1`] = `<div />`;
+
+exports[`welcome - navigation using application menu when navigating to welcome using application menu renders 1`] = `
+<div>
+  <div
+    class="flex justify-center Welcome align-center"
+    data-testid="welcome-page"
+  >
+    <div
+      data-testid="welcome-banner-container"
+      style="width: 320px;"
+    >
+      <i
+        class="Icon logo svg focusable"
+      >
+        <span
+          class="icon"
+        />
+      </i>
+      <div
+        class="flex justify-center"
+      >
+        <div
+          data-testid="welcome-text-container"
+          style="width: 320px;"
+        >
+          <h2>
+            Welcome to 
+            OpenLens
+             5!
+          </h2>
+          <p>
+            To get you started we have auto-detected your clusters in your kubeconfig file and added them to the catalog, your centralized view for managing all your cloud-native resources.
+            <br />
+            <br />
+            If you have any questions or feedback, please join our
+             
+            <a
+              class="link"
+              href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Lens Community slack channel
+            </a>
+            .
+          </p>
+          <ul
+            class="block"
+            data-testid="welcome-menu-container"
+            style="width: 320px;"
+          >
+            <li
+              class="flex grid-12"
+            >
+              <i
+                class="Icon box col-1 material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="view_list"
+                >
+                  view_list
+                </span>
+              </i>
+              <a
+                class="box col-10"
+              >
+                Browse Clusters in Catalog
+              </a>
+              <i
+                class="Icon box col-1 material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="navigate_next"
+                >
+                  navigate_next
+                </span>
+              </i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

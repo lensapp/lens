@@ -1,0 +1,569 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cluster - visibility of sidebar items given kube resource for route is not allowed renders 1`] = `
+<div>
+  <div
+    class="flex flex-col"
+    data-testid="cluster-sidebar"
+  >
+    <div>
+      <div
+        class=""
+        style="width: 40px; height: 40px;"
+      >
+        ??
+      </div>
+      <div />
+    </div>
+    <div
+      class="undefined sidebar-active-status"
+    >
+      <div
+        class="SidebarItem"
+        data-id-test="workloads"
+        data-is-active-test="false"
+        data-test-id="workloads"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-workloads"
+          href="/"
+        >
+          <i
+            class="Icon svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Workloads
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="config"
+        data-is-active-test="false"
+        data-test-id="config"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-config"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="list"
+            >
+              list
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Config
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="network"
+        data-is-active-test="false"
+        data-test-id="network"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-network"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="device_hub"
+            >
+              device_hub
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Network
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="storage"
+        data-is-active-test="false"
+        data-test-id="storage"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-storage"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="storage"
+            >
+              storage
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Storage
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="helm"
+        data-is-active-test="false"
+        data-test-id="helm"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-helm"
+          href="/"
+        >
+          <i
+            class="Icon svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Helm
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="user-management"
+        data-is-active-test="false"
+        data-test-id="user-management"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-user-management"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="security"
+            >
+              security
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Access Control
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="custom-resources"
+        data-is-active-test="false"
+        data-test-id="custom-resources"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-custom-resources"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="extension"
+            >
+              extension
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Custom Resources
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`cluster - visibility of sidebar items given kube resource for route is not allowed when kube resource becomes allowed renders 1`] = `
+<div>
+  <div
+    class="flex flex-col"
+    data-testid="cluster-sidebar"
+  >
+    <div>
+      <div
+        class=""
+        style="width: 40px; height: 40px;"
+      >
+        ??
+      </div>
+      <div />
+    </div>
+    <div
+      class="undefined sidebar-active-status"
+    >
+      <div
+        class="SidebarItem"
+        data-id-test="workloads"
+        data-is-active-test="false"
+        data-test-id="workloads"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-workloads"
+          href="/"
+        >
+          <i
+            class="Icon svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Workloads
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="config"
+        data-is-active-test="false"
+        data-test-id="config"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-config"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="list"
+            >
+              list
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Config
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="some-item-id"
+        data-is-active-test="false"
+        data-test-id="some-item-id"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-some-item-id"
+          href="/"
+        >
+          <span
+            class="link-text box grow"
+          >
+            Some item
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="network"
+        data-is-active-test="false"
+        data-test-id="network"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-network"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="device_hub"
+            >
+              device_hub
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Network
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="storage"
+        data-is-active-test="false"
+        data-test-id="storage"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-storage"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="storage"
+            >
+              storage
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Storage
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="namespaces"
+        data-is-active-test="false"
+        data-test-id="namespaces"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-namespaces"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="layers"
+            >
+              layers
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Namespaces
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="helm"
+        data-is-active-test="false"
+        data-test-id="helm"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-helm"
+          href="/"
+        >
+          <i
+            class="Icon svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Helm
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="user-management"
+        data-is-active-test="false"
+        data-test-id="user-management"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-user-management"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="security"
+            >
+              security
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Access Control
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="custom-resources"
+        data-is-active-test="false"
+        data-test-id="custom-resources"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-custom-resources"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="extension"
+            >
+              extension
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Custom Resources
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;

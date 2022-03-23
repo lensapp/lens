@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`extension special characters in page registrations renders 1`] = `<div />`;
+
+exports[`extension special characters in page registrations when navigating to route with ID having special characters renders 1`] = `
+<div>
+  <div>
+    Some page
+  </div>
+</div>
+`;
