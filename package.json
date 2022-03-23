@@ -384,7 +384,7 @@
     "react-select-event": "^5.3.0",
     "react-table": "^7.7.0",
     "react-window": "^1.8.6",
-    "sass": "^1.45.1",
+    "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
     "sharp": "^0.29.3",
     "style-loader": "^3.3.1",
