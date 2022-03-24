@@ -74,6 +74,38 @@ export class Pods extends React.Component<PodsProps> {
     });
   }
 
+  renderTableContents = (pod: Pod) => {
+    return [
+      <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} expandable={false} />,
+      <KubeObjectStatusIcon key="icon" object={pod} />,
+      pod.getNs(),
+      this.renderContainersStatus(pod),
+      pod.getRestartsCount(),
+      pod.getOwnerRefs().map(ref => {
+        const { kind, name } = ref;
+        const detailsLink = getDetailsUrl(apiManager.lookupApiLink(ref, pod));
+
+        return (
+          <Badge flat key={name} className="owner" tooltip={name}>
+            <Link to={detailsLink} onClick={stopPropagation}>
+              {kind}
+            </Link>
+          </Badge>
+        );
+      }),
+      pod.getNodeName() ?
+        <Badge flat key="node" className="node" tooltip={pod.getNodeName()} expandable={false}>
+          <Link to={getDetailsUrl(nodesApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
+            {pod.getNodeName()}
+          </Link>
+        </Badge>
+        : "",
+      pod.getQosClass(),
+      <KubeObjectAge key="age" object={pod} />,
+      { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) },
+    ];
+  };
+
   render() {
     return (
       <KubeObjectListLayout
@@ -112,35 +144,7 @@ export class Pods extends React.Component<PodsProps> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
-        renderTableContents={pod => [
-          <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} expandable={false} />,
-          <KubeObjectStatusIcon key="icon" object={pod} />,
-          pod.getNs(),
-          this.renderContainersStatus(pod),
-          pod.getRestartsCount(),
-          pod.getOwnerRefs().map(ref => {
-            const { kind, name } = ref;
-            const detailsLink = getDetailsUrl(apiManager.lookupApiLink(ref, pod));
-
-            return (
-              <Badge flat key={name} className="owner" tooltip={name}>
-                <Link to={detailsLink} onClick={stopPropagation}>
-                  {kind}
-                </Link>
-              </Badge>
-            );
-          }),
-          pod.getNodeName() ?
-            <Badge flat key="node" className="node" tooltip={pod.getNodeName()} expandable={false}>
-              <Link to={getDetailsUrl(nodesApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
-                {pod.getNodeName()}
-              </Link>
-            </Badge>
-            : "",
-          pod.getQosClass(),
-          <KubeObjectAge key="age" object={pod} />,
-          { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) },
-        ]}
+        renderTableContents={this.renderTableContents}
       />
     );
   }
