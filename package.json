@@ -296,7 +296,7 @@
     "@types/http-proxy": "^1.17.7",
     "@types/jest": "^26.0.24",
     "@types/js-yaml": "^4.0.5",
-    "@types/jsdom": "^16.2.13",
+    "@types/jsdom": "^16.2.14",
     "@types/jsonpath": "^0.2.0",
     "@types/lodash": "^4.14.180",
     "@types/marked": "^4.0.3",
