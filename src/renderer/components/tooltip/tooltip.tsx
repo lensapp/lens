@@ -54,6 +54,7 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable.ref elem: HTMLElement;
   @observable activePosition: TooltipPosition;
+  @observable isNodeRendered = false;
   @observable isVisible = false;
 
   constructor(props: TooltipProps) {
@@ -80,6 +81,10 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   componentDidUpdate() {
     this.refreshPosition();
+
+    // this.isVisible should be updated after Tooltip DOM node rendered
+    // to show opening animation by adding classname
+    this.isVisible = this.isNodeRendered;
   }
 
   componentWillUnmount() {
@@ -89,19 +94,22 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @boundMethod
   protected onEnterTarget() {
-    this.isVisible = true;
-    this.refreshPosition();
+    this.isNodeRendered = true;
   }
 
   @boundMethod
   protected onLeaveTarget() {
-    this.isVisible = false;
+    this.isNodeRendered = false;
   }
 
   @boundMethod
   refreshPosition() {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
+
+    if (!elem) {
+      return;
+    }
 
     let positions = new Set<TooltipPosition>([
       TooltipPosition.RIGHT,
@@ -150,6 +158,10 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   protected setPosition(pos: { left: number; top: number }) {
+    if (!this.elem) {
+      return;
+    }
+
     const elemStyle = this.elem.style;
 
     elemStyle.left = `${pos.left}px`;
@@ -216,11 +228,16 @@ export class Tooltip extends React.Component<TooltipProps> {
   render() {
     const { style, formatters, usePortal, children, visible } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      visible: visible ?? this.isVisible,
+      visible: this.isVisible || visible,
       formatter: !!formatters,
     });
+
+    if (!visible && !this.isNodeRendered) {
+      return null;
+    }
+
     const tooltip = (
-      <div className={className} style={style} ref={this.bindRef}>
+      <div className={className} style={style} ref={this.bindRef} role="tooltip">
         {children}
       </div>
     );
