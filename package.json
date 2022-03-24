@@ -388,7 +388,7 @@
     "sass-loader": "^12.6.0",
     "sharp": "^0.29.3",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.0.7",
+    "tailwindcss": "^3.0.23",
     "tar-stream": "^2.2.0",
     "ts-jest": "26.5.6",
     "ts-loader": "^9.2.6",
