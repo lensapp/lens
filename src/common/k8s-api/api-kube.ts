@@ -17,4 +17,4 @@ export const apiKube = isClusterPageContext()
       "Host": window.location.host,
     },
   })
-  : null;
+  : undefined;
