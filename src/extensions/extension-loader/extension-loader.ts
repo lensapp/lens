@@ -250,6 +250,7 @@ export class ExtensionLoader {
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
+        ...(extension.getContextProviders ? [registries.ContextProviderRegistry.getInstance().add(await extension.getContextProviders())] : []),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -277,6 +278,7 @@ export class ExtensionLoader {
         registries.ClusterPageRegistry.getInstance().add(extension.clusterPages, extension),
         registries.ClusterPageMenuRegistry.getInstance().add(extension.clusterPageMenus, extension),
         registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
+        ...(extension.getContextProviders ? [registries.ContextProviderRegistry.getInstance().add(await extension.getContextProviders())] : []),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

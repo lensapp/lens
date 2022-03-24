@@ -18,6 +18,7 @@ import { ClusterFrameHandler } from "../../components/cluster-manager/lens-views
 import historyInjectable from "../../navigation/history.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { History } from "history";
+import { ContextProviderRegistry, ContextProviderProps } from "../../../extensions/registries/context-provider-registry";
 
 injectSystemCAs();
 
@@ -39,19 +40,33 @@ class NonInjectedRootFrame extends React.Component<Dependencies> {
     ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
   }
 
+  /**
+   * Recursively render all the React Context Providers with the children
+   */
+  renderWithProviders(contextProviders: React.ComponentType<ContextProviderProps>[], children: React.ReactNode) {
+    if (contextProviders.length === 0) {
+      return children;
+    } else {
+      const [Provider, ...restProviders] = contextProviders;
+
+      return (<Provider>{this.renderWithProviders(restProviders, children)}</Provider>);
+    }
+  }
+
   render() {
-    return (
-      <Router history={this.props.history}>
-        <ErrorBoundary>
-          <Switch>
-            <Route component={ClusterManager} />
-          </Switch>
-        </ErrorBoundary>
-        <Notifications />
-        <ConfirmDialog />
-        <CommandContainer />
-      </Router>
-    );
+    // Extensions may register React Context Provider components
+    const contextProviders = ContextProviderRegistry.getInstance().getItems().map(contextProvider => contextProvider.components.Provider);
+
+    return this.renderWithProviders(contextProviders, (<Router history={this.props.history}>
+      <ErrorBoundary>
+        <Switch>
+          <Route component={ClusterManager} />
+        </Switch>
+      </ErrorBoundary>
+      <Notifications />
+      <ConfirmDialog />
+      <CommandContainer />
+    </Router>));
   }
 }
 

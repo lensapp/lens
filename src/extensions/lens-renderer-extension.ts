@@ -41,6 +41,7 @@ export class LensRendererExtension extends LensExtension {
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
+  getContextProviders?: () => Promise<registries.ContextProviderRegistration[]>;
 
   async navigate<P extends object>(pageId?: string, params?: P) {
     const { navigate } = await import("../renderer/navigation");

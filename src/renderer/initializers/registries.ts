@@ -12,4 +12,5 @@ export function initRegistries() {
   registries.EntitySettingRegistry.createInstance();
   registries.GlobalPageRegistry.createInstance();
   registries.KubeObjectDetailRegistry.createInstance();
+  registries.ContextProviderRegistry.createInstance();
 }
