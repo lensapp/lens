@@ -5,8 +5,8 @@
 
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
 import type { Response } from "node-fetch";
-import { LensProxy } from "../../main/lens-proxy";
 import { apiKubePrefix, isDebugging } from "../vars";
+import { apiBase } from "./api-base";
 
 export interface KubeJsonApiListMetadata {
   resourceVersion: string;
@@ -57,15 +57,15 @@ export interface KubeJsonApiError extends JsonApiError {
 
 export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
   static forCluster(clusterId: string): KubeJsonApi {
-    const port = LensProxy.getInstance().port;
+    const url = new URL(apiBase.config.serverAddress);
 
     return new this({
-      serverAddress: `http://127.0.0.1:${port}`,
+      serverAddress: apiBase.config.serverAddress,
       apiBase: apiKubePrefix,
       debug: isDebugging,
     }, {
       headers: {
-        "Host": `${clusterId}.localhost:${port}`,
+        "Host": `${clusterId}.localhost:${url.port}`,
       },
     });
   }
