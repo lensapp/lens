@@ -90,9 +90,13 @@ export class Animate extends React.Component<AnimateProps> {
       "--leave-duration": `${leaveDuration}ms`,
     } as React.CSSProperties;
 
+    if (!this.isVisible) {
+      return null;
+    }
+
     return React.cloneElement(contentElem, {
       className: cssNames("Animate", name, contentElem.props.className, this.statusClassName),
-      children: this.isVisible ? contentElem.props.children : null,
+      children: contentElem.props.children,
       style: {
         ...contentElem.props.style,
         ...durations,
