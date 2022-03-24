@@ -376,7 +376,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
-  protected bindWatchEventsUpdater(delay = 1000) {
+  protected bindWatchEventsUpdater(delay = 4000) {
     reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
       delay,
     });
