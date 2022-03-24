@@ -7,7 +7,7 @@ import "./pod-details-secrets.scss";
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { autorun, observable } from "mobx";
+import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import { Pod, Secret, secretsApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
@@ -17,18 +17,27 @@ export interface PodDetailsSecretsProps {
 }
 
 export const PodDetailsSecrets = observer(({ pod }: PodDetailsSecretsProps) => {
-  const [secrets] = useState(observable.map<string, Secret>());
+  const [secrets, setSecrets] = useState(new Map<string, Secret>());
 
-  useEffect(() => autorun(async () => {
-    const podSecrets = await Promise.all(
-      pod.getSecrets().map(secretName => secretsApi.get({
-        name: secretName,
-        namespace: pod.getNs(),
-      })),
-    );
+  useEffect(() => (
+    reaction(
+      () => pod.getSecrets(),
+      async (secretNames) => {
+        const results = await Promise.allSettled(
+          secretNames.map(secretName => secretsApi.get({
+            name: secretName,
+            namespace: pod.getNs(),
+          })),
+        );
 
-    secrets.replace(podSecrets.filter(Boolean).map(secret => [secret.getName(), secret]));
-  }), []);
+        setSecrets(new Map(
+          results
+            .filter(result => result.status === "fulfilled" && result.value)
+            .map(result => (result as PromiseFulfilledResult<Secret>).value)
+            .map(secret => [secret.getName(), secret]),
+        ));
+      })
+  ), []);
 
   const renderSecret = (name: string) => {
     const secret = secrets.get(name);
