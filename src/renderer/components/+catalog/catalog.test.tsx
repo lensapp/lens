@@ -27,6 +27,7 @@ import directoryForUserDataInjectable
   from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import { EventEmitter } from "../../../common/event-emitter";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -126,9 +127,11 @@ describe("<Catalog />", () => {
 
     emitEvent = jest.fn();
 
-    di.override(appEventBusInjectable, () => ({
-      emit: emitEvent,
-    }));
+    const source = new EventEmitter();
+    
+    source.emit = emitEvent;
+
+    di.override(appEventBusInjectable, () => source);
 
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
   });
