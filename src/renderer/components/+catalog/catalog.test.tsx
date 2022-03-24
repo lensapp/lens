@@ -25,6 +25,9 @@ import { UserStore } from "../../../common/user-store";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable
   from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import type { AppEvent } from "../../../common/app-event-bus/event-bus";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import { EventEmitter } from "../../../common/event-emitter";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -98,6 +101,7 @@ describe("<Catalog />", () => {
   let di: DependencyInjectionContainer;
   let catalogEntityStore: CatalogEntityStore;
   let catalogEntityRegistry: CatalogEntityRegistry;
+  let emitEvent: (event: AppEvent) => void;
   let render: DiRender;
 
   beforeEach(async () => {
@@ -120,6 +124,14 @@ describe("<Catalog />", () => {
     catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
 
     di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
+
+    emitEvent = jest.fn();
+
+    const source = new EventEmitter();
+    
+    source.emit = emitEvent;
+
+    di.override(appEventBusInjectable, () => source);
 
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
   });
@@ -315,5 +327,40 @@ describe("<Catalog />", () => {
     );
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+  });
+
+  it("emits catalog open AppEvent", () => {
+    render(
+      <Catalog
+        history={history}
+        location={mockLocation}
+        match={mockMatch}
+      />,
+    );
+
+    expect(emitEvent).toHaveBeenCalledWith( {
+      action: "open",
+      name: "catalog",
+    });
+  });
+
+  it("emits catalog change AppEvent when changing the category", () => {
+    render(
+      <Catalog
+        history={history}
+        location={mockLocation}
+        match={mockMatch}
+      />,
+    );
+
+    userEvent.click(screen.getByText("Web Links"));
+
+    expect(emitEvent).toHaveBeenLastCalledWith({
+      action: "change-category",
+      name: "catalog",
+      params: {
+        category: "Web Links",
+      },
+    });
   });
 });

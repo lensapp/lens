@@ -52,10 +52,10 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
 }
 
 autoUpdater.logger = {
-  info: message => logger.info(`[AUTO-UPDATE]: electron-updater:`, message),
-  warn: message => logger.warn(`[AUTO-UPDATE]: electron-updater:`, message),
-  error: message => logger.error(`[AUTO-UPDATE]: electron-updater:`, message),
-  debug: message => logger.debug(`[AUTO-UPDATE]: electron-updater:`, message),
+  info: message => logger.info(`[AUTO-UPDATE]: electron-updater: %s`, message),
+  warn: message => logger.warn(`[AUTO-UPDATE]: electron-updater: %s`, message),
+  error: message => logger.error(`[AUTO-UPDATE]: electron-updater: %s`, message),
+  debug: message => logger.debug(`[AUTO-UPDATE]: electron-updater: %s`, message),
 };
 
 /**

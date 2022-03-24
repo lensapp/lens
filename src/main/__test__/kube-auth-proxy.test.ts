@@ -15,6 +15,7 @@ jest.mock("winston", () => ({
     printf: jest.fn(),
     padLevels: jest.fn(),
     ms: jest.fn(),
+    splat: jest.fn(),
   },
   createLogger: jest.fn().mockReturnValue({
     silly: jest.fn(),

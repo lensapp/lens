@@ -174,6 +174,13 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
   }
 
   /**
+   * Get the name of this category
+   */
+  public getName(): string {
+    return this.metadata.name;
+  }
+
+  /**
    * Add a filter for menu items of catalogAddMenu
    * @param fn The function that should return a truthy value if that menu item should be displayed
    * @returns A function to remove that filter
