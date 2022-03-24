@@ -457,6 +457,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     const items = this.getItems();
 
     for (const { type, object } of this.eventsBuffer.clear()) {
+      // TODO: Convert items from Array to Map to avoid doing findIndex many times per second (events delay)
+      // Also, its worth to use Web Worker for such operations to prevent blocking UI
+      // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
 
