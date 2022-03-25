@@ -36,6 +36,9 @@ export const PodDetailsSecrets = observer(({ pod }: PodDetailsSecretsProps) => {
             .map(result => (result as PromiseFulfilledResult<Secret>).value)
             .map(secret => [secret.getName(), secret]),
         ));
+      },
+      {
+        fireImmediately: true,
       })
   ), []);
 
