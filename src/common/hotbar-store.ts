@@ -9,4 +9,7 @@ import {
   asLegacyGlobalSingletonForExtensionApi,
 } from "../extensions/as-legacy-globals-for-extension-api/as-legacy-global-singleton-object-for-extension-api";
 
+/**
+ * @deprecated use di.inject(hotbarStoreInjectable) instead.
+ */
 export const HotbarStore = asLegacyGlobalSingletonForExtensionApi(hotbarStoreInjectable);
