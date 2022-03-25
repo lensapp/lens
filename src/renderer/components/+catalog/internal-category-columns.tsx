@@ -14,40 +14,7 @@ import { Icon } from "../icon";
 import { prevDefault } from "../../utils";
 import { getLabelBadges } from "./helpers";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-
-function renderEntityName(entity: CatalogEntity) {
-  const hotbarStore = HotbarStore.getInstance();
-  const isItemInHotbar = hotbarStore.isAddedToActive(entity);
-  const onClick = prevDefault(
-    isItemInHotbar
-      ? () => hotbarStore.removeFromHotbar(entity.getId())
-      : () => hotbarStore.addToHotbar(entity),
-  );
-
-  return (
-    <>
-      <Avatar
-        title={entity.getName()}
-        colorHash={`${entity.getName()}-${entity.getSource()}`}
-        src={entity.spec.icon?.src}
-        background={entity.spec.icon?.background}
-        className={styles.catalogAvatar}
-        size={24}
-      >
-        {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
-      </Avatar>
-      <span>{entity.getName()}</span>
-      <Icon
-        small
-        className={styles.pinIcon}
-        material={!isItemInHotbar && "push_pin"}
-        svg={isItemInHotbar ? "push_off" : "push_pin"}
-        tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
-        onClick={onClick}
-      />
-    </>
-  );
-}
+import { observer } from "mobx-react";
 
 export const browseAllColumns: RegisteredAdditionalCategoryColumn[] = [
   {
@@ -66,7 +33,7 @@ export const browseAllColumns: RegisteredAdditionalCategoryColumn[] = [
 export const nameCategoryColumn: RegisteredAdditionalCategoryColumn = {
   id: "name",
   priority: 0,
-  renderCell: renderEntityName,
+  renderCell: (entity) => <EntityName entity={entity}/>,
   titleProps: {
     title: "Name",
     className: styles.entityName,
@@ -119,3 +86,37 @@ export const defaultCategoryColumns: RegisteredAdditionalCategoryColumn[] = [
     searchFilter: entity => entity.status.phase,
   },
 ];
+
+const EntityName = observer(({ entity }: { entity: CatalogEntity }) => {
+  const hotbarStore = HotbarStore.getInstance();
+  const isItemInHotbar = hotbarStore.isAddedToActive(entity);
+  const onClick = prevDefault(
+    isItemInHotbar
+      ? () => hotbarStore.removeFromHotbar(entity.getId())
+      : () => hotbarStore.addToHotbar(entity),
+  );
+
+  return (
+    <>
+      <Avatar
+        title={entity.getName()}
+        colorHash={`${entity.getName()}-${entity.getSource()}`}
+        src={entity.spec.icon?.src}
+        background={entity.spec.icon?.background}
+        className={styles.catalogAvatar}
+        size={24}
+      >
+        {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
+      </Avatar>
+      <span>{entity.getName()}</span>
+      <Icon
+        small
+        className={styles.pinIcon}
+        material={!isItemInHotbar && "push_pin"}
+        svg={isItemInHotbar ? "push_off" : "push_pin"}
+        tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
+        onClick={onClick}
+      />
+    </>
+  );
+});
