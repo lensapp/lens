@@ -14,8 +14,6 @@ export default {
     const weblinksRaw: any = store.get("weblinks");
     const weblinks = (Array.isArray(weblinksRaw) ? weblinksRaw : []) as WeblinkData[];
 
-    console.log("weblinks in 5.4.5-beta.1 migration", weblinks);
-
     const lensWebsiteLink = weblinks.find(weblink => weblink.name === lensWebsiteLinkName);
 
     if (lensWebsiteLink) {
