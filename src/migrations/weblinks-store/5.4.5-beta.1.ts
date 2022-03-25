@@ -9,7 +9,7 @@ import type { MigrationDeclaration } from "../helpers";
 import { kubernetesDocumentationWeblinkName, lensBlogWeblinkName, lensDocumentationWeblinkName, lensSlackWeblinkName, lensTwitterWeblinkName, lensWebsiteLinkName } from "./5.1.4";
 
 export default {
-  version: "5.4.5-beta.1 || 5.5.0-alpha.1",
+  version: "5.4.5-beta.1 || >=5.5.0-alpha.0",
   run(store) {
     const weblinksRaw: any = store.get("weblinks");
     const weblinks = (Array.isArray(weblinksRaw) ? weblinksRaw : []) as WeblinkData[];
