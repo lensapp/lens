@@ -320,7 +320,11 @@ export class ExtensionLoader {
 
             this.dependencies.extensionInstallationCounter.set(instance.sanitizedExtensionId, installationCount);
 
-            await Promise.all(this.dependencies.extensionRegistrators.map(x => x(instance, installationCount)));
+            await Promise.all(
+              this.dependencies.extensionRegistrators.map((register) =>
+                register(instance, installationCount),
+              ),
+            );
 
             this.instances.set(extId, instance);
 
