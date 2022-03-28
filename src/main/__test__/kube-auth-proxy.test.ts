@@ -52,8 +52,6 @@ import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-p
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
-import kubeAuthProxyCaInjectable from "../kube-auth-proxy/kube-auth-proxy-ca.injectable";
-import createKubeAuthProxyCertFilesInjectable from "../kube-auth-proxy/create-kube-auth-proxy-cert-files.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -97,8 +95,6 @@ describe("kube auth proxy tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(spawnInjectable, () => mockSpawn);
-    di.override(createKubeAuthProxyCertFilesInjectable, () => ({} as any));
-    di.override(kubeAuthProxyCaInjectable, () => ({} as any));
 
     mockFs(mockMinikubeConfig);
 

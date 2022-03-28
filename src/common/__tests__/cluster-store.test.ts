@@ -24,8 +24,6 @@ import { createClusterInjectionToken } from "../cluster/create-cluster-injection
 
 import directoryForUserDataInjectable
   from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import kubeAuthProxyCaInjectable from "../../main/kube-auth-proxy/kube-auth-proxy-ca.injectable";
-import createKubeAuthProxyCertFilesInjectable from "../../main/kube-auth-proxy/create-kube-auth-proxy-cert-files.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -89,8 +87,6 @@ describe("cluster-store", () => {
     mainDi = dis.mainDi;
 
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    mainDi.override(createKubeAuthProxyCertFilesInjectable, () => ({} as any));
-    mainDi.override(kubeAuthProxyCaInjectable, () => ({} as any));
 
     await dis.runSetups();
 
