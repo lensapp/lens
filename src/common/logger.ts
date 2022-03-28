@@ -63,7 +63,7 @@ if (ipcMain) {
          */
         dirname: app.getPath("logs"),
         maxsize: 16 * 1024,
-        maxFiles: 1,
+        maxFiles: 16,
         tailable: true,
       }),
     );
