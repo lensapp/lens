@@ -891,7 +891,7 @@
 <p>• <code>Optional</code> <strong>env</strong>: { <code>name</code>: <code>string</code> ; <code>value?</code>: <code>string</code> ; <code>valueFrom?</code>: { <code>configMapKeyRef?</code>: { <code>key</code>: <code>string</code> ; <code>name</code>: <code>string</code>  } ; <code>fieldRef?</code>: { <code>apiVersion</code>: <code>string</code> ; <code>fieldPath</code>: <code>string</code>  } ; <code>secretKeyRef?</code>: { <code>key</code>: <code>string</code> ; <code>name</code>: <code>string</code>  }  }  }[]</p>
 <hr />
 <h3 id="envfrom">envFrom<a class="headerlink" href="#envfrom" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>envFrom</strong>: { <code>configMapRef?</code>: { <code>name</code>: <code>string</code>  } ; <code>secretRef?</code>: { <code>name</code>: <code>string</code>  }  }[]</p>
+<p>• <code>Optional</code> <strong>envFrom</strong>: { <code>configMapRef?</code>: <code>LocalObjectReference</code> ; <code>secretRef?</code>: <code>LocalObjectReference</code>  }[]</p>
 <hr />
 <h3 id="image">image<a class="headerlink" href="#image" title="Permanent link">#</a></h3>
 <p>• <strong>image</strong>: <code>string</code></p>

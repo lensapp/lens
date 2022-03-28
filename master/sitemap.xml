@@ -106,17 +106,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.DrawerItem/</loc>
-         <lastmod>2022-03-28</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.DrawerParamToggler/</loc>
-         <lastmod>2022-03-28</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.DrawerTitle/</loc>
          <lastmod>2022-03-28</lastmod>
          <changefreq>daily</changefreq>
     </url>

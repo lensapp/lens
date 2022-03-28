@@ -1347,7 +1347,7 @@
 </tr>
 <tr>
 <td align="left"><code>template.spec.imagePullSecrets?</code></td>
-<td align="left">{ <code>name</code>: <code>string</code>  }[]</td>
+<td align="left"><code>LocalObjectReference</code>[]</td>
 </tr>
 <tr>
 <td align="left"><code>template.spec.initContainers</code></td>
@@ -1407,7 +1407,7 @@
 </tr>
 <tr>
 <td align="left"><code>template.spec.volumes?</code></td>
-<td align="left">{ <code>configMap</code>: { <code>name</code>: <code>string</code>  } ; <code>emptyDir</code>: { <code>medium?</code>: <code>string</code> ; <code>sizeLimit?</code>: <code>string</code>  } ; <code>name</code>: <code>string</code> ; <code>persistentVolumeClaim</code>: { <code>claimName</code>: <code>string</code>  } ; <code>secret</code>: { <code>defaultMode</code>: <code>number</code> ; <code>secretName</code>: <code>string</code>  }  }[]</td>
+<td align="left"><code>PodVolume</code>[]</td>
 </tr>
 </tbody>
 </table>

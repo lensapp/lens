@@ -1459,7 +1459,7 @@
 </tr>
 <tr>
 <td align="left"><code>imagePullSecrets?</code></td>
-<td align="left">{ <code>name</code>: <code>string</code>  }[]</td>
+<td align="left"><code>LocalObjectReference</code>[]</td>
 </tr>
 <tr>
 <td align="left"><code>initContainers</code></td>
@@ -1519,7 +1519,7 @@
 </tr>
 <tr>
 <td align="left"><code>volumes?</code></td>
-<td align="left">{ <code>configMap</code>: { <code>name</code>: <code>string</code>  } ; <code>emptyDir</code>: { <code>medium?</code>: <code>string</code> ; <code>sizeLimit?</code>: <code>string</code>  } ; <code>name</code>: <code>string</code> ; <code>persistentVolumeClaim</code>: { <code>claimName</code>: <code>string</code>  } ; <code>secret</code>: { <code>defaultMode</code>: <code>number</code> ; <code>secretName</code>: <code>string</code>  }  }[]</td>
+<td align="left"><code>PodVolume</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1966,9 +1966,9 @@ creation timestamp of this object.</p>
 <p>WorkloadKubeObject.getTolerations</p>
 <hr />
 <h3 id="getvolumes">getVolumes<a class="headerlink" href="#getvolumes" title="Permanent link">#</a></h3>
-<p>▸ <strong>getVolumes</strong>(): { <code>configMap</code>: { <code>name</code>: <code>string</code>  } ; <code>emptyDir</code>: { <code>medium?</code>: <code>string</code> ; <code>sizeLimit?</code>: <code>string</code>  } ; <code>name</code>: <code>string</code> ; <code>persistentVolumeClaim</code>: { <code>claimName</code>: <code>string</code>  } ; <code>secret</code>: { <code>defaultMode</code>: <code>number</code> ; <code>secretName</code>: <code>string</code>  }  }[]</p>
+<p>▸ <strong>getVolumes</strong>(): <code>PodVolume</code>[]</p>
 <h4 id="returns_40">Returns<a class="headerlink" href="#returns_40" title="Permanent link">#</a></h4>
-<p>{ <code>configMap</code>: { <code>name</code>: <code>string</code>  } ; <code>emptyDir</code>: { <code>medium?</code>: <code>string</code> ; <code>sizeLimit?</code>: <code>string</code>  } ; <code>name</code>: <code>string</code> ; <code>persistentVolumeClaim</code>: { <code>claimName</code>: <code>string</code>  } ; <code>secret</code>: { <code>defaultMode</code>: <code>number</code> ; <code>secretName</code>: <code>string</code>  }  }[]</p>
+<p><code>PodVolume</code>[]</p>
 <hr />
 <h3 id="hasissues">hasIssues<a class="headerlink" href="#hasissues" title="Permanent link">#</a></h3>
 <p>▸ <strong>hasIssues</strong>(): <code>boolean</code></p>
