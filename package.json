@@ -28,6 +28,8 @@
     "build:mac": "yarn run compile && electron-builder --mac --dir",
     "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
+    "test:unit": "jest --watch --testPathIgnorePatterns integration",
+    "test:integration": "func() { jest ${1:-xyz} --watch --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"]; }; func",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download:binaries": "yarn run ts-node build/download_binaries.ts",
