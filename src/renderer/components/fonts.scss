@@ -4,7 +4,8 @@
  */
 
 // Custom fonts
-@import "~typeface-roboto/index.css";
+@import "~typeface-roboto";
+@import "./mixins";
 
 // Material Design Icons, used primarily in icon.tsx
 // Latest: https://github.com/google/material-design-icons/tree/master/font
@@ -23,4 +24,14 @@
   font-family: 'RobotoMono';
   font-display: block;
   src: local('RobotoMono'), url('./fonts/roboto-mono-nerd.ttf') format('truetype');
+}
+
+#fonts-preloading {
+  > .icons {
+    @include font-preload("Material Icons");
+  }
+
+  > .terminal {
+    @include font-preload("RobotoMono");
+  }
 }
