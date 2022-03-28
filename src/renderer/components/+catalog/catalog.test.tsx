@@ -69,9 +69,6 @@ class MockCatalogEntity extends CatalogEntity {
 }
 
 describe("<Catalog />", () => {
-  //   group: "entity.k8slens.dev",
-  // kind: "KubernetesCluster",
-
   function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
     return new MockCatalogEntity({
       metadata: {

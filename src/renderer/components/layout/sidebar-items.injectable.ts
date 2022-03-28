@@ -4,7 +4,6 @@
  */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { computed, IComputedValue } from "mobx";
-// @ts-ignore
 import { pipeline } from "@ogre-tools/fp";
 
 import {

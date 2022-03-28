@@ -64,19 +64,10 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
       name: item.getName(),
       namespace: item.getNs(),
     });
-
-    // navigation.push(releaseURL({
-    //   params: {
-    //     name: item.getName(),
-    //     namespace: item.getNs(),
-    //   },
-    // }));
   };
 
   hideDetails = () => {
     this.props.navigateToHelmReleases();
-
-    // navigation.push(releaseURL());
   };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
