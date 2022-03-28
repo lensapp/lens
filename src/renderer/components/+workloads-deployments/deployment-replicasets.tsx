@@ -53,7 +53,7 @@ export class DeploymentReplicaSets extends React.Component<DeploymentReplicaSets
 
     return (
       <div className="ReplicaSets flex column">
-        <DrawerTitle title="Deploy Revisions"/>
+        <DrawerTitle>Deploy Revisions</DrawerTitle>
         <Table
           selectable
           tableId="deployment_replica_sets_view"

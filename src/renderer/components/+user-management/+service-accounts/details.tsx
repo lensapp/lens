@@ -143,7 +143,7 @@ export class ServiceAccountsDetails extends React.Component<ServiceAccountsDetai
         </DrawerItem>
         }
 
-        <DrawerTitle title="Mountable secrets"/>
+        <DrawerTitle>Mountable secrets</DrawerTitle>
         <div className="secrets">
           {this.renderSecrets()}
         </div>

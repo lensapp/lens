@@ -92,7 +92,7 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
             })
           }
         </DrawerItem>
-        <DrawerTitle title="Names"/>
+        <DrawerTitle>Names</DrawerTitle>
         <Table selectable className="names box grow">
           <TableHead>
             <TableCell>plural</TableCell>
@@ -109,7 +109,7 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
         </Table>
         {printerColumns.length > 0 &&
           <>
-            <DrawerTitle title="Additional Printer Columns"/>
+            <DrawerTitle>Additional Printer Columns</DrawerTitle>
             <Table selectable className="printer-columns box grow">
               <TableHead>
                 <TableCell className="name">Name</TableCell>
@@ -136,7 +136,7 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
         }
         {validation &&
           <>
-            <DrawerTitle title="Validation"/>
+            <DrawerTitle>Validation</DrawerTitle>
             <MonacoEditor
               readOnly
               value={validation}

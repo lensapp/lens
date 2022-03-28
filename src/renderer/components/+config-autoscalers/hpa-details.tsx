@@ -134,7 +134,7 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
           })}
         </DrawerItem>
 
-        <DrawerTitle title="Metrics"/>
+        <DrawerTitle>Metrics</DrawerTitle>
         <div className="metrics">
           {this.renderMetrics()}
         </div>

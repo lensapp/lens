@@ -67,7 +67,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
 
     return (
       <div className="VolumeDetailsList flex column">
-        <DrawerTitle title="Persistent Volumes"/>
+        <DrawerTitle>Persistent Volumes</DrawerTitle>
         <Table
           tableId="storage_volume_details_list"
           items={persistentVolumes}

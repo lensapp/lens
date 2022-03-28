@@ -131,7 +131,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
 
     return (
       <div className="PodDetailsList flex column">
-        <DrawerTitle title="Pods" />
+        <DrawerTitle>Pods</DrawerTitle>
         <Table
           tableId="workloads_pod_details_list"
           items={pods}

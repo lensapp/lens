@@ -9,6 +9,10 @@ import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { RequireExactlyOne } from "type-fest";
+import type { KubeObjectMetadata, LocalObjectReference } from "../kube-object";
+import type { SecretReference } from "./secret.api";
+import type { PersistentVolumeClaimSpec } from "./persistent-volume-claims.api";
 
 export class PodsApi extends KubeApi<Pod> {
   getLogs = async (params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> => {
@@ -112,12 +116,8 @@ export interface IPodContainer extends Partial<Record<PodContainerProbe, IContai
     };
   }[];
   envFrom?: {
-    configMapRef?: {
-      name: string;
-    };
-    secretRef?: {
-      name: string;
-    };
+    configMapRef?: LocalObjectReference;
+    secretRef?: LocalObjectReference;
   }[];
   volumeMounts?: {
     name: string;
@@ -195,6 +195,444 @@ export interface IPodContainerStatus {
   started?: boolean;
 }
 
+export interface AwsElasticBlockStoreSource {
+  volumeID: string;
+  fsType: string;
+}
+
+export interface AzureDiskSource {
+  /**
+   * The name of the VHD blob object OR the name of an Azure managed data disk if `kind` is `"Managed"`.
+   */
+  diskName: string;
+  /**
+   * The URI of the vhd blob object OR the `resourceID` of an Azure managed data disk if `kind` is `"Managed"`.
+   */
+  diskURI: string;
+  /**
+   * Kind of disk
+   * @default "Shared"
+   */
+  kind?: "Shared" | "Dedicated" | "Managed";
+  /**
+   * Disk caching mode.
+   * @default "None"
+   */
+  cachingMode?: "None" | "ReadOnly" | "ReadWrite";
+  /**
+   * The filesystem type to mount.
+   * @default "ext4"
+   */
+  fsType?: string;
+  /**
+   * Whether the filesystem is used as readOnly.
+   * @default false
+   */
+  readonly?: boolean;
+}
+
+export interface AzureFileSource {
+  /**
+   * The name of the secret that contains both Azure storage account name and key.
+   */
+  secretName: string;
+  /**
+   * The share name to be used.
+   */
+  shareName: string;
+  /**
+   * In case the secret is stored in a different namespace.
+   * @default "default"
+   */
+  secretNamespace?: string;
+  /**
+   * Whether the filesystem is used as readOnly.
+   */
+  readOnly: boolean;
+}
+
+export interface CephfsSource {
+  /**
+   * List of Ceph monitors
+   */
+  monitors: string[];
+  /**
+   * Used as the mounted root, rather than the full Ceph tree.
+   * @default "/"
+   */
+  path?: string;
+  /**
+   * The RADOS user name.
+   * @default "admin"
+   */
+  user?: string;
+  /**
+   * The path to the keyring file.
+   * @default "/etc/ceph/user.secret"
+   */
+  secretFile?: string;
+  /**
+   * Reference to Ceph authentication secrets. If provided, then the secret overrides `secretFile`
+   */
+  secretRef?: SecretReference;
+  /**
+   * Whether the filesystem is used as readOnly.
+   */
+  readOnly: boolean;
+}
+
+export interface CinderSource {
+  volumeID: string;
+  fsType: string;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+  secretRef?: SecretReference;
+}
+
+export interface ConfigMapSource {
+  name: string;
+  items: {
+    key: string;
+    path: string;
+  }[];
+}
+
+export interface DownwardApiSource {
+  items: {
+    path: string;
+    fieldRef: {
+      fieldPath: string;
+    };
+  }[];
+}
+
+export interface EphemeralSource {
+  volumeClaimTemplate: {
+    /**
+     * All the rest of the fields are ignored and rejected during validation
+     */
+    metadata?: Pick<KubeObjectMetadata, "labels" | "annotations">;
+    spec: PersistentVolumeClaimSpec;
+  };
+}
+
+export interface EmptyDirSource {
+  medium?: string;
+  sizeLimit?: string;
+}
+
+export interface FiberChannelSource {
+  /**
+   * A list of World Wide Names
+   */
+  targetWWNs: string[];
+  /**
+   * Logical Unit number
+   */
+  lun: number;
+  /**
+   * The type of filesystem
+   * @default "ext4"
+   */
+  fsType?: string;
+  readOnly: boolean;
+}
+
+export interface FlockerSource {
+  datasetName: string;
+}
+
+export interface FlexVolumeSource {
+  driver: string;
+  fsType?: string;
+  secretRef?: LocalObjectReference;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+  options?: Record<string, string>;
+}
+
+export interface GcePersistentDiskSource {
+  pdName: string;
+  fsType: string;
+}
+
+export interface GitRepoSource {
+  repository: string;
+  revision: string;
+}
+
+export interface GlusterFsSource {
+  /**
+   * The name of the Endpoints object that represents a Gluster cluster configuration.
+   */
+  endpoints: string;
+  /**
+   * The Glusterfs volume name.
+   */
+  path: string;
+  /**
+   * The boolean that sets the mountpoint readOnly or readWrite.
+   */
+  readOnly: boolean;
+}
+
+export interface HostPathSource {
+  path: string;
+  /**
+   * Determines the sorts of checks that will be done
+   * @default ""
+   */
+  type?: "" | "DirectoryOrCreate" | "Directory" | "FileOrCreate" | "File" | "Socket" | "CharDevice" | "BlockDevice";
+}
+
+export interface IScsiSource {
+  targetPortal: string;
+  iqn: string;
+  lun: number;
+  fsType: string;
+  readOnly: boolean;
+  chapAuthDiscovery?: boolean;
+  chapAuthSession?: boolean;
+  secretRef?: SecretReference;
+}
+
+export interface LocalSource {
+  path: string;
+}
+
+export interface NetworkFsSource {
+  server: string;
+  path: string;
+  readOnly?: boolean;
+}
+
+export interface PersistentVolumeClaimSource {
+  claimName: string;
+}
+
+export interface PhotonPersistentDiskSource {
+  pdID: string;
+  /**
+   * @default "ext4"
+   */
+  fsType?: string;
+}
+
+export interface PortworxVolumeSource {
+  volumeID: string;
+  fsType?: string;
+  readOnly?: boolean;
+}
+
+export interface ProjectedSource {
+  sources: {
+    secret?: {
+      name: string;
+      items?: {
+        key: string;
+        path: string;
+        mode?: number;
+      }[];
+    };
+    downwardAPI?: {
+      items?: {
+        path: string;
+        fieldRef?: {
+          fieldPath: string;
+          apiVersion?: string;
+        };
+        resourceFieldRef?: {
+          resource: string;
+          containerName?: string;
+        };
+        mode?: number;
+      }[];
+    };
+    configMap?: {
+      name: string;
+      items?: {
+        key: string;
+        path: string;
+        mode?: number;
+      }[];
+      optional?: boolean;
+    };
+    serviceAccountToken?: {
+      audience?: string;
+      expirationSeconds?: number;
+      path: string;
+    };
+  }[];
+  defaultMode: number;
+}
+
+export interface QuobyteSource {
+  registry: string;
+  volume: string;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+  /**
+   * @default "serivceaccount"
+   */
+  user?: string;
+  group?: string;
+  tenant?: string;
+}
+
+export interface RadosBlockDeviceSource {
+  monitors: string[];
+  image: string;
+  /**
+   * @default "ext4"
+   */
+  fsType?: string;
+  /**
+   * @default "rbd"
+   */
+  pool?: string;
+  /**
+   * @default "admin"
+   */
+  user?: string;
+  /**
+   * @default "/etc/ceph/keyring"
+   */
+  keyring?: string;
+  secretRef?: SecretReference;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+}
+
+export interface ScaleIoSource {
+  gateway: string;
+  system: string;
+  secretRef?: LocalObjectReference;
+  /**
+   * @default false
+   */
+  sslEnabled?: boolean;
+  protectionDomain?: string;
+  storagePool?: string;
+  /**
+   * @default "ThinProvisioned"
+   */
+  storageMode?: "ThickProvisioned" | "ThinProvisioned";
+  volumeName: string;
+  /**
+   * @default "xfs"
+   */
+  fsType?: string;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+}
+
+export interface SecretSource {
+  secretName: string;
+  items?: {
+    key: string;
+    path: string;
+    mode?: number;
+  }[];
+  defaultMode?: number;
+  optional?: boolean;
+}
+
+export interface StorageOsSource {
+  volumeName: string;
+  /**
+   * @default Pod.metadata.namespace
+   */
+  volumeNamespace?: string;
+  /**
+   * @default "ext4"
+   */
+  fsType?: string;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+  secretRef?: LocalObjectReference;
+}
+
+export interface VsphereVolumeSource {
+  volumePath: string;
+  /**
+   * @default "ext4"
+   */
+  fsType?: string;
+  storagePolicyName?: string;
+  storagePolicyID?: string;
+}
+
+export interface ContainerStorageInterfaceSource {
+  driver: string;
+  /**
+   * @default false
+   */
+  readOnly?: boolean;
+  /**
+   * @default "ext4"
+   */
+  fsType?: string;
+  volumeAttributes?: Record<string, string>;
+  controllerPublishSecretRef?: SecretReference;
+  nodeStageSecretRef?: SecretReference;
+  nodePublishSecretRef?: SecretReference;
+  controllerExpandSecretRef?: SecretReference;
+}
+
+export interface PodVolumeVariants {
+  awsElasticBlockStore: AwsElasticBlockStoreSource;
+  azureDisk: AzureDiskSource;
+  azureFile: AzureFileSource;
+  cephfs: CephfsSource;
+  cinder: CinderSource;
+  configMap: ConfigMapSource;
+  csi: ContainerStorageInterfaceSource;
+  downwardAPI: DownwardApiSource;
+  emptyDir: EmptyDirSource;
+  ephemeral: EphemeralSource;
+  fc: FiberChannelSource;
+  flexVolume: FlexVolumeSource;
+  flocker: FlockerSource;
+  gcePersistentDisk: GcePersistentDiskSource;
+  gitRepo: GitRepoSource;
+  glusterfs: GlusterFsSource;
+  hostPath: HostPathSource;
+  iscsi: IScsiSource;
+  local: LocalSource;
+  nfs: NetworkFsSource;
+  persistentVolumeClaim: PersistentVolumeClaimSource;
+  photonPersistentDisk: PhotonPersistentDiskSource;
+  portworxVolume: PortworxVolumeSource;
+  projected: ProjectedSource;
+  quobyte: QuobyteSource;
+  rbd: RadosBlockDeviceSource;
+  scaleIO: ScaleIoSource;
+  secret: SecretSource;
+  storageos: StorageOsSource;
+  vsphereVolume: VsphereVolumeSource;
+}
+
+/**
+ * The valid kinds of volume
+ */
+export type PodVolumeKind = keyof PodVolumeVariants;
+
+export type PodVolume = RequireExactlyOne<PodVolumeVariants> & {
+  name: string;
+};
+
 export class Pod extends WorkloadKubeObject {
   static kind = "Pod";
   static namespaced = true;
@@ -206,23 +644,7 @@ export class Pod extends WorkloadKubeObject {
   }
 
   declare spec?: {
-    volumes?: {
-      name: string;
-      persistentVolumeClaim: {
-        claimName: string;
-      };
-      emptyDir: {
-        medium?: string;
-        sizeLimit?: string;
-      };
-      configMap: {
-        name: string;
-      };
-      secret: {
-        secretName: string;
-        defaultMode: number;
-      };
-    }[];
+    volumes?: PodVolume[];
     initContainers: IPodContainer[];
     containers: IPodContainer[];
     restartPolicy?: string;
@@ -239,9 +661,7 @@ export class Pod extends WorkloadKubeObject {
       [selector: string]: string;
     };
     securityContext?: {};
-    imagePullSecrets?: {
-      name: string;
-    }[];
+    imagePullSecrets?: LocalObjectReference[];
     hostNetwork?: boolean;
     hostPID?: boolean;
     hostIPC?: boolean;

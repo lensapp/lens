@@ -3,23 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./drawer-title.scss";
+import styles from "./drawer-title.module.css";
 import React from "react";
 import { cssNames } from "../../utils";
 
 export interface DrawerTitleProps {
   className?: string;
-  title?: React.ReactNode;
+  children: React.ReactNode;
+
+  /**
+   * Specifies how large this title is
+   *
+   * @default "title"
+   */
+  size?: "sub-title" | "title";
 }
 
-export class DrawerTitle extends React.Component<DrawerTitleProps> {
-  render() {
-    const { title, children, className } = this.props;
-
-    return (
-      <div className={cssNames("DrawerTitle", className)}>
-        {title || children}
-      </div>
-    );
-  }
+export function DrawerTitle({ className, children, size = "title" }: DrawerTitleProps) {
+  return (
+    <div className={cssNames(styles.DrawerTitle, className, {
+      [styles.title]: size === "title",
+      [styles["sub-title"]]: size === "sub-title",
+    })}>
+      {children}
+    </div>
+  );
 }

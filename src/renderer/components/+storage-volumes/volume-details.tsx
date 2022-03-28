@@ -65,7 +65,7 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
 
         {nfs && (
           <>
-            <DrawerTitle title="Network File System"/>
+            <DrawerTitle>Network File System</DrawerTitle>
             {
               Object.entries(nfs).map(([name, value]) => (
                 <DrawerItem key={name} name={startCase(name)}>
@@ -78,7 +78,7 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
 
         {flexVolume && (
           <>
-            <DrawerTitle title="FlexVolume"/>
+            <DrawerTitle>FlexVolume</DrawerTitle>
             <DrawerItem name="Driver">
               {flexVolume.driver}
             </DrawerItem>
@@ -94,7 +94,7 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
 
         {claimRef && (
           <>
-            <DrawerTitle title="Claim"/>
+            <DrawerTitle>Claim</DrawerTitle>
             <DrawerItem name="Type">
               {claimRef.kind}
             </DrawerItem>

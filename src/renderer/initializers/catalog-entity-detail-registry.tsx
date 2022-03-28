@@ -17,7 +17,7 @@ export function initCatalogEntityDetailRegistry() {
         components: {
           Details: ({ entity }: CatalogEntityDetailsProps<KubernetesCluster>) => (
             <>
-              <DrawerTitle title="Kubernetes Information" />
+              <DrawerTitle>Kubernetes Information</DrawerTitle>
               <div className="box grow EntityMetadata">
                 <DrawerItem name="Distribution">
                   {entity.metadata.distro || "unknown"}
@@ -36,7 +36,7 @@ export function initCatalogEntityDetailRegistry() {
         components: {
           Details: ({ entity }: CatalogEntityDetailsProps<WebLink>) => (
             <>
-              <DrawerTitle title="More Information" />
+              <DrawerTitle>More Information</DrawerTitle>
               <DrawerItem name="URL">
                 {entity.spec.url}
               </DrawerItem>

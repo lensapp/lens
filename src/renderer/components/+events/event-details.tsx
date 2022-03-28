@@ -71,7 +71,7 @@ export class EventDetails extends React.Component<EventDetailsProps> {
           <span className={kebabCase(type)}>{type}</span>
         </DrawerItem>
 
-        <DrawerTitle title="Involved object"/>
+        <DrawerTitle>Involved object</DrawerTitle>
         <Table>
           <TableHead>
             <TableCell>Name</TableCell>

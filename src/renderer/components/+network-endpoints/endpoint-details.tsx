@@ -35,7 +35,7 @@ export class EndpointDetails extends React.Component<EndpointDetailsProps> {
     return (
       <div className="EndpointDetails">
         <KubeObjectMeta object={endpoint}/>
-        <DrawerTitle title="Subsets"/>
+        <DrawerTitle>Subsets</DrawerTitle>
         {
           endpoint.getEndpointSubsets().map((subset) => (
             <EndpointSubsetList key={subset.toString()} subset={subset} endpoint={endpoint} />

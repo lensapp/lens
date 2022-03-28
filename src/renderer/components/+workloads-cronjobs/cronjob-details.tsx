@@ -78,7 +78,7 @@ class NonInjectedCronJobDetails extends React.Component<CronJobDetailsProps & De
         </DrawerItem>
         {childJobs.length > 0 &&
           <>
-            <DrawerTitle title="Jobs"/>
+            <DrawerTitle>Jobs</DrawerTitle>
             {childJobs.map((job: Job) => {
               const selectors = job.getSelectors();
               const condition = job.getCondition();
