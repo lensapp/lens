@@ -56,8 +56,7 @@ export class Select extends React.Component<SelectProps> {
   }
 
   @computed get themeClass() {
-    const themeName =
-      this.props.themeName || ThemeStore.getInstance().activeTheme.type;
+    const themeName = this.props.themeName || ThemeStore.getInstance().activeTheme.type;
 
     return `theme-${themeName}`;
   }
@@ -92,9 +91,7 @@ export class Select extends React.Component<SelectProps> {
 
     if (autoConvertOptions && Array.isArray(options)) {
       return options.map(opt => {
-        return this.isValidOption(opt)
-          ? opt
-          : { value: opt, label: String(opt) };
+        return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
       });
     }
 
@@ -120,15 +117,8 @@ export class Select extends React.Component<SelectProps> {
 
   render() {
     const {
-      className,
-      menuClass,
-      isCreatable,
-      autoConvertOptions,
-      value,
-      options,
-      components = {},
-      id: inputId,
-      ...props
+      className, menuClass, isCreatable, autoConvertOptions,
+      value, options, components = {}, id: inputId, ...props
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
 
