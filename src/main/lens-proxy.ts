@@ -79,19 +79,18 @@ export class LensProxy extends Singleton {
 
     this.proxyServer
       .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-        const isInternal = req.url.startsWith(`${apiPrefix}?`);
         const cluster = getClusterForRequest(req);
 
         if (!cluster) {
           logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
+          socket.destroy();
+        } else {
+          const isInternal = req.url.startsWith(`${apiPrefix}?`);
+          const reqHandler = isInternal ? shellApiRequest : kubeApiUpgradeRequest;
 
-          return socket.destroy();
+          (async () => reqHandler({ req, socket, head, cluster }))()
+            .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
         }
-
-        const reqHandler = isInternal ? shellApiRequest : kubeApiUpgradeRequest;
-
-        (async () => reqHandler({ req, socket, head, cluster }))()
-          .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
       });
   }
 
