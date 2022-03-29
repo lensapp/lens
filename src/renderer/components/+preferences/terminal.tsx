@@ -8,7 +8,6 @@ import { observer } from "mobx-react";
 import type { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
-import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
 import { Select } from "../select";
 import type { ThemeStore } from "../../theme.store";
@@ -16,21 +15,15 @@ import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import themeStoreInjectable from "../../theme-store.injectable";
+import defaultShellInjectable from "./default-shell.injectable";
 
 interface Dependencies {
   userStore: UserStore;
   themeStore: ThemeStore;
+  defaultShell: string;
 }
 
-const NonInjectedTerminal = observer(({ userStore, themeStore }: Dependencies) => {
-  const defaultShell = process.env.SHELL
-  || process.env.PTYSHELL
-  || (
-    isWindows
-      ? "powershell.exe"
-      : "System default shell"
-  );
-
+const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: Dependencies) => {
   return (
     <Preferences data-testid="terminal-preferences-page">
       <section>
@@ -102,6 +95,7 @@ export const Terminal = withInjectables<Dependencies>(
     getProps: (di) => ({
       userStore: di.inject(userStoreInjectable),
       themeStore: di.inject(themeStoreInjectable),
+      defaultShell: di.inject(defaultShellInjectable),
     }),
   },
 );
