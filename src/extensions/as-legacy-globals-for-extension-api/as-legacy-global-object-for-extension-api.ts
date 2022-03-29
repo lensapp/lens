@@ -43,4 +43,4 @@ export const asLegacyGlobalForExtensionApi = ((
         return propertyValue;
       },
     },
-  )) as Inject<false>;
+  )) as Inject;
