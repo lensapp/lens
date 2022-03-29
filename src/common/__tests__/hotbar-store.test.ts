@@ -14,6 +14,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../hotbar-store.injectable";
 import { HotbarStore } from "../hotbar-store";
 import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import { runSetupables } from "../setupable-injection-token/run-setupables";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
@@ -150,7 +151,7 @@ describe("HotbarStore", () => {
     beforeEach(async () => {
       mockFs();
 
-      await di.runSetups();
+      await runSetupables(di);
 
       hotbarStore = di.inject(hotbarStoreInjectable);
     });
@@ -381,7 +382,7 @@ describe("HotbarStore", () => {
 
       mockFs(configurationToBeMigrated);
 
-      await di.runSetups();
+      await runSetupables(di);
 
       hotbarStore = di.inject(hotbarStoreInjectable);
     });

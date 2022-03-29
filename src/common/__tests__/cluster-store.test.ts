@@ -24,6 +24,7 @@ import directoryForUserDataInjectable from "../app-paths/directory-for-user-data
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
+import { runSetupables } from "../setupable-injection-token/run-setupables";
 
 console = new Console(stdout, stderr);
 
@@ -82,6 +83,8 @@ describe("cluster-store", () => {
   beforeEach(async () => {
     mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    await runSetupables(mainDi);
+
     mockFs();
 
     mainDi.override(clusterStoreInjectable, (di) => ClusterStore.createInstance({ createCluster: di.inject(createClusterInjectionToken) }));
@@ -89,8 +92,6 @@ describe("cluster-store", () => {
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
-
-    await mainDi.runSetups();
 
     createCluster = mainDi.inject(createClusterInjectionToken);
   });

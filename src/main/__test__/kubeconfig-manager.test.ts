@@ -2,6 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { runSetupables } from "../../common/setupable-injection-token/run-setupables";
+
 const logger = {
   silly: jest.fn(),
   debug: jest.fn(),
@@ -49,7 +51,7 @@ console = new Console(process.stdout, process.stderr); // fix mockFS
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  let di: DiContainer; 
+  let di: DiContainer;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -80,11 +82,11 @@ describe("kubeconfig manager tests", () => {
       }),
     });
 
-    await di.runSetups();
-
     di.override(createContextHandlerInjectable, () => () => {
       throw new Error("you should never come here");
     });
+
+    await runSetupables(di);
 
     const createCluster = di.inject(createClusterInjectionToken);
 

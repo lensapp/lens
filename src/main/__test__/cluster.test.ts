@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { runSetupables } from "../../common/setupable-injection-token/run-setupables";
 
 const logger = {
   silly: jest.fn(),
@@ -79,13 +80,13 @@ describe("create clusters", () => {
       }),
     });
 
-    await di.runSetups();
-
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => () => {
       throw new Error("you should never come here");
     });
+
+    await runSetupables(di);
 
     createCluster = di.inject(createClusterInjectionToken);
 

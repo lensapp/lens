@@ -16,10 +16,9 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import getConfigurationFileModelInjectable
-  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import { runSetupables } from "../../../common/setupable-injection-token/run-setupables";
 
 jest.mock("electron", () => ({
   app: {
@@ -45,16 +44,16 @@ describe("kubeconfig-sync.source tests", () => {
 
     mockFs();
 
-    await di.runSetups();
+    di.override(clusterStoreInjectable, () =>
+      ClusterStore.createInstance({ createCluster: () => null }),
+    );
+
+    await runSetupables(di);
 
     computeDiff = computeDiffFor({
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
       createCluster: di.inject(createClusterInjectionToken),
     });
-
-    di.override(clusterStoreInjectable, () =>
-      ClusterStore.createInstance({ createCluster: () => null }),
-    );
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
