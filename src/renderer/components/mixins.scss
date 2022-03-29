@@ -62,7 +62,7 @@
 
 // Makes custom @font-family available at earlier stages.
 // Element must exist in DOM as soon as possible to initiate preloading.
-@mixin font-preload($fontFamily: "RobotoMono") {
+@mixin font-preload($fontFamily) {
   position: absolute;
   visibility: hidden;
   height: 0;
