@@ -19,7 +19,7 @@ const isAllowedResourceInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (_, resource: KubeResource) => resource,
+    getInstanceKey: (di, resource: KubeResource) => resource,
   }),
 });
 
