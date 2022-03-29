@@ -14,7 +14,7 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
-import { runSetupables } from "../../common/setupable-injection-token/run-setupables";
+import { runSetups } from "../../common/setupable-injection-token/run-setups";
 
 describe("router", () => {
   let router: Router;
@@ -43,7 +43,7 @@ describe("router", () => {
 
     di.register(injectable);
 
-    await runSetupables(di);
+    await runSetups(di);
 
     router = di.inject(routerInjectable);
   });

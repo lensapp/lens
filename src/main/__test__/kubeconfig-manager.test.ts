@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { runSetupables } from "../../common/setupable-injection-token/run-setupables";
+import { runSetups } from "../../common/setupable-injection-token/run-setups";
 
 const logger = {
   silly: jest.fn(),
@@ -86,7 +86,7 @@ describe("kubeconfig manager tests", () => {
       throw new Error("you should never come here");
     });
 
-    await runSetupables(di);
+    await runSetups(di);
 
     const createCluster = di.inject(createClusterInjectionToken);
 

@@ -5,7 +5,7 @@
 import { getDiForUnitTesting as getRendererDi } from "../renderer/getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../main/getDiForUnitTesting";
 import { overrideIpcBridge } from "./override-ipc-bridge";
-import { runSetupables } from "../common/setupable-injection-token/run-setupables";
+import { runSetups } from "../common/setupable-injection-token/run-setups";
 
 export const getDisForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -20,6 +20,6 @@ export const getDisForUnitTesting = (
     mainDi,
 
     runSetups: () =>
-      Promise.all([runSetupables(rendererDi), runSetupables(mainDi)]),
+      Promise.all([runSetups(rendererDi), runSetups(mainDi)]),
   };
 };

@@ -5,7 +5,7 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 
 export interface Setupable {
-  doSetup: () => Promise<void> | void;
+  runSetup: () => Promise<void> | void;
 }
 
 export const setupableInjectionToken = getInjectionToken<Setupable>({

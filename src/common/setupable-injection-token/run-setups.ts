@@ -5,10 +5,10 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { setupableInjectionToken } from "./setupable-injection-token";
 
-export const runSetupables = async (di: DiContainer) => {
+export const runSetups = async (di: DiContainer) => {
   await Promise.all(
     di
       .injectMany(setupableInjectionToken)
-      .map((setupable) => setupable.doSetup()),
+      .map((setupable) => setupable.runSetup()),
   );
 };

@@ -11,7 +11,7 @@ const registerIpcChannelListenersInjectable = getInjectable({
   id: "register-ipc-channel-listeners",
 
   instantiate: di => ({
-    doSetup: async () => {
+    runSetup: async () => {
       const registerIpcChannelListener = di.inject(registerIpcChannelListenerInjectable);
 
       const listeners = di.injectMany(ipcChannelListenerInjectionToken);

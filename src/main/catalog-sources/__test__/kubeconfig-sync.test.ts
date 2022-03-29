@@ -18,7 +18,7 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
-import { runSetupables } from "../../../common/setupable-injection-token/run-setupables";
+import { runSetups } from "../../../common/setupable-injection-token/run-setups";
 
 jest.mock("electron", () => ({
   app: {
@@ -48,7 +48,7 @@ describe("kubeconfig-sync.source tests", () => {
       ClusterStore.createInstance({ createCluster: () => null }),
     );
 
-    await runSetupables(di);
+    await runSetups(di);
 
     computeDiff = computeDiffFor({
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),

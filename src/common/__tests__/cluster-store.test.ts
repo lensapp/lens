@@ -24,7 +24,7 @@ import directoryForUserDataInjectable from "../app-paths/directory-for-user-data
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
-import { runSetupables } from "../setupable-injection-token/run-setupables";
+import { runSetups } from "../setupable-injection-token/run-setups";
 
 console = new Console(stdout, stderr);
 
@@ -83,7 +83,7 @@ describe("cluster-store", () => {
   beforeEach(async () => {
     mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    await runSetupables(mainDi);
+    await runSetups(mainDi);
 
     mockFs();
 
