@@ -18,8 +18,7 @@ import { IComputedValue, reaction } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { setEntityOnRouteMatch } from "../../api/helpers/general-active-sync";
 import { navigation } from "../../navigation";
-import welcomeRouteInjectable
-  from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
+import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
 import { buildURL } from "../../../common/utils/buildUrl";
 
 interface Dependencies {

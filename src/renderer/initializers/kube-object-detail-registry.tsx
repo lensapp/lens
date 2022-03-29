@@ -25,6 +25,7 @@ import { StorageClassDetails } from "../components/+storage-classes";
 import { PersistentVolumeClaimDetails } from "../components/+storage-volume-claims";
 import { PersistentVolumeDetails } from "../components/+storage-volumes";
 import { ClusterRoleDetails } from "../components/+user-management/+cluster-roles";
+import { ClusterRoleBindingDetails } from "../components/+user-management/+cluster-role-bindings";
 import { RoleDetails } from "../components/+user-management/+roles";
 import { RoleBindingDetails } from "../components/+user-management/+role-bindings";
 import { ServiceAccountsDetails } from "../components/+user-management/+service-accounts";
@@ -36,7 +37,6 @@ import { PodDetails } from "../components/+workloads-pods";
 import { ReplicaSetDetails } from "../components/+workloads-replicasets";
 import { StatefulSetDetails } from "../components/+workloads-statefulsets";
 import type { KubeObjectDetailsProps } from "../components/kube-object-details";
-import { ClusterRoleBindingDetails } from "../components/+user-management/+cluster-role-bindings";
 
 export function initKubeObjectDetailRegistry() {
   KubeObjectDetailRegistry.getInstance()

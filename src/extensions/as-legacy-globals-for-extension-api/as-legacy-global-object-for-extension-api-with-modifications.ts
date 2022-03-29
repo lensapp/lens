@@ -16,4 +16,7 @@ export const asLegacyGlobalObjectForExtensionApiWithModifications = <
     injectable: Injectable<InjectableInstance, InjectionTokenInstance, void>,
     modificationObject: ModificationObject,
   ) =>
-    Object.assign(asLegacyGlobalForExtensionApi(injectable), modificationObject);
+    Object.assign(
+      asLegacyGlobalForExtensionApi(injectable),
+      modificationObject,
+    );

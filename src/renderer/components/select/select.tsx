@@ -30,9 +30,7 @@ export interface SelectOption<T = any> {
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any>
-  extends ReactSelectProps<T, boolean>,
-    CreatableProps<T, boolean> {
+export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
   id: string;
   value?: T;
   themeName?: "dark" | "light" | "outlined" | "lens";

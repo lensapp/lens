@@ -6,11 +6,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-
-import hotbarStoreInjectable, {
-  HotbarStore,
-} from "../../../common/hotbar-store.injectable";
-
+import hotbarStoreInjectable, { HotbarStore } from "../../../common/hotbar-store.injectable";
 import type { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
 import { HotbarRemoveCommand } from "./hotbar-remove-command";

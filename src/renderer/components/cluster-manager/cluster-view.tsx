@@ -14,9 +14,7 @@ import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import navigateToCatalogInjectable, {
-  NavigateToCatalog,
-} from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import clusterViewRouteParametersInjectable from "./cluster-view-route-parameters.injectable";
 
 interface Dependencies {

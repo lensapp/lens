@@ -8,16 +8,7 @@ import styles from "./catalog.module.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import {
-  action,
-  computed,
-  IComputedValue,
-  makeObservable,
-  observable,
-  reaction,
-  runInAction,
-  when,
-} from "mobx";
+import { action, computed, IComputedValue, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
@@ -43,9 +34,7 @@ import getCategoryColumnsInjectable from "./get-category-columns.injectable";
 import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable";
 import customCategoryViewsInjectable from "./custom-views.injectable";
 import type { CustomCategoryViewComponents } from "./custom-views";
-import navigateToCatalogInjectable, {
-  NavigateToCatalog,
-} from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import catalogRouteParametersInjectable from "./catalog-route-parameters.injectable";
 import { browseCatalogTab } from "./catalog-browse-tab";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";

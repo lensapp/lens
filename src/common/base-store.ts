@@ -48,12 +48,9 @@ export abstract class BaseStore<T> extends Singleton {
    */
   load() {
     if (!isTestEnv) {
-      logger.info(
-        `[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${
-          this.path
-        } ...`,
-      );
+      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
     }
+
     const di = getLegacyGlobalDiForExtensionApi();
 
     const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
@@ -67,23 +64,14 @@ export abstract class BaseStore<T> extends Singleton {
 
     const res: any = this.fromStore(this.storeConfig.store);
 
-    if (
-      res instanceof Promise ||
-      (typeof res === "object" && res && typeof res.then === "function")
-    ) {
-      console.error(
-        `${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`,
-      );
+    if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
+      console.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
     this.enableSync();
 
     if (!isTestEnv) {
-      logger.info(
-        `[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${
-          this.path
-        }`,
-      );
+      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
     }
   }
 
@@ -124,27 +112,23 @@ export abstract class BaseStore<T> extends Singleton {
     this.syncDisposers.push(
       reaction(
         () => toJS(this.toJSON()), // unwrap possible observables and react to everything
-        (model) => this.onModelChange(model),
+        model => this.onModelChange(model),
         this.params.syncOptions,
       ),
     );
 
     if (ipcMain) {
-      this.syncDisposers.push(
-        ipcMainOn(this.syncMainChannel, (event, model: T) => {
-          logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
-          this.onSync(model);
-        }),
-      );
+      this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
+        logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
+        this.onSync(model);
+      }));
     }
 
     if (ipcRenderer) {
-      this.syncDisposers.push(
-        ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-          logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
-          this.onSyncFromMain(model);
-        }),
-      );
+      this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
+        logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
+        this.onSyncFromMain(model);
+      }));
     }
   }
 
@@ -160,7 +144,7 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   disableSync() {
-    this.syncDisposers.forEach((dispose) => dispose());
+    this.syncDisposers.forEach(dispose => dispose());
     this.syncDisposers.length = 0;
   }
 

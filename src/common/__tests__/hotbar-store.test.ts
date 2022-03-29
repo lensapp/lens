@@ -6,11 +6,7 @@
 import { anyObject } from "jest-mock-extended";
 import mockFs from "mock-fs";
 import logger from "../../main/logger";
-import type {
-  CatalogEntity,
-  CatalogEntityData,
-  CatalogEntityKindData,
-} from "../catalog";
+import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { HotbarStore } from "../hotbar-store";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import hotbarStoreInjectable from "../hotbar-store.injectable";
@@ -72,9 +68,7 @@ jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   },
 }));
 
-function getMockCatalogEntity(
-  data: Partial<CatalogEntityData> & CatalogEntityKindData,
-): CatalogEntity {
+function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
     getName: jest.fn(() => data.metadata?.name),
     getId: jest.fn(() => data.metadata?.uid),
@@ -233,16 +227,9 @@ describe("HotbarStore", () => {
         // aws -> catalog
         hotbarStore.restackItems(3, 0);
 
-        const items = hotbarStore
-          .getActive()
-          .items.map((item) => item?.entity.uid || null);
+        const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
-        expect(items.slice(0, 4)).toEqual([
-          "aws",
-          "catalog-entity",
-          "test",
-          "minikube",
-        ]);
+        expect(items.slice(0, 4)).toEqual(["aws", "catalog-entity", "test", "minikube"]);
       });
 
       it("moves items up", () => {
@@ -255,16 +242,9 @@ describe("HotbarStore", () => {
         // test -> aws
         hotbarStore.restackItems(1, 3);
 
-        const items = hotbarStore
-          .getActive()
-          .items.map((item) => item?.entity.uid || null);
+        const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
-        expect(items.slice(0, 4)).toEqual([
-          "catalog-entity",
-          "minikube",
-          "aws",
-          "test",
-        ]);
+        expect(items.slice(0, 4)).toEqual(["catalog-entity", "minikube", "aws", "test"]);
       });
 
       it("logs an error if cellIndex is out of bounds", () => {
@@ -279,22 +259,13 @@ describe("HotbarStore", () => {
         logger.error = mocked;
 
         hotbarStore.addToHotbar(testCluster, -1);
-        expect(mocked).toBeCalledWith(
-          "[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range",
-          anyObject(),
-        );
+        expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         hotbarStore.addToHotbar(testCluster, 12);
-        expect(mocked).toBeCalledWith(
-          "[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range",
-          anyObject(),
-        );
+        expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         hotbarStore.addToHotbar(testCluster, 13);
-        expect(mocked).toBeCalledWith(
-          "[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range",
-          anyObject(),
-        );
+        expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         logger.error = error;
       });
@@ -302,23 +273,15 @@ describe("HotbarStore", () => {
       it("throws an error if getId is invalid or returns not a string", () => {
         const hotbarStore = HotbarStore.getInstance();
 
-        expect(() => hotbarStore.addToHotbar({} as any)).toThrowError(
-          TypeError,
-        );
-        expect(() =>
-          hotbarStore.addToHotbar({ getId: () => true } as any),
-        ).toThrowError(TypeError);
+        expect(() => hotbarStore.addToHotbar({} as any)).toThrowError(TypeError);
+        expect(() => hotbarStore.addToHotbar({ getId: () => true } as any)).toThrowError(TypeError);
       });
 
       it("throws an error if getName is invalid or returns not a string", () => {
         const hotbarStore = HotbarStore.getInstance();
 
-        expect(() =>
-          hotbarStore.addToHotbar({ getId: () => "" } as any),
-        ).toThrowError(TypeError);
-        expect(() =>
-          hotbarStore.addToHotbar({ getId: () => "", getName: () => 4 } as any),
-        ).toThrowError(TypeError);
+        expect(() => hotbarStore.addToHotbar({ getId: () => "" } as any)).toThrowError(TypeError);
+        expect(() => hotbarStore.addToHotbar({ getId: () => "", getName: () => 4 } as any)).toThrowError(TypeError);
       });
 
       it("does nothing when item moved to same cell", () => {
@@ -443,9 +406,7 @@ describe("HotbarStore", () => {
     });
 
     it("allows to retrieve a hotbar", () => {
-      const hotbar = HotbarStore.getInstance().getById(
-        "3caac17f-aec2-4723-9694-ad204465d935",
-      );
+      const hotbar = HotbarStore.getInstance().getById("3caac17f-aec2-4723-9694-ad204465d935");
 
       expect(hotbar.id).toBe("3caac17f-aec2-4723-9694-ad204465d935");
     });

@@ -56,11 +56,7 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
   get menuItems() {
     if (!this.entity) return [];
 
-    return EntitySettingRegistry.getInstance().getItemsForKind(
-      this.entity.kind,
-      this.entity.apiVersion,
-      this.entity.metadata.source,
-    );
+    return EntitySettingRegistry.getInstance().getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
   }
 
   get activeSetting() {
@@ -74,9 +70,7 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
   };
 
   renderNavigation() {
-    const groups = Object.entries(
-      groupBy(this.menuItems, (item) => item.group || "Extensions"),
-    );
+    const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
 
     groups.sort((a, b) => {
       if (a[0] === "Settings") return -1;
@@ -90,26 +84,21 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
         <div className="flex items-center pb-8">
           <Avatar
             title={this.entity.getName()}
-            colorHash={`${this.entity.getName()}-${
-              this.entity.metadata.source
-            }`}
+            colorHash={`${this.entity.getName()}-${this.entity.metadata.source}`}
             src={this.entity.spec.icon?.src}
             className={styles.settingsAvatar}
             size={40}
           />
-          <div className={styles.entityName}>{this.entity.getName()}</div>
+          <div className={styles.entityName}>
+            {this.entity.getName()}
+          </div>
         </div>
-        <Tabs
-          className="flex column"
-          scrollable={false}
-          onChange={this.onTabChange}
-          value={this.activeTab}
-        >
-          {groups.map((group, groupIndex) => (
+        <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+          { groups.map((group, groupIndex) => (
             <React.Fragment key={`group-${groupIndex}`}>
-              <hr />
+              <hr/>
               <div className="header">{group[0]}</div>
-              {group[1].map((setting, index) => (
+              { group[1].map((setting, index) => (
                 <Tab
                   key={index}
                   value={setting.id}
@@ -134,20 +123,20 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
     const { activeSetting } = this;
 
     return (
-      <SettingLayout navigation={this.renderNavigation()} contentGaps={false}>
-        {activeSetting && (
-          <section>
-            <h2 data-testid={`${activeSetting.id}-header`}>
-              {activeSetting.title}
-            </h2>
+      <SettingLayout
+        navigation={this.renderNavigation()}
+        contentGaps={false}
+      >
+        {
+          activeSetting && (
             <section>
-              <activeSetting.components.View
-                entity={this.entity}
-                key={activeSetting.title}
-              />
+              <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
+              <section>
+                <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
+              </section>
             </section>
-          </section>
-        )}
+          )
+        }
       </SettingLayout>
     );
   }
