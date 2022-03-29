@@ -16,6 +16,7 @@ import { navigate } from "../../navigation";
 import { Menu, MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tooltip } from "../tooltip";
+import { observer } from "mobx-react";
 
 const contextMenu: CatalogEntityContextMenuContext = observable({
   menuItems: [],
@@ -59,7 +60,7 @@ function renderLoadingSidebarCluster() {
   );
 }
 
-export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity }) {
+export const SidebarCluster = observer(({ clusterEntity }: { clusterEntity: CatalogEntity }) => {
   const [opened, setOpened] = useState(false);
 
   if (!clusterEntity) {
@@ -138,4 +139,4 @@ export function SidebarCluster({ clusterEntity }: { clusterEntity: CatalogEntity
       </Menu>
     </div>
   );
-}
+});
