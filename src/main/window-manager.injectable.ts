@@ -7,7 +7,13 @@ import { WindowManager } from "./window-manager";
 
 const windowManagerInjectable = getInjectable({
   id: "window-manager",
-  instantiate: () => WindowManager.createInstance(),
+
+  instantiate: () => {
+    WindowManager.resetInstance();
+
+    return WindowManager.createInstance();
+  },
+
   causesSideEffects: true,
 });
 

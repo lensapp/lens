@@ -7,7 +7,13 @@ import { UserStore } from "./user-store";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
-  instantiate: () => UserStore.createInstance(),
+
+  instantiate: () => {
+    UserStore.resetInstance();
+
+    return UserStore.createInstance();
+  },
+
   causesSideEffects: true,
 });
 

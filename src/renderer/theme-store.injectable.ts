@@ -7,7 +7,13 @@ import { ThemeStore } from "./theme.store";
 
 const themeStoreInjectable = getInjectable({
   id: "theme-store",
-  instantiate: () => ThemeStore.createInstance(),
+
+  instantiate: () => {
+    ThemeStore.resetInstance();
+
+    return ThemeStore.createInstance();
+  },
+
   causesSideEffects: true,
 });
 
