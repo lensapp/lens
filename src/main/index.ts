@@ -62,6 +62,7 @@ import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { init } from "@sentry/electron/main";
+import { runSetups } from "../common/setupable-injection-token/run-setups";
 
 async function main(di: DiContainer) {
   app.setName(appName);
@@ -70,7 +71,7 @@ async function main(di: DiContainer) {
    * Note: this MUST be called before electron's "ready" event has been emitted.
    */
   initializeSentryReporting(init);
-  await di.runSetups();
+  await runSetups(di);
   await app.whenReady();
 
   injectSystemCAs();
