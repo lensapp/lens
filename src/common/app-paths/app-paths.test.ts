@@ -40,7 +40,7 @@ describe("app-paths", () => {
       recent: "some-recent",
       temp: "some-temp",
       videos: "some-videos",
-      userData: "some-irrelevant",
+      userData: "some-irrelevant-user-data",
     };
 
     mainDi.override(
