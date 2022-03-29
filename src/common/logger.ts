@@ -11,11 +11,10 @@ import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
 
 export interface Logger {
-  info: (...args: any) => void;
-  error: (...args: any) => void;
-  debug: (...args: any) => void;
-  log: (...args: any) => void;
-  warn: (...args: any) => void;
+  info: (message: string, ...args: any) => void;
+  error: (message: string, ...args: any) => void;
+  debug: (message: string, ...args: any) => void;
+  warn: (message: string, ...args: any) => void;
 }
 
 const logLevel = process.env.LOG_LEVEL

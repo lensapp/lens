@@ -90,8 +90,7 @@ export const getDiForUnitTesting = (
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,
-      log: noop,
-      error: (...args: any) => console.error(...args),
+      error: (message: string, ...args: any) => console.error(message, ...args),
       info: noop,
     }));
   }
