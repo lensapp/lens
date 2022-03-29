@@ -25,6 +25,9 @@ import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
+import isMacInjectable from "../common/vars/is-mac.injectable";
+import isWindowsInjectable from "../common/vars/is-windows.injectable";
+import isLinuxInjectable from "../common/vars/is-linux.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -45,6 +48,10 @@ export const getDiForUnitTesting = (
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(isMacInjectable, () => true);
+    di.override(isWindowsInjectable, () => false);
+    di.override(isLinuxInjectable, () => false);
+
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
 

@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { isWindows } from "../vars";
+import { isMac } from "../vars";
 
-const isWindowsInjectable = getInjectable({
-  id: "is-windows",
-  instantiate: () => isWindows,
+const isMacInjectable = getInjectable({
+  id: "is-mac",
+  instantiate: () => isMac,
   causesSideEffects: true,
 });
 
-export default isWindowsInjectable;
+export default isMacInjectable;
