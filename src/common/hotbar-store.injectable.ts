@@ -369,14 +369,10 @@ const hotbarStoreInjectable = getInjectable({
   instantiate: (di) => {
     HotbarStore.resetInstance();
 
-    const instance = HotbarStore.createInstance({
+    return HotbarStore.createInstance({
       catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
     });
-
-    return instance;
   },
-
-  causesSideEffects: true,
 });
 
 export default hotbarStoreInjectable;
