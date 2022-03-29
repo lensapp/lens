@@ -5,11 +5,11 @@
 
 import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
-import { isLinux, isMac, isPublishConfigured, isTestEnv } from "../common/vars";
+import { isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
-import { ipcMain, autoUpdater as electronAutoUpdater } from "electron";
+import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
 
@@ -23,25 +23,7 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
   if (arg.doUpdate) {
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
-      setImmediate(() => {
-        if (isMac) {
-          /**
-           * This is a necessary workaround until electron-updater is fixed.
-           * The problem is that it downloads it but then never tries to
-           * download it from itself via electron.
-           */
-          electronAutoUpdater.checkForUpdates();
-        } else if (isLinux) {
-          /**
-           * This is a necessary workaround until electron-updater is fixed.
-           * The problem is that because linux updating is not implemented at
-           * all via electron. Electron's autoUpdater.quitAndInstall() is never
-           * called.
-           */
-          electronAutoUpdater.emit("before-quit-for-update");
-        }
-        autoUpdater.quitAndInstall(true, true);
-      });
+      autoUpdater.quitAndInstall(true, true);
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
       autoUpdater.autoInstallOnAppQuit = true;
