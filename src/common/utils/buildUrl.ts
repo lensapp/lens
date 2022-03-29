@@ -11,7 +11,7 @@ export interface URLParams<P extends object = {}, Q extends object = {}> {
   fragment?: string;
 }
 
-export function buildURL<P extends object = {}, Q extends object = {}>(path: string | any, { params, query, fragment }: URLParams<P, Q> = {}) {
+export function buildURL<P extends object = {}, Q extends object = {}>(path: string, { params, query, fragment }: URLParams<P, Q> = {}) {
   const pathBuilder = compile(String(path));
 
   const queryParams = query ? new URLSearchParams(Object.entries(query)).toString() : "";
@@ -24,7 +24,7 @@ export function buildURL<P extends object = {}, Q extends object = {}>(path: str
   return parts.filter(Boolean).join("");
 }
 
-export function buildURLPositional<P extends object = {}, Q extends object = {}>(path: string | any) {
+export function buildURLPositional<P extends object = {}, Q extends object = {}>(path: string) {
   return function (params?: P, query?: Q, fragment?: string): string {
     return buildURL(path, { params, query, fragment });
   };
