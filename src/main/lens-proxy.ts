@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type net from "net";
+import net from "net";
 import type http from "http";
 import spdy from "spdy";
 import type httpProxy from "http-proxy";
@@ -188,7 +188,7 @@ export class LensProxy extends Singleton {
     });
 
     proxy.on("error", (error, req, res, target) => {
-      if (this.closed) {
+      if (this.closed || res instanceof net.Socket) {
         return;
       }
 
