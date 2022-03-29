@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { checkForUpdates } from "../app-updater";
-import { docsUrl, isMac, productName, supportUrl } from "../../common/vars";
+import { docsUrl, productName, supportUrl } from "../../common/vars";
 import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
@@ -25,6 +25,7 @@ import navigateToExtensionsInjectable from "../../common/front-end-routing/route
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
+import isMacInjectable from "../../common/vars/is-mac.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
@@ -49,6 +50,7 @@ const getAppMenuItemsInjectable = getInjectable({
     const navigateToCatalog = di.inject(navigateToCatalogInjectable);
     const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
     const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
+    const isMac = di.inject(isMacInjectable);
 
     return (): MenuItemsOpts[] => {
       const autoUpdateDisabled = !isAutoUpdateEnabled();
