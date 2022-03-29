@@ -46,7 +46,7 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
         const obj = this.resource;
 
         if (!obj) {
-          if (store.isLoaded) {
+          if (store?.isLoaded) {
             // auto-close tab when resource removed from store
             this.props.closeTab(this.props.tab.id);
           } else if (!store.isLoading) {
