@@ -7,9 +7,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "~flex.box"; // todo: replace with tailwind's flexbox classes
-@import "./fonts";
+@import "~flex.box";
 @import "../themes/theme-vars";
+@import "./fonts";
 
 :root {
   --unit: 8px;
