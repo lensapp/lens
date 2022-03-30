@@ -8,6 +8,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import React from "react";
 import navigateToKubernetesPreferencesInjectable from "../../common/front-end-routing/routes/preferences/kubernetes/navigate-to-kubernetes-preferences.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 
 const addSyncEntriesInjectable = getInjectable({
   id: "add-sync-entries",
@@ -15,10 +16,11 @@ const addSyncEntriesInjectable = getInjectable({
   instantiate: (di) => {
     const userStore = di.inject(userStoreInjectable);
     const navigateToKubernetesPreferences = di.inject(navigateToKubernetesPreferencesInjectable);
+    const logger = di.inject(loggerInjectable);
 
     return async (filePaths: string[]) => {
       userStore.syncKubeconfigEntries.merge(
-        await getAllEntries(filePaths),
+        await getAllEntries(filePaths, logger),
       );
 
       Notifications.ok(
