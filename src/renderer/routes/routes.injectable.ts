@@ -22,13 +22,7 @@ const routesInjectable = getInjectable({
       allRoutes
         .get()
         .filter(matches({ clusterFrame: currentlyInClusterFrame }))
-        .filter((route) => {
-          if (route.isEnabled) {
-            return route.isEnabled.get();
-          }
-
-          return true;
-        }),
+        .filter((route) => route.isEnabled.get()),
     );
   },
 });
