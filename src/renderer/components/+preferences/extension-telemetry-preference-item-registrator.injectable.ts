@@ -14,7 +14,7 @@ const extensionTelemetryPreferenceItemRegistratorInjectable = getInjectable({
 
   instantiate:
     (di) =>
-      async (extension: LensRendererExtension, extensionInstallationCount) => {
+      (extension: LensRendererExtension, extensionInstallationCount) => {
         const injectables = pipeline(
           extension.appPreferences,
 

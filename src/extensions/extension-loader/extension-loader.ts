@@ -25,7 +25,7 @@ const logModule = "[EXTENSIONS-LOADER]";
 interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
   createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension;
-  extensionRegistrators: ((extension: LensExtension, extensionInstallationCount: number) => Promise<void>)[];
+  extensionRegistrators: ((extension: LensExtension, extensionInstallationCount: number) => void)[];
   extensionInstallationCounter: Map<string, number>;
 }
 
@@ -297,8 +297,8 @@ export class ExtensionLoader {
     // 3. Call .enable for each extension
     // 4. Return ExtensionLoading[]
 
-    const extensionInstallationPromises = [...installedExtensions.entries()]
-      .map(async ([extId, extension]) => {
+    const extensions = [...installedExtensions.entries()]
+      .map(([extId, extension]) => {
         const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
         if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
@@ -320,10 +320,8 @@ export class ExtensionLoader {
 
             this.dependencies.extensionInstallationCounter.set(instance.sanitizedExtensionId, installationCount);
 
-            await Promise.all(
-              this.dependencies.extensionRegistrators.map((register) =>
-                register(instance, installationCount),
-              ),
+            this.dependencies.extensionRegistrators.forEach((register) =>
+              register(instance, installationCount),
             );
 
             this.instances.set(extId, instance);
@@ -341,11 +339,7 @@ export class ExtensionLoader {
         }
 
         return null;
-      });
-
-    const extensionInstallations = (await Promise.all(extensionInstallationPromises));
-
-    const extensions = extensionInstallations.filter(extension => Boolean(extension));
+      }).filter(extension => Boolean(extension));
 
     // We first need to wait until each extension's `onActivate` is resolved or rejected,
     // as this might register new catalog categories. Afterwards we can safely .enable the extension.

@@ -25,7 +25,7 @@ const extensionRouteRegistratorInjectable = getInjectable({
   instantiate: (di: DiContainer) => {
     const observableHistory = di.inject(observableHistoryInjectable);
 
-    return async (
+    return (
       extension: LensRendererExtension,
       extensionInstallationCount: number,
     ) => {

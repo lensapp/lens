@@ -19,7 +19,7 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
 
   instantiate:
     (di: DiContainer) =>
-      async (
+      (
         extension: LensRendererExtension,
         extensionInstallationCount: number,
       ) => {
@@ -74,7 +74,6 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
           },
         });
 
-        // TODO: Transactional register
         di.register(sidebarItemsForExtensionInjectable);
       },
 
