@@ -201,7 +201,7 @@
   "dependencies": {
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
-    "@kubernetes/client-node": "^0.16.1",
+    "@kubernetes/client-node": "^0.16.3",
     "@ogre-tools/injectable": "5.1.2",
     "@ogre-tools/injectable-react": "5.1.2",
     "@sentry/electron": "^2.5.4",
