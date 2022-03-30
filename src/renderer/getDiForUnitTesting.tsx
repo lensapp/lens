@@ -28,6 +28,8 @@ import type { UserStore } from "../common/user-store";
 import isMacInjectable from "../common/vars/is-mac.injectable";
 import isWindowsInjectable from "../common/vars/is-windows.injectable";
 import isLinuxInjectable from "../common/vars/is-linux.injectable";
+import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
+import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -51,6 +53,8 @@ export const getDiForUnitTesting = (
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
+
+    di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
