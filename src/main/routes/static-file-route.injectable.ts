@@ -12,20 +12,22 @@ import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
 import readFileBufferInjectable from "../../common/fs/read-file-buffer.injectable";
+import getAbsolutePathInjectable, { GetAbsolutePath } from "../../common/path/get-absolute-path.injectable";
 
 interface ProductionDependencies {
   readFileBuffer: (path: string) => Promise<Buffer>;
+  getAbsolutePath: GetAbsolutePath;
 }
 
 const handleStaticFileInProduction =
-  ({ readFileBuffer }: ProductionDependencies) =>
+  ({ readFileBuffer, getAbsolutePath }: ProductionDependencies) =>
     async ({ params }: LensApiRequest) => {
-      const staticPath = path.resolve(__static);
+      const staticPath = getAbsolutePath(__static);
       let filePath = params.path;
 
       for (let retryCount = 0; retryCount < 5; retryCount += 1) {
         const asset = path.join(staticPath, filePath);
-        const normalizedFilePath = path.resolve(asset);
+        const normalizedFilePath = getAbsolutePath(asset);
 
         if (!normalizedFilePath.startsWith(staticPath)) {
           return { statusCode: 404 };
@@ -79,13 +81,14 @@ const staticFileRouteInjectable = getInjectable({
   instantiate: (di): Route<Buffer> => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const readFileBuffer = di.inject(readFileBufferInjectable);
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
 
     return {
       method: "get",
       path: `/{path*}`,
       handler: isDevelopment
         ? handleStaticFileInDevelopment({ proxy: httpProxy.createProxy() })
-        : handleStaticFileInProduction({ readFileBuffer }),
+        : handleStaticFileInProduction({ readFileBuffer, getAbsolutePath }),
     };
   },
 

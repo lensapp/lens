@@ -14,7 +14,6 @@ import { catalogEntityRegistry } from "../../catalog";
 import { pushCatalogToRenderer } from "../../catalog-pusher";
 import { ClusterManager } from "../../cluster-manager";
 import { ResourceApplier } from "../../resource-applier";
-import path from "path";
 import { remove } from "fs-extra";
 import { onLocationChange, handleWindowAction } from "../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
@@ -23,13 +22,15 @@ import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppM
 import { getNativeColorTheme } from "../../native-theme";
 import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
 import type { MenuItemsOpts } from "../../menu/get-app-menu-items.injectable";
+import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
 
 interface Dependencies {
   getAppMenuItems: () => MenuItemsOpts[];
   directoryForLensLocalStorage: string;
+  getAbsolutePath: GetAbsolutePath;
 }
 
-export const initIpcMainHandlers = ({ getAppMenuItems, directoryForLensLocalStorage }: Dependencies) => () => {
+export const initIpcMainHandlers = ({ getAppMenuItems, directoryForLensLocalStorage, getAbsolutePath }: Dependencies) => () => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -85,7 +86,7 @@ export const initIpcMainHandlers = ({ getAppMenuItems, directoryForLensLocalStor
 
     try {
       // remove the local storage file
-      const localStorageFilePath = path.resolve(directoryForLensLocalStorage, `${cluster.id}.json`);
+      const localStorageFilePath = getAbsolutePath(directoryForLensLocalStorage, `${cluster.id}.json`);
 
       await remove(localStorageFilePath);
     } catch {
