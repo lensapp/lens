@@ -655,7 +655,7 @@ export class KubeApi<T extends KubeObject> {
             if (event.type === "ERROR" && event.object.kind === "Status") {
               errorReceived = true;
 
-              return callback(null, new KubeStatus(event.object as any));
+              return callback(null, new KubeStatus(event.object));
             }
 
             this.modifyWatchEvent(event);
