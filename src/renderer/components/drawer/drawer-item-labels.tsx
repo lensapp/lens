@@ -6,21 +6,30 @@
 import React from "react";
 import { DrawerItem, DrawerItemProps } from "./drawer-item";
 import { Badge } from "../badge";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 
 export interface DrawerItemLabelsProps extends DrawerItemProps {
-  labels: string[];
+  labels: string[] | Record<string, string>;
 }
 
 export function DrawerItemLabels(props: DrawerItemLabelsProps) {
   const { labels, ...itemProps } = props;
 
-  if (!labels || !labels.length) {
+  if (!labels || typeof labels !== "object") {
+    return null;
+  }
+
+  const labelStrings = Array.isArray(labels)
+    ? labels
+    : KubeObject.stringifyLabels(labels);
+
+  if (labelStrings.length === 0) {
     return null;
   }
 
   return (
     <DrawerItem {...itemProps} labelsOnly>
-      {labels.map(label => <Badge key={label} label={label} title={label}/>)}
+      {labelStrings.map(label => <Badge key={label} label={label} title={label}/>)}
     </DrawerItem>
   );
 }

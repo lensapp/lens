@@ -24,3 +24,13 @@
   font-display: block;
   src: local('RobotoMono'), url('./fonts/roboto-mono-nerd.ttf') format('truetype');
 }
+
+#fonts-preloading {
+  > .icons {
+    @include font-preload("Material Icons");
+  }
+
+  > .terminal {
+    @include font-preload("RobotoMono");
+  }
+}

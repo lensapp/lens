@@ -86,7 +86,7 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
           {spec.sessionAffinity}
         </DrawerItem>
 
-        <DrawerTitle title="Connection"/>
+        <DrawerTitle>Connection</DrawerTitle>
 
         <DrawerItem name="Cluster IP">
           {spec.clusterIP}
@@ -129,7 +129,7 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
             {spec.loadBalancerIP}
           </DrawerItem>
         )}
-        <DrawerTitle title="Endpoint"/>
+        <DrawerTitle>Endpoint</DrawerTitle>
 
         <ServiceDetailsEndpoint endpoint={endpoint}/>
       </div>

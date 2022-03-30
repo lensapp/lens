@@ -59,6 +59,10 @@ export function Avatar(props: AvatarProps) {
   const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, ...rest } = props;
 
   const getBackgroundColor = () => {
+    if (src) {
+      return "transparent";
+    }
+
     return background || randomColor({ seed: colorHash, luminosity: "dark" });
   };
 

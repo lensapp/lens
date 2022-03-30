@@ -10,12 +10,13 @@ import type { Cluster } from "../../common/cluster/cluster";
 import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
 import { makeObservable, observable, when } from "mobx";
+import type { SelfSignedCert } from "selfsigned";
 
 const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
 export interface KubeAuthProxyDependencies {
   proxyBinPath: string;
-  proxyCertPath: Promise<string>;
+  proxyCert: SelfSignedCert;
   spawn: typeof spawn;
 }
 
@@ -44,7 +45,7 @@ export class KubeAuthProxy {
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
-    const certPath = await this.dependencies.proxyCertPath;
+    const cert = this.dependencies.proxyCert;
 
     this.proxyProcess = this.dependencies.spawn(proxyBin, [], {
       env: {
@@ -52,7 +53,8 @@ export class KubeAuthProxy {
         KUBECONFIG: this.cluster.kubeConfigPath,
         KUBECONFIG_CONTEXT: this.cluster.contextName,
         API_PREFIX: this.apiPrefix,
-        CERT_PATH: certPath,
+        PROXY_KEY: cert.private,
+        PROXY_CERT: cert.cert,
       },
     });
     this.proxyProcess.on("error", (error) => {

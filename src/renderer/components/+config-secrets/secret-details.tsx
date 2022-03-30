@@ -116,7 +116,7 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
 
     return (
       <>
-        <DrawerTitle title="Data" />
+        <DrawerTitle>Data</DrawerTitle>
         {secrets.map(this.renderSecret)}
         <Button
           primary

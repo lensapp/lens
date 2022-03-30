@@ -17,8 +17,6 @@ interface TabsContextValue<D = any> {
   onChange?(value: D): void;
 }
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
 export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttributes<HTMLElement>, "onChange"> {
   className?: string;
   center?: boolean;
@@ -81,7 +79,9 @@ export class Tab extends React.PureComponent<TabProps> {
   }
 
   scrollIntoView() {
-    this.ref.current?.scrollIntoViewIfNeeded();
+    if (typeof this.ref.current?.scrollIntoViewIfNeeded === "function") {
+      this.ref.current.scrollIntoViewIfNeeded();
+    }
   }
 
   @boundMethod

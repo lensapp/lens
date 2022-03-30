@@ -72,11 +72,34 @@ const resourcesDir = lazyInitialized(() => (
     : path.join(process.cwd(), "binaries", "client", normalizedPlatform)
 ));
 
+/**
+ * @deprecated for being explicit side effect.
+ */
 export const baseBinariesDir = lazyInitialized(() => path.join(resourcesDir.get(), normalizedArch));
+
+/**
+ * @deprecated for being explicit side effect.
+ */
 export const kubeAuthProxyBinaryName = getBinaryName("lens-k8s-proxy");
+
+/**
+ * @deprecated for being explicit side effect.
+ */
 export const helmBinaryName = getBinaryName("helm");
+
+/**
+ * @deprecated for being explicit side effect.
+ */
 export const helmBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), helmBinaryName));
+
+/**
+ * @deprecated for being explicit side effect.
+ */
 export const kubectlBinaryName = getBinaryName("kubectl");
+
+/**
+ * @deprecated for being explicit side effect.
+ */
 export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
 
 // Webpack build paths

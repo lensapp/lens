@@ -28,26 +28,23 @@ interface RuleGroup {
 
 @observer
 export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps> {
-  renderRuleGroup( title: React.ReactNode, group: RuleGroup) {
-    if (!group) return null;
-    const { rule, ranges } = group;
-
-    return (
-      <>
-        <DrawerTitle title={title}/>
-        <DrawerItem name="Rule">
-          {rule}
+  renderRuleGroup = (title: React.ReactNode, { rule, ranges }: RuleGroup) => (
+    <>
+      <DrawerTitle>{title}</DrawerTitle>
+      <DrawerItem name="Rule">
+        {rule}
+      </DrawerItem>
+      {ranges && (
+        <DrawerItem name="Ranges (Min-Max)" labelsOnly>
+          {ranges.map(({ min, max }, index) => (
+            <Badge
+              key={index}
+              label={`${min} - ${max}`} />
+          ))}
         </DrawerItem>
-        {ranges && (
-          <DrawerItem name="Ranges (Min-Max)" labelsOnly>
-            {ranges.map(({ min, max }, index) => {
-              return <Badge key={index} label={`${min} - ${max}`}/>;
-            })}
-          </DrawerItem>
-        )}
-      </>
-    );
-  }
+      )}
+    </>
+  );
 
   render() {
     const { object: psp } = this.props;
@@ -161,7 +158,7 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
 
         {allowedHostPaths && (
           <>
-            <DrawerTitle title="Allowed Host Paths"/>
+            <DrawerTitle>Allowed Host Paths</DrawerTitle>
             <Table>
               <TableHead>
                 <TableCell>Path Prefix</TableCell>
@@ -179,14 +176,14 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
           </>
         )}
 
-        {this.renderRuleGroup("Fs Group", fsGroup)}
-        {this.renderRuleGroup("Run As Group", runAsGroup)}
-        {this.renderRuleGroup("Run As User", runAsUser)}
-        {this.renderRuleGroup("Supplemental Groups", supplementalGroups)}
+        {fsGroup && this.renderRuleGroup("Fs Group", fsGroup)}
+        {runAsGroup && this.renderRuleGroup("Run As Group", runAsGroup)}
+        {runAsUser && this.renderRuleGroup("Run As User", runAsUser)}
+        {supplementalGroups && this.renderRuleGroup("Supplemental Groups", supplementalGroups)}
 
         {runtimeClass && (
           <>
-            <DrawerTitle title="Runtime Class"/>
+            <DrawerTitle>Runtime Class</DrawerTitle>
             <DrawerItem name="Allowed Runtime Class Names">
               {runtimeClass.allowedRuntimeClassNames?.join(", ") || "-"}
             </DrawerItem>
@@ -198,7 +195,7 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
 
         {seLinux && (
           <>
-            <DrawerTitle title="Se Linux"/>
+            <DrawerTitle>Se Linux</DrawerTitle>
             <DrawerItem name="Rule">
               {seLinux.rule}
             </DrawerItem>

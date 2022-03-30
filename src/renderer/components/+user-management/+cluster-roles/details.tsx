@@ -28,7 +28,7 @@ export class ClusterRoleDetails extends React.Component<ClusterRoleDetailsProps>
       <div className="ClusterRoleDetails">
         <KubeObjectMeta object={clusterRole}/>
 
-        <DrawerTitle title="Rules"/>
+        <DrawerTitle>Rules</DrawerTitle>
         {rules.map(({ resourceNames, apiGroups, resources, verbs }, index) => {
           return (
             <div className="rule" key={index}>
