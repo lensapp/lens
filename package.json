@@ -355,7 +355,7 @@
     "eslint": "^8.11.0",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "flex.box": "^3.4.4",
