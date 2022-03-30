@@ -69,6 +69,7 @@
     flex: 1;
     overflow: hidden;
     transition: flex-basis 25ms ease-in;
+    background: var(--dockInfoBackground);
 
     &.terminal {
       background: var(--terminalBackground);
