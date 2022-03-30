@@ -32,6 +32,8 @@ import isWindowsInjectable from "../common/vars/is-windows.injectable";
 import isLinuxInjectable from "../common/vars/is-linux.injectable";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
+import joinPathsInjectable from "../common/path/join-paths.injectable";
+import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -58,6 +60,7 @@ export const getDiForUnitTesting = (
     di.override(isLinuxInjectable, () => false);
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
+    di.override(joinPathsInjectable, () => joinPathsFake);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
