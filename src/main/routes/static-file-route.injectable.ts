@@ -13,20 +13,23 @@ import isDevelopmentInjectable from "../../common/vars/is-development.injectable
 import httpProxy from "http-proxy";
 import readFileBufferInjectable from "../../common/fs/read-file-buffer.injectable";
 import getAbsolutePathInjectable, { GetAbsolutePath } from "../../common/path/get-absolute-path.injectable";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
 interface ProductionDependencies {
   readFileBuffer: (path: string) => Promise<Buffer>;
   getAbsolutePath: GetAbsolutePath;
+  joinPaths: JoinPaths;
 }
 
 const handleStaticFileInProduction =
-  ({ readFileBuffer, getAbsolutePath }: ProductionDependencies) =>
+  ({ readFileBuffer, getAbsolutePath, joinPaths }: ProductionDependencies) =>
     async ({ params }: LensApiRequest) => {
       const staticPath = getAbsolutePath(__static);
       let filePath = params.path;
 
       for (let retryCount = 0; retryCount < 5; retryCount += 1) {
-        const asset = path.join(staticPath, filePath);
+        const asset = joinPaths(staticPath, filePath);
         const normalizedFilePath = getAbsolutePath(asset);
 
         if (!normalizedFilePath.startsWith(staticPath)) {
@@ -82,13 +85,14 @@ const staticFileRouteInjectable = getInjectable({
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const readFileBuffer = di.inject(readFileBufferInjectable);
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
 
     return {
       method: "get",
       path: `/{path*}`,
       handler: isDevelopment
         ? handleStaticFileInDevelopment({ proxy: httpProxy.createProxy() })
-        : handleStaticFileInProduction({ readFileBuffer, getAbsolutePath }),
+        : handleStaticFileInProduction({ readFileBuffer, getAbsolutePath, joinPaths }),
     };
   },
 
