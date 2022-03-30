@@ -9,14 +9,15 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Notice } from "../+extensions/notice";
 import type { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
-import { isWindows } from "../../../common/vars";
-import logger from "../../../main/logger";
 import { iter, tuple } from "../../utils";
 import { SubTitle } from "../layout/sub-title";
 import { PathPicker } from "../path-picker/path-picker";
 import { Spinner } from "../spinner";
 import { RemovableItem } from "./removable-item";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import type { Logger } from "../../../common/logger";
 
 interface SyncInfo {
   type: "file" | "folder" | "unknown";
@@ -31,7 +32,7 @@ interface Value {
   info: SyncInfo;
 }
 
-async function getMapEntry({ filePath, ...data }: KubeconfigSyncEntry): Promise<[string, Value]> {
+async function getMapEntry({ filePath, ...data }: KubeconfigSyncEntry, logger: Logger): Promise<[string, Value]> {
   try {
     // stat follows the stat(2) linux syscall spec, namely it follows symlinks
     const stats = await fse.stat(filePath);
@@ -54,12 +55,14 @@ async function getMapEntry({ filePath, ...data }: KubeconfigSyncEntry): Promise<
   }
 }
 
-export async function getAllEntries(filePaths: string[]): Promise<[string, Value][]> {
-  return Promise.all(filePaths.map(filePath => getMapEntry({ filePath })));
+export async function getAllEntries(filePaths: string[], logger: Logger): Promise<[string, Value][]> {
+  return Promise.all(filePaths.map(filePath => getMapEntry({ filePath }, logger)));
 }
 
 interface Dependencies {
   userStore: UserStore;
+  isWindows: boolean;
+  logger: Logger;
 }
 
 @observer
@@ -76,7 +79,7 @@ class NonInjectedKubeconfigSyncs extends React.Component<Dependencies> {
     const mapEntries = await Promise.all(
       iter.map(
         this.props.userStore.syncKubeconfigEntries,
-        ([filePath, ...value]) => getMapEntry({ filePath, ...value }),
+        ([filePath, ...value]) => getMapEntry({ filePath, ...value }, this.props.logger),
       ),
     );
 
@@ -102,7 +105,7 @@ class NonInjectedKubeconfigSyncs extends React.Component<Dependencies> {
   }
 
   onPick = async (filePaths: string[]) => {
-    this.syncs.merge(await getAllEntries(filePaths));
+    this.syncs.merge(await getAllEntries(filePaths, this.props.logger));
   };
 
   getIconName(entry: Entry) {
@@ -158,7 +161,7 @@ class NonInjectedKubeconfigSyncs extends React.Component<Dependencies> {
   }
 
   renderSyncButtons() {
-    if (isWindows) {
+    if (this.props.isWindows) {
       return (
         <div className="flex gaps align-center mb-5">
           <PathPicker
@@ -207,6 +210,8 @@ export const KubeconfigSyncs = withInjectables<Dependencies>(
   {
     getProps: (di) => ({
       userStore: di.inject(userStoreInjectable),
+      isWindows: di.inject(isWindowsInjectable),
+      logger: di.inject(loggerInjectable),
     }),
   },
 );
