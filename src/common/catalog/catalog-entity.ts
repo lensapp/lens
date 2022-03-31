@@ -181,6 +181,15 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
   }
 
   /**
+   * Get the badge of this category.
+   * Defaults to no badge.
+   * The badge is displayed next to the Category name in the Catalog Category menu
+   */
+  public getBadge(): React.ReactNode {
+    return null;
+  }
+
+  /**
    * Add a filter for menu items of catalogAddMenu
    * @param fn The function that should return a truthy value if that menu item should be displayed
    * @returns A function to remove that filter
