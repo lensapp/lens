@@ -13,6 +13,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { IngressRouteParams } from "../../../common/routes";
 import { KubeObjectAge } from "../kube-object/age";
+import { computeRouteDeclarations } from "../../../common/k8s-api/endpoints";
 
 enum columnId {
   name = "name",
@@ -56,16 +57,24 @@ export class Ingresses extends React.Component<IngressesProps> {
           <KubeObjectStatusIcon key="icon" object={ingress} />,
           ingress.getNs(),
           ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
-          ingress.getRoutes().map(route => <p key={route}>{route}</p>),
+          computeRouteDeclarations(ingress).map(decl => (
+            decl.displayAsLink
+              ? (
+                <span key={decl.url}>
+                  <a
+                    href={decl.url}
+                    rel="noreferrer"
+                    target="_blank"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    {decl.url}
+                  </a> ⇢ {decl.service}
+                </span>
+              )
+              : <span key={decl.url}>{decl.url} ⇢ {decl.service}</span>
+          )),
           <KubeObjectAge key="age" object={ingress} />,
         ]}
-        tableProps={{
-          customRowHeights: (item, lineHeight, paddings) => {
-            const lines = item.getRoutes().length || 1;
-
-            return lines * lineHeight + paddings;
-          },
-        }}
       />
     );
   }

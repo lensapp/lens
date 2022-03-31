@@ -7,6 +7,16 @@
   .TableCell {
     &.rules {
       flex-grow: 3.0;
+      overflow-x: scroll;
+      text-overflow: unset;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      span:not(:last-of-type) {
+        margin-right: 1em;
+      }
     }
 
     &.warning {

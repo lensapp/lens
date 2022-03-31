@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject } from "../kube-object";
-import { autoBind } from "../../utils";
+import { KubeObject, TypedLocalObjectReference } from "../kube-object";
+import { autoBind, hasTypedProperty, isString, iter } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
@@ -41,57 +41,74 @@ export interface ILoadBalancerIngress {
 }
 
 // extensions/v1beta1
-interface IExtensionsBackend {
-  serviceName: string;
-  servicePort: number | string;
+export interface ExtensionsBackend {
+  serviceName?: string;
+  servicePort?: number | string;
 }
 
 // networking.k8s.io/v1
-interface INetworkingBackend {
-  service: IIngressService;
+export interface NetworkingBackend {
+  service?: IngressService;
 }
 
-export type IIngressBackend = IExtensionsBackend | INetworkingBackend;
+export type IngressBackend = (ExtensionsBackend | NetworkingBackend) & {
+  resource?: TypedLocalObjectReference;
+};
 
-export interface IIngressService {
+export interface IngressService {
   name: string;
-  port: {
-    name?: string;
-    number?: number;
+  port: RequireExactlyOne<{
+    name: string;
+    number: number;
+  }>;
+}
+
+function isExtensionsBackend(backend: IngressBackend): backend is ExtensionsBackend {
+  return hasTypedProperty(backend, "serviceName", isString);
+}
+
+/**
+ * Format an ingress backend into the name of the service and port
+ * @param backend The ingress target
+ */
+export function getBackendServiceNamePort(backend: IngressBackend): string {
+  if (isExtensionsBackend(backend)) {
+    return `${backend.serviceName}:${backend.servicePort}`;
+  }
+
+  if (backend.service) {
+    const { name, port } = backend.service;
+
+    return `${name}:${port.number ?? port.name}`;
+  }
+
+  return "<unknown>";
+}
+
+export interface IngressRule {
+  host?: string;
+  http?: {
+    paths: {
+      path?: string;
+      backend: IngressBackend;
+    }[];
   };
 }
 
-export const getBackendServiceNamePort = (backend: IIngressBackend) => {
-  // .service is available with networking.k8s.io/v1, otherwise using extensions/v1beta1 interface
-  const serviceName = "service" in backend ? backend.service.name : backend.serviceName;
-  // Port is specified either with a number or name
-  const servicePort = "service" in backend ? backend.service.port.number ?? backend.service.port.name : backend.servicePort;
-
-  return { serviceName, servicePort };
-};
-
 export interface Ingress {
-  spec: {
-    tls: {
+  spec?: {
+    tls?: {
       secretName: string;
     }[];
-    rules?: {
-      host?: string;
-      http: {
-        paths: {
-          path?: string;
-          backend: IIngressBackend;
-        }[];
-      };
-    }[];
+    rules?: IngressRule[];
     // extensions/v1beta1
-    backend?: IExtensionsBackend;
+    backend?: ExtensionsBackend;
     /**
      * The default backend which is exactly on of:
      * - service
      * - resource
      */
-    defaultBackend?: RequireExactlyOne<INetworkingBackend & {
+    defaultBackend?: RequireExactlyOne<NetworkingBackend & {
       resource: {
         apiGroup: string;
         kind: string;
@@ -106,6 +123,13 @@ export interface Ingress {
   };
 }
 
+export interface ComputedIngressRoute {
+  displayAsLink: boolean;
+  pathname: string;
+  url: string;
+  service: string;
+}
+
 export class Ingress extends KubeObject {
   static kind = "Ingress";
   static namespaced = true;
@@ -116,33 +140,15 @@ export class Ingress extends KubeObject {
     autoBind(this);
   }
 
-  getRoutes() {
-    const { spec: { tls, rules }} = this;
-
-    if (!rules) return [];
-
-    let protocol = "http";
-    const routes: string[] = [];
-
-    if (tls && tls.length > 0) {
-      protocol += "s";
-    }
-    rules.map(rule => {
-      const host = rule.host ? rule.host : "*";
-
-      if (rule.http && rule.http.paths) {
-        rule.http.paths.forEach(path => {
-          const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-
-          routes.push(`${protocol}://${host}${path.path || "/"} ⇢ ${serviceName}:${servicePort}`);
-        });
-      }
-    });
-
-    return routes;
+  getRules() {
+    return this.spec.rules ?? [];
   }
 
-  getServiceNamePort(): IExtensionsBackend {
+  getRoutes(): string[] {
+    return computeRouteDeclarations(this).map(({ url, service }) => `${url} ⇢ ${service}`);
+  }
+
+  getServiceNamePort(): ExtensionsBackend {
     const { spec: { backend, defaultBackend } = {}} = this;
 
     const serviceName = defaultBackend?.service?.name ?? backend?.serviceName;
@@ -155,11 +161,9 @@ export class Ingress extends KubeObject {
   }
 
   getHosts() {
-    const { spec: { rules }} = this;
+    const { spec: { rules = [] }} = this;
 
-    if (!rules) return [];
-
-    return rules.filter(rule => rule.host).map(rule => rule.host);
+    return [...iter.filterMap(rules, rule => rule.host)];
   }
 
   getPorts() {
@@ -168,7 +172,7 @@ export class Ingress extends KubeObject {
     const httpPort = 80;
     const tlsPort = 443;
     // Note: not using the port name (string)
-    const servicePort = defaultBackend?.service.port.number ?? backend?.servicePort;
+    const servicePort = defaultBackend?.service?.port.number ?? backend?.servicePort;
 
     if (rules && rules.length > 0) {
       if (rules.some(rule => Object.prototype.hasOwnProperty.call(rule, "http"))) {
@@ -192,6 +196,24 @@ export class Ingress extends KubeObject {
       address.hostname || address.ip
     ));
   }
+}
+
+export function computeRuleDeclarations(ingress: Ingress, rule: IngressRule): ComputedIngressRoute[] {
+  const { host = "*", http: { paths } = { paths: [] }} = rule;
+  const protocol = (ingress.spec?.tls?.length ?? 0) === 0
+    ? "http"
+    : "https";
+
+  return paths.map(({ path = "/", backend }) => ({
+    displayAsLink: !host.includes("*"),
+    pathname: path,
+    url: `${protocol}://${host}${path}`,
+    service: getBackendServiceNamePort(backend),
+  }));
+}
+
+export function computeRouteDeclarations(ingress: Ingress): ComputedIngressRoute[] {
+  return ingress.getRules().flatMap(rule => computeRuleDeclarations(ingress, rule));
 }
 
 let ingressApi: IngressApi;
