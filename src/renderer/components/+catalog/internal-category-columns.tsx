@@ -117,5 +117,6 @@ export const defaultCategoryColumns: RegisteredAdditionalCategoryColumn[] = [
       sortBy: "status",
     },
     searchFilter: entity => entity.status.phase,
+    sortCallback: entity => entity.status.phase,
   },
 ];
