@@ -377,7 +377,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
-  protected bindWatchEventsUpdater(delay = 1000) {
+  protected bindWatchEventsUpdater(delay = 4000) {
     reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
       delay,
     });
@@ -455,7 +455,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
   @action
   protected updateFromEventsBuffer() {
-    const items = this.getItems();
+    // const items = this.getItems();
+    const groupedItems: [string, T][] = this.getItems().map(item => [item.getId(), item]);
+    const items = new Map<string, T>(groupedItems);
 
     for (const event of this.eventsBuffer.clear()) {
       if (event.type === "ERROR") {
@@ -471,8 +473,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
           continue;
         }
 
-        const index = items.findIndex(item => item.getId() === object.metadata.uid);
-        const item = items[index];
+        // const index = items.findIndex(item => item.getId() === object.metadata.uid);
+        const { uid } = object.metadata;
+        const item = items.get(uid);
 
         switch (type) {
           case "ADDED":
@@ -482,16 +485,16 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
             const newItem = new this.api.objectConstructor(object);
 
             if (!item) {
-              items.push(newItem);
+              items.set(uid, newItem);
             } else {
-              items[index] = newItem;
+              items.set(uid, newItem);
             }
 
             break;
           }
           case "DELETED":
             if (item) {
-              items.splice(index, 1);
+              items.delete(uid);
             }
             break;
         }
@@ -500,7 +503,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
       }
     }
 
-    // update items
-    this.items.replace(this.sortItems(items.slice(-this.bufferSize)));
+    const updatedItems = Array.from(items.values());
+
+    this.items.replace(this.sortItems(updatedItems));
   }
 }
