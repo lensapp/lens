@@ -12,6 +12,7 @@ const initIpcMainHandlersInjectable = getInjectable({
   id: "init-ipc-main-handlers",
 
   instantiate: (di) => initIpcMainHandlers({
+    // TODO: Remove requirement for postponing inject
     getAppMenuItems: () => di.inject(getAppMenuItemsInjectable)(),
     directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
     getAbsolutePath: di.inject(getAbsolutePathInjectable),
