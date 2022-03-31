@@ -55,11 +55,11 @@ import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 import { broadcastNativeThemeOnUpdate } from "./native-theme";
-import getAppMenuItemsInjectable from "./menu/get-app-menu-items.injectable";
 import windowManagerInjectable from "./window-manager.injectable";
 import navigateToPreferencesInjectable from "../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general-catalog-entities.injectable";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 
 const di = getDi();
 
@@ -298,12 +298,12 @@ app.on("ready", async () => {
   logger.info("🖥️  Starting WindowManager");
   const windowManager = di.inject(windowManagerInjectable);
 
-  const getAppMenuItems = di.inject(getAppMenuItemsInjectable);
+  const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
   const trayMenuItems = di.inject(trayMenuItemsInjectable);
   const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
 
   onQuitCleanup.push(
-    initMenu(getAppMenuItems),
+    initMenu(applicationMenuItems),
     initTray(windowManager, trayMenuItems, navigateToPreferences),
     () => ShellSession.cleanup(),
   );

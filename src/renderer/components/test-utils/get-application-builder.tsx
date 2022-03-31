@@ -25,11 +25,11 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
-import getAppMenuItemsInjectable, { MenuItemsOpts } from "../../../main/menu/get-app-menu-items.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import applicationMenuItemsInjectable, { MenuItemsOpts } from "../../../main/menu/application-menu-items.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -126,14 +126,12 @@ export const getApplicationBuilder = () => {
 
     applicationMenu: {
       click: (path: string) => {
-        const getApplicationMenuItems = mainDi.inject(
-          getAppMenuItemsInjectable,
+        const applicationMenuItems = mainDi.inject(
+          applicationMenuItemsInjectable,
         );
 
-        const applicationMenuItems = getApplicationMenuItems();
-
         const menuItems = pipeline(
-          applicationMenuItems,
+          applicationMenuItems.get(),
           flatMap(toFlatChildren(null)),
           filter((menuItem) => !!menuItem.click),
         );

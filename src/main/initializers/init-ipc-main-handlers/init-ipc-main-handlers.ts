@@ -21,16 +21,17 @@ import { showOpenDialog } from "../../ipc/dialog";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
 import { getNativeColorTheme } from "../../native-theme";
 import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
-import type { MenuItemsOpts } from "../../menu/get-app-menu-items.injectable";
 import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
+import type { IComputedValue } from "mobx";
+import type { MenuItemsOpts } from "../../menu/application-menu-items.injectable";
 
 interface Dependencies {
-  getAppMenuItems: () => MenuItemsOpts[];
   directoryForLensLocalStorage: string;
   getAbsolutePath: GetAbsolutePath;
+  applicationMenuItems: IComputedValue<MenuItemsOpts[]>;
 }
 
-export const initIpcMainHandlers = ({ getAppMenuItems, directoryForLensLocalStorage, getAbsolutePath }: Dependencies) => () => {
+export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath }: Dependencies) => () => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -149,7 +150,7 @@ export const initIpcMainHandlers = ({ getAppMenuItems, directoryForLensLocalStor
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 
   ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
-    const appMenu = getAppMenuItems();
+    const appMenu = applicationMenuItems.get();
 
     const menu = Menu.buildFromTemplate(appMenu);
 

@@ -26,6 +26,7 @@ import navigateToCatalogInjectable from "../../common/front-end-routing/routes/c
 import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
+import { computed } from "mobx";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
@@ -35,24 +36,27 @@ export interface MenuItemsOpts extends MenuItemConstructorOptions {
   submenu?: MenuItemConstructorOptions[];
 }
 
-const getAppMenuItemsInjectable = getInjectable({
-  id: "get-app-menu-items",
+const applicationMenuItemsInjectable = getInjectable({
+  id: "application-menu-items",
 
   instantiate: (di) => {
-    const windowManager = di.inject(windowManagerInjectable);
     const logger = di.inject(loggerInjectable);
     const appName = di.inject(appNameInjectable);
-    const electronMenuItems = di.inject(electronMenuItemsInjectable);
-    const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
-
-    const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
-    const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
-    const navigateToCatalog = di.inject(navigateToCatalogInjectable);
-    const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
-    const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
     const isMac = di.inject(isMacInjectable);
+    const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
+    const electronMenuItems = di.inject(electronMenuItemsInjectable);
 
-    return (): MenuItemsOpts[] => {
+    return computed((): MenuItemsOpts[] => {
+
+      // TODO: These injects should happen outside of the computed.
+      // TODO: Remove temporal dependencies in WindowManager to make sure timing is correct.
+      const windowManager = di.inject(windowManagerInjectable);
+      const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
+      const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
+      const navigateToCatalog = di.inject(navigateToCatalogInjectable);
+      const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
+      const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
+
       const autoUpdateDisabled = !isAutoUpdateEnabled();
 
       logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
@@ -326,8 +330,8 @@ const getAppMenuItemsInjectable = getInjectable({
       }
 
       return [...appMenu.values()];
-    };
+    });
   },
 });
 
-export default getAppMenuItemsInjectable;
+export default applicationMenuItemsInjectable;

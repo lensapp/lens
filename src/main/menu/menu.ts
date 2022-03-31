@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { app, BrowserWindow, dialog, Menu } from "electron";
-import { autorun } from "mobx";
+import { autorun, IComputedValue } from "mobx";
 import { appName, isWindows, productName } from "../../common/vars";
 import packageJson from "../../../package.json";
-import type { MenuItemsOpts } from "./get-app-menu-items.injectable";
+import type { MenuItemsOpts } from "./application-menu-items.injectable";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
 export function initMenu(
-  getAppMenuItems: () => MenuItemsOpts[],
+  applicationMenuItems: IComputedValue<MenuItemsOpts[]>,
 ) {
-  return autorun(() => buildMenu(getAppMenuItems), {
+  return autorun(() => buildMenu(applicationMenuItems.get()), {
     delay: 100,
   });
 }
@@ -37,11 +37,9 @@ export function showAbout(browserWindow: BrowserWindow) {
 }
 
 export function buildMenu(
-  getAppMenuItems: () => MenuItemsOpts[],
+  applicationMenuItems: MenuItemsOpts[],
 ) {
-  const menuItems = getAppMenuItems();
-
   Menu.setApplicationMenu(
-    Menu.buildFromTemplate(menuItems),
+    Menu.buildFromTemplate(applicationMenuItems),
   );
 }
