@@ -29,7 +29,7 @@ import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
-import applicationMenuItemsInjectable, { MenuItemsOpts } from "../../../main/menu/application-menu-items.injectable";
+import applicationMenuItemsInjectable, { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -304,7 +304,7 @@ const toFlatChildren =
     ({
       submenu = [],
       ...menuItem
-    }: MenuItemsOpts): (MenuItemsOpts & { path: string })[] =>
+    }: MenuItemOpts): (MenuItemOpts & { path: string })[] =>
       [
         {
           ...menuItem,

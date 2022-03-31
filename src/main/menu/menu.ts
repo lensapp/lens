@@ -6,12 +6,12 @@ import { app, BrowserWindow, dialog, Menu } from "electron";
 import { autorun, IComputedValue } from "mobx";
 import { appName, isWindows, productName } from "../../common/vars";
 import packageJson from "../../../package.json";
-import type { MenuItemsOpts } from "./application-menu-items.injectable";
+import type { MenuItemOpts } from "./application-menu-items.injectable";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
 export function initMenu(
-  applicationMenuItems: IComputedValue<MenuItemsOpts[]>,
+  applicationMenuItems: IComputedValue<MenuItemOpts[]>,
 ) {
   return autorun(() => buildMenu(applicationMenuItems.get()), {
     delay: 100,
@@ -37,7 +37,7 @@ export function showAbout(browserWindow: BrowserWindow) {
 }
 
 export function buildMenu(
-  applicationMenuItems: MenuItemsOpts[],
+  applicationMenuItems: MenuItemOpts[],
 ) {
   Menu.setApplicationMenu(
     Menu.buildFromTemplate(applicationMenuItems),

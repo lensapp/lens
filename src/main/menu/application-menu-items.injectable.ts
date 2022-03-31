@@ -32,7 +32,7 @@ function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
 }
 
-export interface MenuItemsOpts extends MenuItemConstructorOptions {
+export interface MenuItemOpts extends MenuItemConstructorOptions {
   submenu?: MenuItemConstructorOptions[];
 }
 
@@ -46,7 +46,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
 
-    return computed((): MenuItemsOpts[] => {
+    return computed((): MenuItemOpts[] => {
 
       // TODO: These injects should happen outside of the computed.
       // TODO: Remove temporal dependencies in WindowManager to make sure timing is correct.
@@ -61,7 +61,7 @@ const applicationMenuItemsInjectable = getInjectable({
 
       logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
 
-      const macAppMenu: MenuItemsOpts = {
+      const macAppMenu: MenuItemOpts = {
         label: appName,
         id: "root",
         submenu: [
@@ -114,7 +114,7 @@ const applicationMenuItemsInjectable = getInjectable({
           },
         ],
       };
-      const fileMenu: MenuItemsOpts = {
+      const fileMenu: MenuItemOpts = {
         label: "File",
         id: "file",
         submenu: [
@@ -169,7 +169,7 @@ const applicationMenuItemsInjectable = getInjectable({
           ]),
         ],
       };
-      const editMenu: MenuItemsOpts = {
+      const editMenu: MenuItemOpts = {
         label: "Edit",
         id: "edit",
         submenu: [
@@ -184,7 +184,7 @@ const applicationMenuItemsInjectable = getInjectable({
           { role: "selectAll" },
         ],
       };
-      const viewMenu: MenuItemsOpts = {
+      const viewMenu: MenuItemOpts = {
         label: "View",
         id: "view",
         submenu: [
@@ -252,7 +252,7 @@ const applicationMenuItemsInjectable = getInjectable({
           { role: "togglefullscreen" },
         ],
       };
-      const helpMenu: MenuItemsOpts = {
+      const helpMenu: MenuItemOpts = {
         role: "help",
         id: "help",
         submenu: [

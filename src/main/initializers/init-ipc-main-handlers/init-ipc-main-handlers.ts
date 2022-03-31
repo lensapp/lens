@@ -23,12 +23,12 @@ import { getNativeColorTheme } from "../../native-theme";
 import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
 import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
 import type { IComputedValue } from "mobx";
-import type { MenuItemsOpts } from "../../menu/application-menu-items.injectable";
+import type { MenuItemOpts } from "../../menu/application-menu-items.injectable";
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
   getAbsolutePath: GetAbsolutePath;
-  applicationMenuItems: IComputedValue<MenuItemsOpts[]>;
+  applicationMenuItems: IComputedValue<MenuItemOpts[]>;
 }
 
 export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath }: Dependencies) => () => {
