@@ -19,7 +19,7 @@ jobs:
     - name: Install addlicense
       run: |
         export PATH=${PATH}:`go env GOPATH`/bin
-        go install github.com/google/addlicense@^1.0.0
+        go install github.com/google/addlicense@v1.0.0
     - name: Check license headers
       run: |
         set -e
