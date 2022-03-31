@@ -16,58 +16,6 @@ exports[`kube-object-status-icon given info and warning statuses are present, wh
       <div />
     </i>
   </div>
-  <div
-    class="Tooltip narrow formatter"
-  >
-    <div
-      class="KubeObjectStatusTooltip"
-    >
-      <div
-        class="level warning"
-      >
-        <span
-          class="title"
-        >
-          Warning
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some warning status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-      <div
-        class="level info"
-      >
-        <span
-          class="title"
-        >
-          Info
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some info status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 `;
 
@@ -86,36 +34,6 @@ exports[`kube-object-status-icon given level "critical" status, when rendered, r
       </span>
       <div />
     </i>
-  </div>
-  <div
-    class="Tooltip narrow formatter"
-  >
-    <div
-      class="KubeObjectStatusTooltip"
-    >
-      <div
-        class="level error"
-      >
-        <span
-          class="title"
-        >
-          Critical
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some critical status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-    </div>
   </div>
 </body>
 `;
@@ -136,36 +54,6 @@ exports[`kube-object-status-icon given level "info" status, when rendered, rende
       <div />
     </i>
   </div>
-  <div
-    class="Tooltip narrow formatter"
-  >
-    <div
-      class="KubeObjectStatusTooltip"
-    >
-      <div
-        class="level info"
-      >
-        <span
-          class="title"
-        >
-          Info
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some info status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 `;
 
@@ -184,36 +72,6 @@ exports[`kube-object-status-icon given level "warning" status, when rendered, re
       </span>
       <div />
     </i>
-  </div>
-  <div
-    class="Tooltip narrow formatter"
-  >
-    <div
-      class="KubeObjectStatusTooltip"
-    >
-      <div
-        class="level warning"
-      >
-        <span
-          class="title"
-        >
-          Warning
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some warning status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-    </div>
   </div>
 </body>
 `;
@@ -253,80 +111,6 @@ exports[`kube-object-status-icon given status for all levels is present, when re
       </span>
       <div />
     </i>
-  </div>
-  <div
-    class="Tooltip narrow formatter"
-  >
-    <div
-      class="KubeObjectStatusTooltip"
-    >
-      <div
-        class="level error"
-      >
-        <span
-          class="title"
-        >
-          Critical
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some critical status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-      <div
-        class="level warning"
-      >
-        <span
-          class="title"
-        >
-          Warning
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some warning status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-      <div
-        class="level info"
-      >
-        <span
-          class="title"
-        >
-          Info
-        </span>
-        <div
-          class="status msg"
-        >
-          - 
-          Some info status for some-name
-           
-          <span
-            class="age"
-          >
-             · 
-            2d
-          </span>
-        </div>
-      </div>
-    </div>
   </div>
 </body>
 `;
