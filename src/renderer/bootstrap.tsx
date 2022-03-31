@@ -44,10 +44,6 @@ import { bindEvents } from "./navigation/events";
 import deleteClusterDialogModelInjectable
   from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
 
-if (process.isMainFrame) {
-  SentryInit();
-}
-
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
 
@@ -63,6 +59,9 @@ async function attachChromeDebugger() {
 }
 
 export async function bootstrap(di: DiContainer) {
+  if (process.isMainFrame) {
+    await SentryInit();
+  }
   await di.runSetups();
 
   // TODO: Consolidate import time side-effect to setup time

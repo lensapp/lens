@@ -60,20 +60,22 @@ import navigateToPreferencesInjectable from "../common/front-end-routing/routes/
 import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general-catalog-entities.injectable";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
-const di = getDi();
+async function main(di: DiContainer) {
+  app.setName(appName);
 
-app.setName(appName);
-
-app.on("ready", async () => {
+  /**
+   * Note: this MUST be called before electron's "ready" event has been emitted.
+   */
+  await SentryInit();
   await di.runSetups();
+  await app.whenReady();
 
   injectSystemCAs();
 
   const onCloseCleanup = disposer();
   const onQuitCleanup = disposer();
-
-  SentryInit();
 
   logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
@@ -186,8 +188,6 @@ app.on("ready", async () => {
     event.preventDefault();
     lensProtocolRouterMain.route(rawUrl);
   });
-
-  logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
 
   const directoryForExes = di.inject(directoryForExesInjectable);
 
@@ -357,7 +357,9 @@ app.on("ready", async () => {
   setTimeout(() => {
     appEventBus.emit({ name: "service", action: "start" });
   }, 1000);
-});
+}
+
+main(getDi());
 
 /**
  * Exports for virtual package "@k8slens/extensions" for main-process.

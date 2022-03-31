@@ -4,7 +4,6 @@
  */
 
 import { Dedupe, Offline } from "@sentry/integrations";
-import * as Sentry from "@sentry/electron";
 import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import { inspect } from "util";
@@ -23,10 +22,14 @@ function mapProcessName(processType: string) {
 /**
  * Initialize Sentry for the current process so to send errors for debugging.
  */
-export function SentryInit() {
+export async function SentryInit() {
   const processName = mapProcessName(process.type);
 
-  Sentry.init({
+  const { init } = process.type === "browser"
+    ? await import("@sentry/electron/main")
+    : await import("@sentry/electron/renderer");
+
+  init({
     beforeSend: (event) => {
       // default to false, in case instance of UserStore is not created (yet)
       const allowErrorReporting = UserStore.getInstance(false)?.allowErrorReporting ?? false;
