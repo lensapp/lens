@@ -7,6 +7,8 @@ import { Dedupe, Offline } from "@sentry/integrations";
 import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import { inspect } from "util";
+import type { BrowserOptions } from "@sentry/electron/renderer";
+import type { ElectronMainOptions } from "@sentry/electron/main";
 
 /**
  * "Translate" 'browser' to 'main' as Lens developer more familiar with the term 'main'
@@ -22,12 +24,12 @@ function mapProcessName(processType: string) {
 /**
  * Initialize Sentry for the current process so to send errors for debugging.
  */
-export async function SentryInit() {
+export function initializeSentryReporting(init: (opts: BrowserOptions | ElectronMainOptions) => void) {
   const processName = mapProcessName(process.type);
 
-  const { init } = process.type === "browser"
-    ? await import("@sentry/electron/main")
-    : await import("@sentry/electron/renderer");
+  if (!sentryDsn) {
+    return; // do nothing if not configured to avoid uncaught error in dev mode
+  }
 
   init({
     beforeSend: (event) => {

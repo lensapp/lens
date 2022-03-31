@@ -35,7 +35,7 @@ import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
 import { WeblinkStore } from "../common/weblink-store";
-import { SentryInit } from "../common/sentry";
+import { initializeSentryReporting } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { initMenu } from "./menu/menu";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
@@ -61,6 +61,7 @@ import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { init } from "@sentry/electron/main";
 
 async function main(di: DiContainer) {
   app.setName(appName);
@@ -68,7 +69,7 @@ async function main(di: DiContainer) {
   /**
    * Note: this MUST be called before electron's "ready" event has been emitted.
    */
-  await SentryInit();
+  initializeSentryReporting(init);
   await di.runSetups();
   await app.whenReady();
 
