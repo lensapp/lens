@@ -8,7 +8,6 @@ import { filter, sortBy as sortByWithBadTyping } from "lodash/fp";
 import { computed } from "mobx";
 import { Workload, workloadInjectionToken } from "./workload-injection-token";
 import isAllowedResourceInjectable from "../../../../common/utils/is-allowed-resource.injectable";
-import type { KubeResourceEnum } from "../../../../common/rbac";
 
 const sortBy =
   (propertyPath: string) =>
@@ -21,7 +20,7 @@ const workloadsInjectable = getInjectable({
   instantiate: (di) => {
     const workloads = di.injectMany(workloadInjectionToken);
 
-    const isAllowedResource = (resourceName: KubeResourceEnum) =>
+    const isAllowedResource = (resourceName: string) =>
       di.inject(isAllowedResourceInjectable, resourceName);
 
     return computed(() =>

@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
 import navigateToPodsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
-import { KubeResourceEnum } from "../../../../../common/rbac";
 import podsStoreInjectable from "../../../+workloads-pods/pods-store.injectable";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
 import { computed } from "mobx";
@@ -20,7 +19,7 @@ const podsWorkloadInjectable = getInjectable({
     const store = di.inject(podsStoreInjectable);
 
     return {
-      resourceName: KubeResourceEnum.pods,
+      resourceName: "pods",
       open: navigate,
 
       amountOfItems: computed(

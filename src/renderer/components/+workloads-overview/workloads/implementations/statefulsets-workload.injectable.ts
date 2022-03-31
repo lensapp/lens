@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
 import navigateToPodsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
-import { KubeResourceEnum } from "../../../../../common/rbac";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
 import statefulsetsStoreInjectable from "../../../+workloads-statefulsets/statefulsets-store.injectable";
 import { computed } from "mobx";
@@ -20,7 +19,7 @@ const statefulsetsWorkloadInjectable = getInjectable({
     const store = di.inject(statefulsetsStoreInjectable);
 
     return {
-      resourceName: KubeResourceEnum.statefulsets,
+      resourceName: "statefulsets",
       open: navigate,
 
       amountOfItems: computed(

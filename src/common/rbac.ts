@@ -10,16 +10,6 @@ export type KubeResource =
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
 
-export enum KubeResourceEnum {
-  pods = "pods",
-  deployments = "deployments",
-  cronJobs = "cronjobs",
-  jobs = "jobs",
-  replicasets = "replicasets",
-  daemonsets = "daemonsets",
-  statefulsets = "statefulsets",
-}
-
 export interface KubeApiResource extends KubeApiResourceData {
   apiName: KubeResource; // valid api resource name (e.g. "namespaces")
 }

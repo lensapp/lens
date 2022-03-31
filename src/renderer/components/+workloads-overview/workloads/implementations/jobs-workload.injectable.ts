@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import { KubeResourceEnum } from "../../../../../common/rbac";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
 import jobsStoreInjectable from "../../../+workloads-jobs/jobs-store.injectable";
 import navigateToJobsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/jobs/navigate-to-jobs.injectable";
@@ -20,7 +19,7 @@ const jobsWorkloadInjectable = getInjectable({
     const store = di.inject(jobsStoreInjectable);
 
     return {
-      resourceName: KubeResourceEnum.jobs,
+      resourceName: "jobs",
       open: navigate,
 
       amountOfItems: computed(

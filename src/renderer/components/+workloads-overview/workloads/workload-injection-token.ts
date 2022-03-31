@@ -4,10 +4,9 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
-import type { KubeResourceEnum } from "../../../../common/rbac";
 
 export interface Workload {
-  resourceName: KubeResourceEnum;
+  resourceName: string;
   open: () => void;
   amountOfItems: IComputedValue<number>;
   status: IComputedValue<Record<string, number>>;

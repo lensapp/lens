@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import { KubeResourceEnum } from "../../../../../common/rbac";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
 import daemonsetsStoreInjectable from "../../../+workloads-daemonsets/daemonsets-store.injectable";
 import navigateToDaemonsetsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
@@ -20,7 +19,7 @@ const daemonsetsWorkloadInjectable = getInjectable({
     const store = di.inject(daemonsetsStoreInjectable);
 
     return {
-      resourceName: KubeResourceEnum.daemonsets,
+      resourceName: "daemonsets",
       open: navigate,
 
       amountOfItems: computed(
