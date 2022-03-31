@@ -983,6 +983,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sanitizedextensionid" class="md-nav__link">
+    sanitizedExtensionId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#version" class="md-nav__link">
     version
   </a>
@@ -1141,6 +1148,7 @@
 <li><a href="./#description">description</a></li>
 <li><a href="./#isenabled">isEnabled</a></li>
 <li><a href="./#name">name</a></li>
+<li><a href="./#sanitizedextensionid">sanitizedExtensionId</a></li>
 <li><a href="./#version">version</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
@@ -1181,7 +1189,7 @@
 <h3 id="disposers">[Disposers]<a class="headerlink" href="#disposers" title="Permanent link">#</a></h3>
 <p>• <strong>[Disposers]</strong>: <code>ExtendableDisposer</code></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>LensExtension.__@Disposers@24250</p>
+<p>LensExtension.__@Disposers@29610</p>
 <hr />
 <h3 id="additionalcategorycolumns">additionalCategoryColumns<a class="headerlink" href="#additionalcategorycolumns" title="Permanent link">#</a></h3>
 <p>• <strong>additionalCategoryColumns</strong>: <a href="../../interfaces/Renderer.Component.AdditionalCategoryColumnRegistration/"><code>AdditionalCategoryColumnRegistration</code></a>[] = <code>[]</code></p>
@@ -1280,11 +1288,18 @@
 <h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>LensExtension.name</p>
 <hr />
-<h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>version</strong>(): <code>string</code></p>
+<h3 id="sanitizedextensionid">sanitizedExtensionId<a class="headerlink" href="#sanitizedextensionid" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>sanitizedExtensionId</strong>(): <code>string</code></p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p>LensExtension.sanitizedExtensionId</p>
+<hr />
+<h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>version</strong>(): <code>string</code></p>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>LensExtension.version</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="setlensextensiondependencies">[setLensExtensionDependencies]<a class="headerlink" href="#setlensextensiondependencies" title="Permanent link">#</a></h3>
@@ -1304,16 +1319,16 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
-<p>LensExtension.__@setLensExtensionDependencies@24253</p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>LensExtension.__@setLensExtensionDependencies@29613</p>
 <hr />
 <h3 id="activate">activate<a class="headerlink" href="#activate" title="Permanent link">#</a></h3>
 <p>▸ <strong>activate</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>LensExtension.activate</p>
 <hr />
 <h3 id="addcatalogcategoryfilter">addCatalogCategoryFilter<a class="headerlink" href="#addcatalogcategoryfilter" title="Permanent link">#</a></h3>
@@ -1336,7 +1351,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>Disposer</code></p>
 <p>A function to clean up the filter</p>
 <hr />
@@ -1360,15 +1375,15 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>Disposer</code></p>
 <p>A function to clean up the filter</p>
 <hr />
 <h3 id="disable">disable<a class="headerlink" href="#disable" title="Permanent link">#</a></h3>
 <p>▸ <strong>disable</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>LensExtension.disable</p>
 <hr />
 <h3 id="enable">enable<a class="headerlink" href="#enable" title="Permanent link">#</a></h3>
@@ -1388,9 +1403,9 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>LensExtension.enable</p>
 <hr />
 <h3 id="getextensionfilefolder">getExtensionFileFolder<a class="headerlink" href="#getextensionfilefolder" title="Permanent link">#</a></h3>
@@ -1399,9 +1414,9 @@
 folder is for the sole use of this extension.</p>
 <p>Note: there is no security done on this folder, only obfuscation of the
 folder name.</p>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>string</code>></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>LensExtension.getExtensionFileFolder</p>
 <hr />
 <h3 id="isenabledforcluster">isEnabledForCluster<a class="headerlink" href="#isenabledforcluster" title="Permanent link">#</a></h3>
@@ -1424,7 +1439,7 @@ called when the extension is created within a cluster frame.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>Boolean</code>></p>
 <hr />
 <h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
@@ -1463,21 +1478,21 @@ called when the extension is created within a cluster frame.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
 <hr />
 <h3 id="onactivate">onActivate<a class="headerlink" href="#onactivate" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>onActivate</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p>LensExtension.onActivate</p>
 <hr />
 <h3 id="ondeactivate">onDeactivate<a class="headerlink" href="#ondeactivate" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>onDeactivate</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p>LensExtension.onDeactivate</p>
                 
               
