@@ -34,6 +34,7 @@ import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectab
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
+import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -64,6 +65,8 @@ export const getDiForUnitTesting = (
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
+
+    di.override(hotbarStoreInjectable, () => ({}));
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 

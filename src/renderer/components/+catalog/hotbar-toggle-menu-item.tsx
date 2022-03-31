@@ -4,26 +4,54 @@
  */
 import React, { ReactNode, useState } from "react";
 
-import { HotbarStore } from "../../../common/hotbar-store";
 import { MenuItem } from "../menu";
 
 import type { CatalogEntity } from "../../api/catalog-entity";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import type { HotbarStore } from "../../../common/hotbar-store";
 
-export function HotbarToggleMenuItem(props: { entity: CatalogEntity; addContent: ReactNode; removeContent: ReactNode }) {
-  const store = HotbarStore.getInstance();
-  const [itemInHotbar, setItemInHotbar] = useState(store.isAddedToActive(props.entity));
+interface Dependencies {
+  hotbarStore: HotbarStore;
+}
+
+interface HotbarToggleMenuItemProps {
+   entity: CatalogEntity;
+   addContent: ReactNode;
+   removeContent: ReactNode;
+}
+
+function NonInjectedHotbarToggleMenuItem({
+  addContent,
+  entity,
+  hotbarStore,
+  removeContent,
+}: Dependencies & HotbarToggleMenuItemProps) {
+  const [itemInHotbar, setItemInHotbar] = useState(hotbarStore.isAddedToActive(entity));
 
   return (
     <MenuItem onClick={() => {
       if (itemInHotbar) {
-        store.removeFromHotbar(props.entity.getId());
+        hotbarStore.removeFromHotbar(entity.getId());
         setItemInHotbar(false);
       } else {
-        store.addToHotbar(props.entity);
+        hotbarStore.addToHotbar(entity);
         setItemInHotbar(true);
       }
     }}>
-      {itemInHotbar ? props.removeContent : props.addContent }
+      {itemInHotbar ? removeContent : addContent }
     </MenuItem>
   );
 }
+
+export const HotbarToggleMenuItem = withInjectables<Dependencies, HotbarToggleMenuItemProps>(
+  NonInjectedHotbarToggleMenuItem,
+
+  {
+    getProps: (di, props) => ({
+      hotbarStore: di.inject(hotbarStoreInjectable),
+      ...props,
+    }),
+  },
+);
+

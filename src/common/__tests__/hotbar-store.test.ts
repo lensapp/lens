@@ -7,11 +7,13 @@ import { anyObject } from "jest-mock-extended";
 import mockFs from "mock-fs";
 import logger from "../../main/logger";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
-import { HotbarStore } from "../hotbar-store";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import hotbarStoreInjectable from "../hotbar-store.injectable";
+import { HotbarStore } from "../hotbar-store";
+import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 
 jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
@@ -123,12 +125,21 @@ const awsCluster = getMockCatalogEntity({
 
 describe("HotbarStore", () => {
   let di: DiContainer;
+  let hotbarStore: HotbarStore;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
+
+    di.override(hotbarStoreInjectable, () => {
+      HotbarStore.resetInstance();
+
+      return HotbarStore.createInstance({
+        catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
+      });
+    });
   });
 
   afterEach(() => {
@@ -140,18 +151,18 @@ describe("HotbarStore", () => {
       mockFs();
 
       await di.runSetups();
+
+      hotbarStore = di.inject(hotbarStoreInjectable);
     });
 
     describe("load", () => {
       it("loads one hotbar by default", () => {
-        expect(HotbarStore.getInstance().hotbars.length).toEqual(1);
+        expect(hotbarStore.hotbars.length).toEqual(1);
       });
     });
 
     describe("add", () => {
       it("adds a hotbar", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.add({ name: "hottest" });
         expect(hotbarStore.hotbars.length).toEqual(2);
       });
@@ -159,20 +170,14 @@ describe("HotbarStore", () => {
 
     describe("hotbar items", () => {
       it("initially creates 12 empty cells", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         expect(hotbarStore.getActive().items.length).toEqual(12);
       });
 
       it("initially adds catalog entity as first item", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         expect(hotbarStore.getActive().items[0].entity.name).toEqual("Catalog");
       });
 
       it("adds items", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         const items = hotbarStore.getActive().items.filter(Boolean);
 
@@ -180,8 +185,6 @@ describe("HotbarStore", () => {
       });
 
       it("removes items", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.removeFromHotbar("test");
         hotbarStore.removeFromHotbar("catalog-entity");
@@ -191,8 +194,6 @@ describe("HotbarStore", () => {
       });
 
       it("does nothing if removing with invalid uid", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.removeFromHotbar("invalid uid");
         const items = hotbarStore.getActive().items.filter(Boolean);
@@ -201,8 +202,6 @@ describe("HotbarStore", () => {
       });
 
       it("moves item to empty cell", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.addToHotbar(minikubeCluster);
         hotbarStore.addToHotbar(awsCluster);
@@ -216,8 +215,6 @@ describe("HotbarStore", () => {
       });
 
       it("moves items down", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.addToHotbar(minikubeCluster);
         hotbarStore.addToHotbar(awsCluster);
@@ -231,8 +228,6 @@ describe("HotbarStore", () => {
       });
 
       it("moves items up", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.addToHotbar(minikubeCluster);
         hotbarStore.addToHotbar(awsCluster);
@@ -246,8 +241,6 @@ describe("HotbarStore", () => {
       });
 
       it("logs an error if cellIndex is out of bounds", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.add({ name: "hottest", id: "hottest" });
         hotbarStore.setActiveHotbar("hottest");
 
@@ -269,22 +262,16 @@ describe("HotbarStore", () => {
       });
 
       it("throws an error if getId is invalid or returns not a string", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         expect(() => hotbarStore.addToHotbar({} as any)).toThrowError(TypeError);
         expect(() => hotbarStore.addToHotbar({ getId: () => true } as any)).toThrowError(TypeError);
       });
 
       it("throws an error if getName is invalid or returns not a string", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         expect(() => hotbarStore.addToHotbar({ getId: () => "" } as any)).toThrowError(TypeError);
         expect(() => hotbarStore.addToHotbar({ getId: () => "", getName: () => 4 } as any)).toThrowError(TypeError);
       });
 
       it("does nothing when item moved to same cell", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.restackItems(1, 1);
 
@@ -292,8 +279,6 @@ describe("HotbarStore", () => {
       });
 
       it("new items takes first empty cell", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.addToHotbar(awsCluster);
         hotbarStore.restackItems(0, 3);
@@ -309,8 +294,6 @@ describe("HotbarStore", () => {
         console.error = jest.fn();
         console.warn = jest.fn();
 
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
 
         expect(() => hotbarStore.restackItems(-5, 0)).toThrow();
@@ -324,8 +307,6 @@ describe("HotbarStore", () => {
       });
 
       it("checks if entity already pinned to hotbar", () => {
-        const hotbarStore = HotbarStore.getInstance();
-
         hotbarStore.addToHotbar(testCluster);
 
         expect(hotbarStore.isAddedToActive(testCluster)).toBeTruthy();
@@ -401,22 +382,24 @@ describe("HotbarStore", () => {
       mockFs(configurationToBeMigrated);
 
       await di.runSetups();
+
+      hotbarStore = di.inject(hotbarStoreInjectable);
     });
 
     it("allows to retrieve a hotbar", () => {
-      const hotbar = HotbarStore.getInstance().getById("3caac17f-aec2-4723-9694-ad204465d935");
+      const hotbar = hotbarStore.getById("3caac17f-aec2-4723-9694-ad204465d935");
 
       expect(hotbar.id).toBe("3caac17f-aec2-4723-9694-ad204465d935");
     });
 
     it("clears cells without entity", () => {
-      const items = HotbarStore.getInstance().hotbars[0].items;
+      const items = hotbarStore.hotbars[0].items;
 
       expect(items[2]).toBeNull();
     });
 
     it("adds extra data to cells with according entity", () => {
-      const items = HotbarStore.getInstance().hotbars[0].items;
+      const items = hotbarStore.hotbars[0].items;
 
       expect(items[0]).toEqual({
         entity: {

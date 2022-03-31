@@ -41,6 +41,8 @@ import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import { bindEvents } from "./navigation/events";
+import deleteClusterDialogModelInjectable
+  from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -99,6 +101,7 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing Catalog`);
   initializers.initCatalog({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
+    deleteClusterDialogModel: di.inject(deleteClusterDialogModelInjectable),
   });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);

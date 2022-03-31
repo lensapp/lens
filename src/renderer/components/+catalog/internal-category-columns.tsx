@@ -6,48 +6,9 @@
 import styles from "./catalog.module.scss";
 
 import React from "react";
-import { HotbarStore } from "../../../common/hotbar-store";
-import type { CatalogEntity } from "../../api/catalog-entity";
-import { Avatar } from "../avatar";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
-import { Icon } from "../icon";
-import { prevDefault } from "../../utils";
 import { getLabelBadges } from "./helpers";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-
-function renderEntityName(entity: CatalogEntity) {
-  const hotbarStore = HotbarStore.getInstance();
-  const isItemInHotbar = hotbarStore.isAddedToActive(entity);
-  const onClick = prevDefault(
-    isItemInHotbar
-      ? () => hotbarStore.removeFromHotbar(entity.getId())
-      : () => hotbarStore.addToHotbar(entity),
-  );
-
-  return (
-    <>
-      <Avatar
-        title={entity.getName()}
-        colorHash={`${entity.getName()}-${entity.getSource()}`}
-        src={entity.spec.icon?.src}
-        background={entity.spec.icon?.background}
-        className={styles.catalogAvatar}
-        size={24}
-      >
-        {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
-      </Avatar>
-      <span>{entity.getName()}</span>
-      <Icon
-        small
-        className={styles.pinIcon}
-        material={!isItemInHotbar && "push_pin"}
-        svg={isItemInHotbar ? "push_off" : "push_pin"}
-        tooltip={isItemInHotbar ? "Remove from Hotbar" : "Add to Hotbar"}
-        onClick={onClick}
-      />
-    </>
-  );
-}
 
 export const browseAllColumns: RegisteredAdditionalCategoryColumn[] = [
   {
@@ -62,20 +23,6 @@ export const browseAllColumns: RegisteredAdditionalCategoryColumn[] = [
     sortCallback: entity => entity.kind,
   },
 ];
-
-export const nameCategoryColumn: RegisteredAdditionalCategoryColumn = {
-  id: "name",
-  priority: 0,
-  renderCell: renderEntityName,
-  titleProps: {
-    title: "Name",
-    className: styles.entityName,
-    id: "name",
-    sortBy: "name",
-  },
-  searchFilter: entity => entity.getName(),
-  sortCallback: entity => `name=${entity.getName()}`,
-};
 
 export const defaultCategoryColumns: RegisteredAdditionalCategoryColumn[] = [
   {

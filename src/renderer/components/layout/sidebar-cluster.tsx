@@ -6,7 +6,6 @@
 import styles from "./sidebar-cluster.module.scss";
 import { observable } from "mobx";
 import React, { useState } from "react";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
@@ -16,6 +15,9 @@ import { navigate } from "../../navigation";
 import { Menu, MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tooltip } from "../tooltip";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import type { HotbarStore } from "../../../common/hotbar-store";
 import { observer } from "mobx-react";
 
 const contextMenu: CatalogEntityContextMenuContext = observable({
@@ -60,7 +62,15 @@ function renderLoadingSidebarCluster() {
   );
 }
 
-export const SidebarCluster = observer(({ clusterEntity }: { clusterEntity: CatalogEntity }) => {
+interface Dependencies {
+  hotbarStore: HotbarStore;
+}
+
+interface SidebarClusterProps {
+  clusterEntity: CatalogEntity;
+}
+
+const NonInjectedSidebarCluster = observer(({ clusterEntity, hotbarStore }: Dependencies & SidebarClusterProps) => {
   const [opened, setOpened] = useState(false);
 
   if (!clusterEntity) {
@@ -68,8 +78,7 @@ export const SidebarCluster = observer(({ clusterEntity }: { clusterEntity: Cata
   }
 
   const onMenuOpen = () => {
-    const hotbarStore = HotbarStore.getInstance();
-    const isAddedToActive = HotbarStore.getInstance().isAddedToActive(clusterEntity);
+    const isAddedToActive = hotbarStore.isAddedToActive(clusterEntity);
     const title = isAddedToActive
       ? "Remove from Hotbar"
       : "Add to Hotbar";
@@ -140,3 +149,14 @@ export const SidebarCluster = observer(({ clusterEntity }: { clusterEntity: Cata
     </div>
   );
 });
+
+export const SidebarCluster = withInjectables<Dependencies, SidebarClusterProps>(
+  NonInjectedSidebarCluster,
+
+  {
+    getProps: (di, props) => ({
+      hotbarStore: di.inject(hotbarStoreInjectable),
+      ...props,
+    }),
+  },
+);

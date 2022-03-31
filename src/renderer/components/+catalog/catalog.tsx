@@ -13,7 +13,6 @@ import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.s
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
@@ -39,6 +38,8 @@ import catalogRouteParametersInjectable from "./catalog-route-parameters.injecta
 import { browseCatalogTab } from "./catalog-browse-tab";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import type { HotbarStore } from "../../../common/hotbar-store";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void };
@@ -53,6 +54,7 @@ interface Dependencies {
   };
 
   navigateToCatalog: NavigateToCatalog;
+  hotbarStore: HotbarStore;
 }
 
 @observer
@@ -125,11 +127,11 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   addToHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().addToHotbar(entity);
+    this.props.hotbarStore.addToHotbar(entity);
   }
 
   removeFromHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().removeFromHotbar(entity.getId());
+    this.props.hotbarStore.removeFromHotbar(entity.getId());
   }
 
   onDetails = (entity: CatalogEntity) => {
@@ -216,7 +218,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   };
 
   renderName(entity: CatalogEntity) {
-    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(entity);
+    const isItemInHotbar = this.props.hotbarStore.isAddedToActive(entity);
 
     return (
       <>
@@ -341,5 +343,6 @@ export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
     routeParameters: di.inject(catalogRouteParametersInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     emitEvent: di.inject(appEventBusInjectable).emit,
+    hotbarStore: di.inject(hotbarStoreInjectable),
   }),
 });
