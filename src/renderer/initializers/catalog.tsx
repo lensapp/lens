@@ -10,9 +10,9 @@ import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { loadConfigFromString } from "../../common/kube-helpers";
-import { DeleteClusterDialog } from "../components/delete-cluster-dialog";
+import type { DeleteClusterDialogModel } from "../components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model";
 
-async function onClusterDelete(clusterId: string) {
+async function onClusterDelete(clusterId: string, deleteClusterDialogModel: DeleteClusterDialogModel) {
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
   if (!cluster) {
@@ -25,14 +25,15 @@ async function onClusterDelete(clusterId: string) {
     throw error;
   }
 
-  DeleteClusterDialog.open({ cluster, config });
+  deleteClusterDialogModel.open({ cluster, config });
 }
 
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
+  deleteClusterDialogModel: DeleteClusterDialogModel;
 }
 
-export function initCatalog({ openCommandDialog }: Dependencies) {
+export function initCatalog({ openCommandDialog, deleteClusterDialogModel }: Dependencies) {
   catalogCategoryRegistry
     .getForGroupKind("entity.k8slens.dev", "WebLink")
     .on("catalogAddMenu", ctx => {
@@ -50,7 +51,7 @@ export function initCatalog({ openCommandDialog }: Dependencies) {
         context.menuItems.push({
           title: "Remove",
           icon: "delete",
-          onClick: () => onClusterDelete(entity.getId()),
+          onClick: () => onClusterDelete(entity.getId(), deleteClusterDialogModel),
         });
       }
     });

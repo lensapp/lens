@@ -4,52 +4,67 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import { UserStore } from "../../../common/user-store";
-import { sentryDsn } from "../../../common/vars";
+import type { UserStore } from "../../../common/user-store";
 import { Checkbox } from "../checkbox";
 import { SubTitle } from "../layout/sub-title";
 import { ExtensionSettings } from "./extension-settings";
-import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
-import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import { Preferences } from "./preferences";
+import type { ExtensionTelemetryPreferenceRegistration } from "./telemetry-preference-items.injectable";
+import telemetryPreferenceItemsInjectable from "./telemetry-preference-items.injectable";
+import sentryDnsUrlInjectable from "./sentry-dns-url.injectable";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 
 interface Dependencies {
-  appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
+  telemetryPreferenceItems: IComputedValue<ExtensionTelemetryPreferenceRegistration[]>;
+  sentryDnsUrl: string;
+  userStore: UserStore;
 }
 
-const NonInjectedTelemetry: React.FC<Dependencies> = ({ appPreferenceItems }) => {
-  const extensions = appPreferenceItems.get();
-  const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == "telemetry");
-
+const NonInjectedTelemetry: React.FC<Dependencies> = ({
+  telemetryPreferenceItems,
+  sentryDnsUrl,
+  userStore,
+}) => {
   return (
-    <section id="telemetry">
-      <h2 data-testid="telemetry-header">Telemetry</h2>
-      {telemetryExtensions.map((extension) => <ExtensionSettings key={extension.id} setting={extension} size="small" />)}
-      {sentryDsn ? (
-        <React.Fragment key='sentry'>
-          <section id='sentry' className="small">
-            <SubTitle title='Automatic Error Reporting' />
-            <Checkbox
-              label="Allow automatic error reporting"
-              value={UserStore.getInstance().allowErrorReporting}
-              onChange={value => {
-                UserStore.getInstance().allowErrorReporting = value;
-              }}
-            />
-            <div className="hint">
-              <span>
-              Automatic error reports provide vital information about issues and application crashes.
-              It is highly recommended to keep this feature enabled to ensure fast turnaround for issues you might encounter.
-              </span>
-            </div>
-          </section>
-          <hr className="small" />
-        </React.Fragment>) :
-        // we don't need to shows the checkbox at all if Sentry dsn is not a valid url
-        null
-      }
-    </section>
+    <Preferences data-testid="telemetry-preferences-page">
+      <section id="telemetry">
+        <h2 data-testid="telemetry-header">Telemetry</h2>
+        {telemetryPreferenceItems.get().map((item) => (
+          <ExtensionSettings
+            key={item.id}
+            setting={item}
+            size="small"
+            data-testid={`telemetry-preference-item-for-${item.id}`}
+          />
+        ))}
+        {sentryDnsUrl ? (
+          <React.Fragment key="sentry">
+            <section id="sentry" className="small" data-testid="telemetry-preferences-for-automatic-error-reporting">
+              <SubTitle title="Automatic Error Reporting" />
+              <Checkbox
+                label="Allow automatic error reporting"
+                value={userStore.allowErrorReporting}
+                onChange={(value) => {
+                  userStore.allowErrorReporting = value;
+                }}
+              />
+              <div className="hint">
+                <span>
+                  Automatic error reports provide vital information about issues
+                  and application crashes. It is highly recommended to keep this
+                  feature enabled to ensure fast turnaround for issues you might
+                  encounter.
+                </span>
+              </div>
+            </section>
+            <hr className="small" />
+          </React.Fragment>
+        ) : // we don't need to shows the checkbox at all if Sentry dsn is not a valid url
+          null}
+      </section>
+    </Preferences>
   );
 };
 
@@ -58,7 +73,9 @@ export const Telemetry = withInjectables<Dependencies>(
 
   {
     getProps: (di) => ({
-      appPreferenceItems: di.inject(appPreferencesInjectable),
+      telemetryPreferenceItems: di.inject(telemetryPreferenceItemsInjectable),
+      sentryDnsUrl: di.inject(sentryDnsUrlInjectable),
+      userStore: di.inject(userStoreInjectable),
     }),
   },
 );

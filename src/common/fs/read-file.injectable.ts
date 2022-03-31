@@ -7,7 +7,9 @@ import fsInjectable from "./fs.injectable";
 
 const readFileInjectable = getInjectable({
   id: "read-file",
-  instantiate: (di) => di.inject(fsInjectable).readFile,
+
+  instantiate: (di) => (filePath: string) =>
+    di.inject(fsInjectable).readFile(filePath, "utf-8"),
 });
 
 export default readFileInjectable;

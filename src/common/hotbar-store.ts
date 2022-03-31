@@ -8,15 +8,25 @@ import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
-import { catalogEntity } from "../main/catalog-sources/general";
 import logger from "../main/logger";
 import { broadcastMessage } from "./ipc";
-import { defaultHotbarCells, getEmptyHotbar, Hotbar, CreateHotbarData, CreateHotbarOptions } from "./hotbar-types";
+import {
+  defaultHotbarCells,
+  getEmptyHotbar,
+  Hotbar,
+  CreateHotbarData,
+  CreateHotbarOptions,
+} from "./hotbar-types";
 import { hotbarTooManyItemsChannel } from "./ipc/hotbar";
+import type { GeneralEntity } from "./catalog-entities";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
   activeHotbarId: string;
+}
+
+interface Dependencies {
+  catalogCatalogEntity: GeneralEntity;
 }
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
@@ -24,7 +34,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
   @observable private _activeHotbarId: string;
 
-  constructor() {
+  constructor(private dependencies: Dependencies) {
     super({
       configName: "lens-hotbar-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -77,7 +87,9 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   protected fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (!data.hotbars || !data.hotbars.length) {
       const hotbar = getEmptyHotbar("Default");
-      const { metadata: { uid, name, source }} = catalogEntity;
+      const {
+        metadata: { uid, name, source },
+      } = this.dependencies.catalogCatalogEntity;
       const initialItem = { entity: { uid, name, source }};
 
       hotbar.items[0] = initialItem;
@@ -119,21 +131,29 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.find((hotbar) => hotbar.id === id);
   }
 
-  add = action((data: CreateHotbarData, { setActive = false }: CreateHotbarOptions = {}) => {
-    const hotbar = getEmptyHotbar(data.name, data.id);
+  add = action(
+    (
+      data: CreateHotbarData,
+      { setActive = false }: CreateHotbarOptions = {},
+    ) => {
+      const hotbar = getEmptyHotbar(data.name, data.id);
 
-    this.hotbars.push(hotbar);
+      this.hotbars.push(hotbar);
 
-    if (setActive) {
-      this._activeHotbarId = hotbar.id;
-    }
-  });
+      if (setActive) {
+        this._activeHotbarId = hotbar.id;
+      }
+    },
+  );
 
   setHotbarName = action((id: string, name: string) => {
     const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
 
     if (index < 0) {
-      return void console.warn(`[HOTBAR-STORE]: cannot setHotbarName: unknown id`, { id });
+      return void console.warn(
+        `[HOTBAR-STORE]: cannot setHotbarName: unknown id`,
+        { id },
+      );
     }
 
     this.hotbars[index].name = name;
@@ -188,14 +208,17 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     } else if (0 <= cellIndex && cellIndex < hotbar.items.length) {
       hotbar.items[cellIndex] = newItem;
     } else {
-      logger.error(`[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range`, { entityId: uid, hotbarId: hotbar.id, cellIndex });
+      logger.error(
+        `[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range`,
+        { entityId: uid, hotbarId: hotbar.id, cellIndex },
+      );
     }
   }
 
   @action
   removeFromHotbar(uid: string): void {
     const hotbar = this.getActive();
-    const index = hotbar.items.findIndex(item => item?.entity.uid === uid);
+    const index = hotbar.items.findIndex((item) => item?.entity.uid === uid);
 
     if (index < 0) {
       return;
@@ -223,7 +246,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   findClosestEmptyIndex(from: number, direction = 1) {
     let index = from;
 
-    while(this.getActive().items[index] != null) {
+    while (this.getActive().items[index] != null) {
       index += direction;
     }
 
@@ -236,7 +259,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     const source = items[from];
     const moveDown = from < to;
 
-    if (from < 0 || to < 0 || from >= items.length || to >= items.length || isNaN(from) || isNaN(to)) {
+    if (
+      from < 0 ||
+      to < 0 ||
+      from >= items.length ||
+      to >= items.length ||
+      isNaN(from) ||
+      isNaN(to)
+    ) {
       throw new Error("Invalid 'from' or 'to' arguments");
     }
 
@@ -256,25 +286,23 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   switchToPrevious() {
-    const hotbarStore = HotbarStore.getInstance();
-    let index = hotbarStore.activeHotbarIndex - 1;
+    let index = this.activeHotbarIndex - 1;
 
     if (index < 0) {
-      index = hotbarStore.hotbars.length - 1;
+      index = this.hotbars.length - 1;
     }
 
-    hotbarStore.setActiveHotbar(index);
+    this.setActiveHotbar(index);
   }
 
   switchToNext() {
-    const hotbarStore = HotbarStore.getInstance();
-    let index = hotbarStore.activeHotbarIndex + 1;
+    let index = this.activeHotbarIndex + 1;
 
-    if (index >= hotbarStore.hotbars.length) {
+    if (index >= this.hotbars.length) {
       index = 0;
     }
 
-    hotbarStore.setActiveHotbar(index);
+    this.setActiveHotbar(index);
   }
 
   /**
@@ -285,7 +313,11 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       return false;
     }
 
-    return this.getActive().items.findIndex(item => item?.entity.uid === entity.getId()) >= 0;
+    return (
+      this.getActive().items.findIndex(
+        (item) => item?.entity.uid === entity.getId(),
+      ) >= 0
+    );
   }
 
   getDisplayLabel(hotbar: Hotbar): string {

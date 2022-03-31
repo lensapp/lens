@@ -172,6 +172,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
       <>
         <SubTitle title="Cluster Role Reference" />
         <Select
+          id="cluster-role-input"
           themeName="light"
           placeholder="Select cluster role ..."
           isDisabled={this.isEditing}
@@ -229,6 +230,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
 
         <b>Service Accounts</b>
         <Select
+          id="service-account-input"
           isMulti
           themeName="light"
           placeholder="Select service accounts ..."

@@ -15,6 +15,8 @@ const fileSystemProvisionerStoreInjectable = getInjectable({
         directoryForExtensionDataInjectable,
       ),
     }),
+
+  causesSideEffects: true,
 });
 
 export default fileSystemProvisionerStoreInjectable;

@@ -5,18 +5,19 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { matches } from "lodash/fp";
 import releasesInjectable from "../releases.injectable";
-import releaseRouteParametersInjectable from "./release-route-parameters.injectable";
 import { computed } from "mobx";
+import helmReleasesRouteParametersInjectable from "../helm-releases-route-parameters.injectable";
 
 const releaseInjectable = getInjectable({
   id: "release",
 
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
-    const releaseRouteParameters = di.inject(releaseRouteParametersInjectable);
+    const routeParameters = di.inject(helmReleasesRouteParametersInjectable);
 
     return computed(() => {
-      const { name, namespace } = releaseRouteParameters.get();
+      const name = routeParameters.name.get();
+      const namespace = routeParameters.namespace.get();
 
       if (!name || !namespace) {
         return null;

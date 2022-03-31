@@ -4,19 +4,42 @@
  */
 
 import glob from "glob";
-import { memoize } from "lodash/fp";
+import { memoize, noop } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
-import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
-import readDirInjectable from "../common/fs/read-dir.injectable";
-import readFileInjectable from "../common/fs/read-file.injectable";
+import loggerInjectable from "../common/logger.injectable";
+import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
+import observableHistoryInjectable from "./navigation/observable-history.injectable";
+import { searchParamsOptions } from "./navigation";
+import { createMemoryHistory } from "history";
+import { createObservableHistory } from "mobx-observable-history";
+import registerIpcChannelListenerInjectable from "./app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
+import focusWindowInjectable from "./ipc-channel-listeners/focus-window.injectable";
+import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
+import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
+import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
+import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
+import type { ClusterStore } from "../common/cluster-store/cluster-store";
+import type { Cluster } from "../common/cluster/cluster";
+import userStoreInjectable from "../common/user-store/user-store.injectable";
+import type { UserStore } from "../common/user-store";
+import isMacInjectable from "../common/vars/is-mac.injectable";
+import isWindowsInjectable from "../common/vars/is-windows.injectable";
+import isLinuxInjectable from "../common/vars/is-linux.injectable";
+import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
+import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
+import joinPathsInjectable from "../common/path/join-paths.injectable";
+import { joinPathsFake } from "../common/test-utils/join-paths-fake";
+import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 
-export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverrides: false }) => {
+export const getDiForUnitTesting = (
+  { doGeneralOverrides } = { doGeneralOverrides: false },
+) => {
   const di = createContainer();
 
-  setLegacyGlobalDiForExtensionApi(di);
+  setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
   for (const filePath of getInjectableFilePaths()) {
     const injectableInstance = require(filePath).default;
@@ -30,23 +53,45 @@ export const getDiForUnitTesting = ({ doGeneralOverrides } = { doGeneralOverride
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(isMacInjectable, () => true);
+    di.override(isWindowsInjectable, () => false);
+    di.override(isLinuxInjectable, () => false);
+
+    di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
+    di.override(joinPathsInjectable, () => joinPathsFake);
+
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
+
+    di.override(hotbarStoreInjectable, () => ({}));
+
+    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
+
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
+    di.override(userStoreInjectable, () => ({}) as UserStore);
+
     di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
+    di.override(registerIpcChannelListenerInjectable, () => () => undefined);
 
-    di.override(readDirInjectable, () => () => {
-      throw new Error("Tried to read contents of a directory from file system without specifying explicit override.");
+    overrideFsWithFakes(di);
+
+    di.override(observableHistoryInjectable, () => {
+      const historyFake = createMemoryHistory();
+
+      return createObservableHistory(historyFake, {
+        searchParams: searchParamsOptions,
+      });
     });
 
-    di.override(readFileInjectable, () => () => {
-      throw new Error("Tried to read a file from file system without specifying explicit override.");
-    });
+    di.override(focusWindowInjectable, () => () => {});
 
-    di.override(writeJsonFileInjectable, () => () => {
-      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
-    });
-
-    di.override(readJsonFileInjectable, () => () => {
-      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
-    });
+    di.override(loggerInjectable, () => ({
+      warn: noop,
+      debug: noop,
+      error: (message: string, ...args: any) => console.error(message, ...args),
+      info: noop,
+    }));
   }
 
   return di;

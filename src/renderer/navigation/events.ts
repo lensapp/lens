@@ -5,9 +5,11 @@
 
 import { ipcRenderer } from "electron";
 import { reaction } from "mobx";
-import { getMatchedClusterId, navigate } from "./helpers";
 import { broadcastMessage, ipcRendererOn } from "../../common/ipc";
-import logger from "../../main/logger";
+import {
+  getLegacyGlobalDiForExtensionApi,
+} from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import matchedClusterIdInjectable from "./matched-cluster-id.injectable";
 
 export const enum IpcRendererNavigationEvents {
   RELOAD_PAGE = "renderer:page-reload",
@@ -24,8 +26,6 @@ export function bindEvents() {
 
   if (process.isMainFrame) {
     bindClusterManagerRouteEvents();
-  } else {
-    bindClusterFrameRouteEvents();
   }
 
   // Reload dashboard window
@@ -36,25 +36,14 @@ export function bindEvents() {
 
 // Handle events only in main window renderer process (see also: cluster-manager.tsx)
 function bindClusterManagerRouteEvents() {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const matchedClusterId = di.inject(matchedClusterIdInjectable);
+
   // Keep track of active cluster-id for handling IPC/menus/etc.
-  reaction(() => getMatchedClusterId(), clusterId => {
+  reaction(() => matchedClusterId.get(), clusterId => {
     broadcastMessage(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, clusterId);
   }, {
     fireImmediately: true,
-  });
-
-  // Handle navigation via IPC
-  ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_APP, (event, url: string) => {
-    logger.info(`[IPC]: navigate to ${url}`, { currentLocation: location.href });
-    navigate(url);
-    window.focus(); // make sure that the main frame is focused
-  });
-}
-
-// Handle cluster-view renderer process events within iframes
-function bindClusterFrameRouteEvents() {
-  ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER, (event, url: string) => {
-    logger.info(`[IPC]: navigate to ${url}`, { currentLocation: location.href });
-    navigate(url);
   });
 }

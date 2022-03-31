@@ -79,6 +79,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
 
   return (
     <Select
+      id="command-palette-search-input"
       menuPortalTarget={null}
       onChange={v => executeAction(v.value)}
       components={{

@@ -8,6 +8,7 @@ import { isWindows } from "../vars";
 const isWindowsInjectable = getInjectable({
   id: "is-windows",
   instantiate: () => isWindows,
+  causesSideEffects: true,
 });
 
 export default isWindowsInjectable;

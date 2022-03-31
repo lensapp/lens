@@ -38,7 +38,7 @@ const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems, welcomeB
   }, defaultWidth);
 
   return (
-    <div className="flex justify-center Welcome align-center">
+    <div className="flex justify-center Welcome align-center" data-testid="welcome-page">
       <div
         style={{ width: `${maxWidth}px` }}
         data-testid="welcome-banner-container"

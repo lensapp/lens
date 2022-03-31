@@ -4,7 +4,7 @@
  */
 
 import { createContainer } from "@ogre-tools/injectable";
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export const getDi = () => {
   const di = createContainer(
@@ -13,7 +13,7 @@ export const getDi = () => {
     getRequireContextForCommonCode,
   );
 
-  setLegacyGlobalDiForExtensionApi(di);
+  setLegacyGlobalDiForExtensionApi(di, Environments.main);
 
   return di;
 };

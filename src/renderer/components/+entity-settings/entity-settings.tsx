@@ -6,28 +6,29 @@
 import styles from "./entity-settings.module.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
-import type { RouteComponentProps } from "react-router";
+import { observable, makeObservable, IComputedValue, computed } from "mobx";
 import { observer } from "mobx-react";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { EntitySettingRegistry } from "../../../extensions/registries";
-import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
 import logger from "../../../common/logger";
 import { Avatar } from "../avatar";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import entitySettingsRouteParametersInjectable from "./entity-settings-route-parameters.injectable";
 
-export interface EntitySettingsProps extends RouteComponentProps<EntitySettingsRouteParams> {
+interface Dependencies {
+  entityId: IComputedValue<string>;
 }
 
 @observer
-export class EntitySettings extends React.Component<EntitySettingsProps> {
+class NonInjectedEntitySettings extends React.Component<Dependencies> {
   @observable activeTab: string;
 
-  constructor(props: EntitySettingsProps) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
 
@@ -43,8 +44,9 @@ export class EntitySettings extends React.Component<EntitySettingsProps> {
     }
   }
 
+  @computed
   get entityId() {
-    return this.props.match.params.entityId;
+    return this.props.entityId.get();
   }
 
   get entity(): CatalogEntity {
@@ -120,7 +122,6 @@ export class EntitySettings extends React.Component<EntitySettingsProps> {
 
     const { activeSetting } = this;
 
-
     return (
       <SettingLayout
         navigation={this.renderNavigation()}
@@ -140,3 +141,17 @@ export class EntitySettings extends React.Component<EntitySettingsProps> {
     );
   }
 }
+
+export const EntitySettings = withInjectables<Dependencies>(
+  NonInjectedEntitySettings,
+
+  {
+    getProps: (di) => {
+      const routeParameters = di.inject(entitySettingsRouteParametersInjectable);
+
+      return {
+        entityId: routeParameters.entityId,
+      };
+    },
+  },
+);

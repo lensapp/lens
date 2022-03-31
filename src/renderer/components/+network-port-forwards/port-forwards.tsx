@@ -7,15 +7,16 @@ import "./port-forwards.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router-dom";
 import { ItemListLayout } from "../item-object-list/list-layout";
 import type { PortForwardItem, PortForwardStore } from "../../port-forward";
 import { PortForwardMenu } from "./port-forward-menu";
-import { PortForwardsRouteParams, portForwardsURL } from "../../../common/routes";
 import { PortForwardDetails } from "./port-forward-details";
-import { navigation } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
+import { computed, IComputedValue, makeObservable } from "mobx";
+import portForwardsRouteParametersInjectable from "./port-forwards-route-parameters.injectable";
+import navigateToPortForwardsInjectable, { NavigateToPortForwards } from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 
 enum columnId {
   name = "name",
@@ -27,26 +28,30 @@ enum columnId {
   status = "status",
 }
 
-export interface PortForwardsProps extends RouteComponentProps<PortForwardsRouteParams> {
-}
-
 interface Dependencies {
   portForwardStore: PortForwardStore;
+  forwardport: IComputedValue<string>;
+  navigateToPortForwards: NavigateToPortForwards;
 }
 
 @observer
-class NonInjectedPortForwards extends React.Component<PortForwardsProps & Dependencies> {
+class NonInjectedPortForwards extends React.Component<Dependencies> {
+  constructor(props: Dependencies) {
+    super(props);
+
+    makeObservable(this);
+  }
 
   componentDidMount() {
+
     disposeOnUnmount(this, [
       this.props.portForwardStore.watch(),
     ]);
   }
 
+  @computed
   get selectedPortForward() {
-    const { match: { params: { forwardport }}} = this.props;
-
-    return this.props.portForwardStore.getById(forwardport);
+    return this.props.portForwardStore.getById(this.props.forwardport.get());
   }
 
   onDetails = (item: PortForwardItem) => {
@@ -58,15 +63,13 @@ class NonInjectedPortForwards extends React.Component<PortForwardsProps & Depend
   };
 
   showDetails = (item: PortForwardItem) => {
-    navigation.push(portForwardsURL({
-      params: {
-        forwardport: item.getId(),
-      },
-    }));
+    this.props.navigateToPortForwards({
+      forwardport: item.getId(),
+    });
   };
 
   hideDetails = () => {
-    navigation.push(portForwardsURL());
+    this.props.navigateToPortForwards();
   };
 
   renderRemoveDialogMessage(selectedItems: PortForwardItem[]) {
@@ -82,7 +85,7 @@ class NonInjectedPortForwards extends React.Component<PortForwardsProps & Depend
 
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <ItemListLayout
           isConfigurable
           tableId="port_forwards"
@@ -138,19 +141,24 @@ class NonInjectedPortForwards extends React.Component<PortForwardsProps & Depend
             hideDetails={this.hideDetails}
           />
         )}
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }
 
-export const PortForwards = withInjectables<Dependencies, PortForwardsProps>(
+export const PortForwards = withInjectables<Dependencies>(
   NonInjectedPortForwards,
 
   {
-    getProps: (di, props) => ({
-      portForwardStore: di.inject(portForwardStoreInjectable),
-      ...props,
-    }),
+    getProps: (di) => {
+      const routeParameters = di.inject(portForwardsRouteParametersInjectable);
+
+      return {
+        portForwardStore: di.inject(portForwardStoreInjectable),
+        forwardport: routeParameters.forwardport,
+        navigateToPortForwards: di.inject(navigateToPortForwardsInjectable),
+      };
+    },
   },
 );
 

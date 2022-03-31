@@ -168,6 +168,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
 
             <SubTitle title="Namespace" />
             <NamespaceSelect
+              id="namespace-input"
               value={this.namespace}
               placeholder="Namespace"
               themeName="light"
@@ -178,6 +179,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
             <SubTitle title="Values" />
             <div className="flex gaps align-center">
               <Select
+                id="quota-input"
                 className="quota-select"
                 themeName="light"
                 placeholder="Select a quota.."

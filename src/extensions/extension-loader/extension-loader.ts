@@ -25,6 +25,8 @@ const logModule = "[EXTENSIONS-LOADER]";
 interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
   createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension;
+  extensionRegistrators: ((extension: LensExtension, extensionInstallationCount: number) => void)[];
+  extensionInstallationCounter: Map<string, number>;
 }
 
 export interface ExtensionLoading {
@@ -247,7 +249,6 @@ export class ExtensionLoader {
 
     return this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
-        registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
       ];
@@ -274,8 +275,6 @@ export class ExtensionLoader {
       }
 
       const removeItems = [
-        registries.ClusterPageRegistry.getInstance().add(extension.clusterPages, extension),
-        registries.ClusterPageMenuRegistry.getInstance().add(extension.clusterPageMenus, extension),
         registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
       ];
 
@@ -317,6 +316,14 @@ export class ExtensionLoader {
               extension,
             );
 
+            const installationCount = (this.dependencies.extensionInstallationCounter.get(instance.sanitizedExtensionId) | 0) + 1;
+
+            this.dependencies.extensionInstallationCounter.set(instance.sanitizedExtensionId, installationCount);
+
+            this.dependencies.extensionRegistrators.forEach((register) =>
+              register(instance, installationCount),
+            );
+
             this.instances.set(extId, instance);
 
             return {
@@ -332,9 +339,7 @@ export class ExtensionLoader {
         }
 
         return null;
-      })
-      // Remove null values
-      .filter(extension => Boolean(extension));
+      }).filter(extension => Boolean(extension));
 
     // We first need to wait until each extension's `onActivate` is resolved or rejected,
     // as this might register new catalog categories. Afterwards we can safely .enable the extension.

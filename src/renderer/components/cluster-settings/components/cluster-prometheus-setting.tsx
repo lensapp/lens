@@ -116,6 +116,7 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
               ? <Spinner />
               : <>
                 <Select
+                  id="cluster-prometheus-settings-input"
                   value={this.provider}
                   onChange={({ value }) => {
                     this.provider = value;

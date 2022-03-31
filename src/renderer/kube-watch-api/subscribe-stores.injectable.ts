@@ -7,6 +7,7 @@ import kubeWatchApiInjectable from "./kube-watch-api.injectable";
 
 const subscribeStoresInjectable = getInjectable({
   id: "subscribe-stores",
+  causesSideEffects: true,
   instantiate: (di) => di.inject(kubeWatchApiInjectable).subscribeStores,
 });
 

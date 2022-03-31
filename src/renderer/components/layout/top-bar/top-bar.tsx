@@ -11,8 +11,6 @@ import { Icon } from "../../icon";
 import { observable } from "mobx";
 import { ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
-import { isActiveRoute, navigate } from "../../../navigation";
-import { catalogRoute, catalogURL } from "../../../../common/routes";
 import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -21,10 +19,13 @@ import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc"
 import { WindowAction } from "../../../../common/ipc/window";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
-
-export interface TopBarProps {}
+import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
+import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 
 interface Dependencies {
+  navigateToCatalog: NavigateToCatalog;
+  catalogRouteIsActive: IComputedValue<boolean>;
   items: IComputedValue<TopBarRegistration[]>;
   isWindows: boolean;
   isLinux: boolean;
@@ -41,7 +42,7 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-const NonInjectedTopBar = observer(({ items, isWindows, isLinux }: TopBarProps & Dependencies) => {
+const NonInjectedTopBar = observer(({ items, navigateToCatalog, catalogRouteIsActive, isWindows, isLinux }: Dependencies) => {
   const elem = useRef<HTMLDivElement>();
 
   const openAppContextMenu = () => {
@@ -49,7 +50,7 @@ const NonInjectedTopBar = observer(({ items, isWindows, isLinux }: TopBarProps &
   };
 
   const goHome = () => {
-    navigate(catalogURL());
+    navigateToCatalog();
   };
 
   const goBack = () => {
@@ -98,7 +99,7 @@ const NonInjectedTopBar = observer(({ items, isWindows, isLinux }: TopBarProps &
           data-testid="home-button"
           material="home"
           onClick={goHome}
-          disabled={isActiveRoute(catalogRoute)}
+          disabled={catalogRouteIsActive.get()}
         />
         <Icon
           data-testid="history-back"
@@ -149,11 +150,23 @@ const renderRegisteredItems = (items: TopBarRegistration[]) => (
   })
 );
 
-export const TopBar = withInjectables<Dependencies, TopBarProps>(NonInjectedTopBar, {
-  getProps: (di, props) => ({
-    items: di.inject(topBarItemsInjectable),
-    isLinux: di.inject(isLinuxInjectable),
-    isWindows: di.inject(isWindowsInjectable),
-    ...props,
-  }),
-});
+export const TopBar = withInjectables<Dependencies>(
+  NonInjectedTopBar,
+  {
+    getProps: (di) => {
+      const catalogRoute = di.inject(catalogRouteInjectable);
+
+      return {
+        navigateToCatalog: di.inject(navigateToCatalogInjectable),
+        items: di.inject(topBarItemsInjectable),
+        isLinux: di.inject(isLinuxInjectable),
+        isWindows: di.inject(isWindowsInjectable),
+
+        catalogRouteIsActive: di.inject(
+          routeIsActiveInjectable,
+          catalogRoute,
+        ),
+      };
+    },
+  },
+);

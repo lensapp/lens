@@ -216,6 +216,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
               <div className="secret-namespace">
                 <SubTitle title="Namespace" />
                 <NamespaceSelect
+                  id="secret-namespace-input"
                   themeName="light"
                   value={namespace}
                   onChange={({ value }) => this.namespace = value}
@@ -224,6 +225,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
               <div className="secret-type">
                 <SubTitle title="Secret type" />
                 <Select
+                  id="secret-input"
                   themeName="light"
                   options={this.types}
                   value={type} onChange={({ value }: SelectOption) => this.type = value}

@@ -52,6 +52,8 @@ import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-p
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
+import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -96,6 +98,9 @@ describe("kube auth proxy tests", () => {
 
     di.override(spawnInjectable, () => mockSpawn);
 
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(appVersionInjectable);
+
     mockFs(mockMinikubeConfig);
 
     await di.runSetups();
@@ -134,7 +139,7 @@ describe("kube auth proxy tests", () => {
     beforeEach(async () => {
       mockedCP = mock<ChildProcess>();
       listeners = new EventEmitter();
-    
+
       jest.spyOn(Kubectl.prototype, "checkBinary").mockReturnValueOnce(Promise.resolve(true));
       jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValueOnce(Promise.resolve(false));
       mockedCP.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): ChildProcess => {

@@ -13,12 +13,11 @@ import { ExtensionsStore } from "../../../extensions/extensions-store/extensions
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import extensionLoaderInjectable
-  from "../../../extensions/extension-loader/extension-loader.injectable";
-import lensProtocolRouterMainInjectable
-  from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
-import extensionsStoreInjectable
-  from "../../../extensions/extensions-store/extensions-store.injectable";
+import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
+import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
+import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 jest.mock("../../../common/ipc");
 
@@ -42,11 +41,16 @@ describe("protocol router tests", () => {
       "tmp": {},
     });
 
+    di.override(extensionsStoreInjectable, () => ExtensionsStore.createInstance());
+
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(appVersionInjectable);
+
     await di.runSetups();
 
     extensionLoader = di.inject(extensionLoaderInjectable);
-    extensionsStore = di.inject(extensionsStoreInjectable);
 
+    extensionsStore = di.inject(extensionsStoreInjectable);
 
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
@@ -55,9 +59,6 @@ describe("protocol router tests", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-
-    // TODO: Remove Singleton from BaseStore to achieve independent unit testing
-    ExtensionsStore.resetInstance();
 
     mockFs.restore();
   });

@@ -14,22 +14,22 @@ import commandOverlayInjectable, { CommandOverlay } from "./command-overlay.inje
 import { isMac } from "../../../common/vars";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
-import { getMatchedClusterId } from "../../navigation";
 import type { Disposer } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
-
-export interface CommandContainerProps {
-  clusterId?: ClusterId;
-}
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import type { IComputedValue } from "mobx";
+import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
 
 interface Dependencies {
   addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
   commandOverlay: CommandOverlay;
+  clusterId?: ClusterId;
+  matchedClusterId: IComputedValue<ClusterId>;
 }
 
 @observer
-class NonInjectedCommandContainer extends React.Component<CommandContainerProps & Dependencies> {
+class NonInjectedCommandContainer extends React.Component<Dependencies> {
   private escHandler(event: KeyboardEvent) {
     const { commandOverlay } = this.props;
 
@@ -41,7 +41,7 @@ class NonInjectedCommandContainer extends React.Component<CommandContainerProps 
 
   handleCommandPalette = () => {
     const { commandOverlay } = this.props;
-    const clusterIsActive = getMatchedClusterId() !== undefined;
+    const clusterIsActive = this.props.matchedClusterId.get() !== undefined;
 
     if (clusterIsActive) {
       broadcastMessage(`command-palette:${catalogEntityRegistry.activeEntity.getId()}:open`);
@@ -95,10 +95,19 @@ class NonInjectedCommandContainer extends React.Component<CommandContainerProps 
   }
 }
 
-export const CommandContainer = withInjectables<Dependencies, CommandContainerProps>(NonInjectedCommandContainer, {
-  getProps: (di, props) => ({
-    addWindowEventListener: di.inject(windowAddEventListenerInjectable),
-    commandOverlay: di.inject(commandOverlayInjectable),
-    ...props,
-  }),
-});
+export const CommandContainer = withInjectables<Dependencies>(
+  NonInjectedCommandContainer,
+  {
+    getProps: (di, props) => {
+      const hostedCluster = di.inject(hostedClusterInjectable);
+
+      return {
+        clusterId: hostedCluster?.id,
+        addWindowEventListener: di.inject(windowAddEventListenerInjectable),
+        commandOverlay: di.inject(commandOverlayInjectable),
+        matchedClusterId: di.inject(matchedClusterIdInjectable),
+        ...props,
+      };
+    },
+  },
+);

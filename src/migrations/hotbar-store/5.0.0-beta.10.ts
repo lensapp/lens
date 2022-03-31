@@ -9,12 +9,13 @@ import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
 import { defaultHotbarCells, getEmptyHotbar, Hotbar, HotbarItem } from "../../common/hotbar-types";
-import { catalogEntity } from "../../main/catalog-sources/general";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import catalogCatalogEntityInjectable
+  from "../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -42,7 +43,11 @@ export default {
     // Hotbars might be empty, if some of the previous migrations weren't run
     if (hotbars.length === 0) {
       const hotbar = getEmptyHotbar("default");
-      const { metadata: { uid, name, source }} = catalogEntity;
+
+      const di = getLegacyGlobalDiForExtensionApi();
+      const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
+
+      const { metadata: { uid, name, source }} = catalogCatalogEntity;
 
       hotbar.items[0] = { entity: { uid, name, source }};
 
@@ -120,8 +125,11 @@ export default {
        */
       if (hotbars.every(hotbar => hotbar.items.every(item => item?.entity?.uid !== "catalog-entity"))) {
         // note, we will add a new whole hotbar here called "default" if that was previously removed
+        const di = getLegacyGlobalDiForExtensionApi();
+        const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
+
         const defaultHotbar = hotbars.find(hotbar => hotbar.name === "default");
-        const { metadata: { uid, name, source }} = catalogEntity;
+        const { metadata: { uid, name, source }} = catalogCatalogEntity;
 
         if (defaultHotbar) {
           const freeIndex = defaultHotbar.items.findIndex(isNull);

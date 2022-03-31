@@ -3,19 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import path from "path";
 import directoryForKubeConfigsInjectable from "../directory-for-kube-configs/directory-for-kube-configs.injectable";
+import getAbsolutePathInjectable from "../../path/get-absolute-path.injectable";
 
 const getCustomKubeConfigDirectoryInjectable = getInjectable({
   id: "get-custom-kube-config-directory",
 
-  instantiate: (di) => (directoryName: string) => {
+  instantiate: (di) => {
     const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
 
-    return path.resolve(
-      directoryForKubeConfigs,
-      directoryName,
-    );
+    return (directoryName: string) =>
+      getAbsolutePath(directoryForKubeConfigs, directoryName);
   },
 });
 

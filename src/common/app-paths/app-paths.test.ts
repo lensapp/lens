@@ -10,7 +10,6 @@ import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "../../main/app-paths/app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
-import path from "path";
 
 describe("app-paths", () => {
   let mainDi: DiContainer;
@@ -85,7 +84,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: `some-app-data${path.sep}some-app-name`,
+        userData: "some-app-data/some-app-name",
       });
     });
 
@@ -108,7 +107,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: `some-app-data${path.sep}some-app-name`,
+        userData: "some-app-data/some-app-name",
       });
     });
   });
@@ -128,7 +127,7 @@ describe("app-paths", () => {
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
-        userData: `some-integration-testing-app-data${path.sep}some-app-name`,
+        userData: `some-integration-testing-app-data/some-app-name`,
       });
     });
 
@@ -137,7 +136,7 @@ describe("app-paths", () => {
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
-        userData: `some-integration-testing-app-data${path.sep}some-app-name`,
+        userData: "some-integration-testing-app-data/some-app-name",
       });
     });
   });

@@ -5,17 +5,14 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { SidebarCluster } from "../sidebar-cluster";
 import { KubernetesCluster } from "../../../../common/catalog-entities";
-
-jest.mock("../../../../common/hotbar-store", () => ({
-  HotbarStore: {
-    getInstance: () => ({
-      isAddedToActive: jest.fn(),
-    }),
-  },
-}));
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import type { HotbarStore } from "../../../../common/hotbar-store";
 
 const clusterEntity = new KubernetesCluster({
   metadata: {
@@ -34,6 +31,18 @@ const clusterEntity = new KubernetesCluster({
 });
 
 describe("<SidebarCluster/>", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(hotbarStoreInjectable, () => ({
+      isAddedToActive: () => {},
+    }) as unknown as HotbarStore);
+
+    render = renderFor(di);
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
 

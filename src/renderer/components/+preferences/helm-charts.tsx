@@ -144,7 +144,8 @@ export class HelmCharts extends React.Component {
     return (
       <div>
         <div className="flex gaps">
-          <Select id="HelmRepoSelect"
+          <Select
+            id="HelmRepoSelect"
             placeholder="Repositories"
             isLoading={this.loadingAvailableRepos}
             isDisabled={this.loadingAvailableRepos}

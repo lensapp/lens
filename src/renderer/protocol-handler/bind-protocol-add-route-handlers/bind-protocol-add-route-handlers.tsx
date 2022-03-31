@@ -5,7 +5,6 @@
 
 import React from "react";
 import type { LensProtocolRouterRenderer } from "../lens-protocol-router-renderer/lens-protocol-router-renderer";
-import { navigate } from "../../navigation/helpers";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import {
@@ -14,20 +13,28 @@ import {
   LensProtocolRouter,
 } from "../../../common/protocol-handler";
 import { Notifications } from "../../components/notifications";
-import * as routes from "../../../common/routes";
 import type { ExtensionInfo } from "../../components/+extensions/attempt-install-by-info/attempt-install-by-info";
+import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 
 interface Dependencies {
   attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>;
   lensProtocolRouterRenderer: LensProtocolRouterRenderer;
+  navigateToCatalog: NavigateToCatalog;
+  navigateToAddCluster: () => void;
+  navigateToExtensions: () => void;
+  navigateToEntitySettings: NavigateToEntitySettings;
+  navigateToClusterView: NavigateToClusterView;
+  navigateToPreferenceTabId: (tabId: string) => void;
 }
 
 export const bindProtocolAddRouteHandlers =
-  ({ attemptInstallByInfo, lensProtocolRouterRenderer }: Dependencies) =>
+  ({ attemptInstallByInfo, lensProtocolRouterRenderer, navigateToCatalog, navigateToAddCluster, navigateToExtensions, navigateToEntitySettings, navigateToClusterView, navigateToPreferenceTabId }: Dependencies) =>
     () => {
       lensProtocolRouterRenderer
-        .addInternalHandler("/preferences", ({ search: { highlight }}) => {
-          navigate(routes.preferencesURL({ fragment: highlight }));
+        .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
+          navigateToPreferenceTabId(tabId);
         })
         .addInternalHandler("/", ({ tail }) => {
           if (tail) {
@@ -39,26 +46,19 @@ export const bindProtocolAddRouteHandlers =
             );
           }
 
-          navigate(routes.catalogURL());
+          navigateToCatalog();
         })
         .addInternalHandler("/landing", () => {
-          navigate(routes.catalogURL());
+          navigateToCatalog();
         })
         .addInternalHandler(
           "/landing/view/:group/:kind",
           ({ pathname: { group, kind }}) => {
-            navigate(
-              routes.catalogURL({
-                params: {
-                  group,
-                  kind,
-                },
-              }),
-            );
+            navigateToCatalog({ group, kind });
           },
         )
         .addInternalHandler("/cluster", () => {
-          navigate(routes.addClusterURL());
+          navigateToAddCluster();
         })
         .addInternalHandler(
           "/entity/:entityId/settings",
@@ -66,7 +66,7 @@ export const bindProtocolAddRouteHandlers =
             const entity = catalogEntityRegistry.getById(entityId);
 
             if (entity) {
-              navigate(routes.entitySettingsURL({ params: { entityId }}));
+              navigateToEntitySettings(entityId);
             } else {
               Notifications.shortInfo(
                 <p>
@@ -83,7 +83,7 @@ export const bindProtocolAddRouteHandlers =
             const cluster = ClusterStore.getInstance().getById(clusterId);
 
             if (cluster) {
-              navigate(routes.clusterViewURL({ params: { clusterId }}));
+              navigateToClusterView(clusterId);
             } else {
               Notifications.shortInfo(
                 <p>
@@ -99,9 +99,7 @@ export const bindProtocolAddRouteHandlers =
             const cluster = ClusterStore.getInstance().getById(clusterId);
 
             if (cluster) {
-              navigate(
-                routes.entitySettingsURL({ params: { entityId: clusterId }}),
-              );
+              navigateToEntitySettings(clusterId);
             } else {
               Notifications.shortInfo(
                 <p>
@@ -112,7 +110,7 @@ export const bindProtocolAddRouteHandlers =
           },
         )
         .addInternalHandler("/extensions", () => {
-          navigate(routes.extensionsURL());
+          navigateToExtensions();
         })
         .addInternalHandler(
           `/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`,
@@ -124,7 +122,7 @@ export const bindProtocolAddRouteHandlers =
               .filter(Boolean)
               .join("/");
 
-            navigate(routes.extensionsURL());
+            navigateToExtensions();
             attemptInstallByInfo({ name, version, requireConfirmation: true });
           },
         );

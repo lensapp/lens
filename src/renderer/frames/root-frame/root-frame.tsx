@@ -5,7 +5,6 @@
 
 import { injectSystemCAs } from "../../../common/system-ca";
 import React from "react";
-import { Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { ClusterManager } from "../../components/cluster-manager";
 import { ErrorBoundary } from "../../components/error-boundary";
@@ -15,21 +14,14 @@ import { CommandContainer } from "../../components/command-palette/command-conta
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
 import { ClusterFrameHandler } from "../../components/cluster-manager/lens-views";
-import historyInjectable from "../../navigation/history.injectable";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import type { History } from "history";
 
 injectSystemCAs();
 
-interface Dependencies {
-  history: History;
-}
-
 @observer
-class NonInjectedRootFrame extends React.Component<Dependencies> {
+export class RootFrame extends React.Component {
   static displayName = "RootFrame";
 
-  constructor(props: Dependencies) {
+  constructor(props: any) {
     super(props);
 
     ClusterFrameHandler.createInstance();
@@ -41,20 +33,14 @@ class NonInjectedRootFrame extends React.Component<Dependencies> {
 
   render() {
     return (
-      <Router history={this.props.history}>
+      <>
         <ErrorBoundary>
-          <Switch>
-            <Route component={ClusterManager} />
-          </Switch>
+          <ClusterManager />
         </ErrorBoundary>
         <Notifications />
         <ConfirmDialog />
         <CommandContainer />
-      </Router>
+      </>
     );
   }
 }
-
-export const RootFrame = withInjectables(NonInjectedRootFrame, {
-  getProps: (di) => ({ history: di.inject(historyInjectable) }),
-});

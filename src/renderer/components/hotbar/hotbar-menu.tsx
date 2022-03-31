@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { HotbarStore } from "../../../common/hotbar-store";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, type DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
@@ -18,26 +17,33 @@ import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
 import { action, makeObservable, observable } from "mobx";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { HotbarStore } from "../../../common/hotbar-store";
 
 export interface HotbarMenuProps {
   className?: IClassName;
 }
 
+interface Dependencies {
+  hotbarStore: HotbarStore;
+}
+
 @observer
-export class HotbarMenu extends React.Component<HotbarMenuProps> {
+class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuProps> {
   @observable draggingOver = false;
 
-  constructor(props: HotbarMenuProps) {
+  constructor(props: Dependencies & HotbarMenuProps) {
     super(props);
     makeObservable(this);
   }
 
   get hotbar() {
-    return HotbarStore.getInstance().getActive();
+    return this.props.hotbarStore.getActive();
   }
 
   getEntity(item: HotbarItem) {
-    const hotbar = HotbarStore.getInstance().getActive();
+    const hotbar = this.props.hotbarStore.getActive();
 
     if (!hotbar) {
       return null;
@@ -64,17 +70,17 @@ export class HotbarMenu extends React.Component<HotbarMenuProps> {
     const from = parseInt(source.droppableId);
     const to = parseInt(destination.droppableId);
 
-    HotbarStore.getInstance().restackItems(from, to);
+    this.props.hotbarStore.restackItems(from, to);
   }
 
   removeItem(uid: string) {
-    const hotbar = HotbarStore.getInstance();
+    const hotbar = this.props.hotbarStore;
 
     hotbar.removeFromHotbar(uid);
   }
 
   addItem(entity: CatalogEntity, index = -1) {
-    const hotbar = HotbarStore.getInstance();
+    const hotbar = this.props.hotbarStore;
 
     hotbar.addToHotbar(entity, index);
   }
@@ -160,8 +166,7 @@ export class HotbarMenu extends React.Component<HotbarMenuProps> {
   }
 
   render() {
-    const { className } = this.props;
-    const hotbarStore = HotbarStore.getInstance();
+    const { className, hotbarStore } = this.props;
     const hotbar = hotbarStore.getActive();
 
     return (
@@ -176,3 +181,14 @@ export class HotbarMenu extends React.Component<HotbarMenuProps> {
     );
   }
 }
+
+export const HotbarMenu = withInjectables<Dependencies, HotbarMenuProps>(
+  NonInjectedHotbarMenu,
+
+  {
+    getProps: (di, props) => ({
+      hotbarStore: di.inject(hotbarStoreInjectable),
+      ...props,
+    }),
+  },
+);

@@ -31,6 +31,7 @@ export interface SelectOption<T = any> {
 }
 
 export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
+  id: string;
   value?: T;
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
@@ -41,7 +42,7 @@ export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, Crea
 
 @observer
 export class Select extends React.Component<SelectProps> {
-  static defaultProps: SelectProps = {
+  static defaultProps: Omit<SelectProps, "id"> = {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
     menuPlacement: "auto",
@@ -115,12 +116,13 @@ export class Select extends React.Component<SelectProps> {
   render() {
     const {
       className, menuClass, isCreatable, autoConvertOptions,
-      value, options, components = {}, ...props
+      value, options, components = {}, id: inputId, ...props
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
 
     const selectProps: Partial<SelectProps> = {
       ...props,
+      inputId,
       styles: this.styles,
       value: autoConvertOptions ? this.selectedOption : value,
       options: autoConvertOptions ? this.options : options,

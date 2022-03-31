@@ -7,13 +7,13 @@ import { action, makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../../common/item.store";
 import { autoBind, disposer, StorageHelper } from "../../utils";
 import { ForwardedPort, PortForwardItem } from "../port-forward-item";
-import { notifyErrorPortForwarding } from "../port-forward-notify";
 import { apiBase } from "../../api";
 import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";
 
 interface Dependencies {
   storage: StorageHelper<ForwardedPort[] | undefined>;
+  notifyErrorPortForwarding: (message: string) => void;
 }
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
@@ -43,7 +43,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
       for (const result of results) {
         if (result.status === "rejected" || result.value.status === "Disabled") {
-          notifyErrorPortForwarding("One or more port-forwards could not be started");
+          this.dependencies.notifyErrorPortForwarding("One or more port-forwards could not be started");
 
           return;
         }

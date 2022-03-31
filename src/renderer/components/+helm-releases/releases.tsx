@@ -7,11 +7,7 @@ import "../item-object-list/item-list-layout.scss";
 import "./releases.scss";
 
 import React, { Component } from "react";
-import type { RouteComponentProps } from "react-router";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { navigation } from "../../navigation";
-import type { ReleaseRouteParams } from "../../../common/routes";
-import { releaseURL } from "../../../common/routes";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 import { ItemListLayout } from "../item-object-list";
@@ -25,6 +21,10 @@ import removableReleasesInjectable from "./removable-releases.injectable";
 import type { RemovableHelmRelease } from "./removable-releases";
 import type { IComputedValue } from "mobx";
 import releasesInjectable from "./releases.injectable";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
+import helmReleasesRouteParametersInjectable from "./helm-releases-route-parameters.injectable";
+import type { NavigateToHelmReleases } from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
+import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 
 enum columnId {
   name = "name",
@@ -37,18 +37,18 @@ enum columnId {
   updated = "update",
 }
 
-export interface HelmReleasesProps extends RouteComponentProps<ReleaseRouteParams> {
-}
-
 interface Dependencies {
   releases: IComputedValue<RemovableHelmRelease[]>;
   releasesArePending: IComputedValue<boolean>;
   selectNamespace: (namespace: string) => void;
+  namespace: IComputedValue<string>;
+  navigateToHelmReleases: NavigateToHelmReleases;
 }
 
-class NonInjectedHelmReleases extends Component<Dependencies & HelmReleasesProps> {
+class NonInjectedHelmReleases extends Component<Dependencies> {
+  // TODO: This side-effect in mount must go.
   componentDidMount() {
-    const { match: { params: { namespace }}} = this.props;
+    const namespace = this.props.namespace.get();
 
     if (namespace) {
       this.props.selectNamespace(namespace);
@@ -60,16 +60,14 @@ class NonInjectedHelmReleases extends Component<Dependencies & HelmReleasesProps
   };
 
   showDetails = (item: HelmRelease) => {
-    navigation.push(releaseURL({
-      params: {
-        name: item.getName(),
-        namespace: item.getNs(),
-      },
-    }));
+    this.props.navigateToHelmReleases({
+      name: item.getName(),
+      namespace: item.getNs(),
+    });
   };
 
   hideDetails = () => {
-    navigation.push(releaseURL());
+    this.props.navigateToHelmReleases();
   };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
@@ -144,7 +142,7 @@ class NonInjectedHelmReleases extends Component<Dependencies & HelmReleasesProps
     } as ItemStore<RemovableHelmRelease>;
 
     return (
-      <>
+      <SiblingsInTabLayout>
         <ItemListLayout
           store={legacyReleaseStore}
           getItems={() => legacyReleaseStore.items}
@@ -171,7 +169,7 @@ class NonInjectedHelmReleases extends Component<Dependencies & HelmReleasesProps
             filters: (
               <>
                 {filters}
-                <NamespaceSelectFilter />
+                <NamespaceSelectFilter id="namespace-select-filter" />
               </>
             ),
             searchProps: {
@@ -218,20 +216,25 @@ class NonInjectedHelmReleases extends Component<Dependencies & HelmReleasesProps
         />
 
         <ReleaseRollbackDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }
 
-export const HelmReleases = withInjectables<Dependencies, HelmReleasesProps>(
+export const HelmReleases = withInjectables<Dependencies>(
   NonInjectedHelmReleases,
 
   {
-    getProps: (di, props) => ({
-      releases: di.inject(removableReleasesInjectable),
-      releasesArePending: di.inject(releasesInjectable).pending,
-      selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
-      ...props,
-    }),
+    getProps: (di) => {
+      const routeParameters = di.inject(helmReleasesRouteParametersInjectable);
+
+      return {
+        releases: di.inject(removableReleasesInjectable),
+        releasesArePending: di.inject(releasesInjectable).pending,
+        selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
+        navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
+        namespace: routeParameters.namespace,
+      };
+    },
   },
 );

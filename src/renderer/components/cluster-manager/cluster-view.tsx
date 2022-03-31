@@ -5,32 +5,34 @@
 
 import "./cluster-view.scss";
 import React from "react";
-import { computed, makeObservable, reaction } from "mobx";
+import { computed, IComputedValue, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import { ClusterStatus } from "./cluster-status";
 import { ClusterFrameHandler } from "./lens-views";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { navigate } from "../../navigation";
-import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
 import { requestClusterActivation } from "../../ipc";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import clusterViewRouteParametersInjectable from "./cluster-view-route-parameters.injectable";
 
-export interface ClusterViewProps extends RouteComponentProps<ClusterViewRouteParams> {
+interface Dependencies {
+  clusterId: IComputedValue<string>;
+  navigateToCatalog: NavigateToCatalog;
 }
 
 @observer
-export class ClusterView extends React.Component<ClusterViewProps> {
+class NonInjectedClusterView extends React.Component<Dependencies> {
   private store = ClusterStore.getInstance();
 
-  constructor(props: ClusterViewProps) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @computed get clusterId() {
-    return this.props.match.params.clusterId;
+    return this.props.clusterId.get();
   }
 
   @computed get cluster(): Cluster | undefined {
@@ -65,7 +67,7 @@ export class ClusterView extends React.Component<ClusterViewProps> {
 
       reaction(() => [this.cluster?.ready, this.cluster?.disconnected], ([, disconnected]) => {
         if (ClusterFrameHandler.getInstance().hasLoadedView(this.clusterId) && disconnected) {
-          navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
+          this.props.navigateToCatalog(); // redirect to catalog when active cluster get disconnected/not available
         }
       }),
     ]);
@@ -89,3 +91,19 @@ export class ClusterView extends React.Component<ClusterViewProps> {
     );
   }
 }
+
+export const ClusterView = withInjectables<Dependencies>(
+  NonInjectedClusterView,
+
+  {
+    getProps: (di) => {
+      const routeParameters = di.inject(clusterViewRouteParametersInjectable);
+
+      return {
+        clusterId: routeParameters.clusterId,
+        navigateToCatalog: di.inject(navigateToCatalogInjectable),
+      };
+    },
+  },
+);
+

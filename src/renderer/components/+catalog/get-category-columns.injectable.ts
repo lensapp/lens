@@ -9,10 +9,12 @@ import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
 import type { ItemListLayoutProps } from "../item-object-list";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
 import categoryColumnsInjectable from "./custom-category-columns.injectable";
-import { defaultCategoryColumns, browseAllColumns, nameCategoryColumn } from "./internal-category-columns";
+import { defaultCategoryColumns, browseAllColumns } from "./internal-category-columns";
+import nameCategoryColumnInjectable from "./name-category-column.injectable";
 
 interface Dependencies {
   extensionColumns: IComputedValue<Map<string, Map<string, RegisteredAdditionalCategoryColumn[]>>>;
+  nameCategoryColumn: RegisteredAdditionalCategoryColumn;
 }
 
 export interface GetCategoryColumnsParams {
@@ -21,7 +23,7 @@ export interface GetCategoryColumnsParams {
 
 export type CategoryColumns = Required<Pick<ItemListLayoutProps<CatalogEntity>, "sortingCallbacks" | "searchFilters" | "renderTableContents" | "renderTableHeader">>;
 
-function getSpecificCategoryColumns(activeCategory: CatalogCategory, extensionColumns: IComputedValue<Map<string, Map<string, RegisteredAdditionalCategoryColumn[]>>>): RegisteredAdditionalCategoryColumn[] {
+function getSpecificCategoryColumns(activeCategory: CatalogCategory, extensionColumns: IComputedValue<Map<string, Map<string, RegisteredAdditionalCategoryColumn[]>>>, nameCategoryColumn: RegisteredAdditionalCategoryColumn): RegisteredAdditionalCategoryColumn[] {
   const fromExtensions = (
     extensionColumns
       .get()
@@ -41,7 +43,7 @@ function getSpecificCategoryColumns(activeCategory: CatalogCategory, extensionCo
   ];
 }
 
-function getBrowseAllColumns(): RegisteredAdditionalCategoryColumn[] {
+function getBrowseAllColumns(nameCategoryColumn: RegisteredAdditionalCategoryColumn): RegisteredAdditionalCategoryColumn[] {
   return [
     ...browseAllColumns,
     nameCategoryColumn,
@@ -49,11 +51,11 @@ function getBrowseAllColumns(): RegisteredAdditionalCategoryColumn[] {
   ];
 }
 
-const getCategoryColumns = ({ extensionColumns }: Dependencies) => ({ activeCategory }: GetCategoryColumnsParams): CategoryColumns => {
+const getCategoryColumns = ({ extensionColumns, nameCategoryColumn }: Dependencies) => ({ activeCategory }: GetCategoryColumnsParams): CategoryColumns => {
   const allRegistrations = orderBy(
     activeCategory
-      ? getSpecificCategoryColumns(activeCategory, extensionColumns)
-      : getBrowseAllColumns(),
+      ? getSpecificCategoryColumns(activeCategory, extensionColumns, nameCategoryColumn)
+      : getBrowseAllColumns(nameCategoryColumn),
     "priority",
     "asc",
   );
@@ -89,6 +91,7 @@ const getCategoryColumnsInjectable = getInjectable({
 
   instantiate: (di) => getCategoryColumns({
     extensionColumns: di.inject(categoryColumnsInjectable),
+    nameCategoryColumn: di.inject(nameCategoryColumnInjectable),
   }),
 });
 

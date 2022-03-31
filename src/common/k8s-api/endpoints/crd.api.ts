@@ -5,9 +5,11 @@
 
 import { KubeCreationError, KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { crdResourcesURL } from "../../routes";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import customResourcesRouteInjectable from "../../front-end-routing/routes/cluster/custom-resources/custom-resources/custom-resources-route.injectable";
+import { buildURL } from "../../utils/buildUrl";
 
 interface AdditionalPrinterColumnsCommon {
   name: string;
@@ -99,7 +101,11 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getResourceUrl() {
-    return crdResourcesURL({
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const customResourcesRoute = di.inject(customResourcesRouteInjectable);
+
+    return buildURL(customResourcesRoute.path, {
       params: {
         group: this.getGroup(),
         name: this.getPluralName(),

@@ -18,12 +18,12 @@ import type {
   DiContainer,
 } from "@ogre-tools/injectable";
 
-
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 
-import directoryForUserDataInjectable
-  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -80,15 +80,17 @@ describe("cluster-store", () => {
   let createCluster: (model: ClusterModel) => Cluster;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
-    mainDi = dis.mainDi;
-
+    mainDi.override(clusterStoreInjectable, (di) => ClusterStore.createInstance({ createCluster: di.inject(createClusterInjectionToken) }));
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    await dis.runSetups();
+    mainDi.permitSideEffects(getConfigurationFileModelInjectable);
+    mainDi.permitSideEffects(appVersionInjectable);
+
+    await mainDi.runSetups();
 
     createCluster = mainDi.inject(createClusterInjectionToken);
   });

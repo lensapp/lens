@@ -8,21 +8,18 @@ import styles from "./catalog.module.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, IComputedValue, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { action, computed, IComputedValue, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
-import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
 import { prevDefault } from "../../utils";
 import { CatalogEntityDetails } from "./catalog-entity-details";
-import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
@@ -36,10 +33,13 @@ import getCategoryColumnsInjectable from "./get-category-columns.injectable";
 import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable";
 import customCategoryViewsInjectable from "./custom-views.injectable";
 import type { CustomCategoryViewComponents } from "./custom-views";
+import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import catalogRouteParametersInjectable from "./catalog-route-parameters.injectable";
+import { browseCatalogTab } from "./catalog-browse-tab";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
-
-export interface CatalogProps extends RouteComponentProps<CatalogViewRouteParam> {}
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import type { HotbarStore } from "../../../common/hotbar-store";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void };
@@ -47,23 +47,35 @@ interface Dependencies {
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
   emitEvent: (event: AppEvent) => void;
+
+  routeParameters: {
+    group: IComputedValue<string>;
+    kind: IComputedValue<string>;
+  };
+
+  navigateToCatalog: NavigateToCatalog;
+  hotbarStore: HotbarStore;
 }
 
 @observer
-class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
+class NonInjectedCatalog extends React.Component<Dependencies> {
   @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
 
-  constructor(props: CatalogProps & Dependencies) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
+  @computed
   get routeActiveTab(): string {
-    const { group, kind } = this.props.match.params ?? {};
+    const { group, kind } = this.props.routeParameters;
 
-    if (group && kind) {
-      return `${group}/${kind}`;
+    const dereferencedGroup = group.get();
+    const dereferencedKind = kind.get();
+
+    if (dereferencedGroup && dereferencedKind) {
+      return `${dereferencedGroup}/${dereferencedKind}`;
     }
 
     return browseCatalogTab;
@@ -115,11 +127,11 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
   }
 
   addToHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().addToHotbar(entity);
+    this.props.hotbarStore.addToHotbar(entity);
   }
 
   removeFromHotbar(entity: CatalogEntity): void {
-    HotbarStore.getInstance().removeFromHotbar(entity.getId());
+    this.props.hotbarStore.removeFromHotbar(entity.getId());
   }
 
   onDetails = (entity: CatalogEntity) => {
@@ -163,9 +175,10 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
     });
 
     if (activeCategory) {
-      navigate(catalogURL({ params: { group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
+
+      this.props.navigateToCatalog({ group: activeCategory.spec.group, kind: activeCategory.spec.names.kind });
     } else {
-      navigate(catalogURL({ params: { group: browseCatalogTab }}));
+      this.props.navigateToCatalog({ group: browseCatalogTab });
     }
   });
 
@@ -205,7 +218,7 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
   };
 
   renderName(entity: CatalogEntity) {
-    const isItemInHotbar = HotbarStore.getInstance().isAddedToActive(entity);
+    const isItemInHotbar = this.props.hotbarStore.isAddedToActive(entity);
 
     return (
       <>
@@ -321,13 +334,15 @@ class NonInjectedCatalog extends React.Component<CatalogProps & Dependencies> {
   }
 }
 
-export const Catalog = withInjectables<Dependencies, CatalogProps>( NonInjectedCatalog, {
-  getProps: (di, props) => ({
+export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
+  getProps: (di) => ({
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
     customCategoryViews: di.inject(customCategoryViewsInjectable),
+    routeParameters: di.inject(catalogRouteParametersInjectable),
+    navigateToCatalog: di.inject(navigateToCatalogInjectable),
     emitEvent: di.inject(appEventBusInjectable).emit,
-    ...props,
+    hotbarStore: di.inject(hotbarStoreInjectable),
   }),
 });

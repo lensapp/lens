@@ -6,9 +6,8 @@
 import "./nodes.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import { cssNames, interval } from "../../utils";
-import { TabLayout } from "../layout/tab-layout";
+import { TabLayout } from "../layout/tab-layout-2";
 import { nodesStore } from "./nodes.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { formatNodeTaint, getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
@@ -20,7 +19,6 @@ import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
 import { eventStore } from "../+events/event.store";
-import type { NodesRouteParams } from "../../../common/routes";
 import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
 import { KubeObjectAge } from "../kube-object/age";
@@ -38,9 +36,6 @@ enum columnId {
   status = "status",
 }
 
-export interface NodesRouteProps extends RouteComponentProps<NodesRouteParams> {
-}
-
 type MetricsTooltipFormatter = (metrics: [number, number]) => string;
 
 interface UsageArgs {
@@ -51,11 +46,11 @@ interface UsageArgs {
 }
 
 @observer
-export class NodesRoute extends React.Component<NodesRouteProps> {
+export class NodesRoute extends React.Component {
   @observable.ref metrics: Partial<INodeMetrics> = {};
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
-  constructor(props: NodesRouteProps) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }

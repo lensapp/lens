@@ -83,6 +83,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       }
       <span>Pod</span>
       <Select
+        id="pod-selection-input"
         options={podSelectOptions}
         value={podSelectOptions.find(opt => opt.value === pod)}
         formatOptionLabel={option => option.label}
@@ -93,6 +94,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       />
       <span>Container</span>
       <Select
+        id="container-selector-input"
         options={containerSelectOptions}
         value={{ label: selectedContainer, value: selectedContainer }}
         onChange={onContainerChange}

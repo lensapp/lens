@@ -29,7 +29,7 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
   render() {
     const {
       waiting, label, primary, accent, plain, hidden, active, big,
-      round, outlined, tooltip, light, children, ...btnProps
+      round, outlined, tooltip, light, children, tooltipOverrideDisabled, ...btnProps
     } = this.props;
 
     if (hidden) return null;

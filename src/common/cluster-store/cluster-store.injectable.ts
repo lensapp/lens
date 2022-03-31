@@ -13,6 +13,8 @@ const clusterStoreInjectable = getInjectable({
     ClusterStore.createInstance({
       createCluster: di.inject(createClusterInjectionToken),
     }),
+
+  causesSideEffects: true,
 });
 
 export default clusterStoreInjectable;

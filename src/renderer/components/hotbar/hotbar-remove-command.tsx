@@ -6,7 +6,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarManagerInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
 import { ConfirmDialog } from "../confirm-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
@@ -14,7 +14,7 @@ import type { Hotbar } from "../../../common/hotbar-types";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  hotbarManager: {
+  hotbarStore: {
     hotbars: Hotbar[];
     getById: (id: string) => Hotbar | undefined;
     remove: (hotbar: Hotbar) => void;
@@ -22,14 +22,14 @@ interface Dependencies {
   };
 }
 
-const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarManager }: Dependencies) => {
-  const options = hotbarManager.hotbars.map(hotbar => ({
+const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarStore }: Dependencies) => {
+  const options = hotbarStore.hotbars.map(hotbar => ({
     value: hotbar.id,
-    label: hotbarManager.getDisplayLabel(hotbar),
+    label: hotbarStore.getDisplayLabel(hotbar),
   }));
 
   const onChange = (id: string): void => {
-    const hotbar = hotbarManager.getById(id);
+    const hotbar = hotbarStore.getById(id);
 
     if (!hotbar) {
       return;
@@ -43,7 +43,7 @@ const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarMa
         primary: false,
         accent: true,
       },
-      ok: () => hotbarManager.remove(hotbar),
+      ok: () => hotbarStore.remove(hotbar),
       message: (
         <div className="confirm flex column gaps">
           <p>
@@ -56,6 +56,7 @@ const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarMa
 
   return (
     <Select
+      id="remove-hotbar-input"
       menuPortalTarget={null}
       onChange={(v) => onChange(v.value)}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
@@ -71,7 +72,7 @@ const NonInjectedHotbarRemoveCommand = observer(({ closeCommandOverlay, hotbarMa
 export const HotbarRemoveCommand = withInjectables<Dependencies>(NonInjectedHotbarRemoveCommand, {
   getProps: (di, props) => ({
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    hotbarManager: di.inject(hotbarManagerInjectable),
+    hotbarStore: di.inject(hotbarStoreInjectable),
     ...props,
   }),
 });

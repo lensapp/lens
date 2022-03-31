@@ -8,17 +8,14 @@ import "./namespaces.scss";
 import React from "react";
 import { NamespaceStatus } from "../../../common/k8s-api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
-import { TabLayout } from "../layout/tab-layout";
+import { TabLayout } from "../layout/tab-layout-2";
 import { Badge } from "../badge";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NamespaceStore } from "./namespace-store/namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { NamespacesRouteParams } from "../../../common/routes";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
-import addNamespaceDialogModelInjectable
-  from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
+import addNamespaceDialogModelInjectable from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
@@ -28,15 +25,12 @@ enum columnId {
   status = "status",
 }
 
-export interface NamespacesRouteProps extends RouteComponentProps<NamespacesRouteParams> {
-}
-
 interface Dependencies {
   namespaceStore: NamespaceStore;
   openAddNamespaceDialog: () => void;
 }
 
-export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: Dependencies & NamespacesRouteProps) => (
+export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: Dependencies) => (
   <TabLayout>
     <KubeObjectListLayout
       isConfigurable
@@ -81,10 +75,9 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
 );
 
 
-export const NamespacesRoute = withInjectables<Dependencies, NamespacesRouteProps>(NonInjectedNamespacesRoute, {
-  getProps: (di, props) => ({
+export const NamespacesRoute = withInjectables<Dependencies>(NonInjectedNamespacesRoute, {
+  getProps: (di) => ({
     namespaceStore: di.inject(namespaceStoreInjectable),
     openAddNamespaceDialog: di.inject(addNamespaceDialogModelInjectable).open,
-    ...props,
   }),
 });

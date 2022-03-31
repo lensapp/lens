@@ -4,15 +4,20 @@
  */
 import type { KubeResource } from "../../common/rbac";
 import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { castArray } from "lodash/fp";
+import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
-  const _isAllowedResource = asLegacyGlobalFunctionForExtensionApi(isAllowedResourceInjectable);
-
   const resources = castArray(resource);
 
-  return resources.every(x => _isAllowedResource(x));
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  return resources.every((resourceName: any) => {
+    const _isAllowedResource = di.inject(isAllowedResourceInjectable, resourceName);
+
+    // Note: Legacy isAllowedResource does not advertise reactivity
+    return _isAllowedResource.get();
+  });
 }
 
 export { ResourceStack } from "../../common/k8s/resource-stack";
