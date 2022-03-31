@@ -3,20 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import generalCatalogEntitiesInjectable from "../../common/catalog-entities/general-catalog-entities/general-catalog-entities.injectable";
 import catalogEntityRegistryInjectable from "../catalog/catalog-entity-registry.injectable";
+import { generalCatalogEntityInjectionToken } from "../../common/catalog-entities/general-catalog-entities/general-catalog-entity-injection-token";
+import { computed } from "mobx";
 
 const syncGeneralCatalogEntitiesInjectable = getInjectable({
   id: "sync-general-catalog-entities",
 
   instantiate: (di) => {
-    const generalCatalogEntities = di.inject(generalCatalogEntitiesInjectable);
+    const generalCatalogEntities = di.injectMany(generalCatalogEntityInjectionToken);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
+    // TODO: This shouldn't be reactive at all but catalogEntityRegistry accepts only reactive sources
+    const reactiveGeneralCatalogEntities = computed(() => generalCatalogEntities);
+
     return () => {
-      catalogEntityRegistry.addObservableSource(
+      catalogEntityRegistry.addComputedSource(
         "lens:general",
-        generalCatalogEntities,
+        reactiveGeneralCatalogEntities,
       );
     };
   },
