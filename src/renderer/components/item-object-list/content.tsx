@@ -16,7 +16,7 @@ import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import { Filter, pageFilters } from "./page-filters.store";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";

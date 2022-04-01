@@ -12,7 +12,7 @@ import type { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable 
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 
 export interface BarChartProps extends ChartProps {

@@ -16,7 +16,7 @@ import { eventStore } from "../+events/event.store";
 import { boundMethod, cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectAge } from "../kube-object/age";

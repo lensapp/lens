@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import ChartJS, { ChartOptions } from "chart.js";
 import { Chart, ChartProps } from "./chart";
 import { cssNames } from "../../utils";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 
 export interface PieChartProps extends ChartProps {
 }

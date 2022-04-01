@@ -11,7 +11,7 @@ import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { mapValues } from "lodash";
 
 type IContext = IResourceMetricsValue<Node, { metrics: IClusterMetrics }>;

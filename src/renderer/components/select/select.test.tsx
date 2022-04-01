@@ -6,7 +6,7 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { Select } from "./select";
 import { UserStore } from "../../../common/user-store";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { DiRender, renderFor } from "../test-utils/renderFor";

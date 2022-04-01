@@ -11,7 +11,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
-import { ThemeStore } from "../../../theme.store";
+import { ThemeStore } from "../../../themes/store";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";

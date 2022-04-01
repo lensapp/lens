@@ -9,7 +9,7 @@ import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
-import { ThemeStore } from "../../../theme.store";
+import { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
 import { once } from "lodash";

@@ -22,23 +22,21 @@ jest.mock("electron", () => ({
 }));
 
 import { UserStore } from "../user-store";
-import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
-import { stdout, stderr } from "process";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
-import { defaultTheme } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable
   from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable
   from "../get-configuration-file-model/app-version/app-version.injectable";
+import { defaultColorThemeConf, defaultTerminalThemeConf } from "../user-store/preferences-helpers";
 
-console = new Console(stdout, stderr);
+console.log("This is a reminder to get rid of mockFs because it breaks console.log");
 
 describe("user store tests", () => {
   let userStore: UserStore;
@@ -76,20 +74,16 @@ describe("user store tests", () => {
       expect(userStore.lastSeenAppVersion).toBe("1.2.3");
     });
 
-    it("allows setting and getting preferences", () => {
+    it("allows setting preferences", () => {
       userStore.httpsProxy = "abcd://defg";
 
       expect(userStore.httpsProxy).toBe("abcd://defg");
-      expect(userStore.colorTheme).toBe(defaultTheme);
-
-      userStore.colorTheme = "light";
-      expect(userStore.colorTheme).toBe("light");
     });
 
     it("correctly resets theme to default value", async () => {
-      userStore.colorTheme = "some other theme";
-      userStore.resetTheme();
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      (userStore.colorTheme as any) = "some other theme";
+      userStore.resetThemeSettings();
+      expect(userStore.colorTheme).toEqual(defaultColorThemeConf);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {
@@ -107,7 +101,6 @@ describe("user store tests", () => {
           "config.json": JSON.stringify({
             user: { username: "foobar" },
             preferences: { colorTheme: "light" },
-            lastSeenAppVersion: "1.2.3",
           }),
           "lens-cluster-store.json": JSON.stringify({
             clusters: [
@@ -137,9 +130,148 @@ describe("user store tests", () => {
       expect(userStore.lastSeenAppVersion).toBe("0.0.0");
     });
 
-    it.only("skips clusters for adding to kube-sync with files under extension_data/", () => {
+    it("skips clusters for adding to kube-sync with files under extension_data/", () => {
       expect(userStore.syncKubeconfigEntries.has("some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
       expect(userStore.syncKubeconfigEntries.has("some/other/path")).toBe(true);
+    });
+  });
+
+  describe("5.5.0-alpha.1 migrations", () => {
+    it("given the invalid colorTheme setting of 'light', this migration resets value to default", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { colorTheme: "light" },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.colorTheme).toEqual(defaultColorThemeConf);
+    });
+    it("given the invalid colorTheme setting of false, this migration resets value to default", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { colorTheme: false },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.colorTheme).toEqual(defaultColorThemeConf);
+    });
+
+    it("given the colorTheme setting of 'system', this migration sets to tracking the system color theme type", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { colorTheme: "system" },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.colorTheme).toEqual({
+        followSystemThemeType: true,
+        name: "lens",
+      });
+    });
+
+    it("given the colorTheme setting of 'lens-light', this migration sets to the new format without loosing data", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { colorTheme: "lens-light" },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.colorTheme).toEqual({
+        followSystemThemeType: false,
+        name: "lens",
+        type: "light",
+      });
+    });
+
+    it("given the terminalTheme setting of '', this migration sets to the new format of following lens theme", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { terminalTheme: "" },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.terminalTheme).toEqual(defaultTerminalThemeConf);
+    });
+
+    it("given the invalid terminalTheme setting of 10, this migration sets to default", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { terminalTheme: 10 },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.terminalTheme).toEqual(defaultTerminalThemeConf);
+    });
+
+    it("given the valid terminalTheme setting of 'lens-dark', this migration sets to the new format", () => {
+      mockFs({
+        "some-directory-for-user-data": {
+          "lens-user-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.5.0-alpha.0",
+              },
+            },
+            preferences: { terminalTheme: "lens-dark" },
+          }),
+        },
+      });
+
+      userStore = di.inject(userStoreInjectable);
+      expect(userStore.terminalTheme).toEqual({
+        isGlobalTheme: false,
+        isGlobalThemeType: false,
+        name: "lens",
+        type: "dark",
+      });
     });
   });
 });

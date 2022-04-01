@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { ThemeStore } from "./theme.store";
+import { ThemeStore } from "./store";
 
 const themeStoreInjectable = getInjectable({
   id: "theme-store",

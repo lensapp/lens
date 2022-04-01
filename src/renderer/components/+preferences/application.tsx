@@ -7,7 +7,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { SubTitle } from "../layout/sub-title";
 import { Select, SelectOption } from "../select";
-import type { ThemeStore } from "../../theme.store";
+import { themeTypeOptions } from "../../themes/store";
 import type { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { Switch } from "../switch";
@@ -21,7 +21,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import { Preferences } from "./preferences";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import themeStoreInjectable from "../../theme-store.injectable";
 
 const timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
   label: zone,
@@ -35,10 +34,9 @@ const updateChannelOptions: SelectOption<string>[] = Array.from(
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
   userStore: UserStore;
-  themeStore: ThemeStore;
 }
 
-const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, userStore, themeStore }) => {
+const NonInjectedApplication = observer(({ appPreferenceItems, userStore }: Dependencies) => {
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
   const extensionSettings = appPreferenceItems.get().filter((preference) => preference.showInPreferencesTab === "application");
 
@@ -48,16 +46,27 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <h2 data-testid="application-header">Application</h2>
         <section id="appearance">
           <SubTitle title="Theme" />
-          <Select
-            id="theme-input"
-            options={[
-              { label: "Sync with computer", value: "system" },
-              ...themeStore.themeOptions,
-            ]}
-            value={userStore.colorTheme}
-            onChange={({ value }) => userStore.colorTheme = value}
-            themeName="lens"
-          />
+          <Switch
+            checked={userStore.colorTheme.followSystemThemeType}
+            onChange={() => userStore.colorTheme.followSystemThemeType = !userStore.colorTheme.followSystemThemeType}
+          >
+            Sync theme type with Operating System settings
+          </Switch>
+
+          {!userStore.colorTheme.followSystemThemeType && (
+            <>
+              <p className="mt-4 mb-5 leading-relaxed">
+                Choose whether you want dark or light theming for Lens.
+              </p>
+              <Select
+                id="theme-type-input"
+                options={themeTypeOptions}
+                value={userStore.colorTheme.type}
+                onChange={({ value }) => userStore.colorTheme.type = value}
+                themeName="lens"
+              />
+            </>
+          )}
         </section>
 
         <hr />
@@ -135,16 +144,11 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
       </section>
     </Preferences>
   );
-};
+});
 
-export const Application = withInjectables<Dependencies>(
-  observer(NonInjectedApplication),
-
-  {
-    getProps: (di) => ({
-      appPreferenceItems: di.inject(appPreferencesInjectable),
-      userStore: di.inject(userStoreInjectable),
-      themeStore: di.inject(themeStoreInjectable),
-    }),
-  },
-);
+export const Application = withInjectables<Dependencies>(NonInjectedApplication, {
+  getProps: (di) => ({
+    appPreferenceItems: di.inject(appPreferencesInjectable),
+    userStore: di.inject(userStoreInjectable),
+  }),
+});

@@ -14,7 +14,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { ChartData, PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits, cssNames } from "../../utils";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";

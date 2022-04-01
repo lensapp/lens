@@ -9,7 +9,7 @@ import * as selectEvent from "react-select-event";
 import { Pod } from "../../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../resource-selector";
 import { dockerPod, deploymentPod1, deploymentPod2 } from "./pod.mock";
-import { ThemeStore } from "../../../../theme.store";
+import { ThemeStore } from "../../../../themes/store";
 import { UserStore } from "../../../../../common/user-store";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";

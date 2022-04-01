@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+
 /**
  * Narrows `val` to include the property `key` (if true is returned)
  * @param val The object to be tested
@@ -71,6 +72,20 @@ export function isTypedArray<T>(val: unknown, isEntry: (entry: unknown) => entry
  */
 export function isString(val: unknown): val is string {
   return typeof val === "string";
+}
+
+/**
+ * A function to validate (into the typesystem) that a certain string ends with a specific suffix.
+ */
+export function endsWith<T extends string>(val: string, suffix: T): val is `${string}${T}` {
+  return val.endsWith(suffix);
+}
+
+/**
+ * A predicate for determining (in the type system) that a given string has a certain prefix
+ */
+export function startsWith<T extends string>(val: string, prefix: T): val is `${T}${string}`{
+  return val.startsWith(prefix) as never;
 }
 
 /**

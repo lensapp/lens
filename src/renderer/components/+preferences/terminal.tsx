@@ -10,20 +10,18 @@ import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
 import { Switch } from "../switch";
 import { Select } from "../select";
-import type { ThemeStore } from "../../theme.store";
+import { themeTypeOptions } from "../../themes/store";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import themeStoreInjectable from "../../theme-store.injectable";
 import defaultShellInjectable from "./default-shell.injectable";
 
 interface Dependencies {
   userStore: UserStore;
-  themeStore: ThemeStore;
   defaultShell: string;
 }
 
-const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: Dependencies) => {
+const NonInjectedTerminal = observer(({ userStore, defaultShell }: Dependencies) => {
   return (
     <Preferences data-testid="terminal-preferences-page">
       <section>
@@ -51,17 +49,27 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
 
         <section id="terminalTheme">
           <SubTitle title="Terminal theme" />
-          <Select
-            id="terminal-theme-input"
-            themeName="lens"
-            options={[
-              { label: "Match theme", value: "" },
-              ...themeStore.themeOptions,
-            ]}
-            value={userStore.terminalTheme}
-            onChange={({ value }) => userStore.terminalTheme = value}
-          />
+          <Switch
+            checked={userStore.terminalTheme.isGlobalThemeType}
+            onChange={() => userStore.terminalTheme.isGlobalThemeType = !userStore.terminalTheme.isGlobalThemeType}
+          >
+            Sync terminal theme type with that of Lens
+          </Switch>
+
+          {
+            !userStore.terminalTheme.isGlobalThemeType && (
+              <Select
+                id="terminal-theme-input"
+                themeName="lens"
+                options={themeTypeOptions}
+                value={userStore.terminalTheme.type}
+                onChange={({ value }) => userStore.terminalTheme.type = value}
+              />
+            )
+          }
         </section>
+
+        {/* Once other themes are supported add an option to sync those as well */}
 
         <section>
           <SubTitle title="Font size" />
@@ -88,15 +96,10 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
   );
 });
 
-export const Terminal = withInjectables<Dependencies>(
-  NonInjectedTerminal,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-      themeStore: di.inject(themeStoreInjectable),
-      defaultShell: di.inject(defaultShellInjectable),
-    }),
-  },
-);
+export const Terminal = withInjectables<Dependencies>(NonInjectedTerminal, {
+  getProps: (di) => ({
+    userStore: di.inject(userStoreInjectable),
+    defaultShell: di.inject(defaultShellInjectable),
+  }),
+});
 

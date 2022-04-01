@@ -15,7 +15,7 @@ import ReactSelectCreatable from "react-select/creatable";
 import type { ActionMeta, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
 import type { CreatableProps } from "react-select/creatable";
 
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 import { boundMethod, cssNames } from "../../utils";
 
 const { Menu } = components;

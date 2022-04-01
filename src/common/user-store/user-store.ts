@@ -12,7 +12,7 @@ import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../app-event-bus/event-bus";
 import { getOrInsertSet, toggle, toJS, entries, fromEntries } from "../../renderer/utils";
-import { DESCRIPTORS } from "./preferences-helpers";
+import { ColorThemeConf, DESCRIPTORS, TerminalThemeConf } from "./preferences-helpers";
 import type { EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel, TerminalConfig } from "./preferences-helpers";
 import logger from "../../main/logger";
 
@@ -49,8 +49,8 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable allowTelemetry: boolean;
   @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
-  @observable colorTheme: string;
-  @observable terminalTheme: string;
+  @observable colorTheme: ColorThemeConf;
+  @observable terminalTheme: TerminalThemeConf;
   @observable localeTimezone: string;
   @observable downloadMirror: string;
   @observable httpsProxy?: string;
@@ -142,8 +142,9 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  resetTheme() {
+  resetThemeSettings() {
     this.colorTheme = DESCRIPTORS.colorTheme.fromStore(undefined);
+    this.terminalTheme = DESCRIPTORS.terminalTheme.fromStore(undefined);
   }
 
   @action

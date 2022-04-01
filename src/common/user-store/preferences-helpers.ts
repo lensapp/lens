@@ -10,7 +10,9 @@ import { getAppVersion } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
+import { defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily, defaultThemeName, defaultThemeType } from "../vars";
+import type { ThemeType } from "../../renderer/themes/types";
+import { equals } from "lodash/fp";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -43,7 +45,7 @@ export const defaultEditorConfig: EditorConfiguration = {
 };
 interface PreferenceDescription<T, R = T> {
   fromStore(val: T | undefined): R;
-  toStore(val: R): T | undefined;
+  toStore(val: R | undefined): T | undefined;
 }
 
 const httpsProxy: PreferenceDescription<string | undefined> = {
@@ -64,12 +66,28 @@ const shell: PreferenceDescription<string | undefined> = {
   },
 };
 
-const colorTheme: PreferenceDescription<string> = {
+export type ColorThemeConf = {
+  name: string;
+} & ({
+  followSystemThemeType: true;
+  type?: undefined;
+} | {
+  followSystemThemeType: false;
+  type: ThemeType;
+});
+
+export const defaultColorThemeConf: ColorThemeConf = {
+  name: defaultThemeName,
+  followSystemThemeType: false,
+  type: defaultThemeType,
+};
+
+const colorTheme: PreferenceDescription<ColorThemeConf> = {
   fromStore(val) {
-    return val || defaultTheme;
+    return val || defaultColorThemeConf;
   },
   toStore(val) {
-    if (!val || val === defaultTheme) {
+    if (!val || equals(val, defaultColorThemeConf)) {
       return undefined;
     }
 
@@ -77,12 +95,35 @@ const colorTheme: PreferenceDescription<string> = {
   },
 };
 
-const terminalTheme: PreferenceDescription<string | undefined> = {
+export type TerminalThemeConf = ({
+  isGlobalTheme: true;
+  name?: undefined;
+} | {
+  isGlobalTheme: false;
+  name: string;
+}) & ({
+  isGlobalThemeType: true;
+  type?: undefined;
+} | {
+  isGlobalThemeType: false;
+  type: ThemeType;
+});
+
+export const defaultTerminalThemeConf: TerminalThemeConf = {
+  isGlobalTheme: true,
+  isGlobalThemeType: true,
+};
+
+const terminalTheme: PreferenceDescription<TerminalThemeConf> = {
   fromStore(val) {
-    return val || "";
+    return val || defaultTerminalThemeConf;
   },
   toStore(val) {
-    return val || undefined;
+    if (!val || equals(val, defaultTerminalThemeConf)) {
+      return undefined;
+    }
+
+    return defaultTerminalThemeConf;
   },
 };
 

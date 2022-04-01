@@ -7,6 +7,7 @@
 import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
+import type { ThemeType } from "../renderer/themes/types";
 import { defineGlobal } from "./utils/defineGlobal";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
@@ -26,7 +27,10 @@ export const isIntegrationTesting = process.argv.includes(integrationTestingArg)
 export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
 export const publicPath = "/build/" as string;
-export const defaultTheme = "lens-dark" as string;
+
+export const defaultThemeName = "lens";
+export const defaultThemeType: ThemeType = "dark";
+
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";

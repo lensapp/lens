@@ -10,7 +10,7 @@ import fse from "fs-extra";
 import { DockTabs } from "../dock-tabs";
 import { DockStore, DockTab, TabKind } from "../dock/store";
 import { noop } from "../../../utils";
-import { ThemeStore } from "../../../theme.store";
+import { ThemeStore } from "../../../themes/store";
 import { UserStore } from "../../../../common/user-store";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import dockStoreInjectable from "../dock/store.injectable";

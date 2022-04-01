@@ -10,7 +10,7 @@ import { BarChart, ChartDataSets, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
-import { ThemeStore } from "../../theme.store";
+import { ThemeStore } from "../../themes/store";
 
 type IContext = IResourceMetricsValue<PersistentVolumeClaim, { metrics: IPvcMetrics }>;
 

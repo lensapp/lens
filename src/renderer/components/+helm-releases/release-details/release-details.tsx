@@ -20,7 +20,7 @@ import { Spinner } from "../../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { Button } from "../../button";
 import { Notifications } from "../../notifications";
-import { ThemeStore } from "../../../theme.store";
+import { ThemeStore } from "../../../themes/store";
 import { apiManager } from "../../../../common/k8s-api/api-manager";
 import { SubTitle } from "../../layout/sub-title";
 import { getDetailsUrl } from "../../kube-detail-params";
