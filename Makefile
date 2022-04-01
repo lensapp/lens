@@ -29,9 +29,12 @@ compile-dev: node_modules
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev: binaries/client build-extensions
+dev: binaries/client build-extensions src/renderer/themes/theme-vars.css
 	rm -rf static/build/
 	yarn dev
+
+src/renderer/themes/theme-vars.css: node_modules src/renderer/themes/lens-dark.ts build/generate-theme-vars-file.ts
+	yarn run ts-node build/generate-theme-vars-file
 
 .PHONY: lint
 lint: node_modules
@@ -50,7 +53,7 @@ integration: build
 	yarn integration
 
 .PHONY: build
-build: node_modules binaries/client
+build: node_modules binaries/client src/renderer/themes/theme-vars.css
 	yarn run npm:fix-build-version
 	$(MAKE) build-extensions -B
 	yarn run compile
@@ -81,7 +84,7 @@ test-extensions: $(extension_node_modules)
 .PHONY: copy-extension-themes
 copy-extension-themes:
 	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
-	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
+	cp $(wildcard src/renderer/themes/lens-*.ts) src/extensions/npm/extensions/dist/src/renderer/themes/
 
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
