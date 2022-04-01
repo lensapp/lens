@@ -285,7 +285,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.5.0",
     "@types/byline": "^4.2.33",
-    "@types/chart.js": "^2.9.35",
+    "@types/chart.js": "^2.9.36",
     "@types/cli-progress": "^3.9.2",
     "@types/color": "^3.0.3",
     "@types/crypto-js": "^3.1.47",

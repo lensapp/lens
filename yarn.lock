@@ -1338,10 +1338,10 @@
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.2.tgz#f65d3d6389e01eeb458bd54dc8f52b95a9463bc8"
   integrity sha512-6ckxMjBBD8URvjB6J3NcnuAn5Pkl7t3TizAg+xdlzzQGSPSmBcXf8KoIH0ua/i+tio+ZRUHEXp0HEmvaR4kt0w==
 
-"@types/chart.js@^2.9.35":
-  version "2.9.35"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.35.tgz#10ddee097ab9320f8eabd8a31017fda3644d9218"
-  integrity sha512-MWx/zZlh4wHBbM4Tm4YsZyYGb1/LkTiFLFwX/FXb0EJCvXX2xWTRHwlJ2RAAEXWxLrOdaAWP8vFtJXny+4CpEw==
+"@types/chart.js@^2.9.36":
+  version "2.9.36"
+  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.36.tgz#8bdd3a625edaeef10367bc8a9e3239f077332de7"
+  integrity sha512-lkG9C6O5TqKyW3JDWMfCedVUATH4AeQCo8Q/vflT/0VDj6KMcba+jr1wLe+IXQ+F9mVWn80DVsDnt6cPuGutIg==
   dependencies:
     moment "^2.10.2"
 
