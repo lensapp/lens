@@ -12,8 +12,18 @@ import React from "react";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
 import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
 import type { HotbarStore } from "../../../common/hotbar-store";
+import { observer } from "mobx-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
 
-const renderEntityName = (hotbarStore: HotbarStore) => (entity: CatalogEntity) => {
+interface Dependencies {
+  hotbarStore: HotbarStore;
+}
+
+interface EntityNameProps {
+  entity: CatalogEntity;
+}
+
+const NonInjectedEntityName = observer(({ entity, hotbarStore }: Dependencies & EntityNameProps) => {
   const isItemInHotbar = hotbarStore.isAddedToActive(entity);
   const onClick = prevDefault(
     isItemInHotbar
@@ -44,15 +54,26 @@ const renderEntityName = (hotbarStore: HotbarStore) => (entity: CatalogEntity) =
       />
     </>
   );
-};
+});
+
+const EntityName = withInjectables<Dependencies, EntityNameProps>(
+  NonInjectedEntityName,
+
+  {
+    getProps: (di, props) => ({
+      hotbarStore: di.inject(hotbarStoreInjectable),
+      ...props,
+    }),
+  },
+);
 
 
 const nameCategoryColumnInjectable = getInjectable({
   id: "name-category-column",
-  instantiate: (di): RegisteredAdditionalCategoryColumn => ({
+  instantiate: (): RegisteredAdditionalCategoryColumn => ({
     id: "name",
     priority: 0,
-    renderCell: renderEntityName(di.inject(hotbarStoreInjectable)),
+    renderCell: (entity) => <EntityName entity={entity}/>,
     titleProps: {
       title: "Name",
       className: styles.entityName,
