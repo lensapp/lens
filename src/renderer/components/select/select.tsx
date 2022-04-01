@@ -31,7 +31,7 @@ export interface SelectOption<T = any> {
 }
 
 export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
-  id: string;
+  id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   value?: T;
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
@@ -122,7 +122,7 @@ export class Select extends React.Component<SelectProps> {
 
     const selectProps: Partial<SelectProps> = {
       ...props,
-      inputId,
+      ...(inputId ? { inputId }: {}),
       styles: this.styles,
       value: autoConvertOptions ? this.selectedOption : value,
       options: autoConvertOptions ? this.options : options,
