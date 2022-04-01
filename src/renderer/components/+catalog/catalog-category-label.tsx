@@ -3,19 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import type { CatalogCategory } from "../../../common/catalog/catalog-entity";
 
 interface CatalogCategoryLabelProps {
-  category: CatalogCategory;
+  label: string | React.ReactNode;
+  badge?: React.ReactNode;
 }
 
 /**
  * Display label for Catalog Category for the Catalog menu
  */
-export const CatalogCategoryLabel = ({ category }: CatalogCategoryLabelProps) =>
+export const CatalogCategoryLabel = ({ label, badge }: CatalogCategoryLabelProps) =>
   (
     <div className="flex">
-      <div>{category.metadata.name}</div>
-      <div className="flex items-center">{category.getBadge()}</div>
+      <div>{label}</div>
+      {badge ? (<div className="flex items-center">{badge}</div>) : null}
     </div>
   );
