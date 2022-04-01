@@ -4,7 +4,7 @@
  */
 
 import assert from "assert";
-import { iter } from ".";
+import * as iter from "./iter";
 
 // Helper to convert memory from units Ki, Mi, Gi, Ti, Pi to bytes and vise versa
 
