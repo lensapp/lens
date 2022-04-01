@@ -55,6 +55,13 @@ export class ClusterStatus extends React.Component<Props> {
     ]);
   }
 
+  componentDidUpdate(prevProps: Readonly<ClusterStatusProps>): void {
+    if (prevProps.cluster.id !== this.props.cluster.id) {
+      this.isReconnecting = false;
+      this.authOutput = [];
+    }
+  }
+
   reconnect = async () => {
     this.authOutput = [];
     this.isReconnecting = true;
