@@ -26,10 +26,10 @@ describe("Table tests", () => {
       expect(i).toStrictEqual([1, 2, 4, 3]);
     });
 
-    it("should sort numerically asc (by defaul) and not touch the original list", () => {
+    it("should sort numerically asc (by default) and not touch the original list", () => {
       const i = [1, 2, 4, 3];
 
-      expect(getSorted(i, v => v, "foobar")).toStrictEqual([1, 2, 3, 4]);
+      expect(getSorted(i, v => v)).toStrictEqual([1, 2, 3, 4]);
       expect(i).toStrictEqual([1, 2, 4, 3]);
     });
 
