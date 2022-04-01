@@ -130,7 +130,7 @@ const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependenci
 describe("<LogResourceSelector />", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
@@ -140,8 +140,6 @@ describe("<LogResourceSelector />", () => {
     di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);
-
-    await di.runSetups();
 
     mockFs({
       "tmp": {},

@@ -13,7 +13,7 @@ import { joinPathsFake } from "../../../common/test-utils/join-paths-fake";
 describe("get-electron-app-path", () => {
   let getElectronAppPath: (name: string) => string | null;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: false });
 
     const appStub = {
@@ -34,8 +34,6 @@ describe("get-electron-app-path", () => {
     di.override(electronAppInjectable, () => appStub);
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(joinPathsInjectable, () => joinPathsFake);
-
-    await di.runSetups();
 
     getElectronAppPath = di.inject(getElectronAppPathInjectable);
   });

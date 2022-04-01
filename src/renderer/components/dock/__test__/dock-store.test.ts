@@ -28,7 +28,6 @@ describe("DockStore", () => {
       directoryForUserDataInjectable,
       () => "some-test-suite-specific-directory-for-user-data",
     );
-    await di.runSetups();
 
     dockStore = di.inject(dockStoreInjectable);
 

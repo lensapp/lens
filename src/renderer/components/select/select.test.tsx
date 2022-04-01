@@ -30,13 +30,12 @@ describe("<Select />", () => {
   let di: DiContainer;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
 
     mockFs();
 
-    await di.runSetups();
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
 

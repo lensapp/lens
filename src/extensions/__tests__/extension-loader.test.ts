@@ -109,7 +109,7 @@ describe("ExtensionLoader", () => {
   let extensionLoader: ExtensionLoader;
   let updateExtensionStateMock: jest.Mock;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const dis = getDisForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
@@ -117,8 +117,6 @@ describe("ExtensionLoader", () => {
     updateExtensionStateMock = jest.fn();
 
     dis.mainDi.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
-
-    await dis.runSetups();
 
     extensionLoader = dis.mainDi.inject(extensionLoaderInjectable);
   });

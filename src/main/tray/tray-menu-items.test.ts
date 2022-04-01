@@ -19,8 +19,6 @@ describe("tray-menu-items", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    await di.runSetups();
-
     extensionsStub = new ObservableMap();
 
     di.override(

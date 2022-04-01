@@ -19,12 +19,10 @@ jest.mock("../../+cluster-roles/store");
 describe("RoleBindingDialog tests", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    await di.runSetups();
 
     render = renderFor(di);
 

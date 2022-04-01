@@ -88,15 +88,13 @@ describe("<Catalog />", () => {
   let emitEvent: (event: AppEvent) => void;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-
-    await di.runSetups();
 
     mockFs();
 
