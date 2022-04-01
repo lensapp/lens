@@ -316,14 +316,6 @@ export class ExtensionLoader {
               extension,
             );
 
-            const installationCount = (this.dependencies.extensionInstallationCounter.get(instance.sanitizedExtensionId) | 0) + 1;
-
-            this.dependencies.extensionInstallationCounter.set(instance.sanitizedExtensionId, installationCount);
-
-            this.dependencies.extensionRegistrators.forEach((register) =>
-              register(instance, installationCount),
-            );
-
             this.instances.set(extId, instance);
 
             return {
@@ -351,6 +343,16 @@ export class ExtensionLoader {
         }),
       ),
     );
+
+    extensions.forEach(({ instance }) => {
+      const installationCount = (this.dependencies.extensionInstallationCounter.get(instance.sanitizedExtensionId) | 0) + 1;
+
+      this.dependencies.extensionInstallationCounter.set(instance.sanitizedExtensionId, installationCount);
+
+      this.dependencies.extensionRegistrators.forEach((register) =>
+        register(instance, installationCount),
+      );
+    });
 
     // Return ExtensionLoading[]
     return extensions.map(extension => {
