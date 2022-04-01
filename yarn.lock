@@ -4929,10 +4929,10 @@ electron-window-state@^5.0.3:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@^14.2.7:
-  version "14.2.7"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.7.tgz#cd291e0bcfddab651967728adc66ab90dd8ad53a"
-  integrity sha512-JYK2DviM9l0UDR6PgIKg9w/r7klty2u1+a3hqWIyXi0f3BSFpcswcSpY6kThrsFdSxeeXO9m4sXjWExDl/YquQ==
+electron@^14.2.9:
+  version "14.2.9"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.9.tgz#9e1e95643ec3847592a186e8115d1ddb2e4921ee"
+  integrity sha512-7LdJFmqVzO9NLKO0hwOwPA6Kv4GSybGMcej8f2q7fVT4O8mIfL9oo/v4axVjVWm0+58ROQtHv8hYnnAs3ygG0Q==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
