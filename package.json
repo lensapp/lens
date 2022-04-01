@@ -217,7 +217,6 @@
     "chokidar": "^3.5.3",
     "conf": "^7.1.2",
     "crypto-js": "^4.1.1",
-    "data-urls": "^3.0.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-updater": "^4.6.5",
     "electron-window-state": "^5.0.3",
