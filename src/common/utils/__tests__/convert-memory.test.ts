@@ -26,6 +26,10 @@ describe("bytesToUnits", () => {
     expect(bytesToUnits(NaN)).toBe("N/A");
   });
 
+  it("given a number within the magnitude of 0..124, format with B", () => {
+    expect(bytesToUnits(100)).toBe("100.0B");
+  });
+
   it("given a number within the magnitude of 1024..1024^2, format with KiB", () => {
     expect(bytesToUnits(1024)).toBe("1.0KiB");
     expect(bytesToUnits(2048)).toBe("2.0KiB");
@@ -78,8 +82,8 @@ describe("bytesToUnits -> unitsToBytes", () => {
     expect(unitsToBytes(bytesToUnits(1024**2 + 3, { precision: 6 }))).toBe(1024**2 + 3);
     expect(unitsToBytes(bytesToUnits(1024**3 + 4, { precision: 9 }))).toBe(1024**3 + 4);
     expect(unitsToBytes(bytesToUnits(1024**4 + 5, { precision: 12 }))).toBe(1024**4 + 5);
-    expect(unitsToBytes(bytesToUnits(1024**5 + 6, { precision: 15 }))).toBe(1024**5 + 6);
-    expect(unitsToBytes(bytesToUnits(1024**6 + 7, { precision: 18 }))).toBe(1024**6 + 7);
+    expect(unitsToBytes(bytesToUnits(1024**5 + 6, { precision: 16 }))).toBe(1024**5 + 6);
+    expect(unitsToBytes(bytesToUnits(1024**6 + 7, { precision: 20 }))).toBe(1024**6 + 7);
   });
 
   it("given an invalid input, round trips to NaN", () => {
