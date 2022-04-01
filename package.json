@@ -209,7 +209,6 @@
     "@sentry/electron": "^3.0.6",
     "@sentry/integrations": "^6.19.3",
     "@types/circular-dependency-plugin": "5.0.5",
-    "@types/data-urls": "^2.0.1",
     "abort-controller": "^3.0.0",
     "auto-bind": "^4.0.0",
     "await-lock": "^2.1.0",
