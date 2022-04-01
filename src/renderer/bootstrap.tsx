@@ -21,7 +21,7 @@ import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
 import { WeblinkStore } from "../common/weblink-store";
-import { SentryInit } from "../common/sentry";
+import { initializeSentryReporting } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
@@ -41,12 +41,8 @@ import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import { bindEvents } from "./navigation/events";
-import deleteClusterDialogModelInjectable
-  from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
-
-if (process.isMainFrame) {
-  SentryInit();
-}
+import deleteClusterDialogModelInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
+import { init } from "@sentry/electron/renderer";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -63,6 +59,10 @@ async function attachChromeDebugger() {
 }
 
 export async function bootstrap(di: DiContainer) {
+  if (process.isMainFrame) {
+    initializeSentryReporting(init);
+  }
+
   await di.runSetups();
 
   // TODO: Consolidate import time side-effect to setup time
