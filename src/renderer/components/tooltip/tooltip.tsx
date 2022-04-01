@@ -54,11 +54,16 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable.ref elem: HTMLElement;
   @observable activePosition: TooltipPosition;
+  @observable isDomNodeRendered = false;
   @observable isVisible = false;
 
   constructor(props: TooltipProps) {
     super(props);
     makeObservable(this);
+  }
+
+  get visible() {
+    return this.isVisible || this.props.visible;
   }
 
   get targetElem(): HTMLElement {
@@ -80,6 +85,10 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   componentDidUpdate() {
     this.refreshPosition();
+
+    // this.isVisible should be updated after Tooltip DOM node rendered
+    // to show opening animation by adding classname
+    this.isVisible = this.isDomNodeRendered;
   }
 
   componentWillUnmount() {
@@ -89,19 +98,22 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @boundMethod
   protected onEnterTarget() {
-    this.isVisible = true;
-    this.refreshPosition();
+    this.isDomNodeRendered = true;
   }
 
   @boundMethod
   protected onLeaveTarget() {
-    this.isVisible = false;
+    this.isDomNodeRendered = false;
   }
 
   @boundMethod
   refreshPosition() {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
+
+    if (!elem) {
+      return;
+    }
 
     let positions = new Set<TooltipPosition>([
       TooltipPosition.RIGHT,
@@ -150,6 +162,10 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   protected setPosition(pos: { left: number; top: number }) {
+    if (!this.elem) {
+      return;
+    }
+
     const elemStyle = this.elem.style;
 
     elemStyle.left = `${pos.left}px`;
@@ -214,16 +230,20 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    const { style, formatters, usePortal, children, visible } = this.props;
+    const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      visible: visible ?? this.isVisible,
+      visible: this.visible,
       formatter: !!formatters,
     });
     const tooltip = (
-      <div className={className} style={style} ref={this.bindRef}>
+      <div className={className} style={style} ref={this.bindRef} role="tooltip">
         {children}
       </div>
     );
+
+    if (!this.isDomNodeRendered) {
+      return null;
+    }
 
     if (usePortal) {
       return createPortal(tooltip, document.body);
