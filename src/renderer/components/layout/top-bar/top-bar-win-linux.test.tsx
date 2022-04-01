@@ -7,41 +7,31 @@ import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "./top-bar";
-import * as vars from "../../../../common/vars";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { DiRender, renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc";
-
-const mockConfig = vars as { isWindows: boolean; isLinux: boolean };
+import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
+import isMacInjectable from "../../../../common/vars/is-mac.injectable";
+import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 jest.mock("../../../../common/ipc");
 jest.mock("../../../ipc");
 
-jest.mock("../../../../common/vars", () => {
-  const { SemVer } = require("semver");
-
-  return {
-    ...jest.requireActual<{}>("../../../../common/vars"),
-    __esModule: true,
-    isWindows: null,
-    isLinux: null,
-    appSemVer: new SemVer("1.0.0"),
-  };
-});
-
 describe("<TopBar/> in Windows and Linux", () => {
   let render: DiRender;
+  let di: DiContainer;
 
-  beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(() => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs();
+    di.override(isMacInjectable, () => false);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    await di.runSetups();
+    mockFs();
 
     render = renderFor(di);
   });
@@ -51,8 +41,7 @@ describe("<TopBar/> in Windows and Linux", () => {
   });
 
   it("shows window controls on Windows", () => {
-    mockConfig.isWindows = true;
-    mockConfig.isLinux = false;
+    di.override(isWindowsInjectable, () => true);
 
     const { getByTestId } = render(<TopBar />);
 
@@ -63,8 +52,7 @@ describe("<TopBar/> in Windows and Linux", () => {
   });
 
   it("shows window controls on Linux", () => {
-    mockConfig.isWindows = false;
-    mockConfig.isLinux = true;
+    di.override(isLinuxInjectable, () => true);
 
     const { getByTestId } = render(<TopBar />);
 
@@ -75,7 +63,7 @@ describe("<TopBar/> in Windows and Linux", () => {
   });
 
   it("triggers ipc events on click", () => {
-    mockConfig.isWindows = true;
+    di.override(isWindowsInjectable, () => true);
 
     const { getByTestId } = render(<TopBar />);
 

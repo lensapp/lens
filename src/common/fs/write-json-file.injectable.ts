@@ -8,12 +8,14 @@ import path from "path";
 import type { JsonValue } from "type-fest";
 import fsInjectable from "./fs.injectable";
 
+export type WriteJson = (filePath: string, contents: JsonValue) => Promise<void>;
+
 interface Dependencies {
   writeJson: (file: string, object: any, options?: WriteOptions | BufferEncoding | string) => Promise<void>;
   ensureDir: (dir: string, options?: EnsureOptions | number) => Promise<void>;
 }
 
-const writeJsonFile = ({ writeJson, ensureDir }: Dependencies) => async (filePath: string, content: JsonValue) => {
+const writeJsonFile = ({ writeJson, ensureDir }: Dependencies): WriteJson => async (filePath, content) => {
   await ensureDir(path.dirname(filePath), { mode: 0o755 });
 
   await writeJson(filePath, content, {

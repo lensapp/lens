@@ -7,14 +7,13 @@ import "./statefulsets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { StatefulSetsRouteParams } from "../../../common/routes";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
@@ -25,11 +24,8 @@ enum columnId {
   replicas = "replicas",
 }
 
-export interface StatefulSetsProps extends RouteComponentProps<StatefulSetsRouteParams> {
-}
-
 @observer
-export class StatefulSets extends React.Component<StatefulSetsProps> {
+export class StatefulSets extends React.Component {
   renderPods(statefulSet: StatefulSet) {
     const { readyReplicas, currentReplicas } = statefulSet.status;
 
@@ -38,38 +34,40 @@ export class StatefulSets extends React.Component<StatefulSetsProps> {
 
   render() {
     return (
-      <KubeObjectListLayout
-        isConfigurable
-        tableId="workload_statefulsets"
-        className="StatefulSets" store={statefulSetStore}
-        dependentStores={[podsStore, eventStore]} // status icon component uses event store, details component uses podStore
-        sortingCallbacks={{
-          [columnId.name]: statefulSet => statefulSet.getName(),
-          [columnId.namespace]: statefulSet => statefulSet.getNs(),
-          [columnId.age]: statefulSet => -statefulSet.getCreationTimestamp(),
-          [columnId.replicas]: statefulSet => statefulSet.getReplicas(),
-        }}
-        searchFilters={[
-          statefulSet => statefulSet.getSearchFields(),
-        ]}
-        renderHeaderTitle="Stateful Sets"
-        renderTableHeader={[
-          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
-          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
-          { title: "Pods", className: "pods", id: columnId.pods },
-          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
-          { className: "warning", showWithColumn: columnId.replicas },
-          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
-        ]}
-        renderTableContents={statefulSet => [
-          statefulSet.getName(),
-          statefulSet.getNs(),
-          this.renderPods(statefulSet),
-          statefulSet.getReplicas(),
-          <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
-          <KubeObjectAge key="age" object={statefulSet} />,
-        ]}
-      />
+      <SiblingsInTabLayout>
+        <KubeObjectListLayout
+          isConfigurable
+          tableId="workload_statefulsets"
+          className="StatefulSets" store={statefulSetStore}
+          dependentStores={[podsStore, eventStore]} // status icon component uses event store, details component uses podStore
+          sortingCallbacks={{
+            [columnId.name]: statefulSet => statefulSet.getName(),
+            [columnId.namespace]: statefulSet => statefulSet.getNs(),
+            [columnId.age]: statefulSet => -statefulSet.getCreationTimestamp(),
+            [columnId.replicas]: statefulSet => statefulSet.getReplicas(),
+          }}
+          searchFilters={[
+            statefulSet => statefulSet.getSearchFields(),
+          ]}
+          renderHeaderTitle="Stateful Sets"
+          renderTableHeader={[
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Pods", className: "pods", id: columnId.pods },
+            { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+            { className: "warning", showWithColumn: columnId.replicas },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          ]}
+          renderTableContents={statefulSet => [
+            statefulSet.getName(),
+            statefulSet.getNs(),
+            this.renderPods(statefulSet),
+            statefulSet.getReplicas(),
+            <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
+            <KubeObjectAge key="age" object={statefulSet} />,
+          ]}
+        />
+      </SiblingsInTabLayout>
     );
   }
 }

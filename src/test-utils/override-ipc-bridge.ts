@@ -7,6 +7,10 @@ import type { Channel } from "../common/ipc-channel/channel";
 import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
 import asyncFn from "@async-fn/jest";
+import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
+import windowManagerInjectable from "../main/window-manager.injectable";
+import type { SendToViewArgs, WindowManager } from "../main/window-manager";
+import { appNavigationIpcChannel } from "../common/front-end-routing/navigation-ipc-channel";
 
 export const overrideIpcBridge = ({
   rendererDi,
@@ -63,4 +67,33 @@ export const overrideIpcBridge = ({
   mainDi.override(registerChannelInjectable, () => (channel, callback) => {
     mainIpcRegistrations.set(channel, callback);
   });
+
+  const rendererIpcFakeHandles = new Map<string, ((...args: any[]) => void)[]>();
+
+  rendererDi.override(
+    registerIpcChannelListenerInjectable,
+    () =>
+      ({ channel, handle }) => {
+        const existingHandles = rendererIpcFakeHandles.get(channel.name) || [];
+
+        rendererIpcFakeHandles.set(channel.name, [...existingHandles, handle]);
+      },
+  );
+
+  mainDi.override(
+    windowManagerInjectable,
+    () =>
+      ({
+        sendToView: ({ channel: channelName, data }: SendToViewArgs) => {
+          const handles = rendererIpcFakeHandles.get(channelName);
+
+          handles.forEach(handle => handle(...data));
+        },
+
+        navigateSync(url: string) {
+          this.sendToView({ channel: appNavigationIpcChannel.name, data: [url] });
+        },
+
+      } as unknown as WindowManager),
+  );
 };

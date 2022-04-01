@@ -71,7 +71,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
 
     return (
       <DropFileInput onDropFiles={this.props.installOnDrop}>
-        <SettingLayout className="Extensions" contentGaps={false}>
+        <SettingLayout className="Extensions" contentGaps={false} data-testid="extensions-page">
           <section>
             <h1>Extensions</h1>
 

@@ -14,19 +14,22 @@ import { Input } from "../components/input";
 import { cssNames } from "../utils";
 import type { PortForwardStore } from "./port-forward-store/port-forward-store";
 import { openPortForward } from "./port-forward-utils";
-import { aboutPortForwarding, notifyErrorPortForwarding } from "./port-forward-notify";
 import { Checkbox } from "../components/checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
 import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-forward-dialog-model.injectable";
 import logger from "../../common/logger";
 import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
+import aboutPortForwardingInjectable from "./about-port-forwarding.injectable";
+import notifyErrorPortForwardingInjectable from "./notify-error-port-forwarding.injectable";
 
 export interface PortForwardDialogProps extends Partial<DialogProps> {}
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
   model: PortForwardDialogModel;
+  aboutPortForwarding: () => void;
+  notifyErrorPortForwarding: (message: string) => void;
 }
 
 @observer
@@ -68,18 +71,18 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
         portForward = await this.portForwardStore.modify(portForward, desiredPort);
 
         if (wasRunning && portForward.status === "Disabled") {
-          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+          this.props.notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
         }
       } else {
         portForward.forwardPort = desiredPort;
         portForward = await this.portForwardStore.add(portForward);
 
         if (portForward.status === "Disabled") {
-          notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+          this.props.notifyErrorPortForwarding(`Error occurred starting port-forward, the local port ${portForward.forwardPort} may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
         } else {
           // if this is the first port-forward show the about notification
           if (!length) {
-            aboutPortForwarding();
+            this.props.aboutPortForwarding();
           }
         }
       }
@@ -167,6 +170,8 @@ export const PortForwardDialog = withInjectables<Dependencies, PortForwardDialog
     getProps: (di, props) => ({
       portForwardStore: di.inject(portForwardStoreInjectable),
       model: di.inject(portForwardDialogModelInjectable),
+      aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
+      notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
       ...props,
     }),
   },

@@ -9,7 +9,7 @@ import React, { Fragment } from "react";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
-import { TabLayout } from "../layout/tab-layout";
+import { TabLayout } from "../layout/tab-layout-2";
 import { EventStore, eventStore } from "./event.store";
 import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object-list-layout";
 import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
@@ -19,9 +19,10 @@ import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { eventsURL } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import navigateToEventsInjectable  from "../../../common/front-end-routing/routes/cluster/events/navigate-to-events.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 import { ReactiveDuration } from "../duration/reactive-duration";
 
@@ -46,8 +47,12 @@ const defaultProps: Partial<EventsProps> = {
   compactLimit: 10,
 };
 
+interface Dependencies {
+  navigateToEvents: () => void;
+}
+
 @observer
-export class Events extends React.Component<EventsProps> {
+class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   static defaultProps = defaultProps as object;
 
   @observable sorting: TableSortParams = {
@@ -64,7 +69,7 @@ export class Events extends React.Component<EventsProps> {
     [columnId.lastSeen]: event => -new Date(event.lastTimestamp).getTime(),
   };
 
-  constructor(props: EventsProps) {
+  constructor(props: Dependencies & EventsProps) {
     super(props);
     makeObservable(this);
   }
@@ -105,7 +110,7 @@ export class Events extends React.Component<EventsProps> {
 
       return {
         title,
-        info: <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>,
+        info: <span> ({visibleItems.length} of <a onClick={this.props.navigateToEvents}>{items.length}</a>)</span>,
       };
     }
 
@@ -204,3 +209,14 @@ export class Events extends React.Component<EventsProps> {
     );
   }
 }
+
+export const Events = withInjectables<Dependencies, EventsProps>(
+  NonInjectedEvents,
+
+  {
+    getProps: (di, props) => ({
+      navigateToEvents: di.inject(navigateToEventsInjectable),
+      ...props,
+    }),
+  },
+);

@@ -32,6 +32,7 @@ const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entiti
 
   return (
     <Select
+      id="activate-entity-input"
       menuPortalTarget={null}
       onChange={(v) => onSelect(v.value)}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}

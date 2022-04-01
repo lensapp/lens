@@ -10,7 +10,6 @@ import type { ObservableHistory } from "mobx-observable-history";
 export interface PageParamInit<V = any> {
   name: string;
   defaultValue?: V; // multi-values param must be defined with array-value, e.g. []
-  prefix?: string; // name prefix, for extensions it's `${extension.id}:`
   parse?(value: string | string[]): V; // from URL
   stringify?(value: V): string | string[]; // to URL
 }
@@ -22,9 +21,9 @@ export class PageParam<V = any> {
 
   constructor(private init: PageParamInit<V>, private history: ObservableHistory) {
     makeObservable(this);
-    const { prefix, name, defaultValue } = init;
+    const { name, defaultValue } = init;
 
-    this.name = `${prefix ?? ""}${name}`; // actual prefixed URL-name
+    this.name = name;
     this.isMulti = Array.isArray(defaultValue); // multi-values param
   }
 
@@ -97,7 +96,7 @@ export class PageParam<V = any> {
     this.history.searchParams.delete(this.name);
   }
 
-  toString({ withPrefix = true, mergeGlobals = true, value = this.get() } = {}): string {
+  toString({ mergeGlobals = true, value = this.get() } = {}): string {
     let searchParams = new URLSearchParams();
 
     if (mergeGlobals) {
@@ -109,6 +108,6 @@ export class PageParam<V = any> {
       searchParams.append(this.name, value);
     });
 
-    return `${withPrefix ? "?" : ""}${searchParams}`;
+    return searchParams.toString();
   }
 }

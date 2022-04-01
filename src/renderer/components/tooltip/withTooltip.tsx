@@ -24,6 +24,7 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
   const DecoratedComponent = class extends React.Component<HTMLAttributes<any> & TooltipDecoratorProps> {
     static displayName = `withTooltip(${Target.displayName || Target.name})`;
 
+    // TODO: Remove side-effect to allow deterministic unit testing
     protected tooltipId = uniqueId("tooltip_target_");
 
     render() {

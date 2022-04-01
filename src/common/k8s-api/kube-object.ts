@@ -118,6 +118,12 @@ export type LabelMatchExpression = {
   }
 );
 
+export interface TypedLocalObjectReference {
+  apiGroup?: string;
+  kind: string;
+  name: string;
+}
+
 export interface LabelSelector {
   matchLabels?: Record<string, string | undefined>;
   matchExpressions?: LabelMatchExpression[];

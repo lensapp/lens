@@ -4,7 +4,7 @@
  */
 import type { Channel } from "../channel";
 
-export const createChannel = <TInstance>(name: string): Channel<TInstance> => ({
+export const createChannel = <Message>(name: string): Channel<Message> => ({
   name,
   _template: null,
 });

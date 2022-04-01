@@ -4,4 +4,3 @@
  */
 
 export { syncWeblinks } from "./weblinks";
-export { syncGeneralEntities } from "./general";

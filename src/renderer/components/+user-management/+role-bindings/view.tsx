@@ -6,7 +6,6 @@ import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { RoleBindingDialog } from "./dialog";
@@ -14,7 +13,7 @@ import { roleBindingsStore } from "./store";
 import { rolesStore } from "../+roles/store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { serviceAccountsStore } from "../+service-accounts/store";
-import type { RoleBindingsRouteParams } from "../../../../common/routes";
+import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
@@ -24,14 +23,11 @@ enum columnId {
   age = "age",
 }
 
-export interface RoleBindingsProps extends RouteComponentProps<RoleBindingsRouteParams> {
-}
-
 @observer
-export class RoleBindings extends React.Component<RoleBindingsProps> {
+export class RoleBindings extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_role_bindings"
@@ -69,7 +65,7 @@ export class RoleBindings extends React.Component<RoleBindingsProps> {
           }}
         />
         <RoleBindingDialog />
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

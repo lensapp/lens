@@ -4,15 +4,15 @@
  */
 import { SubTitle } from "../layout/sub-title";
 import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
-import React from "react";
+import React, { DOMAttributes } from "react";
 import { cssNames } from "../../../renderer/utils";
 
-export interface ExtensionSettingsProps {
+export interface ExtensionSettingsProps extends DOMAttributes<HTMLDivElement> {
   setting: AppPreferenceRegistration;
   size: "small" | "normal";
 }
 
-export function ExtensionSettings({ setting, size }: ExtensionSettingsProps) {
+export function ExtensionSettings({ setting, size, ...props }: ExtensionSettingsProps) {
   const {
     title,
     id,
@@ -21,7 +21,7 @@ export function ExtensionSettings({ setting, size }: ExtensionSettingsProps) {
 
   return (
     <React.Fragment>
-      <section id={id} className={cssNames(size)}>
+      <section id={id} className={cssNames(size)} {...props}>
         <SubTitle title={title} />
         <Input />
         <div className="hint">

@@ -6,15 +6,17 @@
 import styles from "./catalog.module.scss";
 
 import React from "react";
-import { HotbarStore } from "../../../common/hotbar-store";
-import type { CatalogEntity } from "../../api/catalog-entity";
-import { Avatar } from "../avatar";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
-import { Icon } from "../icon";
-import { prevDefault } from "../../utils";
 import { getLabelBadges } from "./helpers";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { observer } from "mobx-react";
+import type { HotbarStore } from "../../../common/hotbar-store";
+import { prevDefault } from "../../utils";
+import { Avatar } from "../avatar";
+import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { CatalogEntity } from "../../api/catalog-entity";
+import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
 
 export const browseAllColumns: RegisteredAdditionalCategoryColumn[] = [
   {
@@ -84,11 +86,19 @@ export const defaultCategoryColumns: RegisteredAdditionalCategoryColumn[] = [
       sortBy: "status",
     },
     searchFilter: entity => entity.status.phase,
+    sortCallback: entity => entity.status.phase,
   },
 ];
 
-const EntityName = observer(({ entity }: { entity: CatalogEntity }) => {
-  const hotbarStore = HotbarStore.getInstance();
+interface Dependencies {
+  hotbarStore: HotbarStore;
+}
+
+interface EntityNameProps {
+  entity: CatalogEntity;
+}
+
+const NonInjectedEntityName = observer(({ entity, hotbarStore }: Dependencies & EntityNameProps) => {
   const isItemInHotbar = hotbarStore.isAddedToActive(entity);
   const onClick = prevDefault(
     isItemInHotbar
@@ -120,3 +130,14 @@ const EntityName = observer(({ entity }: { entity: CatalogEntity }) => {
     </>
   );
 });
+
+const EntityName = withInjectables<Dependencies, EntityNameProps>(
+  NonInjectedEntityName,
+
+  {
+    getProps: (di, props) => ({
+      hotbarStore: di.inject(hotbarStoreInjectable),
+      ...props,
+    }),
+  },
+);

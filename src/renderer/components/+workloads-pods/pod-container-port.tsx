@@ -13,19 +13,14 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import type { ForwardedPort } from "../../port-forward";
-import {
-  aboutPortForwarding,
-  notifyErrorPortForwarding,
-  openPortForward,
-  PortForwardStore,
-  predictProtocol,
-} from "../../port-forward";
-
+import { openPortForward, PortForwardStore, predictProtocol } from "../../port-forward";
 import { Spinner } from "../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import logger from "../../../common/logger";
+import aboutPortForwardingInjectable from "../../port-forward/about-port-forwarding.injectable";
+import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error-port-forwarding.injectable";
 
 export interface PodContainerPortProps {
   pod: Pod;
@@ -39,6 +34,8 @@ export interface PodContainerPortProps {
 interface Dependencies {
   portForwardStore: PortForwardStore;
   openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean; onClose: () => void }) => void;
+  aboutPortForwarding: () => void;
+  notifyErrorPortForwarding: (message: string) => void;
 }
 
 @observer
@@ -119,10 +116,10 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
 
         // if this is the first port-forward show the about notification
         if (!length) {
-          aboutPortForwarding();
+          this.props.aboutPortForwarding();
         }
       } else {
-        notifyErrorPortForwarding(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
+        this.props.notifyErrorPortForwarding(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       }
     } catch (error) {
       logger.error("[POD-CONTAINER-PORT]:", error, portForward);
@@ -199,6 +196,8 @@ export const PodContainerPort = withInjectables<Dependencies, PodContainerPortPr
     getProps: (di, props) => ({
       portForwardStore: di.inject(portForwardStoreInjectable),
       openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+      aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
+      notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
       ...props,
     }),
   },

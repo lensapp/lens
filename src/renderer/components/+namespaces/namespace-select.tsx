@@ -77,6 +77,7 @@ class NonInjectedNamespaceSelect extends React.Component<NamespaceSelectProps & 
 
     return (
       <Select
+        id="namespace-input"
         className={cssNames("NamespaceSelect", className)}
         menuClass="NamespaceSelectMenu"
         formatOptionLabel={this.formatOptionLabel}

@@ -4,10 +4,10 @@
  */
 
 import glob from "glob";
-import { memoize, kebabCase } from "lodash/fp";
+import { kebabCase, memoize, noop } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 
-import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
@@ -16,14 +16,32 @@ import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
 import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
+import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
+import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
+import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
+import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
+import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
+import type { ClusterStore } from "../common/cluster-store/cluster-store";
+import type { Cluster } from "../common/cluster/cluster";
+import userStoreInjectable from "../common/user-store/user-store.injectable";
+import type { UserStore } from "../common/user-store";
+import isMacInjectable from "../common/vars/is-mac.injectable";
+import isWindowsInjectable from "../common/vars/is-windows.injectable";
+import isLinuxInjectable from "../common/vars/is-linux.injectable";
+import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
+import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
+import joinPathsInjectable from "../common/path/join-paths.injectable";
+import { joinPathsFake } from "../common/test-utils/join-paths-fake";
+import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
 ) => {
   const di = createContainer();
 
-  setLegacyGlobalDiForExtensionApi(di);
+  setLegacyGlobalDiForExtensionApi(di, Environments.main);
 
   for (const filePath of getInjectableFilePaths()) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -38,6 +56,24 @@ export const getDiForUnitTesting = (
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(isMacInjectable, () => true);
+    di.override(isWindowsInjectable, () => false);
+    di.override(isLinuxInjectable, () => false);
+
+    di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
+    di.override(joinPathsInjectable, () => joinPathsFake);
+
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
+
+    di.override(hotbarStoreInjectable, () => ({}));
+
+    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
+
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
+    di.override(userStoreInjectable, () => ({}) as UserStore);
+
     di.override(
       getElectronAppPathInjectable,
       () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`,
@@ -47,8 +83,9 @@ export const getDiForUnitTesting = (
     di.override(appNameInjectable, () => "some-electron-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
-    di.override(spawnInjectable, () => () => { 
-      return { 
+
+    di.override(spawnInjectable, () => () => {
+      return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
@@ -66,6 +103,13 @@ export const getDiForUnitTesting = (
     di.override(readFileInjectable, () => () => {
       throw new Error("Tried to read file from file system without specifying explicit override.");
     });
+
+    di.override(loggerInjectable, () => ({
+      warn: noop,
+      debug: noop,
+      error: (message: string, ...args: any) => console.error(message, ...args),
+      info: noop,
+    }));
   }
 
   return di;

@@ -9,9 +9,6 @@ import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, Upda
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
-import { ClusterStore } from "../../common/cluster-store/cluster-store";
-import { navigate } from "../navigation";
-import { entitySettingsURL } from "../../common/routes";
 import { defaultHotbarCells } from "../../common/hotbar-types";
 import { type ListNamespaceForbiddenArgs, clusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
 import { hotbarTooManyItemsChannel } from "../../common/ipc/hotbar";
@@ -63,64 +60,18 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
   );
 }
 
-const notificationLastDisplayedAt = new Map<string, number>();
-const intervalBetweenNotifications = 1000 * 60; // 60s
-
-function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ListNamespaceForbiddenArgs): void {
-  const lastDisplayedAt = notificationLastDisplayedAt.get(clusterId);
-  const now = Date.now();
-
-  if (!notificationLastDisplayedAt.has(clusterId) || (now - lastDisplayedAt) > intervalBetweenNotifications) {
-    notificationLastDisplayedAt.set(clusterId, now);
-  } else {
-    // don't bother the user too often
-    return;
-  }
-
-  const notificationId = `list-namespaces-forbidden:${clusterId}`;
-
-  if (notificationsStore.getById(notificationId)) {
-    // notification is still visible
-    return;
-  }
-
-  Notifications.info(
-    (
-      <div className="flex column gaps">
-        <b>Add Accessible Namespaces</b>
-        <p>
-          Cluster <b>{ClusterStore.getInstance().getById(clusterId).name}</b> does not have permissions to list namespaces.{" "}
-          Please add the namespaces you have access to.
-        </p>
-        <div className="flex gaps row align-left box grow">
-          <Button
-            active
-            outlined
-            label="Go to Accessible Namespaces Settings"
-            onClick={() => {
-              navigate(entitySettingsURL({ params: { entityId: clusterId }, fragment: "namespaces" }));
-              notificationsStore.remove(notificationId);
-            }}
-          />
-        </div>
-      </div>
-    ),
-    {
-      id: notificationId,
-      /**
-       * Set the time when the notification is closed as well so that there is at
-       * least a minute between closing the notification as seeing it again
-       */
-      onClose: () => notificationLastDisplayedAt.set(clusterId, Date.now()),
-    },
-  );
-}
-
 function HotbarTooManyItemsHandler(): void {
   Notifications.error(`Cannot have more than ${defaultHotbarCells} items pinned to a hotbar`);
 }
 
-export function registerIpcListeners() {
+interface Dependencies {
+  listNamespacesForbiddenHandler: (
+    event: IpcRendererEvent,
+    ...[clusterId]: ListNamespaceForbiddenArgs
+  ) => void;
+}
+
+export const registerIpcListeners = ({ listNamespacesForbiddenHandler }: Dependencies) => () => {
   onCorrect({
     source: ipcRenderer,
     channel: UpdateAvailableChannel,
@@ -130,7 +81,7 @@ export function registerIpcListeners() {
   onCorrect({
     source: ipcRenderer,
     channel: clusterListNamespaceForbiddenChannel,
-    listener: ListNamespacesForbiddenHandler,
+    listener: listNamespacesForbiddenHandler,
     verifier: isListNamespaceForbiddenArgs,
   });
   onCorrect({
@@ -145,4 +96,4 @@ export function registerIpcListeners() {
   ipcRendererOn(AutoUpdateNoUpdateAvailable, () => {
     Notifications.shortInfo("No update is currently available");
   });
-}
+};

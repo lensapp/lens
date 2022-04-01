@@ -85,6 +85,7 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
+              id="add-dialog-namespace-select-input"
               themeName="light"
               value={this.namespace}
               onChange={({ value }) => this.namespace = value}

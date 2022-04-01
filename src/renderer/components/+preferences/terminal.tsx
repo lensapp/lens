@@ -5,80 +5,98 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { UserStore } from "../../../common/user-store";
+import type { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
-import { isWindows } from "../../../common/vars";
 import { Switch } from "../switch";
 import { Select } from "../select";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../theme.store";
+import { Preferences } from "./preferences";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import themeStoreInjectable from "../../theme-store.injectable";
+import defaultShellInjectable from "./default-shell.injectable";
 
-export const Terminal = observer(() => {
-  const userStore = UserStore.getInstance();
-  const themeStore = ThemeStore.getInstance();
-  const defaultShell = process.env.SHELL
-  || process.env.PTYSHELL
-  || (
-    isWindows
-      ? "powershell.exe"
-      : "System default shell"
+interface Dependencies {
+  userStore: UserStore;
+  themeStore: ThemeStore;
+  defaultShell: string;
+}
+
+const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: Dependencies) => {
+  return (
+    <Preferences data-testid="terminal-preferences-page">
+      <section>
+        <h2>Terminal</h2>
+
+        <section id="shell">
+          <SubTitle title="Terminal Shell Path" />
+          <Input
+            theme="round-black"
+            placeholder={defaultShell}
+            value={userStore.shell}
+            onChange={(value) => userStore.shell = value}
+          />
+        </section>
+
+        <section id="terminalSelection">
+          <SubTitle title="Terminal copy & paste" />
+          <Switch
+            checked={userStore.terminalCopyOnSelect}
+            onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
+          >
+            Copy on select and paste on right-click
+          </Switch>
+        </section>
+
+        <section id="terminalTheme">
+          <SubTitle title="Terminal theme" />
+          <Select
+            id="terminal-theme-input"
+            themeName="lens"
+            options={[
+              { label: "Match theme", value: "" },
+              ...themeStore.themeOptions,
+            ]}
+            value={userStore.terminalTheme}
+            onChange={({ value }) => userStore.terminalTheme = value}
+          />
+        </section>
+
+        <section>
+          <SubTitle title="Font size" />
+          <Input
+            theme="round-black"
+            type="number"
+            min={10}
+            validators={InputValidators.isNumber}
+            value={userStore.terminalConfig.fontSize.toString()}
+            onChange={(value) => userStore.terminalConfig.fontSize = Number(value)}
+          />
+        </section>
+        <section>
+          <SubTitle title="Font family" />
+          <Input
+            theme="round-black"
+            type="text"
+            value={userStore.terminalConfig.fontFamily}
+            onChange={(value) => userStore.terminalConfig.fontFamily = value}
+          />
+        </section>
+      </section>
+    </Preferences>
   );
-
-  return (<section>
-    <h2>Terminal</h2>
-
-    <section id="shell">
-      <SubTitle title="Terminal Shell Path"/>
-      <Input
-        theme="round-black"
-        placeholder={defaultShell}
-        value={userStore.shell}
-        onChange={(value) => userStore.shell = value}
-      />
-    </section>
-
-    <section id="terminalSelection">
-      <SubTitle title="Terminal copy & paste" />
-      <Switch
-        checked={userStore.terminalCopyOnSelect}
-        onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
-      >
-          Copy on select and paste on right-click
-      </Switch>
-    </section>
-
-    <section id="terminalTheme">
-      <SubTitle title="Terminal theme" />
-      <Select
-        themeName="lens"
-        options={[
-          { label: "Match theme", value: "" },
-          ...themeStore.themeOptions,
-        ]}
-        value={userStore.terminalTheme}
-        onChange={({ value }) => userStore.terminalTheme = value}
-      />
-    </section>
-
-    <section>
-      <SubTitle title="Font size"/>
-      <Input
-        theme="round-black"
-        type="number"
-        min={10}
-        validators={InputValidators.isNumber}
-        value={userStore.terminalConfig.fontSize.toString()}
-        onChange={(value) => userStore.terminalConfig.fontSize=Number(value)}
-      />
-    </section>
-    <section>
-      <SubTitle title="Font family"/>
-      <Input
-        theme="round-black"
-        type="text"
-        value={userStore.terminalConfig.fontFamily}
-        onChange={(value) => userStore.terminalConfig.fontFamily=value}
-      />
-    </section>
-  </section>);
 });
+
+export const Terminal = withInjectables<Dependencies>(
+  NonInjectedTerminal,
+
+  {
+    getProps: (di) => ({
+      userStore: di.inject(userStoreInjectable),
+      themeStore: di.inject(themeStoreInjectable),
+      defaultShell: di.inject(defaultShellInjectable),
+    }),
+  },
+);
+

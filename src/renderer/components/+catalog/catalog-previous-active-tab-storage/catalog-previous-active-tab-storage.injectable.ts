@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { browseCatalogTab } from "../../../../common/routes";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
+import { browseCatalogTab } from "../catalog-browse-tab";
 
 const catalogPreviousActiveTabStorageInjectable = getInjectable({
   id: "catalog-previous-active-tab-storage",

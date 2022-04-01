@@ -21,6 +21,10 @@ import { LogTabViewModel, LogTabViewModelDependencies } from "../logs-view-model
 import type { TabId } from "../../dock/store";
 import userEvent from "@testing-library/user-event";
 import { SearchStore } from "../../../../search-store/search-store";
+import getConfigurationFileModelInjectable
+  from "../../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -130,6 +134,9 @@ describe("<LogResourceSelector />", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
+
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);
 

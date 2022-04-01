@@ -117,7 +117,7 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
             filters: (
               <>
                 {filters}
-                {store.api.isNamespaced && <NamespaceSelectFilter />}
+                {store.api.isNamespaced && <NamespaceSelectFilter id="kube-object-list-layout-namespace-select-input" />}
               </>
             ),
             searchProps: {

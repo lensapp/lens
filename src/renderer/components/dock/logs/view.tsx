@@ -57,9 +57,9 @@ const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStore
     setTimeout(() => {
       const overlay = document.querySelector(".PodLogs .list span.active");
 
-      if (typeof overlay?.scrollIntoViewIfNeeded === "function") {
-        overlay.scrollIntoViewIfNeeded();
-      }
+      if (!overlay) return;
+      // Note: .scrollIntoViewIfNeeded() is non-standard and thus not present in js-dom.
+      overlay?.scrollIntoViewIfNeeded?.();
     }, 100);
   };
 

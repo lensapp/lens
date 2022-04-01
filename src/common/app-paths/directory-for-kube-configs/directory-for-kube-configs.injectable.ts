@@ -4,13 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../directory-for-user-data/directory-for-user-data.injectable";
-import path from "path";
+import getAbsolutePathInjectable from "../../path/get-absolute-path.injectable";
 
 const directoryForKubeConfigsInjectable = getInjectable({
   id: "directory-for-kube-configs",
 
-  instantiate: (di) =>
-    path.resolve(di.inject(directoryForUserDataInjectable), "kubeconfigs"),
+  instantiate: (di) => {
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const directoryForUserData = di.inject(directoryForUserDataInjectable);
+
+    return getAbsolutePath(
+      directoryForUserData,
+      "kubeconfigs",
+    );
+  },
 });
 
 export default directoryForKubeConfigsInjectable;

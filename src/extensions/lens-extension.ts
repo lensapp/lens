@@ -32,6 +32,10 @@ export class LensExtension {
   readonly manifestPath: string;
   readonly isBundled: boolean;
 
+  get sanitizedExtensionId() {
+    return sanitizeExtensionName(this.name);
+  }
+
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private _isEnabled = false;
@@ -90,6 +94,7 @@ export class LensExtension {
 
       this[Disposers].push(...await register(this));
       logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+
     } catch (error) {
       logger.error(`[EXTENSION]: failed to activate ${this.name}@${this.version}: ${error}`);
     }
@@ -128,6 +133,12 @@ export class LensExtension {
 export function sanitizeExtensionName(name: string) {
   return name.replace("@", "").replace("/", "--");
 }
+
+export const getSanitizedPath = (...parts: string[]) => parts
+  .filter(Boolean)
+  .join("/")
+  .replace(/\/+/g, "/")
+  .replace(/\/$/, ""); // normalize multi-slashes (e.g. coming from page.id)
 
 export function extensionDisplayName(name: string, version: string) {
   return `${name}@${version}`;

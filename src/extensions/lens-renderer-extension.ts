@@ -5,7 +5,6 @@
 
 import type * as registries from "./registries";
 import { Disposers, LensExtension } from "./lens-extension";
-import { getExtensionPageUrl } from "./registries/page-registry";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
 import { catalogEntityRegistry, EntityFilter } from "../renderer/api/catalog-entity-registry";
@@ -22,6 +21,13 @@ import type { StatusBarRegistration } from "../renderer/components/status-bar/st
 import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
 import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/+workloads-overview/workloads-overview-detail-registration";
 import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import routesInjectable from "../renderer/routes/routes.injectable";
+import { fromPairs, map, matches, toPairs } from "lodash/fp";
+import extensionPageParametersInjectable from "../renderer/routes/extension-page-parameters.injectable";
+import { pipeline } from "@ogre-tools/fp";
+import { getExtensionRoutePath } from "../renderer/routes/get-extension-route-path";
+import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -43,14 +49,48 @@ export class LensRendererExtension extends LensExtension {
   customCategoryViews: CustomCategoryViewRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {
-    const { navigate } = await import("../renderer/navigation");
-    const pageUrl = getExtensionPageUrl({
-      extensionId: this.name,
-      pageId,
-      params: params ?? {}, // compile to url with params
-    });
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(
+      Environments.renderer,
+    );
 
-    navigate(pageUrl);
+    const navigateToRoute = di.inject(navigateToRouteInjectionToken);
+    const routes = di.inject(routesInjectable).get();
+
+    const targetRegistration = [...this.globalPages, ...this.clusterPages].find(
+      registration => registration.id === (pageId || undefined),
+    );
+
+    const targetRoutePath = getExtensionRoutePath(this, targetRegistration.id);
+
+    const targetRoute = routes.find(matches({ path: targetRoutePath }));
+
+    if (targetRoute) {
+      const normalizedParams = di.inject(extensionPageParametersInjectable, {
+        extension: this,
+        registration: targetRegistration,
+      });
+
+      const query = pipeline(
+        params,
+
+        toPairs,
+
+        map(([key, value]) => {
+          const normalizedParam = normalizedParams[key];
+
+          return [
+            key,
+            normalizedParam.stringify(value),
+          ];
+        }),
+
+        fromPairs,
+      );
+
+      navigateToRoute(targetRoute, {
+        query,
+      });
+    }
   }
 
   /**

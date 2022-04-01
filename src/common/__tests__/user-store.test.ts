@@ -26,34 +26,41 @@ import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultTheme } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable
+  from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable
+  from "../get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   let userStore: UserStore;
-  let mainDi: DiContainer;
+  let di: DiContainer;
 
   beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
-    mainDi = dis.mainDi;
+    di.override(writeFileInjectable, () => () => undefined);
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(userStoreInjectable, () => UserStore.createInstance());
 
-    mainDi.override(writeFileInjectable, () => () => undefined);
-    mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(appVersionInjectable);
 
-    await dis.runSetups();
+    await di.runSetups();
   });
 
   afterEach(() => {
+    UserStore.resetInstance();
     mockFs.restore();
   });
 
@@ -61,12 +68,7 @@ describe("user store tests", () => {
     beforeEach(() => {
       mockFs({ "some-directory-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
 
-      userStore = mainDi.inject(userStoreInjectable);
-    });
-
-    afterEach(() => {
-      mockFs.restore();
-      UserStore.resetInstance();
+      userStore = di.inject(userStoreInjectable);
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
@@ -128,12 +130,7 @@ describe("user store tests", () => {
         },
       });
 
-      userStore = mainDi.inject(userStoreInjectable);
-    });
-
-    afterEach(() => {
-      UserStore.resetInstance();
-      mockFs.restore();
+      userStore = di.inject(userStoreInjectable);
     });
 
     it("sets last seen app version to 0.0.0", () => {

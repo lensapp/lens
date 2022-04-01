@@ -30,11 +30,10 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { startCatalogSyncToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
-import { syncGeneralEntities, syncWeblinks } from "./catalog-sources";
+import { syncWeblinks } from "./catalog-sources";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
-import { HotbarStore } from "../common/hotbar-store";
 import { WeblinkStore } from "../common/weblink-store";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
@@ -48,7 +47,6 @@ import lensProtocolRouterMainInjectable from "./protocol-handler/lens-protocol-r
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import directoryForExesInjectable from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
 import initIpcMainHandlersInjectable from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
-import electronMenuItemsInjectable from "./menu/electron-menu-items.injectable";
 import directoryForKubeConfigsInjectable from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
@@ -57,6 +55,11 @@ import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 import { broadcastNativeThemeOnUpdate } from "./native-theme";
+import windowManagerInjectable from "./window-manager.injectable";
+import navigateToPreferencesInjectable from "../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general-catalog-entities.injectable";
+import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 
 const di = getDi();
 
@@ -66,7 +69,7 @@ app.on("ready", async () => {
   await di.runSetups();
 
   injectSystemCAs();
-  
+
   const onCloseCleanup = disposer();
   const onQuitCleanup = disposer();
 
@@ -184,7 +187,7 @@ app.on("ready", async () => {
     lensProtocolRouterMain.route(rawUrl);
   });
 
-  logger.debug("[APP-MAIN] waiting for 'ready' and other messages");  
+  logger.debug("[APP-MAIN] waiting for 'ready' and other messages");
 
   const directoryForExes = di.inject(directoryForExesInjectable);
 
@@ -204,7 +207,9 @@ app.on("ready", async () => {
    * store has migrations that will remove items that previous migrations add
    * if this is not present
    */
-  syncGeneralEntities();
+  const syncGeneralCatalogEntities = di.inject(syncGeneralCatalogEntitiesInjectable);
+
+  syncGeneralCatalogEntities();
 
   logger.info("💾 Loading stores");
 
@@ -218,7 +223,7 @@ app.on("ready", async () => {
   clusterStore.provideInitialFromMain();
 
   // HotbarStore depends on: ClusterStore
-  HotbarStore.createInstance();
+  di.inject(hotbarStoreInjectable);
 
   WeblinkStore.createInstance();
 
@@ -291,13 +296,15 @@ app.on("ready", async () => {
   const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
 
   logger.info("🖥️  Starting WindowManager");
-  const windowManager = WindowManager.createInstance();
-  const menuItems = di.inject(electronMenuItemsInjectable);
+  const windowManager = di.inject(windowManagerInjectable);
+
+  const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
   const trayMenuItems = di.inject(trayMenuItemsInjectable);
+  const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
 
   onQuitCleanup.push(
-    initMenu(windowManager, menuItems),
-    initTray(windowManager, trayMenuItems),
+    initMenu(applicationMenuItems),
+    initTray(windowManager, trayMenuItems, navigateToPreferences),
     () => ShellSession.cleanup(),
   );
 

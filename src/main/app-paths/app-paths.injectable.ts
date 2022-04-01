@@ -16,9 +16,9 @@ import registerChannelInjectable from "./register-channel/register-channel.injec
 import { getAppPaths } from "./get-app-paths";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
-import path from "path";
 import appNameInjectable from "./app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
 const appPathsInjectable = getInjectable({
   id: "app-paths",
@@ -55,10 +55,11 @@ const setupPathForUserData = async (di: DiContainerForSetup) => {
   const setElectronAppPath = await di.inject(setElectronAppPathInjectable);
   const appName = await di.inject(appNameInjectable);
   const getAppPath = await di.inject(getElectronAppPathInjectable);
+  const joinPaths = await di.inject(joinPathsInjectable);
 
   const appDataPath = getAppPath("appData");
 
-  setElectronAppPath("userData", path.join(appDataPath, appName));
+  setElectronAppPath("userData", joinPaths(appDataPath, appName));
 };
 
 // Todo: this kludge is here only until we have a proper place to setup integration testing.

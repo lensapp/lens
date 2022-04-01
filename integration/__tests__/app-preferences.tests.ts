@@ -52,7 +52,7 @@ describe("preferences page tests", () => {
     ];
 
     for (const { id, header } of pages) {
-      await window.click(`[data-testid=${id}-tab]`);
+      await window.click(`[data-testid=tab-link-for-${id}]`);
       await window.waitForSelector(`[data-testid=${id}-header] >> text=${header}`);
     }
   }, 10*60*1000);

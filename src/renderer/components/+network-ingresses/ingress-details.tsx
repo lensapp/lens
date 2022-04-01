@@ -15,7 +15,7 @@ import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getBackendServiceNamePort, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
+import { computeRuleDeclarations, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
@@ -49,12 +49,8 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules }} = ingress;
-
-    if (!rules || !rules.length) return null;
-
-    return rules.map((rule, index) => {
-      return (
+    return ingress.getRules()
+      .map((rule, index) => (
         <div className="rules" key={index}>
           {rule.host && (
             <div className="host-title">
@@ -65,28 +61,33 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
             <Table className="paths">
               <TableHead>
                 <TableCell className="path">Path</TableCell>
+                <TableCell className="link">Link</TableCell>
                 <TableCell className="backends">Backends</TableCell>
               </TableHead>
               {
-                rule.http.paths.map((path, index) => {
-                  const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-                  const backend = `${serviceName}:${servicePort}`;
-
-                  return (
+                computeRuleDeclarations(ingress, rule)
+                  .map(({ displayAsLink, service, url, pathname }) => (
                     <TableRow key={index}>
-                      <TableCell className="path">{path.path || ""}</TableCell>
-                      <TableCell className="backends">
-                        <p key={backend}>{backend}</p>
+                      <TableCell className="path">{pathname}</TableCell>
+                      <TableCell className="link">
+                        {
+                          displayAsLink
+                            ? (
+                              <a href={url} rel="noreferrer" target="_blank">
+                                {url}
+                              </a>
+                            )
+                            : url
+                        }
                       </TableCell>
+                      <TableCell className="backends">{service}</TableCell>
                     </TableRow>
-                  );
-                })
+                  ))
               }
             </Table>
           )}
         </div>
-      );
-    });
+      ));
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
@@ -99,15 +100,14 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
             <TableCell className="name">Hostname</TableCell>
             <TableCell className="ingresspoints">IP</TableCell>
           </TableHead>
-          {ingressPoints.map(({ hostname, ip }, index) => {
-            return (
+          {
+            ingressPoints.map(({ hostname, ip }, index) => (
               <TableRow key={index}>
                 <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
                 <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
               </TableRow>
-            );
-          })
-          })
+            ))
+          }
         </Table>
       </div>
     );

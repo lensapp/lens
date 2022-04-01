@@ -14,25 +14,24 @@ import { catalogEntityRegistry } from "../../catalog";
 import { pushCatalogToRenderer } from "../../catalog-pusher";
 import { ClusterManager } from "../../cluster-manager";
 import { ResourceApplier } from "../../resource-applier";
-import { WindowManager } from "../../window-manager";
-import path from "path";
 import { remove } from "fs-extra";
-import { getAppMenu } from "../../menu/menu";
-import type { MenuRegistration } from "../../menu/menu-registration";
-import type { IComputedValue } from "mobx";
 import { onLocationChange, handleWindowAction } from "../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
 import { showOpenDialog } from "../../ipc/dialog";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
 import { getNativeColorTheme } from "../../native-theme";
 import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
+import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
+import type { IComputedValue } from "mobx";
+import type { MenuItemOpts } from "../../menu/application-menu-items.injectable";
 
 interface Dependencies {
-  electronMenuItems: IComputedValue<MenuRegistration[]>;
   directoryForLensLocalStorage: string;
+  getAbsolutePath: GetAbsolutePath;
+  applicationMenuItems: IComputedValue<MenuItemOpts[]>;
 }
 
-export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalStorage }: Dependencies) => () => {
+export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath }: Dependencies) => () => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -88,7 +87,7 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
 
     try {
       // remove the local storage file
-      const localStorageFilePath = path.resolve(directoryForLensLocalStorage, `${cluster.id}.json`);
+      const localStorageFilePath = getAbsolutePath(directoryForLensLocalStorage, `${cluster.id}.json`);
 
       await remove(localStorageFilePath);
     } catch {
@@ -151,7 +150,9 @@ export const initIpcMainHandlers = ({ electronMenuItems, directoryForLensLocalSt
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 
   ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
-    const menu = Menu.buildFromTemplate(getAppMenu(WindowManager.getInstance(), electronMenuItems.get()));
+    const appMenu = applicationMenuItems.get();
+
+    const menu = Menu.buildFromTemplate(appMenu);
 
     menu.popup({
       ...BrowserWindow.fromWebContents(event.sender),

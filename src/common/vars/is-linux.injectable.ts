@@ -8,6 +8,7 @@ import { isLinux } from "../vars";
 const isLinuxInjectable = getInjectable({
   id: "is-linux",
   instantiate: () => isLinux,
+  causesSideEffects: true,
 });
 
 export default isLinuxInjectable;

@@ -20,9 +20,7 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
-import { HotbarStore } from "../common/hotbar-store";
 import { WeblinkStore } from "../common/weblink-store";
-import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
@@ -36,6 +34,15 @@ import userStoreInjectable from "../common/user-store/user-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
+import { Router } from "react-router";
+import historyInjectable from "./navigation/history.injectable";
+import themeStoreInjectable from "./theme-store.injectable";
+import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
+import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
+import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import { bindEvents } from "./navigation/events";
+import deleteClusterDialogModelInjectable
+  from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -58,6 +65,9 @@ async function attachChromeDebugger() {
 export async function bootstrap(di: DiContainer) {
   await di.runSetups();
 
+  // TODO: Consolidate import time side-effect to setup time
+  bindEvents();
+
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
@@ -79,12 +89,19 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
   initializers.initCatalogEntityDetailRegistry();
 
+  const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
+  const addSyncEntries = di.inject(addSyncEntriesInjectable);
+
   logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
-  initializers.initCatalogCategoryRegistryEntries();
+  initializers.initCatalogCategoryRegistryEntries({
+    navigateToAddCluster,
+    addSyncEntries,
+  });
 
   logger.info(`${logPrefix} initializing Catalog`);
   initializers.initCatalog({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
+    deleteClusterDialogModel: di.inject(deleteClusterDialogModelInjectable),
   });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
@@ -104,10 +121,11 @@ export async function bootstrap(di: DiContainer) {
   await clusterStore.loadInitialOnRenderer();
 
   // HotbarStore depends on: ClusterStore
-  HotbarStore.createInstance();
+  di.inject(hotbarStoreInjectable);
 
   // ThemeStore depends on: UserStore
-  ThemeStore.createInstance();
+  // TODO: Remove temporal dependencies
+  di.inject(themeStoreInjectable);
 
   WeblinkStore.createInstance();
 
@@ -142,9 +160,13 @@ export async function bootstrap(di: DiContainer) {
     });
   }
 
+  const history = di.inject(historyInjectable);
+
   render(
     <DiContextProvider value={{ di }}>
-      {DefaultProps(App)}
+      <Router history={history}>
+        {DefaultProps(App)}
+      </Router>
     </DiContextProvider>,
 
     rootElem,
