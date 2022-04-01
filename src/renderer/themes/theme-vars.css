@@ -29,6 +29,7 @@
 --sidebarActiveColor: #ffffff;
 --sidebarSubmenuActiveColor: #ffffff;
 --sidebarItemHoverBackground: #3a3e44;
+--badgeBackgroundColor: #ffba44;
 --buttonPrimaryBackground: #3d90ce;
 --buttonDefaultBackground: #414448;
 --buttonLightBackground: #f1f1f1;
@@ -73,6 +74,8 @@
 --dockEditorComment: #808080;
 --dockEditorActiveLineBackground: #3a3d41;
 --dockBadgeBackground: #36393e;
+--dockTabBorderColor: #43424d;
+--dockTabActiveBackground: #3a3e45;
 --logsBackground: #000000;
 --logsForeground: #ffffff;
 --logRowHoverBackground: #35373a;
@@ -125,7 +128,7 @@
 --inputControlHoverBorder: #474a4f;
 --lineProgressBackground: #414448;
 --radioActiveBackground: #36393e;
---menuActiveBackground: #36393e;
+--menuActiveBackground: #3d90ce;
 --menuSelectedOptionBgc: #36393e;
 --canvasBackground: #24292e;
 --scrollBarColor: #5f6064;
