@@ -126,7 +126,7 @@ export class NodesRoute extends React.Component {
       metricNames: ["workloadMemoryUsage", "memoryAllocatableCapacity"],
       formatters: [
         ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
-        ([usage]) => bytesToUnits(usage, 3),
+        ([usage]) => bytesToUnits(usage, { precision: 3 }),
       ],
     });
   }
@@ -138,7 +138,7 @@ export class NodesRoute extends React.Component {
       metricNames: ["fsUsage", "fsSize"],
       formatters: [
         ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
-        ([usage]) => bytesToUnits(usage, 3),
+        ([usage]) => bytesToUnits(usage, { precision: 3 }),
       ],
     });
   }
