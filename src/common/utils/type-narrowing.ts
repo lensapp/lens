@@ -103,7 +103,7 @@ export function isBoolean(val: unknown): val is boolean {
  * checks if val is of type object and isn't null
  * @param val the value to be checked
  */
-export function isObject(val: unknown): val is object {
+export function isObject(val: unknown): val is Record<string | symbol | number, unknown> {
   return typeof val === "object" && val !== null;
 }
 

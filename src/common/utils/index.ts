@@ -14,7 +14,6 @@ export * from "./convertMemory";
 export * from "./debouncePromise";
 export * from "./delay";
 export * from "./disposer";
-export * from "./downloadFile";
 export * from "./escapeRegExp";
 export * from "./formatDuration";
 export * from "./getRandId";

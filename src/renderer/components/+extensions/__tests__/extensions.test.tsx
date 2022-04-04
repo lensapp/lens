@@ -25,23 +25,10 @@ import extensionInstallationStateStoreInjectable from "../../../../extensions/ex
 import { observable, when } from "mobx";
 import type { DeleteFile } from "../../../../common/fs/delete-file.injectable";
 import deleteFileInjectable from "../../../../common/fs/delete-file.injectable";
-
-jest.mock("../../notifications");
-
-jest.mock("../../../../common/utils/downloadFile", () => ({
-  downloadFile: jest.fn(({ url }) => ({
-    promise: Promise.resolve(),
-    url,
-    cancel: () => {},
-  })),
-  downloadJson: jest.fn(({ url }) => ({
-    promise: Promise.resolve({}),
-    url,
-    cancel: () => { },
-  })),
-}));
-
-jest.mock("../../../../common/utils/tar");
+import type { DownloadJson } from "../../../../common/fetch/download-json.injectable";
+import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
+import downloadJsonInjectable from "../../../../common/fetch/download-json.injectable";
+import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
 
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
@@ -50,6 +37,8 @@ describe("Extensions", () => {
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
   let deleteFileMock: jest.MockedFunction<DeleteFile>;
+  let downloadJson: jest.MockedFunction<DownloadJson>;
+  let downloadBinary: jest.MockedFunction<DownloadBinary>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -64,6 +53,12 @@ describe("Extensions", () => {
 
     deleteFileMock = jest.fn();
     di.override(deleteFileInjectable, () => deleteFileMock);
+
+    downloadJson = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
+    di.override(downloadJsonInjectable, () => downloadJson);
+
+    downloadBinary = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
+    di.override(downloadBinaryInjectable, () => downloadBinary);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
@@ -110,7 +105,7 @@ describe("Extensions", () => {
     // Approve confirm dialog
     fireEvent.click(await screen.findByText("Yes"));
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
       fireEvent.click(menuTrigger);
       expect(screen.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
@@ -124,6 +119,7 @@ describe("Extensions", () => {
     render(<Extensions />);
 
     const resolveInstall = observable.box(false);
+    const url = "https://test.extensionurl/package.tgz";
 
     deleteFileMock.mockReturnValue(Promise.resolve());
     installExtensionFromInput.mockImplementation(async (input) => {
@@ -139,13 +135,26 @@ describe("Extensions", () => {
       exact: false,
     }), {
       target: {
-        value: "https://test.extensionurl/package.tgz",
+        value: url,
       },
+    });
+
+    const doResolve = observable.box(false);
+
+    downloadBinary.mockImplementation(async (targetUrl) => {
+      expect(targetUrl).toBe(url);
+
+      await when(() => doResolve.get());
+
+      return {
+        callWasSuccessful: false,
+        error: "unknown location",
+      };
     });
 
     fireEvent.click(await screen.findByText("Install"));
     expect((await screen.findByText("Install")).closest("button")).toBeDisabled();
-    resolveInstall.set(true);
+    doResolve.set(true);
   });
 
   it("displays spinner while extensions are loading", () => {

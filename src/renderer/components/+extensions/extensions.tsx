@@ -32,7 +32,8 @@ import type { InstallExtensionFromInput } from "./install-extension-from-input.i
 import installExtensionFromInputInjectable from "./install-extension-from-input.injectable";
 import installFromSelectFileDialogInjectable from "./install-from-select-file-dialog.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
-import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
+import type { InstallOnDrop } from "./install-on-drop.injectable";
+import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
@@ -44,7 +45,7 @@ interface Dependencies {
   confirmUninstallExtension: ConfirmUninstallExtension;
   installExtensionFromInput: InstallExtensionFromInput;
   installFromSelectFileDialog: () => Promise<void>;
-  installOnDrop: (files: File[]) => Promise<void>;
+  installOnDrop: InstallOnDrop;
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
