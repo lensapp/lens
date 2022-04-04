@@ -70,7 +70,8 @@ const applicationMenuItemsInjectable = getInjectable({
             label: `About ${productName}`,
             id: "about",
             click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-              showAbout(browserWindow);
+              showAbout(browserWindow)
+                .catch(error => logger.error(`[MENU]: Failed to show Lens About view`, { error }));
             },
           },
           ...ignoreIf(autoUpdateDisabled, [
@@ -287,7 +288,8 @@ const applicationMenuItemsInjectable = getInjectable({
               label: `About ${productName}`,
               id: "about",
               click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-                showAbout(browserWindow);
+                showAbout(browserWindow)
+                  .catch(error => logger.error(`[MENU]: Failed to show Lens About view`, { error }));
               },
             },
             ...ignoreIf(autoUpdateDisabled, [

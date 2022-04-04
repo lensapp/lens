@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { BrowserWindow } from "electron";
-import { app, dialog, Menu } from "electron";
+import { app, clipboard, dialog, Menu } from "electron";
 import type { IComputedValue } from "mobx";
 import { autorun } from "mobx";
 import { appName, isWindows, productName } from "../../common/vars";
@@ -20,22 +20,28 @@ export function initMenu(
   });
 }
 
-export function showAbout(browserWindow: BrowserWindow) {
+export async function showAbout(browserWindow: BrowserWindow) {
   const appInfo = [
     `${appName}: ${app.getVersion()}`,
     `Electron: ${process.versions.electron}`,
     `Chrome: ${process.versions.chrome}`,
     `Node: ${process.versions.node}`,
     packageJson.copyright,
-  ];
+  ].join("\n");
 
-  dialog.showMessageBoxSync(browserWindow, {
+  const result = await dialog.showMessageBox(browserWindow, {
     title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
-    buttons: ["Close"],
+    buttons: ["Close", "Copy"],
     message: productName,
-    detail: appInfo.join("\r\n"),
+    detail: appInfo,
+    cancelId: 0,
+    defaultId: 0,
   });
+
+  if (result.response === 0) {
+    clipboard.writeText(appInfo);
+  }
 }
 
 export function buildMenu(
