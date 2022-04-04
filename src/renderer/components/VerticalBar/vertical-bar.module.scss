@@ -1,0 +1,20 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.verticalBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 12px;
+  height: 22px;
+  background-color: #313235;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.value {
+  background-color: gray;
+  transition: all 0.2s ease-in-out;
+}
