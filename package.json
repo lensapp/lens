@@ -272,7 +272,7 @@
     "winston": "^3.6.0",
     "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
-    "ws": "^7.5.5"
+    "ws": "^7.5.7"
   },
   "devDependencies": {
     "@async-fn/jest": "1.5.3",
