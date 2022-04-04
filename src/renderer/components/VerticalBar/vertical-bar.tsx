@@ -15,7 +15,7 @@ interface BarProps extends HTMLAttributes<HTMLDivElement> {
 
 export function VerticalBar({ color, className, value }: BarProps) {
   return (
-    <div className={styles.verticalBar}>
+    <div className={styles.verticalBar} data-testid="vertical-bar">
       <div className={cssNames(styles.value, className)} style={{ backgroundColor: color, height: `${value}%` }}></div>
     </div>
   );
