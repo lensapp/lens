@@ -375,7 +375,7 @@
     "node-gyp": "7.1.2",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.15",
-    "playwright": "^1.20.1",
+    "playwright": "^1.20.2",
     "postcss": "^8.4.12",
     "postcss-loader": "^6.2.1",
     "randomcolor": "^0.6.2",
