@@ -5,39 +5,34 @@
 
 import styles from "./metric-bar.module.scss";
 
-import React, { HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
-import { cssNames, cssVar } from "../../utils";
+import React, { HTMLAttributes, ReactNode } from "react";
 import { VerticalBar } from "../vertical-bar";
+import { TooltipDecoratorProps, withTooltip } from "../tooltip";
+import { cssNames } from "../../utils";
 
-interface BarProps extends HTMLAttributes<HTMLDivElement> {
+interface BarProps extends HTMLAttributes<HTMLDivElement>, TooltipDecoratorProps {
   value: number;
   max: number;
   min?: number;
-  tooltip?: ReactNode;
   showPercent?: ReactNode;
   changeColorOnWarning?: boolean;
   warningPercentage?: number;
-  metricName?: "cpu" | "memory" | "disk";  // Used for color setting
-  customColor?: string;
 }
 
-export function MetricBar(props: BarProps) {
-  const elem = useRef<HTMLDivElement>();
-  const { max, min, tooltip, showPercent, changeColorOnWarning = true, warningPercentage = 85, value, metricName, customColor } = props;
+export const MetricBar = withTooltip((props: BarProps) => {
+  const { max, min = 0, showPercent = true, changeColorOnWarning = true, warningPercentage = 85, value } = props;
   const percents = Math.min(100, value / (max - min) * 100);
-  const [metricColor, setMetricColor] = useState("var(--colorVague)");
-  const color = (percents > warningPercentage && changeColorOnWarning) ? "pink" : customColor || metricColor;
-
-  useEffect(() => {
-    const cssVars = cssVar(elem.current);
-
-    setMetricColor(cssVars.get(`--color-${metricName}`).toString());
-  });
+  const percentsRounded = +percents.toFixed(2);
+  const warning = percents > warningPercentage;
 
   return (
-    <div className={cssNames(styles.metricBar)} data-testid="metric-bar" ref={elem}>
-      <VerticalBar color={color} value={percents} />
-      {showPercent && <label>{percents}%</label>}
+    <div className={cssNames(styles.metricBar, props.className)} data-testid="metric-bar">
+      <VerticalBar
+        value={percentsRounded}
+        className={cssNames(styles.bar, { [styles.warning]: warning && changeColorOnWarning })}
+      />
+      {showPercent && <label>{percentsRounded}%</label>}
     </div>
   );
-}
+});
+

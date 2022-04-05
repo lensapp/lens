@@ -20,6 +20,10 @@
       flex: 1.0;
       align-self: center;
 
+      .metrics {
+        --metric-color: var(--blue);
+      }
+
       .LineProgress {
         color: var(--blue);
       }

@@ -22,6 +22,7 @@ import { eventStore } from "../+events/event.store";
 import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
 import { KubeObjectAge } from "../kube-object/age";
+import { MetricBar } from "../metric-bar";
 
 enum columnId {
   name = "name",
@@ -96,7 +97,8 @@ export class NodesRoute extends React.Component {
     const [usage, capacity] = metrics;
 
     return (
-      <LineProgress
+      <MetricBar
+        className="metrics"
         max={capacity}
         value={usage}
         tooltip={{

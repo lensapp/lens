@@ -9,14 +9,13 @@ import React, { HTMLAttributes } from "react";
 import { cssNames } from "../../utils";
 
 interface BarProps extends HTMLAttributes<HTMLDivElement> {
-  color: string;
   value: number;
 }
 
-export function VerticalBar({ color, className, value }: BarProps) {
+export function VerticalBar({ className, value, ...rest }: BarProps) {
   return (
-    <div className={styles.verticalBar} data-testid="vertical-bar">
-      <div className={cssNames(styles.value, className)} style={{ backgroundColor: color, height: `${value}%` }}></div>
+    <div className={styles.verticalBar} data-testid="vertical-bar" {...rest}>
+      <div className={cssNames(styles.value, className)} style={{ blockSize: `${value}%` }}></div>
     </div>
   );
 }

@@ -4,6 +4,8 @@
  */
 
 .verticalBar {
+  --line-color: gray;
+
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -15,6 +17,6 @@
 }
 
 .value {
-  background-color: gray;
+  background-color: var(--line-color);
   transition: all 0.2s ease-in-out;
 }
