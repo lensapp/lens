@@ -19,6 +19,7 @@ import type { RequestInit } from "node-fetch";
 // eslint-disable-next-line import/no-named-as-default
 import AbortController from "abort-controller";
 import type { Patch } from "rfc6902";
+import logger from "../logger";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
@@ -456,30 +457,46 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   protected updateFromEventsBuffer() {
     const items = this.getItems();
 
-    for (const { type, object } of this.eventsBuffer.clear()) {
-      const index = items.findIndex(item => item.getId() === object.metadata?.uid);
-      const item = items[index];
+    for (const event of this.eventsBuffer.clear()) {
+      if (event.type === "ERROR") {
+        continue;
+      }
 
-      switch (type) {
-        case "ADDED":
+      try {
+        const { type, object } = event;
 
-          // falls through
-        case "MODIFIED": {
-          const newItem = new this.api.objectConstructor(object);
-
-          if (!item) {
-            items.push(newItem);
-          } else {
-            items[index] = newItem;
-          }
-
-          break;
+        if (!object.metadata?.uid) {
+          logger.warn("[KUBE-STORE]: watch event did not have defined .metadata.uid, skipping", { event });
+          // Other parts of the code will break if this happens
+          continue;
         }
-        case "DELETED":
-          if (item) {
-            items.splice(index, 1);
+
+        const index = items.findIndex(item => item.getId() === object.metadata.uid);
+        const item = items[index];
+
+        switch (type) {
+          case "ADDED":
+
+            // fallthrough
+          case "MODIFIED": {
+            const newItem = new this.api.objectConstructor(object);
+
+            if (!item) {
+              items.push(newItem);
+            } else {
+              items[index] = newItem;
+            }
+
+            break;
           }
-          break;
+          case "DELETED":
+            if (item) {
+              items.splice(index, 1);
+            }
+            break;
+        }
+      } catch (error) {
+        logger.error("[KUBE-STORE]: failed to handle event from watch buffer", { error, event });
       }
     }
 

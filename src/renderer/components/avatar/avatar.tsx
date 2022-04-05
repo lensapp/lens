@@ -57,10 +57,7 @@ function getLabelFromTitle(title: string) {
 
 export function Avatar(props: AvatarProps) {
   const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, ...rest } = props;
-
-  const getBackgroundColor = () => {
-    return background || randomColor({ seed: colorHash, luminosity: "dark" });
-  };
+  const colorFromHash = randomColor({ seed: colorHash, luminosity: "dark" });
 
   const renderContents = () => {
     if (src) {
@@ -77,7 +74,11 @@ export function Avatar(props: AvatarProps) {
         [styles.rounded]: variant == "rounded",
         [styles.disabled]: disabled,
       }, className)}
-      style={{ width: `${size}px`, height: `${size}px`, backgroundColor: getBackgroundColor() }}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        background: background || (src ? "transparent" : colorFromHash),
+      }}
       {...rest}
     >
       {renderContents()}

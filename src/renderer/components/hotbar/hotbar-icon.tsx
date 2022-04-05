@@ -61,7 +61,7 @@ export const HotbarIcon = observer(({ menuItems = [], size = 40, tooltip, ...pro
         id={id}
         title={title}
         colorHash={`${title}-${source}`}
-        className={cssNames(styles.avatar, { [styles.active]: active })}
+        className={cssNames(styles.avatar, { [styles.active]: active, [styles.hasImage]: !!src })}
         disabled={disabled}
         size={size}
         src={src}

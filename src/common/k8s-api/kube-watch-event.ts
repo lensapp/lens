@@ -4,9 +4,13 @@
  */
 
 import type { KubeJsonApiData } from "./kube-json-api";
+import type { KubeStatusData } from "./kube-object";
 
-export interface IKubeWatchEvent<T extends KubeJsonApiData> {
-  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
-  object?: T;
-}
+export type IKubeWatchEvent<T extends KubeJsonApiData> = {
+  type: "ADDED" | "MODIFIED" | "DELETED";
+  object: T;
+} | {
+  type: "ERROR";
+  object: KubeStatusData;
+};
 
