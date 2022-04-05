@@ -92,7 +92,11 @@ export class NodesRoute extends React.Component {
     const metrics = this.getLastMetricValues(node, metricNames);
 
     if (!metrics || metrics.length < 2) {
-      return <VerticalBar value={0}/>;
+      return (
+        <div className="opacity-50 flex gap-2 items-center">
+          <VerticalBar value={0}/>0%
+        </div>
+      );
     }
 
     const [usage, capacity] = metrics;
