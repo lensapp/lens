@@ -18,6 +18,7 @@ import catalogEntityDetailItemsInjectable from "./catalog-entity-detail-items/ca
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { CatalogEntityDetailItem } from "./catalog-entity-detail-items/catalog-entity-detail-item-injection-token";
 import type { IComputedValue } from "mobx";
+import showDefaultCatalogEntityDetailItemsInjectable from "./show-default-catalog-entity-detail-items.injectable";
 
 export interface CatalogEntityDetailsProps<T extends CatalogEntity> {
   entity: T;
@@ -26,59 +27,62 @@ export interface CatalogEntityDetailsProps<T extends CatalogEntity> {
 }
 
 interface Dependencies {
-  detailItems: IComputedValue<CatalogEntityDetailItem<any>[]>;
+  detailItems: IComputedValue<CatalogEntityDetailItem<CatalogEntity>[]>;
+  showDefaultCatalogEntityDetailItems: IComputedValue<boolean>;
 }
 
 @observer
 class NonInjectedCatalogEntityDetails<T extends CatalogEntity> extends Component<CatalogEntityDetailsProps<T> & Dependencies> {
   renderContent(entity: T) {
-    const { onRun, hideDetails } = this.props;
+    const { onRun, hideDetails, showDefaultCatalogEntityDetailItems } = this.props;
 
     return (
       <>
-        <div className="flex">
-          <div className={styles.entityIcon}>
-            <Avatar
-              title={entity.getName()}
-              colorHash={`${entity.getName()}-${entity.getSource()}`}
-              size={128}
-              src={entity.spec.icon?.src}
-              data-testid="detail-panel-hot-bar-icon"
-              background={entity.spec.icon?.background}
-              onClick={onRun}
-              className={styles.avatar}
-            >
-              {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material}/>}
-            </Avatar>
-            {entity.isEnabled() && (
-              <div className={styles.hint}>
-                  Click to open
-              </div>
-            )}
-          </div>
-          <div className={cssNames("box grow", styles.metadata)}>
-            <DrawerItem name="Name">
-              {entity.getName()}
-            </DrawerItem>
-            <DrawerItem name="Kind">
-              {entity.kind}
-            </DrawerItem>
-            <DrawerItem name="Source">
-              {entity.getSource()}
-            </DrawerItem>
-            <DrawerItem name="Status">
-              {entity.status.phase}
-            </DrawerItem>
-            <DrawerItem name="Labels">
-              {getLabelBadges(entity, hideDetails)}
-            </DrawerItem>
-            {isDevelopment && (
-              <DrawerItem name="Id">
-                {entity.getId()}
+        {showDefaultCatalogEntityDetailItems.get() && (
+          <div className="flex">
+            <div className={styles.entityIcon}>
+              <Avatar
+                title={entity.getName()}
+                colorHash={`${entity.getName()}-${entity.getSource()}`}
+                size={128}
+                src={entity.spec.icon?.src}
+                data-testid="detail-panel-hot-bar-icon"
+                background={entity.spec.icon?.background}
+                onClick={onRun}
+                className={styles.avatar}
+              >
+                {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material}/>}
+              </Avatar>
+              {entity.isEnabled() && (
+                <div className={styles.hint}>
+                    Click to open
+                </div>
+              )}
+            </div>
+            <div className={cssNames("box grow", styles.metadata)}>
+              <DrawerItem name="Name">
+                {entity.getName()}
               </DrawerItem>
-            )}
+              <DrawerItem name="Kind">
+                {entity.kind}
+              </DrawerItem>
+              <DrawerItem name="Source">
+                {entity.getSource()}
+              </DrawerItem>
+              <DrawerItem name="Status">
+                {entity.status.phase}
+              </DrawerItem>
+              <DrawerItem name="Labels">
+                {getLabelBadges(entity, hideDetails)}
+              </DrawerItem>
+              {isDevelopment && (
+                <DrawerItem name="Id">
+                  {entity.getId()}
+                </DrawerItem>
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="box grow">
           {this.props.detailItems.get().map(({ components: { Details }}, index) => <Details entity={entity} key={index} />)}
         </div>
@@ -104,12 +108,20 @@ class NonInjectedCatalogEntityDetails<T extends CatalogEntity> extends Component
   }
 }
 
-const InjectedCatalogEntityDetails = withInjectables<Dependencies, CatalogEntityDetailsProps<CatalogEntity>>(
+const InjectedCatalogEntityDetails = withInjectables<
+  Dependencies,
+  CatalogEntityDetailsProps<CatalogEntity>
+>(
   NonInjectedCatalogEntityDetails,
 
   {
     getProps: (di, props) => ({
       detailItems: di.inject(catalogEntityDetailItemsInjectable, props.entity),
+
+      showDefaultCatalogEntityDetailItems: di.inject(
+        showDefaultCatalogEntityDetailItemsInjectable,
+        props.entity,
+      ),
       ...props,
     }),
   },
