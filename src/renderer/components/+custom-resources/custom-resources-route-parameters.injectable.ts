@@ -12,7 +12,7 @@ const customResourcesRouteParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(customResourcesRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       group: computed(() => pathParameters.get().group),

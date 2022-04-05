@@ -120,7 +120,7 @@ export enum ClusterStatus {
 }
 
 /**
- * The message format for the "cluster:<cluster-id>:connection-update" channels
+ * The message format for the "cluster:connection-update" channel
  */
 export interface KubeAuthUpdate {
   message: string;

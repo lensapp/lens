@@ -6,12 +6,12 @@
 import "./cluster-view.scss";
 import React from "react";
 import type { IComputedValue } from "mobx";
-import { computed, makeObservable, reaction } from "mobx";
+import { when, computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import type { ClusterFrameHandler } from "./cluster-frame-handler";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
+import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -20,17 +20,24 @@ import clusterViewRouteParametersInjectable from "./cluster-view-route-parameter
 import clusterFrameHandlerInjectable from "./cluster-frame-handler.injectable";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import type { ClusterConnectionStatusState } from "./cluster-status.state.injectable";
+import clusterConnectionStatusStateInjectable from "./cluster-status.state.injectable";
+import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
+import type { Disposer } from "../../utils";
+import { disposer } from "../../utils";
 
 interface Dependencies {
-  clusterId: IComputedValue<string>;
+  clusterId: IComputedValue<string | undefined>;
   clusterFrames: ClusterFrameHandler;
   navigateToCatalog: NavigateToCatalog;
   entityRegistry: CatalogEntityRegistry;
+  clusterConnectionStatusState: ClusterConnectionStatusState;
+  clusterStore: ClusterStore;
 }
 
 @observer
 class NonInjectedClusterView extends React.Component<Dependencies> {
-  private readonly store = ClusterStore.getInstance();
+  private navigateToClusterDisposer?: Disposer;
 
   constructor(props: Dependencies) {
     super(props);
@@ -42,13 +49,30 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
   }
 
   @computed get cluster(): Cluster | undefined {
-    return this.store.getById(this.clusterId);
+    const { clusterId } = this;
+
+    if (!clusterId) {
+      return undefined;
+    }
+
+    return this.props.clusterStore.getById(clusterId);
   }
 
-  private readonly isViewLoaded = computed(() => this.props.clusterFrames.hasLoadedView(this.clusterId), {
-    keepAlive: true,
-    requiresReaction: true,
-  });
+  private readonly isViewLoaded = computed(
+    () => {
+      const { clusterId } = this;
+
+      if (!clusterId) {
+        return false;
+      }
+
+      return this.props.clusterFrames.hasLoadedView(clusterId);
+    },
+    {
+      keepAlive: true,
+      requiresReaction: true,
+    },
+  );
 
   @computed get isReady(): boolean {
     const { cluster } = this;
@@ -68,8 +92,13 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
   bindEvents() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
-        // TODO: replace with better handling
-        if (clusterId && !this.props.entityRegistry.getById(clusterId)) {
+        this.navigateToClusterDisposer?.();
+
+        if (!clusterId) {
+          return;
+        }
+
+        if (!this.props.entityRegistry.getById(clusterId)) {
           return this.props.navigateToCatalog(); // redirect to catalog when the clusterId does not correspond to an entity
         }
 
@@ -77,14 +106,29 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
         this.props.clusterFrames.initView(clusterId);
         requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
         this.props.entityRegistry.activeEntity = clusterId;
+
+        const navigateToClusterDisposer = disposer(
+          when(
+            () => this.cluster?.disconnected === false,
+            () => {
+              navigateToClusterDisposer.push(when(
+                // The clusterId check makes sure that we are still talking about the same cluster
+                () => (this.cluster?.disconnected ?? true) && this.clusterId === clusterId,
+                () => {
+                  this.props.navigateToCatalog();
+                },
+              ));
+            },
+          ),
+        );
+
+        this.navigateToClusterDisposer = navigateToClusterDisposer;
+
+        disposeOnUnmount(this, [
+          navigateToClusterDisposer,
+        ]);
       }, {
         fireImmediately: true,
-      }),
-
-      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], ([, disconnected]) => {
-        if (this.isViewLoaded.get() && disconnected) {
-          this.props.navigateToCatalog(); // redirect to catalog when active cluster get disconnected/not available
-        }
       }),
     ]);
   }
@@ -114,6 +158,8 @@ export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView,
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     clusterFrames: di.inject(clusterFrameHandlerInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    clusterConnectionStatusState: di.inject(clusterConnectionStatusStateInjectable),
+    clusterStore: di.inject(clusterStoreInjectable),
   }),
 });
 

@@ -12,7 +12,7 @@ const clusterViewRouteParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(clusterViewRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       clusterId: computed(() => pathParameters.get().clusterId),

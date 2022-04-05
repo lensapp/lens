@@ -12,7 +12,7 @@ const helmChartsRouteParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(helmChartsRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       chartName: computed(() => pathParameters.get().chartName),

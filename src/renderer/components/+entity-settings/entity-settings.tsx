@@ -24,7 +24,7 @@ import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.i
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
 interface Dependencies {
-  entityId: IComputedValue<string>;
+  entityId: IComputedValue<string | undefined>;
   entityRegistry: CatalogEntityRegistry;
   observableHistory: ObservableHistory<unknown>;
 }
@@ -54,8 +54,15 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
     return this.props.entityId.get();
   }
 
+  @computed
   get entity() {
-    return this.props.entityRegistry.getById(this.entityId);
+    const { entityId } = this;
+
+    if (!entityId) {
+      return undefined;
+    }
+
+    return this.props.entityRegistry.getById(entityId);
   }
 
   get menuItems() {

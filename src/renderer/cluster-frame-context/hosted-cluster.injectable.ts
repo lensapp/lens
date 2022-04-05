@@ -13,6 +13,10 @@ const hostedClusterInjectable = getInjectable({
     const hostedClusterId = di.inject(hostedClusterIdInjectable);
     const store = di.inject(clusterStoreInjectable);
 
+    if (!hostedClusterId) {
+      return undefined;
+    }
+
     return store.getById(hostedClusterId);
   },
 });

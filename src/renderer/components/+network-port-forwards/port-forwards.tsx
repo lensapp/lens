@@ -32,7 +32,7 @@ enum columnId {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  forwardport: IComputedValue<string>;
+  forwardport: IComputedValue<string | undefined>;
   navigateToPortForwards: NavigateToPortForwards;
 }
 
@@ -158,19 +158,11 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
   }
 }
 
-export const PortForwards = withInjectables<Dependencies>(
-  NonInjectedPortForwards,
-
-  {
-    getProps: (di) => {
-      const routeParameters = di.inject(portForwardsRouteParametersInjectable);
-
-      return {
-        portForwardStore: di.inject(portForwardStoreInjectable),
-        forwardport: routeParameters.forwardport,
-        navigateToPortForwards: di.inject(navigateToPortForwardsInjectable),
-      };
-    },
-  },
-);
+export const PortForwards = withInjectables<Dependencies>(NonInjectedPortForwards, {
+  getProps: (di) => ({
+    portForwardStore: di.inject(portForwardStoreInjectable),
+    navigateToPortForwards: di.inject(navigateToPortForwardsInjectable),
+    ...di.inject(portForwardsRouteParametersInjectable),
+  }),
+});
 

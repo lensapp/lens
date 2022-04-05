@@ -12,7 +12,7 @@ const portForwardsRouteParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(portForwardsRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       forwardport: computed(() => pathParameters.get().forwardport),

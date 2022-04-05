@@ -27,8 +27,8 @@ enum columnId {
 }
 
 interface Dependencies {
-  group: IComputedValue<string>;
-  name: IComputedValue<string>;
+  group: IComputedValue<string | undefined>;
+  name: IComputedValue<string | undefined>;
   apiManager: ApiManager;
   customResourceDefinitionStore: CustomResourceDefinitionStore;
 }
@@ -41,7 +41,14 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
   }
 
   @computed get crd() {
-    return this.props.customResourceDefinitionStore.getByGroup(this.props.group.get(), this.props.name.get());
+    const group = this.props.group.get();
+    const name = this.props.name.get();
+
+    if (!group || !name) {
+      return undefined;
+    }
+
+    return this.props.customResourceDefinitionStore.getByGroup(group, name);
   }
 
   @computed get store() {

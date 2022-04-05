@@ -12,7 +12,7 @@ const catalogRouteParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(catalogRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       group: computed(() => pathParameters.get().group),

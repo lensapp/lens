@@ -625,7 +625,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const update: KubeAuthUpdate = { message, isError };
 
     this.dependencies.logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: this.getMeta() });
-    broadcastMessage(`cluster:${this.id}:connection-update`, update);
+    broadcastMessage(`cluster:connection-update`, this.id, update);
   }
 
   protected async getAllowedNamespaces(proxyConfig: KubeConfig) {

@@ -15,7 +15,15 @@ const getActiveClusterEntityInjectable = getInjectable({
     const store = di.inject(clusterStoreInjectable);
     const entityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    return () => store.getById(entityRegistry.activeEntity?.getId());
+    return () => {
+      const entityId = entityRegistry.activeEntity?.getId();
+
+      if (!entityId) {
+        return undefined;
+      }
+
+      return store.getById(entityId);
+    };
   },
 });
 

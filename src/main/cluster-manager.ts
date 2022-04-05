@@ -23,8 +23,8 @@ const logPrefix = "[CLUSTER-MANAGER]:";
 const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
 interface Dependencies {
-  store: ClusterStore;
-  catalogEntityRegistry: CatalogEntityRegistry;
+  readonly store: ClusterStore;
+  readonly entityRegistry: CatalogEntityRegistry;
 }
 
 export class ClusterManager {
@@ -32,7 +32,7 @@ export class ClusterManager {
 
   @observable visibleCluster: ClusterId | undefined = undefined;
 
-  constructor(private dependencies: Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 
@@ -52,12 +52,12 @@ export class ClusterManager {
     );
 
     reaction(
-      () => this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
+      () => this.dependencies.entityRegistry.filterItemsByPredicate(isKubernetesCluster),
       entities => this.syncClustersFromCatalog(entities),
     );
 
     reaction(() => [
-      this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
+      this.dependencies.entityRegistry.filterItemsByPredicate(isKubernetesCluster),
       this.visibleCluster,
     ] as const, ([entities, visibleCluster]) => {
       for (const entity of entities) {
@@ -71,7 +71,7 @@ export class ClusterManager {
 
     observe(this.deleting, change => {
       if (change.type === "add") {
-        this.updateEntityStatus(this.dependencies.catalogEntityRegistry.findById(change.newValue) as KubernetesCluster);
+        this.updateEntityStatus(this.dependencies.entityRegistry.findById(change.newValue) as KubernetesCluster);
       }
     });
 
@@ -89,13 +89,13 @@ export class ClusterManager {
   }
 
   protected updateEntityFromCluster(cluster: Cluster) {
-    const index = this.dependencies.catalogEntityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
+    const index = this.dependencies.entityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
 
     if (index === -1) {
       return;
     }
 
-    const entity = this.dependencies.catalogEntityRegistry.items[index] as KubernetesCluster;
+    const entity = this.dependencies.entityRegistry.items[index] as KubernetesCluster;
 
     this.updateEntityStatus(entity, cluster);
 
@@ -136,7 +136,7 @@ export class ClusterManager {
       cluster.preferences.icon = undefined;
     }
 
-    this.dependencies.catalogEntityRegistry.items.splice(index, 1, entity);
+    this.dependencies.entityRegistry.items.splice(index, 1, entity);
   }
 
   @action
@@ -279,7 +279,13 @@ export class ClusterManager {
       return cluster;
     }
 
-    return this.dependencies.store.getById(getClusterIdFromHost(req.headers.host));
+    const clusterId = getClusterIdFromHost(req.headers.host);
+
+    if (!clusterId) {
+      return undefined;
+    }
+
+    return this.dependencies.store.getById(clusterId);
   };
 }
 

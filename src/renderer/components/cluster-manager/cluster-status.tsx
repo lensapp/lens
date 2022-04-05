@@ -5,23 +5,23 @@
 
 import styles from "./cluster-status.module.scss";
 
-import { computed, observable, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import React from "react";
-import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { IClassName } from "../../utils";
-import { isBoolean, hasTypedProperty, isObject, isString, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import type { KubeAuthUpdate } from "../../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { requestClusterActivation } from "../../ipc";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import type { ClusterConnectionStatus } from "./cluster-status.state.injectable";
+import clusterConnectionStatusStateInjectable from "./cluster-status.state.injectable";
 
 export interface ClusterStatusProps {
   className?: IClassName;
@@ -31,89 +31,58 @@ export interface ClusterStatusProps {
 interface Dependencies {
   navigateToEntitySettings: NavigateToEntitySettings;
   entityRegistry: CatalogEntityRegistry;
+  state: ClusterConnectionStatus;
 }
 
-@observer
-class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Dependencies> {
-  @observable authOutput: KubeAuthUpdate[] = [];
-  @observable isReconnecting = false;
+const NonInjectedClusterStatus = observer((props: ClusterStatusProps & Dependencies) => {
+  const {
+    cluster,
+    navigateToEntitySettings,
+    state,
+    className,
+    entityRegistry,
+  } = props;
+  const entity = entityRegistry.getById(cluster.id);
+  const clusterName = entity?.getName() ?? cluster.name;
 
-  constructor(props: ClusterStatusProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  get cluster(): Cluster {
-    return this.props.cluster;
-  }
-
-  @computed get entity() {
-    return this.props.entityRegistry.getById(this.cluster.id);
-  }
-
-  @computed get hasErrors(): boolean {
-    return this.authOutput.some(({ isError }) => isError);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: unknown) => {
-        if (
-          isObject(res)
-          && hasTypedProperty(res, "message", isString)
-          && hasTypedProperty(res, "isError", isBoolean)
-        ) {
-          this.authOutput.push(res);
-        } else {
-          console.warn(`Got invalid connection update for ${this.cluster.id}`, { update: res });
-        }
-      }),
-    ]);
-  }
-
-  componentDidUpdate(prevProps: Readonly<ClusterStatusProps>): void {
-    if (prevProps.cluster.id !== this.props.cluster.id) {
-      this.isReconnecting = false;
-      this.authOutput = [];
-    }
-  }
-
-  reconnect = async () => {
-    this.authOutput = [];
-    this.isReconnecting = true;
+  const reconnect = async () => {
+    runInAction(() => {
+      state.resetAuthOutput();
+      state.setAsReconnecting();
+    });
 
     try {
-      await requestClusterActivation(this.cluster.id, true);
+      await requestClusterActivation(cluster.id, true);
     } catch (error) {
-      this.authOutput.push({
+      state.appendAuthUpdate({
         message: String(error),
         isError: true,
       });
     } finally {
-      this.isReconnecting = false;
+      state.clearReconnectingState();
     }
   };
 
-  manageProxySettings = () => {
-    this.props.navigateToEntitySettings(this.cluster.id, "proxy");
-  };
+  const manageProxySettings = () => navigateToEntitySettings(cluster.id, "proxy");
 
-  renderAuthenticationOutput() {
+  const renderAuthenticationOutput = () => {
     return (
       <pre>
         {
-          this.authOutput.map(({ message, isError }, index) => (
-            <p key={index} className={cssNames({ error: isError })}>
-              {message.trim()}
-            </p>
-          ))
+          state.authOutput
+            .get()
+            .map(({ message, isError }, index) => (
+              <p key={index} className={cssNames({ error: isError })}>
+                {message.trim()}
+              </p>
+            ))
         }
       </pre>
     );
-  }
+  };
 
-  renderStatusIcon() {
-    if (this.hasErrors) {
+  const renderStatusIcon = () => {
+    if (state.hasErrorOutput.get()) {
       return <Icon material="cloud_off" className={styles.icon} />;
     }
 
@@ -122,28 +91,28 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
         <Spinner singleColor={false} className={styles.spinner} />
         <pre className="kube-auth-out">
           <p>
-            {this.isReconnecting ? "Reconnecting" : "Connecting"}
+            {state.isReconnecting.get() ? "Reconnecting" : "Connecting"}
             &hellip;
           </p>
         </pre>
       </>
     );
-  }
+  };
 
-  renderReconnectionHelp() {
-    if (this.hasErrors && !this.isReconnecting) {
+  const renderReconnectionHelp = () => {
+    if (state.hasErrorOutput.get() && !state.isReconnecting.get()) {
       return (
         <>
           <Button
             primary
             label="Reconnect"
             className="box center"
-            onClick={this.reconnect}
-            waiting={this.isReconnecting}
+            onClick={reconnect}
+            waiting={state.isReconnecting.get()}
           />
           <a
             className="box center interactive"
-            onClick={this.manageProxySettings}
+            onClick={manageProxySettings}
           >
             Manage Proxy Settings
           </a>
@@ -152,26 +121,25 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     }
 
     return undefined;
-  }
+  };
 
-  render() {
-    return (
-      <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
-        <div className="flex items-center column gaps">
-          <h2>{this.entity?.getName() ?? this.cluster.name}</h2>
-          {this.renderStatusIcon()}
-          {this.renderAuthenticationOutput()}
-          {this.renderReconnectionHelp()}
-        </div>
+  return (
+    <div className={cssNames(styles.status, "flex column box center align-center justify-center", className)}>
+      <div className="flex items-center column gaps">
+        <h2>{clusterName}</h2>
+        {renderStatusIcon()}
+        {renderAuthenticationOutput()}
+        {renderReconnectionHelp()}
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
 
 export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(NonInjectedClusterStatus, {
   getProps: (di, props) => ({
     ...props,
     navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    state: di.inject(clusterConnectionStatusStateInjectable).forCluster(props.cluster.id),
   }),
 });

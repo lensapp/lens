@@ -106,12 +106,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.size > 0;
   }
 
-  getById(id: ClusterId | undefined): Cluster | undefined {
-    if (id) {
-      return this.clusters.get(id);
-    }
-
-    return undefined;
+  getById(id: ClusterId): Cluster | undefined {
+    return this.clusters.get(id);
   }
 
   addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {

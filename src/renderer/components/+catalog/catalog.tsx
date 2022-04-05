@@ -56,8 +56,8 @@ interface Dependencies {
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
   emitEvent: (event: AppEvent) => void;
   routeParameters: {
-    group: IComputedValue<string>;
-    kind: IComputedValue<string>;
+    group: IComputedValue<string | undefined>;
+    kind: IComputedValue<string | undefined>;
   };
   navigateToCatalog: NavigateToCatalog;
   hotbarStore: HotbarStore;

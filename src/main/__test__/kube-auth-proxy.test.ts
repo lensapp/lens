@@ -219,7 +219,7 @@ describe("kube auth proxy tests", () => {
       mockWaitUntilUsed.mockReturnValueOnce(Promise.resolve());
 
       const cluster = createCluster({
-        id: "foobar",
+        id: "some-cluster-id",
         kubeConfigPath: "minikube-config.yml",
         contextName: "minikube",
       }, {
@@ -233,34 +233,34 @@ describe("kube auth proxy tests", () => {
       await proxy.run();
       listeners.emit("error", { message: "foobarbat" });
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { message: "foobarbat", isError: true });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "foobarbat", isError: true });
     });
 
     it("should call spawn and broadcast exit", async () => {
       await proxy.run();
       listeners.emit("exit", 0);
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { message: "proxy exited with code: 0", isError: false });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "proxy exited with code: 0", isError: false });
     });
 
     it("should call spawn and broadcast errors from stderr", async () => {
       await proxy.run();
       listeners.emit("stderr/data", "an error");
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { message: "an error", isError: true });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "an error", isError: true });
     });
 
     it("should call spawn and broadcast stdout serving info", async () => {
       await proxy.run();
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { message: "Authentication proxy started", isError: false });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "Authentication proxy started", isError: false });
     });
 
     it("should call spawn and broadcast stdout other info", async () => {
       await proxy.run();
       listeners.emit("stdout/data", "some info");
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:foobar:connection-update", { message: "some info", isError: false });
+      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "some info", isError: false });
     });
   });
 });

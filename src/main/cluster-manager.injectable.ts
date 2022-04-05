@@ -13,7 +13,7 @@ const clusterManagerInjectable = getInjectable({
   instantiate: (di) => {
     const clusterManager = new ClusterManager({
       store: di.inject(clusterStoreInjectable),
-      catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
+      entityRegistry: di.inject(catalogEntityRegistryInjectable),
     });
 
     clusterManager.init();

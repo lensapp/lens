@@ -12,7 +12,7 @@ const helmReleasesRouteParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(helmReleasesRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       namespace: computed(() => pathParameters.get().namespace),

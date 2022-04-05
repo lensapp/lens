@@ -40,7 +40,7 @@ interface Dependencies {
   releases: IComputedValue<RemovableHelmRelease[]>;
   releasesArePending: IComputedValue<boolean>;
   selectNamespace: (namespace: string) => void;
-  namespace: IComputedValue<string>;
+  namespace: IComputedValue<string | undefined>;
   navigateToHelmReleases: NavigateToHelmReleases;
 }
 
@@ -213,20 +213,12 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
   }
 }
 
-export const HelmReleases = withInjectables<Dependencies>(
-  NonInjectedHelmReleases,
-
-  {
-    getProps: (di) => {
-      const routeParameters = di.inject(helmReleasesRouteParametersInjectable);
-
-      return {
-        releases: di.inject(removableReleasesInjectable),
-        releasesArePending: di.inject(releasesInjectable).pending,
-        selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
-        navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
-        namespace: routeParameters.namespace,
-      };
-    },
-  },
-);
+export const HelmReleases = withInjectables<Dependencies>(NonInjectedHelmReleases, {
+  getProps: (di) => ({
+    releases: di.inject(removableReleasesInjectable),
+    releasesArePending: di.inject(releasesInjectable).pending,
+    selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
+    navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
+    ...di.inject(helmReleasesRouteParametersInjectable),
+  }),
+});
