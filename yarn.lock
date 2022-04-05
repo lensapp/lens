@@ -10988,10 +10988,10 @@ react-redux@^7.2.0:
     prop-types "^15.7.2"
     react-is "^16.13.1"
 
-react-refresh-typescript@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-refresh-typescript/-/react-refresh-typescript-2.0.3.tgz#73fd93befd2a0a0fd8041c39cc82b8c04aec00c3"
-  integrity sha512-CnR+UkpCFUIxW3u+KPxc6UhSO3M3aQxd9XCvgdry4a22LFwwITnjbANFUKtPGxA/Skw3PbZJrLiZ08UQnpXprQ==
+react-refresh-typescript@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-refresh-typescript/-/react-refresh-typescript-2.0.4.tgz#f20acdb3a538fc79da10c64fdd5560bea01309f1"
+  integrity sha512-ySsBExEFik5Jjf7NoXtFbzUk2rYWM4gF5gg+wRTNmp9p7B2uMpAAa339FHWqmB8EAr0e6mzzskAXxc0Jd04fBw==
 
 react-refresh@^0.11.0:
   version "0.11.0"
