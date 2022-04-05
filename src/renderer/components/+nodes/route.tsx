@@ -11,7 +11,6 @@ import { TabLayout } from "../layout/tab-layout-2";
 import { nodesStore } from "./nodes.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { formatNodeTaint, getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
-import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../../common/utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
@@ -23,6 +22,7 @@ import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
 import { KubeObjectAge } from "../kube-object/age";
 import { MetricBar } from "../metric-bar";
+import { VerticalBar } from "../vertical-bar";
 
 enum columnId {
   name = "name",
@@ -50,6 +50,7 @@ interface UsageArgs {
 export class NodesRoute extends React.Component {
   @observable.ref metrics: Partial<INodeMetrics> = {};
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
+  private metricBarHeight = 22;
 
   constructor(props: any) {
     super(props);
@@ -91,7 +92,7 @@ export class NodesRoute extends React.Component {
     const metrics = this.getLastMetricValues(node, metricNames);
 
     if (!metrics || metrics.length < 2) {
-      return <LineProgress value={0}/>;
+      return <VerticalBar value={0}/>;
     }
 
     const [usage, capacity] = metrics;
@@ -101,6 +102,7 @@ export class NodesRoute extends React.Component {
         className="metrics"
         max={capacity}
         value={usage}
+        height={this.metricBarHeight}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
           children: `${title}: ${formatters.map(formatter => formatter([usage, capacity])).join(", ")}`,
@@ -232,6 +234,11 @@ export class NodesRoute extends React.Component {
               <KubeObjectAge key="age" object={node} />,
               this.renderConditions(node),
             ];
+          }}
+          tableProps={{
+            customRowHeights: (item, lineHeight, paddings) => {
+              return paddings + this.metricBarHeight;
+            },
           }}
         />
       </TabLayout>

@@ -6,6 +6,10 @@
 @import "nodes-mixins";
 
 .Nodes {
+  .TableRow {
+    align-items: center;
+  }
+
   .TableCell {
     &.name {
       flex: 2;
@@ -23,18 +27,14 @@
       .metrics {
         --metric-color: var(--blue);
       }
-
-      .LineProgress {
-        color: var(--blue);
-      }
     }
 
     &.memory {
       flex: 1.0;
       align-self: center;
 
-      .LineProgress {
-        color: var(--magenta);
+      .metrics {
+        --metric-color: var(--magenta);
       }
     }
 
@@ -42,8 +42,8 @@
       flex: 1.0;
       align-self: center;
 
-      .LineProgress {
-        color: var(--golden);
+      .metrics {
+        --metric-color: var(--golden);
       }
     }
 
