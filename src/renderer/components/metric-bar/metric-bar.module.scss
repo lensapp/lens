@@ -7,7 +7,7 @@
   --metric-color: gray;
 
   display: flex;
-  gap: 0.5rem;
+  gap: var(--padding);
   align-items: center;
 }
 
