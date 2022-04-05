@@ -10,7 +10,6 @@ import { Catalog } from "./catalog";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import { CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
 import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -101,7 +100,6 @@ describe("<Catalog />", () => {
 
     UserStore.createInstance();
     ThemeStore.createInstance();
-    CatalogEntityDetailRegistry.createInstance();
 
     render = renderFor(di);
 
@@ -123,7 +121,6 @@ describe("<Catalog />", () => {
   afterEach(() => {
     UserStore.resetInstance();
     ThemeStore.resetInstance();
-    CatalogEntityDetailRegistry.resetInstance();
 
     jest.clearAllMocks();
     jest.restoreAllMocks();

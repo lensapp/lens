@@ -28,6 +28,9 @@ import extensionPageParametersInjectable from "../renderer/routes/extension-page
 import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/get-extension-route-path";
 import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
+import type {
+  CatalogEntityDetailRegistration,
+} from "../renderer/components/+catalog/catalog-entity-detail-items/extension-registration";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -43,7 +46,7 @@ export class LensRendererExtension extends LensExtension {
   commands: CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
   welcomeBanners: WelcomeBannerRegistration[] = [];
-  catalogEntityDetailItems: registries.CatalogEntityDetailRegistration<CatalogEntity>[] = [];
+  catalogEntityDetailItems: CatalogEntityDetailRegistration<CatalogEntity>[] = [];
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
