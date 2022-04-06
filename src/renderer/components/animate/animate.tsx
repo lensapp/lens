@@ -83,23 +83,23 @@ export class Animate extends React.Component<AnimateProps> {
   }
 
   render() {
-    const { name, enterDuration, leaveDuration } = this.props;
-    const contentElem = this.contentElem;
-    const durations = {
-      "--enter-duration": `${enterDuration}ms`,
-      "--leave-duration": `${leaveDuration}ms`,
-    } as React.CSSProperties;
-
     if (!this.isVisible) {
       return null;
     }
+
+    const { name, enterDuration, leaveDuration } = this.props;
+    const contentElem = this.contentElem;
+    const cssVarsForAnimation = {
+      "--enter-duration": `${enterDuration}ms`,
+      "--leave-duration": `${leaveDuration}ms`,
+    } as React.CSSProperties;
 
     return React.cloneElement(contentElem, {
       className: cssNames("Animate", name, contentElem.props.className, this.statusClassName),
       children: contentElem.props.children,
       style: {
         ...contentElem.props.style,
-        ...durations,
+        ...cssVarsForAnimation,
       },
     });
   }

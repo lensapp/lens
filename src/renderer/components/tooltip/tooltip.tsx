@@ -9,7 +9,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames, IClassName } from "../../utils";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, action } from "mobx";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -54,16 +54,12 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable.ref elem: HTMLElement;
   @observable activePosition: TooltipPosition;
-  @observable isDomNodeRendered = false;
-  @observable isVisible = false;
+  @observable isVisible = this.props.visible ?? false;
+  @observable isContentVisible = false; // animation manager
 
   constructor(props: TooltipProps) {
     super(props);
     makeObservable(this);
-  }
-
-  get visible() {
-    return this.isVisible || this.props.visible;
   }
 
   get targetElem(): HTMLElement {
@@ -85,10 +81,6 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   componentDidUpdate() {
     this.refreshPosition();
-
-    // this.isVisible should be updated after Tooltip DOM node rendered
-    // to show opening animation by adding classname
-    this.isVisible = this.isDomNodeRendered;
   }
 
   componentWillUnmount() {
@@ -96,14 +88,16 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @boundMethod
+  @action.bound
   protected onEnterTarget() {
-    this.isDomNodeRendered = true;
+    this.isVisible = true;
+    requestAnimationFrame(action(() => this.isContentVisible = true));
   }
 
-  @boundMethod
+  @action.bound
   protected onLeaveTarget() {
-    this.isDomNodeRendered = false;
+    this.isVisible = false;
+    this.isContentVisible = false;
   }
 
   @boundMethod
@@ -230,9 +224,13 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
+    if (!this.isVisible) {
+      return null;
+    }
+
     const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      visible: this.visible,
+      visible: this.isContentVisible,
       formatter: !!formatters,
     });
     const tooltip = (
@@ -240,10 +238,6 @@ export class Tooltip extends React.Component<TooltipProps> {
         {children}
       </div>
     );
-
-    if (!this.isDomNodeRendered) {
-      return null;
-    }
 
     if (usePortal) {
       return createPortal(tooltip, document.body);
