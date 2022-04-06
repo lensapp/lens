@@ -285,7 +285,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
-  switchToPrevious = () => {
+  switchToPrevious() {
     let index = this.activeHotbarIndex - 1;
 
     if (index < 0) {
@@ -293,9 +293,9 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     this.setActiveHotbar(index);
-  };
+  }
 
-  switchToNext = () => {
+  switchToNext() {
     let index = this.activeHotbarIndex + 1;
 
     if (index >= this.hotbars.length) {
@@ -303,7 +303,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     this.setActiveHotbar(index);
-  };
+  }
 
   /**
    * Checks if entity already pinned to the active hotbar

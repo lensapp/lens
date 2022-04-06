@@ -44,9 +44,14 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
     tooltipTimeout.current = setTimeout(() => setTooltipVisible(false), 1500);
   }
 
-  function onArrowClick(switchTo: () => void) {
+  function onPrevClick() {
     onTooltipShow();
-    switchTo();
+    hotbarStore.switchToPrevious();
+  }
+
+  function onNextClick() {
+    onTooltipShow();
+    hotbarStore.switchToNext();
   }
 
   function onMouseEvent(event: React.MouseEvent) {
@@ -56,11 +61,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
 
   return (
     <div className={styles.HotbarSelector}>
-      <Icon
-        material="play_arrow"
-        className={cssNames(styles.Icon, styles.previous)}
-        onClick={() => onArrowClick(hotbarStore.switchToPrevious)}
-      />
+      <Icon material="play_arrow" className={cssNames(styles.Icon, styles.previous)} onClick={onPrevClick}/>
       <div className={styles.HotbarIndex}>
         <Badge
           id="hotbarIndex"
@@ -79,7 +80,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
           {hotbar.name}
         </Tooltip>
       </div>
-      <Icon material="play_arrow" className={styles.Icon} onClick={() => onArrowClick(hotbarStore.switchToNext)} />
+      <Icon material="play_arrow" className={styles.Icon} onClick={onNextClick} />
     </div>
   );
 });
