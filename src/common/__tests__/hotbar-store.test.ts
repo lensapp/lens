@@ -9,7 +9,7 @@ import logger from "../../main/logger";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../vars/app-version.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../hotbar-store.injectable";
 import { HotbarStore } from "../hotbar-store";

@@ -8,7 +8,6 @@ import type { NativeImage } from "electron";
 import { Menu, nativeImage, nativeTheme, Tray } from "electron";
 import type { IComputedValue } from "mobx";
 import { autorun } from "mobx";
-import { showAbout } from "../menu/menu";
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { WindowManager } from "../window-manager";
 import logger from "../logger";
@@ -21,6 +20,7 @@ import sharp from "sharp";
 import LogoLens from "../../renderer/components/icon/logo-lens.svg";
 import { JSDOM } from "jsdom";
 
+import type { ShowAbout } from "../menu/show-about.injectable";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -80,6 +80,7 @@ export async function initTray(
   windowManager: WindowManager,
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
   navigateToPreferences: () => void,
+  showAbout: ShowAbout,
 ): Promise<Disposer> {
   const icon = await createCurrentTrayIcon();
   const dispose = disposer();
@@ -101,7 +102,12 @@ export async function initTray(
   dispose.push(
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
+        const menu = createTrayMenu(
+          windowManager,
+          toJS(trayMenuItems.get()),
+          navigateToPreferences,
+          showAbout,
+        );
 
         tray.setContextMenu(menu);
       } catch (error) {
@@ -131,6 +137,7 @@ function createTrayMenu(
   windowManager: WindowManager,
   extensionTrayItems: TrayMenuRegistration[],
   navigateToPreferences: () => void,
+  showAbout: ShowAbout,
 ): Menu {
   let template: Electron.MenuItemConstructorOptions[] = [
     {

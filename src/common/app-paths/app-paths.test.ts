@@ -9,7 +9,7 @@ import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
-import appNameInjectable from "../../main/app-paths/app-name/app-name.injectable";
+import appNameInjectable from "../../main/vars/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
 
 describe("app-paths", () => {

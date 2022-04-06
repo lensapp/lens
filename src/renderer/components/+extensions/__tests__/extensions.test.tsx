@@ -24,7 +24,7 @@ import directoryForDownloadsInjectable from "../../../../common/app-paths/direct
 import getConfigurationFileModelInjectable
   from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable
-  from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+  from "../../../../common/vars/app-version.injectable";
 
 mockWindow();
 

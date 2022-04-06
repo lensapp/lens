@@ -14,7 +14,7 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable
   from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable
-  from "../get-configuration-file-model/app-version/app-version.injectable";
+  from "../vars/app-version.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {

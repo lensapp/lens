@@ -8,7 +8,6 @@ import { docsUrl, productName, supportUrl } from "../../common/vars";
 import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
-import { showAbout } from "./menu";
 import windowManagerInjectable from "../window-manager.injectable";
 import type {
   BrowserWindow,
@@ -18,7 +17,7 @@ import {
   webContents,
 } from "electron";
 import loggerInjectable from "../../common/logger.injectable";
-import appNameInjectable from "../app-paths/app-name/app-name.injectable";
+import appNameInjectable from "../vars/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
 import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
@@ -28,6 +27,7 @@ import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/w
 import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
+import showAboutInjectable from "./show-about.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
@@ -46,6 +46,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
+    const showAbout = di.inject(showAboutInjectable);
 
     return computed((): MenuItemOpts[] => {
 
@@ -70,8 +71,7 @@ const applicationMenuItemsInjectable = getInjectable({
             label: `About ${productName}`,
             id: "about",
             click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-              showAbout(browserWindow)
-                .catch(error => logger.error(`[MENU]: Failed to show Lens About view`, { error }));
+              showAbout(browserWindow);
             },
           },
           ...ignoreIf(autoUpdateDisabled, [
@@ -288,8 +288,7 @@ const applicationMenuItemsInjectable = getInjectable({
               label: `About ${productName}`,
               id: "about",
               click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-                showAbout(browserWindow)
-                  .catch(error => logger.error(`[MENU]: Failed to show Lens About view`, { error }));
+                showAbout(browserWindow);
               },
             },
             ...ignoreIf(autoUpdateDisabled, [

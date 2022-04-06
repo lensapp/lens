@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import Config from "conf";
 import type { BaseStoreParams } from "../base-store";
-import appVersionInjectable from "./app-version/app-version.injectable";
+import appVersionInjectable from "../vars/app-version.injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const getConfigurationFileModelInjectable = getInjectable({

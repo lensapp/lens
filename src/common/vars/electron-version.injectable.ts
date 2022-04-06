@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import packageInfo from "../../../../package.json";
 
-const appVersionInjectable = getInjectable({
-  id: "app-version",
-  instantiate: () => packageInfo.version,
+const electronVersionInjectable = getInjectable({
+  id: "electron-version",
+  instantiate: () => process.versions.electron,
   causesSideEffects: true,
 });
 
-export default appVersionInjectable;
+export default electronVersionInjectable;

@@ -17,7 +17,7 @@ import registerChannelInjectable from "./register-channel/register-channel.injec
 import { getAppPaths } from "./get-app-paths";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
-import appNameInjectable from "./app-name/app-name.injectable";
+import appNameInjectable from "../vars/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 

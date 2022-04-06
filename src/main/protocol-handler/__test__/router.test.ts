@@ -17,7 +17,7 @@ import extensionLoaderInjectable from "../../../extensions/extension-loader/exte
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../../../common/vars/app-version.injectable";
 
 jest.mock("../../../common/ipc");
 

@@ -19,7 +19,7 @@ import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import getConfigurationFileModelInjectable
   from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable
-  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+  from "../../../common/vars/app-version.injectable";
 
 jest.mock("electron", () => ({
   app: {

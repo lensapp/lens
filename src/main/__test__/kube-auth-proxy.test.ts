@@ -56,7 +56,7 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
 import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
