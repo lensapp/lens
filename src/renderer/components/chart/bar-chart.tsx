@@ -195,7 +195,7 @@ export const memoryOptions: ChartOptions = {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
 
-        return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
+        return `${label}: ${bytesToUnits(parseInt(value.y.toString()), { precision: 3 })}`;
       },
     },
   },

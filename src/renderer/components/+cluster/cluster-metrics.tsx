@@ -73,7 +73,7 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
         label: ({ index }, data) => {
           const value = data.datasets[0].data[index] as ChartPoint;
 
-          return bytesToUnits(parseInt(value.y as string), 3);
+          return bytesToUnits(parseInt(value.y as string), { precision: 3 });
         },
       },
     },
