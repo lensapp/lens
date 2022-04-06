@@ -37,10 +37,6 @@ exports[`kube-object-menu given kube object renders 1`] = `
       </ul>
     </div>
   </div>
-  <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
-  />
 </body>
 `;
 
