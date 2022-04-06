@@ -9,7 +9,8 @@ import "./virtual-list.scss";
 
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-import { Align, ListChildComponentProps, ListOnScrollProps, VariableSizeList } from "react-window";
+import type { Align, ListChildComponentProps, ListOnScrollProps } from "react-window";
+import { VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
 import type { TableRowProps } from "../table/table-row";
 import type { ItemObject } from "../../../common/item.store";

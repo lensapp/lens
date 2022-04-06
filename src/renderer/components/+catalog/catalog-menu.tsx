@@ -7,7 +7,8 @@ import treeStyles from "./catalog-tree.module.scss";
 import styles from "./catalog-menu.module.scss";
 
 import React from "react";
-import { TreeItem, TreeItemProps, TreeView } from "@material-ui/lab";
+import type { TreeItemProps } from "@material-ui/lab";
+import { TreeItem, TreeView } from "@material-ui/lab";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";

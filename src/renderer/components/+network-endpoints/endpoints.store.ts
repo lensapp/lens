@@ -4,7 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { Endpoint, endpointApi } from "../../../common/k8s-api/endpoints/endpoint.api";
+import type { Endpoint } from "../../../common/k8s-api/endpoints/endpoint.api";
+import { endpointApi } from "../../../common/k8s-api/endpoints/endpoint.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class EndpointStore extends KubeObjectStore<Endpoint> {

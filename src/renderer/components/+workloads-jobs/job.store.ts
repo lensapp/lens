@@ -5,8 +5,10 @@
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
-import { Job, jobApi } from "../../../common/k8s-api/endpoints/job.api";
-import { CronJob, Pod, PodStatus } from "../../../common/k8s-api/endpoints";
+import type { Job } from "../../../common/k8s-api/endpoints/job.api";
+import { jobApi } from "../../../common/k8s-api/endpoints/job.api";
+import type { CronJob, Pod } from "../../../common/k8s-api/endpoints";
+import { PodStatus } from "../../../common/k8s-api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 

@@ -8,7 +8,8 @@
 import type { ClusterModel } from "../../common/cluster-types";
 import { getAppVersion } from "../../common/utils/app-version";
 import fs from "fs";
-import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { MigrationDeclaration } from "../helpers";
+import { migrationLog } from "../helpers";
 
 export default {
   version: getAppVersion(), // Run always after upgrade

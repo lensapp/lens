@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
+import type { IMetrics, IMetricsReqParams } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";

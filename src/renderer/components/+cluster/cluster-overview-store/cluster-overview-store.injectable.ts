@@ -3,8 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type {
+  ClusterOverviewStorageState } from "./cluster-overview-store";
 import {
-  ClusterOverviewStorageState,
   ClusterOverviewStore,
   MetricNodeRole,
   MetricType,

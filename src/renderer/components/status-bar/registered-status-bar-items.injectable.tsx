@@ -4,7 +4,8 @@
  */
 import React from "react";
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import type {
   StatusBarItemProps,
   StatusBarRegistration,

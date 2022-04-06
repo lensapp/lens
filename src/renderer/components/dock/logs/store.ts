@@ -3,9 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { observable, IComputedValue, when } from "mobx";
+import type { IComputedValue } from "mobx";
+import { observable, when } from "mobx";
 import type { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
-import { getOrInsertWith, interval, IntervalFn } from "../../../utils";
+import type { IntervalFn } from "../../../utils";
+import { getOrInsertWith, interval } from "../../../utils";
 import type { TabId } from "../dock/store";
 import type { LogTabData } from "./tab-store";
 

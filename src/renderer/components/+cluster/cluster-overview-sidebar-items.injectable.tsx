@@ -5,8 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { Icon } from "../icon";
 import React from "react";
+import type {
+  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
 import {
-  SidebarItemRegistration,
   sidebarItemsInjectionToken,
 } from "../layout/sidebar-items.injectable";
 import { computed } from "mobx";

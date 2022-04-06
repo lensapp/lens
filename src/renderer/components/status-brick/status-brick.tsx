@@ -7,7 +7,8 @@ import "./status-brick.scss";
 
 import React from "react";
 import { cssNames } from "../../utils";
-import { TooltipDecoratorProps, withTooltip } from "../tooltip";
+import type { TooltipDecoratorProps } from "../tooltip";
+import { withTooltip } from "../tooltip";
 
 export interface StatusBrickProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
 }

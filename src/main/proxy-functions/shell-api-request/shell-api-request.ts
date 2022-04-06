@@ -4,7 +4,8 @@
  */
 
 import logger from "../../logger";
-import WebSocket, { Server as WebSocketServer } from "ws";
+import type WebSocket from "ws";
+import { Server as WebSocketServer } from "ws";
 import type { ProxyApiRequestArgs } from "../types";
 import { ClusterManager } from "../../cluster-manager";
 import URLParse from "url-parse";

@@ -4,9 +4,10 @@
  */
 import React from "react";
 
+import type {
+  RenderResult } from "@testing-library/react";
 import {
   render as testingLibraryRender,
-  RenderResult,
 } from "@testing-library/react";
 
 import type { DiContainer } from "@ogre-tools/injectable";

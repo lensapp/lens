@@ -4,7 +4,8 @@
  */
 
 import "./tabs.scss";
-import React, { DOMAttributes } from "react";
+import type { DOMAttributes } from "react";
+import React from "react";
 import { boundMethod, cssNames } from "../../utils";
 import { Icon } from "../icon";
 

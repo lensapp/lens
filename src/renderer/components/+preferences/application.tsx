@@ -6,14 +6,16 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { SubTitle } from "../layout/sub-title";
-import { Select, SelectOption } from "../select";
+import type { SelectOption } from "../select";
+import { Select } from "../select";
 import type { ThemeStore } from "../../theme.store";
 import type { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { Switch } from "../switch";
 import moment from "moment-timezone";
 import { CONSTANTS, defaultExtensionRegistryUrl, ExtensionRegistryLocation } from "../../../common/user-store/preferences-helpers";
-import { action, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { action } from "mobx";
 import { isUrl } from "../input/input_validators";
 import { ExtensionSettings } from "./extension-settings";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";

@@ -6,8 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { noop, some } from "lodash/fp";
 import { computed } from "mobx";
 
+import type {
+  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
 import {
-  SidebarItemRegistration,
   sidebarItemsInjectionToken,
 } from "../layout/sidebar-items.injectable";
 import { Icon } from "../icon";

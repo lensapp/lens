@@ -4,7 +4,8 @@
  */
 
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { broadcastMessage } from "../../../common/ipc";

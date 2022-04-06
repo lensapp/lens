@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { DockTabCreate, DockTab, TabKind, TabId } from "../dock/store";
+import type { DockTabCreate, DockTab, TabId } from "../dock/store";
+import { TabKind } from "../dock/store";
 import type { LogTabData } from "./tab-store";
 import * as uuid from "uuid";
 import { runInAction } from "mobx";

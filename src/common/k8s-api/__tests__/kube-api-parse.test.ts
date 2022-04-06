@@ -13,7 +13,8 @@ jest.mock("../api-manager", () => ({
   },
 }));
 
-import { IKubeApiParsed, parseKubeApi } from "../kube-api-parse";
+import type { IKubeApiParsed } from "../kube-api-parse";
+import { parseKubeApi } from "../kube-api-parse";
 
 /**
  * [<input-url>, <expected-result>]

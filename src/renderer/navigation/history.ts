@@ -5,7 +5,8 @@
 
 import { ipcRenderer } from "electron";
 import { createBrowserHistory, createMemoryHistory } from "history";
-import { createObservableHistory, ObservableSearchParamsOptions } from "mobx-observable-history";
+import type { ObservableSearchParamsOptions } from "mobx-observable-history";
+import { createObservableHistory } from "mobx-observable-history";
 import logger from "../../main/logger";
 
 export const searchParamsOptions: ObservableSearchParamsOptions = {

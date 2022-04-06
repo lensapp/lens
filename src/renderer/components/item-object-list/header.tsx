@@ -5,9 +5,11 @@
 
 import "./item-list-layout.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { Filter } from "./page-filters.store";
 import type { HeaderCustomizer, HeaderPlaceholders, SearchFilter } from "./list-layout";

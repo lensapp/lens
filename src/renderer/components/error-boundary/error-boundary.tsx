@@ -5,7 +5,8 @@
 
 import "./error-boundary.scss";
 
-import React, { ErrorInfo } from "react";
+import type { ErrorInfo } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { Button } from "../button";
 import { navigation } from "../../navigation";

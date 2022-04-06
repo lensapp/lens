@@ -5,7 +5,8 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Input, InputValidator } from "../input";
+import type { InputValidator } from "../input";
+import { Input } from "../input";
 import type { CreateHotbarData, CreateHotbarOptions } from "../../../common/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";

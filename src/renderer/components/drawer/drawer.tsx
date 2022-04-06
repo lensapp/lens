@@ -8,9 +8,11 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import { cssNames, noop, StorageHelper } from "../../utils";
+import type { StorageHelper } from "../../utils";
+import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
-import { Animate, AnimateName } from "../animate";
+import type { AnimateName } from "../animate";
+import { Animate } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import drawerStorageInjectable, {
   defaultDrawerWidth,

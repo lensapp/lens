@@ -4,9 +4,11 @@
  */
 
 import React from "react";
-import { GroupSelectOption, Select, SelectOption } from "../../select";
+import type { GroupSelectOption, SelectOption } from "../../select";
+import { Select } from "../../select";
 import yaml from "js-yaml";
-import { IComputedValue, makeObservable, observable } from "mobx";
+import type { IComputedValue } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import type { CreateResourceTabStore } from "./store";
 import type { DockTab } from "../dock/store";

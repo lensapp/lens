@@ -5,7 +5,8 @@
 
 import { UserStore } from "../../common/user-store";
 import type { ContextHandler } from "../context-handler/context-handler";
-import { PrometheusProvider, PrometheusProviderRegistry, PrometheusService } from "../prometheus";
+import type { PrometheusService } from "../prometheus";
+import { PrometheusProvider, PrometheusProviderRegistry } from "../prometheus";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";

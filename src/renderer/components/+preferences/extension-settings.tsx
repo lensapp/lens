@@ -4,7 +4,8 @@
  */
 import { SubTitle } from "../layout/sub-title";
 import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
-import React, { DOMAttributes } from "react";
+import type { DOMAttributes } from "react";
+import React from "react";
 import { cssNames } from "../../../renderer/utils";
 
 export interface ExtensionSettingsProps extends DOMAttributes<HTMLDivElement> {

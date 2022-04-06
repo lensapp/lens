@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { appEventBus, AppEvent } from "../app-event-bus/event-bus";
+import type { AppEvent } from "../app-event-bus/event-bus";
+import { appEventBus } from "../app-event-bus/event-bus";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 

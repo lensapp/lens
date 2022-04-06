@@ -4,7 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { Secret, secretsApi } from "../../../common/k8s-api/endpoints";
+import type { Secret } from "../../../common/k8s-api/endpoints";
+import { secretsApi } from "../../../common/k8s-api/endpoints";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class SecretsStore extends KubeObjectStore<Secret> {

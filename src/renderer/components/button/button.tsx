@@ -4,9 +4,11 @@
  */
 
 import "./button.scss";
-import React, { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes } from "react";
+import React from "react";
 import { cssNames } from "../../utils";
-import { TooltipDecoratorProps, withTooltip } from "../tooltip";
+import type { TooltipDecoratorProps } from "../tooltip";
+import { withTooltip } from "../tooltip";
 
 export interface ButtonProps extends ButtonHTMLAttributes<any>, TooltipDecoratorProps {
   label?: React.ReactNode;

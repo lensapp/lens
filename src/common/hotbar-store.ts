@@ -7,15 +7,16 @@ import { action, comparer, observable, makeObservable, computed } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import { toJS } from "./utils";
-import { CatalogEntity } from "./catalog";
+import type { CatalogEntity } from "./catalog";
 import logger from "../main/logger";
 import { broadcastMessage } from "./ipc";
+import type {
+  Hotbar,
+  CreateHotbarData,
+  CreateHotbarOptions } from "./hotbar-types";
 import {
   defaultHotbarCells,
   getEmptyHotbar,
-  Hotbar,
-  CreateHotbarData,
-  CreateHotbarOptions,
 } from "./hotbar-types";
 import { hotbarTooManyItemsChannel } from "./ipc/hotbar";
 import type { GeneralEntity } from "./catalog-entities";

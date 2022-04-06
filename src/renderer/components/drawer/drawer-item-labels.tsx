@@ -4,7 +4,8 @@
  */
 
 import React from "react";
-import { DrawerItem, DrawerItemProps } from "./drawer-item";
+import type { DrawerItemProps } from "./drawer-item";
+import { DrawerItem } from "./drawer-item";
 import { Badge } from "../badge";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 

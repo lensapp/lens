@@ -5,7 +5,8 @@
 
 import React from "react";
 import type { IPodMetrics } from "../../../common/k8s-api/endpoints";
-import { getMetricLastPoints, IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
+import type { IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
+import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 import { bytesToUnits } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";

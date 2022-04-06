@@ -7,11 +7,13 @@ import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { SubTitle } from "../../layout/sub-title";
-import { Select, SelectOption } from "../../select";
+import type { SelectOption } from "../../select";
+import { Select } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
 import { productName } from "../../../../common/vars";
-import { MetricProviderInfo, metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
+import type { MetricProviderInfo } from "../../../../common/k8s-api/endpoints/metrics.api";
+import { metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
 
 export interface ClusterPrometheusSettingProps {

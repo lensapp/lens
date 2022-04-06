@@ -5,7 +5,8 @@
 
 import styles from "./hotbar-entity-icon.module.scss";
 
-import React, { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
+import React from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 
@@ -13,7 +14,8 @@ import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuC
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
-import { cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";

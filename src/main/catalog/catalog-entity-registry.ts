@@ -4,7 +4,8 @@
  */
 
 import { action, computed, type IComputedValue, type IObservableArray, makeObservable, observable } from "mobx";
-import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity, CatalogEntityConstructor } from "../../common/catalog";
+import type { CatalogCategoryRegistry, CatalogEntity, CatalogEntityConstructor } from "../../common/catalog";
+import { catalogCategoryRegistry } from "../../common/catalog";
 import { iter } from "../../common/utils";
 
 export class CatalogEntityRegistry {

@@ -7,9 +7,10 @@ import { Tab, Tabs } from "../../tabs";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import React from "react";
-import preferenceNavigationItemsInjectable, {
+import type {
   PreferenceNavigationItem,
 } from "./preference-navigation-items.injectable";
+import preferenceNavigationItemsInjectable from "./preference-navigation-items.injectable";
 
 import { observer } from "mobx-react";
 

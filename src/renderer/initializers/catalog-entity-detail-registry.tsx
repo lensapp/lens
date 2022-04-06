@@ -5,7 +5,8 @@
 
 import React from "react";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
-import { CatalogEntityDetailRegistry, CatalogEntityDetailsProps } from "../../extensions/registries";
+import type { CatalogEntityDetailsProps } from "../../extensions/registries";
+import { CatalogEntityDetailRegistry } from "../../extensions/registries";
 import { DrawerItem, DrawerTitle } from "../components/drawer";
 
 export function initCatalogEntityDetailRegistry() {

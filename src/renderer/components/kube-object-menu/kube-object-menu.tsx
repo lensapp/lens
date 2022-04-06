@@ -6,7 +6,8 @@
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { MenuActions, MenuActionsProps } from "../menu";
+import type { MenuActionsProps } from "../menu";
+import { MenuActions } from "../menu";
 import identity from "lodash/identity";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";

@@ -6,7 +6,8 @@
 import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
-import { getChartDetails, HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import { getChartDetails } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";

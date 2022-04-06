@@ -3,9 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject, LabelSelector } from "../kube-object";
+import type { LabelSelector } from "../kube-object";
+import { KubeObject } from "../kube-object";
 import { autoBind } from "../../utils";
-import { IMetrics, metricsApi } from "./metrics.api";
+import type { IMetrics } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 import type { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";

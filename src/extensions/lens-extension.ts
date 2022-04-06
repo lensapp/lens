@@ -8,9 +8,11 @@ import { action, observable, makeObservable, computed } from "mobx";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
-import { Disposer, disposer } from "../common/utils";
+import type { Disposer } from "../common/utils";
+import { disposer } from "../common/utils";
+import type {
+  LensExtensionDependencies } from "./lens-extension-set-dependencies";
 import {
-  LensExtensionDependencies,
   setLensExtensionDependencies,
 } from "./lens-extension-set-dependencies";
 

@@ -4,7 +4,8 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { PageParam, PageParamInit } from "../navigation";
+import type { PageParamInit } from "../navigation";
+import { PageParam } from "../navigation";
 import observableHistoryInjectable from "../navigation/observable-history.injectable";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import type { PageRegistration } from "../../extensions/registries";

@@ -5,11 +5,13 @@
 
 import "./menu.scss";
 
-import React, { Fragment, ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
+import React, { Fragment } from "react";
 import { createPortal } from "react-dom";
 import { autoBind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
-import { Icon, IconProps } from "../icon";
+import type { IconProps } from "../icon";
+import { Icon } from "../icon";
 import isEqual from "lodash/isEqual";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);

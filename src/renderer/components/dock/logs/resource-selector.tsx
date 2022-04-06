@@ -9,7 +9,8 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import { Badge } from "../../badge";
-import { Select, SelectOption } from "../../select";
+import type { SelectOption } from "../../select";
+import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
 import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
 

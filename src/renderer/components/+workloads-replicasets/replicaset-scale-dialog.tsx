@@ -8,13 +8,15 @@ import "./replicaset-scale-dialog.scss";
 import React, { Component } from "react";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
+import type { DialogProps } from "../dialog";
+import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Icon } from "../icon";
 import { Slider } from "../slider";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
-import { ReplicaSet, ReplicaSetApi, replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
+import type { ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
+import { replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
 export interface ReplicaSetScaleDialogProps extends Partial<DialogProps> {
   replicaSetApi: ReplicaSetApi;

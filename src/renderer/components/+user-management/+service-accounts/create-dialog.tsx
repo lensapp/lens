@@ -10,7 +10,8 @@ import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
-import { Dialog, DialogProps } from "../../dialog";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
 import { showDetails } from "../../kube-detail-params";

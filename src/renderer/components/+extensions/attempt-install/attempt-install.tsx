@@ -2,10 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import {
+import type {
   Disposer,
+  ExtendableDisposer } from "../../../../common/utils";
+import {
   disposer,
-  ExtendableDisposer,
 } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { Button } from "../../button";
@@ -16,9 +17,10 @@ import { remove as removeDir } from "fs-extra";
 import { shell } from "electron";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate/create-temp-files-and-validate";
 import type { InstallRequest } from "./install-request";
+import type {
+  ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import {
   ExtensionInstallationState,
-  ExtensionInstallationStateStore,
 } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {

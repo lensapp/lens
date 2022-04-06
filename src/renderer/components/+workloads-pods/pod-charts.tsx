@@ -8,7 +8,8 @@ import { observer } from "mobx-react";
 import React, { useContext } from "react";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import type { IResourceMetricsValue } from "../resource-metrics";
+import { ResourceMetricsContext } from "../resource-metrics";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 
 import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";

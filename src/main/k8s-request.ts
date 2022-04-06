@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import request, { RequestPromiseOptions } from "request-promise-native";
+import type { RequestPromiseOptions } from "request-promise-native";
+import request from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { IMetricsReqParams } from "../common/k8s-api/endpoints/metrics.api";
 import { LensProxy } from "./lens-proxy";

@@ -7,7 +7,8 @@ import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
-import { iter, Disposer } from "../utils";
+import type { Disposer } from "../utils";
+import { iter } from "../utils";
 import type { CategoryColumnRegistration } from "../../renderer/components/+catalog/custom-category-columns";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;

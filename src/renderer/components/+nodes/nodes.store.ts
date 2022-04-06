@@ -6,7 +6,8 @@ import { sum } from "lodash";
 import { computed, makeObservable } from "mobx";
 
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import { Node, nodesApi } from "../../../common/k8s-api/endpoints";
+import type { Node } from "../../../common/k8s-api/endpoints";
+import { nodesApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 

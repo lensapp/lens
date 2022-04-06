@@ -7,7 +7,8 @@ import "./namespace-select-filter.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { components, OptionTypeBase, PlaceholderProps } from "react-select";
+import type { OptionTypeBase, PlaceholderProps } from "react-select";
+import { components } from "react-select";
 
 import { Icon } from "../icon";
 import { NamespaceSelect } from "./namespace-select";

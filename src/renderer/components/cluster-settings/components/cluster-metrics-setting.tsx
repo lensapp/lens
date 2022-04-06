@@ -5,7 +5,8 @@
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Select, SelectOption } from "../../select/select";
+import type { SelectOption } from "../../select/select";
+import { Select } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";

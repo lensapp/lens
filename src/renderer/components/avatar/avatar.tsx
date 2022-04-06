@@ -5,7 +5,8 @@
 
 import styles from "./avatar.module.scss";
 
-import React, { HTMLAttributes, ImgHTMLAttributes } from "react";
+import type { HTMLAttributes, ImgHTMLAttributes } from "react";
+import React from "react";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
 import { cssNames, iter } from "../../utils";

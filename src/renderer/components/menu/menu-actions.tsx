@@ -10,8 +10,10 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
-import { Icon, IconProps } from "../icon";
-import { Menu, MenuItem, MenuProps } from "./menu";
+import type { IconProps } from "../icon";
+import { Icon } from "../icon";
+import type { MenuProps } from "./menu";
+import { Menu, MenuItem } from "./menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
 

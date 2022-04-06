@@ -5,11 +5,13 @@
 
 import "./statefulset-scale-dialog.scss";
 
-import { StatefulSet, StatefulSetApi, statefulSetApi } from "../../../common/k8s-api/endpoints";
+import type { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
+import { statefulSetApi } from "../../../common/k8s-api/endpoints";
 import React, { Component } from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
+import type { DialogProps } from "../dialog";
+import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Icon } from "../icon";
 import { Slider } from "../slider";

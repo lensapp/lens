@@ -5,7 +5,8 @@
 
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import { DockStore, DockTab, TabKind } from "../dock/store";
+import type { DockStore, DockTab } from "../dock/store";
+import { TabKind } from "../dock/store";
 import dockStoreInjectable from "../dock/store.injectable";
 import fse from "fs-extra";
 

@@ -5,7 +5,8 @@
 
 import React from "react";
 import { KubeObjectDetailRegistry } from "../api/kube-object-detail-registry";
-import { HpaDetails, HpaDetailsProps } from "../components/+config-autoscalers";
+import type { HpaDetailsProps } from "../components/+config-autoscalers";
+import { HpaDetails } from "../components/+config-autoscalers";
 import { LimitRangeDetails } from "../components/+config-limit-ranges";
 import { ConfigMapDetails } from "../components/+config-maps";
 import { PodDisruptionBudgetDetails } from "../components/+config-pod-disruption-budgets";

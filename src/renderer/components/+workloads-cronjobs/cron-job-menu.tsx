@@ -4,7 +4,8 @@
  */
 import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import { CronJob, cronJobApi } from "../../../common/k8s-api/endpoints";
+import type { CronJob } from "../../../common/k8s-api/endpoints";
+import { cronJobApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
 import { Icon } from "../icon";

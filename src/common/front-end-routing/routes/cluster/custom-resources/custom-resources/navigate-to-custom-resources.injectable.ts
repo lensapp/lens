@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import customResourcesRouteInjectable, { CustomResourcesPathParameters } from "./custom-resources-route.injectable";
+import type { CustomResourcesPathParameters } from "./custom-resources-route.injectable";
+import customResourcesRouteInjectable from "./custom-resources-route.injectable";
 import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
 
 const navigateToCustomResourcesInjectable = getInjectable({

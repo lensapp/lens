@@ -4,7 +4,8 @@
  */
 
 import React from "react";
-import { Icon, IconProps } from "../icon";
+import type { IconProps } from "../icon";
+import { Icon } from "../icon";
 import { FilterType } from "./page-filters.store";
 
 export interface FilterIconProps extends Partial<IconProps> {

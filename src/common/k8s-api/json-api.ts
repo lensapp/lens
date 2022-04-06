@@ -8,7 +8,8 @@
 import { Agent as HttpAgent } from "http";
 import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
-import fetch, { Response, RequestInit } from "node-fetch";
+import type { Response, RequestInit } from "node-fetch";
+import fetch from "node-fetch";
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import logger from "../../common/logger";

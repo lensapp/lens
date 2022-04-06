@@ -5,7 +5,8 @@
 
 import React from "react";
 import { cssNames } from "../../utils";
-import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
+import type { MenuActionsProps } from "../menu/menu-actions";
+import { MenuActions } from "../menu/menu-actions";
 import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 import { makeObservable, observable } from "mobx";

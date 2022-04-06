@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { Route, routeInjectionToken } from "../../../../route-injection-token";
+import type { Route } from "../../../../route-injection-token";
+import { routeInjectionToken } from "../../../../route-injection-token";
 
 export interface CustomResourcesPathParameters {
   group?: string;

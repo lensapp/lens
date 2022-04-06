@@ -4,7 +4,8 @@
  */
 
 import React from "react";
-import { EntitySettingRegistry, RegisteredEntitySetting } from "../../../../extensions/registries";
+import type { RegisteredEntitySetting } from "../../../../extensions/registries";
+import { EntitySettingRegistry } from "../../../../extensions/registries";
 import { HotbarAddCommand } from "../../hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../../hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";

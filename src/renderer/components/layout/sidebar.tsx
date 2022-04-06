@@ -12,9 +12,10 @@ import { SidebarItem } from "./sidebar-item";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { SidebarCluster } from "./sidebar-cluster";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import sidebarItemsInjectable, {
+import type {
   HierarchicalSidebarItem,
 } from "./sidebar-items.injectable";
+import sidebarItemsInjectable from "./sidebar-items.injectable";
 import type { IComputedValue } from "mobx";
 
 interface Dependencies {

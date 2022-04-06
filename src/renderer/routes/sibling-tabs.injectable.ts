@@ -5,7 +5,8 @@
 import { computed } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
 
-import sidebarItemsInjectable, { HierarchicalSidebarItem } from "../components/layout/sidebar-items.injectable";
+import type { HierarchicalSidebarItem } from "../components/layout/sidebar-items.injectable";
+import sidebarItemsInjectable from "../components/layout/sidebar-items.injectable";
 import { find } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 

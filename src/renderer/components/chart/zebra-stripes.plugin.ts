@@ -7,7 +7,8 @@
 // Based on cover DIV element with repeating-linear-gradient style
 
 import type ChartJS from "chart.js";
-import moment, { Moment } from "moment";
+import type { Moment } from "moment";
+import moment from "moment";
 import get from "lodash/get";
 
 const defaultOptions = {
