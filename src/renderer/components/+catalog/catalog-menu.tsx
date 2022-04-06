@@ -67,7 +67,7 @@ export const CatalogMenu = observer((props: CatalogMenuProps) => {
                   icon={getCategoryIcon(category)}
                   key={category.getId()}
                   nodeId={category.getId()}
-                  label={<CatalogCategoryLabel label={category.metadata.name} badge={category.getBadge()} />}
+                  label={<CatalogCategoryLabel category={category}/>}
                   data-testid={`${category.getId()}-tab`}
                   onClick={() => props.onItemClick(category.getId())}
                 />

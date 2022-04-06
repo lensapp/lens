@@ -37,7 +37,7 @@ describe("CatalogCategoryLabel", () => {
   it("renders without a badge", async () => {
     const category = new CatalogCategoryWithoutBadge();
 
-    render(<CatalogCategoryLabel label={category.metadata.name} badge={category.getBadge()}/>);
+    render(<CatalogCategoryLabel category={category}/>);
 
     expect(await screen.findByText("Test Category")).toBeInTheDocument();
   });
@@ -45,7 +45,7 @@ describe("CatalogCategoryLabel", () => {
   it("renders with a badge", async () => {
     const category = new CatalogCategoryWithBadge();
 
-    render(<CatalogCategoryLabel label={category.metadata.name} badge={category.getBadge()}/>);
+    render(<CatalogCategoryLabel category={category}/>);
 
     expect(await screen.findByText("Test Category")).toBeInTheDocument();
     expect(await screen.findByText("Test Badge")).toBeInTheDocument();
