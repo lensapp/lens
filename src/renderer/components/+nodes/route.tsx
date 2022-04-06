@@ -93,9 +93,7 @@ export class NodesRoute extends React.Component {
 
     if (!metrics || metrics.length < 2) {
       return (
-        <div className="opacity-50 flex gap-2 items-center">
-          <VerticalBar value={0}/>0%
-        </div>
+        <VerticalBar value={0}/>
       );
     }
 
