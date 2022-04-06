@@ -14,6 +14,7 @@ import { StylesProvider } from "@material-ui/core";
 import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
+import { CatalogCategoryLabel } from "./catalog-category-label";
 
 export interface CatalogMenuProps {
   activeItem: string;
@@ -66,7 +67,7 @@ export const CatalogMenu = observer((props: CatalogMenuProps) => {
                   icon={getCategoryIcon(category)}
                   key={category.getId()}
                   nodeId={category.getId()}
-                  label={category.metadata.name}
+                  label={<CatalogCategoryLabel category={category}/>}
                   data-testid={`${category.getId()}-tab`}
                   onClick={() => props.onItemClick(category.getId())}
                 />
