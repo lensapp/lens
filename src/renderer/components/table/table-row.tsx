@@ -5,7 +5,8 @@
 
 import "./table-row.scss";
 
-import React, { CSSProperties } from "react";
+import type { CSSProperties } from "react";
+import React from "react";
 import { cssNames } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 

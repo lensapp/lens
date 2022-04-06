@@ -8,7 +8,8 @@ import "./tooltip.scss";
 import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { observable, makeObservable, action } from "mobx";
 
 export enum TooltipPosition {

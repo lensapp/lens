@@ -3,9 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, comparer, computed, IReactionDisposer, makeObservable, reaction } from "mobx";
-import { autoBind, noop, StorageHelper, toggle } from "../../../utils";
-import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../../../common/k8s-api/kube-object.store";
+import type { IReactionDisposer } from "mobx";
+import { action, comparer, computed, makeObservable, reaction } from "mobx";
+import type { StorageHelper } from "../../../utils";
+import { autoBind, noop, toggle } from "../../../utils";
+import type { KubeObjectStoreLoadingParams } from "../../../../common/k8s-api/kube-object.store";
+import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { Namespace, namespacesApi } from "../../../../common/k8s-api/endpoints/namespaces.api";
 
 interface Dependencies {

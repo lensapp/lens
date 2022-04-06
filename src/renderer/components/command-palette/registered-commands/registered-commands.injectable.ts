@@ -4,7 +4,8 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import type { CustomResourceDefinition } from "../../../../common/k8s-api/endpoints";
 import customResourceDefinitionsInjectable from "../../+custom-resources/custom-resources.injectable";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";

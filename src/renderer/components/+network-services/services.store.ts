@@ -4,7 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { Service, serviceApi } from "../../../common/k8s-api/endpoints/service.api";
+import type { Service } from "../../../common/k8s-api/endpoints/service.api";
+import { serviceApi } from "../../../common/k8s-api/endpoints/service.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class ServiceStore extends KubeObjectStore<Service> {

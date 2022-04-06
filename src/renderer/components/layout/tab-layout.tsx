@@ -5,10 +5,12 @@
 
 import "./tab-layout.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { matchPath, Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
 import { navigate, navigation } from "../../navigation";

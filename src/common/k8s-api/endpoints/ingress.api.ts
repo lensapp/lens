@@ -3,9 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject, TypedLocalObjectReference } from "../kube-object";
+import type { TypedLocalObjectReference } from "../kube-object";
+import { KubeObject } from "../kube-object";
 import { autoBind, hasTypedProperty, isString, iter } from "../../utils";
-import { IMetrics, metricsApi } from "./metrics.api";
+import type { IMetrics } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";

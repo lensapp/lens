@@ -6,7 +6,8 @@
 import React from "react";
 import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
-import { LocalRef, VolumeVariantComponent } from "../variant-helpers";
+import type { VolumeVariantComponent } from "../variant-helpers";
+import { LocalRef } from "../variant-helpers";
 
 export const RadosBlockDevice: VolumeVariantComponent<"rbd"> = (
   ({ pod, variant: { monitors, image, fsType = "ext4", pool = "rbd", user = "admin", keyring = "/etc/ceph/keyright", secretRef, readOnly = false }}) => (

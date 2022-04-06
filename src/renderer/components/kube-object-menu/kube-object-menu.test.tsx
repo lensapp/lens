@@ -9,12 +9,14 @@ import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { ConfirmDialog } from "../confirm-dialog";
-import asyncFn, { AsyncFnMock } from "@async-fn/jest";
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
-import { DiRender, renderFor } from "../test-utils/renderFor";
+import type { DiRender } from "../test-utils/renderFor";
+import { renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";

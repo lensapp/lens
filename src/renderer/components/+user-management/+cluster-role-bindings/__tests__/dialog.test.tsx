@@ -9,7 +9,8 @@ import { clusterRolesStore } from "../../+cluster-roles/store";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import userEvent from "@testing-library/user-event";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
-import { DiRender, renderFor } from "../../../test-utils/renderFor";
+import type { DiRender } from "../../../test-utils/renderFor";
+import { renderFor } from "../../../test-utils/renderFor";
 
 jest.mock("../../+cluster-roles/store");
 

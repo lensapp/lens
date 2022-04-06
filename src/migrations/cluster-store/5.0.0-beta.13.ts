@@ -4,7 +4,8 @@
  */
 
 import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../common/cluster-types";
-import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { MigrationDeclaration } from "../helpers";
+import { migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import path from "path";
 import { moveSync, removeSync } from "fs-extra";

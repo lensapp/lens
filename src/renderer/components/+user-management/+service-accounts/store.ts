@@ -4,7 +4,8 @@
  */
 
 import { apiManager } from "../../../../common/k8s-api/api-manager";
-import { ServiceAccount, serviceAccountsApi } from "../../../../common/k8s-api/endpoints";
+import type { ServiceAccount } from "../../../../common/k8s-api/endpoints";
+import { serviceAccountsApi } from "../../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../../utils";
 

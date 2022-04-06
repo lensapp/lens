@@ -4,7 +4,8 @@
  */
 
 import React from "react";
-import FormControlLabel, { FormControlLabelProps } from "@material-ui/core/FormControlLabel";
+import type { FormControlLabelProps } from "@material-ui/core/FormControlLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles({

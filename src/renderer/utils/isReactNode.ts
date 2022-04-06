@@ -4,7 +4,8 @@
  */
 
 // Type guard for checking valid react node to use in render
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 export function isReactNode(node: ReactNode): node is ReactNode {
   return React.isValidElement(node)

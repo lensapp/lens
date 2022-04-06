@@ -4,7 +4,8 @@
  */
 
 import React from "react";
-import { KubeMetaField, KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeMetaField } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";

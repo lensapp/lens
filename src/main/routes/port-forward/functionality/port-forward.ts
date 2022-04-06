@@ -4,7 +4,8 @@
  */
 import logger from "../../../logger";
 import { getPortFrom } from "../../../utils/get-port";
-import { spawn, ChildProcessWithoutNullStreams } from "child_process";
+import type { ChildProcessWithoutNullStreams } from "child_process";
+import { spawn } from "child_process";
 import * as tcpPortUsed from "tcp-port-used";
 
 const internalPortRegex = /^forwarding from (?<address>.+) ->/i;

@@ -4,7 +4,8 @@
  */
 
 import { apiManager } from "../../../../common/k8s-api/api-manager";
-import { RoleBinding, roleBindingApi, RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
+import type { RoleBinding, RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
+import { roleBindingApi } from "../../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { HashSet } from "../../../utils";
 import { hashRoleBindingSubject } from "./hashers";

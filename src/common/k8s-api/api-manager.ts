@@ -9,7 +9,8 @@ import { action, observable, makeObservable } from "mobx";
 import { autoBind, iter } from "../utils";
 import type { KubeApi } from "./kube-api";
 import type { KubeObject } from "./kube-object";
-import { IKubeObjectRef, parseKubeApi, createKubeApiURL } from "./kube-api-parse";
+import type { IKubeObjectRef } from "./kube-api-parse";
+import { parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
 export class ApiManager {
   private apis = observable.map<string, KubeApi<KubeObject>>();

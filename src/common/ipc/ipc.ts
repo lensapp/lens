@@ -10,7 +10,8 @@
 import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
 import logger from "../../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import type { ClusterFrameInfo } from "../cluster-frames";
+import { clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
 
 export const broadcastMainChannel = "ipc:broadcast-main";

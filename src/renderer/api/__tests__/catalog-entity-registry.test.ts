@@ -5,7 +5,8 @@
 
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
-import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
+import type { CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
+import { CatalogCategory } from "../catalog-entity";
 import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";
 import { observable } from "mobx";
 

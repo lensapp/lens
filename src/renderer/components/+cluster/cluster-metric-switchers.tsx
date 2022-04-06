@@ -8,7 +8,8 @@ import { observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { cssNames } from "../../utils";
 import { Radio, RadioGroup } from "../radio";
-import { ClusterOverviewStore, MetricNodeRole, MetricType } from "./cluster-overview-store/cluster-overview-store";
+import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
+import { MetricNodeRole, MetricType } from "./cluster-overview-store/cluster-overview-store";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 

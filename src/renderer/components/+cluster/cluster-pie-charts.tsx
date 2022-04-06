@@ -7,11 +7,13 @@ import styles from "./cluster-pie-charts.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { ClusterOverviewStore, MetricNodeRole } from "./cluster-overview-store/cluster-overview-store";
+import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
+import { MetricNodeRole } from "./cluster-overview-store/cluster-overview-store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { nodesStore } from "../+nodes/nodes.store";
-import { ChartData, PieChart } from "../chart";
+import type { ChartData } from "../chart";
+import { PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";

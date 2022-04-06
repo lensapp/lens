@@ -8,7 +8,8 @@ import styles from "./status-bar.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import registeredStatusBarItemsInjectable, { RegisteredStatusBarItems } from "./registered-status-bar-items.injectable";
+import type { RegisteredStatusBarItems } from "./registered-status-bar-items.injectable";
+import registeredStatusBarItemsInjectable from "./registered-status-bar-items.injectable";
 import type { IComputedValue } from "mobx";
 
 export interface StatusBarProps {}

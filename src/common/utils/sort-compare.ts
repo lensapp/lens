@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import semver, { coerce, SemVer } from "semver";
+import type { SemVer } from "semver";
+import semver, { coerce } from "semver";
 import * as iter from "./iter";
 import type { RawHelmChart } from "../k8s-api/endpoints/helm-charts.api";
 import logger from "../logger";

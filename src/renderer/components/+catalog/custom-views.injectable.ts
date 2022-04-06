@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { orderBy } from "lodash";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import { getOrInsert, getOrInsertMap } from "../../utils";

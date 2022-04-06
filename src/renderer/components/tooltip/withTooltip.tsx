@@ -5,9 +5,11 @@
 
 // Tooltip decorator for simple composition with other components
 
-import React, { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+import React from "react";
 import hoistNonReactStatics from "hoist-non-react-statics";
-import { Tooltip, TooltipProps } from "./tooltip";
+import type { TooltipProps } from "./tooltip";
+import { Tooltip } from "./tooltip";
 import { isReactNode } from "../../utils/isReactNode";
 import uniqueId from "lodash/uniqueId";
 

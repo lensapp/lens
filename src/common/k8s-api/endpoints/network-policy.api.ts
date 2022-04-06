@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject, LabelSelector } from "../kube-object";
+import type { LabelSelector } from "../kube-object";
+import { KubeObject } from "../kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";

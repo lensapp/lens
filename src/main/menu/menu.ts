@@ -2,8 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { app, BrowserWindow, dialog, Menu } from "electron";
-import { autorun, IComputedValue } from "mobx";
+import type { BrowserWindow } from "electron";
+import { app, dialog, Menu } from "electron";
+import type { IComputedValue } from "mobx";
+import { autorun } from "mobx";
 import { appName, isWindows, productName } from "../../common/vars";
 import packageJson from "../../../package.json";
 import type { MenuItemOpts } from "./application-menu-items.injectable";

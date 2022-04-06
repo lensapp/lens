@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { LogTabData } from "./tab-store";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import type { TabId } from "../dock/store";
 import type { SearchStore } from "../../../search-store/search-store";
 import type { Pod } from "../../../../common/k8s-api/endpoints";

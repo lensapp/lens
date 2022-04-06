@@ -5,7 +5,8 @@
 
 import "./cluster-view.scss";
 import React from "react";
-import { computed, IComputedValue, makeObservable, reaction } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import { ClusterFrameHandler } from "./lens-views";
@@ -14,7 +15,8 @@ import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import clusterViewRouteParametersInjectable from "./cluster-view-route-parameters.injectable";
 
 interface Dependencies {

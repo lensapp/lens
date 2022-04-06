@@ -10,7 +10,8 @@ import { KubeObject } from "../kube-object";
 import AbortController from "abort-controller";
 import { delay } from "../../utils/delay";
 import { PassThrough } from "stream";
-import { ApiManager, apiManager } from "../api-manager";
+import type { ApiManager } from "../api-manager";
+import { apiManager } from "../api-manager";
 import { Ingress, Pod } from "../endpoints";
 
 jest.mock("../api-manager");

@@ -10,7 +10,8 @@ import type { IIngressMetrics, Ingress } from "../../../common/k8s-api/endpoints
 import { BarChart, memoryOptions } from "../chart";
 import { normalizeMetrics, isMetricsEmpty } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { ResourceMetricsContext, IResourceMetricsValue } from "../resource-metrics";
+import type { IResourceMetricsValue } from "../resource-metrics";
+import { ResourceMetricsContext } from "../resource-metrics";
 
 type IContext = IResourceMetricsValue<Ingress, { metrics: IIngressMetrics }>;
 

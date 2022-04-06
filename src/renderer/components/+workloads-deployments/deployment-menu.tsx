@@ -4,7 +4,8 @@
  */
 import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import { Deployment, deploymentApi } from "../../../common/k8s-api/endpoints";
+import type { Deployment } from "../../../common/k8s-api/endpoints";
+import { deploymentApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 import { Icon } from "../icon";

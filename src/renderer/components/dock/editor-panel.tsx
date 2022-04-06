@@ -10,7 +10,8 @@ import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { DockStore, TabId } from "./dock/store";
 import { cssNames } from "../../utils";
-import { MonacoEditor, MonacoEditorProps } from "../monaco-editor";
+import type { MonacoEditorProps } from "../monaco-editor";
+import { MonacoEditor } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
 

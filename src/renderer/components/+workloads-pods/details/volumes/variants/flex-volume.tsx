@@ -6,7 +6,8 @@
 import React from "react";
 import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
-import { LocalRef, VolumeVariantComponent } from "../variant-helpers";
+import type { VolumeVariantComponent } from "../variant-helpers";
+import { LocalRef } from "../variant-helpers";
 
 export const FlexVolume: VolumeVariantComponent<"flexVolume"> = (
   ({ pod, variant: { driver, fsType, secretRef, readOnly = false, options }}) => (

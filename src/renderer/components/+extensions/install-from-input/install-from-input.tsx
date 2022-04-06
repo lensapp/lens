@@ -2,7 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { downloadFile, ExtendableDisposer } from "../../../../common/utils";
+import type { ExtendableDisposer } from "../../../../common/utils";
+import { downloadFile } from "../../../../common/utils";
 import { InputValidators } from "../../input";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import logger from "../../../../main/logger";

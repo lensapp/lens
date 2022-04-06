@@ -9,7 +9,8 @@ import React, { createRef } from "react";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { Input, InputProps } from "./input";
+import type { InputProps } from "./input";
+import { Input } from "./input";
 import { isMac } from "../../../common/vars";
 
 export interface SearchInputProps extends InputProps {

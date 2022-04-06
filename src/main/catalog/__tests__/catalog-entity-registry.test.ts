@@ -4,8 +4,10 @@
  */
 
 import { observable, reaction } from "mobx";
-import { WebLink, WebLinkSpec, WebLinkStatus } from "../../../common/catalog-entities";
-import { catalogCategoryRegistry, CatalogEntity, CatalogEntityMetadata } from "../../../common/catalog";
+import type { WebLinkSpec, WebLinkStatus } from "../../../common/catalog-entities";
+import { WebLink } from "../../../common/catalog-entities";
+import type { CatalogEntityMetadata } from "../../../common/catalog";
+import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 
 class InvalidEntity extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {

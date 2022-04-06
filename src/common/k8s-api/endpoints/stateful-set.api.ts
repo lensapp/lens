@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import type { IAffinity } from "../workload-kube-object";
+import { WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";

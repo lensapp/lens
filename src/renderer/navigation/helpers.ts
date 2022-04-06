@@ -5,9 +5,11 @@
 
 import type { LocationDescriptor } from "history";
 import { createPath } from "history";
-import { matchPath, RouteProps } from "react-router";
+import type { RouteProps } from "react-router";
+import { matchPath } from "react-router";
 import { navigation } from "./history";
-import { PageParam, PageParamInit } from "./page-param";
+import type { PageParamInit } from "./page-param";
+import { PageParam } from "./page-param";
 
 export function navigate(location: LocationDescriptor) {
   const currentLocation = createPath(navigation.location);

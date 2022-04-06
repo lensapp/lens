@@ -4,7 +4,8 @@
  */
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
-import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategory, CatalogCategorySpec } from "../catalog";
+import type { CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategorySpec } from "../catalog";
+import { CatalogEntity, CatalogCategory } from "../catalog";
 import { ClusterStore } from "../cluster-store/cluster-store";
 import { broadcastMessage } from "../ipc";
 import { app } from "electron";

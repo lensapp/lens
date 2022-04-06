@@ -6,7 +6,8 @@
 import "./logs-dialog.scss";
 
 import React from "react";
-import { Dialog, DialogProps } from "../dialog";
+import type { DialogProps } from "../dialog";
+import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Notifications } from "../notifications";
 import { Button } from "../button";

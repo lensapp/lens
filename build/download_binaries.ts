@@ -4,13 +4,15 @@
  */
 import packageInfo from "../package.json";
 import { type WriteStream } from "fs";
-import { FileHandle, open } from "fs/promises";
+import type { FileHandle } from "fs/promises";
+import { open } from "fs/promises";
 import { constants, ensureDir, unlink } from "fs-extra";
 import path from "path";
 import fetch from "node-fetch";
 import { promisify } from "util";
 import { pipeline as _pipeline, Transform, Writable } from "stream";
-import { MultiBar, SingleBar } from "cli-progress";
+import type { SingleBar } from "cli-progress";
+import { MultiBar } from "cli-progress";
 import AbortController from "abort-controller";
 import { extract } from "tar-stream";
 import gunzip from "gunzip-maybe";

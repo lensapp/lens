@@ -5,7 +5,8 @@
 
 import styles from "./close-button.module.scss";
 
-import React, { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
+import React from "react";
 import { Icon } from "../icon";
 
 export interface CloseButtonProps extends HTMLAttributes<HTMLDivElement> {

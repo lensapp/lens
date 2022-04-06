@@ -9,7 +9,8 @@ import "../../../../common/vars";
 import readFileInjectable from "../../../../common/fs/read-file.injectable";
 import readDirInjectable from "../../../../common/fs/read-dir.injectable";
 import type { RawTemplates } from "./create-resource-templates.injectable";
-import getAbsolutePathInjectable, { GetAbsolutePath } from "../../../../common/path/get-absolute-path.injectable";
+import type { GetAbsolutePath } from "../../../../common/path/get-absolute-path.injectable";
+import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 
 interface Dependencies {
   readDir: (dirPath: string) => Promise<string[]>;

@@ -10,7 +10,8 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { Notification, NotificationMessage, notificationsStore, NotificationStatus } from "./notifications.store";
+import type { Notification, NotificationMessage } from "./notifications.store";
+import { notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon";
 

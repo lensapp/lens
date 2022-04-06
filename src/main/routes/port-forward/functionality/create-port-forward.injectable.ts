@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { PortForward, PortForwardArgs } from "./port-forward";
+import type { PortForwardArgs } from "./port-forward";
+import { PortForward } from "./port-forward";
 import bundledKubectlInjectable from "../../../kubectl/bundled-kubectl.injectable";
 
 const createPortForwardInjectable = getInjectable({

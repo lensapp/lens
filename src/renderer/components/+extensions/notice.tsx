@@ -4,7 +4,8 @@
  */
 
 import styles from "./notice.module.scss";
-import React, { DOMAttributes } from "react";
+import type { DOMAttributes } from "react";
+import React from "react";
 import { cssNames } from "../../utils";
 
 export interface NoticeProps extends DOMAttributes<any> {

@@ -5,7 +5,8 @@
 
 import { action, computed, makeObservable } from "mobx";
 import type { TabId } from "../dock/store";
-import { DockTabStorageState, DockTabStore } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import { getReleaseValues } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import type { StorageHelper } from "../../../utils";
 

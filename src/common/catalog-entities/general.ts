@@ -4,7 +4,8 @@
  */
 
 import { navigate } from "../../renderer/navigation";
-import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
+import type { CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
+import { CatalogCategory, CatalogEntity } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 interface GeneralEntitySpec extends CatalogEntitySpec {

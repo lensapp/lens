@@ -11,7 +11,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { secretsStore } from "../../+config-secrets/secrets.store";
-import { Secret, SecretType, ServiceAccount } from "../../../../common/k8s-api/endpoints";
+import type { ServiceAccount } from "../../../../common/k8s-api/endpoints";
+import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "../../icon";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";

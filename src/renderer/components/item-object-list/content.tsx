@@ -5,17 +5,23 @@
 
 import "./item-list-layout.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
-import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
-import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
-import { boundMethod, cssNames, IClassName, isReactNode, prevDefault, stopPropagation } from "../../utils";
-import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
+import type { ConfirmDialogParams } from "../confirm-dialog";
+import { ConfirmDialog } from "../confirm-dialog";
+import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
+import { Table, TableCell, TableHead, TableRow } from "../table";
+import type { IClassName } from "../../utils";
+import { boundMethod, cssNames, isReactNode, prevDefault, stopPropagation } from "../../utils";
+import type { AddRemoveButtonsProps } from "../add-remove-buttons";
+import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
-import { Filter, pageFilters } from "./page-filters.store";
+import type { Filter } from "./page-filters.store";
+import { pageFilters } from "./page-filters.store";
 import { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";

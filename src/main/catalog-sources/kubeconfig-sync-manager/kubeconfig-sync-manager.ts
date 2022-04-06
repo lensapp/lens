@@ -3,14 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, observable, IComputedValue, computed, ObservableMap, runInAction, makeObservable, observe } from "mobx";
+import type { IComputedValue, ObservableMap } from "mobx";
+import { action, observable, computed, runInAction, makeObservable, observe } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { catalogEntityRegistry } from "../../catalog";
-import { FSWatcher, watch } from "chokidar";
+import type { FSWatcher } from "chokidar";
+import { watch } from "chokidar";
 import fs from "fs";
 import path from "path";
 import type stream from "stream";
-import { bytesToUnits, Disposer, getOrInsertWith, iter, noop } from "../../../common/utils";
+import type { Disposer } from "../../../common/utils";
+import { bytesToUnits, getOrInsertWith, iter, noop } from "../../../common/utils";
 import logger from "../../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";

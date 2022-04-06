@@ -3,11 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autoUpdater, UpdateInfo } from "electron-updater";
+import type { UpdateInfo } from "electron-updater";
+import { autoUpdater } from "electron-updater";
 import logger from "./logger";
 import { isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
-import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
+import type { UpdateAvailableToBackchannel } from "../common/ipc";
+import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel } from "../common/ipc";
 import { once } from "lodash";
 import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";

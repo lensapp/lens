@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
+import type { JsonApiData, JsonApiError } from "./json-api";
+import { JsonApi } from "./json-api";
 import type { Response } from "node-fetch";
 import { apiKubePrefix, isDebugging } from "../vars";
 import { apiBase } from "./api-base";

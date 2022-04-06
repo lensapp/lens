@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
-import { DockStorageState, TabKind } from "./store";
+import type { DockStorageState } from "./store";
+import { TabKind } from "./store";
 
 const dockStorageInjectable = getInjectable({
   id: "dock-storage",

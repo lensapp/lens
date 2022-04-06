@@ -5,7 +5,8 @@
 
 import React from "react";
 import { configMapApi } from "../../../../../../common/k8s-api/endpoints";
-import { LocalRef, VolumeVariantComponent } from "../variant-helpers";
+import type { VolumeVariantComponent } from "../variant-helpers";
+import { LocalRef } from "../variant-helpers";
 
 export const ConfigMap: VolumeVariantComponent<"configMap"> = (
   ({ pod, variant: { name }}) => (

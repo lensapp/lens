@@ -14,9 +14,11 @@ import { PortForwardDetails } from "./port-forward-details";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
-import { computed, IComputedValue, makeObservable } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed, makeObservable } from "mobx";
 import portForwardsRouteParametersInjectable from "./port-forwards-route-parameters.injectable";
-import navigateToPortForwardsInjectable, { NavigateToPortForwards } from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
+import type { NavigateToPortForwards } from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
+import navigateToPortForwardsInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 
 enum columnId {
   name = "name",

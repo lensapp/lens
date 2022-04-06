@@ -19,7 +19,8 @@ import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc"
 import { WindowAction } from "../../../../common/ipc/window";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
-import navigateToCatalogInjectable, { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import type { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import navigateToCatalogInjectable from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 

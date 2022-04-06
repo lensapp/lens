@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import type { ClusterId } from "../../../common/cluster-types";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import { catalogEntityRegistry } from "../../catalog";

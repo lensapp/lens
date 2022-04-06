@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { match, matchPath } from "react-router";
+import type { match } from "react-router";
+import { matchPath } from "react-router";
 import { countBy } from "lodash";
 import { iter } from "../utils";
 import { pathToRegexp } from "path-to-regexp";

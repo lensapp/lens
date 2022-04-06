@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { KubeAuthProxy, KubeAuthProxyDependencies } from "./kube-auth-proxy";
+import type { KubeAuthProxyDependencies } from "./kube-auth-proxy";
+import { KubeAuthProxy } from "./kube-auth-proxy";
 import type { Cluster } from "../../common/cluster/cluster";
 import path from "path";
 import selfsigned from "selfsigned";

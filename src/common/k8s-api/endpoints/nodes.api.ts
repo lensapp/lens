@@ -5,7 +5,8 @@
 
 import { KubeObject } from "../kube-object";
 import { autoBind, cpuUnitsToNumber, iter, unitsToBytes } from "../../../renderer/utils";
-import { IMetrics, metricsApi } from "./metrics.api";
+import type { IMetrics } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";

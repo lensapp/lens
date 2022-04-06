@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { CustomResourceDefinition, CustomResourceDefinitionSpec } from "../endpoints";
+import type { CustomResourceDefinitionSpec } from "../endpoints";
+import { CustomResourceDefinition } from "../endpoints";
 
 describe("Crds", () => {
   describe("getVersion()", () => {

@@ -6,7 +6,8 @@
 import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { boundMethod, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";

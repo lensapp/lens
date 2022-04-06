@@ -6,12 +6,13 @@
 import "../common/ipc/cluster";
 import type http from "http";
 import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
-import { Cluster } from "../common/cluster/cluster";
+import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { getClusterIdFromHost, Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
-import { KubernetesCluster, KubernetesClusterPrometheusMetrics, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
+import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 import { ClusterStore } from "../common/cluster-store/cluster-store";

@@ -6,7 +6,8 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import { computed, IObservableArray, observable, runInAction } from "mobx";
+import type { IObservableArray } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 import React from "react";
@@ -14,7 +15,8 @@ import { Router } from "react-router";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
-import { fireEvent, RenderResult } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { Sidebar } from "../layout/sidebar";
@@ -29,7 +31,8 @@ import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
-import applicationMenuItemsInjectable, { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
+import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
+import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 

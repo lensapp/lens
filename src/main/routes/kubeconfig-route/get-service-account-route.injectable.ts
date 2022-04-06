@@ -8,7 +8,8 @@ import { apiPrefix } from "../../../common/vars";
 import type { Route } from "../../router/router";
 import { routeInjectionToken } from "../../router/router.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { CoreV1Api, V1Secret } from "@kubernetes/client-node";
+import type { V1Secret } from "@kubernetes/client-node";
+import { CoreV1Api } from "@kubernetes/client-node";
 
 const getServiceAccountRouteInjectable = getInjectable({
   id: "get-service-account-route",

@@ -9,7 +9,8 @@ import path from "path";
 import os from "os";
 import yaml from "js-yaml";
 import logger from "../main/logger";
-import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
+import type { Cluster, Context, User } from "@kubernetes/client-node/dist/config_types";
+import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
 import { resolvePath } from "./utils";
 import Joi from "joi";
 

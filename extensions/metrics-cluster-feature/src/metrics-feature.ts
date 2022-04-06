@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Renderer, Common } from "@k8slens/extensions";
+import type { Common } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import semver from "semver";
 import * as path from "path";
 

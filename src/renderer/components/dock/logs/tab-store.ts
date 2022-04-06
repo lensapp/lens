@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { DockTabStorageState, DockTabStore } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import type { StorageHelper } from "../../../utils";
 import type { TabId } from "../dock/store";
 import { logTabDataValidator } from "./log-tab-data.validator";

@@ -9,7 +9,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import { Pod, Secret, secretsApi } from "../../../common/k8s-api/endpoints";
+import type { Pod, Secret } from "../../../common/k8s-api/endpoints";
+import { secretsApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 
 export interface PodDetailsSecretsProps {

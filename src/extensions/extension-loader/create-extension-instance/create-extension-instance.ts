@@ -4,8 +4,9 @@
  */
 import type { LensExtensionConstructor } from "../../lens-extension";
 import type { InstalledExtension } from "../../extension-discovery/extension-discovery";
+import type {
+  LensExtensionDependencies } from "../../lens-extension-set-dependencies";
 import {
-  LensExtensionDependencies,
   setLensExtensionDependencies,
 } from "../../lens-extension-set-dependencies";
 

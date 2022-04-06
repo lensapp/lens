@@ -6,7 +6,8 @@ import { pipeline } from "@ogre-tools/fp";
 import { getInjectable } from "@ogre-tools/injectable";
 import { filter, sortBy as sortByWithBadTyping } from "lodash/fp";
 import { computed } from "mobx";
-import { Workload, workloadInjectionToken } from "./workload-injection-token";
+import type { Workload } from "./workload-injection-token";
+import { workloadInjectionToken } from "./workload-injection-token";
 import isAllowedResourceInjectable from "../../../../common/utils/is-allowed-resource.injectable";
 
 const sortBy =

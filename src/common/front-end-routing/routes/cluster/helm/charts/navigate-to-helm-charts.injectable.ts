@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import helmChartsRouteInjectable, { HelmChartsPathParameters } from "./helm-charts-route.injectable";
+import type { HelmChartsPathParameters } from "./helm-charts-route.injectable";
+import helmChartsRouteInjectable from "./helm-charts-route.injectable";
 import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
 
 export type NavigateToHelmCharts = (parameters?: HelmChartsPathParameters) => void;

@@ -5,8 +5,10 @@
 
 import React from "react";
 import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, PortForwardStore } from "../../port-forward";
-import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
+import type { PortForwardItem, PortForwardStore } from "../../port-forward";
+import { openPortForward } from "../../port-forward";
+import type { MenuActionsProps } from "../menu/menu-actions";
+import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
