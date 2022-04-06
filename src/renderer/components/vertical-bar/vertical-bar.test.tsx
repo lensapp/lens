@@ -16,12 +16,11 @@ describe("<VerticalBar/>", () => {
     expect(container.querySelector("[data-testid='vertical-bar']")).toBeInTheDocument();
   });
 
-  it("bar uses provided color and value", () => {
-    const { container } = render(<VerticalBar color="red" value={50} />);
+  it("bar uses provided value", () => {
+    const { container } = render(<VerticalBar value={50} />);
 
     expect(container.querySelector("[data-testid='vertical-bar'] div")).toHaveStyle(`
-      background-color: red;
-      height: 50%;
+      block-size: 50%;
     `);
   });
 });
