@@ -23,7 +23,6 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { Disposer } from "../../utils";
-import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -59,12 +58,11 @@ class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProp
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: replicaSet } = this.props;
 
     this.metrics = await getMetricsForReplicaSets([replicaSet], replicaSet.getNs(), "");
-  }
+  };
 
   render() {
     const { object: replicaSet } = this.props;

@@ -11,7 +11,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "./pods.store";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { boundMethod, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
+import { autoBind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -36,6 +36,11 @@ export interface PodDetailsListProps {
 
 @observer
 export class PodDetailsList extends React.Component<PodDetailsListProps> {
+  constructor(props: PodDetailsListProps) {
+    super(props);
+    autoBind(this);
+  }
+
   private metricsWatcher = interval(120, () => {
     podsStore.loadKubeMetrics(this.props.owner.getNs());
   });
@@ -88,7 +93,6 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
     );
   }
 
-  @boundMethod
   getTableRow(uid: string) {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);

@@ -5,8 +5,8 @@
 
 import "./terminal-dock-tab.scss";
 import React from "react";
-import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../../utils";
+import { disposeOnUnmount, observer } from "mobx-react";
+import { autoBind, cssNames } from "../../../utils";
 import type { DockTabProps } from "../dock-tab";
 import { DockTab } from "../dock-tab";
 import { Icon } from "../../icon";
@@ -26,11 +26,18 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedTerminalTab extends React.Component<TerminalTabProps & Dependencies> {
+class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    autoBind(this);
+  }
+
   componentDidMount() {
-    reaction(() => this.isDisconnected === true, () => {
-      this.props.dockStore.closeTab(this.tabId);
-    });
+    disposeOnUnmount(this, [
+      reaction(() => this.isDisconnected === true, () => {
+        this.props.dockStore.closeTab(this.tabId);
+      }),
+    ]);
   }
 
   get tabId() {
@@ -41,7 +48,6 @@ class NonInjectedTerminalTab extends React.Component<TerminalTabProps & Dependen
     return this.props.terminalStore.isDisconnected(this.tabId);
   }
 
-  @boundMethod
   reconnect() {
     this.props.terminalStore.reconnect(this.tabId);
   }

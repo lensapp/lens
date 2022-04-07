@@ -9,10 +9,10 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { EndpointSubset, Endpoint, EndpointAddress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { boundMethod } from "../../utils";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
 import { getDetailsUrl } from "../kube-detail-params";
+import { autoBind } from "../../../common/utils";
 
 export interface EndpointSubsetListProps {
   subset: EndpointSubset;
@@ -21,6 +21,10 @@ export interface EndpointSubsetListProps {
 
 @observer
 export class EndpointSubsetList extends React.Component<EndpointSubsetListProps> {
+  constructor(props: EndpointSubsetListProps) {
+    super(props);
+    autoBind(this);
+  }
 
   getAddressTableRow(ip: string) {
     const { subset } = this.props;
@@ -29,7 +33,6 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
     return this.renderAddressTableRow(address);
   }
 
-  @boundMethod
   getNotReadyAddressTableRow(ip: string) {
     const { subset } = this.props;
     const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
@@ -37,7 +40,6 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
     return this.renderAddressTableRow(address);
   }
 
-  @boundMethod
   renderAddressTable(addresses: EndpointAddress[], virtual: boolean) {
     return (
       <div>
@@ -63,7 +65,6 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
     );
   }
 
-  @boundMethod
   renderAddressTableRow(address: EndpointAddress) {
     const { endpoint } = this.props;
 

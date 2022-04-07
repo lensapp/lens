@@ -8,7 +8,6 @@ import "./volume-details-list.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { PersistentVolume } from "../../../common/k8s-api/endpoints/persistent-volume.api";
-import { boundMethod } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
 import { showDetails } from "../kube-detail-params";
@@ -38,8 +37,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
     [sortBy.status]: (volume: PersistentVolume) => volume.getStatus(),
   };
 
-  @boundMethod
-  getTableRow(uid: string) {
+  getTableRow = (uid: string) => {
     const { persistentVolumes } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);
 
@@ -55,7 +53,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
         <TableCell className={cssNames("status", kebabCase(volume.getStatus()))}>{volume.getStatus()}</TableCell>
       </TableRow>
     );
-  }
+  };
 
   render() {
     const { persistentVolumes } = this.props;

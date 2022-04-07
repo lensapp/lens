@@ -20,7 +20,6 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
-import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 
 export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
@@ -43,12 +42,11 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: volumeClaim } = this.props;
 
     this.metrics = await getMetricsForPvc(volumeClaim);
-  }
+  };
 
   render() {
     const { object: volumeClaim } = this.props;

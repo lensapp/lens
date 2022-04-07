@@ -11,7 +11,7 @@ import React from "react";
 import { Icon } from "../icon";
 import type { InputProps, InputValidator } from "../input";
 import { Input } from "../input";
-import { boundMethod } from "../../utils";
+import { autoBind } from "../../utils";
 
 export interface EditableListProps<T> {
   items: T[];
@@ -36,7 +36,11 @@ const defaultProps: Partial<EditableListProps<any>> = {
 export class EditableList<T> extends React.Component<EditableListProps<T>> {
   static defaultProps = defaultProps as EditableListProps<any>;
 
-  @boundMethod
+  constructor(props: EditableListProps<T>) {
+    super(props);
+    autoBind(this);
+  }
+
   onSubmit(val: string, evt: React.KeyboardEvent) {
     if (val) {
       evt.preventDefault();

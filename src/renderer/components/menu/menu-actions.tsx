@@ -8,7 +8,7 @@ import "./menu-actions.scss";
 import React, { isValidElement } from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
@@ -48,9 +48,9 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   constructor(props: MenuActionsProps) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
-  @boundMethod
   remove() {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;

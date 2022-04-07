@@ -9,7 +9,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import type { IClassName } from "../../utils";
-import { boundMethod, cssNames } from "../../utils";
+import { cssNames, autoBind } from "../../utils";
 import { observable, makeObservable, action } from "mobx";
 
 export enum TooltipPosition {
@@ -61,6 +61,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   constructor(props: TooltipProps) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   get targetElem(): HTMLElement {
@@ -89,19 +90,18 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @action.bound
+  @action
   protected onEnterTarget() {
     this.isVisible = true;
     requestAnimationFrame(action(() => this.isContentVisible = true));
   }
 
-  @action.bound
+  @action
   protected onLeaveTarget() {
     this.isVisible = false;
     this.isContentVisible = false;
   }
 
-  @boundMethod
   refreshPosition() {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
@@ -219,7 +219,6 @@ export class Tooltip extends React.Component<TooltipProps> {
     };
   }
 
-  @boundMethod
   bindRef(elem: HTMLElement) {
     this.elem = elem;
   }

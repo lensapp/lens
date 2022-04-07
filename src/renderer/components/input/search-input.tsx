@@ -7,7 +7,7 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../utils";
+import { cssNames, autoBind } from "../../utils";
 import { Icon } from "../icon";
 import type { InputProps } from "./input";
 import { Input } from "./input";
@@ -33,6 +33,11 @@ export class SearchInput extends React.Component<SearchInputProps> {
 
   private inputRef = createRef<Input>();
 
+  constructor(props: SearchInputProps) {
+    super(props);
+    autoBind(this);
+  }
+
   componentDidMount() {
     if (!this.props.bindGlobalFocusHotkey) return;
     window.addEventListener("keydown", this.onGlobalKey);
@@ -42,14 +47,12 @@ export class SearchInput extends React.Component<SearchInputProps> {
     window.removeEventListener("keydown", this.onGlobalKey);
   }
 
-  @boundMethod
   onGlobalKey(evt: KeyboardEvent) {
     if (evt.key === "f" && (isMac ? evt.metaKey : evt.ctrlKey)) {
       this.inputRef.current.focus();
     }
   }
 
-  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     this.props.onKeyDown?.(evt);
 
@@ -59,7 +62,6 @@ export class SearchInput extends React.Component<SearchInputProps> {
     }
   }
 
-  @boundMethod
   clear() {
     if (this.props.onClear) {
       this.props.onClear();

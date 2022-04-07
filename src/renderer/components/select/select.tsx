@@ -17,7 +17,7 @@ import type { ActionMeta, OptionTypeBase, Props as ReactSelectProps, Styles } fr
 import type { CreatableProps } from "react-select/creatable";
 
 import { ThemeStore } from "../../theme.store";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 
 const { Menu } = components;
 
@@ -52,6 +52,7 @@ export class Select extends React.Component<SelectProps> {
   constructor(props: SelectProps) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   @computed get themeClass() {
@@ -97,14 +98,12 @@ export class Select extends React.Component<SelectProps> {
     return options as SelectOption[];
   }
 
-  @boundMethod
   onChange(value: SelectOption, meta: ActionMeta<any>) {
     if (this.props.onChange) {
       this.props.onChange(value, meta);
     }
   }
 
-  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);

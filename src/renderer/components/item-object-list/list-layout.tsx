@@ -11,7 +11,7 @@ import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import type { IClassName, StorageHelper } from "../../utils";
-import { boundMethod, cssNames, noop } from "../../utils";
+import { autoBind, cssNames, noop } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";
@@ -120,6 +120,7 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
   constructor(props: ItemListLayoutProps<I> & Dependencies) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   async componentDidMount() {
@@ -160,7 +161,6 @@ class NonInjectedItemListLayout<I extends ItemObject> extends React.Component<It
     return activeFilters;
   }
 
-  @boundMethod
   toggleFilters() {
     this.showFilters = !this.showFilters;
   }

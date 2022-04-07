@@ -7,7 +7,7 @@ import styles from "./dock-tab.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames, prevDefault, isMiddleClick } from "../../utils";
+import { autoBind, cssNames, prevDefault, isMiddleClick } from "../../utils";
 import type { DockStore, DockTab as DockTabModel } from "./dock/store";
 import type { TabProps } from "../tabs";
 import { Tab } from "../tabs";
@@ -34,13 +34,13 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
   constructor(props: DockTabProps & Dependencies) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   get tabId() {
     return this.props.value.id;
   }
 
-  @boundMethod
   close() {
     this.props.dockStore.closeTab(this.tabId);
   }

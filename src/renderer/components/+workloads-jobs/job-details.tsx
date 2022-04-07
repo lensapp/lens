@@ -25,7 +25,6 @@ import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ResourceMetrics } from "../resource-metrics";
-import { boundMethod } from "autobind-decorator";
 import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
@@ -63,12 +62,11 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: job } = this.props;
 
     this.metrics = await getMetricsForJobs([job], job.getNs(), "");
-  }
+  };
 
   render() {
     const { object: job } = this.props;

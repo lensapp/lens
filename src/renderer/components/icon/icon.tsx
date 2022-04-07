@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import type { TooltipDecoratorProps } from "../tooltip";
 import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
@@ -43,13 +43,17 @@ export class Icon extends React.PureComponent<IconProps> {
     return String(content).includes("svg+xml"); // data-url for raw svg-icon
   }
 
+  constructor(props: IconProps) {
+    super(props);
+    autoBind(this);
+  }
+
   get isInteractive() {
     const { interactive, onClick, href, link } = this.props;
 
     return interactive ?? !!(onClick || href || link);
   }
 
-  @boundMethod
   onClick(evt: React.MouseEvent) {
     if (this.props.disabled) {
       return;
@@ -60,7 +64,6 @@ export class Icon extends React.PureComponent<IconProps> {
     }
   }
 
-  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":

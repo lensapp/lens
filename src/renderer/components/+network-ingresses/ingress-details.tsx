@@ -19,7 +19,6 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { computeRuleDeclarations, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
@@ -42,12 +41,11 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: ingress } = this.props;
 
     this.metrics = await getMetricsForIngress(ingress.getName(), ingress.getNs());
-  }
+  };
 
   renderPaths(ingress: Ingress) {
     return ingress.getRules()

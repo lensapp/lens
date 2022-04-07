@@ -11,7 +11,7 @@ import React from "react";
 import { Button } from "../button";
 import { saveKubeconfig } from "./save-config";
 import { Notifications } from "../notifications";
-import { boundMethod } from "autobind-decorator";
+import { autoBind } from "../../../common/utils";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Select } from "../select";
@@ -36,9 +36,9 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
-  @boundMethod
   onOpen() {
     this.newCurrentContext = "";
 
@@ -47,7 +47,6 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
     }
   }
 
-  @boundMethod
   onClose() {
     this.props.model.close();
     this.showContextSwitch = false;
@@ -65,7 +64,6 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
     }
   }
 
-  @boundMethod
   async onDelete() {
     const { cluster, config } = this.props.model;
 

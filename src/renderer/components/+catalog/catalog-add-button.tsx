@@ -9,7 +9,7 @@ import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { observable, makeObservable, action } from "mobx";
-import { boundMethod } from "../../../common/utils";
+import { autoBind } from "../../../common/utils";
 import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
@@ -29,6 +29,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   constructor(props: CatalogAddButtonProps) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   componentDidMount() {
@@ -74,17 +75,14 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     return category.filteredItems(this.menuItems.get(category.getId()) || []);
   };
 
-  @boundMethod
   onOpen() {
     this.isOpen = true;
   }
 
-  @boundMethod
   onClose() {
     this.isOpen = false;
   }
 
-  @boundMethod
   onButtonClick() {
     const defaultAction = this.items.find(item => item.defaultAction)?.onClick;
     const clickAction = defaultAction || (this.items.length === 1 ? this.items[0].onClick : null);
