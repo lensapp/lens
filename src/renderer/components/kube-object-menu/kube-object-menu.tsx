@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { MenuActionsProps } from "../menu";
 import { MenuActions } from "../menu";
@@ -31,7 +31,11 @@ interface Dependencies {
   createEditResourceTab: (kubeObject: KubeObject) => void;
 }
 
-class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Component<KubeObjectMenuProps<TKubeObject> & Dependencies> {
+class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject, Props extends KubeObjectMenuProps<TKubeObject> & Dependencies> extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    autoBind(this);
+  }
 
   get store() {
     const { object } = this.props;
@@ -49,13 +53,11 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Co
     return this.props.removable ?? Boolean(this.store?.remove);
   }
 
-  @boundMethod
   async update() {
     this.props.hideDetails();
     this.props.createEditResourceTab(this.props.object);
   }
 
-  @boundMethod
   async remove() {
     this.props.hideDetails();
     const { object, removeAction } = this.props;
@@ -64,7 +66,6 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject> extends React.Co
     else await this.store.remove(object);
   }
 
-  @boundMethod
   renderRemoveMessage() {
     const { object } = this.props;
 

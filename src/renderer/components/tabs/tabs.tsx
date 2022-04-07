@@ -6,7 +6,7 @@
 import "./tabs.scss";
 import type { DOMAttributes } from "react";
 import React from "react";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 
 const TabsContext = React.createContext<TabsContextValue>({});
@@ -28,10 +28,7 @@ export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttribu
 export class Tabs extends React.PureComponent<TabsProps> {
   public elem: HTMLElement;
 
-  @boundMethod
-  protected bindRef(elem: HTMLElement) {
-    this.elem = elem;
-  }
+  bindRef = (elem: HTMLElement) => this.elem = elem;
 
   render() {
     const { center, wrap, onChange, value, autoFocus, scrollable = true, withBorder, ...elemProps } = this.props;
@@ -69,6 +66,11 @@ export class Tab extends React.PureComponent<TabProps> {
   declare context: TabsContextValue;
   public ref = React.createRef<HTMLDivElement>();
 
+  constructor(props: TabProps) {
+    super(props);
+    autoBind(this);
+  }
+
   get isActive() {
     const { active, value } = this.props;
 
@@ -84,7 +86,6 @@ export class Tab extends React.PureComponent<TabProps> {
     this.ref.current?.scrollIntoViewIfNeeded?.();
   }
 
-  @boundMethod
   onClick(evt: React.MouseEvent<HTMLElement>) {
     const { value, active, disabled, onClick } = this.props;
 
@@ -96,13 +97,11 @@ export class Tab extends React.PureComponent<TabProps> {
     this.context.onChange?.(value);
   }
 
-  @boundMethod
   onFocus(evt: React.FocusEvent<HTMLElement>) {
     this.props.onFocus?.(evt);
     this.scrollIntoView();
   }
 
-  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
     if (evt.key === " " || evt.key === "Enter") {
       this.ref.current?.click();

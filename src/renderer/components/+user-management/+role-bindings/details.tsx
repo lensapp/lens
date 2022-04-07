@@ -9,7 +9,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import type { RoleBinding, RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
-import { prevDefault, boundMethod } from "../../../utils";
+import { prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { DrawerTitle } from "../../drawer";
@@ -36,8 +36,7 @@ export class RoleBindingDetails extends React.Component<RoleBindingDetailsProps>
     ]);
   }
 
-  @boundMethod
-  removeSelectedSubjects() {
+  removeSelectedSubjects = () => {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;
 
@@ -48,7 +47,7 @@ export class RoleBindingDetails extends React.Component<RoleBindingDetailsProps>
         <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
       ),
     });
-  }
+  };
 
   render() {
     const { selectedSubjects } = this;

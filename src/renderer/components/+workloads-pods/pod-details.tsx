@@ -13,7 +13,7 @@ import { observable, reaction, makeObservable } from "mobx";
 import { type IPodMetrics, nodesApi, Pod, getMetricsForPods } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { boundMethod, cssNames, toJS } from "../../utils";
+import { cssNames, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
@@ -51,13 +51,12 @@ export class PodDetails extends React.Component<PodDetailsProps> {
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: pod } = this.props;
 
     this.metrics = await getMetricsForPods([pod], pod.getNs());
     this.containerMetrics = await getMetricsForPods([pod], pod.getNs(), "container, namespace");
-  }
+  };
 
   render() {
     const { object: pod } = this.props;

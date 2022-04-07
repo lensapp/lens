@@ -7,7 +7,7 @@ import "./table.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import type { TableRowElem, TableRowProps } from "./table-row";
 import { TableRow } from "./table-row";
 import type { TableHeadElem, TableHeadProps } from "./table-head";
@@ -99,6 +99,7 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
   constructor(props: TableProps<Item> & Dependencies) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   componentDidMount() {
@@ -173,7 +174,6 @@ class NonInjectedTable<Item> extends React.Component<TableProps<Item> & Dependen
     onSort?.({ sortBy, orderBy });
   }
 
-  @boundMethod
   sort(colName: TableSortBy) {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;

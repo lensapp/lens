@@ -15,7 +15,7 @@ import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
 import { SearchStore } from "../../../search-store/search-store";
 import { UserStore } from "../../../../common/user-store";
-import { array, boundMethod, cssNames } from "../../../utils";
+import { array, autoBind, cssNames } from "../../../utils";
 import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
@@ -39,6 +39,7 @@ export class LogList extends React.Component<LogListProps> {
   constructor(props: LogListProps) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   componentDidMount() {
@@ -51,14 +52,12 @@ export class LogList extends React.Component<LogListProps> {
     ]);
   }
 
-  @boundMethod
   onLogsInitialLoad(logs: string[], prevLogs: string[]) {
     if (!prevLogs.length && logs.length) {
       this.isLastLineVisible = true;
     }
   }
 
-  @boundMethod
   onLogsUpdate() {
     if (this.isLastLineVisible) {
       setTimeout(() => {
@@ -67,7 +66,6 @@ export class LogList extends React.Component<LogListProps> {
     }
   }
 
-  @boundMethod
   onUserScrolledUp(logs: string[], prevLogs: string[]) {
     if (!this.virtualListDiv.current) return;
 

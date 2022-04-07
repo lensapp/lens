@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { boundMethod, cssNames } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import type { PortForwardItem, PortForwardStore } from "../../port-forward";
 import { openPortForward } from "../../port-forward";
 import type { MenuActionsProps } from "../menu/menu-actions";
@@ -26,8 +26,12 @@ interface Dependencies {
   openPortForwardDialog: (item: PortForwardItem) => void;
 }
 
-class NonInjectedPortForwardMenu extends React.Component<PortForwardMenuProps & Dependencies> {
-  @boundMethod
+class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependencies> extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    autoBind(this);
+  }
+
   remove() {
     const { portForward } = this.props;
 

@@ -14,7 +14,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName } from "../../utils";
-import { boundMethod, cssNames, isReactNode, prevDefault, stopPropagation } from "../../utils";
+import { autoBind, cssNames, isReactNode, prevDefault, stopPropagation } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
@@ -68,13 +68,13 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   constructor(props: ItemListLayoutContentProps<I>) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   @computed get failedToLoad() {
     return this.props.store.failedLoading;
   }
 
-  @boundMethod
   renderRow(item: I) {
     return this.getTableRow(item);
   }
@@ -133,7 +133,6 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     );
   }
 
-  @boundMethod
   getRow(uid: string) {
     return (
       <div key={uid}>
@@ -150,7 +149,6 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     );
   }
 
-  @boundMethod
   removeItemsDialog(selectedItems: I[]) {
     const { customizeRemoveDialog, store } = this.props;
     const visibleMaxNamesCount = 5;

@@ -7,7 +7,7 @@ import "./input.scss";
 
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
-import { boundMethod, cssNames, debouncePromise, getRandId } from "../../utils";
+import { autoBind, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import type { TooltipProps } from "../tooltip";
 import { Tooltip } from "../tooltip";
@@ -90,6 +90,11 @@ export class Input extends React.Component<InputProps, State> {
     errors: [],
     submitted: false,
   };
+
+  constructor(props: InputProps) {
+    super(props);
+    autoBind(this);
+  }
 
   componentWillUnmount(): void {
     this.setDirtyOnChange.cancel();
@@ -220,7 +225,6 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ dirty });
   }
 
-  @boundMethod
   onFocus(evt: React.FocusEvent<InputElement>) {
     const { onFocus, autoSelectOnFocus } = this.props;
 
@@ -229,7 +233,6 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ focused: true });
   }
 
-  @boundMethod
   onBlur(evt: React.FocusEvent<InputElement>) {
     this.props.onBlur?.(evt);
     this.setState({ focused: false });
@@ -237,7 +240,6 @@ export class Input extends React.Component<InputProps, State> {
 
   setDirtyOnChange = debounce(() => this.setDirty(), 500);
 
-  @boundMethod
   onChange(evt: React.ChangeEvent<any>) {
     this.props.onChange?.(evt.currentTarget.value, evt);
     this.validate();
@@ -251,7 +253,6 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<InputElement>) {
     this.props.onKeyDown?.(evt);
 
@@ -329,7 +330,6 @@ export class Input extends React.Component<InputProps, State> {
     };
   }
 
-  @boundMethod
   bindRef(elem: InputElement) {
     this.input = elem;
   }

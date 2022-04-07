@@ -24,7 +24,6 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { Disposer } from "../../utils";
-import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -60,12 +59,11 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: statefulSet } = this.props;
 
     this.metrics = await getMetricsForStatefulSets([statefulSet], statefulSet.getNs(), "");
-  }
+  };
 
   render() {
     const { object: statefulSet } = this.props;

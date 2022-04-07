@@ -6,7 +6,6 @@
 import React from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { boundMethod } from "../../utils";
 
 export interface RenderDelayProps {
   placeholder?: React.ReactNode;
@@ -32,10 +31,7 @@ export class RenderDelay extends React.Component<RenderDelayProps> {
     window.cancelIdleCallback(this.showContents);
   }
 
-  @boundMethod
-  showContents() {
-    this.isVisible = true;
-  }
+  showContents = () => this.isVisible = true;
 
   render() {
     if (!this.isVisible) {

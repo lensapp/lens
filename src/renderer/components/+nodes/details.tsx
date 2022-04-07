@@ -25,7 +25,6 @@ import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { NodeDetailsResources } from "./details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import type { Disposer } from "../../utils";
-import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -61,12 +60,11 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: node } = this.props;
 
     this.metrics = await getMetricsByNodeNames([node.getName()]);
-  }
+  };
 
   render() {
     const { object: node } = this.props;

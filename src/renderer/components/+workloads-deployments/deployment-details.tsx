@@ -26,7 +26,6 @@ import { DeploymentReplicaSets } from "./deployment-replicasets";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { Disposer } from "../../utils";
-import { boundMethod } from "../../utils";
 import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -63,12 +62,11 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: deployment } = this.props;
 
     this.metrics = await getMetricsForDeployments([deployment], deployment.getNs(), "");
-  }
+  };
 
   render() {
     const { object: deployment } = this.props;

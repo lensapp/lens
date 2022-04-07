@@ -10,7 +10,7 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { Disposer } from "../../utils";
-import { boundMethod, cssNames } from "../../utils";
+import {  cssNames } from "../../utils";
 import { getMetricsForNamespace, type IPodMetrics, Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
@@ -71,10 +71,9 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
     return limitRangeStore.getAllByNs(namespace);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     this.metrics = await getMetricsForNamespace(this.props.object.getName(), "");
-  }
+  };
 
   render() {
     const { object: namespace } = this.props;

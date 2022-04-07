@@ -11,7 +11,7 @@ import { getChartDetails } from "../../../common/k8s-api/endpoints/helm-charts.a
 import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
-import { boundMethod, stopPropagation } from "../../utils";
+import { autoBind, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
@@ -48,6 +48,7 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
   constructor(props: HelmChartDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   componentWillUnmount() {
@@ -77,7 +78,6 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     ]);
   }
 
-  @boundMethod
   async onVersionChange({ value: chart }: SelectOption<HelmChart>) {
     this.selectedChart = chart;
     this.readme = null;
@@ -94,7 +94,6 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     }
   }
 
-  @boundMethod
   install() {
     this.props.createInstallChartTab(this.selectedChart);
     this.props.hideDetails();

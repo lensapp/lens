@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import { cssNames } from "../../utils/cssNames";
 import type { TooltipDecoratorProps } from "../tooltip";
 import { withTooltip } from "../tooltip";
-import { boundMethod } from "../../utils";
+import { autoBind } from "../../utils";
 
 export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   small?: boolean;
@@ -44,6 +44,7 @@ export class Badge extends React.Component<BadgeProps> {
   constructor(props: BadgeProps) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
   @computed get isExpandable() {
@@ -52,7 +53,6 @@ export class Badge extends React.Component<BadgeProps> {
     return this.elem?.clientWidth < this.elem?.scrollWidth;
   }
 
-  @boundMethod
   onMouseUp() {
     if (!this.isExpandable || Badge.badgeMeta.hasTextSelected) {
       Badge.badgeMeta.hasTextSelected = false;
@@ -61,7 +61,6 @@ export class Badge extends React.Component<BadgeProps> {
     }
   }
 
-  @boundMethod
   bindRef(elem: HTMLElement) {
     this.elem = elem;
   }

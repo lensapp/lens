@@ -5,7 +5,7 @@
 
 import React from "react";
 import type { Cluster } from "../../../../common/cluster/cluster";
-import { boundMethod } from "../../../utils";
+import { autoBind } from "../../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
@@ -28,9 +28,13 @@ export class ClusterIconSetting extends React.Component<ClusterIconSettingProps>
   @observable status = GeneralInputStatus.CLEAN;
   @observable errorText?: string;
 
+  constructor(props: ClusterIconSettingProps) {
+    super(props);
+    autoBind(this);
+  }
+
   private element = React.createRef<HTMLDivElement>();
 
-  @boundMethod
   async onIconPick([file]: File[]) {
     if (!file) {
       return;
@@ -56,7 +60,6 @@ export class ClusterIconSetting extends React.Component<ClusterIconSettingProps>
     this.props.cluster.preferences.icon = null;
   }
 
-  @boundMethod
   onUploadClick() {
     this.element
       .current
