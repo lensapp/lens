@@ -34,7 +34,7 @@ export class PieChart extends React.Component<PieChartProps> {
             const total = datasetData.reduce((acc, cur) => acc + cur, 0);
             const percent = Math.round((dataset.data[tooltipItem["index"]] as number / total) * 100);
             const percentLabel = isNaN(percent) ? "N/A" : `${percent}%`;
-            const tooltipLabel = data.tooltipLabels?.[tooltipItem["index"]];
+            const tooltipLabel = dataset.tooltipLabels?.[tooltipItem["index"]];
             let tooltip = `${dataset["label"]}: ${percentLabel}`;
 
             if (tooltipLabel) {

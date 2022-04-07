@@ -13,12 +13,12 @@ import { Badge } from "../badge";
 
 export interface ChartData extends ChartJS.ChartData {
   datasets?: ChartDataSets[];
-  tooltipLabels?: ChartTooltipLabel[];
 }
 
 export interface ChartDataSets extends ChartJS.ChartDataSets {
   id?: string;
   tooltip?: string;
+  tooltipLabels?: ChartTooltipLabel[];
 }
 
 export interface ChartProps {
@@ -37,7 +37,7 @@ export interface ChartProps {
   className?: string;
 }
 
-type ChartTooltipLabel = (percent: string) => string | string;
+export type ChartTooltipLabel = (percent: string) => string | string;
 
 export enum ChartKind {
   PIE = "pie",
