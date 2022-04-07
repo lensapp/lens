@@ -124,9 +124,9 @@ describe("<Catalog />", () => {
     }));
 
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => computed(() => catalogEntityItem));
+    Object.assign(catalogEntityStore, {
+      selectedItem: computed(() => catalogEntityItem),
+    });
   });
 
   afterEach(() => {

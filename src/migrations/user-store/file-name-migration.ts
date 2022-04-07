@@ -6,11 +6,10 @@
 import fse from "fs-extra";
 import path from "path";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { isErrnoException } from "../../common/utils";
 
-export function fileNameMigration() {
+export async function userStoreFileNameMigration() {
   const di = getLegacyGlobalDiForExtensionApi();
 
   const userDataPath = di.inject(directoryForUserDataInjectable);
@@ -18,10 +17,10 @@ export function fileNameMigration() {
   const lensUserStoreJsonPath = path.join(userDataPath, "lens-user-store.json");
 
   try {
-    fse.moveSync(configJsonPath, lensUserStoreJsonPath);
+    await fse.move(configJsonPath, lensUserStoreJsonPath);
   } catch (error) {
     if (error instanceof Error && error.message === "dest already exists.") {
-      fse.removeSync(configJsonPath);
+      await fse.remove(configJsonPath);
     } else if (isErrnoException(error) && error.code === "ENOENT" && error.path === configJsonPath) {
       // (No such file or directory)
       return; // file already moved

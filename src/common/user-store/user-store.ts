@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { app, ipcMain } from "electron";
+import { app } from "electron";
 import semver, { SemVer } from "semver";
 import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
-import migrations, { fileNameMigration } from "../../migrations/user-store";
+import migrations from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../app-event-bus/event-bus";
@@ -30,11 +30,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     });
 
     makeObservable(this);
-
-    if (ipcMain) {
-      fileNameMigration();
-    }
-
     this.load();
   }
 

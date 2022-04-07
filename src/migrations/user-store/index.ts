@@ -10,10 +10,10 @@ import { joinMigrations } from "../helpers";
 import version210Beta4 from "./2.1.0-beta.4";
 import version500Alpha3 from "./5.0.0-alpha.3";
 import version503Beta1 from "./5.0.3-beta.1";
-import { fileNameMigration } from "./file-name-migration";
+import { userStoreFileNameMigration } from "./file-name-migration";
 
 export {
-  fileNameMigration,
+  userStoreFileNameMigration,
 };
 
 export default joinMigrations(
