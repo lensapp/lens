@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { comparer, computed } from "mobx";
-import hostedClusterInjectable from "../../renderer/cluster/hosted-cluster.injectable";
+import hostedClusterInjectable from "./hosted-cluster.injectable";
 
 const allowedResourcesInjectable = getInjectable({
   id: "allowed-resources",

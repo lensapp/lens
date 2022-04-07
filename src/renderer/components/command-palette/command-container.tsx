@@ -18,7 +18,7 @@ import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
 import type { Disposer } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
-import hostedClusterInjectable from "../../cluster/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 import type { IComputedValue } from "mobx";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
 

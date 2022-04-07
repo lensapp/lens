@@ -7,7 +7,7 @@ import { initClusterFrame } from "./init-cluster-frame";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
 import frameRoutingIdInjectable from "./frame-routing-id/frame-routing-id.injectable";
-import hostedClusterInjectable from "../../../cluster/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../../../common/cluster-store/hosted-cluster.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
 import clusterFrameContextInjectable from "../../../cluster-frame-context/cluster-frame-context.injectable";
 import assert from "assert";

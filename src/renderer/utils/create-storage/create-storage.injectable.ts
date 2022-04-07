@@ -10,7 +10,7 @@ import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectab
 import { observable } from "mobx";
 import loggerInjectable from "../../../common/logger.injectable";
 import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
-import hostedClusterIdInjectable from "../../cluster/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "../../../common/cluster-store/hosted-cluster-id.injectable";
 
 const createStorageInjectable = getInjectable({
   id: "create-storage",

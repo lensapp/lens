@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getClusterIdFromHost } from "../../common/utils";
+import { getClusterIdFromHost } from "../utils";
 
 const hostedClusterIdInjectable = getInjectable({
   id: "hosted-cluster-id",

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import hostedClusterIdInjectable from "./hosted-cluster-id.injectable";
-import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
+import clusterStoreInjectable from "./cluster-store.injectable";
 
 const hostedClusterInjectable = getInjectable({
   id: "hosted-cluster",
