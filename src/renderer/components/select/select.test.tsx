@@ -122,7 +122,7 @@ describe("<Select />", () => {
     const { container, rerender } = render(<Select
       value={options[0]}
       onChange={onChange}
-      options={options} 
+      options={options}
     />);
     const selectedValueContainer = container.querySelector(".Select__single-value");
 

@@ -34,6 +34,7 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
+import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -59,6 +60,7 @@ export const getDiForUnitTesting = (
     di.override(isLinuxInjectable, () => false);
 
     di.override(terminalSpawningPoolInjectable, () => new HTMLElement());
+    di.override(hostedClusterIdInjectable, () => undefined);
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);

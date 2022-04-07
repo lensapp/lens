@@ -14,7 +14,6 @@ import ReactSelect, { components } from "react-select";
 import type { Props as ReactSelectProps, GroupBase } from "react-select";
 import { ThemeStore } from "../../theme.store";
 import { autoBind, cssNames } from "../../utils";
-import { merge } from "lodash";
 
 const { Menu } = components;
 
@@ -65,6 +64,7 @@ export class Select<Option, IsMulti extends boolean = false, Group extends Group
       menuClass,
       components = {},
       styles,
+      value = null,
       ...props
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
@@ -72,12 +72,14 @@ export class Select<Option, IsMulti extends boolean = false, Group extends Group
     return (
       <ReactSelect
         {...props}
-        styles={merge(styles, {
+        styles={{
           menuPortal: styles => ({
             ...styles,
             zIndex: "auto",
           }),
-        })}
+          ...styles,
+        }}
+        value={value}
         onKeyDown={this.onKeyDown}
         className={cssNames("Select", this.themeClass, className)}
         classNamePrefix="Select"
