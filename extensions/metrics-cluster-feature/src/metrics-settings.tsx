@@ -3,10 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { Common, Renderer } from "@k8slens/extensions";
+import type { Common } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import { computed, observable, makeObservable } from "mobx";
-import { MetricsFeature, MetricsConfiguration } from "./metrics-feature";
+import type { MetricsConfiguration } from "./metrics-feature";
+import { MetricsFeature } from "./metrics-feature";
 
 const {
   K8sApi: {

@@ -4,7 +4,8 @@
  */
 
 import type { StorageHelper } from "../../../utils";
-import { DockTabStorageState, DockTabStore } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import type { TabId } from "../dock/store";
 import type { KubeObject } from "../../../../common/k8s-api/kube-object";
 import { apiManager } from "../../../../common/k8s-api/api-manager";

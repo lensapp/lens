@@ -5,7 +5,8 @@
 
 import styles from "./react-table.module.scss";
 import React, { useCallback, useMemo } from "react";
-import { useFlexLayout, useSortBy, useTable, UseTableOptions } from "react-table";
+import type { UseTableOptions } from "react-table";
+import { useFlexLayout, useSortBy, useTable } from "react-table";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 

@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import { AppPaths, appPathsInjectionToken } from "./app-path-injection-token";
+import type { AppPaths } from "./app-path-injection-token";
+import { appPathsInjectionToken } from "./app-path-injection-token";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import type { PathName } from "./app-path-names";

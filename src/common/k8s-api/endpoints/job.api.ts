@@ -5,7 +5,8 @@
 
 import get from "lodash/get";
 import { autoBind } from "../../utils";
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import type { IAffinity } from "../workload-kube-object";
+import { WorkloadKubeObject } from "../workload-kube-object";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { KubeJsonApiData } from "../kube-json-api";

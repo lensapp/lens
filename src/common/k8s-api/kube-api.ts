@@ -12,14 +12,17 @@ import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
 import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
+import type { KubeObjectConstructor } from "./kube-object";
+import { KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
-import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
+import type { KubeJsonApiData } from "./kube-json-api";
+import { KubeJsonApi } from "./kube-json-api";
 import { noop, WrappedAbortController } from "../utils";
 import type { RequestInit } from "node-fetch";
 import type AbortController from "abort-controller";
-import { Agent, AgentOptions } from "https";
+import type { AgentOptions } from "https";
+import { Agent } from "https";
 import type { Patch } from "rfc6902";
 
 /**

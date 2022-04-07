@@ -7,7 +7,8 @@ import { mkdirp, remove } from "fs-extra";
 import * as os from "os";
 import * as path from "path";
 import * as uuid from "uuid";
-import { ElectronApplication, Frame, Page, _electron as electron } from "playwright";
+import type { ElectronApplication, Frame, Page } from "playwright";
+import { _electron as electron } from "playwright";
 import { noop } from "lodash";
 
 export const appPaths: Partial<Record<NodeJS.Platform, string>> = {

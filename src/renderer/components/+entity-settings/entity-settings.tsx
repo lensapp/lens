@@ -6,7 +6,8 @@
 import styles from "./entity-settings.module.scss";
 
 import React from "react";
-import { observable, makeObservable, IComputedValue, computed } from "mobx";
+import type { IComputedValue } from "mobx";
+import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";

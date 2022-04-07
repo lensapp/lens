@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { AuthorizationV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
+import type { KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
+import { AuthorizationV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 import { getInjectable } from "@ogre-tools/injectable";
 

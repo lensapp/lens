@@ -5,8 +5,10 @@
 
 import { action, makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../../common/item.store";
-import { autoBind, disposer, StorageHelper } from "../../utils";
-import { ForwardedPort, PortForwardItem } from "../port-forward-item";
+import type { StorageHelper } from "../../utils";
+import { autoBind, disposer } from "../../utils";
+import type { ForwardedPort } from "../port-forward-item";
+import { PortForwardItem } from "../port-forward-item";
 import { apiBase } from "../../api";
 import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";

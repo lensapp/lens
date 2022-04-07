@@ -4,7 +4,8 @@
  */
 
 import { action, observable, reaction } from "mobx";
-import { autoBind, StorageHelper, toJS } from "../../../utils";
+import type { StorageHelper } from "../../../utils";
+import { autoBind, toJS } from "../../../utils";
 import type { TabId } from "../dock/store";
 
 export interface DockTabStoreOptions {

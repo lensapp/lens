@@ -6,7 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import editResourceTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { KubeObject } from "../../../../common/k8s-api/kube-object";
-import { DockStore, DockTabCreateSpecific, TabId, TabKind } from "../dock/store";
+import type { DockStore, DockTabCreateSpecific, TabId } from "../dock/store";
+import { TabKind } from "../dock/store";
 import type { EditResourceTabStore } from "./store";
 import { runInAction } from "mobx";
 

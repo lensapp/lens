@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { CatalogCategory, CatalogCategoryRegistry, CatalogCategorySpec } from "../catalog";
+import type { CatalogCategorySpec } from "../catalog";
+import { CatalogCategory, CatalogCategoryRegistry } from "../catalog";
 
 class TestCatalogCategoryRegistry extends CatalogCategoryRegistry { }
 

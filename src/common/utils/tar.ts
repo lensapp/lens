@@ -5,7 +5,8 @@
 
 // Helper for working with tarball files (.tar, .tgz)
 // Docs: https://github.com/npm/node-tar
-import tar, { ExtractOptions, FileStat } from "tar";
+import type { ExtractOptions, FileStat } from "tar";
+import tar from "tar";
 import path from "path";
 
 export interface ReadFileFromTarOpts {

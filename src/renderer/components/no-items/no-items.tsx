@@ -6,7 +6,8 @@
 import "./no-items.scss";
 
 import React from "react";
-import { cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 
 export interface NoItemsProps {
   className?: IClassName;

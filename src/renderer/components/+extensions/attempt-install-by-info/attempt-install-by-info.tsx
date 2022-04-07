@@ -2,7 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { downloadFile, downloadJson, ExtendableDisposer } from "../../../../common/utils";
+import type { ExtendableDisposer } from "../../../../common/utils";
+import { downloadFile, downloadJson } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { ConfirmDialog } from "../../confirm-dialog";
 import React from "react";

@@ -7,7 +7,8 @@ import { overSome } from "lodash/fp";
 import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../extensions/renderer-extensions.injectable";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-import { Route, routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import type { Route } from "../../common/front-end-routing/route-injection-token";
+import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
 
 const allRoutesInjectable = getInjectable({
   id: "all-routes",

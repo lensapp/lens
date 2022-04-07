@@ -5,7 +5,8 @@
 
 import React from "react";
 import { pvcApi } from "../../../../../../common/k8s-api/endpoints";
-import { LocalRef, VolumeVariantComponent } from "../variant-helpers";
+import type { VolumeVariantComponent } from "../variant-helpers";
+import { LocalRef } from "../variant-helpers";
 
 export const PersistentVolumeClaim: VolumeVariantComponent<"persistentVolumeClaim"> = (
   ({ pod, variant: { claimName }}) => (

@@ -214,6 +214,7 @@ module.exports = {
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "off",
         "no-template-curly-in-string": "error",
+        "@typescript-eslint/consistent-type-imports": "error",
       },
     },
   ],

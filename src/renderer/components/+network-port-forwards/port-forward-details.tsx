@@ -7,7 +7,8 @@ import "./port-forward-details.scss";
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { portForwardAddress, PortForwardItem } from "../../port-forward";
+import type { PortForwardItem } from "../../port-forward";
+import { portForwardAddress } from "../../port-forward";
 import { Drawer, DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { podsApi, serviceApi } from "../../../common/k8s-api/endpoints";

@@ -5,7 +5,8 @@
 import { pipeline } from "@ogre-tools/fp";
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { filter, orderBy } from "lodash/fp";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 
 export const preferenceNavigationItemInjectionToken =
   getInjectionToken<PreferenceNavigationItem>({

@@ -4,7 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { NetworkPolicy, networkPolicyApi } from "../../../common/k8s-api/endpoints/network-policy.api";
+import type { NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
+import { networkPolicyApi } from "../../../common/k8s-api/endpoints/network-policy.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class NetworkPolicyStore extends KubeObjectStore<NetworkPolicy> {

@@ -5,11 +5,13 @@
 
 import "./item-list-layout.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
-import { boundMethod, cssNames, IClassName, noop, StorageHelper } from "../../utils";
+import type { IClassName, StorageHelper } from "../../utils";
+import { boundMethod, cssNames, noop } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";

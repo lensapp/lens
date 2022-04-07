@@ -8,7 +8,8 @@ import styles from "./cluster-metrics.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import { ClusterOverviewStore, MetricType } from "./cluster-overview-store/cluster-overview-store";
+import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
+import { MetricType } from "./cluster-overview-store/cluster-overview-store";
 import { BarChart } from "../chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
@@ -72,7 +73,7 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
         label: ({ index }, data) => {
           const value = data.datasets[0].data[index] as ChartPoint;
 
-          return bytesToUnits(parseInt(value.y as string), 3);
+          return bytesToUnits(parseInt(value.y as string), { precision: 3 });
         },
       },
     },

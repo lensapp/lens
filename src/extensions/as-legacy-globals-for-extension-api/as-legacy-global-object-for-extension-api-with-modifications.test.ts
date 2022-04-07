@@ -2,11 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type {
+  DiContainer,
+  Injectable } from "@ogre-tools/injectable";
 import {
   createContainer,
-  DiContainer,
   getInjectable,
-  Injectable,
 } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 import { asLegacyGlobalObjectForExtensionApiWithModifications } from "./as-legacy-global-object-for-extension-api-with-modifications";

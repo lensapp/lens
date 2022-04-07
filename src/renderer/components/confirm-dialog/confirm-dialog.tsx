@@ -5,12 +5,15 @@
 
 import "./confirm-dialog.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
-import { Button, ButtonProps } from "../button";
-import { Dialog, DialogProps } from "../dialog";
+import type { ButtonProps } from "../button";
+import { Button } from "../button";
+import type { DialogProps } from "../dialog";
+import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 

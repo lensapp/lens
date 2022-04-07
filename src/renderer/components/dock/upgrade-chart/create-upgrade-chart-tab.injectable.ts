@@ -6,7 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import upgradeChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { DockStore, DockTabCreateSpecific, TabId, TabKind } from "../dock/store";
+import type { DockStore, DockTabCreateSpecific, TabId } from "../dock/store";
+import { TabKind } from "../dock/store";
 import type { UpgradeChartTabStore } from "./store";
 import { runInAction } from "mobx";
 

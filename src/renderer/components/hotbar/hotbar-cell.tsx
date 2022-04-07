@@ -4,7 +4,8 @@
  */
 import "./hotbar-menu.scss";
 
-import React, { HTMLAttributes, ReactNode, useState } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+import React, { useState } from "react";
 
 import { cssNames } from "../../utils";
 

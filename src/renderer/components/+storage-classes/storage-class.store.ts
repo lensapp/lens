@@ -5,7 +5,8 @@
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
-import { StorageClass, storageClassApi } from "../../../common/k8s-api/endpoints/storage-class.api";
+import type { StorageClass } from "../../../common/k8s-api/endpoints/storage-class.api";
+import { storageClassApi } from "../../../common/k8s-api/endpoints/storage-class.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { volumesStore } from "../+storage-volumes/volumes.store";
 

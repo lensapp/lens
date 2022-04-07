@@ -6,7 +6,8 @@ import { makeObservable } from "mobx";
 
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import { Deployment, deploymentApi, PodStatus } from "../../../common/k8s-api/endpoints";
+import type { Deployment } from "../../../common/k8s-api/endpoints";
+import { deploymentApi, PodStatus } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 

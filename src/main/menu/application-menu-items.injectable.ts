@@ -10,10 +10,11 @@ import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
 import { showAbout } from "./menu";
 import windowManagerInjectable from "../window-manager.injectable";
-import {
+import type {
   BrowserWindow,
   MenuItem,
-  MenuItemConstructorOptions,
+  MenuItemConstructorOptions } from "electron";
+import {
   webContents,
 } from "electron";
 import loggerInjectable from "../../common/logger.injectable";

@@ -8,11 +8,13 @@ import styles from "./helm-charts.module.scss";
 import React from "react";
 import { computed, observable, makeObservable } from "mobx";
 
-import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
+import type { HelmRepo } from "../../../main/helm/helm-repo-manager";
+import { HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
-import { Select, SelectOption } from "../select";
+import type { SelectOption } from "../select";
+import { Select } from "../select";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
 import { RemovableItem } from "./removable-item";

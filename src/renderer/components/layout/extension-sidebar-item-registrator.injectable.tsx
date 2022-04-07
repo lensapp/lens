@@ -2,11 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { DiContainer, getInjectable } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import React from "react";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import { SidebarItemRegistration, sidebarItemsInjectionToken } from "./sidebar-items.injectable";
+import type { SidebarItemRegistration } from "./sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "./sidebar-items.injectable";
 import { computed } from "mobx";
 import routesInjectable from "../../routes/routes.injectable";
 import { matches, noop } from "lodash/fp";

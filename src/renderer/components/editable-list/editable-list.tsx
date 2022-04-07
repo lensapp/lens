@@ -9,7 +9,8 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { Icon } from "../icon";
-import { Input, InputProps, InputValidator } from "../input";
+import type { InputProps, InputValidator } from "../input";
+import { Input } from "../input";
 import { boundMethod } from "../../utils";
 
 export interface EditableListProps<T> {

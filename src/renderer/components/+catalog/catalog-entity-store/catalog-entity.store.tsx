@@ -7,7 +7,8 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../../api/catalog-entity";
 import { ItemStore } from "../../../../common/item.store";
-import { CatalogCategory, catalogCategoryRegistry } from "../../../../common/catalog";
+import type { CatalogCategory } from "../../../../common/catalog";
+import { catalogCategoryRegistry } from "../../../../common/catalog";
 import { autoBind, disposer } from "../../../../common/utils";
 
 interface Dependencies {

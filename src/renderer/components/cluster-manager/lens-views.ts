@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, IReactionDisposer, makeObservable, observable, when } from "mobx";
+import type { IReactionDisposer } from "mobx";
+import { action, makeObservable, observable, when } from "mobx";
 import logger from "../../../main/logger";
 import { clusterVisibilityHandler } from "../../../common/ipc/cluster";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";

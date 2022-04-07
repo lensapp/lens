@@ -75,7 +75,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   renderMemoryUsage(id: string, usage: number) {
     const { maxMemory } = this.props;
     const tooltip = (
-      <p>Memory: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, 3)}</p>
+      <p>Memory: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, { precision: 3 })}</p>
     );
 
     if (!maxMemory) return usage ? bytesToUnits(usage) : 0;

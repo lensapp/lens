@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { PodSecurityPolicy, pspApi } from "../../../common/k8s-api/endpoints";
+import type { PodSecurityPolicy } from "../../../common/k8s-api/endpoints";
+import { pspApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 

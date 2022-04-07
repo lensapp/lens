@@ -9,7 +9,8 @@
 import path from "path";
 import fse from "fs-extra";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
-import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { MigrationDeclaration } from "../helpers";
+import { migrationLog } from "../helpers";
 import type { ClusterModel } from "../../common/cluster-types";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable

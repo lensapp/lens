@@ -5,7 +5,8 @@
 
 import * as uuid from "uuid";
 import { action, comparer, computed, makeObservable, observable, reaction, runInAction } from "mobx";
-import { autoBind, StorageHelper } from "../../../utils";
+import type { StorageHelper } from "../../../utils";
+import { autoBind } from "../../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;

@@ -6,10 +6,12 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
 import type { IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
-import { BarChart, ChartDataSets, memoryOptions } from "../chart";
+import type { ChartDataSets } from "../chart";
+import { BarChart, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import type { IResourceMetricsValue } from "../resource-metrics";
+import { ResourceMetricsContext } from "../resource-metrics";
 import { ThemeStore } from "../../theme.store";
 
 type IContext = IResourceMetricsValue<PersistentVolumeClaim, { metrics: IPvcMetrics }>;

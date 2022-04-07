@@ -6,8 +6,10 @@
 import "./pie-chart.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import ChartJS, { ChartOptions } from "chart.js";
-import { Chart, ChartProps } from "./chart";
+import type { ChartOptions } from "chart.js";
+import ChartJS from "chart.js";
+import type { ChartProps } from "./chart";
+import { Chart } from "./chart";
 import { cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 

@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiManager } from "../../../../common/k8s-api/api-manager";
-import { ClusterRole, clusterRoleApi } from "../../../../common/k8s-api/endpoints";
+import type { ClusterRole } from "../../../../common/k8s-api/endpoints";
+import { clusterRoleApi } from "../../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../../utils";
 

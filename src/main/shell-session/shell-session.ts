@@ -16,7 +16,8 @@ import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
 import logger from "../logger";
-import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
+import type { TerminalMessage } from "../../renderer/api/terminal-api";
+import { TerminalChannels } from "../../renderer/api/terminal-api";
 import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";
 

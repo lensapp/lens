@@ -172,6 +172,23 @@ export function join(src: Iterable<string>, connector = ","): string {
 }
 
 /**
+ * Returns the next value after iterating over the iterable `index` times.
+ *
+ * For example: `nth(["a", "b"], 0)` will return `"a"`
+ * For example: `nth(["a", "b"], 1)` will return `"b"`
+ * For example: `nth(["a", "b"], 2)` will return `undefined`
+ */
+export function nth<T>(src: Iterable<T>, index: number): T | undefined {
+  const iteree = src[Symbol.iterator]();
+
+  while (index-- > 0) {
+    iteree.next();
+  }
+
+  return iteree.next().value;
+}
+
+/**
  * Iterate through `src` and return `true` if `fn` returns a thruthy value for every yielded value.
  * Otherwise, return `false`. This function short circuits.
  * @param src The type to be iterated over

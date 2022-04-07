@@ -9,7 +9,8 @@ import type { IPodMetrics } from "../../../common/k8s-api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import type { IResourceMetricsValue } from "../resource-metrics";
+import { ResourceMetricsContext } from "../resource-metrics";
 import { ThemeStore } from "../../theme.store";
 import { mapValues } from "lodash";
 

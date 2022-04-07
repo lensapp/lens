@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { LensApiRequest, Route } from "../router/router";
-import { contentTypes, SupportedFileExtension } from "../router/router-content-types";
+import type { SupportedFileExtension } from "../router/router-content-types";
+import { contentTypes } from "../router/router-content-types";
 import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
 import { appName, publicPath } from "../../common/vars";
@@ -12,7 +13,8 @@ import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
 import readFileBufferInjectable from "../../common/fs/read-file-buffer.injectable";
-import getAbsolutePathInjectable, { GetAbsolutePath } from "../../common/path/get-absolute-path.injectable";
+import type { GetAbsolutePath } from "../../common/path/get-absolute-path.injectable";
+import getAbsolutePathInjectable from "../../common/path/get-absolute-path.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 

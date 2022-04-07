@@ -5,10 +5,12 @@
 
 import "./input.scss";
 
-import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import React from "react";
 import { boundMethod, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
-import { Tooltip, TooltipProps } from "../tooltip";
+import type { TooltipProps } from "../tooltip";
+import { Tooltip } from "../tooltip";
 import * as Validators from "./input_validators";
 import type { InputValidator } from "./input_validators";
 import isFunction from "lodash/isFunction";

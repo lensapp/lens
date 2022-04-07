@@ -5,11 +5,13 @@
 
 import "./icon.scss";
 
-import React, { createRef, ReactNode } from "react";
+import type { ReactNode } from "react";
+import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { boundMethod, cssNames } from "../../utils";
-import { TooltipDecoratorProps, withTooltip } from "../tooltip";
+import type { TooltipDecoratorProps } from "../tooltip";
+import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 import { decode } from "../../../common/utils/base64";
 

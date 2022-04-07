@@ -5,7 +5,8 @@
 
 import "./drop-file-input.scss";
 import React from "react";
-import { boundMethod, cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";

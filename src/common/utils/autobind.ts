@@ -4,7 +4,8 @@
  */
 
 import { boundMethod, boundClass } from "autobind-decorator";
-import autoBindClass, { Options } from "auto-bind";
+import type { Options } from "auto-bind";
+import autoBindClass from "auto-bind";
 import autoBindReactClass from "auto-bind/react";
 
 // Automatically bind methods to their class instance

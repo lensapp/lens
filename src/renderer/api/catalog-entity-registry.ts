@@ -5,7 +5,8 @@
 
 import { computed, observable, makeObservable, action } from "mobx";
 import { ipcRendererOn } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
+import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
+import { catalogCategoryRegistry } from "../../common/catalog";
 import "../../common/catalog-entities";
 import type { Cluster } from "../../common/cluster/cluster";
 import { ClusterStore } from "../../common/cluster-store/cluster-store";

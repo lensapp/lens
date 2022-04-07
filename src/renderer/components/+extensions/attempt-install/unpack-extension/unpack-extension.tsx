@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { InstallRequestValidated } from "../create-temp-files-and-validate/create-temp-files-and-validate";
-import { Disposer, extractTar, noop } from "../../../../../common/utils";
+import type { Disposer } from "../../../../../common/utils";
+import { extractTar, noop } from "../../../../../common/utils";
 import { extensionDisplayName } from "../../../../../extensions/lens-extension";
 import logger from "../../../../../main/logger";
 import type { ExtensionLoader } from "../../../../../extensions/extension-loader";

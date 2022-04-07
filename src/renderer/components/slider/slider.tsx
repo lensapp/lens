@@ -9,7 +9,8 @@ import "./slider.scss";
 
 import React, { Component } from "react";
 import { cssNames } from "../../utils";
-import MaterialSlider, { SliderClassKey, SliderProps as MaterialSliderProps } from "@material-ui/core/Slider";
+import type { SliderClassKey, SliderProps as MaterialSliderProps } from "@material-ui/core/Slider";
+import MaterialSlider from "@material-ui/core/Slider";
 
 export interface SliderProps extends Omit<MaterialSliderProps, "onChange"> {
   className?: string;

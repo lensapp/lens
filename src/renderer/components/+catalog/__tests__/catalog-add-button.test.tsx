@@ -5,7 +5,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CatalogCategory, CatalogCategorySpec } from "../../../../common/catalog";
+import type { CatalogCategorySpec } from "../../../../common/catalog";
+import { CatalogCategory } from "../../../../common/catalog";
 import { CatalogAddButton } from "../catalog-add-button";
 
 class TestCatalogCategory extends CatalogCategory {

@@ -5,7 +5,8 @@
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import { LimitRange, limitRangeApi } from "../../../common/k8s-api/endpoints/limit-range.api";
+import type { LimitRange } from "../../../common/k8s-api/endpoints/limit-range.api";
+import { limitRangeApi } from "../../../common/k8s-api/endpoints/limit-range.api";
 
 export class LimitRangesStore extends KubeObjectStore<LimitRange> {
   api = limitRangeApi;

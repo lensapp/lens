@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
-import { extensionDisplayName, LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import { extensionDisplayName } from "../../../../extensions/lens-extension";
 import logger from "../../../../main/logger";
 import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import { Notifications } from "../../notifications";

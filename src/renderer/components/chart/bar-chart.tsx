@@ -9,7 +9,8 @@ import moment from "moment";
 import Color from "color";
 import { observer } from "mobx-react";
 import type { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
-import { Chart, ChartKind, ChartProps } from "./chart";
+import type { ChartProps } from "./chart";
+import { Chart, ChartKind } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
 import { ThemeStore } from "../../theme.store";
@@ -194,7 +195,7 @@ export const memoryOptions: ChartOptions = {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
 
-        return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
+        return `${label}: ${bytesToUnits(parseInt(value.y.toString()), { precision: 3 })}`;
       },
     },
   },

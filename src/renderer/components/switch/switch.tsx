@@ -5,7 +5,8 @@
 
 import styles from "./switch.module.scss";
 
-import React, { ChangeEvent, HTMLProps } from "react";
+import type { ChangeEvent, HTMLProps } from "react";
+import React from "react";
 import { cssNames } from "../../utils";
 
 export interface SwitchProps extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {

@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import catalogRouteInjectable, { CatalogPathParameters } from "./catalog-route.injectable";
+import type { CatalogPathParameters } from "./catalog-route.injectable";
+import catalogRouteInjectable from "./catalog-route.injectable";
 import { navigateToRouteInjectionToken } from "../../navigate-to-route-injection-token";
 
 export type NavigateToCatalog = (parameters?: CatalogPathParameters) => void;

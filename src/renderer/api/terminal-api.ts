@@ -4,7 +4,8 @@
  */
 
 import { getHostedClusterId } from "../utils";
-import { WebSocketApi, WebSocketEvents } from "./websocket-api";
+import type { WebSocketEvents } from "./websocket-api";
+import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import url from "url";
 import { makeObservable, observable } from "mobx";

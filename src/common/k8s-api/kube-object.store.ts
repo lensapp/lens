@@ -6,11 +6,14 @@
 import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
-import { autoBind, Disposer, noop, rejectPromiseBy } from "../utils";
-import { KubeObject, KubeStatus } from "./kube-object";
+import type { Disposer } from "../utils";
+import { autoBind, noop, rejectPromiseBy } from "../utils";
+import type { KubeObject } from "./kube-object";
+import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
-import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./kube-api";
+import type { IKubeApiQueryParams, KubeApi } from "./kube-api";
+import { ensureObjectSelfLink } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { KubeJsonApiData } from "./kube-json-api";
 import type { RequestInit } from "node-fetch";

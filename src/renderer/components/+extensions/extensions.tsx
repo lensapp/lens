@@ -4,8 +4,9 @@
  */
 
 import "./extensions.scss";
+import type {
+  IComputedValue } from "mobx";
 import {
-  IComputedValue,
   makeObservable,
   observable,
   reaction,

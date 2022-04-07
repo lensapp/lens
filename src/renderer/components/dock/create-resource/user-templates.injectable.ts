@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed, IComputedValue, observable } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed, observable } from "mobx";
 import path from "path";
 import os from "os";
 import { delay, getOrInsert, waitForPath } from "../../../utils";

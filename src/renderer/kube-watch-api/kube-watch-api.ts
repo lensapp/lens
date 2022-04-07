@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { comparer, reaction } from "mobx";
-import { disposer, Disposer, noop, WrappedAbortController } from "../../common/utils";
+import type { Disposer } from "../../common/utils";
+import { disposer, noop, WrappedAbortController } from "../../common/utils";
 import type { KubeObject } from "../../common/k8s-api/kube-object";
 import AbortController from "abort-controller";
 import { once } from "lodash";

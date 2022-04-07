@@ -4,7 +4,8 @@
  */
 
 import type { StorageHelper } from "../../../utils";
-import { DockTabStorageState, DockTabStore } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 
 interface Dependencies {
   createStorage:<T> (storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;

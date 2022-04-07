@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, IInterceptable, IInterceptor, IListenable, ISetWillChange, observable, ObservableMap, ObservableSet } from "mobx";
+import type { IInterceptable, IInterceptor, IListenable, ISetWillChange, ObservableMap } from "mobx";
+import { action, observable, ObservableSet } from "mobx";
 
 export function makeIterableIterator<T>(iterator: Iterator<T>): IterableIterator<T> {
   (iterator as IterableIterator<T>)[Symbol.iterator] = () => iterator as IterableIterator<T>;
