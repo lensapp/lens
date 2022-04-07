@@ -1012,7 +1012,7 @@
 <p>An optional disposer, Lens will cleanup when the extension is disabled or uninstalled even if this is not called</p>
 <hr />
 <h3 id="createinstance">createInstance<a class="headerlink" href="#createinstance" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>>(...<code>args</code>): <code>T</code></p>
+<p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, ...<code>args</code>): <code>T</code></p>
 <p>Creates the single instance of the child class if one was not already created.</p>
 <p>Multiple calls will return the same instance.
 Essentially throwing away the arguments to the subsequent calls.</p>
@@ -1048,6 +1048,11 @@ only the first's arguments will be used.</p>
 </thead>
 <tbody>
 <tr>
+<td align="left"><code>this</code></td>
+<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
+<td align="left">Implicit argument that is the child class type</td>
+</tr>
+<tr>
 <td align="left"><code>...args</code></td>
 <td align="left"><code>R</code></td>
 <td align="left">The constructor arguments for the child class</td>
@@ -1061,7 +1066,7 @@ only the first's arguments will be used.</p>
 <p>IpcRegistrar.createInstance</p>
 <hr />
 <h3 id="getinstance">getInstance<a class="headerlink" href="#getinstance" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>strict</code>): <code>T</code></p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict?</code>): <code>T</code></p>
 <p>Get the instance of the child class that was previously created.</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
@@ -1088,13 +1093,21 @@ only the first's arguments will be used.</p>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Default value</th>
 <th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td align="left"><code>this</code></td>
+<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
+<td align="left"><code>undefined</code></td>
+<td align="left">Implicit argument that is the child class type</td>
+</tr>
+<tr>
 <td align="left"><code>strict</code></td>
 <td align="left"><code>boolean</code></td>
+<td align="left"><code>true</code></td>
 <td align="left">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
 </tr>
 </tbody>
