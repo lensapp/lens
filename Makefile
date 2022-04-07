@@ -81,11 +81,6 @@ build-extensions: node_modules clean-old-extensions $(extension_dists)
 test-extensions: $(extension_node_modules)
 	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
-.PHONY: copy-extension-themes
-copy-extension-themes:
-	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
-	cp $(wildcard src/renderer/themes/lens-*.ts) src/extensions/npm/extensions/dist/src/renderer/themes/
-
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
 
@@ -93,7 +88,7 @@ src/extensions/npm/extensions/dist: node_modules
 	yarn compile:extension-types
 
 .PHONY: build-npm
-build-npm: build-extension-types copy-extension-themes src/extensions/npm/extensions/__mocks__
+build-npm: build-extension-types src/extensions/npm/extensions/__mocks__
 	yarn npm:fix-package-version
 
 .PHONY: build-extension-types
