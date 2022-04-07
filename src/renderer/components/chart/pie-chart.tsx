@@ -8,7 +8,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions } from "chart.js";
 import ChartJS from "chart.js";
-import type { ChartProps } from "./chart";
+import type { ChartData, ChartProps } from "./chart";
 import { Chart } from "./chart";
 import { cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
@@ -28,15 +28,24 @@ export class PieChart extends React.Component<PieChartProps> {
         mode: "index",
         callbacks: {
           title: () => "",
-          label: (tooltipItem, data) => {
-            const dataset: any = data["datasets"][tooltipItem.datasetIndex];
-            const metaData = Object.values<{ total: number }>(dataset["_meta"])[0];
-            const percent = Math.round((dataset["data"][tooltipItem["index"]] / metaData.total) * 100);
-            const label = dataset["label"];
+          label: (tooltipItem, data: ChartData) => {
+            const dataset = data.datasets[tooltipItem.datasetIndex];
+            const datasetData = dataset.data as number[];
+            const total = datasetData.reduce((acc, cur) => acc + cur, 0);
+            const percent = Math.round((dataset.data[tooltipItem["index"]] as number / total) * 100);
+            const percentLabel = isNaN(percent) ? "N/A" : `${percent}%`;
+            const tooltipLabel = data.tooltipLabels?.[tooltipItem["index"]];
+            let tooltip = `${dataset["label"]}: ${percentLabel}`;
 
-            if (isNaN(percent)) return `${label}: N/A`;
+            if (tooltipLabel) {
+              if (typeof tooltipLabel === "function") {
+                tooltip = tooltipLabel(percentLabel);
+              } else {
+                tooltip = tooltipLabel;
+              }
+            }
 
-            return `${label}: ${percent}%`;
+            return tooltip;
           },
         },
         filter: ({ datasetIndex, index }, { datasets }) => {
