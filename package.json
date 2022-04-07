@@ -61,7 +61,7 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "moduleNameMapper": {
-      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
+      "\\.(css|scss)$": "identity-obj-proxy",
       "\\.(svg|png|jpg|eot|woff2?|ttf)$": "<rootDir>/__mocks__/assetMock.ts"
     },
     "modulePathIgnorePatterns": [
@@ -202,9 +202,9 @@
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.16.3",
+    "@ogre-tools/fp": "5.2.0",
     "@ogre-tools/injectable": "5.2.0",
     "@ogre-tools/injectable-react": "5.2.0",
-    "@ogre-tools/fp": "5.2.0",
     "@sentry/electron": "^3.0.6",
     "@sentry/integrations": "^6.19.3",
     "@types/circular-dependency-plugin": "5.0.5",
@@ -363,6 +363,7 @@
     "gunzip-maybe": "^1.4.2",
     "hoist-non-react-statics": "^3.3.2",
     "html-webpack-plugin": "^5.5.0",
+    "identity-obj-proxy": "^3.0.0",
     "ignore-loader": "^0.1.2",
     "include-media": "^1.4.9",
     "jest": "26.6.3",
