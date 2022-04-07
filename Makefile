@@ -84,7 +84,7 @@ test-extensions: $(extension_node_modules)
 .PHONY: copy-extension-themes
 copy-extension-themes:
 	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
-	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
+	cp $(wildcard src/renderer/themes/lens-*.ts) src/extensions/npm/extensions/dist/src/renderer/themes/
 
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
