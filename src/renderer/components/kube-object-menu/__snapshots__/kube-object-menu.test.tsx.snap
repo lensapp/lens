@@ -101,9 +101,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
          
         <div>
           <p>
-            Remove 
-            some-kind
-             
+            Remove some-kind 
             <b>
               some-namespace/some-name
             </b>
@@ -198,9 +196,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
          
         <div>
           <p>
-            Remove 
-            some-kind
-             
+            Remove some-kind 
             <b>
               some-namespace/some-name
             </b>
@@ -295,9 +291,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
          
         <div>
           <p>
-            Remove 
-            some-kind
-             
+            Remove some-kind 
             <b>
               some-name
             </b>

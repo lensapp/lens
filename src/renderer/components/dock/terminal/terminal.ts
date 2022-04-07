@@ -4,6 +4,7 @@
  */
 
 import debounce from "lodash/debounce";
+import type { IComputedValue } from "mobx";
 import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
@@ -14,41 +15,36 @@ import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
-import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 import assert from "assert";
 
+export interface TerminalDependencies {
+  readonly spawningPool: HTMLElement;
+  readonly terminalConfig: IComputedValue<TerminalConfig>;
+  readonly terminalCopyOnSelect: IComputedValue<boolean>;
+}
+
+export interface TerminalArguments {
+  tabId: TabId;
+  api: TerminalApi;
+}
+
 export class Terminal {
-  private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
-
-  public static spawningPool: HTMLElement;
-
-  static {
-    const pool = document.getElementById("terminal-init");
-
-    assert(pool, "FATAL: missing #terminal-init tag in DOM");
-
-    this.spawningPool = pool;
-  }
-
-  private xterm: XTerm = new XTerm({
-    cursorBlink: true,
-    cursorStyle: "bar",
-    fontSize: this.terminalConfig.fontSize,
-    fontFamily: this.terminalConfig.fontFamily,
-  });
+  private readonly xterm: XTerm;
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;
-  private disposer = disposer();
+  private readonly disposer = disposer();
+  public readonly tabId: TabId;
+  protected readonly api: TerminalApi;
 
-  get elem() {
+  private get elem() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.xterm.element!;
   }
 
-  get viewport() {
+  private get viewport() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.elem.querySelector(".xterm-viewport")!;
   }
@@ -63,15 +59,25 @@ export class Terminal {
     const { elem } = this;
 
     if (elem) {
-      Terminal.spawningPool.appendChild(elem);
+      this.dependencies.spawningPool.appendChild(elem);
     }
   }
 
-  constructor(public tabId: TabId, protected api: TerminalApi) {
+  constructor(protected readonly dependencies: TerminalDependencies, { tabId, api }: TerminalArguments) {
+    this.tabId = tabId;
+    this.api = api;
+    const { fontSize, fontFamily } = this.dependencies.terminalConfig.get();
+
+    this.xterm = new XTerm({
+      cursorBlink: true,
+      cursorStyle: "bar",
+      fontSize,
+      fontFamily,
+    });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
 
-    this.xterm.open(Terminal.spawningPool);
+    this.xterm.open(this.dependencies.spawningPool);
     this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
     this.xterm.onSelectionChange(this.onSelectionChange);
@@ -93,10 +99,10 @@ export class Terminal {
       }, {
         fireImmediately: true,
       }),
-      reaction(() => UserStore.getInstance().terminalConfig.fontSize, this.setFontSize, {
+      reaction(() => this.dependencies.terminalConfig.get().fontSize, this.setFontSize, {
         fireImmediately: true,
       }),
-      reaction(() => UserStore.getInstance().terminalConfig.fontFamily, this.setFontFamily, {
+      reaction(() => this.dependencies.terminalConfig.get().fontFamily, this.setFontFamily, {
         fireImmediately: true,
       }),
       () => onDataHandler.dispose(),
@@ -173,7 +179,7 @@ export class Terminal {
   onContextMenu = () => {
     if (
       // don't paste if user hasn't turned on the feature
-      UserStore.getInstance().terminalCopyOnSelect
+      this.dependencies.terminalCopyOnSelect.get()
 
       // don't paste if the clipboard doesn't have text
       && clipboard.availableFormats().includes("text/plain")
@@ -185,7 +191,7 @@ export class Terminal {
   onSelectionChange = () => {
     const selection = this.xterm.getSelection().trim();
 
-    if (UserStore.getInstance().terminalCopyOnSelect && selection) {
+    if (this.dependencies.terminalCopyOnSelect.get() && selection) {
       clipboard.writeText(selection);
     }
   };
