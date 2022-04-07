@@ -162,6 +162,10 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
         `Usage: ${podUsage || 0}`,
         `Capacity: ${podAllocatableCapacity}`,
       ],
+      tooltipLabels: [
+        (percent) => `Usage: ${percent}`,
+        (percent) => `Available: ${percent}`,
+      ],
     };
 
     return (
