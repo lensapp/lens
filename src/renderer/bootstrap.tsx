@@ -12,7 +12,7 @@ import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
@@ -69,6 +69,7 @@ export async function bootstrap(di: DiContainer) {
   bindEvents();
 
   const rootElem = document.getElementById("app");
+  const rootNode = createRoot(rootElem);
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
   // TODO: Remove temporal dependencies to make timing of initialization not important
@@ -152,7 +153,7 @@ export async function bootstrap(di: DiContainer) {
   }
 
   try {
-    await initializeApp(rootElem);
+    await initializeApp(() => rootNode.unmount());
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
       origin: location.href,
@@ -160,16 +161,12 @@ export async function bootstrap(di: DiContainer) {
     });
   }
 
-  const history = di.inject(historyInjectable);
-
-  render(
+  rootNode.render(
     <DiContextProvider value={{ di }}>
-      <Router history={history}>
+      <Router history={di.inject(historyInjectable)}>
         {DefaultProps(App)}
       </Router>
     </DiContextProvider>,
-
-    rootElem,
   );
 }
 

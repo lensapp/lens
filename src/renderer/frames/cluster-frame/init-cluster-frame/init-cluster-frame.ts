@@ -10,7 +10,6 @@ import { Notifications } from "../../../components/notifications";
 import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
 import type { CatalogEntity } from "../../../../common/catalog";
 import { when } from "mobx";
-import { unmountComponentAtNode } from "react-dom";
 import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { requestSetClusterFrameId } from "../../../ipc";
@@ -30,7 +29,7 @@ const logPrefix = "[CLUSTER-FRAME]:";
 
 export const initClusterFrame =
   ({ hostedCluster, loadExtensions, catalogEntityRegistry, frameRoutingId, emitEvent, clusterFrameContext }: Dependencies) =>
-    async (rootElem: HTMLElement) => {
+    async (unmountRoot: () => void) => {
 
       // TODO: Make catalogEntityRegistry already initialized when passed as dependency
       catalogEntityRegistry.init();
@@ -80,7 +79,7 @@ export const initClusterFrame =
           `${logPrefix} Unload dashboard, clusterId=${(hostedCluster.id)}, frameId=${frameRoutingId}`,
         );
 
-        unmountComponentAtNode(rootElem);
+        unmountRoot();
       };
 
       // TODO: Make context dependency of KubeObjectStore

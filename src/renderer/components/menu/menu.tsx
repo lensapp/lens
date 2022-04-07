@@ -144,7 +144,7 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  refreshPosition = () => {
+  refreshPosition = () => requestAnimationFrame(() => {
     if (!this.props.usePortal || !this.opener || !this.elem) {
       return;
     }
@@ -187,7 +187,7 @@ export class Menu extends React.Component<MenuProps, State> {
         left: renderMenuLeft ? menuOnLeftSidePosition : menuOnRightSidePosition,
       },
     });
-  };
+  });
 
   open() {
     if (this.isOpen) {
