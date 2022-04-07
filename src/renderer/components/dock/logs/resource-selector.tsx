@@ -11,15 +11,11 @@ import { observer } from "mobx-react";
 import { Badge } from "../../badge";
 import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
-import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
+import type { Pod } from "../../../../common/k8s-api/endpoints";
 import type { GroupBase } from "react-select";
 
 export interface LogResourceSelectorProps {
   model: LogTabViewModel;
-}
-
-function getSelectOptions(containers: IPodContainer[]) {
-  return containers.map(container => container.name);
 }
 
 export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps) => {
@@ -64,23 +60,23 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
   const containerSelectOptions = [
     {
       label: "Containers",
-      options: getSelectOptions(pod.getContainers()),
+      options: pod.getContainers().map(container => container.name),
     },
     {
       label: "Init Containers",
-      options: getSelectOptions(pod.getInitContainers()),
+      options: pod.getInitContainers().map(container => container.name),
     },
   ];
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
-      <span>Namespace</span> 
+      <span>Namespace</span>
       {" "}
       <Badge data-testid="namespace-badge" label={pod.getNs()} />
       {
         owner && (
           <>
-            <span>Owner</span> 
+            <span>Owner</span>
             {" "}
             <Badge data-testid="namespace-badge" label={`${owner.kind} ${owner.name}`} />
           </>
@@ -90,6 +86,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       <Select
         options={pods}
         value={pod}
+        isClearable={false}
         formatOptionLabel={option => option.getName()}
         onChange={onPodChange}
         className="pod-selector"

@@ -47,7 +47,6 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
 
   constructor(props: HelmChartDetailsProps & Dependencies) {
     super(props);
-    makeObservable(this);
     autoBind(this);
   }
 

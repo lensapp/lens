@@ -63,7 +63,6 @@ import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { init } from "@sentry/electron/main";
-import { userStoreFileNameMigration } from "../migrations/user-store";
 
 async function main(di: DiContainer) {
   app.setName(appName);
@@ -73,8 +72,6 @@ async function main(di: DiContainer) {
    */
   initializeSentryReporting(init);
 
-  // TODO make this part of the UserStore setup
-  await userStoreFileNameMigration();
   await di.runSetups();
   await app.whenReady();
 

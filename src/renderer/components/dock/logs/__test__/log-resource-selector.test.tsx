@@ -64,7 +64,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
   });
 }
 
-const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
+function getOnePodViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel {
   const selectedPod = dockerPod;
 
   return mockLogTabViewModel(tabId, {
@@ -84,7 +84,7 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
     },
     ...deps,
   });
-};
+}
 
 const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
   const selectedPod = deploymentPod1;
@@ -155,74 +155,83 @@ describe("<LogResourceSelector />", () => {
     mockFs.restore();
   });
 
-  it("renders w/o errors", () => {
-    const model = getOnePodViewModel("foobar");
-    const { container } = render(<LogResourceSelector model={model} />);
+  describe.only("with one pod", () => {
+    let model: LogTabViewModel;
 
-    expect(container).toBeInstanceOf(HTMLElement);
+    beforeEach(() => {
+      model = getOnePodViewModel("foobar");
+    });
+
+    it("renders w/o errors", () => {
+      const { container } = render(<LogResourceSelector model={model} />);
+
+      expect(container).toBeInstanceOf(HTMLElement);
+    });
+
+    it("renders proper namespace", async () => {
+      const { findByTestId } = render(<LogResourceSelector model={model} />);
+      const ns = await findByTestId("namespace-badge");
+
+      expect(ns).toHaveTextContent("default");
+    });
+
+    it.only("renders proper selected items within dropdowns", async () => {
+      const { findByText } = render(<LogResourceSelector model={model} />);
+
+      expect(await findByText("dockerExporter")).toBeInTheDocument();
+      expect(await findByText("docker-exporter")).toBeInTheDocument();
+    });
   });
 
-  it("renders proper namespace", async () => {
-    const model = getOnePodViewModel("foobar");
-    const { findByTestId } = render(<LogResourceSelector model={model} />);
-    const ns = await findByTestId("namespace-badge");
+  describe("with several pods", () => {
+    let model: LogTabViewModel;
 
-    expect(ns).toHaveTextContent("default");
-  });
+    beforeEach(() => {
+      model = getFewPodsTabData("foobar");
+    });
 
-  it("renders proper selected items within dropdowns", async () => {
-    const model = getOnePodViewModel("foobar");
-    const { findByText } = render(<LogResourceSelector model={model} />);
+    it("renders sibling pods in dropdown", async () => {
+      const { container, findByText } = render(<LogResourceSelector model={model} />);
+      const selector = container.querySelector<HTMLElement>(".pod-selector");
 
-    expect(await findByText("dockerExporter")).toBeInTheDocument();
-    expect(await findByText("docker-exporter")).toBeInTheDocument();
-  });
+      assert(selector);
 
-  it("renders sibling pods in dropdown", async () => {
-    const model = getFewPodsTabData("foobar");
-    const { container, findByText } = render(<LogResourceSelector model={model} />);
-    const selector = container.querySelector<HTMLElement>(".pod-selector");
+      selectEvent.openMenu(selector);
+      expect(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
+      expect(await findByText("deploymentPod1", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
+    });
 
-    assert(selector);
+    it("renders sibling containers in dropdown", async () => {
+      const { findByText, container } = render(<LogResourceSelector model={model} />);
+      const selector = container.querySelector<HTMLElement>(".container-selector");
 
-    selectEvent.openMenu(selector);
-    expect(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
-    expect(await findByText("deploymentPod1", { selector: ".pod-selector-menu .Select__option" })).toBeInTheDocument();
-  });
+      assert(selector);
 
-  it("renders sibling containers in dropdown", async () => {
-    const model = getFewPodsTabData("foobar");
-    const { findByText, container } = render(<LogResourceSelector model={model} />);
-    const selector = container.querySelector<HTMLElement>(".container-selector");
+      selectEvent.openMenu(selector);
 
-    assert(selector);
+      expect(await findByText("node-exporter-1")).toBeInTheDocument();
+      expect(await findByText("init-node-exporter")).toBeInTheDocument();
+      expect(await findByText("init-node-exporter-1")).toBeInTheDocument();
+    });
 
-    selectEvent.openMenu(selector);
+    it("renders pod owner as badge", async () => {
+      const { findByText } = render(<LogResourceSelector model={model} />);
 
-    expect(await findByText("node-exporter-1")).toBeInTheDocument();
-    expect(await findByText("init-node-exporter")).toBeInTheDocument();
-    expect(await findByText("init-node-exporter-1")).toBeInTheDocument();
-  });
+      expect(await findByText("super-deployment", {
+        exact: false,
+      })).toBeInTheDocument();
+    });
 
-  it("renders pod owner as badge", async () => {
-    const model = getFewPodsTabData("foobar");
-    const { findByText } = render(<LogResourceSelector model={model} />);
+    it("updates tab name if selected pod changes", async () => {
+      const renameTab = jest.fn();
+      const { findByText, container } = render(<LogResourceSelector model={model} />);
+      const selector = container.querySelector<HTMLElement>(".pod-selector");
 
-    expect(await findByText("super-deployment", {
-      exact: false,
-    })).toBeInTheDocument();
-  });
+      assert(selector);
 
-  it("updates tab name if selected pod changes", async () => {
-    const renameTab = jest.fn();
-    const model = getFewPodsTabData("foobar", { renameTab });
-    const { findByText, container } = render(<LogResourceSelector model={model} />);
-    const selector = container.querySelector<HTMLElement>(".pod-selector");
-
-    assert(selector);
-
-    selectEvent.openMenu(selector);
-    userEvent.click(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" }));
-    expect(renameTab).toBeCalledWith("foobar", "Pod deploymentPod2");
+      selectEvent.openMenu(selector);
+      userEvent.click(await findByText("deploymentPod2", { selector: ".pod-selector-menu .Select__option" }));
+      expect(renameTab).toBeCalledWith("foobar", "Pod deploymentPod2");
+    });
   });
 });
