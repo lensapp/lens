@@ -11,14 +11,14 @@ import type { KubeApi } from "./kube-api";
 import type { KubeJsonApiDataFor, KubeObject, ObjectReference } from "./kube-object";
 import { parseKubeApi, createKubeApiURL } from "./kube-api-parse";
 
-export type RegisterableStore<S> = S extends KubeObjectStore<any, any, any>
-  ? S
+export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
+  ? Store
   : never;
-export type RegisterableApi<A> = A extends KubeApi<any, any>
-  ? A
+export type RegisterableApi<Api> = Api extends KubeApi<any, any>
+  ? Api
   : never;
-export type KubeObjectStoreFrom<A> = A extends KubeApi<infer K, infer D>
-  ? KubeObjectStore<K, A, D>
+export type KubeObjectStoreFrom<Api> = Api extends KubeApi<infer KubeObj, infer ApiData>
+  ? KubeObjectStore<KubeObj, Api, ApiData>
   : never;
 
 export class ApiManager {
@@ -42,7 +42,7 @@ export class ApiManager {
     return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi<A>(apiBase: string, api: RegisterableApi<A>) {
+  registerApi<Api>(apiBase: string, api: RegisterableApi<Api>) {
     if (!api.apiBase) return;
 
     if (!this.apis.has(apiBase)) {
@@ -78,14 +78,14 @@ export class ApiManager {
     }
   }
 
-  registerStore<K>(store: RegisterableStore<K>): void;
+  registerStore<KubeObj>(store: RegisterableStore<KubeObj>): void;
   /**
    * @deprecated KubeObjectStore's should only every be about a single KubeApi type
    */
-  registerStore<K extends KubeObject>(store: KubeObjectStore<K, KubeApi<K>, KubeJsonApiDataFor<K>>, apis: KubeApi<K>[]): void;
+  registerStore<KubeObj extends KubeObject>(store: KubeObjectStore<KubeObj, KubeApi<KubeObj>, KubeJsonApiDataFor<KubeObj>>, apis: KubeApi<KubeObj>[]): void;
 
   @action
-  registerStore<K extends KubeObject>(store: KubeObjectStore<K, KubeApi<K>, KubeJsonApiDataFor<K>>, apis: KubeApi<K>[] = [store.api]): void {
+  registerStore<KubeObj extends KubeObject>(store: KubeObjectStore<KubeObj, KubeApi<KubeObj>, KubeJsonApiDataFor<KubeObj>>, apis: KubeApi<KubeObj>[] = [store.api]): void {
     for (const api of apis.filter(isDefined)) {
       if (api.apiBase) {
         this.stores.set(api.apiBase, store as never);
@@ -94,11 +94,11 @@ export class ApiManager {
   }
 
   getStore(api: string | undefined): KubeObjectStore | undefined;
-  getStore<A>(api: RegisterableApi<A>): KubeObjectStoreFrom<A> | undefined;
+  getStore<Api>(api: RegisterableApi<Api>): KubeObjectStoreFrom<Api> | undefined;
   /**
    * @deprecated use an actual cast instead of hiding it with this unused type param
    */
-  getStore<S extends KubeObjectStore>(api: string | KubeApi): S | undefined ;
+  getStore<Store extends KubeObjectStore>(api: string | KubeApi): Store | undefined ;
   getStore(api: string | KubeApi | undefined): KubeObjectStore | undefined {
     const { apiBase } = this.resolveApi(api) ?? {};
 
