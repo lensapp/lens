@@ -42,7 +42,7 @@ export type KubeTemplateObjectMetadata<Namespaced extends KubeObjectScope> = Pic
   namespace?: ScopedNamespace<Namespaced>;
 };
 
-interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope> {
+export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope> {
   /**
    * Annotations is an unstructured key value map stored with a resource that may be set by
    * external tools to store and retrieve arbitrary metadata. They are not queryable and should be

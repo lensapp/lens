@@ -6,6 +6,7 @@ import type { KubeResource } from "../../common/rbac";
 import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
 import { castArray } from "lodash/fp";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import type { BaseKubeJsonApiObjectMetadata } from "../../common/k8s-api/kube-object";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const resources = castArray(resource);
@@ -20,6 +21,9 @@ export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   });
 }
 
+export {
+  BaseKubeJsonApiObjectMetadata,
+};
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
 export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
