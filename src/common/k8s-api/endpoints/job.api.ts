@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { IPodContainer, PodMetricData, PodSpec } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { KubeObjectStatus, LabelSelector } from "../kube-object";
+import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 
 export interface JobSpec {
@@ -39,7 +39,7 @@ export interface JobStatus extends KubeObjectStatus {
   succeeded: number;
 }
 
-export class Job extends KubeObject<JobStatus, JobSpec, "namespace-scoped"> {
+export class Job extends KubeObject<JobStatus, JobSpec, KubeObjectScope.Namespace> {
   static readonly kind = "Job";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/batch/v1/jobs";

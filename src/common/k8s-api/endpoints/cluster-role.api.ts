@@ -7,17 +7,17 @@ import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import type { KubeObjectMetadata } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { AggregationRule } from "./types/aggregation-rule";
 import type { PolicyRule } from "./types/policy-rule";
 
-export interface ClusterRoleData extends KubeJsonApiData<KubeObjectMetadata<"cluster-scoped">, void, void> {
+export interface ClusterRoleData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Cluster>, void, void> {
   rules?: PolicyRule[];
   aggregationRule?: AggregationRule;
 }
 
-export class ClusterRole extends KubeObject<void, void, "cluster-scoped"> {
+export class ClusterRole extends KubeObject<void, void, KubeObjectScope.Cluster> {
   static kind = "ClusterRole";
   static namespaced = false;
   static apiBase = "/apis/rbac.authorization.k8s.io/v1/clusterroles";

@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { KubeObjectStatus, LabelSelector } from "../kube-object";
+import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
 
@@ -74,7 +74,7 @@ export interface ReplicaSetStatus extends KubeObjectStatus {
   observedGeneration?: number;
 }
 
-export class ReplicaSet extends KubeObject<ReplicaSetStatus, ReplicaSetSpec, "namespace-scoped"> {
+export class ReplicaSet extends KubeObject<ReplicaSetStatus, ReplicaSetSpec, KubeObjectScope.Namespace> {
   static kind = "ReplicaSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/replicasets";

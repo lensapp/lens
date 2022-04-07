@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LabelSelector } from "../kube-object";
+import type { KubeObjectScope, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -22,7 +22,7 @@ export interface PodDisruptionBudgetStatus {
   expectedPods: number;
 }
 
-export class PodDisruptionBudget extends KubeObject<PodDisruptionBudgetStatus, PodDisruptionBudgetSpec, "namespace-scoped"> {
+export class PodDisruptionBudget extends KubeObject<PodDisruptionBudgetStatus, PodDisruptionBudgetSpec, KubeObjectScope.Namespace> {
   static readonly kind = "PodDisruptionBudget";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/policy/v1beta1/poddisruptionbudgets";

@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -60,7 +61,7 @@ export interface ServiceStatus {
   };
 }
 
-export class Service extends KubeObject<ServiceStatus, ServiceSpec, "namespace-scoped"> {
+export class Service extends KubeObject<ServiceStatus, ServiceSpec, KubeObjectScope.Namespace> {
   static readonly kind = "Service";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/services";

@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -39,7 +40,7 @@ export interface LimitRangeSpec {
   limits: LimitRangeItem[];
 }
 
-export class LimitRange extends KubeObject<void, LimitRangeSpec, "namespace-scoped"> {
+export class LimitRange extends KubeObject<void, LimitRangeSpec, KubeObjectScope.Namespace> {
   static readonly kind = "LimitRange";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/limitranges";

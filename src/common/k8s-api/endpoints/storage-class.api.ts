@@ -4,7 +4,7 @@
  */
 
 import { autoBind } from "../../utils";
-import type { KubeObjectMetadata } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -20,7 +20,7 @@ export interface TopologySelectorTerm {
   matchLabelExpressions?: TopologySelectorLabelRequirement[];
 }
 
-export interface StorageClassData extends KubeJsonApiData<KubeObjectMetadata<"cluster-scoped">, void, void> {
+export interface StorageClassData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Cluster>, void, void> {
   allowVolumeExpansion?: boolean;
   allowedTopologies?: TopologySelectorTerm[];
   mountOptions?: string[];
@@ -30,7 +30,7 @@ export interface StorageClassData extends KubeJsonApiData<KubeObjectMetadata<"cl
   volumeBindingMode?: string;
 }
 
-export class StorageClass extends KubeObject<void, void, "cluster-scoped"> {
+export class StorageClass extends KubeObject<void, void, KubeObjectScope.Cluster> {
   static readonly kind = "StorageClass";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/storage.k8s.io/v1/storageclasses";

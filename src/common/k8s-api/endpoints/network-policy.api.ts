@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LabelSelector } from "../kube-object";
+import type { KubeObjectScope, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -104,7 +104,7 @@ export interface NetworkPolicy {
   spec: NetworkPolicySpec;
 }
 
-export class NetworkPolicy extends KubeObject<void, NetworkPolicySpec, "namespace-scoped"> {
+export class NetworkPolicy extends KubeObject<void, NetworkPolicySpec, KubeObjectScope.Namespace> {
   static readonly kind = "NetworkPolicy";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/networking.k8s.io/v1/networkpolicies";

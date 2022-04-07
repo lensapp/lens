@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { TypedLocalObjectReference } from "../kube-object";
+import type { KubeObjectScope, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { hasTypedProperty, isString, iter } from "../../utils";
 import type { MetricData } from "./metrics.api";
@@ -141,7 +141,7 @@ export interface IngressStatus {
   };
 }
 
-export class Ingress extends KubeObject<IngressStatus, IngressSpec, "namespace-scoped"> {
+export class Ingress extends KubeObject<IngressStatus, IngressSpec, KubeObjectScope.Namespace> {
   static readonly kind = "Ingress";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingresses";

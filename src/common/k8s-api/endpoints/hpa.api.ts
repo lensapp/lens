@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BaseKubeObjectCondition, LabelSelector } from "../kube-object";
+import type { BaseKubeObjectCondition, KubeObjectScope, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -98,7 +98,7 @@ interface MetricCurrentTarget {
   target?: string | undefined;
 }
 
-export class HorizontalPodAutoscaler extends KubeObject<HorizontalPodAutoscalerStatus, HorizontalPodAutoscalerSpec, "namespace-scoped"> {
+export class HorizontalPodAutoscaler extends KubeObject<HorizontalPodAutoscalerStatus, HorizontalPodAutoscalerSpec, KubeObjectScope.Namespace> {
   static readonly kind = "HorizontalPodAutoscaler";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";

@@ -3,20 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectMetadata, LocalObjectReference, ObjectReference } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, LocalObjectReference, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
-export interface ServiceAccountData extends KubeJsonApiData<KubeObjectMetadata<"namespace-scoped">, void, void> {
+export interface ServiceAccountData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   automountServiceAccountToken?: boolean;
   imagePullSecrets?: LocalObjectReference[];
   secrets?: ObjectReference[];
 }
 
-export class ServiceAccount extends KubeObject<void, void, "namespace-scoped"> {
+export class ServiceAccount extends KubeObject<void, void, KubeObjectScope.Namespace> {
   static readonly kind = "ServiceAccount";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/serviceaccounts";

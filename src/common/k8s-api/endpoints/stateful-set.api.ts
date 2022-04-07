@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { LabelSelector } from "../kube-object";
+import type { KubeObjectScope, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
 import type { PersistentVolumeClaimTemplateSpec } from "./types/persistent-volume-claim-template-spec";
@@ -82,7 +82,7 @@ export interface StatefulSetStatus {
   collisionCount: number;
 }
 
-export class StatefulSet extends KubeObject<StatefulSetStatus, StatefulSetSpec, "namespace-scoped"> {
+export class StatefulSet extends KubeObject<StatefulSetStatus, StatefulSetSpec, KubeObjectScope.Namespace> {
   static readonly kind = "StatefulSet";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/apps/v1/statefulsets";

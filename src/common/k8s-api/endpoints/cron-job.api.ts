@@ -4,7 +4,7 @@
  */
 
 import moment from "moment";
-import type { ObjectReference } from "../kube-object";
+import type { KubeObjectScope, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
@@ -67,7 +67,7 @@ export interface CronJobStatus {
   active?: ObjectReference[];
 }
 
-export class CronJob extends KubeObject<CronJobStatus, CronJobSpec, "namespace-scoped"> {
+export class CronJob extends KubeObject<CronJobStatus, CronJobSpec, KubeObjectScope.Namespace> {
   static readonly kind = "CronJob";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/batch/v1beta1/cronjobs";

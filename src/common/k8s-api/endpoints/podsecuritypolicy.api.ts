@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -80,7 +81,7 @@ export interface PodSecurityPolicySpec {
   volumes?: string[];
 }
 
-export class PodSecurityPolicy extends KubeObject<void, PodSecurityPolicySpec, "cluster-scoped"> {
+export class PodSecurityPolicy extends KubeObject<void, PodSecurityPolicySpec, KubeObjectScope.Cluster> {
   static readonly kind = "PodSecurityPolicy";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/policy/v1beta1/podsecuritypolicies";

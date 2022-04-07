@@ -6,7 +6,7 @@
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import customResourcesRouteInjectable from "../../front-end-routing/routes/cluster/custom-resources/custom-resources/custom-resources-route.injectable";
 import { buildURL } from "../../utils/buildUrl";
-import type { BaseKubeObjectCondition } from "../kube-object";
+import type { BaseKubeObjectCondition, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -102,7 +102,7 @@ export interface CustomResourceDefinitionStatus {
   storedVersions: string[];
 }
 
-export class CustomResourceDefinition extends KubeObject<CustomResourceDefinitionStatus, CustomResourceDefinitionSpec, "cluster-scoped"> {
+export class CustomResourceDefinition extends KubeObject<CustomResourceDefinitionStatus, CustomResourceDefinitionSpec, KubeObjectScope.Cluster> {
   static kind = "CustomResourceDefinition";
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";

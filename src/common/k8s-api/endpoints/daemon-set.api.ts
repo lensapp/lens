@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pods.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
-import type { KubeObjectStatus, LabelSelector } from "../kube-object";
+import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
 
@@ -42,7 +42,7 @@ export interface DaemonSetStatus extends KubeObjectStatus {
   updatedNumberScheduled?: number;
 }
 
-export class DaemonSet extends KubeObject<DaemonSetStatus, DaemonSetSpec, "namespace-scoped"> {
+export class DaemonSet extends KubeObject<DaemonSetStatus, DaemonSetSpec, KubeObjectScope.Namespace> {
   static kind = "DaemonSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/daemonsets";

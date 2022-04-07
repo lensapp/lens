@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectMetadata } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -12,12 +12,12 @@ import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { RoleRef } from "./types/role-ref";
 import type { Subject } from "./types/subject";
 
-export interface RoleBindingData extends KubeJsonApiData<KubeObjectMetadata<"namespace-scoped">, void, void> {
+export interface RoleBindingData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   subjects?: Subject[];
   roleRef: RoleRef;
 }
 
-export class RoleBinding extends KubeObject<void, void, "namespace-scoped"> {
+export class RoleBinding extends KubeObject<void, void, KubeObjectScope.Namespace> {
   static readonly kind = "RoleBinding";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/rbac.authorization.k8s.io/v1/rolebindings";

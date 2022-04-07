@@ -200,8 +200,8 @@ interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope> {
   [key: string]: unknown;
 }
 
-export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = Namespaced extends "namespace-scoped"
-  ? BaseKubeJsonApiObjectMetadata<"namespace-scoped"> & { readonly namespace: string }
+export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = Namespaced extends KubeObjectScope.Namespace
+  ? BaseKubeJsonApiObjectMetadata<KubeObjectScope.Namespace> & { readonly namespace: string }
   : BaseKubeJsonApiObjectMetadata<Namespaced>;
 
 export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = KubeJsonApiObjectMetadata<Namespaced> & {
@@ -359,11 +359,14 @@ export interface LabelSelector {
   matchExpressions?: LabelMatchExpression[];
 }
 
-export type KubeObjectScope = "namespace-scoped" | "cluster-scoped";
+export enum KubeObjectScope {
+  Namespace,
+  Cluster,
+}
 export type ScopedNamespace<Namespaced extends KubeObjectScope> = (
-  Namespaced extends "namespace-scoped"
+  Namespaced extends KubeObjectScope.Namespace
     ? string
-    : Namespaced extends "cluster-scoped"
+    : Namespaced extends KubeObjectScope.Cluster
       ? undefined
       : string | undefined
 );

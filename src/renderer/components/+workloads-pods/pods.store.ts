@@ -10,7 +10,7 @@ import { cpuUnitsToNumber, isClusterPageContext, unitsToBytes } from "../../util
 import type { Pod, PodMetrics, PodApi } from "../../../common/k8s-api/endpoints";
 import { podMetricsApi, podApi } from "../../../common/k8s-api/endpoints";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject, KubeObjectScope } from "../../../common/k8s-api/kube-object";
 
 export class PodsStore extends KubeObjectStore<Pod, PodApi> {
   readonly kubeMetrics = observable.array<PodMetrics>([]);
@@ -25,7 +25,7 @@ export class PodsStore extends KubeObjectStore<Pod, PodApi> {
     }
   }
 
-  getPodsByOwner(workload: KubeObject<any, any, "namespace-scoped">): Pod[] {
+  getPodsByOwner(workload: KubeObject<unknown, unknown, KubeObjectScope.Namespace>): Pod[] {
     return this.items.filter(pod => (
       pod.getOwnerRefs()
         .find(owner => owner.uid === workload.getId())

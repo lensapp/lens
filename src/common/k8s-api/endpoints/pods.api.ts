@@ -9,7 +9,7 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { RequireExactlyOne } from "type-fest";
-import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector } from "../kube-object";
+import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector, KubeObjectScope } from "../kube-object";
 import type { SecretReference } from "./secret.api";
 import type { PersistentVolumeClaimSpec } from "./persistent-volume-claims.api";
 import { KubeObject } from "../kube-object";
@@ -759,7 +759,7 @@ export interface PodStatus {
   reason?: string;
 }
 
-export class Pod extends KubeObject<PodStatus, PodSpec, "namespace-scoped"> {
+export class Pod extends KubeObject<PodStatus, PodSpec, KubeObjectScope.Namespace> {
   static kind = "Pod";
   static namespaced = true;
   static apiBase = "/api/v1/pods";
