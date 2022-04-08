@@ -18,7 +18,6 @@ export interface ChartData extends ChartJS.ChartData {
 export interface ChartDataSets extends ChartJS.ChartDataSets {
   id?: string;
   tooltip?: string;
-  tooltipLabels?: ChartTooltipLabel[];
 }
 
 export interface ChartProps {
@@ -36,8 +35,6 @@ export interface ChartProps {
   title?: string;
   className?: string;
 }
-
-export type ChartTooltipLabel = (percent: string) => string | string;
 
 export enum ChartKind {
   PIE = "pie",

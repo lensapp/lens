@@ -8,12 +8,23 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions } from "chart.js";
 import ChartJS from "chart.js";
-import type { ChartData, ChartProps } from "./chart";
+import type { ChartProps } from "./chart";
 import { Chart } from "./chart";
 import { cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 
 export interface PieChartProps extends ChartProps {
+}
+
+export interface PieChartData extends ChartJS.ChartData {
+  datasets?: PieChartDataSets[];
+}
+
+export type DatasetTooltipLabel = (percent: string) => string | string;
+
+interface PieChartDataSets extends ChartJS.ChartDataSets {
+  id?: string;
+  tooltipLabels?: DatasetTooltipLabel[];
 }
 
 @observer
@@ -28,7 +39,7 @@ export class PieChart extends React.Component<PieChartProps> {
         mode: "index",
         callbacks: {
           title: () => "",
-          label: (tooltipItem, data: ChartData) => {
+          label: (tooltipItem, data: PieChartData) => {
             const dataset = data.datasets[tooltipItem.datasetIndex];
             const datasetData = dataset.data as number[];
             const total = datasetData.reduce((acc, cur) => acc + cur, 0);
