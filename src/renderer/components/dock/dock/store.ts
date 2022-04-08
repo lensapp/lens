@@ -5,7 +5,7 @@
 
 import * as uuid from "uuid";
 import { action, comparer, computed, makeObservable, observable, reaction, runInAction } from "mobx";
-import type { StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
 import { autoBind } from "../../../utils";
 import throttle from "lodash/throttle";
 
@@ -99,7 +99,7 @@ export interface DockTabCloseEvent {
 }
 
 interface Dependencies {
-  readonly storage: StorageHelper<DockStorageState>;
+  readonly storage: StorageLayer<DockStorageState>;
   readonly tabDataClearers: Record<TabKind, (tabId: TabId) => void>;
   readonly tabDataValidator: Partial<Record<TabKind, (tabId: TabId) => boolean>>;
 }

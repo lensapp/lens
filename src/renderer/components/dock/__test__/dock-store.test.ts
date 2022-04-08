@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DockStore, DockTab } from "../dock/store";
 import { TabKind } from "../dock/store";
 import dockStoreInjectable from "../dock/store.injectable";
-import fse from "fs-extra";
 
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
@@ -24,20 +23,11 @@ describe("DockStore", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(
-      directoryForUserDataInjectable,
-      () => "some-test-suite-specific-directory-for-user-data",
-    );
+    di.override(hostedClusterIdInjectable, () => "some-cluster-id");
+
     await di.runSetups();
 
     dockStore = di.inject(dockStoreInjectable);
-
-    await dockStore.whenReady;
-  });
-
-  afterEach(() => {
-    fse.remove("some-test-suite-specific-directory-for-user-data");
-    dockStore.closeAllTabs();
   });
 
   it("closes tab and selects one from right", () => {

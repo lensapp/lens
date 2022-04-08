@@ -8,7 +8,7 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import type { StorageHelper } from "../../utils";
+import type { StorageLayer } from "../../utils";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
@@ -63,7 +63,7 @@ export const resizingAnchorProps: Record<DrawerPosition, [ResizeDirection, Resiz
 
 interface Dependencies {
   history: History;
-  drawerStorage: StorageHelper<{ width: number }>;
+  drawerStorage: StorageLayer<{ width: number }>;
 }
 
 class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typeof defaultProps, State> {

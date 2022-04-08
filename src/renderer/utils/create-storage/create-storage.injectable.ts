@@ -15,20 +15,19 @@ import hostedClusterIdInjectable from "../../../common/cluster-store/hosted-clus
 const createStorageInjectable = getInjectable({
   id: "create-storage",
 
-  instantiate: (di) =>
-    createStorage({
-      storage: observable({
-        initialized: false,
-        loaded: false,
-        data: {} as Record<string /*key*/, any>, // json-serializable
-      }),
-      readJsonFile: di.inject(readJsonFileInjectable),
-      writeJsonFile: di.inject(writeJsonFileInjectable),
-      logger: di.inject(loggerInjectable),
-      directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
-      getAbsolutePath: di.inject(getAbsolutePathInjectable),
-      hostedClusterId: di.inject(hostedClusterIdInjectable),
+  instantiate: (di) => createStorage({
+    storage: observable({
+      initialized: false,
+      loaded: false,
+      data: {},
     }),
+    readJsonFile: di.inject(readJsonFileInjectable),
+    writeJsonFile: di.inject(writeJsonFileInjectable),
+    logger: di.inject(loggerInjectable),
+    directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
+    getAbsolutePath: di.inject(getAbsolutePathInjectable),
+    hostedClusterId: di.inject(hostedClusterIdInjectable),
+  }),
 });
 
 export default createStorageInjectable;

@@ -6,6 +6,7 @@
 // Keeps window.localStorage state in external JSON-files.
 // Because app creates random port between restarts => storage session wiped out each time.
 import { comparer, reaction, toJS, when } from "mobx";
+import type { StorageLayer } from "../storageHelper";
 import { StorageHelper } from "../storageHelper";
 import { isTestEnv } from "../../../common/vars";
 import type { JsonObject, JsonValue } from "type-fest";
@@ -22,6 +23,8 @@ interface Dependencies {
   hostedClusterId: string | undefined;
 }
 
+export type CreateStorage = <T>(key: string, defaultValue: T) => StorageLayer<T>;
+
 /**
  * Creates a helper for saving data under the "key" intended for window.localStorage
  */
@@ -33,7 +36,7 @@ export const createStorage = ({
   readJsonFile,
   writeJsonFile,
   hostedClusterId,
-}: Dependencies) => <T>(key: string, defaultValue: T) => {
+}: Dependencies): CreateStorage => (key, defaultValue) => {
   const { logPrefix } = StorageHelper;
 
   if (!storage.initialized) {
@@ -78,7 +81,7 @@ export const createStorage = ({
       .catch(error => logger.error(`${logPrefix} Failed to initialize storage: ${error}`));
   }
 
-  return new StorageHelper<T>(key, {
+  return new StorageHelper(key, {
     autoInit: true,
     defaultValue,
     storage: {

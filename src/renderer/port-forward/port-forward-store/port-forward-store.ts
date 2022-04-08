@@ -5,7 +5,7 @@
 
 import { action, makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../../common/item.store";
-import type { StorageHelper } from "../../utils";
+import type { StorageLayer } from "../../utils";
 import { autoBind, disposer } from "../../utils";
 import type { ForwardedPort } from "../port-forward-item";
 import { PortForwardItem } from "../port-forward-item";
@@ -14,7 +14,7 @@ import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";
 
 interface Dependencies {
-  storage: StorageHelper<ForwardedPort[] | undefined>;
+  storage: StorageLayer<ForwardedPort[] | undefined>;
   notifyErrorPortForwarding: (message: string) => void;
 }
 

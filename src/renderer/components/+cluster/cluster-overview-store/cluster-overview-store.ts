@@ -7,7 +7,7 @@ import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { Cluster, ClusterApi } from "../../../../common/k8s-api/endpoints";
 import { getMetricsByNodeNames, type ClusterMetricData } from "../../../../common/k8s-api/endpoints";
-import type { StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
 import { autoBind } from "../../../utils";
 import { type IMetricsReqParams, normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { nodesStore } from "../../+nodes/nodes.store";
@@ -28,7 +28,7 @@ export interface ClusterOverviewStorageState {
 }
 
 interface Dependencies {
-  storage: StorageHelper<ClusterOverviewStorageState>;
+  storage: StorageLayer<ClusterOverviewStorageState>;
 }
 
 export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> implements ClusterOverviewStorageState {

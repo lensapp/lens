@@ -4,8 +4,9 @@
  */
 
 import { action, observable, reaction } from "mobx";
-import type { StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
 import { autoBind, toJS } from "../../../utils";
+import type { CreateStorage } from "../../../utils/create-storage/create-storage";
 import type { TabId } from "../dock/store";
 
 export interface DockTabStoreOptions {
@@ -16,11 +17,11 @@ export interface DockTabStoreOptions {
 export type DockTabStorageState<T> = Record<TabId, T>;
 
 interface DockTabStoreDependencies {
-  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
+  createStorage: CreateStorage;
 }
 
 export class DockTabStore<T> {
-  protected storage?: StorageHelper<DockTabStorageState<T>>;
+  protected storage?: StorageLayer<DockTabStorageState<T>>;
   private data = observable.map<TabId, T>();
 
   constructor(protected dependencies: DockTabStoreDependencies, protected options: DockTabStoreOptions) {
@@ -41,7 +42,7 @@ export class DockTabStore<T> {
 
     // auto-save to local-storage
     if (storageKey) {
-      const storage = this.storage = this.dependencies.createStorage<T>(storageKey, {});
+      const storage = this.storage = this.dependencies.createStorage(storageKey, {});
 
       storage.whenReady.then(() => {
         this.data.replace(storage.value);

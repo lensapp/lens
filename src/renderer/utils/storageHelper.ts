@@ -24,7 +24,17 @@ export interface StorageHelperOptions<T> {
   defaultValue: T;
 }
 
-export class StorageHelper<T> {
+export interface StorageLayer<T> {
+  isDefaultValue(val: T): boolean;
+  get(): T;
+  readonly value: T;
+  readonly whenReady: Promise<void>;
+  set(value: T): void;
+  reset(): void;
+  merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)): void;
+}
+
+export class StorageHelper<T> implements StorageLayer<T> {
   static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
 
@@ -140,7 +150,7 @@ export class StorageHelper<T> {
 
   @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce<T>(this.toJSON(), (draft: Draft<T>) => {
+    const nextValue = produce<T>(toJS(this.get()), (draft) => {
 
       if (typeof value == "function") {
         const newValue = value(draft);
@@ -158,9 +168,5 @@ export class StorageHelper<T> {
     });
 
     this.set(nextValue);
-  }
-
-  toJSON(): T {
-    return toJS(this.get());
   }
 }

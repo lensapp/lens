@@ -5,7 +5,7 @@
 
 import type { IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
-import type { StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
 import { autoBind, noop, toggle } from "../../../utils";
 import type { KubeObjectStoreLoadingParams } from "../../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
@@ -13,7 +13,7 @@ import type { NamespaceApi } from "../../../../common/k8s-api/endpoints/namespac
 import { Namespace } from "../../../../common/k8s-api/endpoints/namespaces.api";
 
 interface Dependencies {
-  storage: StorageHelper<string[] | undefined>;
+  storage: StorageLayer<string[] | undefined>;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
@@ -70,7 +70,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
    * @private
    * The current value (list of namespaces names) in the storage layer
    */
-  @computed private get selectedNamespaces(): string[] {
+  @computed private get selectedNamespaces() {
     return this.dependencies.storage.get() ?? [];
   }
 
@@ -84,7 +84,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   /**
    * The list of selected namespace names (for filtering)
    */
-  @computed get contextNamespaces(): string[] {
+  @computed get contextNamespaces() {
     if (!this.selectedNamespaces.length) {
       return this.allowedNamespaces; // show all namespaces when nothing selected
     }

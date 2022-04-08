@@ -10,7 +10,7 @@ import React from "react";
 import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
-import type { IClassName, SingleOrMany, StorageHelper } from "../../utils";
+import type { IClassName, SingleOrMany, StorageLayer } from "../../utils";
 import { autoBind, cssNames, noop } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject } from "../../../common/item.store";
@@ -65,7 +65,7 @@ export type ItemListStore<I extends ItemObject, PreLoadStores extends boolean> =
 }) & (
   PreLoadStores extends true
     ? {
-      loadAll: (selectedNamespaces: string[]) => Promise<void>;
+      loadAll: (selectedNamespaces: readonly string[]) => Promise<void>;
     }
     : {
       loadAll?: unknown;
@@ -149,9 +149,13 @@ const defaultProps: Partial<ItemListLayoutProps<ItemObject, true>> = {
   failedToLoadMessage: "Failed to load items",
 };
 
+export interface ItemListLayoutStorage {
+  showFilters: boolean;
+}
+
 interface Dependencies {
   namespaceStore: NamespaceStore;
-  itemListLayoutStorage: StorageHelper<{ showFilters: boolean }>;
+  itemListLayoutStorage: StorageLayer<ItemListLayoutStorage>;
 }
 
 @observer
