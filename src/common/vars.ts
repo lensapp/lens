@@ -131,6 +131,13 @@ export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as stri
 export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ" as string;
 export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 
+export const lensWebsiteWeblinkId = "lens-website-link";
+export const lensDocumentationWeblinkId = "lens-documentation-link";
+export const lensSlackWeblinkId = "lens-slack-link";
+export const lensTwitterWeblinkId = "lens-twitter-link";
+export const lensBlogWeblinkId = "lens-blog-link";
+export const kubernetesDocumentationWeblinkId = "kubernetes-documentation-link";
+
 export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = "https://docs.k8slens.dev/main/" as string;
 
