@@ -26,6 +26,7 @@ function createDevServer(): WebpackDevServer {
     },
     allowedHosts: "all",
     host: "localhost",
+    port: 9191,
     static: buildDir, // aka `devServer.contentBase` in webpack@4
     hot: "only", // use HMR only without errors
     liveReload: false,
