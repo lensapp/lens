@@ -15,6 +15,7 @@ export interface Logger {
   error: (message: string, ...args: any) => void;
   debug: (message: string, ...args: any) => void;
   warn: (message: string, ...args: any) => void;
+  silly: (message: string, ...args: any) => void;
 }
 
 const logLevel = process.env.LOG_LEVEL

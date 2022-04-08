@@ -108,6 +108,7 @@ export const getDiForUnitTesting = (
       debug: noop,
       error: (message: string, ...args: any) => console.error(message, ...args),
       info: noop,
+      silly: noop,
     }));
   }
 

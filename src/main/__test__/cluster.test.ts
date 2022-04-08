@@ -3,32 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-    splat: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
-
 jest.mock("../../common/ipc");
 jest.mock("request");
 jest.mock("request-promise-native");
@@ -109,6 +83,7 @@ describe("create clusters", () => {
   });
 
   afterEach(() => {
+    cluster.disconnect();
     mockFs.restore();
   });
 
