@@ -277,7 +277,7 @@
     "@async-fn/jest": "1.5.3",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "@sentry/types": "^6.19.3",
     "@testing-library/jest-dom": "^5.16.3",
