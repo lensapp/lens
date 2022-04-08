@@ -8,7 +8,6 @@
 import { isFunction, merge } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
-import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
 import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
@@ -27,6 +26,9 @@ import { Agent } from "https";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import loggerInjectable from "../logger.injectable";
+import type { Logger } from "../logger";
 
 /**
  * The options used for creating a `KubeApi`
@@ -35,7 +37,7 @@ export interface IKubeApiOptions<T extends KubeObject<any, any, KubeObjectScope>
   /**
    * base api-path for listing all resources, e.g. "/api/v1/pods"
    *
-   * If not specified then will be the one on the `objectConstructor`
+   * Must be provided either here or under `objectConstructor.apiBase`
    * @deprecated should be specified by `objectConstructor`
    */
   apiBase?: string;
@@ -46,11 +48,13 @@ export interface IKubeApiOptions<T extends KubeObject<any, any, KubeObjectScope>
   objectConstructor: KubeObjectConstructor<T, Data>;
 
   /**
+   * Must be provided either here or under `objectConstructor.namespaced`
    * @deprecated should be specified by `objectConstructor`
    */
   isNamespaced?: boolean;
 
   /**
+   * Must be provided either here or under `objectConstructor.kind`
    * @deprecated should be specified by `objectConstructor`
    */
   kind?: string;
@@ -317,6 +321,7 @@ export class KubeApi<
   protected readonly doCheckPreferredVersion: boolean;
   protected readonly fullApiPathname: string;
   protected readonly fallbackApiBases?: string[];
+  protected readonly logger: Logger;
 
   constructor({
     objectConstructor,
@@ -331,10 +336,12 @@ export class KubeApi<
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
     const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(fullApiPathname);
+    const di = getLegacyGlobalDiForExtensionApi();
 
     assert(kind);
     assert(apiPrefix);
 
+    this.logger = di.inject(loggerInjectable);
     this.doCheckPreferredVersion = doCheckPreferredVersion;
     this.fallbackApiBases = fallbackApiBases;
     this.fullApiPathname = fullApiPathname;
@@ -353,7 +360,7 @@ export class KubeApi<
 
   get apiVersionWithGroup() {
     return [this.apiGroup, this.apiVersionPreferred ?? this.apiVersion]
-      .filter(isDefined)
+      .filter(Boolean)
       .join("/");
   }
 
@@ -375,10 +382,10 @@ export class KubeApi<
         const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
 
         // Request available resources
-        const response = await this.request.get<IKubeResourceList>(`${apiPrefix}/${apiVersionWithGroup}`);
+        const { resources } = await this.request.get(`${apiPrefix}/${apiVersionWithGroup}`) as IKubeResourceList;
 
         // If the resource is found in the group, use this apiUrl
-        if (response.resources?.find(kubeResource => kubeResource.name === resource)) {
+        if (resources.find(({ name }) => name === resource)) {
           return { apiPrefix, apiGroup };
         }
       } catch (error) {
@@ -398,7 +405,7 @@ export class KubeApi<
         return await this.getLatestApiPrefixGroup();
       } catch (error) {
         // If valid API wasn't found, log the error and return defaults below
-        logger.error(`[KUBE-API]: ${error}`);
+        this.logger.error(`[KUBE-API]: ${error}`);
       }
     }
 
@@ -422,8 +429,8 @@ export class KubeApi<
       this.apiPrefix = apiPrefix;
       this.apiGroup = apiGroup;
 
-      const url = [apiPrefix, apiGroup].filter(isDefined).join("/");
-      const res = await this.request.get<IKubePreferredVersion>(url);
+      const url = [apiPrefix, apiGroup].filter(Boolean).join("/");
+      const res = await this.request.get(url) as IKubePreferredVersion;
 
       this.apiVersionPreferred = res?.preferredVersion?.version;
 
@@ -663,7 +670,7 @@ export class KubeApi<
     const abortController = new WrappedAbortController(opts.abortController);
 
     abortController.signal.addEventListener("abort", () => {
-      logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
+      this.logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
       clearTimeout(timedRetry);
     });
 
@@ -674,7 +681,7 @@ export class KubeApi<
       timeout: 600_000,
     });
 
-    logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
+    this.logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     responsePromise
       .then(response => {
@@ -682,7 +689,7 @@ export class KubeApi<
         let requestRetried = false;
 
         if (!response.ok) {
-          logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
+          this.logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
 
           return callback(null, response);
         }
@@ -699,7 +706,7 @@ export class KubeApi<
             // Close current request
             abortController.abort();
 
-            logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
+            this.logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
 
             requestRetried = true;
 
@@ -718,7 +725,7 @@ export class KubeApi<
               return;
             }
 
-            logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
+            this.logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
 
             requestRetried = true;
 
@@ -747,7 +754,7 @@ export class KubeApi<
         });
       })
       .catch(error => {
-        logger.error(`[KUBE-API] watch (${watchId}) throwed ${watchUrl}`, error);
+        this.logger.error(`[KUBE-API] watch (${watchId}) throwed ${watchUrl}`, error);
 
         callback(null, error);
       });

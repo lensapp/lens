@@ -12,25 +12,21 @@ import { PassThrough } from "stream";
 import type { ApiManager } from "../api-manager";
 import { apiManager } from "../api-manager";
 import type { FetchMock } from "jest-fetch-mock/types";
+import { DeploymentApi, Ingress, IngressApi, Pod, PodApi } from "../endpoints";
+import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 
 jest.mock("../api-manager");
 
 const mockApiManager = apiManager as jest.Mocked<ApiManager>;
 const mockFetch = fetch as FetchMock;
 
-class TestKubeObject extends KubeObject {
-  static kind = "Pod";
-  static namespaced = true;
-  static apiBase = "/api/v1/pods";
-}
-
-class TestKubeApi extends KubeApi<TestKubeObject> {
-  public async checkPreferredVersion() {
-    return super.checkPreferredVersion();
-  }
-}
-
 describe("forRemoteCluster", () => {
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    await di.runSetups();
+  });
+
   it("builds api client for KubeObject", async () => {
     const api = forRemoteCluster({
       cluster: {
@@ -39,7 +35,7 @@ describe("forRemoteCluster", () => {
       user: {
         token: "daa",
       },
-    }, TestKubeObject);
+    }, Pod);
 
     expect(api).toBeInstanceOf(KubeApi);
   });
@@ -52,9 +48,9 @@ describe("forRemoteCluster", () => {
       user: {
         token: "daa",
       },
-    }, TestKubeObject, TestKubeApi);
+    }, Pod, PodApi);
 
-    expect(api).toBeInstanceOf(TestKubeApi);
+    expect(api).toBeInstanceOf(PodApi);
   });
 
   it("calls right api endpoint", async () => {
@@ -65,7 +61,7 @@ describe("forRemoteCluster", () => {
       user: {
         token: "daa",
       },
-    }, TestKubeObject);
+    }, Pod);
 
     mockFetch.mockResponse(async (request: any) => {
       expect(request.url).toEqual("https://127.0.0.1:6443/api/v1/pods");
@@ -84,7 +80,11 @@ describe("forRemoteCluster", () => {
 describe("KubeApi", () => {
   let request: KubeJsonApi;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    await di.runSetups();
+
     request = new KubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,
       apiBase: "/api-kube",
@@ -121,9 +121,9 @@ describe("KubeApi", () => {
 
     const apiBase = "/apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
-    const kubeApi = new KubeApi({
+    const kubeApi = new IngressApi({
       request,
-      objectConstructor: KubeObject,
+      objectConstructor: Ingress,
       apiBase,
       fallbackApiBases: [fallbackApiBase],
       checkPreferredVersion: true,
@@ -164,9 +164,10 @@ describe("KubeApi", () => {
 
     const apiBase = "apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
-    const kubeApi = new KubeApi({
+    const kubeApi = new IngressApi({
       request,
       objectConstructor: Object.assign(KubeObject, { apiBase }),
+      kind: "Ingress",
       fallbackApiBases: [fallbackApiBase],
       checkPreferredVersion: true,
     });
@@ -183,41 +184,38 @@ describe("KubeApi", () => {
     it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred", async () => {
       expect.hasAssertions();
 
-      const api = new TestKubeApi({
-        objectConstructor: TestKubeObject,
+      const api = new IngressApi({
+        objectConstructor: Ingress,
         checkPreferredVersion: true,
         fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
         request: {
           get: jest.fn()
-            .mockImplementationOnce((path: string) => {
-              expect(path).toBe("/apis/networking.k8s.io/v1");
-
-              throw new Error("no");
-            })
-            .mockImplementationOnce((path: string) => {
-              expect(path).toBe("/apis/extensions/v1beta1");
-
-              return {
-                resources: [
-                  {
-                    name: "ingresses",
-                  },
-                ],
-              };
-            })
-            .mockImplementationOnce((path: string) => {
-              expect(path).toBe("/apis/extensions");
-
-              return {
-                preferredVersion: {
-                  version: "v1beta1",
-                },
-              };
+            .mockImplementation((path: string) => {
+              switch (path) {
+                case "/apis/networking.k8s.io/v1":
+                  throw new Error("no");
+                case "/apis/extensions/v1beta1":
+                  return {
+                    resources: [
+                      {
+                        name: "ingresses",
+                      },
+                    ],
+                  };
+                case "/apis/extensions":
+                  return {
+                    preferredVersion: {
+                      version: "v1beta1",
+                    },
+                  };
+                default:
+                  throw new Error("unknown path");
+              }
             }),
         } as Partial<KubeJsonApi> as KubeJsonApi,
       });
 
-      await api.checkPreferredVersion();
+      await (api as any).checkPreferredVersion();
 
       expect(api.apiVersionPreferred).toBe("v1beta1");
       expect(mockApiManager.registerApi).toBeCalledWith("/apis/extensions/v1beta1/ingresses", expect.anything());
@@ -226,41 +224,38 @@ describe("KubeApi", () => {
     it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred with non-grouped apis", async () => {
       expect.hasAssertions();
 
-      const api = new TestKubeApi({
-        objectConstructor: TestKubeObject,
+      const api = new PodApi({
+        objectConstructor: Pod,
         checkPreferredVersion: true,
         fallbackApiBases: ["/api/v1beta1/pods"],
         request: {
           get: jest.fn()
-            .mockImplementationOnce((path: string) => {
-              expect(path).toBe("/api/v1");
-
-              throw new Error("no");
-            })
-            .mockImplementationOnce((path: string) => {
-              expect(path).toBe("/api/v1beta1");
-
-              return {
-                resources: [
-                  {
-                    name: "pods",
-                  },
-                ],
-              };
-            })
-            .mockImplementationOnce((path: string) => {
-              expect(path).toBe("/api");
-
-              return {
-                preferredVersion: {
-                  version: "v1beta1",
-                },
-              };
+            .mockImplementation((path: string) => {
+              switch (path) {
+                case "/api/v1":
+                  throw new Error("no");
+                case "/api/v1beta1":
+                  return {
+                    resources: [
+                      {
+                        name: "pods",
+                      },
+                    ],
+                  };
+                case "/api":
+                  return {
+                    preferredVersion: {
+                      version: "v1beta1",
+                    },
+                  };
+                default:
+                  throw new Error("unknown path");
+              }
             }),
         } as Partial<KubeJsonApi> as KubeJsonApi,
       });
 
-      await api.checkPreferredVersion();
+      await (api as any).checkPreferredVersion();
 
       expect(api.apiVersionPreferred).toBe("v1beta1");
       expect(mockApiManager.registerApi).toBeCalledWith("/api/v1beta1/pods", expect.anything());
@@ -268,12 +263,11 @@ describe("KubeApi", () => {
   });
 
   describe("patch", () => {
-    let api: TestKubeApi;
+    let api: DeploymentApi;
 
     beforeEach(() => {
-      api = new TestKubeApi({
+      api = new DeploymentApi({
         request,
-        objectConstructor: TestKubeObject,
       });
     });
 
@@ -345,12 +339,12 @@ describe("KubeApi", () => {
   });
 
   describe("delete", () => {
-    let api: TestKubeApi;
+    let api: PodApi;
 
     beforeEach(() => {
-      api = new TestKubeApi({
+      api = new PodApi({
         request,
-        objectConstructor: TestKubeObject,
+        objectConstructor: Pod,
       });
     });
 
@@ -404,13 +398,13 @@ describe("KubeApi", () => {
   });
 
   describe("watch", () => {
-    let api: TestKubeApi;
+    let api: PodApi;
     let stream: PassThrough;
 
     beforeEach(() => {
-      api = new TestKubeApi({
+      api = new PodApi({
         request,
-        objectConstructor: TestKubeObject,
+        objectConstructor: Pod,
       });
       stream = new PassThrough();
     });
@@ -581,12 +575,12 @@ describe("KubeApi", () => {
   });
 
   describe("create", () => {
-    let api: TestKubeApi;
+    let api: PodApi;
 
     beforeEach(() => {
-      api = new TestKubeApi({
+      api = new PodApi({
         request,
-        objectConstructor: TestKubeObject,
+        objectConstructor: Pod,
       });
     });
 
@@ -678,12 +672,12 @@ describe("KubeApi", () => {
   });
 
   describe("update", () => {
-    let api: TestKubeApi;
+    let api: PodApi;
 
     beforeEach(() => {
-      api = new TestKubeApi({
+      api = new PodApi({
         request,
-        objectConstructor: TestKubeObject,
+        objectConstructor: Pod,
       });
     });
 
