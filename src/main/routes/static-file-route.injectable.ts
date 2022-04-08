@@ -8,7 +8,7 @@ import type { SupportedFileExtension } from "../router/router-content-types";
 import { contentTypes } from "../router/router-content-types";
 import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
-import { appName, publicPath } from "../../common/vars";
+import { appName, publicPath, webpackDevServerPort } from "../../common/vars";
 import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
@@ -74,7 +74,7 @@ const handleStaticFileInDevelopment =
       }
 
       proxy.web(req, res, {
-        target: "http://127.0.0.1:8080",
+        target: `http://127.0.0.1:${webpackDevServerPort}`,
       });
 
       return { proxy };
