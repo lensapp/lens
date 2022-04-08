@@ -7,7 +7,7 @@
 // API docs: https://react-window.now.sh
 import "./virtual-list.scss";
 
-import type { ForwardedRef, PropsWithoutRef, RefObject } from "react";
+import type { ForwardedRef } from "react";
 import React, { createRef, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import type { Align, ListChildComponentProps, ListOnScrollProps } from "react-window";
@@ -28,7 +28,7 @@ export interface VirtualListProps<T extends { getId(): string } | string> {
   selectedItemId?: string;
   getRow?: (uid: T extends string ? number : string) => React.ReactElement | undefined | null;
   onScroll?: (props: ListOnScrollProps) => void;
-  outerRef?: React.Ref<any>;
+  outerRef?: React.Ref<HTMLDivElement>;
 
   /**
    * If specified then AutoSizer will not be used and instead a fixed height
@@ -53,7 +53,8 @@ function VirtualListInner<T extends { getId(): string } | string>({
   onScroll = noop,
   outerRef,
   fixedHeight,
-}: VirtualListProps<T>, ref: ForwardedRef<VirtualListRef>) {
+  forwardedRef,
+}: VirtualListProps<T> & { forwardedRef?: ForwardedRef<VirtualListRef> }) {
   const [overscanCount, setOverscanCount] = useState(initialOffset);
   const listRef = createRef<VariableSizeList>();
   const prevItems = useRef(items);
@@ -75,7 +76,7 @@ function VirtualListInner<T extends { getId(): string } | string>({
   }), [selectedItemId, [items]]);
   const getItemSize = (index: number) => rowHeights[index];
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(forwardedRef, () => ({
     scrollToItem: (index, align) => listRef.current?.scrollToItem(index, align),
   }));
 
@@ -130,13 +131,9 @@ function VirtualListInner<T extends { getId(): string } | string>({
   );
 }
 
-const ForwardedVirtualList = forwardRef(VirtualListInner);
-
-export function VirtualList<T extends { getId(): string } | string>(
-  props: PropsWithoutRef<VirtualListProps<T>> & { ref?: RefObject<VirtualListRef> },
-) {
-  return <ForwardedVirtualList {...props as never} />;
-}
+export const VirtualList = forwardRef<VirtualListRef, VirtualListProps<string>>((props, ref) => (
+  <VirtualListInner {...props} forwardedRef={ref} />
+)) as <T extends { getId(): string } | string>(props: VirtualListProps<T> & { ref?: ForwardedRef<VirtualListRef> }) => JSX.Element;
 
 interface RowData<T extends { getId(): string } | string> {
   items: T[];

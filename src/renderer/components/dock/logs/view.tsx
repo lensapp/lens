@@ -7,6 +7,7 @@ import React, { createRef, useEffect } from "react";
 import { observer } from "mobx-react";
 import { InfoPanel } from "../info-panel";
 import { LogResourceSelector } from "./resource-selector";
+import type { LogListRef } from "./list";
 import { LogList } from "./list";
 import { LogSearch } from "./search";
 import { LogControls } from "./controls";
@@ -30,7 +31,7 @@ interface Dependencies {
 }
 
 const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStores }: Dependencies & LogsDockTabProps) => {
-  const logListElement = createRef<LogList>();
+  const logListElement = createRef<LogListRef>();
   const data = model.logTabData.get();
 
   useEffect(() => {

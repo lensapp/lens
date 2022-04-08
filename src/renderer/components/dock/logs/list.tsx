@@ -5,6 +5,7 @@
 
 import "./list.scss";
 
+import type { ForwardedRef } from "react";
 import React from "react";
 import AnsiUp from "ansi_up";
 import DOMPurify from "dompurify";
@@ -28,8 +29,12 @@ export interface LogListProps {
 
 const colorConverter = new AnsiUp();
 
+export interface LogListRef {
+  scrollToItem: (index: number, align: Align) => void;
+}
+
 @observer
-export class LogList extends React.Component<LogListProps> {
+class NonForwardedLogList extends React.Component<LogListProps & { innerRef: ForwardedRef<LogListRef> }> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -37,7 +42,7 @@ export class LogList extends React.Component<LogListProps> {
   private virtualListRef = React.createRef<VirtualListRef>(); // A reference for VirtualList component
   private lineHeight = 18; // Height of a log line. Should correlate with styles in pod-log-list.scss
 
-  constructor(props: LogListProps) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -51,6 +56,27 @@ export class LogList extends React.Component<LogListProps> {
         this.onUserScrolledUp(logs, prevLogs);
       }),
     ]);
+    this.bindInnerRef({
+      scrollToItem: this.scrollToItem,
+    });
+  }
+
+  componentDidUpdate() {
+    this.bindInnerRef({
+      scrollToItem: this.scrollToItem,
+    });
+  }
+
+  componentWillUnmount() {
+    this.bindInnerRef(null);
+  }
+
+  private bindInnerRef(value: LogListRef | null) {
+    if (typeof this.props.innerRef === "function") {
+      this.props.innerRef(value);
+    } else if (this.props.innerRef && typeof this.props.innerRef === "object") {
+      this.props.innerRef.current = value;
+    }
   }
 
   onLogsInitialLoad(logs: string[], prevLogs: string[]) {
@@ -246,3 +272,7 @@ export class LogList extends React.Component<LogListProps> {
     );
   }
 }
+
+export const LogList = React.forwardRef<LogListRef, LogListProps>((props, ref) => (
+  <NonForwardedLogList {...props} innerRef={ref} />
+));
