@@ -7,7 +7,7 @@ import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import type { IPodContainer, Secret } from "../../../common/k8s-api/endpoints";
+import type { PodContainer, Secret } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
 import { secretStore } from "../+config-secrets/secrets.store";
@@ -17,7 +17,7 @@ import { base64, cssNames, iter } from "../../utils";
 import _ from "lodash";
 
 export interface ContainerEnvironmentProps {
-  container: IPodContainer;
+  container: PodContainer;
   namespace: string;
 }
 

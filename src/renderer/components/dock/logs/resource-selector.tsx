@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import { Badge } from "../../badge";
 import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
-import type { Pod } from "../../../../common/k8s-api/endpoints";
+import type { PodContainer, Pod } from "../../../../common/k8s-api/endpoints";
 import type { GroupBase } from "react-select";
 
 export interface LogResourceSelectorProps {
@@ -33,13 +33,15 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     return null;
   }
 
-  const onContainerChange = (container: string | null) => {
+  const allContainers = pod.getAllContainers();
+  const container = allContainers.find(container => container.name === selectedContainer) ?? null;
+  const onContainerChange = (container: PodContainer | null) => {
     if (!container) {
       return;
     }
 
     model.updateLogTabData({
-      selectedContainer: container,
+      selectedContainer: container.name,
     });
     model.reloadLogs();
   };
@@ -60,11 +62,11 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
   const containerSelectOptions = [
     {
       label: "Containers",
-      options: pod.getContainers().map(container => container.name),
+      options: pod.getContainers(),
     },
     {
       label: "Init Containers",
-      options: pod.getInitContainers().map(container => container.name),
+      options: pod.getInitContainers(),
     },
   ];
 
@@ -93,13 +95,15 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
         menuClass="pod-selector-menu"
       />
       <span>Container</span>
-      <Select<string, false, GroupBase<string>>
+      <Select<PodContainer, false, GroupBase<PodContainer>>
         id="container-selector-input"
         options={containerSelectOptions}
-        value={selectedContainer}
+        value={container}
         onChange={onContainerChange}
+        getOptionLabel={opt => opt.name}
         className="container-selector"
         menuClass="container-selector-menu"
+        controlShouldRenderValue
       />
     </div>
   );

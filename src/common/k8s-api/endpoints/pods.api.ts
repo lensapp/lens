@@ -101,7 +101,7 @@ export interface VolumeMount {
   subPathExpr?: string;
 }
 
-export interface IPodContainer extends Partial<Record<PodContainerProbe, IContainerProbe>> {
+export interface PodContainer extends Partial<Record<PodContainerProbe, IContainerProbe>> {
   name: string;
   image: string;
   command?: string[];
@@ -702,7 +702,7 @@ export interface PodSpec {
   activeDeadlineSeconds?: number;
   affinity?: Affinity;
   automountServiceAccountToken?: boolean;
-  containers?: IPodContainer[];
+  containers?: PodContainer[];
   dnsPolicy?: string;
   enableServiceLinks?: boolean;
   ephemeralContainers?: unknown[];
@@ -712,7 +712,7 @@ export interface PodSpec {
   hostNetwork?: boolean;
   hostPID?: boolean;
   imagePullSecrets?: LocalObjectReference[];
-  initContainers?: IPodContainer[];
+  initContainers?: PodContainer[];
   nodeName?: string;
   nodeSelector?: Record<string, string | undefined>;
   overhead?: Record<string, string | undefined>;
@@ -906,19 +906,19 @@ export class Pod extends KubeObject<PodStatus, PodSpec, KubeObjectScope.Namespac
     return this.getStatusPhase() !== "Running";
   }
 
-  getLivenessProbe(container: IPodContainer) {
+  getLivenessProbe(container: PodContainer) {
     return this.getProbe(container, "livenessProbe");
   }
 
-  getReadinessProbe(container: IPodContainer) {
+  getReadinessProbe(container: PodContainer) {
     return this.getProbe(container, "readinessProbe");
   }
 
-  getStartupProbe(container: IPodContainer) {
+  getStartupProbe(container: PodContainer) {
     return this.getProbe(container, "startupProbe");
   }
 
-  private getProbe(container: IPodContainer, field: PodContainerProbe): string[] {
+  private getProbe(container: PodContainer, field: PodContainerProbe): string[] {
     const probe: string[] = [];
     const probeData = container[field];
 

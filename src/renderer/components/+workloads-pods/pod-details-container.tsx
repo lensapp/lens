@@ -6,7 +6,7 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import type { IPodContainer, IPodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
+import type { PodContainer, IPodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames, isDefined } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -26,7 +26,7 @@ import portForwardStoreInjectable from "../../port-forward/port-forward-store/po
 
 export interface PodDetailsContainerProps {
   pod: Pod;
-  container: IPodContainer;
+  container: PodContainer;
   metrics?: Partial<Record<string, MetricData>>;
 }
 

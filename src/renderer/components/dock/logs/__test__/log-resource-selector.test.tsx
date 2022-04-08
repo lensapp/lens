@@ -155,7 +155,7 @@ describe("<LogResourceSelector />", () => {
     mockFs.restore();
   });
 
-  describe.only("with one pod", () => {
+  describe("with one pod", () => {
     let model: LogTabViewModel;
 
     beforeEach(() => {
@@ -175,7 +175,7 @@ describe("<LogResourceSelector />", () => {
       expect(ns).toHaveTextContent("default");
     });
 
-    it.only("renders proper selected items within dropdowns", async () => {
+    it("renders proper selected items within dropdowns", async () => {
       const { findByText } = render(<LogResourceSelector model={model} />);
 
       expect(await findByText("dockerExporter")).toBeInTheDocument();
@@ -185,9 +185,11 @@ describe("<LogResourceSelector />", () => {
 
   describe("with several pods", () => {
     let model: LogTabViewModel;
+    let renameTab: jest.MockedFunction<LogTabViewModelDependencies["renameTab"]>;
 
     beforeEach(() => {
-      model = getFewPodsTabData("foobar");
+      renameTab = jest.fn();
+      model = getFewPodsTabData("foobar", { renameTab });
     });
 
     it("renders sibling pods in dropdown", async () => {
@@ -223,7 +225,6 @@ describe("<LogResourceSelector />", () => {
     });
 
     it("updates tab name if selected pod changes", async () => {
-      const renameTab = jest.fn();
       const { findByText, container } = render(<LogResourceSelector model={model} />);
       const selector = container.querySelector<HTMLElement>(".pod-selector");
 

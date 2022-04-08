@@ -63,7 +63,7 @@ export { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
 
 // types
 export type { ILocalKubeApiConfig, IRemoteKubeApiConfig, IKubeApiCluster } from "../../common/k8s-api/kube-api";
-export type { IPodContainer, IPodContainerStatus } from "../../common/k8s-api/endpoints";
+export type { PodContainer as IPodContainer, IPodContainerStatus } from "../../common/k8s-api/endpoints";
 export type { SecretReference as ISecretRef } from "../../common/k8s-api/endpoints";
 export type { KubeObjectStatus } from "./kube-object-status";
 export type { KubeJsonApiObjectMetadata as KubeObjectMetadata, KubeStatusData } from "../../common/k8s-api/kube-object";
