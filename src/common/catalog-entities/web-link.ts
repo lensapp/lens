@@ -69,5 +69,3 @@ export class WebLinkCategory extends CatalogCategory {
     },
   };
 }
-
-catalogCategoryRegistry.add(new WebLinkCategory());

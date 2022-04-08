@@ -11,7 +11,7 @@ import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, ipcR
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
-import { defaultHotbarCells } from "../../common/hotbar-types";
+import { defaultHotbarCells } from "../../common/hotbars/types";
 import { type ListNamespaceForbiddenArgs, clusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
 import { hotbarTooManyItemsChannel } from "../../common/ipc/hotbar";
 
@@ -31,7 +31,7 @@ function RenderYesButtons(props: { backchannel: string; notificationId: string }
       <Button
         light
         label="Yes"
-        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })} 
+        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })}
       />
     );
   }
@@ -41,13 +41,13 @@ function RenderYesButtons(props: { backchannel: string; notificationId: string }
       <Button
         light
         label="Yes, now"
-        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })} 
+        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: true })}
       />
       <Button
         active
         outlined
         label="Yes, later"
-        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: false })} 
+        onClick={() => sendToBackchannel(props.backchannel, props.notificationId, { doUpdate: true, now: false })}
       />
     </>
   );
@@ -72,7 +72,7 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
             active
             outlined
             label="No"
-            onClick={() => sendToBackchannel(backchannel, notificationId, { doUpdate: false })} 
+            onClick={() => sendToBackchannel(backchannel, notificationId, { doUpdate: false })}
           />
         </div>
       </div>

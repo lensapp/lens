@@ -59,7 +59,7 @@ import assert from "assert";
 import windowManagerInjectable from "./window-manager.injectable";
 import navigateToPreferencesInjectable from "../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general-catalog-entities.injectable";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { init } from "@sentry/electron/main";

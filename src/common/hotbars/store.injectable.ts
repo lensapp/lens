@@ -3,8 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import catalogCatalogEntityInjectable from "./catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
-import { HotbarStore } from "./hotbar-store";
+import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import { HotbarStore } from "./store";
+import loggerInjectable from "../logger.injectable";
 
 const hotbarStoreInjectable = getInjectable({
   id: "hotbar-store",
@@ -14,6 +15,7 @@ const hotbarStoreInjectable = getInjectable({
 
     return HotbarStore.createInstance({
       catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
+      logger: di.inject(loggerInjectable),
     });
   },
 

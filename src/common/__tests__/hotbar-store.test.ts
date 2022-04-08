@@ -5,69 +5,21 @@
 
 import { anyObject } from "jest-mock-extended";
 import mockFs from "mock-fs";
-import logger from "../../main/logger";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import hotbarStoreInjectable from "../hotbar-store.injectable";
-import { HotbarStore } from "../hotbar-store";
+import hotbarStoreInjectable from "../hotbars/store.injectable";
+import type { HotbarStore } from "../hotbars/store";
+import catalogEntityRegistryInjectable from "../../main/catalog/entity-registry.injectable";
+import { computed } from "mobx";
+import hasCategoryForEntityInjectable from "../catalog/has-category-for-entity.injectable";
 import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import loggerInjectable from "../logger.injectable";
+import type { Logger } from "../logger";
 
-jest.mock("../../main/catalog/catalog-entity-registry", () => ({
-  catalogEntityRegistry: {
-    items: [
-      getMockCatalogEntity({
-        apiVersion: "v1",
-        kind: "Cluster",
-
-        status: {
-          phase: "Running",
-        },
-
-        metadata: {
-          uid: "1dfa26e2ebab15780a3547e9c7fa785c",
-          name: "mycluster",
-          source: "local",
-          labels: {},
-        },
-      }),
-
-      getMockCatalogEntity({
-        apiVersion: "v1",
-        kind: "Cluster",
-
-        status: {
-          phase: "Running",
-        },
-
-        metadata: {
-          uid: "55b42c3c7ba3b04193416cda405269a5",
-          name: "my_shiny_cluster",
-          source: "remote",
-          labels: {},
-        },
-      }),
-
-      getMockCatalogEntity({
-        apiVersion: "v1",
-        kind: "Cluster",
-
-        status: {
-          phase: "Running",
-        },
-
-        metadata: {
-          uid: "catalog-entity",
-          name: "Catalog",
-          source: "app",
-          labels: {},
-        },
-      }),
-    ],
-  },
-}));
+console.log("I am here as reminder against mockfs (and to fix console logging)");
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -84,69 +36,81 @@ function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKi
   } as CatalogEntity;
 }
 
-const testCluster = getMockCatalogEntity({
-  apiVersion: "v1",
-  kind: "Cluster",
-  status: {
-    phase: "Running",
-  },
-  metadata: {
-    uid: "test",
-    name: "test",
-    labels: {},
-  },
-});
-
-const minikubeCluster = getMockCatalogEntity({
-  apiVersion: "v1",
-  kind: "Cluster",
-  status: {
-    phase: "Running",
-  },
-  metadata: {
-    uid: "minikube",
-    name: "minikube",
-    labels: {},
-  },
-});
-
-const awsCluster = getMockCatalogEntity({
-  apiVersion: "v1",
-  kind: "Cluster",
-  status: {
-    phase: "Running",
-  },
-  metadata: {
-    uid: "aws",
-    name: "aws",
-    labels: {},
-  },
-});
-
 describe("HotbarStore", () => {
   let di: DiContainer;
   let hotbarStore: HotbarStore;
+  let testCluster: CatalogEntity;
+  let minikubeCluster: CatalogEntity;
+  let awsCluster: CatalogEntity;
+  let logger: jest.Mocked<Logger>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true, overrideHotbarStore: false });
+
+    testCluster = getMockCatalogEntity({
+      apiVersion: "v1",
+      kind: "Cluster",
+      status: {
+        phase: "Running",
+      },
+      metadata: {
+        uid: "some-test-id",
+        name: "my-test-cluster",
+        source: "local",
+        labels: {},
+      },
+    });
+    minikubeCluster = getMockCatalogEntity({
+      apiVersion: "v1",
+      kind: "Cluster",
+      status: {
+        phase: "Running",
+      },
+      metadata: {
+        uid: "some-minikube-id",
+        name: "my-minikube-cluster",
+        source: "local",
+        labels: {},
+      },
+    });
+    awsCluster = getMockCatalogEntity({
+      apiVersion: "v1",
+      kind: "Cluster",
+      status: {
+        phase: "Running",
+      },
+      metadata: {
+        uid: "some-aws-id",
+        name: "my-aws-cluster",
+        source: "local",
+        labels: {},
+      },
+    });
+
+    di.override(hasCategoryForEntityInjectable, () => () => true);
+
+    logger = di.inject(loggerInjectable) as jest.Mocked<Logger>;
+
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
+    const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
+
+    catalogEntityRegistry.addComputedSource("some-id", computed(() => [
+      testCluster,
+      minikubeCluster,
+      awsCluster,
+      catalogCatalogEntity,
+    ]));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-
-    di.override(hotbarStoreInjectable, () => {
-      HotbarStore.resetInstance();
-
-      return HotbarStore.createInstance({
-        catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
-      });
-    });
+    di.permitSideEffects(hotbarStoreInjectable);
   });
 
   afterEach(() => {
     mockFs.restore();
   });
 
-  describe("given no migrations", () => {
+  describe("given no previous data in store, running all migrations", () => {
     beforeEach(async () => {
       mockFs();
 
@@ -186,7 +150,7 @@ describe("HotbarStore", () => {
 
       it("removes items", () => {
         hotbarStore.addToHotbar(testCluster);
-        hotbarStore.removeFromHotbar("test");
+        hotbarStore.removeFromHotbar("some-test-id");
         hotbarStore.removeFromHotbar("catalog-entity");
         const items = hotbarStore.getActive().items.filter(Boolean);
 
@@ -211,7 +175,7 @@ describe("HotbarStore", () => {
         hotbarStore.restackItems(1, 5);
 
         expect(hotbarStore.getActive().items[5]).toBeTruthy();
-        expect(hotbarStore.getActive().items[5]?.entity.uid).toEqual("test");
+        expect(hotbarStore.getActive().items[5]?.entity.uid).toEqual("some-test-id");
       });
 
       it("moves items down", () => {
@@ -224,7 +188,7 @@ describe("HotbarStore", () => {
 
         const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
-        expect(items.slice(0, 4)).toEqual(["aws", "catalog-entity", "test", "minikube"]);
+        expect(items.slice(0, 4)).toEqual(["some-aws-id", "catalog-entity", "some-test-id", "some-minikube-id"]);
       });
 
       it("moves items up", () => {
@@ -237,28 +201,21 @@ describe("HotbarStore", () => {
 
         const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
-        expect(items.slice(0, 4)).toEqual(["catalog-entity", "minikube", "aws", "test"]);
+        expect(items.slice(0, 4)).toEqual(["catalog-entity", "some-minikube-id", "some-aws-id", "some-test-id"]);
       });
 
       it("logs an error if cellIndex is out of bounds", () => {
         hotbarStore.add({ name: "hottest", id: "hottest" });
         hotbarStore.setActiveHotbar("hottest");
 
-        const { error } = logger;
-        const mocked = jest.fn();
-
-        logger.error = mocked;
-
         hotbarStore.addToHotbar(testCluster, -1);
-        expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+        expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         hotbarStore.addToHotbar(testCluster, 12);
-        expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+        expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         hotbarStore.addToHotbar(testCluster, 13);
-        expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
-
-        logger.error = error;
+        expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
       });
 
       it("throws an error if getId is invalid or returns not a string", () => {
@@ -275,7 +232,7 @@ describe("HotbarStore", () => {
         hotbarStore.addToHotbar(testCluster);
         hotbarStore.restackItems(1, 1);
 
-        expect(hotbarStore.getActive().items[1]?.entity.uid).toEqual("test");
+        expect(hotbarStore.getActive().items[1]?.entity.uid).toEqual("some-test-id");
       });
 
       it("new items takes first empty cell", () => {
@@ -284,7 +241,7 @@ describe("HotbarStore", () => {
         hotbarStore.restackItems(0, 3);
         hotbarStore.addToHotbar(minikubeCluster);
 
-        expect(hotbarStore.getActive().items[0]?.entity.uid).toEqual("minikube");
+        expect(hotbarStore.getActive().items[0]?.entity.uid).toEqual("some-minikube-id");
       });
 
       it("throws if invalid arguments provided", () => {
@@ -315,7 +272,7 @@ describe("HotbarStore", () => {
     });
   });
 
-  describe("given pre beta-5 configurations", () => {
+  describe("given data from 5.0.0-beta.3 and version being 5.0.0-beta.10", () => {
     beforeEach(async () => {
       const configurationToBeMigrated = {
         "some-electron-app-path-for-user-data": {
@@ -332,7 +289,7 @@ describe("HotbarStore", () => {
                 items: [
                   {
                     entity: {
-                      uid: "1dfa26e2ebab15780a3547e9c7fa785c",
+                      uid: "some-aws-id",
                     },
                   },
                   {
@@ -381,13 +338,15 @@ describe("HotbarStore", () => {
 
       mockFs(configurationToBeMigrated);
 
+      di.override(appVersionInjectable, () => "5.0.0-beta.10");
+
       await di.runSetups();
 
       hotbarStore = di.inject(hotbarStoreInjectable);
     });
 
     it("allows to retrieve a hotbar", () => {
-      const hotbar = hotbarStore.getById("3caac17f-aec2-4723-9694-ad204465d935");
+      const hotbar = hotbarStore.findById("3caac17f-aec2-4723-9694-ad204465d935");
 
       expect(hotbar?.id).toBe("3caac17f-aec2-4723-9694-ad204465d935");
     });
@@ -403,17 +362,9 @@ describe("HotbarStore", () => {
 
       expect(items[0]).toEqual({
         entity: {
-          name: "mycluster",
+          name: "my-aws-cluster",
           source: "local",
-          uid: "1dfa26e2ebab15780a3547e9c7fa785c",
-        },
-      });
-
-      expect(items[1]).toEqual({
-        entity: {
-          name: "my_shiny_cluster",
-          source: "remote",
-          uid: "55b42c3c7ba3b04193416cda405269a5",
+          uid: "some-aws-id",
         },
       });
     });

@@ -6,19 +6,15 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import { ConfirmDialog } from "../confirm-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import type { Hotbar } from "../../../common/hotbar-types";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  hotbarStore: {
-    hotbars: Hotbar[];
-    remove: (hotbar: Hotbar) => void;
-    getDisplayLabel: (hotbar: Hotbar) => string;
-  };
+  hotbarStore: HotbarStore;
 }
 
 const NonInjectedHotbarRemoveCommand = observer(({

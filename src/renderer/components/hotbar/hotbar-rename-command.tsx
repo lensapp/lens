@@ -6,22 +6,18 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { InputValidator } from "../input";
 import { Input } from "../input";
-import type { Hotbar } from "../../../common/hotbar-types";
+import type { Hotbar } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  hotbarStore: {
-    hotbars: Hotbar[];
-    getById: (id: string) => Hotbar | undefined;
-    setHotbarName: (id: string, name: string) => void;
-    getDisplayLabel: (hotbar: Hotbar) => string;
-  };
+  hotbarStore: HotbarStore;
   uniqueHotbarName: InputValidator<false>;
 }
 

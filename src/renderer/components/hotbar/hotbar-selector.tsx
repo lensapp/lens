@@ -7,22 +7,18 @@ import styles from "./hotbar-selector.module.scss";
 import React, { useRef, useState } from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import { observer } from "mobx-react";
-import type { Hotbar } from "../../../common/hotbar-types";
+import type { Hotbar } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { cssNames } from "../../utils";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 interface Dependencies {
-  hotbarStore: {
-    switchToPrevious: () => void;
-    switchToNext: () => void;
-    getActive: () => Hotbar;
-    getDisplayIndex: (hotbar: Hotbar) => string;
-  };
+  hotbarStore: HotbarStore;
   openCommandOverlay: (component: React.ReactElement) => void;
 }
 

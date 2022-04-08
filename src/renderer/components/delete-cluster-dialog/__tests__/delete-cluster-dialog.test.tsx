@@ -16,7 +16,7 @@ import { createClusterInjectionToken } from "../../../../common/cluster/create-c
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import type { OpenDeleteClusterDialog } from "../open.injectable";
 import openDeleteClusterDialogInjectable from "../open.injectable";
 

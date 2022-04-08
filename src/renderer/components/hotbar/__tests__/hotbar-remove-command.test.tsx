@@ -11,7 +11,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { ThemeStore } from "../../../theme.store";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { UserStore } from "../../../../common/user-store";
@@ -19,7 +19,7 @@ import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
-import type { HotbarStore } from "../../../../common/hotbar-store";
+import type { HotbarStore } from "../../../../common/hotbars/store";
 
 const mockHotbars: Partial<Record<string, any>> = {
   "1": {

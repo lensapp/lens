@@ -6,15 +6,15 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
 import { HotbarRemoveCommand } from "./hotbar-remove-command";
 import { HotbarRenameCommand } from "./hotbar-rename-command";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import type { HotbarStore } from "../../../common/hotbar-store";
-import type { Hotbar } from "../../../common/hotbar-types";
+import type { HotbarStore } from "../../../common/hotbars/store";
+import type { Hotbar } from "../../../common/hotbars/types";
 
 const hotbarAddAction = Symbol("hotbar-add");
 const hotbarRemoveAction = Symbol("hotbar-remove");

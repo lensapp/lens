@@ -16,8 +16,8 @@ import { Menu, MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tooltip } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
+import type { HotbarStore } from "../../../common/hotbars/store";
 import { observer } from "mobx-react";
 
 const contextMenu: CatalogEntityContextMenuContext = observable({

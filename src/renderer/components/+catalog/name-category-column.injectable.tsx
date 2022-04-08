@@ -10,8 +10,8 @@ import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 import React from "react";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 const renderEntityName = (hotbarStore: HotbarStore) => (entity: CatalogEntity) => {
   const isItemInHotbar = hotbarStore.isAddedToActive(entity);

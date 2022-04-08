@@ -195,8 +195,6 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
       expect(queryByTitle("Application")).toHaveAttribute("aria-expanded");
       expect(queryByTitle("Kubernetes")).toHaveAttribute("aria-expanded");
     });
-
-    // console.log(prettyDOM());
   });
 
   it("skips sections without headings", async () => {

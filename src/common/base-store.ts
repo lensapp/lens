@@ -10,7 +10,7 @@ import { ipcMain, ipcRenderer } from "electron";
 import type { IEqualsComparer } from "mobx";
 import { makeObservable, reaction, runInAction } from "mobx";
 import type { Disposer } from "./utils";
-import { getAppVersion, Singleton, toJS } from "./utils";
+import { Singleton, toJS } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
@@ -59,8 +59,6 @@ export abstract class BaseStore<T> extends Singleton {
 
     this.storeConfig = getConfigurationFileModel({
       ...this.params,
-      projectName: "lens",
-      projectVersion: getAppVersion(),
       cwd: this.cwd(),
     });
 

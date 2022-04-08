@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { isEqual, isPlainObject, memoize, noop } from "lodash/fp";
+import { isEqual, isPlainObject, memoize } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
@@ -32,7 +32,7 @@ import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectab
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
 import createStorageInjectable from "./utils/create-storage/create-storage.injectable";
@@ -130,10 +130,11 @@ export const getDiForUnitTesting = (
     di.override(focusWindowInjectable, () => () => {});
 
     di.override(loggerInjectable, () => ({
-      warn: noop,
-      debug: noop,
-      error: (message: string, ...args: any) => console.error(message, ...args),
-      info: noop,
+      warn: jest.fn(),
+      debug: jest.fn(),
+      error: jest.fn(),
+      info: jest.fn(),
+      silly: jest.fn(),
     }));
   }
 

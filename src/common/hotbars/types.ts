@@ -4,8 +4,8 @@
  */
 
 import * as uuid from "uuid";
-import type { Tuple } from "./utils";
-import { tuple } from "./utils";
+import type { Tuple } from "../utils";
+import { tuple } from "../utils";
 
 export interface HotbarItem {
   entity: {

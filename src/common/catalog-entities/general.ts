@@ -6,7 +6,6 @@
 import { navigate } from "../../renderer/navigation";
 import type { CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog";
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
@@ -54,5 +53,3 @@ export class GeneralCategory extends CatalogCategory {
     },
   };
 }
-
-catalogCategoryRegistry.add(new GeneralCategory());

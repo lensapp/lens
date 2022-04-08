@@ -4,17 +4,21 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { inputValidator } from "../input_validators";
 
 const uniqueHotbarNameInjectable = getInjectable({
   id: "unique-hotbar-name",
 
-  instantiate: di => inputValidator({
-    condition: ({ required }) => required,
-    message: () => "Hotbar with this name already exists",
-    validate: value => !di.inject(hotbarStoreInjectable).getByName(value),
-  }),
+  instantiate: di => {
+    const store = di.inject(hotbarStoreInjectable);
+
+    return inputValidator({
+      condition: ({ required }) => required,
+      message: () => "Hotbar with this name already exists",
+      validate: value => !store.findByName(value),
+    });
+  },
 });
 
 export default uniqueHotbarNameInjectable;

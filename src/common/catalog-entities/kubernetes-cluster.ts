@@ -158,5 +158,3 @@ class KubernetesClusterCategory extends CatalogCategory {
 }
 
 export const kubernetesClusterCategory = new KubernetesClusterCategory();
-
-catalogCategoryRegistry.add(kubernetesClusterCategory);

@@ -41,8 +41,8 @@ import catalogRouteParametersInjectable from "./catalog-route-parameters.injecta
 import { browseCatalogTab } from "./catalog-browse-tab";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void; get: () => string };

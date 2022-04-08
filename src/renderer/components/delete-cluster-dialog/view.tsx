@@ -17,9 +17,9 @@ import { Icon } from "../icon";
 import { Select } from "../select";
 import { Checkbox } from "../checkbox";
 import { requestClearClusterAsDeleting, requestDeleteCluster, requestSetClusterAsDeleting } from "../../ipc";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import type { HotbarStore } from "../../../common/hotbars/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { DeleteClusterDialogState } from "./state.injectable";
 import deleteClusterDialogStateInjectable from "./state.injectable";
 

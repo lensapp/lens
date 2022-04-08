@@ -16,12 +16,12 @@ import { DragDropContext, Draggable, Droppable, type DropResult } from "react-be
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
-import type { HotbarItem } from "../../../common/hotbar-types";
-import { defaultHotbarCells } from "../../../common/hotbar-types";
+import type { HotbarItem } from "../../../common/hotbars/types";
+import { defaultHotbarCells } from "../../../common/hotbars/types";
 import { action, makeObservable, observable } from "mobx";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 export interface HotbarMenuProps {
   className?: IClassName;
@@ -118,7 +118,7 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
                 <Draggable
                   draggableId={item.entity.uid}
                   key={item.entity.uid}
-                  index={0} 
+                  index={0}
                 >
                   {(provided, snapshot) => {
                     const style = {

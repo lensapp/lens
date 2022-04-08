@@ -13,7 +13,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { AdditionalCategoryColumnRegistration, CategoryColumnRegistration } from "../custom-category-columns";
 import type { CategoryColumns, GetCategoryColumnsParams } from "../get-category-columns.injectable";
 import getCategoryColumnsInjectable from "../get-category-columns.injectable";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 
 class TestCategory extends CatalogCategory {
   apiVersion = "catalog.k8slens.dev/v1alpha1";

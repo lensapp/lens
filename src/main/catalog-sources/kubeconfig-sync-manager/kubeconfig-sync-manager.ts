@@ -227,7 +227,6 @@ export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Dependen
         }
       }
     } catch (error) {
-      console.log(error);
       logger.warn(`${logPrefix} Failed to compute diff: ${error}`, { filePath });
       source.clear(); // clear source if we have failed so as to not show outdated information
     }
