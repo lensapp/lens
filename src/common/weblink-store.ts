@@ -54,12 +54,11 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
       name,
       url,
     } = data;
+    const weblink: WeblinkData = { id, name, url };
 
-    const weblink = { id, name, url };
+    this.weblinks.push(weblink);
 
-    this.weblinks.push(weblink as WeblinkData);
-
-    return weblink as WeblinkData;
+    return weblink;
   }
 
   @action

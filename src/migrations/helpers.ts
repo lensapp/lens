@@ -20,7 +20,7 @@ export interface MigrationDeclaration {
 }
 
 export function joinMigrations(...declarations: MigrationDeclaration[]): Migrations<any> {
-  const migrations = new Map<string, ((store: Conf<any>) => void)[]>();
+  const migrations = new Map<string, MigrationDeclaration["run"][]>();
 
   for (const decl of declarations) {
     getOrInsert(migrations, decl.version, []).push(decl.run);
