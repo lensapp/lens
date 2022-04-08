@@ -13,9 +13,11 @@ import logger from "../logger";
 import { LensProxy } from "../lens-proxy";
 import { isErrnoException } from "../../common/utils";
 import type { PartialDeep } from "type-fest";
+import type { Logger } from "../../common/logger";
 
-interface Dependencies {
-  directoryForTemp: string;
+export interface KubeconfigManagerDependencies {
+  readonly directoryForTemp: string;
+  readonly logger: Logger;
 }
 
 export class KubeconfigManager {
@@ -30,7 +32,7 @@ export class KubeconfigManager {
 
   protected readonly contextHandler: ClusterContextHandler;
 
-  constructor(private dependencies: Dependencies, protected cluster: Cluster) {
+  constructor(private readonly dependencies: KubeconfigManagerDependencies, protected cluster: Cluster) {
     this.contextHandler = cluster.contextHandler;
   }
 

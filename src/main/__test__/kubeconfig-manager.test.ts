@@ -2,33 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    padLevels: jest.fn(),
-    ms: jest.fn(),
-    printf: jest.fn(),
-    splat: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
 
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
@@ -44,6 +17,8 @@ import directoryForTempInjectable from "../../common/app-paths/directory-for-tem
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { parse } from "url";
+import loggerInjectable from "../../common/logger.injectable";
+import type { Logger } from "../../common/logger";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -51,11 +26,13 @@ describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
   let di: DiContainer;
+  let logger: jest.Mocked<Logger>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    logger = di.inject(loggerInjectable) as jest.Mocked<Logger>;
 
     mockFs({
       "minikube-config.yml": JSON.stringify({
