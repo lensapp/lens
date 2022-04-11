@@ -13,10 +13,4 @@
   --workload-status-failed: #{$pod-status-failed-color};
   --workload-status-terminated: #{$pod-status-terminated-color};
   --workload-status-unknown: #{$pod-status-unknown-color};
-
-  .PieChart {
-    .chart-container {
-      width: 110px
-    }
-  }
 }

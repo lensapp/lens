@@ -12,7 +12,7 @@ import { MetricNodeRole } from "./cluster-overview-store/cluster-overview-store"
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { nodesStore } from "../+nodes/nodes.store";
-import type { ChartData } from "../chart";
+import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits, cssNames } from "../../utils";
@@ -49,7 +49,7 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
     const defaultColor = ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor;
 
     if (!memoryCapacity || !cpuCapacity || !podCapacity || !memoryAllocatableCapacity || !cpuAllocatableCapacity || !podAllocatableCapacity) return null;
-    const cpuData: ChartData = {
+    const cpuData: PieChartData = {
       datasets: [
         {
           data: [
@@ -96,7 +96,7 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
         ["Capacity", cpuCapacity],
       ]),
     };
-    const memoryData: ChartData = {
+    const memoryData: PieChartData = {
       datasets: [
         {
           data: [
@@ -143,7 +143,7 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
         `Capacity: ${bytesToUnits(memoryCapacity)}`,
       ],
     };
-    const podsData: ChartData = {
+    const podsData: PieChartData = {
       datasets: [
         {
           data: [
@@ -156,6 +156,10 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
           ],
           id: "podUsage",
           label: "Usage",
+          tooltipLabels: [
+            (percent) => `Usage: ${percent}`,
+            (percent) => `Available: ${percent}`,
+          ],
         },
       ],
       labels: [

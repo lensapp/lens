@@ -16,6 +16,17 @@ import { ThemeStore } from "../../theme.store";
 export interface PieChartProps extends ChartProps {
 }
 
+export interface PieChartData extends ChartJS.ChartData {
+  datasets?: PieChartDataSets[];
+}
+
+export type DatasetTooltipLabel = (percent: string) => string | string;
+
+interface PieChartDataSets extends ChartJS.ChartDataSets {
+  id?: string;
+  tooltipLabels?: DatasetTooltipLabel[];
+}
+
 @observer
 export class PieChart extends React.Component<PieChartProps> {
   render() {
@@ -28,15 +39,24 @@ export class PieChart extends React.Component<PieChartProps> {
         mode: "index",
         callbacks: {
           title: () => "",
-          label: (tooltipItem, data) => {
-            const dataset: any = data["datasets"][tooltipItem.datasetIndex];
-            const metaData = Object.values<{ total: number }>(dataset["_meta"])[0];
-            const percent = Math.round((dataset["data"][tooltipItem["index"]] / metaData.total) * 100);
-            const label = dataset["label"];
+          label: (tooltipItem, data: PieChartData) => {
+            const dataset = data.datasets[tooltipItem.datasetIndex];
+            const datasetData = dataset.data as number[];
+            const total = datasetData.reduce((acc, cur) => acc + cur, 0);
+            const percent = Math.round((datasetData[tooltipItem.index] as number / total) * 100);
+            const percentLabel = isNaN(percent) ? "N/A" : `${percent}%`;
+            const tooltipLabel = dataset.tooltipLabels?.[tooltipItem.index];
+            let tooltip = `${dataset.label}: ${percentLabel}`;
 
-            if (isNaN(percent)) return `${label}: N/A`;
+            if (tooltipLabel) {
+              if (typeof tooltipLabel === "function") {
+                tooltip = tooltipLabel(percentLabel);
+              } else {
+                tooltip = tooltipLabel;
+              }
+            }
 
-            return `${label}: ${percent}%`;
+            return tooltip;
           },
         },
         filter: ({ datasetIndex, index }, { datasets }) => {

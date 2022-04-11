@@ -8,9 +8,9 @@ import "./overview-workload-status.scss";
 import React from "react";
 import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
+import type { DatasetTooltipLabel, PieChartData } from "../chart";
 import { PieChart } from "../chart";
 import { cssVar } from "../../utils";
-import type { ChartData } from "chart.js";
 import { ThemeStore } from "../../theme.store";
 
 export interface OverviewWorkloadStatusProps {
@@ -27,7 +27,7 @@ export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStat
     }
 
     const cssVars = cssVar(this.elem);
-    const chartData: Required<ChartData> = {
+    const chartData: Required<PieChartData> = {
       labels: [],
       datasets: [],
     };
@@ -43,10 +43,12 @@ export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStat
     } else {
       const data: number[] = [];
       const backgroundColor: string[] = [];
+      const tooltipLabels: DatasetTooltipLabel[] = [];
 
       for (const [status, value] of statuses) {
         data.push(value);
         backgroundColor.push(cssVars.get(`--workload-status-${status.toLowerCase()}`).toString());
+        tooltipLabels.push(percent => `${capitalize(status)}: ${percent}`);
         chartData.labels.push(`${capitalize(status)}: ${value}`);
       }
 
@@ -54,6 +56,7 @@ export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStat
         data,
         backgroundColor,
         label: "Status",
+        tooltipLabels,
       });
     }
 
