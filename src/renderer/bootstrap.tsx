@@ -6,6 +6,7 @@
 import "./components/app.scss";
 
 import React from "react";
+import ReactDOM from "react-dom";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
@@ -187,6 +188,7 @@ const LensExtensions = {
 
 export {
   React,
+  ReactDOM,
   ReactRouter,
   ReactRouterDom,
   Mobx,
