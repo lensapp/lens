@@ -3,52 +3,45 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./replicaset-scale-dialog.scss";
+import "./dialog.scss";
 
 import React, { Component } from "react";
+import type { IObservableValue } from "mobx";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import type { DialogProps } from "../dialog";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Icon } from "../icon";
-import { Slider } from "../slider";
-import { Notifications } from "../notifications";
-import { cssNames } from "../../utils";
-import type { ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
-import { replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
+import { Wizard, WizardStep } from "../../wizard";
+import { Icon } from "../../icon";
+import { Slider } from "../../slider";
+import { Notifications } from "../../notifications";
+import { cssNames } from "../../../utils";
+import type { ReplicaSet, ReplicaSetApi } from "../../../../common/k8s-api/endpoints";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
+import replicaSetScaleDialogStateInjectable from "./state.injectable";
 
 export interface ReplicaSetScaleDialogProps extends Partial<DialogProps> {
-  replicaSetApi: ReplicaSetApi;
 }
 
-const dialogState = observable.box<ReplicaSet | undefined>();
+interface Dependencies {
+  replicaSetApi: ReplicaSetApi;
+  state: IObservableValue<ReplicaSet | undefined>;
+}
 
 @observer
-export class ReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogProps> {
-  static defaultProps = {
-    replicaSetApi,
-  };
-
+class NonInjectedReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogProps & Dependencies> {
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  constructor(props: ReplicaSetScaleDialogProps) {
+  constructor(props: ReplicaSetScaleDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(replicaSet: ReplicaSet) {
-    dialogState.set(replicaSet);
-  }
-
-  static close() {
-    dialogState.set(undefined);
-  }
-
   close = () => {
-    ReplicaSetScaleDialog.close();
+    this.props.state.set(undefined);
   };
 
   onOpen = async (replicaSet: ReplicaSet) => {
@@ -162,8 +155,8 @@ export class ReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogProps>
   }
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const replicaSet = dialogState.get();
+    const { className, state, ...dialogProps } = this.props;
+    const replicaSet = state.get();
 
     return (
       <Dialog
@@ -179,3 +172,11 @@ export class ReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogProps>
     );
   }
 }
+
+export const ReplicaSetScaleDialog = withInjectables<Dependencies, ReplicaSetScaleDialogProps>(NonInjectedReplicaSetScaleDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    replicaSetApi: di.inject(replicaSetApiInjectable),
+    state: di.inject(replicaSetScaleDialogStateInjectable),
+  }),
+});

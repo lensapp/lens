@@ -7,19 +7,23 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import type { OpenStatefulSetDialog } from "./dialog/open.injectable";
+import type { OpenStatefulSetScaleDialog } from "./dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import openStatefulSetDialogInjectable from "./dialog/open.injectable";
+import openStatefulSetScaleDialogInjectable from "./dialog/open.injectable";
 
 export interface StatefulSetMenuProps extends KubeObjectMenuProps<StatefulSet> {}
 
 interface Dependencies {
-  openStatefulSetDialog: OpenStatefulSetDialog;
+  openStatefulSetScaleDialog: OpenStatefulSetScaleDialog;
 }
 
-const NonInjectedStatefulSetMenu = ({ object, toolbar, openStatefulSetDialog }: Dependencies & StatefulSetMenuProps) => (
+const NonInjectedStatefulSetMenu = ({
+  object,
+  toolbar,
+  openStatefulSetScaleDialog,
+}: Dependencies & StatefulSetMenuProps) => (
   <>
-    <MenuItem onClick={() => openStatefulSetDialog(object)}>
+    <MenuItem onClick={() => openStatefulSetScaleDialog(object)}>
       <Icon
         material="open_with"
         tooltip="Scale"
@@ -33,6 +37,6 @@ const NonInjectedStatefulSetMenu = ({ object, toolbar, openStatefulSetDialog }: 
 export const StatefulSetMenu = withInjectables<Dependencies, StatefulSetMenuProps>(NonInjectedStatefulSetMenu, {
   getProps: (di, props) => ({
     ...props,
-    openStatefulSetDialog: di.inject(openStatefulSetDialogInjectable),
+    openStatefulSetScaleDialog: di.inject(openStatefulSetScaleDialogInjectable),
   }),
 });

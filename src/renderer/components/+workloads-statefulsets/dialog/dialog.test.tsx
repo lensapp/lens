@@ -10,11 +10,11 @@ import { StatefulSet } from "../../../../common/k8s-api/endpoints";
 import { StatefulSetScaleDialog } from "./dialog";
 import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
-import type { OpenStatefulSetDialog } from "./open.injectable";
+import type { OpenStatefulSetScaleDialog } from "./open.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
 import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
-import openStatefulSetDialogInjectable from "./open.injectable";
+import openStatefulSetScaleDialogInjectable from "./open.injectable";
 import { type DiRender, renderFor } from "../../test-utils/renderFor";
 
 const dummyStatefulSet = new StatefulSet({
@@ -88,7 +88,7 @@ const dummyStatefulSet = new StatefulSet({
 
 describe("<StatefulSetScaleDialog />", () => {
   let statefulSetApi: StatefulSetApi;
-  let openStatefulSetDialog: OpenStatefulSetDialog;
+  let openStatefulSetDialog: OpenStatefulSetScaleDialog;
   let render: DiRender;
 
   beforeEach(() => {
@@ -98,7 +98,7 @@ describe("<StatefulSetScaleDialog />", () => {
 
     render = renderFor(di);
     statefulSetApi = di.inject(statefulSetApiInjectable);
-    openStatefulSetDialog = di.inject(openStatefulSetDialogInjectable);
+    openStatefulSetDialog = di.inject(openStatefulSetScaleDialogInjectable);
   });
 
   it("renders w/o errors", () => {

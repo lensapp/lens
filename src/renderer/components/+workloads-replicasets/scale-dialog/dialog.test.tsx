@@ -5,10 +5,17 @@
 
 import "@testing-library/jest-dom/extend-expect";
 
-import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
-import { render, waitFor, fireEvent } from "@testing-library/react";
+import { ReplicaSetScaleDialog } from "./dialog";
+import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
-import { ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
+import type { ReplicaSetApi } from "../../../../common/k8s-api/endpoints/replica-set.api";
+import { ReplicaSet } from "../../../../common/k8s-api/endpoints/replica-set.api";
+import type { OpenReplicaSetScaleDialog } from "./open.injectable";
+import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
+import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
+import openReplicaSetScaleDialogInjectable from "./open.injectable";
 
 const dummyReplicaSet = new ReplicaSet({
   apiVersion: "v1",
@@ -70,15 +77,21 @@ const dummyReplicaSet = new ReplicaSet({
 
 describe("<ReplicaSetScaleDialog />", () => {
   let replicaSetApi: ReplicaSetApi;
+  let openReplicaSetScaleDialog: OpenReplicaSetScaleDialog;
+  let render: DiRender;
 
   beforeEach(() => {
-    replicaSetApi = new ReplicaSetApi({
-      objectConstructor: ReplicaSet,
-    });
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    render = renderFor(di);
+    replicaSetApi = di.inject(replicaSetApiInjectable);
+    openReplicaSetScaleDialog = di.inject(openReplicaSetScaleDialogInjectable);
   });
 
   it("renders w/o errors", () => {
-    const { container } = render(<ReplicaSetScaleDialog replicaSetApi={replicaSetApi} />);
+    const { container } = render(<ReplicaSetScaleDialog />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
@@ -89,9 +102,9 @@ describe("<ReplicaSetScaleDialog />", () => {
     const initReplicas = 1;
 
     replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { getByTestId } = render(<ReplicaSetScaleDialog replicaSetApi={replicaSetApi} />);
+    const { getByTestId } = render(<ReplicaSetScaleDialog />);
 
-    ReplicaSetScaleDialog.open(dummyReplicaSet);
+    openReplicaSetScaleDialog(dummyReplicaSet);
     // we need to wait for the replicaSetScaleDialog to show up
     // because there is an <Animate /> in <Dialog /> which renders null at start.
     await waitFor(async () => {
@@ -109,9 +122,9 @@ describe("<ReplicaSetScaleDialog />", () => {
     const initReplicas = 1;
 
     replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const component = render(<ReplicaSetScaleDialog replicaSetApi={replicaSetApi} />);
+    const component = render(<ReplicaSetScaleDialog />);
 
-    ReplicaSetScaleDialog.open(dummyReplicaSet);
+    openReplicaSetScaleDialog(dummyReplicaSet);
     await waitFor(async () => {
       expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
       expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);

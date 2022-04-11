@@ -7,15 +7,15 @@ import type { StatefulSet } from "../../../../common/k8s-api/endpoints";
 import { getInjectable } from "@ogre-tools/injectable";
 import statefulSetDialogStateInjectable from "./state.injectable";
 
-export type OpenStatefulSetDialog = (obj: StatefulSet) => void;
+export type OpenStatefulSetScaleDialog = (obj: StatefulSet) => void;
 
-const openStatefulSetDialogInjectable = getInjectable({
-  id: "open-stateful-set-dialog",
-  instantiate: (di): OpenStatefulSetDialog => {
+const openStatefulSetScaleDialogInjectable = getInjectable({
+  id: "open-stateful-set-scale-dialog",
+  instantiate: (di): OpenStatefulSetScaleDialog => {
     const state = di.inject(statefulSetDialogStateInjectable);
 
     return (obj) => state.set(obj);
   },
 });
 
-export default openStatefulSetDialogInjectable;
+export default openStatefulSetScaleDialogInjectable;
