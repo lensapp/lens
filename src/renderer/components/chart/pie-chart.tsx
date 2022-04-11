@@ -17,13 +17,13 @@ export interface PieChartProps extends ChartProps {
 }
 
 export interface PieChartData extends ChartJS.ChartData {
-  id?: string;
   datasets?: PieChartDataSets[];
 }
 
 export type DatasetTooltipLabel = (percent: string) => string | string;
 
 interface PieChartDataSets extends ChartJS.ChartDataSets {
+  id?: string;
   tooltipLabels?: DatasetTooltipLabel[];
 }
 
