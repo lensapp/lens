@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import { ClusterIdDetector } from "../../../cluster-detectors/cluster-id-detector";
 import { LastSeenDetector } from "../../../cluster-detectors/last-seen-detector";
 import { VersionDetector } from "../../../cluster-detectors/version-detector";
@@ -29,7 +29,7 @@ const setupDetectorRegistryInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupDetectorRegistryInjectable;

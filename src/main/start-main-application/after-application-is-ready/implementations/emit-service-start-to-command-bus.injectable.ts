@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
 
 const emitServiceStartToCommandBusInjectable = getInjectable({
@@ -19,7 +19,7 @@ const emitServiceStartToCommandBusInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default emitServiceStartToCommandBusInjectable;

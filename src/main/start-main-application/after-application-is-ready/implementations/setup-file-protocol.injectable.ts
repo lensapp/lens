@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import { registerFileProtocol } from "../../../../common/register-protocol";
 
 // TODO: Remove side effect on import defining __static
@@ -21,7 +21,7 @@ const setupFileProtocolInjectable = getInjectable({
 
   causesSideEffects: true,
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupFileProtocolInjectable;

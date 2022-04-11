@@ -7,7 +7,7 @@ import { ipcMainOn } from "../../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../../../renderer/navigation/events";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import { onRootFrameRenderInjectionToken } from "../../on-root-frame-render/on-root-frame-render-injection-token";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import { runManyFor } from "../../run-many-for";
 
 const setupListenerForRootFrameRenderingInjectable = getInjectable({
@@ -36,7 +36,7 @@ const setupListenerForRootFrameRenderingInjectable = getInjectable({
   // Direct usage of IPC
   causesSideEffects: true,
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupListenerForRootFrameRenderingInjectable;

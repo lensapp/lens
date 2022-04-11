@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import { productName } from "../../../../common/vars";
 import loggerInjectable from "../../../../common/logger.injectable";
 import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
@@ -47,7 +47,7 @@ const setupProtocolRouterMainInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupProtocolRouterMainInjectable;

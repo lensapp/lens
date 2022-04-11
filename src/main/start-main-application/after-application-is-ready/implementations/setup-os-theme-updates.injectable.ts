@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { broadcastNativeThemeOnUpdate } from "../../../native-theme";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 
 const setupOsThemeUpdatesInjectable = getInjectable({
   id: "setup-os-theme-updates",
@@ -18,7 +18,7 @@ const setupOsThemeUpdatesInjectable = getInjectable({
   // Todo: remove explicit usage of IPC to get rid of this.
   causesSideEffects: true,
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupOsThemeUpdatesInjectable;

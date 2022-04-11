@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import syncGeneralCatalogEntitiesInjectable from "../../../catalog-sources/sync-general-catalog-entities.injectable";
 
 const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
@@ -21,7 +21,7 @@ const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupSyncingOfGeneralCatalogEntitiesInjectable;

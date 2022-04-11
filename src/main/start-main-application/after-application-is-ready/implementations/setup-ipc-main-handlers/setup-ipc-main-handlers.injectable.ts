@@ -9,7 +9,7 @@ import loggerInjectable from "../../../../../common/logger.injectable";
 import clusterManagerInjectable from "../../../../cluster-manager.injectable";
 import applicationMenuItemsInjectable from "../../../../menu/application-menu-items.injectable";
 import getAbsolutePathInjectable from "../../../../../common/path/get-absolute-path.injectable";
-import { onApplicationIsReadyInjectionToken } from "../../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../../after-application-is-ready-injection-token";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -39,7 +39,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupIpcMainHandlersInjectable;

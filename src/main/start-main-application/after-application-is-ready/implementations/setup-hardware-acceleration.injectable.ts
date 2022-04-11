@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
 
 const setupHardwareAccelerationInjectable = getInjectable({
@@ -23,7 +23,7 @@ const setupHardwareAccelerationInjectable = getInjectable({
 
   causesSideEffects: true,
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupHardwareAccelerationInjectable;

@@ -7,7 +7,7 @@ import windowManagerInjectable from "../../../window-manager.injectable";
 import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 
 const startMainWindowInjectable = getInjectable({
   id: "start-main-window",
@@ -35,7 +35,7 @@ const startMainWindowInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default startMainWindowInjectable;

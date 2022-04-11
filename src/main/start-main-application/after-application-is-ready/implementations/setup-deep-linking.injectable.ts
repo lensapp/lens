@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import windowManagerInjectable from "../../../window-manager.injectable";
-import { onApplicationIsReadyInjectionToken } from "../on-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
 
 const setupDeepLinking = getInjectable({
@@ -37,7 +37,7 @@ const setupDeepLinking = getInjectable({
     };
   },
 
-  injectionToken: onApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupDeepLinking;
