@@ -25,14 +25,28 @@ export interface SelectOption<T> {
   label?: React.ReactElement | string;
 }
 
-export interface SelectProps<Option, IsMulti extends boolean, Group extends GroupBase<Option> = GroupBase<Option>> extends ReactSelectProps<Option, IsMulti, Group> {
+export interface SelectProps<
+  /**
+   * This needs to extend `object` because even though `ReactSelectProps` allows for any `T`, the
+   * maintainers of `react-select` says that they don't support it.
+   *
+   * Ref: https://github.com/JedWatson/react-select/issues/5032
+   */
+  Option extends object,
+  IsMulti extends boolean,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+> extends ReactSelectProps<Option, IsMulti, Group> {
   id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
 }
 
 @observer
-export class Select<Option, IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>> extends React.Component<SelectProps<Option, IsMulti, Group>> {
+export class Select<
+  Option extends object,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+> extends React.Component<SelectProps<Option, IsMulti, Group>> {
   static defaultProps = {
     menuPortalTarget: document.body,
     menuPlacement: "auto",

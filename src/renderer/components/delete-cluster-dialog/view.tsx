@@ -5,7 +5,7 @@
 import styles from "./view.module.scss";
 
 import type { IObservableValue } from "mobx";
-import { action, observable } from "mobx";
+import {  action, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -31,7 +31,7 @@ export interface Dependencies {
 @observer
 class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   private readonly showContextSwitch = observable.box(false);
-  private readonly newCurrentContext = observable.box("");
+  private readonly newCurrentContext = observable.box<string | undefined>();
 
   @action
   onOpen(state: DeleteClusterDialogState) {
@@ -99,24 +99,27 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       return null;
     }
 
+    const contextName = this.newCurrentContext.get();
+    const selectOptions = config
+      .contexts
+      .filter(context => context.name !== cluster.contextName);
+    const selectedOption = selectOptions.find(ctx => ctx.name === contextName);
+
     return (
       <div className="mt-4">
         <Select
           id="delete-cluster-input"
-          options={(
-            config
-              .contexts
-              .filter(context => context.name !== cluster.contextName)
-              .map(ctx => ctx.name)
-          )}
-          value={this.newCurrentContext.get()}
-          onChange={contextName => {
-            if (contextName) {
-              this.newCurrentContext.set(contextName);
+          options={selectOptions}
+          getOptionLabel={opt => opt.name}
+          value={selectedOption}
+          onChange={opt => {
+            if (opt) {
+              this.newCurrentContext.set(opt.name);
             }
           }}
           themeName="light"
           className="ml-[1px] mr-[1px]"
+          placeholder="Select new context..."
         />
       </div>
     );

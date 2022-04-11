@@ -4,7 +4,7 @@
  */
 import "@testing-library/jest-dom/extend-expect";
 import { KubeConfig } from "@kubernetes/client-node";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
@@ -16,9 +16,10 @@ import { createClusterInjectionToken } from "../../../../common/cluster/create-c
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import type { OpenDeleteClusterDialog } from "../open.injectable";
 import openDeleteClusterDialogInjectable from "../open.injectable";
+import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import createKubeconfigManagerInjectable from "../../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -98,12 +99,11 @@ describe("<DeleteClusterDialog />", () => {
     const { mainDi, rendererDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
 
     render = renderFor(rendererDi);
-
-    mainDi.override(createContextHandlerInjectable, () => () => undefined as never);
-
+    mainDi.override(createContextHandlerInjectable, () => () => undefined);
+    mainDi.override(createKubeconfigManagerInjectable, () => () => undefined);
     mockFs();
 
-    rendererDi.override(hotbarStoreInjectable, () => ({}));
+    rendererDi.override(createStoresAndApisInjectable, () => true);
 
     await runSetups();
 
@@ -137,7 +137,7 @@ describe("<DeleteClusterDialog />", () => {
       expect(container).toBeInstanceOf(HTMLElement);
     });
 
-    it("shows warning when deleting non-current-context cluster", () => {
+    it("shows warning when deleting non-current-context cluster", async () => {
       const cluster = createCluster({
         id: "test",
         contextName: "test",
@@ -148,14 +148,14 @@ describe("<DeleteClusterDialog />", () => {
       });
 
       openDeleteClusterDialog({ cluster, config });
-      const { getByText } = render(<DeleteClusterDialog />);
 
+      render(<DeleteClusterDialog />);
       const message = "The contents of kubeconfig file will be changed!";
 
-      expect(getByText(message)).toBeInstanceOf(HTMLElement);
+      expect(await screen.findByText(message)).toBeInstanceOf(HTMLElement);
     });
 
-    it("shows warning when deleting current-context cluster", () => {
+    it("shows warning when deleting current-context cluster", async () => {
       const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
@@ -166,10 +166,9 @@ describe("<DeleteClusterDialog />", () => {
       });
 
       openDeleteClusterDialog({ cluster, config });
+      render(<DeleteClusterDialog />);
 
-      const { getByTestId } = render(<DeleteClusterDialog />);
-
-      expect(getByTestId("current-context-warning")).toBeInstanceOf(HTMLElement);
+      expect(await screen.findByTestId("current-context-warning")).toBeInstanceOf(HTMLElement);
     });
 
     it("shows context switcher when deleting current cluster", async () => {
@@ -183,14 +182,15 @@ describe("<DeleteClusterDialog />", () => {
       });
 
       openDeleteClusterDialog({ cluster, config });
+      render(<DeleteClusterDialog />);
 
-      const { getByText } = render(<DeleteClusterDialog />);
+      const menu = await screen.findByText("Select new context...");
 
-      expect(getByText("Select...")).toBeInTheDocument();
-      selectEvent.openMenu(getByText("Select..."));
+      expect(menu).toBeInTheDocument();
+      selectEvent.openMenu(menu);
 
-      expect(getByText("test")).toBeInTheDocument();
-      expect(getByText("test2")).toBeInTheDocument();
+      expect(await screen.findByText("test")).toBeInTheDocument();
+      expect(await screen.findByText("test2")).toBeInTheDocument();
     });
 
     it("shows context switcher after checkbox click", async () => {
@@ -204,21 +204,23 @@ describe("<DeleteClusterDialog />", () => {
       });
 
       openDeleteClusterDialog({ cluster, config });
+      render(<DeleteClusterDialog />);
 
-      const { getByText, getByTestId } = render(<DeleteClusterDialog />);
-      const link = getByTestId("context-switch");
+      const link = await screen.findByTestId("context-switch");
 
       expect(link).toBeInstanceOf(HTMLElement);
       fireEvent.click(link);
 
-      expect(getByText("Select...")).toBeInTheDocument();
-      selectEvent.openMenu(getByText("Select..."));
+      const menu = await screen.findByText("Select new context...");
 
-      expect(getByText("test")).toBeInTheDocument();
-      expect(getByText("test2")).toBeInTheDocument();
+      expect(menu).toBeInTheDocument();
+      selectEvent.openMenu(menu);
+
+      expect(await screen.findByText("test")).toBeInTheDocument();
+      expect(await screen.findByText("test2")).toBeInTheDocument();
     });
 
-    it("shows warning for internal kubeconfig cluster", () => {
+    it("shows warning for internal kubeconfig cluster", async () => {
       const cluster = createCluster({
         id: "some-cluster",
         contextName: "test",
@@ -231,10 +233,9 @@ describe("<DeleteClusterDialog />", () => {
       const spy = jest.spyOn(cluster, "isInLocalKubeconfig").mockImplementation(() => true);
 
       openDeleteClusterDialog({ cluster, config });
+      render(<DeleteClusterDialog />);
 
-      const { getByTestId } = render(<DeleteClusterDialog />);
-
-      expect(getByTestId("internal-kubeconfig-warning")).toBeInstanceOf(HTMLElement);
+      expect(await screen.findByTestId("internal-kubeconfig-warning")).toBeInstanceOf(HTMLElement);
 
       spy.mockRestore();
     });
@@ -256,7 +257,7 @@ describe("<DeleteClusterDialog />", () => {
       mockFs.restore();
     });
 
-    it("shows warning if no other contexts left", () => {
+    it("shows warning if no other contexts left", async () => {
       const cluster = createCluster({
         id: "other-cluster",
         contextName: "other-context",
@@ -267,10 +268,9 @@ describe("<DeleteClusterDialog />", () => {
       });
 
       openDeleteClusterDialog({ cluster, config });
+      render(<DeleteClusterDialog />);
 
-      const { getByTestId } = render(<DeleteClusterDialog />);
-
-      expect(getByTestId("no-more-contexts-warning")).toBeInstanceOf(HTMLElement);
+      expect(await screen.findByTestId("no-more-contexts-warning")).toBeInstanceOf(HTMLElement);
     });
   });
 });

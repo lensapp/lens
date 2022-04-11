@@ -58,14 +58,14 @@ export class Cluster implements ClusterModel, ClusterState {
 
   public get contextHandler() {
     // TODO: remove these once main/renderer are seperate classes
-    assert(this._contextHandler);
+    assert(this._contextHandler, "contextHandler is only defined in the main environment");
 
     return this._contextHandler;
   }
 
   protected get proxyKubeconfigManager() {
     // TODO: remove these once main/renderer are seperate classes
-    assert(this._proxyKubeconfigManager);
+    assert(this._proxyKubeconfigManager, "proxyKubeconfigManager is only defined in the main environment");
 
     return this._proxyKubeconfigManager;
   }

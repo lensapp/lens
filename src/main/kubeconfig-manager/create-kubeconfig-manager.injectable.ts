@@ -13,16 +13,18 @@ export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
 }
 
+export type CreateKubeconfigManager = (cluster: Cluster) => KubeconfigManager | undefined;
+
 const createKubeconfigManagerInjectable = getInjectable({
   id: "create-kubeconfig-manager",
 
-  instantiate: (di) => {
+  instantiate: (di): CreateKubeconfigManager => {
     const dependencies: KubeconfigManagerDependencies = {
       directoryForTemp: di.inject(directoryForTempInjectable),
       logger: di.inject(loggerInjectable),
     };
 
-    return (cluster: Cluster) => new KubeconfigManager(dependencies, cluster);
+    return (cluster) => new KubeconfigManager(dependencies, cluster);
   },
 });
 

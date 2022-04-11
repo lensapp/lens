@@ -17,7 +17,7 @@ const createContextHandlerInjectable = getInjectable({
   instantiate: (di) => {
     const createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
 
-    return (cluster: Cluster): ClusterContextHandler => {
+    return (cluster: Cluster): ClusterContextHandler | undefined => {
       const clusterUrl = new URLParse(cluster.apiUrl);
 
       return new ContextHandler(
