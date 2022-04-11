@@ -10,6 +10,7 @@ import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable"
 import replicaSetApiInjectable from "../../common/k8s-api/endpoints/replica-set.api.injectable";
 import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
 import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
+import statefulSetApiInjectable from "../../common/k8s-api/endpoints/stateful-set.api.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
 /**
@@ -27,6 +28,7 @@ export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
 export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
 export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
 export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);
+export const statefulSetApi = asLegacyGlobalForExtensionApi(statefulSetApiInjectable);
 
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
@@ -37,7 +39,7 @@ export { Pod, PodApi as PodsApi } from "../../common/k8s-api/endpoints/pod.api";
 export { Node, nodeApi as nodesApi, NodeApi as NodesApi } from "../../common/k8s-api/endpoints/nodes.api";
 export { Deployment, deploymentApi, DeploymentApi } from "../../common/k8s-api/endpoints/deployment.api";
 export { DaemonSet } from "../../common/k8s-api/endpoints/daemon-set.api";
-export { StatefulSet, statefulSetApi } from "../../common/k8s-api/endpoints/stateful-set.api";
+export { StatefulSet } from "../../common/k8s-api/endpoints/stateful-set.api";
 export { Job, jobApi } from "../../common/k8s-api/endpoints/job.api";
 export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints/cron-job.api";
 export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/configmap.api";

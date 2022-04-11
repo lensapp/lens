@@ -3,51 +3,45 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./statefulset-scale-dialog.scss";
+import "./dialog.scss";
 
-import type { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
-import { statefulSetApi } from "../../../common/k8s-api/endpoints";
+import type { StatefulSet, StatefulSetApi } from "../../../../common/k8s-api/endpoints";
 import React, { Component } from "react";
+import type { IObservableValue } from "mobx";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import type { DialogProps } from "../dialog";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Icon } from "../icon";
-import { Slider } from "../slider";
-import { Notifications } from "../notifications";
-import { cssNames } from "../../utils";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
+import { Wizard, WizardStep } from "../../wizard";
+import { Icon } from "../../icon";
+import { Slider } from "../../slider";
+import { Notifications } from "../../notifications";
+import { cssNames } from "../../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
+import statefulSetDialogStateInjectable from "./state.injectable";
 
 export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
-  statefulSetApi: StatefulSetApi;
 }
 
-const dialogState = observable.box<StatefulSet | undefined>();
+interface Dependencies {
+  statefulSetApi: StatefulSetApi;
+  state: IObservableValue<StatefulSet | undefined>;
+}
 
 @observer
-export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProps> {
-  static defaultProps = {
-    statefulSetApi,
-  };
+class NonInjectedStatefulSetScaleDialog extends Component<StatefulSetScaleDialogProps & Dependencies> {
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  constructor(props: StatefulSetScaleDialogProps) {
+  constructor(props: StatefulSetScaleDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(statefulSet: StatefulSet) {
-    dialogState.set(statefulSet);
-  }
-
-  static close() {
-    dialogState.set(undefined);
-  }
-
   close = () => {
-    StatefulSetScaleDialog.close();
+    this.props.state.set(undefined);
   };
 
   onOpen = async (statefulSet: StatefulSet) => {
@@ -161,8 +155,8 @@ export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProp
   }
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const statefulSet = dialogState.get();
+    const { className, state, ...dialogProps } = this.props;
+    const statefulSet = state.get();
 
     return (
       <Dialog
@@ -178,3 +172,11 @@ export class StatefulSetScaleDialog extends Component<StatefulSetScaleDialogProp
     );
   }
 }
+
+export const StatefulSetScaleDialog = withInjectables<Dependencies, StatefulSetScaleDialogProps>(NonInjectedStatefulSetScaleDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    statefulSetApi: di.inject(statefulSetApiInjectable),
+    state: di.inject(statefulSetDialogStateInjectable),
+  }),
+});

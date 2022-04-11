@@ -15,6 +15,7 @@ import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectabl
 import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable";
 import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
 import replicaSetApiInjectable from "../../common/k8s-api/endpoints/replica-set.api.injectable";
+import statefulSetApiInjectable from "../../common/k8s-api/endpoints/stateful-set.api.injectable";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const resources = castArray(resource);
@@ -36,6 +37,7 @@ export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
 export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
 export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
 export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);
+export const statefulSetApi = asLegacyGlobalForExtensionApi(statefulSetApiInjectable);
 
 export {
   BaseKubeJsonApiObjectMetadata,
@@ -49,7 +51,7 @@ export { Pod, PodApi as PodsApi } from "../../common/k8s-api/endpoints/pod.api";
 export { Node, nodeApi as nodesApi, NodeApi as NodesApi } from "../../common/k8s-api/endpoints/nodes.api";
 export { Deployment, deploymentApi, DeploymentApi } from "../../common/k8s-api/endpoints/deployment.api";
 export { DaemonSet } from "../../common/k8s-api/endpoints/daemon-set.api";
-export { StatefulSet, statefulSetApi } from "../../common/k8s-api/endpoints/stateful-set.api";
+export { StatefulSet } from "../../common/k8s-api/endpoints/stateful-set.api";
 export { Job, jobApi } from "../../common/k8s-api/endpoints/job.api";
 export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints/cron-job.api";
 export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/configmap.api";

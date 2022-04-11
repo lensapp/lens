@@ -5,10 +5,17 @@
 
 import "@testing-library/jest-dom/extend-expect";
 
-import { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
-import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
-import { render, waitFor, fireEvent } from "@testing-library/react";
+import type { StatefulSetApi } from "../../../../common/k8s-api/endpoints";
+import { StatefulSet } from "../../../../common/k8s-api/endpoints";
+import { StatefulSetScaleDialog } from "./dialog";
+import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
+import type { OpenStatefulSetDialog } from "./open.injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
+import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import openStatefulSetDialogInjectable from "./open.injectable";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
 
 const dummyStatefulSet = new StatefulSet({
   apiVersion: "v1",
@@ -81,15 +88,21 @@ const dummyStatefulSet = new StatefulSet({
 
 describe("<StatefulSetScaleDialog />", () => {
   let statefulSetApi: StatefulSetApi;
+  let openStatefulSetDialog: OpenStatefulSetDialog;
+  let render: DiRender;
 
   beforeEach(() => {
-    statefulSetApi = new StatefulSetApi({
-      objectConstructor: StatefulSet,
-    });
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    render = renderFor(di);
+    statefulSetApi = di.inject(statefulSetApiInjectable);
+    openStatefulSetDialog = di.inject(openStatefulSetDialogInjectable);
   });
 
   it("renders w/o errors", () => {
-    const { container } = render(<StatefulSetScaleDialog statefulSetApi={statefulSetApi} />);
+    const { container } = render(<StatefulSetScaleDialog />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
@@ -100,9 +113,9 @@ describe("<StatefulSetScaleDialog />", () => {
     const initReplicas = 1;
 
     statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { getByTestId } = render(<StatefulSetScaleDialog statefulSetApi={statefulSetApi} />);
+    const { getByTestId } = render(<StatefulSetScaleDialog />);
 
-    StatefulSetScaleDialog.open(dummyStatefulSet);
+    openStatefulSetDialog(dummyStatefulSet);
     // we need to wait for the StatefulSetScaleDialog to show up
     // because there is an <Animate /> in <Dialog /> which renders null at start.
     await waitFor(async () => {
@@ -120,9 +133,9 @@ describe("<StatefulSetScaleDialog />", () => {
     const initReplicas = 1;
 
     statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const component = render(<StatefulSetScaleDialog statefulSetApi={statefulSetApi} />);
+    const component = render(<StatefulSetScaleDialog />);
 
-    StatefulSetScaleDialog.open(dummyStatefulSet);
+    openStatefulSetDialog(dummyStatefulSet);
     await waitFor(async () => {
       expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
       expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);

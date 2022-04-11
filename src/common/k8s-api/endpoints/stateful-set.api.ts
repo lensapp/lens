@@ -7,7 +7,6 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pod.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeObjectScope, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
@@ -121,7 +120,3 @@ export class StatefulSet extends KubeObject<StatefulSetStatus, StatefulSetSpec, 
     return containers.map(container => container.image);
   }
 }
-
-export const statefulSetApi = isClusterPageContext()
-  ? new StatefulSetApi()
-  : undefined as never;

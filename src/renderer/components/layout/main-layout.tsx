@@ -19,6 +19,7 @@ export interface MainLayoutProps {
   sidebar: React.ReactNode;
   className?: string;
   footer?: React.ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 /**

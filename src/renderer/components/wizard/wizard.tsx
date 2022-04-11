@@ -18,7 +18,6 @@ export interface WizardCommonProps<D> {
   reset?: () => void;
   done?: () => void;
   hideSteps?: boolean;
-  children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
 export interface WizardProps<D> extends WizardCommonProps<D> {
@@ -27,6 +26,7 @@ export interface WizardProps<D> extends WizardCommonProps<D> {
   title?: string;
   header?: React.ReactNode;
   onChange?: (step: number) => void;
+  children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
 interface State {
@@ -128,6 +128,7 @@ export interface WizardStepProps<D> extends WizardCommonProps<D> {
   noValidate?: boolean; // no validate form attribute
   skip?: boolean; // don't render the step
   scrollable?: boolean;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 interface WizardStepState {
