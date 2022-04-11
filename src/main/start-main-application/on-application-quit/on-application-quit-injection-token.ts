@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Runnable } from "../../../../run-many-for";
+import type { Runnable } from "../run-many-for";
 import type { Event } from "electron";
 
 export const onApplicationQuitInjectionToken = getInjectionToken<

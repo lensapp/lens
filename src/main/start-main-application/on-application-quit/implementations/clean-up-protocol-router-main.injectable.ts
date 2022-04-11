@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { onApplicationQuitInjectionToken } from "../on-application-quit-injection-token";
-import lensProtocolRouterMainInjectable from "../../../../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
+import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 
 const cleanUpProtocolRouterMainInjectable = getInjectable({
   id: "clean-up-protocol-router-main",

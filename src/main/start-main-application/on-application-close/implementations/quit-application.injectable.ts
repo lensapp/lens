@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationQuitInjectionToken } from "./on-application-quit/on-application-quit-injection-token";
-import { isIntegrationTesting } from "../../../../../common/vars";
-import { runManyFor } from "../../../run-many-for";
-import { onApplicationCloseInjectionToken } from "../../on-application-close-injection-token";
+import { onApplicationQuitInjectionToken } from "../../on-application-quit/on-application-quit-injection-token";
+import { isIntegrationTesting } from "../../../../common/vars";
+import { runManyFor } from "../../run-many-for";
+import { onApplicationCloseInjectionToken } from "../on-application-close-injection-token";
 
 const quitApplicationInjectable = getInjectable({
   id: "prevent-application-from-closing-involuntarily",

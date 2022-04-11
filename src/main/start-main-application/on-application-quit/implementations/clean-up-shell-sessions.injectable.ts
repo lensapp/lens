@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { onApplicationQuitInjectionToken } from "../on-application-quit-injection-token";
-import { ShellSession } from "../../../../../../shell-session/shell-session";
+import { ShellSession } from "../../../shell-session/shell-session";
 
 const cleanUpShellSessionsInjectable = getInjectable({
   id: "clean-up-shell-sessions",
