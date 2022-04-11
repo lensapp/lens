@@ -17,6 +17,7 @@ export interface PieChartProps extends ChartProps {
 }
 
 export interface PieChartData extends ChartJS.ChartData {
+  id?: string;
   datasets?: PieChartDataSets[];
 }
 
