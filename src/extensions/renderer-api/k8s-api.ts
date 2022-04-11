@@ -11,6 +11,7 @@ import clusterRoleBindingApiInjectable from "../../common/k8s-api/endpoints/clus
 import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-role.api.injectable";
 import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const resources = castArray(resource);
@@ -28,6 +29,7 @@ export function isAllowedResource(resource: KubeResource | KubeResource[]) {
 export const serviceAccountsApi = asLegacyGlobalForExtensionApi(serviceAccountApiInjectable);
 export const clusterRoleApi = asLegacyGlobalForExtensionApi(clusterRoleApiInjectable);
 export const clusterRoleBindingApi = asLegacyGlobalForExtensionApi(clusterRoleBindingApiInjectable);
+export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
 
 export {
   BaseKubeJsonApiObjectMetadata,
@@ -58,10 +60,10 @@ export { NetworkPolicy, networkPolicyApi } from "../../common/k8s-api/endpoints"
 export { PersistentVolume, persistentVolumeApi } from "../../common/k8s-api/endpoints";
 export { PersistentVolumeClaim, persistentVolumeClaimApi as pvcApi, PersistentVolumeClaimApi as PersistentVolumeClaimsApi } from "../../common/k8s-api/endpoints";
 export { StorageClass, storageClassApi } from "../../common/k8s-api/endpoints";
-export { Namespace, namespacesApi } from "../../common/k8s-api/endpoints";
+export { Namespace, namespaceApi as namespacesApi } from "../../common/k8s-api/endpoints";
 export { KubeEvent, eventApi } from "../../common/k8s-api/endpoints";
 export { ServiceAccount } from "../../common/k8s-api/endpoints";
-export { Role, roleApi } from "../../common/k8s-api/endpoints";
+export { Role } from "../../common/k8s-api/endpoints";
 export { RoleBinding, roleBindingApi } from "../../common/k8s-api/endpoints";
 export { ClusterRole } from "../../common/k8s-api/endpoints";
 export { ClusterRoleBinding } from "../../common/k8s-api/endpoints";
@@ -102,7 +104,7 @@ export type { PersistentVolumeClaimStore as VolumeClaimStore } from "../../rende
 export type { StorageClassStore } from "../../renderer/components/+storage-classes/storage-class.store";
 export type { NamespaceStore } from "../../renderer/components/+namespaces/namespace-store/namespace.store";
 export type { ServiceAccountStore as ServiceAccountsStore } from "../../renderer/components/+user-management/+service-accounts/store";
-export type { RolesStore } from "../../renderer/components/+user-management/+roles/store";
+export type { RoleStore as RolesStore } from "../../renderer/components/+user-management/+roles/store";
 export type { RoleBindingStore as RoleBindingsStore } from "../../renderer/components/+user-management/+role-bindings/store";
 export type { CRDStore } from "../../renderer/components/+custom-resources/crd.store";
 export type { CRDResourceStore } from "../../renderer/components/+custom-resources/crd-resource.store";

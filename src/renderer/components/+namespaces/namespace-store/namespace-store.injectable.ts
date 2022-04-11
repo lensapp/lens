@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { NamespaceStore } from "./namespace.store";
 import apiManagerInjectable from "../../kube-object-menu/dependencies/api-manager.injectable";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
-import { namespacesApi } from "../../../../common/k8s-api/endpoints";
+import { namespaceApi } from "../../../../common/k8s-api/endpoints";
 
 const namespaceStoreInjectable = getInjectable({
   id: "namespace-store",
@@ -21,7 +21,7 @@ const namespaceStoreInjectable = getInjectable({
 
     const namespaceStore = new NamespaceStore({
       storage,
-    }, namespacesApi);
+    }, namespaceApi);
 
     const apiManager = di.inject(apiManagerInjectable);
 

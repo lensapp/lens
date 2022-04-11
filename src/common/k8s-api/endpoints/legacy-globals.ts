@@ -6,6 +6,7 @@
 import { asLegacyGlobalForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import clusterRoleBindingApiInjectable from "./cluster-role-binding.api.injectable";
 import clusterRoleApiInjectable from "./cluster-role.api.injectable";
+import roleApiInjectable from "./role.api.injectable";
 import serviceAccountApiInjectable from "./service-account.api.injectable";
 
 /**
@@ -22,3 +23,8 @@ export const clusterRoleApi = asLegacyGlobalForExtensionApi(clusterRoleApiInject
  * @deprecated use `di.inject(serviceAccountApiInjectable)` instead
  */
 export const serviceAccountApi = asLegacyGlobalForExtensionApi(serviceAccountApiInjectable);
+
+/**
+ * @deprecated use `di.inject(roleApiInjectable)` instead
+ */
+export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);

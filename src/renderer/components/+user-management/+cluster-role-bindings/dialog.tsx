@@ -21,7 +21,7 @@ import { Notifications } from "../../notifications";
 import { Select } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
 import { clusterRoleBindingStore } from "./legacy-store";
-import { clusterRolesStore } from "../+cluster-roles/legacy-store";
+import { clusterRoleStore } from "../+cluster-roles/legacy-store";
 import { ObservableHashSet, nFircate } from "../../../utils";
 import { Input } from "../../input";
 import { TooltipPosition } from "../../tooltip";
@@ -106,7 +106,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
       return this.reset();
     }
 
-    this.selectedRoleRef = clusterRolesStore
+    this.selectedRoleRef = clusterRoleStore
       .items
       .find(item => item.getName() === binding.roleRef.name);
     this.bindingName = binding.getName();
@@ -164,7 +164,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
           themeName="light"
           placeholder="Select cluster role ..."
           isDisabled={this.isEditing}
-          options={clusterRolesStore.items.slice()}
+          options={clusterRoleStore.items.slice()}
           value={this.selectedRoleRef}
           autoFocus={!this.isEditing}
           formatOptionLabel={value => (

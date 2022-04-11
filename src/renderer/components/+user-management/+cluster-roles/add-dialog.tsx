@@ -15,7 +15,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { clusterRolesStore } from "./legacy-store";
+import { clusterRoleStore } from "./legacy-store";
 
 export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
@@ -45,7 +45,7 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
 
   createRole = async () => {
     try {
-      const role = await clusterRolesStore.create({ name: this.clusterRoleName });
+      const role = await clusterRoleStore.create({ name: this.clusterRoleName });
 
       showDetails(role.selfLink);
       this.reset();

@@ -4,9 +4,9 @@
  */
 
 import { asLegacyGlobalForExtensionApi } from "../../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import clusterRoleStoreInjectable from "./store.injectable";
+import roleStoreInjectable from "./store.injectable";
 
 /**
- * @deprecated use `di.inject(clusterRoleStoreInjectable)` instead
+ * @deprecated use `di.inject(roleStoreInjectable)` instead
  */
-export const clusterRoleStore = asLegacyGlobalForExtensionApi(clusterRoleStoreInjectable);
+export const roleStore = asLegacyGlobalForExtensionApi(roleStoreInjectable);

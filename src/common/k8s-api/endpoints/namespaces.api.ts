@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeObjectScope, KubeObjectStatus } from "../kube-object";
 import { KubeObject } from "../kube-object";
@@ -34,6 +35,12 @@ export class Namespace extends KubeObject<NamespaceStatus, NamespaceSpec, KubeOb
 }
 
 export class NamespaceApi extends KubeApi<Namespace> {
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: Namespace,
+    });
+  }
 }
 
 export function getMetricsForNamespace(namespace: string, selector = ""): Promise<PodMetricData> {
@@ -52,14 +59,6 @@ export function getMetricsForNamespace(namespace: string, selector = ""): Promis
   });
 }
 
-let namespacesApi: NamespaceApi;
-
-if (isClusterPageContext()) {
-  namespacesApi = new NamespaceApi({
-    objectConstructor: Namespace,
-  });
-}
-
-export {
-  namespacesApi,
-};
+export const namespaceApi = isClusterPageContext()
+  ? new NamespaceApi()
+  : undefined as never;

@@ -9,8 +9,8 @@ import { computed, observable, makeObservable, action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
-import { rolesStore } from "../+roles/store";
-import { serviceAccountsStore } from "../+service-accounts/store";
+import { roleStore } from "../+roles/legacy-store";
+import { serviceAccountStore } from "../+service-accounts/legacy-store";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import type { ClusterRole, Role, RoleBinding, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { roleApi } from "../../../../common/k8s-api/endpoints";
@@ -24,7 +24,7 @@ import { Notifications } from "../../notifications";
 import { Select } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
 import { roleBindingStore } from "./store";
-import { clusterRolesStore } from "../+cluster-roles/store";
+import { clusterRoleStore } from "../+cluster-roles/legacy-store";
 import { Input } from "../../input";
 import { ObservableHashSet, nFircate } from "../../../utils";
 import type { Subject } from "../../../../common/k8s-api/endpoints/types/subject";
@@ -96,9 +96,9 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   }
 
   @computed get roleRefOptions(): (Role | ClusterRole)[] {
-    const roles = rolesStore.items
+    const roles = roleStore.items
       .filter(role => role.getNs() === this.bindingNamespace);
-    const clusterRoles = clusterRolesStore.items;
+    const clusterRoles = clusterRoleStore.items;
 
     return [
       ...roles,
@@ -117,8 +117,8 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
 
     this.selectedRoleRef = (
       binding.roleRef.kind === roleApi.kind
-        ? rolesStore.items.find(findByRoleRefName)
-        : clusterRolesStore.items.find(findByRoleRefName)
+        ? roleStore.items.find(findByRoleRefName)
+        : clusterRoleStore.items.find(findByRoleRefName)
     );
 
     this.bindingName = binding.getName();
@@ -128,7 +128,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
     const accountNames = new Set(saSubjects.map(acc => acc.name));
 
     this.selectedAccounts.replace(
-      serviceAccountsStore.items
+      serviceAccountStore.items
         .filter(sa => accountNames.has(sa.getName())),
     );
     this.selectedUsers.replace(uSubjects.map(user => user.name));
@@ -234,7 +234,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
           isMulti
           themeName="light"
           placeholder="Select service accounts ..."
-          options={serviceAccountsStore.items}
+          options={serviceAccountStore.items}
           isOptionSelected={account => this.selectedAccounts.has(account)}
           formatOptionLabel={account => (
             <>
