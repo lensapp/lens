@@ -23,7 +23,6 @@ export interface PieChartData extends ChartJS.ChartData {
 export type DatasetTooltipLabel = (percent: string) => string | string;
 
 interface PieChartDataSets extends ChartJS.ChartDataSets {
-  id?: string;
   tooltipLabels?: DatasetTooltipLabel[];
 }
 
@@ -43,10 +42,10 @@ export class PieChart extends React.Component<PieChartProps> {
             const dataset = data.datasets[tooltipItem.datasetIndex];
             const datasetData = dataset.data as number[];
             const total = datasetData.reduce((acc, cur) => acc + cur, 0);
-            const percent = Math.round((dataset.data[tooltipItem["index"]] as number / total) * 100);
+            const percent = Math.round((dataset.data[tooltipItem.index] as number / total) * 100);
             const percentLabel = isNaN(percent) ? "N/A" : `${percent}%`;
-            const tooltipLabel = dataset.tooltipLabels?.[tooltipItem["index"]];
-            let tooltip = `${dataset["label"]}: ${percentLabel}`;
+            const tooltipLabel = dataset.tooltipLabels?.[tooltipItem.index];
+            let tooltip = `${dataset.label}: ${percentLabel}`;
 
             if (tooltipLabel) {
               if (typeof tooltipLabel === "function") {
