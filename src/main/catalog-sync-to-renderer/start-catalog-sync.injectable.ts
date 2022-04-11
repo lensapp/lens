@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { onRootFrameRenderInjectionToken } from "../start-main-application/on-root-frame-render/on-root-frame-render-injection-token";
 import catalogSyncToRendererInjectable from "./catalog-sync-to-renderer.injectable";
 
-const startCatalogSyncWhenRootFrameIsRenderedInjectable = getInjectable({
-  id: "start-catalog-sync-when-root-frame-is-rendered",
+const startCatalogSyncInjectable = getInjectable({
+  id: "start-catalog-sync",
 
   instantiate: (di) => {
     const catalogSyncToRenderer = di.inject(catalogSyncToRendererInjectable);
@@ -22,4 +22,4 @@ const startCatalogSyncWhenRootFrameIsRenderedInjectable = getInjectable({
   injectionToken: onRootFrameRenderInjectionToken,
 });
 
-export default startCatalogSyncWhenRootFrameIsRenderedInjectable;
+export default startCatalogSyncInjectable;

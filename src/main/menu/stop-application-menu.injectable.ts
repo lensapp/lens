@@ -3,20 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationMenuInitializerInjectable from "./application-menu-initializer.injectable";
+import applicationMenuInjectable from "./application-menu.injectable";
 import { onApplicationHardQuitInjectionToken } from "../start-main-application/on-application-hard-quit/on-application-hard-quit-injection-token";
 
-const cleanupApplicationMenuWhenApplicationIsQuitInjectable = getInjectable({
-  id: "cleanup-application-menu-when-application-is-quit",
+const stopApplicationMenuInjectable = getInjectable({
+  id: "stop-application-menu",
 
   instantiate: (di) => {
-    const initializeApplicationMenu = di.inject(
-      applicationMenuInitializerInjectable,
+    const applicationMenu = di.inject(
+      applicationMenuInjectable,
     );
 
     return {
       run: () => {
-        initializeApplicationMenu.stop();
+        applicationMenu.stop();
       },
     };
   },
@@ -24,4 +24,4 @@ const cleanupApplicationMenuWhenApplicationIsQuitInjectable = getInjectable({
   injectionToken: onApplicationHardQuitInjectionToken,
 });
 
-export default cleanupApplicationMenuWhenApplicationIsQuitInjectable;
+export default stopApplicationMenuInjectable;

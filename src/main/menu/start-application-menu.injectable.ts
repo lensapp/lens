@@ -4,19 +4,19 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../start-main-application/after-application-is-ready/after-application-is-ready-injection-token";
-import applicationMenuInitializerInjectable from "./application-menu-initializer.injectable";
+import applicationMenuInjectable from "./application-menu.injectable";
 
-const setupApplicationMenuWhenApplicationIsReadyInjectable = getInjectable({
-  id: "setup-application-menu-when-application-is-ready",
+const startApplicationMenuInjectable = getInjectable({
+  id: "start-application-menu",
 
   instantiate: (di) => {
-    const initializeApplicationMenu = di.inject(
-      applicationMenuInitializerInjectable,
+    const applicationMenu = di.inject(
+      applicationMenuInjectable,
     );
 
     return {
       run: () => {
-        initializeApplicationMenu.start();
+        applicationMenu.start();
       },
     };
   },
@@ -24,4 +24,4 @@ const setupApplicationMenuWhenApplicationIsReadyInjectable = getInjectable({
   injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
-export default setupApplicationMenuWhenApplicationIsReadyInjectable;
+export default startApplicationMenuInjectable;
