@@ -8,7 +8,7 @@ import "./pod-disruption-budgets.scss";
 import * as React from "react";
 import { observer } from "mobx-react";
 import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
-import type { PodDisruptionBudget } from "../../../common/k8s-api/endpoints/poddisruptionbudget.api";
+import type { PodDisruptionBudget } from "../../../common/k8s-api/endpoints/pod-disruption-budget.api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";

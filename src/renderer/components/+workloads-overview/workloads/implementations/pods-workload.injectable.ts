@@ -6,9 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
 import navigateToPodsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
-import podsStoreInjectable from "../../../+workloads-pods/pods-store.injectable";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
 import { computed } from "mobx";
+import podStoreInjectable from "../../../+workloads-pods/store.injectable";
 
 const podsWorkloadInjectable = getInjectable({
   id: "pods-workload",
@@ -16,7 +16,7 @@ const podsWorkloadInjectable = getInjectable({
   instantiate: (di) => {
     const navigate = di.inject(navigateToPodsInjectable);
     const namespaceStore = di.inject(namespaceStoreInjectable);
-    const store = di.inject(podsStoreInjectable);
+    const store = di.inject(podStoreInjectable);
 
     return {
       resourceName: "pods",

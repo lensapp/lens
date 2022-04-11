@@ -4,8 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { PodDisruptionBudget, PodDisruptionBudgetApi } from "../../../common/k8s-api/endpoints/poddisruptionbudget.api";
-import { podDisruptionBudgetApi } from "../../../common/k8s-api/endpoints/poddisruptionbudget.api";
+import type { PodDisruptionBudget, PodDisruptionBudgetApi } from "../../../common/k8s-api/endpoints/pod-disruption-budget.api";
+import { podDisruptionBudgetApi } from "../../../common/k8s-api/endpoints/pod-disruption-budget.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { isClusterPageContext } from "../../utils";
 

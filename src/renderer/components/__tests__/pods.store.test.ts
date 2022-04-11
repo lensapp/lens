@@ -4,7 +4,7 @@
  */
 
 import { Pod } from "../../../common/k8s-api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 
 const runningPod = new Pod({
   apiVersion: "foo",
@@ -112,7 +112,7 @@ const succeededPod = new Pod({
 
 describe("Pod Store tests", () => {
   it("gets Pod statuses in proper sorting order", () => {
-    const statuses = Object.entries(podsStore.getStatuses([
+    const statuses = Object.entries(podStore.getStatuses([
       pendingPod,
       runningPod,
       succeededPod,
@@ -131,7 +131,7 @@ describe("Pod Store tests", () => {
   });
 
   it("counts statuses properly", () => {
-    const statuses = Object.entries(podsStore.getStatuses([
+    const statuses = Object.entries(podStore.getStatuses([
       pendingPod,
       pendingPod,
       pendingPod,

@@ -14,9 +14,9 @@ import { LocaleDate } from "../locale-date";
 import { eventStore } from "./event.store";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -86,16 +86,12 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
   }
 }
 
-export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsProps>(
-  NonInjectedKubeEventDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsProps>(NonInjectedKubeEventDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+  }),
+});
 
 
 

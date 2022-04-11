@@ -14,7 +14,6 @@ import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { Link } from "react-router-dom";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getMetricsForJobs, type PodMetricData, Job } from "../../../common/k8s-api/endpoints";
@@ -29,14 +28,17 @@ import { getDetailsUrl } from "../kube-detail-params";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  podStore: PodStore;
 }
 
 @observer
@@ -54,7 +56,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
         this.metrics = null;
       }),
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
       ]),
     ]);
   }
@@ -129,7 +131,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
 
                 return (
                   <p key={name}>
-                    {kind} 
+                    {kind}
                     {" "}
                     <Link to={detailsUrl}>{name}</Link>
                   </p>
@@ -168,14 +170,11 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   }
 }
 
-export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(
-  NonInjectedJobDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInjectedJobDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});
 

@@ -13,7 +13,6 @@ import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { PodMetricData } from "../../../common/k8s-api/endpoints";
@@ -26,14 +25,17 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  podStore: PodStore;
 }
 
 @observer
@@ -52,7 +54,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
       }),
 
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
       ]),
     ]);
   }
@@ -64,7 +66,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
   };
 
   render() {
-    const { object: statefulSet } = this.props;
+    const { object: statefulSet, podStore } = this.props;
 
     if (!statefulSet) {
       return null;
@@ -84,7 +86,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
 
     return (
       <div className="StatefulSetDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && podStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
             tabs={podMetricTabs}
@@ -130,14 +132,11 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
   }
 }
 
-export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetailsProps>(
-  NonInjectedStatefulSetDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetailsProps>(NonInjectedStatefulSetDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});
 

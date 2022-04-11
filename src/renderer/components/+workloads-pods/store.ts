@@ -6,13 +6,12 @@
 import countBy from "lodash/countBy";
 import { observable } from "mobx";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { cpuUnitsToNumber, isClusterPageContext, unitsToBytes } from "../../utils";
+import { cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import type { Pod, PodMetrics, PodApi } from "../../../common/k8s-api/endpoints";
-import { podMetricsApi, podApi } from "../../../common/k8s-api/endpoints";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import { podMetricsApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObject, KubeObjectScope } from "../../../common/k8s-api/kube-object";
 
-export class PodsStore extends KubeObjectStore<Pod, PodApi> {
+export class PodStore extends KubeObjectStore<Pod, PodApi> {
   readonly kubeMetrics = observable.array<PodMetrics>([]);
 
   async loadKubeMetrics(namespace?: string) {
@@ -76,12 +75,4 @@ export class PodsStore extends KubeObjectStore<Pod, PodApi> {
       };
     }, empty);
   }
-}
-
-export const podsStore = isClusterPageContext()
-  ? new PodsStore(podApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(podsStore);
 }

@@ -9,7 +9,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { podsStore } from "./pods.store";
+import { podStore } from "./legacy-store";
 import type { Pod } from "../../../common/k8s-api/endpoints";
 import { autoBind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
@@ -42,7 +42,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   }
 
   private metricsWatcher = interval(120, () => {
-    podsStore.loadKubeMetrics(this.props.owner.getNs());
+    podStore.loadKubeMetrics(this.props.owner.getNs());
   });
 
   componentDidMount() {
@@ -113,7 +113,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
       return;
     }
 
-    const metrics = podsStore.getPodKubeMetrics(pod);
+    const metrics = podStore.getPodKubeMetrics(pod);
 
     return (
       <TableRow
@@ -138,7 +138,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   render() {
     const { pods } = this.props;
 
-    if (!podsStore.isLoaded) {
+    if (!podStore.isLoaded) {
       return (
         <div className="PodDetailsList flex justify-center">
           <Spinner />
@@ -166,8 +166,8 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
           sortable={{
             [sortBy.name]: pod => pod.getName(),
             [sortBy.namespace]: pod => pod.getNs(),
-            [sortBy.cpu]: pod => podsStore.getPodKubeMetrics(pod).cpu,
-            [sortBy.memory]: pod => podsStore.getPodKubeMetrics(pod).memory,
+            [sortBy.cpu]: pod => podStore.getPodKubeMetrics(pod).cpu,
+            [sortBy.memory]: pod => podStore.getPodKubeMetrics(pod).memory,
           }}
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}

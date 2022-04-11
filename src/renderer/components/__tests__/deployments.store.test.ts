@@ -5,7 +5,7 @@
 
 import { observable } from "mobx";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import type { PodSpec } from "../../../common/k8s-api/endpoints";
 import { Deployment, Pod } from "../../../common/k8s-api/endpoints";
 
@@ -202,7 +202,7 @@ const failedPod = new Pod({
 describe("Deployment Store tests", () => {
   beforeAll(() => {
     // Add pods to pod store
-    podsStore.items = observable.array([
+    podStore.items = observable.array([
       runningPod,
       failedPod,
       pendingPod,

@@ -10,7 +10,7 @@ import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
@@ -62,7 +62,7 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
     }
 
     const { storageClassName, accessModes } = volumeClaim.spec;
-    const pods = volumeClaim.getPods(podsStore.items);
+    const pods = volumeClaim.getPods(podStore.items);
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.VolumeClaim);
 
     return (

@@ -8,13 +8,13 @@ import type { Job, JobApi } from "../../../common/k8s-api/endpoints/job.api";
 import { jobApi } from "../../../common/k8s-api/endpoints/job.api";
 import type { CronJob, Pod } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { isClusterPageContext } from "../../utils";
 
 export class JobStore extends KubeObjectStore<Job, JobApi> {
   getChildPods(job: Job): Pod[] {
-    return podsStore.getPodsByOwnerId(job.getId());
+    return podStore.getPodsByOwnerId(job.getId());
   }
 
   getJobsByOwner(cronJob: CronJob) {

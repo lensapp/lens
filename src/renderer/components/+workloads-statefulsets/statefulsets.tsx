@@ -8,7 +8,7 @@ import "./statefulsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { statefulSetStore } from "./statefulset.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
@@ -40,7 +40,7 @@ export class StatefulSets extends React.Component {
           tableId="workload_statefulsets"
           className="StatefulSets"
           store={statefulSetStore}
-          dependentStores={[podsStore, eventStore]} // status icon component uses event store, details component uses podStore
+          dependentStores={[podStore, eventStore]} // status icon component uses event store, details component uses podStore
           sortingCallbacks={{
             [columnId.name]: statefulSet => statefulSet.getName(),
             [columnId.namespace]: statefulSet => statefulSet.getNs(),

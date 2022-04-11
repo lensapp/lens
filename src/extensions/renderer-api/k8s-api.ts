@@ -12,6 +12,8 @@ import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-rol
 import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
+import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable";
+import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const resources = castArray(resource);
@@ -30,46 +32,47 @@ export const serviceAccountsApi = asLegacyGlobalForExtensionApi(serviceAccountAp
 export const clusterRoleApi = asLegacyGlobalForExtensionApi(clusterRoleApiInjectable);
 export const clusterRoleBindingApi = asLegacyGlobalForExtensionApi(clusterRoleBindingApiInjectable);
 export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
+export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
+export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
 
 export {
   BaseKubeJsonApiObjectMetadata,
 };
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
-export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 export { KubeApi, forCluster, forRemoteCluster } from "../../common/k8s-api/kube-api";
 export { KubeObject, KubeStatus } from "../../common/k8s-api/kube-object";
-export { Pod, podApi as podsApi, PodApi as PodsApi } from "../../common/k8s-api/endpoints";
-export { Node, nodeApi as nodesApi, NodeApi as NodesApi } from "../../common/k8s-api/endpoints";
-export { Deployment, deploymentApi, DeploymentApi } from "../../common/k8s-api/endpoints";
-export { DaemonSet, daemonSetApi } from "../../common/k8s-api/endpoints";
-export { StatefulSet, statefulSetApi } from "../../common/k8s-api/endpoints";
-export { Job, jobApi } from "../../common/k8s-api/endpoints";
-export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints";
-export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints";
-export { Secret, secretApi as secretsApi } from "../../common/k8s-api/endpoints";
-export { ReplicaSet, replicaSetApi } from "../../common/k8s-api/endpoints";
-export { ResourceQuota, resourceQuotaApi } from "../../common/k8s-api/endpoints";
-export { LimitRange, limitRangeApi } from "../../common/k8s-api/endpoints";
-export { HorizontalPodAutoscaler, horizontalPodAutoscalerApi as hpaApi } from "../../common/k8s-api/endpoints";
-export { PodDisruptionBudget, podDisruptionBudgetApi as pdbApi } from "../../common/k8s-api/endpoints";
-export { Service, serviceApi } from "../../common/k8s-api/endpoints";
-export { Endpoints as Endpoint, endpointsApi as endpointApi } from "../../common/k8s-api/endpoints";
-export { Ingress, ingressApi, IngressApi } from "../../common/k8s-api/endpoints";
-export { NetworkPolicy, networkPolicyApi } from "../../common/k8s-api/endpoints";
-export { PersistentVolume, persistentVolumeApi } from "../../common/k8s-api/endpoints";
-export { PersistentVolumeClaim, persistentVolumeClaimApi as pvcApi, PersistentVolumeClaimApi as PersistentVolumeClaimsApi } from "../../common/k8s-api/endpoints";
-export { StorageClass, storageClassApi } from "../../common/k8s-api/endpoints";
-export { Namespace, namespaceApi as namespacesApi } from "../../common/k8s-api/endpoints";
-export { KubeEvent, eventApi } from "../../common/k8s-api/endpoints";
-export { ServiceAccount } from "../../common/k8s-api/endpoints";
-export { Role } from "../../common/k8s-api/endpoints";
-export { RoleBinding, roleBindingApi } from "../../common/k8s-api/endpoints";
-export { ClusterRole } from "../../common/k8s-api/endpoints";
-export { ClusterRoleBinding } from "../../common/k8s-api/endpoints";
-export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints";
+export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
+export { Pod, PodApi as PodsApi } from "../../common/k8s-api/endpoints/pod.api";
+export { Node, nodeApi as nodesApi, NodeApi as NodesApi } from "../../common/k8s-api/endpoints/nodes.api";
+export { Deployment, deploymentApi, DeploymentApi } from "../../common/k8s-api/endpoints/deployment.api";
+export { DaemonSet } from "../../common/k8s-api/endpoints/daemon-set.api";
+export { StatefulSet, statefulSetApi } from "../../common/k8s-api/endpoints/stateful-set.api";
+export { Job, jobApi } from "../../common/k8s-api/endpoints/job.api";
+export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints/cron-job.api";
+export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/configmap.api";
+export { Secret, secretApi as secretsApi } from "../../common/k8s-api/endpoints/secret.api";
+export { ReplicaSet, replicaSetApi } from "../../common/k8s-api/endpoints/replica-set.api";
+export { ResourceQuota, resourceQuotaApi } from "../../common/k8s-api/endpoints/resource-quota.api";
+export { LimitRange, limitRangeApi } from "../../common/k8s-api/endpoints/limit-range.api";
+export { HorizontalPodAutoscaler, horizontalPodAutoscalerApi as hpaApi } from "../../common/k8s-api/endpoints/hpa.api";
+export { PodDisruptionBudget, podDisruptionBudgetApi as pdbApi } from "../../common/k8s-api/endpoints/pod-disruption-budget.api";
+export { Service, serviceApi } from "../../common/k8s-api/endpoints/service.api";
+export { Endpoints as Endpoint, endpointsApi as endpointApi } from "../../common/k8s-api/endpoints/endpoint.api";
+export { Ingress, ingressApi, IngressApi } from "../../common/k8s-api/endpoints/ingress.api";
+export { NetworkPolicy, networkPolicyApi } from "../../common/k8s-api/endpoints/network-policy.api";
+export { PersistentVolume, persistentVolumeApi } from "../../common/k8s-api/endpoints/persistent-volume.api";
+export { PersistentVolumeClaim, persistentVolumeClaimApi as pvcApi, PersistentVolumeClaimApi as PersistentVolumeClaimsApi } from "../../common/k8s-api/endpoints/persistent-volume-claims.api";
+export { StorageClass, storageClassApi } from "../../common/k8s-api/endpoints/storage-class.api";
+export { Namespace, namespaceApi as namespacesApi } from "../../common/k8s-api/endpoints/namespaces.api";
+export { KubeEvent, eventApi } from "../../common/k8s-api/endpoints/events.api";
+export { ServiceAccount } from "../../common/k8s-api/endpoints/service-account.api";
+export { Role } from "../../common/k8s-api/endpoints/role.api";
+export { RoleBinding, roleBindingApi } from "../../common/k8s-api/endpoints/role-binding.api";
+export { ClusterRole } from "../../common/k8s-api/endpoints/cluster-role.api";
+export { ClusterRoleBinding } from "../../common/k8s-api/endpoints/cluster-role-binding.api";
+export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints/crd.api";
 export { KubeObjectStatusLevel } from "./kube-object-status";
-export { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
 
 // types
 export type { ILocalKubeApiConfig, IRemoteKubeApiConfig, IKubeApiCluster } from "../../common/k8s-api/kube-api";
@@ -81,10 +84,10 @@ export type { KubeObjectStoreLoadAllParams, KubeObjectStoreLoadingParams, KubeOb
 
 // stores
 export type { EventStore } from "../../renderer/components/+events/event.store";
-export type { PodsStore } from "../../renderer/components/+workloads-pods/pods.store";
+export type { PodStore as PodsStore } from "../../renderer/components/+workloads-pods/store";
 export type { NodesStore } from "../../renderer/components/+nodes/nodes.store";
 export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/deployments.store";
-export type { DaemonSetStore } from "../../renderer/components/+workloads-daemonsets/daemonsets.store";
+export type { DaemonSetStore } from "../../renderer/components/+workloads-daemonsets/store";
 export type { StatefulSetStore } from "../../renderer/components/+workloads-statefulsets/statefulset.store";
 export type { JobStore } from "../../renderer/components/+workloads-jobs/job.store";
 export type { CronJobStore } from "../../renderer/components/+workloads-cronjobs/cronjob.store";

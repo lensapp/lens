@@ -10,6 +10,9 @@ import type { SearchStore } from "../../../search-store/search-store";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
 import { isDefined } from "../../../utils";
 import assert from "assert";
+import type { GetPodById } from "../../+workloads-pods/get-pod-by-id.injectable";
+import type { GetPodsByOwnerId } from "../../+workloads-pods/get-pods-by-owner-id.injectable";
+import type { LoadLogs } from "./load-logs.injectable";
 
 export interface LogTabViewModelDependencies {
   getLogs: (tabId: TabId) => string[];
@@ -17,12 +20,12 @@ export interface LogTabViewModelDependencies {
   getTimestampSplitLogs: (tabId: TabId) => [string, string][];
   getLogTabData: (tabId: TabId) => LogTabData | undefined;
   setLogTabData: (tabId: TabId, data: LogTabData) => void;
-  loadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>) => Promise<void>;
+  loadLogs: LoadLogs;
   reloadLogs: (tabId: TabId, pod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>) => Promise<void>;
   renameTab: (tabId: TabId, title: string) => void;
   stopLoadingLogs: (tabId: TabId) => void;
-  getPodById: (id: string) => Pod | undefined;
-  getPodsByOwnerId: (id: string) => Pod[];
+  getPodById: GetPodById;
+  getPodsByOwnerId: GetPodsByOwnerId;
   areLogsPresent: (tabId: TabId) => boolean;
   searchStore: SearchStore;
 }

@@ -10,8 +10,8 @@ import { autoBind, isClusterPageContext } from "../../utils";
 import type { KubeEvent, KubeEventApi } from "../../../common/k8s-api/endpoints/events.api";
 import { eventApi } from "../../../common/k8s-api/endpoints/events.api";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { Pod } from "../../../common/k8s-api/endpoints/pods.api";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { Pod } from "../../../common/k8s-api/endpoints/pod.api";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class EventStore extends KubeObjectStore<KubeEvent, KubeEventApi> {
@@ -48,7 +48,7 @@ export class EventStore extends KubeObjectStore<KubeEvent, KubeEventApi> {
       const { kind, uid } = recent.involvedObject;
 
       if (kind == Pod.kind) {  // Wipe out running pods
-        const pod = podsStore.items.find(pod => pod.getId() == uid);
+        const pod = podStore.getById(uid);
 
         if (!pod || (!pod.hasIssues() && (pod.spec?.priority ?? 0) < 500000)) return undefined;
       }

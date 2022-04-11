@@ -4,7 +4,7 @@
  */
 
 import { observable } from "mobx";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { ReplicaSet, Pod } from "../../../common/k8s-api/endpoints";
 
@@ -129,7 +129,7 @@ const failedPod = new Pod({
 
 describe("ReplicaSet Store tests", () => {
   beforeAll(() => {
-    podsStore.items = observable.array([
+    podStore.items = observable.array([
       runningPod,
       failedPod,
       pendingPod,

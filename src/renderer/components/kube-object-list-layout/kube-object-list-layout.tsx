@@ -23,9 +23,9 @@ import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 
 export interface KubeObjectListLayoutProps<
   K extends KubeObject,
@@ -148,9 +148,9 @@ const InjectedKubeObjectListLayout = withInjectables<
   KubeObjectListLayoutProps<KubeObject, KubeApi<KubeObject, KubeJsonApiDataFor<KubeObject>>, KubeJsonApiDataFor<KubeObject>>
 >(NonInjectedKubeObjectListLayout, {
   getProps: (di, props) => ({
-    clusterFrameContext: di.inject(clusterFrameContextInjectable),
-    subscribeToStores: di.inject(kubeWatchApiInjectable).subscribeStores,
     ...props,
+    clusterFrameContext: di.inject(clusterFrameContextInjectable),
+    subscribeToStores: di.inject(subscribeStoresInjectable),
   }),
 });
 

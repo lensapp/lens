@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase, statefulSetApi } from "../../../common/k8s-api/endpoints";
@@ -12,7 +12,7 @@ import { isClusterPageContext } from "../../utils";
 
 export class StatefulSetStore extends KubeObjectStore<StatefulSet, StatefulSetApi> {
   getChildPods(statefulSet: StatefulSet) {
-    return podsStore.getPodsByOwnerId(statefulSet.getId());
+    return podStore.getPodsByOwnerId(statefulSet.getId());
   }
 
   getStatuses(statefulSets: StatefulSet[]) {

@@ -4,9 +4,12 @@
  */
 
 import { observable } from "mobx";
-import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import type { DaemonSetStore } from "../+workloads-daemonsets/store";
+import daemonSetStoreInjectable from "../+workloads-daemonsets/store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 import { DaemonSet, Pod } from "../../../common/k8s-api/endpoints";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningDaemonSet = new DaemonSet({
   apiVersion: "foo",
@@ -128,8 +131,17 @@ const failedPod = new Pod({
 });
 
 describe("DaemonSet Store tests", () => {
+  let daemonSetStore: DaemonSetStore;
+
   beforeAll(() => {
-    podsStore.items = observable.array([
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    const podStore = di.inject(podStoreInjectable);
+
+    daemonSetStore = di.inject(daemonSetStoreInjectable);
+    podStore.items = observable.array([
       runningPod,
       failedPod,
       pendingPod,

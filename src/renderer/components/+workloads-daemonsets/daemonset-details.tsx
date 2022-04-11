@@ -12,8 +12,8 @@ import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { daemonSetStore } from "./daemonsets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import type { DaemonSetStore } from "./store";
+import type { PodStore } from "../+workloads-pods/store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { DaemonSet, getMetricsForDaemonSets, type PodMetricData } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
@@ -25,14 +25,18 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import daemonSetStoreInjectable from "./store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  daemonSetStore: DaemonSetStore;
+  podStore: PodStore;
 }
 
 @observer
@@ -50,7 +54,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
         this.metrics = null;
       }),
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
       ]),
     ]);
   }
@@ -62,7 +66,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   };
 
   render() {
-    const { object: daemonSet } = this.props;
+    const { object: daemonSet, daemonSetStore, podStore } = this.props;
 
     if (!daemonSet) {
       return null;
@@ -83,7 +87,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
 
     return (
       <div className="DaemonSetDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && podStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
             tabs={podMetricTabs}
@@ -130,13 +134,11 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   }
 }
 
-export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsProps>(
-  NonInjectedDaemonSetDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsProps>(NonInjectedDaemonSetDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    daemonSetStore: di.inject(daemonSetStoreInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});

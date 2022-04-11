@@ -7,7 +7,6 @@ import type { MetricData } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { RequireExactlyOne } from "type-fest";
 import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector, KubeObjectScope } from "../kube-object";
 import type { SecretReference } from "./secret.api";
@@ -984,7 +983,3 @@ export class Pod extends KubeObject<PodStatus, PodSpec, KubeObjectScope.Namespac
     return podIPs.map(value => value.ip);
   }
 }
-
-export const podApi = isClusterPageContext()
-  ? new PodApi()
-  : undefined as never;

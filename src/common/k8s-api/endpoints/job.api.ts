@@ -6,7 +6,7 @@
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { PodContainer, PodMetricData, PodSpec } from "./pods.api";
+import type { PodContainer, PodMetricData, PodSpec } from "./pod.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";

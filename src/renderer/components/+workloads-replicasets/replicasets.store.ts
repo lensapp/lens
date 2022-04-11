@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { Deployment, ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints";
 import { replicaSetApi } from "../../../common/k8s-api/endpoints";
-import { PodStatusPhase } from "../../../common/k8s-api/endpoints/pods.api";
+import { PodStatusPhase } from "../../../common/k8s-api/endpoints/pod.api";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { isClusterPageContext } from "../../utils";
 
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet, ReplicaSetApi> {
   getChildPods(replicaSet: ReplicaSet) {
-    return podsStore.getPodsByOwnerId(replicaSet.getId());
+    return podStore.getPodsByOwnerId(replicaSet.getId());
   }
 
   getStatuses(replicaSets: ReplicaSet[]) {

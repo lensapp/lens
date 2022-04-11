@@ -4,7 +4,7 @@
  */
 
 import { observable } from "mobx";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { StatefulSet, Pod } from "../../../common/k8s-api/endpoints";
 
@@ -130,7 +130,7 @@ const failedPod = new Pod({
 describe("StatefulSet Store tests", () => {
   beforeAll(() => {
     // Add pods to pod store
-    podsStore.items = observable.array([
+    podStore.items = observable.array([
       runningPod,
       failedPod,
       pendingPod,

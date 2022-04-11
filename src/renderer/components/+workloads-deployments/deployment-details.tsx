@@ -14,7 +14,6 @@ import type { PodMetricData } from "../../../common/k8s-api/endpoints";
 import { Deployment, getMetricsForDeployments } from "../../../common/k8s-api/endpoints";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { deploymentStore } from "./deployments.store";
@@ -28,14 +27,17 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  podStore: PodStore;
 }
 
 @observer
@@ -54,7 +56,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
       }),
 
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
         replicaSetStore,
       ]),
     ]);
@@ -67,7 +69,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   };
 
   render() {
-    const { object: deployment } = this.props;
+    const { object: deployment, podStore } = this.props;
 
     if (!deployment) {
       return null;
@@ -88,7 +90,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
 
     return (
       <div className="DeploymentDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && podStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
             tabs={podMetricTabs}
@@ -161,14 +163,11 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   }
 }
 
-export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetailsProps>(
-  NonInjectedDeploymentDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetailsProps>(NonInjectedDeploymentDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});
 

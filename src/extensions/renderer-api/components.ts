@@ -12,9 +12,9 @@ import commandOverlayInjectable from "../../renderer/components/command-palette/
 import createPodLogsTabInjectable from "../../renderer/components/dock/logs/create-pod-logs-tab.injectable";
 import createWorkloadLogsTabInjectable from "../../renderer/components/dock/logs/create-workload-logs-tab.injectable";
 import sendCommandInjectable from "../../renderer/components/dock/terminal/send-command.injectable";
-import { podsStore } from "../../renderer/components/+workloads-pods/pods.store";
 import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
 import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
+import { podStore } from "../../renderer/components/+workloads-pods/legacy-store";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -97,7 +97,7 @@ export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(
     createWorkloadTab: asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),
     renameTab: (tabId: string): void => {
       const tabData = logTabStore.getData(tabId);
-      const pod = podsStore.getById(tabData?.selectedPodId);
+      const pod = podStore.getById(tabData?.selectedPodId);
 
       if (pod) {
         renameTab(tabId, `Pod ${pod.getName()}`);

@@ -18,8 +18,8 @@ import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import { volumesStore } from "../+storage-volumes/volumes.store";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 
 export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
 }
@@ -93,14 +93,10 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
   }
 }
 
-export const StorageClassDetails = withInjectables<Dependencies, StorageClassDetailsProps>(
-  NonInjectedStorageClassDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const StorageClassDetails = withInjectables<Dependencies, StorageClassDetailsProps>(NonInjectedStorageClassDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+  }),
+});
 

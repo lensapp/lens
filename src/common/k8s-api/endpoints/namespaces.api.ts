@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import type { KubeObjectScope, KubeObjectStatus } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { metricsApi } from "./metrics.api";
-import type { PodMetricData } from "./pods.api";
+import type { PodMetricData } from "./pod.api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum NamespaceStatusKind {

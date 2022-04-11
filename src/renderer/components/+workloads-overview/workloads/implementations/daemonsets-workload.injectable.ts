@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
-import daemonsetsStoreInjectable from "../../../+workloads-daemonsets/daemonsets-store.injectable";
+import daemonsetsStoreInjectable from "../../../+workloads-daemonsets/store.injectable";
 import navigateToDaemonsetsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
 import { computed } from "mobx";
 

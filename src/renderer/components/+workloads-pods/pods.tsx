@@ -8,7 +8,7 @@ import "./pods.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { podsStore } from "./pods.store";
+import { podStore } from "./legacy-store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { Pod } from "../../../common/k8s-api/endpoints";
@@ -80,7 +80,7 @@ export class Pods extends React.Component {
                   {this.renderState(name, ready, "terminated", state.terminated)}
                 </>
               ),
-            }} 
+            }}
           />
         </Fragment>
       ));
@@ -91,7 +91,7 @@ export class Pods extends React.Component {
       <SiblingsInTabLayout>
         <KubeObjectListLayout
           className="Pods"
-          store={podsStore}
+          store={podStore}
           dependentStores={[eventStore]} // status icon component uses event store
           tableId = "workloads_pods"
           isConfigurable
@@ -131,7 +131,7 @@ export class Pods extends React.Component {
               key="name"
               label={pod.getName()}
               tooltip={pod.getName()}
-              expandable={false} 
+              expandable={false}
             />,
             <KubeObjectStatusIcon key="icon" object={pod} />,
             pod.getNs(),

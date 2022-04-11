@@ -130,7 +130,12 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "no-restricted-imports": ["error", {
-          "paths": ["."],
+          "paths": [
+            {
+              "name": ".",
+              "message": "No importing from local index.ts(x?) file. A common way to make circular dependencies.",
+            },
+          ],
         }],
         "@typescript-eslint/member-delimiter-style": ["error", {
           "multiline": {
@@ -240,6 +245,26 @@ module.exports = {
         "react-hooks/exhaustive-deps": "off",
         "no-template-curly-in-string": "error",
         "@typescript-eslint/consistent-type-imports": "error",
+      },
+    },
+    {
+      files: [
+        "src/{common,main,renderer}/**/*.ts",
+        "src/{common,main,renderer}/**/*.tsx",
+      ],
+      rules: {
+        "no-restricted-imports": ["error", {
+          "patterns": [
+            {
+              "group": [
+                "**/extensions/renderer-api/**/*",
+                "**/extensions/main-api/**/*",
+                "**/extensions/common-api/**/*",
+              ],
+              message: "No importing from the extension api definitions in application code",
+            },
+          ],
+        }],
       },
     },
   ],

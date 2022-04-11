@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { persistentVolumeClaimStore } from "./volume-claim.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../../common/utils/convertMemory";
 import { stopPropagation } from "../../utils";
@@ -39,11 +39,11 @@ export class PersistentVolumeClaims extends React.Component {
           tableId="storage_volume_claims"
           className="PersistentVolumeClaims"
           store={persistentVolumeClaimStore}
-          dependentStores={[podsStore]}
+          dependentStores={[podStore]}
           sortingCallbacks={{
             [columnId.name]: pvc => pvc.getName(),
             [columnId.namespace]: pvc => pvc.getNs(),
-            [columnId.pods]: pvc => pvc.getPods(podsStore.items).map(pod => pod.getName()),
+            [columnId.pods]: pvc => pvc.getPods(podStore.items).map(pod => pod.getName()),
             [columnId.status]: pvc => pvc.getStatus(),
             [columnId.size]: pvc => unitsToBytes(pvc.getStorage()),
             [columnId.storageClass]: pvc => pvc.spec.storageClassName,
@@ -51,7 +51,7 @@ export class PersistentVolumeClaims extends React.Component {
           }}
           searchFilters={[
             pvc => pvc.getSearchFields(),
-            pvc => pvc.getPods(podsStore.items).map(pod => pod.getName()),
+            pvc => pvc.getPods(podStore.items).map(pod => pod.getName()),
           ]}
           renderHeaderTitle="Persistent Volume Claims"
           renderTableHeader={[
@@ -65,7 +65,7 @@ export class PersistentVolumeClaims extends React.Component {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={pvc => {
-            const pods = pvc.getPods(podsStore.items);
+            const pods = pvc.getPods(podStore.items);
             const { storageClassName } = pvc.spec;
             const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
               name: storageClassName,

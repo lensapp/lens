@@ -4,7 +4,7 @@
  */
 
 import type { KubeObjectScope, KubeTemplateObjectMetadata } from "../../kube-object";
-import type { PodSpec } from "../pods.api";
+import type { PodSpec } from "../pod.api";
 
 export interface PodTemplateSpec {
   metadata?: KubeTemplateObjectMetadata<KubeObjectScope.Namespace>;

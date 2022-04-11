@@ -12,7 +12,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
 import { ResourceMetrics } from "../resource-metrics";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { ClusterMetricData } from "../../../common/k8s-api/endpoints";
 import { formatNodeTaint, getMetricsByNodeNames, Node } from "../../../common/k8s-api/endpoints";
@@ -26,14 +25,17 @@ import { NodeDetailsResources } from "./details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  podStore: PodStore;
 }
 
 @observer
@@ -52,7 +54,7 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
       }),
 
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
       ]),
     ]);
   }
@@ -64,7 +66,7 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
   };
 
   render() {
-    const { object: node } = this.props;
+    const { object: node, podStore } = this.props;
 
     if (!node) {
       return null;
@@ -79,13 +81,13 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
     const { nodeInfo, addresses } = node.status ?? {};
     const conditions = node.getActiveConditions();
     const taints = node.getTaints();
-    const childPods = podsStore.getPodsByNode(node.getName());
+    const childPods = podStore.getPodsByNode(node.getName());
     const { metrics } = this;
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Node);
 
     return (
       <div className="NodeDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && podStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
             tabs={[
@@ -186,14 +188,11 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
   }
 }
 
-export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(
-  NonInjectedNodeDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonInjectedNodeDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});
 

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
 import { deploymentApi, PodStatusPhase } from "../../../common/k8s-api/endpoints";
@@ -38,7 +38,7 @@ export class DeploymentStore extends KubeObjectStore<Deployment, DeploymentApi> 
   }
 
   getChildPods(deployment: Deployment) {
-    return podsStore
+    return podStore
       .getByLabel(deployment.getTemplateLabels())
       .filter(pod => pod.getNs() === deployment.getNs());
   }

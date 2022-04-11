@@ -9,8 +9,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { DaemonSet } from "../../../common/k8s-api/endpoints";
 import { eventStore } from "../+events/event.store";
-import { daemonSetStore } from "./daemonsets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { daemonSetStore } from "./legacy-store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -39,7 +39,7 @@ export class DaemonSets extends React.Component {
           tableId="workload_daemonsets"
           className="DaemonSets"
           store={daemonSetStore}
-          dependentStores={[podsStore, eventStore]} // status icon component uses event store
+          dependentStores={[podStore, eventStore]} // status icon component uses event store
           sortingCallbacks={{
             [columnId.name]: daemonSet => daemonSet.getName(),
             [columnId.namespace]: daemonSet => daemonSet.getNs(),
@@ -68,7 +68,7 @@ export class DaemonSets extends React.Component {
               <Badge
                 key={selector}
                 label={selector}
-                scrollable 
+                scrollable
               />
             )),
             <KubeObjectAge key="age" object={daemonSet} />,

@@ -3,16 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import type { DaemonSet, DaemonSetApi, Pod } from "../../../common/k8s-api/endpoints";
-import { daemonSetApi, PodStatusPhase } from "../../../common/k8s-api/endpoints";
+import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
+import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { isClusterPageContext } from "../../utils";
+
+export interface DaemonSetStoreDependencies {
+  readonly getPodsByOwnerId: GetPodsByOwnerId;
+}
 
 export class DaemonSetStore extends KubeObjectStore<DaemonSet, DaemonSetApi> {
+  constructor(protected readonly dependencies: DaemonSetStoreDependencies, api: DaemonSetApi, opts?: KubeObjectStoreOptions) {
+    super(api, opts);
+  }
+
   getChildPods(daemonSet: DaemonSet): Pod[] {
-    return podsStore.getPodsByOwnerId(daemonSet.getId());
+    return this.dependencies.getPodsByOwnerId(daemonSet.getId());
   }
 
   getStatuses(daemonSets?: DaemonSet[]) {
@@ -32,12 +39,4 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet, DaemonSetApi> {
 
     return status;
   }
-}
-
-export const daemonSetStore = isClusterPageContext()
-  ? new DaemonSetStore(daemonSetApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(daemonSetStore);
 }

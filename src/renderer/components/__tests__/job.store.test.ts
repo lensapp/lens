@@ -5,7 +5,7 @@
 
 import { observable } from "mobx";
 import { jobStore } from "../+workloads-jobs/job.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { Job, Pod } from "../../../common/k8s-api/endpoints";
 
 const runningJob = new Job({
@@ -166,7 +166,7 @@ const succeededPod = new Pod({
 
 describe("Job Store tests", () => {
   beforeAll(() => {
-    podsStore.items = observable.array([
+    podStore.items = observable.array([
       runningPod,
       failedPod,
       pendingPod,

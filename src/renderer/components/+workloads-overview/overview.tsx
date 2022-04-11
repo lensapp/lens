@@ -8,9 +8,7 @@ import "./overview.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { eventStore } from "../+events/event.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
@@ -23,15 +21,21 @@ import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import detailComponentsInjectable from "./detail-components.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
+import type { PodStore } from "../+workloads-pods/store";
+import type { DaemonSetStore } from "../+workloads-daemonsets/store";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import daemonSetStoreInjectable from "../+workloads-daemonsets/store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ComponentType<{}>[]>;
   clusterFrameContext: ClusterFrameContext;
   subscribeStores: SubscribeStores;
+  podStore: PodStore;
+  daemonSetStore: DaemonSetStore;
 }
 
 @observer
@@ -47,11 +51,11 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
         cronJobStore,
-        daemonSetStore,
+        this.props.daemonSetStore,
         deploymentStore,
         eventStore,
         jobStore,
-        podsStore,
+        this.props.podStore,
         replicaSetStore,
         statefulSetStore,
       ], {
@@ -104,14 +108,12 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
   }
 }
 
-export const WorkloadsOverview = withInjectables<Dependencies>(
-  NonInjectedWorkloadsOverview,
-
-  {
-    getProps: (di) => ({
-      detailComponents: di.inject(detailComponentsInjectable),
-      clusterFrameContext: di.inject(clusterFrameContextInjectable),
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-    }),
-  },
-);
+export const WorkloadsOverview = withInjectables<Dependencies>(NonInjectedWorkloadsOverview, {
+  getProps: (di) => ({
+    detailComponents: di.inject(detailComponentsInjectable),
+    clusterFrameContext: di.inject(clusterFrameContextInjectable),
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    daemonSetStore: di.inject(daemonSetStoreInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});

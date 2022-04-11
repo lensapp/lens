@@ -6,8 +6,7 @@
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { PodMetricData } from "./pods.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import type { PodMetricData } from "./pod.api";
 import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
@@ -104,7 +103,3 @@ export function getMetricsForDaemonSets(daemonsets: DaemonSet[], namespace: stri
     namespace,
   });
 }
-
-export const daemonSetApi = isClusterPageContext()
-  ? new DaemonSetApi()
-  : undefined as never;
