@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onApplicationQuitInjectionToken } from "../on-application-quit-injection-token";
+import { onApplicationHardQuitInjectionToken } from "../on-application-hard-quit-injection-token";
 import { ShellSession } from "../../../shell-session/shell-session";
 
 const cleanUpShellSessionsInjectable = getInjectable({
@@ -15,7 +15,7 @@ const cleanUpShellSessionsInjectable = getInjectable({
     },
   }),
 
-  injectionToken: onApplicationQuitInjectionToken,
+  injectionToken: onApplicationHardQuitInjectionToken,
 });
 
 export default cleanUpShellSessionsInjectable;

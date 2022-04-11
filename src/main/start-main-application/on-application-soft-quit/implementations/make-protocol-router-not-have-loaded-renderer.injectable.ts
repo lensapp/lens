@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import lensProtocolRouterMainInjectable  from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
-import { onApplicationCloseInjectionToken } from "../on-application-close-injection-token";
+import { onApplicationSoftQuitInjectionToken } from "../on-application-soft-quit-injection-token";
 
 const makeProtocolRouterNotHaveLoadedRendererInjectable = getInjectable({
   id: "make-protocol-router-not-have-loaded-renderer",
@@ -21,7 +21,7 @@ const makeProtocolRouterNotHaveLoadedRendererInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationCloseInjectionToken,
+  injectionToken: onApplicationSoftQuitInjectionToken,
 });
 
 export default makeProtocolRouterNotHaveLoadedRendererInjectable;

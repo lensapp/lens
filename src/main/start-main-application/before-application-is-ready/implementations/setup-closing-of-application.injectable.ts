@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
 import { beforeApplicationIsReadyInjectionToken } from "../before-application-is-ready-injection-token";
-import { onApplicationCloseInjectionToken } from "../../on-application-close/on-application-close-injection-token";
+import { onApplicationSoftQuitInjectionToken } from "../../on-application-soft-quit/on-application-soft-quit-injection-token";
 import { runManyFor } from "../../run-many-for";
 
 const setupClosingOfApplicationInjectable = getInjectable({
@@ -15,7 +15,7 @@ const setupClosingOfApplicationInjectable = getInjectable({
     const app = di.inject(electronAppInjectable);
 
     const runManyForApplicationClose = runManyFor(di)(
-      onApplicationCloseInjectionToken,
+      onApplicationSoftQuitInjectionToken,
     );
 
     return {

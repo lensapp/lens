@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import kubeconfigSyncManagerInjectable from "../../../catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
-import { onApplicationCloseInjectionToken } from "../on-application-close-injection-token";
+import { onApplicationSoftQuitInjectionToken } from "../on-application-soft-quit-injection-token";
 
 const stopKubeConfigSyncInjectable = getInjectable({
   id: "stop-kube-config-sync",
@@ -19,7 +19,7 @@ const stopKubeConfigSyncInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationCloseInjectionToken,
+  injectionToken: onApplicationSoftQuitInjectionToken,
 });
 
 export default stopKubeConfigSyncInjectable;

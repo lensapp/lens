@@ -6,8 +6,8 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Runnable } from "../run-many-for";
 import type { Event } from "electron";
 
-export const onApplicationQuitInjectionToken = getInjectionToken<
+export const onApplicationHardQuitInjectionToken = getInjectionToken<
   Runnable<{ event: Event }>
 >({
-  id: "on-application-quit",
+  id: "on-application-hard-quit",
 });
