@@ -18,7 +18,7 @@ import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingStore } from "./store";
+import { clusterRoleBindingStore } from "./legacy-store";
 import { hashSubject } from "../hashers";
 
 export interface ClusterRoleBindingDetailsProps extends KubeObjectDetailsProps<ClusterRoleBinding> {

@@ -26,6 +26,7 @@ export interface DialogProps {
   pinned?: boolean;
   animated?: boolean;
   "data-testid"?: string;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 interface DialogState {
@@ -164,6 +165,6 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
       return null;
     }
 
-    return createPortal(dialog, document.body) as React.ReactPortal;
+    return createPortal(dialog, document.body);
   }
 }

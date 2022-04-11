@@ -15,7 +15,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { clusterRolesStore } from "./store";
+import { clusterRolesStore } from "./legacy-store";
 
 export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }

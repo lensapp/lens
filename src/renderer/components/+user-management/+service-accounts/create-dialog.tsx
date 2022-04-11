@@ -18,7 +18,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { serviceAccountsStore } from "./store";
+import { serviceAccountStore } from "./legacy-store";
 
 export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
 }
@@ -47,7 +47,7 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
     const { name, namespace } = this;
 
     try {
-      const serviceAccount = await serviceAccountsStore.create({ namespace, name });
+      const serviceAccount = await serviceAccountStore.create({ namespace, name });
 
       this.name = "";
       showDetails(serviceAccount.selfLink);

@@ -2,7 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
@@ -51,7 +50,3 @@ export class ClusterRoleBindingApi extends KubeApi<ClusterRoleBinding, ClusterRo
     });
   }
 }
-
-export const clusterRoleBindingApi = isClusterPageContext()
-  ? new ClusterRoleBindingApi()
-  : undefined as never;

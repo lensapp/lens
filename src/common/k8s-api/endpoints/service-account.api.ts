@@ -8,7 +8,6 @@ import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface ServiceAccountData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   automountServiceAccountToken?: boolean;
@@ -54,7 +53,3 @@ export class ServiceAccountApi extends KubeApi<ServiceAccount, ServiceAccountDat
     });
   }
 }
-
-export const serviceAccountApi = isClusterPageContext()
-  ? new ServiceAccountApi()
-  : undefined as never;

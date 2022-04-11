@@ -3,6 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import clusterRoleBindingApiInjectable from "../../common/k8s-api/endpoints/cluster-role-binding.api.injectable";
+import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-role.api.injectable";
+import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+
 /**
  * @deprecated This function never works
  * @returns false
@@ -10,6 +15,10 @@
 export function isAllowedResource(...args: any[]) {
   return Boolean(void args);
 }
+
+export const serviceAccountsApi = asLegacyGlobalForExtensionApi(serviceAccountApiInjectable);
+export const clusterRoleApi = asLegacyGlobalForExtensionApi(clusterRoleApiInjectable);
+export const clusterRoleBindingApi = asLegacyGlobalForExtensionApi(clusterRoleBindingApiInjectable);
 
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
@@ -39,11 +48,11 @@ export { PersistentVolumeClaim, persistentVolumeClaimApi as pvcApi, PersistentVo
 export { StorageClass, storageClassApi } from "../../common/k8s-api/endpoints/storage-class.api";
 export { Namespace, namespacesApi } from "../../common/k8s-api/endpoints/namespaces.api";
 export { KubeEvent, eventApi } from "../../common/k8s-api/endpoints/events.api";
-export { ServiceAccount, serviceAccountApi as serviceAccountsApi } from "../../common/k8s-api/endpoints/service-accounts.api";
+export { ServiceAccount } from "../../common/k8s-api/endpoints/service-account.api";
 export { Role, roleApi } from "../../common/k8s-api/endpoints/role.api";
 export { RoleBinding, roleBindingApi } from "../../common/k8s-api/endpoints/role-binding.api";
-export { ClusterRole, clusterRoleApi } from "../../common/k8s-api/endpoints/cluster-role.api";
-export { ClusterRoleBinding, clusterRoleBindingApi } from "../../common/k8s-api/endpoints/cluster-role-binding.api";
+export { ClusterRole } from "../../common/k8s-api/endpoints/cluster-role.api";
+export { ClusterRoleBinding } from "../../common/k8s-api/endpoints/cluster-role-binding.api";
 export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints/crd.api";
 
 // types

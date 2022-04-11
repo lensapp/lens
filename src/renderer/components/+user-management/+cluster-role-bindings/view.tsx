@@ -10,7 +10,7 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingStore } from "./store";
+import { clusterRoleBindingStore } from "./legacy-store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { serviceAccountsStore } from "../+service-accounts/store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";

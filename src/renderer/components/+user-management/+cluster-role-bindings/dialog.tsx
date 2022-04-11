@@ -9,7 +9,7 @@ import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
-import { serviceAccountsStore } from "../+service-accounts/store";
+import { serviceAccountStore } from "../+service-accounts/legacy-store";
 import type { ClusterRole, ClusterRoleBinding, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
@@ -20,8 +20,8 @@ import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Select } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
-import { clusterRoleBindingStore } from "./store";
-import { clusterRolesStore } from "../+cluster-roles/store";
+import { clusterRoleBindingStore } from "./legacy-store";
+import { clusterRolesStore } from "../+cluster-roles/legacy-store";
 import { ObservableHashSet, nFircate } from "../../../utils";
 import { Input } from "../../input";
 import { TooltipPosition } from "../../tooltip";
@@ -115,7 +115,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
     const accountNames = new Set(saSubjects.map(acc => acc.name));
 
     this.selectedAccounts.replace(
-      serviceAccountsStore.items
+      serviceAccountStore.items
         .filter(sa => accountNames.has(sa.getName())),
     );
     this.selectedUsers.replace(uSubjects.map(user => user.name));
@@ -223,7 +223,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
           isMulti
           themeName="light"
           placeholder="Select service accounts ..."
-          options={serviceAccountsStore.items.slice()}
+          options={serviceAccountStore.items.slice()}
           formatOptionLabel={value => (
             <>
               <Icon small material="account_box" />
@@ -257,9 +257,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
         <Wizard
           header={(
             <h5>
-              {action}
-              {" "}
-              ClusterRoleBinding
+              {`${action} ClusterRoleBinding`}
             </h5>
           )}
           done={ClusterRoleBindingDialog.close}

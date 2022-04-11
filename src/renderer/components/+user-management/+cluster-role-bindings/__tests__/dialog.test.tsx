@@ -5,14 +5,13 @@
 
 import React from "react";
 import { ClusterRoleBindingDialog } from "../dialog";
-import { clusterRolesStore } from "../../+cluster-roles/store";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import userEvent from "@testing-library/user-event";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
-
-jest.mock("../../+cluster-roles/store");
+import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
+import createStoresAndApisInjectable from "../../../../create-stores-apis.injectable";
 
 describe("ClusterRoleBindingDialog tests", () => {
   let render: DiRender;
@@ -20,11 +19,15 @@ describe("ClusterRoleBindingDialog tests", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    di.override(createStoresAndApisInjectable, () => true);
+
     await di.runSetups();
 
     render = renderFor(di);
 
-    clusterRolesStore.items.replace([
+    const store = di.inject(clusterRoleStoreInjectable);
+
+    store.items.replace([
       new ClusterRole({
         apiVersion: "rbac.authorization.k8s.io/v1",
         kind: "ClusterRole",

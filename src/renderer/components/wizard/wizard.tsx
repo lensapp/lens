@@ -18,6 +18,7 @@ export interface WizardCommonProps<D> {
   reset?: () => void;
   done?: () => void;
   hideSteps?: boolean;
+  children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
 export interface WizardProps<D> extends WizardCommonProps<D> {
@@ -26,7 +27,6 @@ export interface WizardProps<D> extends WizardCommonProps<D> {
   title?: string;
   header?: React.ReactNode;
   onChange?: (step: number) => void;
-  children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
 interface State {

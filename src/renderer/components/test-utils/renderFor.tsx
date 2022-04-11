@@ -14,7 +14,14 @@ type DiRenderFor = (di: DiContainer) => DiRender;
 
 export const renderFor: DiRenderFor = (di) => (ui) => {
   const result = testingLibraryRender(
-    <DiContextProvider value={{ di }}>{ui}</DiContextProvider>,
+    (
+      <DiContextProvider value={{ di }}>
+        {ui}
+      </DiContextProvider>
+    ),
+    {
+      legacyRoot: true,
+    },
   );
 
   return {

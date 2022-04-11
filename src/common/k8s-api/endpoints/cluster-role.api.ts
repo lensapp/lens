@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
@@ -44,7 +43,3 @@ export class ClusterRoleApi extends KubeApi<ClusterRole, ClusterRoleData> {
     });
   }
 }
-
-export const clusterRoleApi = isClusterPageContext()
-  ? new ClusterRoleApi()
-  : undefined as never;

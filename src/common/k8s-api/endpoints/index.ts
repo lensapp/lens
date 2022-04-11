@@ -36,6 +36,7 @@ export * from "./role-binding.api";
 export * from "./secret.api";
 export * from "./selfsubjectrulesreviews.api";
 export * from "./service.api";
-export * from "./service-accounts.api";
+export * from "./service-account.api";
 export * from "./stateful-set.api";
 export * from "./storage-class.api";
+export * from "./legacy-globals";
