@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../start-main-application/after-application-is-ready/after-application-is-ready-injection-token";
-import trayInitializerInjectable from "./tray-initializer.injectable";
+import trayInjectable from "./tray.injectable";
 
-const setupTrayWhenApplicationIsReadyInjectable = getInjectable({
-  id: "setup-tray-when-application-is-ready",
+const startTrayInjectable = getInjectable({
+  id: "start-tray",
 
   instantiate: (di) => {
-    const trayInitializer = di.inject(trayInitializerInjectable);
+    const trayInitializer = di.inject(trayInjectable);
 
     return {
       run: () => {
@@ -22,4 +22,4 @@ const setupTrayWhenApplicationIsReadyInjectable = getInjectable({
   injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
-export default setupTrayWhenApplicationIsReadyInjectable;
+export default startTrayInjectable;

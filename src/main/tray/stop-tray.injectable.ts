@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import trayInitializerInjectable from "./tray-initializer.injectable";
+import trayInjectable from "./tray.injectable";
 import { onApplicationHardQuitInjectionToken } from "../start-main-application/on-application-hard-quit/on-application-hard-quit-injection-token";
 
-const setupTrayWhenApplicationIsQuitInjectable = getInjectable({
-  id: "setup-tray-when-application-is-quit",
+const stopTrayInjectable = getInjectable({
+  id: "stop-tray",
 
   instantiate: (di) => {
-    const trayInitializer = di.inject(trayInitializerInjectable);
+    const trayInitializer = di.inject(trayInjectable);
 
     return {
       run: () => {
@@ -22,4 +22,4 @@ const setupTrayWhenApplicationIsQuitInjectable = getInjectable({
   injectionToken: onApplicationHardQuitInjectionToken,
 });
 
-export default setupTrayWhenApplicationIsQuitInjectable;
+export default stopTrayInjectable;
