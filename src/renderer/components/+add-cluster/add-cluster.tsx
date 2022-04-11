@@ -59,7 +59,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
   }
 
   componentDidMount() {
-    appEventBus.emit({ name: "cluster-add", action: "start" });
+    appEventBus.emit({ type: "APP_EVENT", name: "cluster-add", action: "start" });
   }
 
   @computed get allErrors(): string[] {
@@ -85,7 +85,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
   addClusters = action(async () => {
     this.isWaiting = true;
-    appEventBus.emit({ name: "cluster-add", action: "click" });
+    appEventBus.emit({ type: "APP_EVENT", name: "cluster-add", action: "click" });
 
     try {
       const absPath = this.props.getCustomKubeConfigDirectory(uuid.v4());

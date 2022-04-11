@@ -117,7 +117,7 @@ export class LensProxy extends Singleton {
           });
 
           this.port = port;
-          appEventBus.emit({ name: "lens-proxy", action: "listen", params: { port }});
+          appEventBus.emit({ type: "APP_EVENT", name: "lens-proxy", action: "listen", params: { port }});
           resolve(port);
         })
         .once("error", (error) => {

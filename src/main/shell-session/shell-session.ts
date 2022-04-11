@@ -286,7 +286,7 @@ export abstract class ShellSession {
         }
       });
 
-    appEventBus.emit({ name: this.ShellType, action: "open" });
+    appEventBus.emit({ type: "APP_EVENT", name: this.ShellType, action: "open" });
   }
 
   protected getPathEntries(): string[] {

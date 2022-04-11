@@ -67,6 +67,7 @@ export const initClusterFrame =
 
       setTimeout(() => {
         emitEvent({
+          type: "APP_EVENT",
           name: "cluster",
           action: "open",
           params: {

@@ -19,7 +19,7 @@ describe("event bus tests", () => {
         event = data;
       });
 
-      appEventBus.emit({ name: "foo", action: "bar" });
+      appEventBus.emit({ type: "APP_EVENT", name: "foo", action: "bar" });
       expect(event.name).toBe("foo");
     });
   });

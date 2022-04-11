@@ -61,7 +61,7 @@ export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoca
   });
 
   ipcMainHandle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "stop" });
+    appEventBus.emit({ type: "APP_EVENT", name: "cluster", action: "stop" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -71,7 +71,7 @@ export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoca
   });
 
   ipcMainHandle(clusterDeleteHandler, async (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "remove" });
+    appEventBus.emit({ type: "APP_EVENT", name: "cluster", action: "remove" });
 
     const clusterStore = ClusterStore.getInstance();
     const cluster = clusterStore.getById(clusterId);
@@ -105,7 +105,7 @@ export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoca
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-apply-all" });
+    appEventBus.emit({ type: "APP_EVENT", name: "cluster", action: "kubectl-apply-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -124,7 +124,7 @@ export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoca
   });
 
   ipcMainHandle(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-delete-all" });
+    appEventBus.emit({ type: "APP_EVENT", name: "cluster", action: "kubectl-delete-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {

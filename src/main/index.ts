@@ -157,7 +157,7 @@ async function main(di: DiContainer) {
 
 
     logger.info("APP:QUIT");
-    appEventBus.emit({ name: "app", action: "close" });
+    appEventBus.emit({ type: "APP_EVENT", name: "app", action: "close" });
     ClusterManager.getInstance(false)?.stop(); // close cluster connections
 
     const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
@@ -356,7 +356,7 @@ async function main(di: DiContainer) {
   }
 
   setTimeout(() => {
-    appEventBus.emit({ name: "service", action: "start" });
+    appEventBus.emit({ type: "APP_EVENT", name: "service", action: "start" });
   }, 1000);
 }
 
