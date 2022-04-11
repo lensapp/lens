@@ -21,7 +21,7 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
@@ -31,6 +31,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
@@ -38,6 +39,7 @@ export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deploymen
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
+  replicaSetStore: ReplicaSetStore;
 }
 
 @observer
@@ -57,7 +59,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
 
       this.props.subscribeStores([
         this.props.podStore,
-        replicaSetStore,
+        this.props.replicaSetStore,
       ]),
     ]);
   }
@@ -69,7 +71,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   };
 
   render() {
-    const { object: deployment, podStore } = this.props;
+    const { object: deployment, podStore, replicaSetStore } = this.props;
 
     if (!deployment) {
       return null;
@@ -168,6 +170,7 @@ export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetails
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
+    replicaSetStore: di.inject(replicaSetStoreInjectable),
   }),
 });
 

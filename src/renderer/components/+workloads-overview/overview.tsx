@@ -10,7 +10,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { eventStore } from "../+events/event.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import type { IComputedValue } from "mobx";
@@ -29,6 +28,8 @@ import type { DaemonSetStore } from "../+workloads-daemonsets/store";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import daemonSetStoreInjectable from "../+workloads-daemonsets/store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { ReplicaSetStore } from "../+workloads-replicasets/store";
+import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ComponentType<{}>[]>;
@@ -36,6 +37,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   daemonSetStore: DaemonSetStore;
+  replicaSetStore: ReplicaSetStore;
 }
 
 @observer
@@ -56,7 +58,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
         eventStore,
         jobStore,
         this.props.podStore,
-        replicaSetStore,
+        this.props.replicaSetStore,
         statefulSetStore,
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
@@ -115,5 +117,6 @@ export const WorkloadsOverview = withInjectables<Dependencies>(NonInjectedWorklo
     subscribeStores: di.inject(subscribeStoresInjectable),
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),
+    replicaSetStore: di.inject(replicaSetStoreInjectable),
   }),
 });

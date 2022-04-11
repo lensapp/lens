@@ -7,7 +7,6 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pod.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
@@ -121,7 +120,3 @@ export class ReplicaSet extends KubeObject<ReplicaSetStatus, ReplicaSetSpec, Kub
     return containers.map(container => container.image);
   }
 }
-
-export const replicaSetApi = isClusterPageContext()
-  ? new ReplicaSetApi()
-  : undefined as never;

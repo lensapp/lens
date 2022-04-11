@@ -15,7 +15,7 @@ import { prevDefault, stopPropagation } from "../../utils";
 import { DrawerTitle } from "../drawer";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { replicaSetStore } from "../+workloads-replicasets/legacy-store";
 import { showDetails } from "../kube-detail-params";
 import { KubeObjectAge } from "../kube-object/age";
 

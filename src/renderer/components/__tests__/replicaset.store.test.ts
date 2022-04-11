@@ -4,9 +4,12 @@
  */
 
 import { observable } from "mobx";
-import { podStore } from "../+workloads-pods/legacy-store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import replicasetsStoreInjectable from "../+workloads-replicasets/store.injectable";
+import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import { ReplicaSet, Pod } from "../../../common/k8s-api/endpoints";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningReplicaSet = new ReplicaSet({
   apiVersion: "foo",
@@ -128,7 +131,16 @@ const failedPod = new Pod({
 });
 
 describe("ReplicaSet Store tests", () => {
-  beforeAll(() => {
+  let replicaSetStore: ReplicaSetStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    const podStore = di.inject(podStoreInjectable);
+
+    replicaSetStore = di.inject(replicasetsStoreInjectable);
     podStore.items = observable.array([
       runningPod,
       failedPod,

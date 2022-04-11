@@ -14,6 +14,7 @@ import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extensio
 import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
 import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable";
 import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
+import replicaSetApiInjectable from "../../common/k8s-api/endpoints/replica-set.api.injectable";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const resources = castArray(resource);
@@ -34,6 +35,7 @@ export const clusterRoleBindingApi = asLegacyGlobalForExtensionApi(clusterRoleBi
 export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
 export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
 export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
+export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);
 
 export {
   BaseKubeJsonApiObjectMetadata,
@@ -52,7 +54,7 @@ export { Job, jobApi } from "../../common/k8s-api/endpoints/job.api";
 export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints/cron-job.api";
 export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/configmap.api";
 export { Secret, secretApi as secretsApi } from "../../common/k8s-api/endpoints/secret.api";
-export { ReplicaSet, replicaSetApi } from "../../common/k8s-api/endpoints/replica-set.api";
+export { ReplicaSet } from "../../common/k8s-api/endpoints/replica-set.api";
 export { ResourceQuota, resourceQuotaApi } from "../../common/k8s-api/endpoints/resource-quota.api";
 export { LimitRange, limitRangeApi } from "../../common/k8s-api/endpoints/limit-range.api";
 export { HorizontalPodAutoscaler, horizontalPodAutoscalerApi as hpaApi } from "../../common/k8s-api/endpoints/hpa.api";
@@ -93,7 +95,7 @@ export type { JobStore } from "../../renderer/components/+workloads-jobs/job.sto
 export type { CronJobStore } from "../../renderer/components/+workloads-cronjobs/cronjob.store";
 export type { ConfigMapStore as ConfigMapsStore } from "../../renderer/components/+config-maps/config-maps.store";
 export type { SecretStore as SecretsStore } from "../../renderer/components/+config-secrets/secrets.store";
-export type { ReplicaSetStore } from "../../renderer/components/+workloads-replicasets/replicasets.store";
+export type { ReplicaSetStore } from "../../renderer/components/+workloads-replicasets/store";
 export type { ResourceQuotaStore as ResourceQuotasStore } from "../../renderer/components/+config-resource-quotas/resource-quotas.store";
 export type { LimitRangeStore as LimitRangesStore } from "../../renderer/components/+config-limit-ranges/limit-ranges.store";
 export type { HorizontalPodAutoscalerStore as HPAStore } from "../../renderer/components/+config-autoscalers/hpa.store";

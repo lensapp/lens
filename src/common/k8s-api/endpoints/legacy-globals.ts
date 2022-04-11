@@ -8,6 +8,7 @@ import clusterRoleBindingApiInjectable from "./cluster-role-binding.api.injectab
 import clusterRoleApiInjectable from "./cluster-role.api.injectable";
 import daemonSetApiInjectable from "./daemon-set.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
+import replicaSetApiInjectable from "./replica-set.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 import serviceAccountApiInjectable from "./service-account.api.injectable";
 
@@ -40,3 +41,8 @@ export const podApi = asLegacyGlobalForExtensionApi(podApiInjectable);
  * @deprecated use `di.inject(daemonSetApiInjectable)` instead
  */
 export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
+
+/**
+ * @deprecated use `di.inject(replicaSetApiInjectable)` instead
+ */
+export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);

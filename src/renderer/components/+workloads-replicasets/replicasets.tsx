@@ -7,7 +7,7 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { replicaSetStore } from "./replicasets.store";
+import { replicaSetStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { eventStore } from "../+events/event.store";

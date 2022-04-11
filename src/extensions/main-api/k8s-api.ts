@@ -7,6 +7,7 @@ import clusterRoleBindingApiInjectable from "../../common/k8s-api/endpoints/clus
 import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-role.api.injectable";
 import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
 import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable";
+import replicaSetApiInjectable from "../../common/k8s-api/endpoints/replica-set.api.injectable";
 import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
 import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
@@ -25,6 +26,7 @@ export const clusterRoleBindingApi = asLegacyGlobalForExtensionApi(clusterRoleBi
 export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
 export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
 export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
+export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);
 
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
@@ -40,7 +42,7 @@ export { Job, jobApi } from "../../common/k8s-api/endpoints/job.api";
 export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints/cron-job.api";
 export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/configmap.api";
 export { Secret, secretApi as secretsApi } from "../../common/k8s-api/endpoints/secret.api";
-export { ReplicaSet, replicaSetApi } from "../../common/k8s-api/endpoints/replica-set.api";
+export { ReplicaSet } from "../../common/k8s-api/endpoints/replica-set.api";
 export { ResourceQuota, resourceQuotaApi } from "../../common/k8s-api/endpoints/resource-quota.api";
 export { LimitRange, limitRangeApi } from "../../common/k8s-api/endpoints/limit-range.api";
 export { HorizontalPodAutoscaler, horizontalPodAutoscalerApi as hpaApi } from "../../common/k8s-api/endpoints/hpa.api";

@@ -3,17 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podStore } from "../+workloads-pods/legacy-store";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import type { Deployment, ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints";
-import { replicaSetApi } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints/pod.api";
+import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { isClusterPageContext } from "../../utils";
+
+export interface ReplicaSetStoreDependencies {
+  getPodsByOwnerId: GetPodsByOwnerId;
+}
 
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet, ReplicaSetApi> {
+  constructor(protected readonly dependencies: ReplicaSetStoreDependencies, api: ReplicaSetApi, opts?: KubeObjectStoreOptions) {
+    super(api, opts);
+  }
+
   getChildPods(replicaSet: ReplicaSet) {
-    return podStore.getPodsByOwnerId(replicaSet.getId());
+    return this.dependencies.getPodsByOwnerId(replicaSet.getId());
   }
 
   getStatuses(replicaSets: ReplicaSet[]) {
@@ -39,12 +45,4 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet, ReplicaSetApi> 
       !!replicaSet.getOwnerRefs().find(owner => owner.uid === deployment.getId()),
     );
   }
-}
-
-export const replicaSetStore = isClusterPageContext()
-  ? new ReplicaSetStore(replicaSetApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(replicaSetStore);
 }

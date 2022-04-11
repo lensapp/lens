@@ -133,7 +133,7 @@ const failedPod = new Pod({
 describe("DaemonSet Store tests", () => {
   let daemonSetStore: DaemonSetStore;
 
-  beforeAll(() => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(createStoresAndApisInjectable, () => true);

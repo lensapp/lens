@@ -8,7 +8,6 @@ import React from "react";
 import { makeObservable, observable, reaction } from "mobx";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { replicaSetStore } from "./replicasets.store";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
@@ -28,6 +27,8 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { ReplicaSetStore } from "./store";
+import replicaSetStoreInjectable from "./store.injectable";
 
 export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSet> {
 }
@@ -35,6 +36,7 @@ export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSe
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
+  replicaSetStore: ReplicaSetStore;
 }
 
 @observer
@@ -65,7 +67,7 @@ class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProp
   };
 
   render() {
-    const { object: replicaSet, podStore } = this.props;
+    const { object: replicaSet, podStore, replicaSetStore } = this.props;
 
     if (!replicaSet) {
       return null;
@@ -138,5 +140,6 @@ export const ReplicaSetDetails = withInjectables<Dependencies, ReplicaSetDetails
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
+    replicaSetStore: di.inject(replicaSetStoreInjectable),
   }),
 });
