@@ -201,7 +201,7 @@ export interface ContainerState {
   terminated?: ContainerStateTerminated;
 }
 
-export interface IPodContainerStatus {
+export interface PodContainerStatus {
   name: string;
   state?: ContainerState;
   lastState?: ContainerState;
@@ -753,8 +753,8 @@ export interface PodStatus {
     ip: string;
   }[];
   startTime: string;
-  initContainerStatuses?: IPodContainerStatus[];
-  containerStatuses?: IPodContainerStatus[];
+  initContainerStatuses?: PodContainerStatus[];
+  containerStatuses?: PodContainerStatus[];
   qosClass?: string;
   reason?: string;
 }

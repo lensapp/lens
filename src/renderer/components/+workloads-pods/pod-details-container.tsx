@@ -6,7 +6,7 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import type { PodContainer, IPodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
+import type { PodContainer, PodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames, isDefined } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -43,7 +43,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
     ]);
   }
 
-  renderStatus(state: string, status: IPodContainerStatus | null | undefined) {
+  renderStatus(state: string, status: PodContainerStatus | null | undefined) {
     const { ready = false, state: containerState = {}} = status ?? {};
     const { terminated } = containerState;
 
@@ -56,7 +56,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
     );
   }
 
-  renderLastState(lastState: string, status: IPodContainerStatus | null | undefined) {
+  renderLastState(lastState: string, status: PodContainerStatus | null | undefined) {
     const { lastState: lastContainerState = {}} = status ?? {};
     const { terminated } = lastContainerState;
 

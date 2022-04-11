@@ -4,6 +4,7 @@
  */
 
 import assert from "assert";
+import type { PodContainer, PodContainerStatus } from "../endpoints";
 import { Pod } from "../endpoints";
 
 interface GetDummyPodOptions {
@@ -13,15 +14,18 @@ interface GetDummyPodOptions {
   initDead?: number;
 }
 
-function getDummyPod(rawOpts?: GetDummyPodOptions): Pod {
-  const opts = {
-    ...(rawOpts ?? {}),
-    running: 0,
-    dead: 0,
-    initDead: 0,
-    initRunning: 0,
-  };
+function getDummyPod(rawOpts: GetDummyPodOptions = {}): Pod {
+  const {
+    running = 0,
+    dead = 0,
+    initDead = 0,
+    initRunning = 0,
+  } = rawOpts;
 
+  const containers: PodContainer[] = [];
+  const initContainers: PodContainer[] = [];
+  const containerStatuses: PodContainerStatus[] = [];
+  const initContainerStatuses: PodContainerStatus[] = [];
   const pod = new Pod({
     apiVersion: "v1",
     kind: "Pod",
@@ -33,8 +37,8 @@ function getDummyPod(rawOpts?: GetDummyPodOptions): Pod {
       selfLink: "/api/v1/pods/default/test",
     },
     spec: {
-      containers: [],
-      initContainers: [],
+      containers,
+      initContainers,
       serviceAccount: "dummy",
       serviceAccountName: "dummy",
     },
@@ -44,20 +48,20 @@ function getDummyPod(rawOpts?: GetDummyPodOptions): Pod {
       hostIP: "10.0.0.1",
       podIP: "10.0.0.1",
       startTime: "now",
-      containerStatuses: [],
-      initContainerStatuses: [],
+      containerStatuses,
+      initContainerStatuses,
     },
   });
 
-  for (let i = 0; i < opts.running; i += 1) {
-    const name = `container_r_${i}`;
+  for (let i = 0; i < running; i += 1) {
+    const name = `container_running_${i}`;
 
-    pod.spec.containers?.push({
+    containers.push({
       image: "dummy",
       imagePullPolicy: "dummy",
       name,
     });
-    pod.status?.containerStatuses?.push({
+    containerStatuses.push({
       image: "dummy",
       imageID: "dummy",
       name,
@@ -71,15 +75,15 @@ function getDummyPod(rawOpts?: GetDummyPodOptions): Pod {
     });
   }
 
-  for (let i = 0; i < opts.dead; i += 1) {
-    const name = `container_d_${i}`;
+  for (let i = 0; i < dead; i += 1) {
+    const name = `container_dead_${i}`;
 
-    pod.spec.containers?.push({
+    containers.push({
       image: "dummy",
       imagePullPolicy: "dummy",
       name,
     });
-    pod.status?.containerStatuses?.push({
+    containerStatuses.push({
       image: "dummy",
       imageID: "dummy",
       name,
@@ -96,15 +100,15 @@ function getDummyPod(rawOpts?: GetDummyPodOptions): Pod {
     });
   }
 
-  for (let i = 0; i < opts.initRunning; i += 1) {
-    const name = `container_ir_${i}`;
+  for (let i = 0; i < initRunning; i += 1) {
+    const name = `container_init-running_${i}`;
 
-    pod.spec.initContainers?.push({
+    initContainers.push({
       image: "dummy",
       imagePullPolicy: "dummy",
       name,
     });
-    pod.status?.initContainerStatuses?.push({
+    initContainerStatuses.push({
       image: "dummy",
       imageID: "dummy",
       name,
@@ -118,15 +122,15 @@ function getDummyPod(rawOpts?: GetDummyPodOptions): Pod {
     });
   }
 
-  for (let i = 0; i < opts.initDead; i += 1) {
-    const name = `container_id_${i}`;
+  for (let i = 0; i < initDead; i += 1) {
+    const name = `container_init-dead_${i}`;
 
-    pod.spec.initContainers?.push({
+    initContainers.push({
       image: "dummy",
       imagePullPolicy: "dummy",
       name,
     });
-    pod.status?.initContainerStatuses?.push({
+    initContainerStatuses.push({
       image: "dummy",
       imageID: "dummy",
       name,
@@ -172,8 +176,8 @@ describe("Pods", () => {
 
     it("getRunningContainers should return only running and init running", () => {
       const res = [
-        ...Array.from(new Array(running), (val, index) => getNamedContainer(`container_r_${index}`)),
-        ...Array.from(new Array(initRunning), (val, index) => getNamedContainer(`container_ir_${index}`)),
+        ...Array.from(new Array(running), (val, index) => getNamedContainer(`container_running_${index}`)),
+        ...Array.from(new Array(initRunning), (val, index) => getNamedContainer(`container_init-running_${index}`)),
       ];
 
       expect(pod.getRunningContainers()).toStrictEqual(res);
@@ -181,10 +185,10 @@ describe("Pods", () => {
 
     it("getAllContainers should return all containers", () => {
       const res = [
-        ...Array.from(new Array(running), (val, index) => getNamedContainer(`container_r_${index}`)),
-        ...Array.from(new Array(dead), (val, index) => getNamedContainer(`container_d_${index}`)),
-        ...Array.from(new Array(initRunning), (val, index) => getNamedContainer(`container_ir_${index}`)),
-        ...Array.from(new Array(initDead), (val, index) => getNamedContainer(`container_id_${index}`)),
+        ...Array.from(new Array(running), (val, index) => getNamedContainer(`container_running_${index}`)),
+        ...Array.from(new Array(dead), (val, index) => getNamedContainer(`container_dead_${index}`)),
+        ...Array.from(new Array(initRunning), (val, index) => getNamedContainer(`container_init-running_${index}`)),
+        ...Array.from(new Array(initDead), (val, index) => getNamedContainer(`container_init-dead_${index}`)),
       ];
 
       expect(pod.getAllContainers()).toStrictEqual(res);
