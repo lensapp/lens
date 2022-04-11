@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { onApplicationHardQuitInjectionToken } from "../on-application-hard-quit-injection-token";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 
-const cleanUpProtocolRouterMainInjectable = getInjectable({
-  id: "clean-up-protocol-router-main",
+const cleanUpDeepLinkingInjectable = getInjectable({
+  id: "clean-up-deep-linking",
 
   instantiate: (di) => {
     const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
@@ -22,4 +22,4 @@ const cleanUpProtocolRouterMainInjectable = getInjectable({
   injectionToken: onApplicationHardQuitInjectionToken,
 });
 
-export default cleanUpProtocolRouterMainInjectable;
+export default cleanUpDeepLinkingInjectable;
