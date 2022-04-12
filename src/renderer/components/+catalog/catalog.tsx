@@ -124,7 +124,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     }));
 
     this.props.emitEvent({
-      type: "APP_EVENT",
       name: "catalog",
       action: "open",
     });
@@ -171,7 +170,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     this.props.emitEvent({
-      type: "APP_EVENT",
       name: "catalog",
       action: "change-category",
       params: {

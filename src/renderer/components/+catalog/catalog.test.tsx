@@ -286,7 +286,6 @@ describe("<Catalog />", () => {
     );
 
     expect(emitEvent).toHaveBeenCalledWith( {
-      type: "APP_EVENT",
       action: "open",
       name: "catalog",
     });
@@ -300,7 +299,6 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByText("Web Links"));
 
     expect(emitEvent).toHaveBeenLastCalledWith({
-      type: "APP_EVENT",
       action: "change-category",
       name: "catalog",
       params: {

@@ -13,7 +13,7 @@ export function exitApp() {
   const windowManager = WindowManager.getInstance(false);
   const clusterManager = ClusterManager.getInstance(false);
 
-  appEventBus.emit({ type: "APP_EVENT", name: "service", action: "close" });
+  appEventBus.emit({ name: "service", action: "close" });
   windowManager?.hide();
   clusterManager?.stop();
   logger.info("SERVICE:QUIT");

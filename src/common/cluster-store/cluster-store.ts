@@ -108,7 +108,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
-    appEventBus.emit({ type: "APP_EVENT", name: "cluster", action: "add" });
+    appEventBus.emit({ name: "cluster", action: "add" });
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel

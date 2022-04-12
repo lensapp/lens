@@ -99,7 +99,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   startMainReactions() {
     // track telemetry availability
     reaction(() => this.allowTelemetry, allowed => {
-      appEventBus.emit({ type: "APP_EVENT", name: "telemetry", action: allowed ? "enabled" : "disabled" });
+      appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
     });
 
     // open at system start-up
@@ -148,7 +148,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   @action
   saveLastSeenAppVersion() {
-    appEventBus.emit({ type: "APP_EVENT", name: "app", action: "whats-new-seen" });
+    appEventBus.emit({ name: "app", action: "whats-new-seen" });
     this.lastSeenAppVersion = getAppVersion();
   }
 

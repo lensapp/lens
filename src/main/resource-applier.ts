@@ -27,7 +27,7 @@ export class ResourceApplier {
    * @param ns The optional namespace of the kube resource
    */
   async patch(name: string, kind: string, patch: Patch, ns?: string): Promise<string> {
-    appEventBus.emit({ type: "APP_EVENT", name: "resource", action: "patch" });
+    appEventBus.emit({ name: "resource", action: "patch" });
 
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
@@ -60,7 +60,7 @@ export class ResourceApplier {
 
   async apply(resource: KubernetesObject | any): Promise<string> {
     resource = this.sanitizeObject(resource);
-    appEventBus.emit({ type: "APP_EVENT", name: "resource", action: "apply" });
+    appEventBus.emit({ name: "resource", action: "apply" });
 
     return this.kubectlApply(yaml.dump(resource));
   }

@@ -5,30 +5,15 @@
 
 import { EventEmitter } from "../event-emitter";
 
-export interface Keyable { [key: string]: any }
-export interface LensAppEvent {
-  type: "APP_EVENT";
+interface AppEventParams {
+  [key: string]: any;
+}
+
+export interface AppEvent {
   name: string;
   action: string;
-  params?: Keyable;
+  destination?: string;
+  params?: AppEventParams;
 }
-
-export interface TelemetryEvent {
-  type: "TELEMETRY_EVENT";
-  name: string;
-  credentials: Keyable;
-  event: Keyable;
-}
-
-export interface LensProxyEvent {
-  type: "LENS_PROXY_EVENT";
-  name: string;
-  action: string;
-  params: {
-    port: number;
-  };
-}
-
-export type AppEvent = LensAppEvent | TelemetryEvent | LensProxyEvent;
 
 export const appEventBus = new EventEmitter<[AppEvent]>();

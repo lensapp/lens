@@ -81,10 +81,10 @@ export class WindowManager extends Singleton {
       // open external links in default browser (target=_blank, window.open)
       this.mainWindow
         .on("focus", () => {
-          appEventBus.emit({ type: "APP_EVENT", name: "app", action: "focus" });
+          appEventBus.emit({ name: "app", action: "focus" });
         })
         .on("blur", () => {
-          appEventBus.emit({ type: "APP_EVENT", name: "app", action: "blur" });
+          appEventBus.emit({ name: "app", action: "blur" });
         })
         .on("closed", () => {
           // clean up
@@ -95,7 +95,7 @@ export class WindowManager extends Singleton {
         })
         .webContents
         .on("dom-ready", () => {
-          appEventBus.emit({ type: "APP_EVENT", name: "app", action: "dom-ready" });
+          appEventBus.emit({ name: "app", action: "dom-ready" });
         })
         .on("did-fail-load", (_event, code, desc) => {
           logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
@@ -178,7 +178,7 @@ export class WindowManager extends Singleton {
       this.splashWindow?.close();
       this.splashWindow = undefined;
       setTimeout(() => {
-        appEventBus.emit({ type: "APP_EVENT", name: "app", action: "start" });
+        appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
     } catch (error) {
       logger.error(`Showing main window failed: ${error.stack || error}`);
