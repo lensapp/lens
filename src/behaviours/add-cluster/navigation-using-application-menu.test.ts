@@ -4,7 +4,8 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import { ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
 
 // TODO: Make components free of side effects by making them deterministic

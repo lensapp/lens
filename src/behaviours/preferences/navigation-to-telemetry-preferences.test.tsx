@@ -4,7 +4,8 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
-import { ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";

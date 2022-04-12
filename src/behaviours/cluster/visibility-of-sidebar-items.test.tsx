@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
-import { SidebarItemRegistration, sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
+import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
 import { computed } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";

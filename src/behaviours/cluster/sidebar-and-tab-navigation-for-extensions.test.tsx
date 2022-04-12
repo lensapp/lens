@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { fireEvent, RenderResult } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";

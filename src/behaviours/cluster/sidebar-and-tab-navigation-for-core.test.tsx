@@ -2,17 +2,21 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { DiContainer, getInjectable } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import { fireEvent, RenderResult } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
-import { SidebarItemRegistration, sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
+import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
 import { computed } from "mobx";
 import { noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
-import { ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";

@@ -4,8 +4,9 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
+import type {
+  ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import {
-  ApplicationBuilder,
   getApplicationBuilder,
 } from "../../renderer/components/test-utils/get-application-builder";
 import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
