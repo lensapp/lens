@@ -4,7 +4,10 @@
  */
 
 import { Pod } from "../../../common/k8s-api/endpoints";
-import { podStore } from "../+workloads-pods/legacy-store";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningPod = new Pod({
   apiVersion: "foo",
@@ -111,6 +114,16 @@ const succeededPod = new Pod({
 });
 
 describe("Pod Store tests", () => {
+  let podStore: PodStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    podStore = di.inject(podStoreInjectable);
+  });
+
   it("gets Pod statuses in proper sorting order", () => {
     const statuses = Object.entries(podStore.getStatuses([
       pendingPod,
