@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`extensions - navigation using application menu renders 1`] = `<div />`;
+
+exports[`extensions - navigation using application menu when navigating to extensions using application menu renders 1`] = `
+<div>
+  <div
+    class="SettingLayout DropFileInput Extensions"
+    data-testid="extensions-page"
+  >
+    <div
+      class="contentRegion"
+      id="ScrollSpyRoot"
+    >
+      <div
+        class="content"
+      >
+        <section>
+          <h1>
+            Extensions
+          </h1>
+          <div
+            class="mb-14 mt-3"
+          >
+            <p>
+              Add new features via Lens Extensions.
+               
+              Check out 
+              <a
+                href="https://docs.k8slens.dev/main//extensions/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                docs
+              </a>
+               
+              and list of 
+              <a
+                href="https://github.com/lensapp/lens-extensions/blob/main/README.md"
+                rel="noreferrer"
+                target="_blank"
+              >
+                available extensions
+              </a>
+              .
+            </p>
+          </div>
+          <section
+            class="mt-2"
+          >
+            <div
+              class="SubTitle"
+            >
+              Name or file path or URL to an extension package (tar, tgz)
+               
+            </div>
+            <div
+              class="flex"
+            >
+              <div
+                class="flex-1"
+              />
+              <div
+                class="flex-initial"
+              >
+                <button
+                  class="Button w-80 h-full primary"
+                  type="button"
+                >
+                  Install
+                </button>
+              </div>
+            </div>
+            <small
+              class="mt-3"
+            >
+              <b>
+                Pro-Tip
+              </b>
+              : you can drag-n-drop tarball-file to this area
+            </small>
+          </section>
+          <div>
+            <div
+              class="Spinner singleColor center"
+            />
+          </div>
+        </section>
+      </div>
+      <div
+        class="toolsRegion"
+      >
+        <div
+          class="fixed top-[60px]"
+        >
+          <div>
+            <div
+              aria-label="Close"
+              role="button"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="close"
+                >
+                  close
+                </span>
+              </i>
+            </div>
+            <div
+              aria-hidden="true"
+            >
+              ESC
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -75,17 +75,17 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
     this.props.hotbarStore.restackItems(from, to);
   }
 
-  removeItem(uid: string) {
+  removeItem = (uid: string) => {
     const hotbar = this.props.hotbarStore;
 
     hotbar.removeFromHotbar(uid);
-  }
+  };
 
-  addItem(entity: CatalogEntity, index = -1) {
+  addItem = (entity: CatalogEntity, index = -1) => {
     const hotbar = this.props.hotbarStore;
 
     hotbar.addToHotbar(entity, index);
-  }
+  };
 
   getMoveAwayDirection(entityId: string, cellIndex: number) {
     const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);

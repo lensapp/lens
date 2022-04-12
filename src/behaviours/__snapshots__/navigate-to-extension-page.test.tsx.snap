@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`navigate to extension page renders 1`] = `<div />`;
+
+exports[`navigate to extension page when extension navigates to child route renders 1`] = `
+<div>
+  <div>
+    Child page
+  </div>
+</div>
+`;
+
+exports[`navigate to extension page when extension navigates to route with parameters renders 1`] = `
+<div>
+  <div>
+    <ul>
+      <li>
+        some-string-value-from-navigate
+      </li>
+      <li>
+        126
+      </li>
+      <li>
+        some-array-value-from-navigate
+      </li>
+    </ul>
+    <button
+      data-testid="button-to-change-page-parameters"
+      type="button"
+    >
+      Some button
+    </button>
+  </div>
+</div>
+`;
+
+exports[`navigate to extension page when extension navigates to route without parameters renders 1`] = `
+<div>
+  <div>
+    <ul>
+      <li>
+        some-string-value
+      </li>
+      <li>
+        42
+      </li>
+      <li>
+        some-array-value,some-other-array-value
+      </li>
+    </ul>
+    <button
+      data-testid="button-to-change-page-parameters"
+      type="button"
+    >
+      Some button
+    </button>
+  </div>
+</div>
+`;
+
+exports[`navigate to extension page when extension navigates to route without parameters when changing page parameters renders 1`] = `
+<div>
+  <div>
+    <ul>
+      <li>
+        some-changed-string-value
+      </li>
+      <li>
+        84
+      </li>
+      <li>
+        some-changed-array-value,some-other-changed-array-value
+      </li>
+    </ul>
+    <button
+      data-testid="button-to-change-page-parameters"
+      type="button"
+    >
+      Some button
+    </button>
+  </div>
+</div>
+`;
