@@ -48,9 +48,11 @@ export class CustomResourceDefinitions extends React.Component {
     return crdStore.items; // show all by default
   }
 
-  toggleSelection = (groups: readonly string[]) => {
+  toggleSelection = (options: readonly ({ group: string })[]) => {
+    const groups = options.map(({ group }) => group);
+
     this.selectedGroups.replace(groups);
-    crdGroupsUrlParam.set([...groups]);
+    crdGroupsUrlParam.set(groups);
   };
 
   private getPlaceholder() {
@@ -101,13 +103,13 @@ export class CustomResourceDefinitions extends React.Component {
                 <Select
                   className="group-select"
                   placeholder={this.getPlaceholder()}
-                  options={Object.keys(crdStore.groups)}
+                  options={Object.keys(crdStore.groups).map(group => ({ group }))}
                   onChange={this.toggleSelection}
                   closeMenuOnSelect={false}
                   controlShouldRenderValue={false}
-                  isOptionSelected={opt => this.selectedGroups.has(opt)}
+                  isOptionSelected={opt => this.selectedGroups.has(opt.group)}
                   isMulti={true}
-                  formatOptionLabel={(group) => (
+                  formatOptionLabel={({ group }) => (
                     <div className="flex gaps align-center">
                       <Icon small material="folder" />
                       <span>{group}</span>
@@ -115,11 +117,11 @@ export class CustomResourceDefinitions extends React.Component {
                         <Icon
                           small
                           material="check"
-                          className="box right" 
+                          className="box right"
                         />
                       )}
                     </div>
-                  )} 
+                  )}
                 />
               </>
             ),
