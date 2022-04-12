@@ -42,6 +42,8 @@ import whenSecondInstanceInjectable from "./electron-app/when-second-instance.in
 import whenSystemShutdownInjectable from "./electron-app/when-system-shutdown.injectable";
 import exitAppInjectable from "./electron-app/exit-app.injectable";
 import setApplicationNameInjectable from "./electron-app/set-application-name.injectable";
+import getCommandLineSwitchInjectable from "./electron-app/get-command-line-switch.injectable";
+import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -77,6 +79,8 @@ export const getDiForUnitTesting = (
     di.override(whenSystemShutdownInjectable, () => () => {});
     di.override(exitAppInjectable, () => () => {});
     di.override(setApplicationNameInjectable, () => () => {});
+    di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
+    di.override(isAutoUpdateEnabledInjectable, () => () => false);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
