@@ -22,20 +22,23 @@ export interface ClusterPrometheusSettingProps {
 
 const autoDetectPrometheus = Symbol("auto-detect-prometheus");
 
-type ProviderOption = typeof autoDetectPrometheus | string;
+interface ProviderOption {
+  provider: typeof autoDetectPrometheus | string;
+}
 
 @observer
 export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps> {
   @observable path = "";
-  @observable provider: ProviderOption = autoDetectPrometheus;
+  @observable selectedOption = this.options.find(opt => opt.provider === autoDetectPrometheus);
   @observable loading = true;
   loadedOptions = observable.map<string, MetricProviderInfo>();
 
   @computed get options(): ProviderOption[] {
-    return [
+    return ([
       autoDetectPrometheus,
       ...this.loadedOptions.keys(),
-    ];
+    ] as const)
+      .map(provider => ({ provider }));
   }
 
   constructor(props: ClusterPrometheusSettingProps) {
@@ -44,11 +47,11 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
   }
 
   @computed get canEditPrometheusPath(): boolean {
-    if (this.provider === autoDetectPrometheus) {
+    if (!this.selectedOption || this.selectedOption.provider === autoDetectPrometheus) {
       return false;
     }
 
-    return this.loadedOptions.get(this.provider)?.isConfigurable ?? false;
+    return this.loadedOptions.get(this.selectedOption.provider)?.isConfigurable ?? false;
   }
 
   componentDidMount() {
@@ -65,9 +68,9 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
         }
 
         if (prometheusProvider) {
-          this.provider = prometheusProvider.type;
+          this.selectedOption = this.options.find(opt => opt.provider === prometheusProvider.type);
         } else {
-          this.provider = "";
+          this.selectedOption = undefined;
         }
       }),
     );
@@ -81,7 +84,7 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
   }
 
   parsePrometheusPath = () => {
-    if (!this.provider || !this.path) {
+    if (!this.selectedOption || !this.path) {
       return undefined;
     }
     const parsed = this.path.split(/\/|:/, 3);
@@ -100,8 +103,8 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
   };
 
   onSaveProvider = () => {
-    this.props.cluster.preferences.prometheusProvider = typeof this.provider === "string"
-      ? { type: this.provider }
+    this.props.cluster.preferences.prometheusProvider = typeof this.selectedOption === "string"
+      ? { type: this.selectedOption }
       : undefined;
   };
 
@@ -121,9 +124,9 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
                 <>
                   <Select<ProviderOption, false, GroupBase<ProviderOption>>
                     id="cluster-prometheus-settings-input"
-                    value={this.provider}
+                    value={this.selectedOption}
                     onChange={provider => {
-                      this.provider = provider ?? autoDetectPrometheus;
+                      this.selectedOption = provider ?? { provider: autoDetectPrometheus };
                       this.onSaveProvider();
                     }}
                     options={this.options}

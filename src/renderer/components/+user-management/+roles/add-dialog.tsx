@@ -17,7 +17,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { rolesStore } from "./store";
+import { roleStore } from "./legacy-store";
 
 export interface AddRoleDialogProps extends Partial<DialogProps> {
 }
@@ -49,7 +49,7 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
 
   createRole = async () => {
     try {
-      const role = await rolesStore.create({ name: this.roleName, namespace: this.namespace });
+      const role = await roleStore.create({ name: this.roleName, namespace: this.namespace });
 
       showDetails(role.selfLink);
       this.reset();
@@ -90,7 +90,7 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
               id="add-dialog-namespace-select-input"
               themeName="light"
               value={this.namespace}
-              onChange={namespace => this.namespace = namespace ?? "default"}
+              onChange={option => this.namespace = option?.namespace ?? "default"}
             />
           </WizardStep>
         </Wizard>

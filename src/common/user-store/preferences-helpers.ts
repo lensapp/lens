@@ -88,7 +88,7 @@ const colorTheme: PreferenceDescription<string> = {
   },
 };
 
-const terminalTheme: PreferenceDescription<string | undefined> = {
+const terminalTheme: PreferenceDescription<string> = {
   fromStore(val) {
     return val || "";
   },

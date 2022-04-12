@@ -188,7 +188,7 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
           return [
             type, // type of event: "Normal" or "Warning"
             {
-              className: { warning: isWarning },
+              className: cssNames({ warning: isWarning }),
               title: (
                 <>
                   <span id={tooltipId}>{message}</span>
@@ -209,9 +209,7 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
             event.getSource(),
             event.count,
             <KubeObjectAge key="age" object={event} />,
-            event.lastTimestamp
-              ? <ReactiveDuration key="last-seen" timestamp={event.lastTimestamp} />
-              : "<unknown>",
+            <ReactiveDuration key="last-seen" timestamp={event.lastTimestamp} />,
           ];
         }}
       />

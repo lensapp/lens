@@ -31,9 +31,21 @@ interface Dependencies {
   themeStore: ThemeStore;
 }
 
+const timezoneOptions = moment.tz.names().map(timezone => ({ timezone }));
+
 const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, userStore, themeStore }) => {
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
   const extensionSettings = appPreferenceItems.get().filter((preference) => preference.showInPreferencesTab === "application");
+  const themeOptions = [
+    "system",
+    ...themeStore.themes.keys(),
+  ].map(theme => ({ theme }));
+  const extensionInstallRegistryOptions = ([
+    "default",
+    "npmrc",
+    "custom",
+  ] as const).map(registry => ({ registry }));
+  const updateChannelOptions = [...updateChannels.keys()].map(channel => ({ channel }));
 
   return (
     <Preferences data-testid="application-preferences-page">
@@ -42,13 +54,10 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="appearance">
           <SubTitle title="Theme" />
           <Select
-            options={[
-              "system",
-              ...themeStore.themes.keys(),
-            ]}
-            getOptionLabel={option => themeStore.themes.get(option)?.name ?? "Sync with computer"}
-            value={userStore.colorTheme}
-            onChange={value => userStore.colorTheme = value ?? defaultTheme}
+            options={themeOptions}
+            getOptionLabel={option => themeStore.themes.get(option.theme)?.name ?? "Sync with computer"}
+            value={({ theme: userStore.colorTheme })}
+            onChange={value => userStore.colorTheme = value?.theme ?? defaultTheme}
             themeName="lens"
           />
         </section>
@@ -58,14 +67,10 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="extensionRegistryUrl">
           <SubTitle title="Extension Install Registry" />
           <Select
-            options={[
-              "default",
-              "npmrc",
-              "custom",
-            ]}
-            value={userStore.extensionRegistryUrl.location}
+            options={extensionInstallRegistryOptions}
+            value={({ registry: userStore.extensionRegistryUrl.location })}
             getOptionLabel={option => {
-              switch (option) {
+              switch (option.registry) {
                 case "custom":
                   return "Custom Url";
                 case "default":
@@ -75,7 +80,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
               }
             }}
             onChange={value => runInAction(() => {
-              userStore.extensionRegistryUrl.location = value ?? defaultExtensionRegistryUrlLocation;
+              userStore.extensionRegistryUrl.location = value?.registry ?? defaultExtensionRegistryUrlLocation;
 
               if (userStore.extensionRegistryUrl.location === "custom") {
                 userStore.extensionRegistryUrl.customUrl = "";
@@ -123,9 +128,9 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="update-channel">
           <SubTitle title="Update Channel" />
           <Select
-            options={[...updateChannels.keys()]}
-            value={userStore.updateChannel}
-            onChange={value => userStore.updateChannel = value ?? defaultUpdateChannel}
+            options={updateChannelOptions}
+            value={({ channel: userStore.updateChannel })}
+            onChange={value => userStore.updateChannel = value?.channel ?? defaultUpdateChannel}
             themeName="lens"
           />
         </section>
@@ -135,10 +140,10 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="locale">
           <SubTitle title="Locale Timezone" />
           <Select
-            options={moment.tz.names()}
-            value={userStore.localeTimezone}
-            getOptionLabel={timeZone => moment.tz.zone(timeZone)?.name ?? "<unknown>"}
-            onChange={value => userStore.localeTimezone = value ?? defaultLocaleTimezone}
+            options={timezoneOptions}
+            value={({ timezone: userStore.localeTimezone })}
+            getOptionLabel={option => option.timezone}
+            onChange={value => userStore.localeTimezone = value?.timezone ?? defaultLocaleTimezone}
             themeName="lens"
           />
         </section>

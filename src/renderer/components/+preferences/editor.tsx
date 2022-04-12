@@ -22,6 +22,14 @@ interface Dependencies {
 
 const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
   const editorConfiguration = userStore.editorConfiguration;
+  const minimapPositionOptions = (["left", "right"] as const)
+    .map(side => ({ side }));
+  const lineNumberOptions = ([
+    "on",
+    "off",
+    "relative",
+    "interval",
+  ] as const).map(lineNumbers => ({ lineNumbers }));
 
   return (
     <Preferences data-testid="editor-preferences-page">
@@ -43,9 +51,9 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
               <SubHeader compact>Position</SubHeader>
               <Select
                 themeName="lens"
-                options={["left", "right"]}
-                value={editorConfiguration.minimap.side}
-                onChange={value => editorConfiguration.minimap.side = value ?? undefined}
+                options={minimapPositionOptions}
+                value={editorConfiguration.minimap.side ? ({ side: editorConfiguration.minimap.side }) : null}
+                onChange={value => editorConfiguration.minimap.side = value?.side}
               />
             </div>
           </div>
@@ -54,15 +62,10 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
         <section>
           <SubTitle title="Line numbers"/>
           <Select
-            options={[
-              "on",
-              "off",
-              "relative",
-              "interval",
-            ]}
-            getOptionLabel={string.uppercaseFirst}
-            value={editorConfiguration.lineNumbers}
-            onChange={value => editorConfiguration.lineNumbers = value ?? defaultEditorConfig.lineNumbers}
+            options={lineNumberOptions}
+            getOptionLabel={option => string.uppercaseFirst(option.lineNumbers)}
+            value={{ lineNumbers: editorConfiguration.lineNumbers }}
+            onChange={value => editorConfiguration.lineNumbers = value?.lineNumbers ?? defaultEditorConfig.lineNumbers}
             themeName="lens"
           />
         </section>

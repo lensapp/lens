@@ -9,7 +9,7 @@ import React from "react";
 import { formatDuration } from "../../utils";
 
 export interface ReactiveDurationProps {
-  timestamp: string;
+  timestamp: string | undefined;
 
   /**
    * Whether the display string should prefer length over precision
@@ -34,6 +34,10 @@ function computeUpdateInterval(creationTimestampEpoch: number): number {
 }
 
 export const ReactiveDuration = observer(({ timestamp, compact = true }: ReactiveDurationProps) => {
+  if (!timestamp) {
+    return <>{"<unknown>"}</>;
+  }
+
   const creationTimestamp = new Date(timestamp).getTime();
 
   return (

@@ -94,20 +94,6 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
     return undefined;
   }
 
-  private formatQuotaOptionLabel = (quota: string) => {
-    const iconMaterial = this.getQuotaOptionLabelIconMaterial(quota);
-
-    return iconMaterial
-      ? (
-        <span className="nobr">
-          <Icon material={iconMaterial} /> 
-          {" "}
-          {quota}
-        </span>
-      )
-      : quota;
-  };
-
   setQuota = () => {
     if (!this.quotaSelectValue) return;
     this.quotas[this.quotaSelectValue] = this.quotaInputValue;
@@ -194,7 +180,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
               placeholder="Namespace"
               themeName="light"
               className="box grow"
-              onChange={value => this.namespace = value}
+              onChange={option => this.namespace = option?.namespace ?? null}
             />
 
             <SubTitle title="Values" />
@@ -204,11 +190,27 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
                 className="quota-select"
                 themeName="light"
                 placeholder="Select a quota.."
-                options={Object.keys(this.quotas)}
+                options={Object.keys(this.quotas).map(quota => ({ quota }))}
                 isMulti={false}
-                value={this.quotaSelectValue}
-                onChange={value => this.quotaSelectValue = value}
-                formatOptionLabel={this.formatQuotaOptionLabel}
+                value={(
+                  this.quotaSelectValue
+                    ? ({ quota: this.quotaSelectValue })
+                    : null
+                )}
+                onChange={option => this.quotaSelectValue = option?.quota ?? null}
+                formatOptionLabel={({ quota }) => {
+                  const iconMaterial = this.getQuotaOptionLabelIconMaterial(quota);
+
+                  return iconMaterial
+                    ? (
+                      <span className="nobr">
+                        <Icon material={iconMaterial} />
+                        {" "}
+                        {quota}
+                      </span>
+                    )
+                    : quota;
+                }}
               />
               <Input
                 maxLength={10}

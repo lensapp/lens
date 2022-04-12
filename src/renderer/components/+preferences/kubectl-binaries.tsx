@@ -30,6 +30,7 @@ const NonInjectedKubectlBinaries= observer(({
   const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
+  const downloadMirrorOptions = [...packageMirrors].map(([name, mirror]) => ({ name, mirror }));
 
   const save = () => {
     userStore.downloadBinariesPath = downloadPath;
@@ -52,12 +53,12 @@ const NonInjectedKubectlBinaries= observer(({
         <SubTitle title="Download mirror" />
         <Select
           placeholder="Download mirror for kubectl"
-          options={[...packageMirrors.keys()]}
-          value={userStore.downloadMirror}
-          onChange={value => userStore.downloadMirror = value ?? defaultPackageMirror}
-          getOptionLabel={mirrorKey => packageMirrors.get(mirrorKey)?.label ?? "<unknown>"}
+          options={downloadMirrorOptions}
+          value={downloadMirrorOptions.find(opt => opt.name === userStore.downloadMirror)}
+          onChange={option => userStore.downloadMirror = option?.name ?? defaultPackageMirror}
+          getOptionLabel={option => option.mirror.label}
           isDisabled={!userStore.downloadKubectlBinaries}
-          isOptionDisabled={mirrorKey => !packageMirrors.get(mirrorKey)?.platforms.has(process.platform)}
+          isOptionDisabled={option => option.mirror.platforms.has(process.platform)}
           themeName="lens"
         />
       </section>

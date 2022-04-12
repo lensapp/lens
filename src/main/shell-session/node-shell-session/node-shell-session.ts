@@ -51,7 +51,12 @@ export class NodeShellSession extends ShellSession {
         data: `Error occurred: ${get(error, "response.body.message", error ? String(error) : "unknown error")}`,
       });
 
-      throw new ShellOpenError("failed to create node pod", error);
+      throw new ShellOpenError(
+        "failed to create node pod",
+        error instanceof Error
+          ? { cause: error }
+          : undefined,
+      );
     }
 
     const env = await this.getCachedShellEnv();

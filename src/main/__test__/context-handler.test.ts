@@ -73,7 +73,7 @@ const clusterStub = {
 } as unknown as Cluster;
 
 describe("ContextHandler", () => {
-  let createContextHandler: (cluster: Cluster) => ClusterContextHandler;
+  let createContextHandler: (cluster: Cluster) => ClusterContextHandler | undefined;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });

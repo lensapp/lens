@@ -18,6 +18,7 @@ import { iter } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import registeredCommandsInjectable from "./registered-commands/registered-commands.injectable";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { SingleValue } from "react-select";
 
 interface Dependencies {
   commands: IComputedValue<Map<string, RegisteredCommand>>;
@@ -28,20 +29,14 @@ interface Dependencies {
 const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeCommandOverlay }: Dependencies) => {
   const [searchValue, setSearchValue] = useState("");
 
-  const executeAction = (commandId: string | null) => {
-    if (!commandId) {
-      return;
-    }
-
-    const command = commands.get().get(commandId);
-
-    if (!command) {
+  const executeAction = (option: SingleValue<typeof activeCommands[number]>) => {
+    if (!option) {
       return;
     }
 
     try {
       closeCommandOverlay();
-      command.action({
+      option.action({
         entity: activeEntity,
         navigate: (url, opts = {}) => {
           const { forceRootFrame = false } = opts;
@@ -54,7 +49,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         },
       });
     } catch (error) {
-      console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
+      console.error("[COMMAND-DIALOG] failed to execute command", option.id, error);
     }
   };
 
@@ -70,8 +65,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         return void console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
       }
     })
-    .map(({ id, ...rest }) => [id, rest] as const)
-    .collect(items => new Map(items));
+    .collect(items => Array.from(items));
 
   return (
     <Select
@@ -83,15 +77,12 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         IndicatorSeparator: null,
       }}
       menuIsOpen
-      options={Array.from(activeCommands.keys())}
-      getOptionLabel={commandId => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { title } = activeCommands.get(commandId)!;
-
-        return typeof title === "string"
+      options={activeCommands}
+      getOptionLabel={({ title }) => (
+        typeof title === "string"
           ? title
-          : title(context);
-      }}
+          : title(context)
+      )}
       autoFocus={true}
       escapeClearsValue={false}
       data-test-id="command-palette-search"

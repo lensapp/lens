@@ -7,7 +7,8 @@ import "./welcome.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
-import Carousel from "react-material-ui-carousel";
+import type { CarouselProps } from "react-material-ui-carousel";
+import LegacyCarousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -17,6 +18,9 @@ import welcomeBannerItemsInjectable from "./welcome-banner-items/welcome-banner-
 import type { WelcomeBannerRegistration } from "./welcome-banner-items/welcome-banner-registration";
 
 export const defaultWidth = 320;
+
+// This is to fix some react 18 type errors
+const Carousel = LegacyCarousel as React.ComponentType<CarouselProps>;
 
 interface Dependencies {
   welcomeMenuItems: IComputedValue<WelcomeMenuRegistration[]>;

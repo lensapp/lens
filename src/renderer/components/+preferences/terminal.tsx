@@ -24,6 +24,11 @@ interface Dependencies {
 }
 
 const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: Dependencies) => {
+  const themeOptions = [
+    "",
+    ...themeStore.themes.keys(),
+  ].map(name => ({ name }));
+
   return (
     <Preferences data-testid="terminal-preferences-page">
       <section>
@@ -53,12 +58,9 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
           <SubTitle title="Terminal theme" />
           <Select
             themeName="lens"
-            options={[
-              "",
-              ...themeStore.themes.keys(),
-            ]}
-            getOptionLabel={themeName => {
-              const theme = themeStore.themes.get(themeName);
+            options={themeOptions}
+            getOptionLabel={option => {
+              const theme = themeStore.themes.get(option.name);
 
               if (theme) {
                 return theme.name;
@@ -66,8 +68,8 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
 
               return "Match System Theme";
             }}
-            value={userStore.terminalTheme}
-            onChange={value => userStore.terminalTheme = value ?? ""}
+            value={{ name: userStore.terminalTheme }}
+            onChange={option => userStore.terminalTheme = option?.name ?? ""}
           />
         </section>
 

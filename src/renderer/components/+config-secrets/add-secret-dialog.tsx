@@ -18,7 +18,7 @@ import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Select } from "../select";
 import { Icon } from "../icon";
-import { base64, iter } from "../../utils";
+import { base64, iter, object } from "../../utils";
 import { Notifications } from "../notifications";
 import upperFirst from "lodash/upperFirst";
 import { showDetails } from "../kube-detail-params";
@@ -27,20 +27,20 @@ import { fromEntries } from "../../../common/utils/objects";
 export interface AddSecretDialogProps extends Partial<DialogProps> {
 }
 
-interface ISecretTemplateField {
+interface SecretTemplateField {
   key: string;
   value?: string;
   required?: boolean;
 }
 
-interface ISecretTemplate {
-  [field: string]: ISecretTemplateField[] | undefined;
-  annotations?: ISecretTemplateField[];
-  labels?: ISecretTemplateField[];
-  data?: ISecretTemplateField[];
+interface SecretTemplate {
+  [field: string]: SecretTemplateField[] | undefined;
+  annotations?: SecretTemplateField[];
+  labels?: SecretTemplateField[];
+  data?: SecretTemplateField[];
 }
 
-type ISecretField = keyof ISecretTemplate;
+type ISecretField = keyof SecretTemplate;
 
 const dialogState = observable.object({
   isOpen: false,
@@ -61,7 +61,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
     dialogState.isOpen = false;
   }
 
-  private secretTemplate: Partial<Record<SecretType, ISecretTemplate>> = {
+  private secretTemplate: Partial<Record<SecretType, SecretTemplate>> = {
     [SecretType.Opaque]: {},
     [SecretType.ServiceAccountToken]: {
       annotations: [
@@ -71,8 +71,8 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
     },
   };
 
-  get types() {
-    return Object.keys(this.secretTemplate) as SecretType[];
+  private get secretTypeOptions() {
+    return object.keys(this.secretTemplate).map(type => ({ type }));
   }
 
   @observable secret = this.secretTemplate;
@@ -89,7 +89,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
     AddSecretDialog.close();
   };
 
-  private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue: (val: string) => string = (val => val)) => {
+  private getDataFromFields = (fields: SecretTemplateField[] = [], processValue: (val: string) => string = (val => val)) => {
     return iter.pipeline(fields)
       .filterMap(({ key, value }) => (
         value
@@ -160,7 +160,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                   tabIndex={item.required ? -1 : 0}
                   readOnly={item.required}
                   value={item.key}
-                  onChange={v => item.key = v} 
+                  onChange={v => item.key = v}
                 />
                 <Input
                   multiLine
@@ -169,7 +169,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                   className="value"
                   placeholder="Value"
                   value={item.value}
-                  onChange={v => item.value = v} 
+                  onChange={v => item.value = v}
                 />
                 <Icon
                   small
@@ -177,7 +177,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                   tooltip={item.required ? "Required field" : "Remove field"}
                   className="remove-icon"
                   material="remove_circle_outline"
-                  onClick={() => this.removeField(field, index)} 
+                  onClick={() => this.removeField(field, index)}
                 />
               </div>
             ))}
@@ -224,7 +224,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                   id="secret-namespace-input"
                   themeName="light"
                   value={namespace}
-                  onChange={value => this.namespace = value ?? "default"}
+                  onChange={value => this.namespace = value?.namespace ?? "default"}
                 />
               </div>
               <div className="secret-type">
@@ -232,9 +232,9 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                 <Select
                   id="secret-input"
                   themeName="light"
-                  options={this.types}
-                  value={type}
-                  onChange={value => this.type = value ?? SecretType.Opaque}
+                  options={this.secretTypeOptions}
+                  value={({ type })}
+                  onChange={value => this.type = value?.type ?? SecretType.Opaque}
                 />
               </div>
             </div>

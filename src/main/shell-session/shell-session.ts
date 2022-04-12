@@ -23,8 +23,8 @@ import { stat } from "fs/promises";
 import { getOrInsertWith } from "../../common/utils";
 
 export class ShellOpenError extends Error {
-  constructor(message: string, public cause: unknown) {
-    super(`${message}: ${cause}`);
+  constructor(message: string, options?: ErrorOptions) {
+    super(`${message}`, options);
     this.name = this.constructor.name;
     Error.captureStackTrace(this);
   }

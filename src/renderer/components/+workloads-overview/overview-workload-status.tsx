@@ -10,11 +10,11 @@ import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
 import type { DatasetTooltipLabel, PieChartData } from "../chart";
 import { PieChart } from "../chart";
-import { cssVar } from "../../utils";
+import { cssVar, object } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 
 export interface OverviewWorkloadStatusProps {
-  status: Record<string, number>;
+  status: Partial<Record<string, number>>;
 }
 
 @observer
@@ -32,7 +32,7 @@ export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStat
       datasets: [],
     };
 
-    const statuses = Object.entries(this.props.status).filter(([, val]) => val > 0);
+    const statuses = object.entries(this.props.status).filter(([, val]) => val > 0);
 
     if (statuses.length === 0) {
       chartData.datasets.push({
