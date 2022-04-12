@@ -72,23 +72,28 @@ export type ItemListStore<I extends ItemObject, PreLoadStores extends boolean> =
     }
 );
 
+export type RenderHeaderTitle<
+  Item extends ItemObject,
+  PreLoadStores extends boolean,
+> = ReactNode | ((parent: NonInjectedItemListLayout<Item, PreLoadStores>) => ReactNode);
+
 export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlaceholders;
-export type ItemListLayoutProps<I extends ItemObject, PreLoadStores extends boolean = boolean> = {
+export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends boolean = boolean> = {
   tableId?: string;
   className: IClassName;
-  getItems: () => I[];
-  store: ItemListStore<I, PreLoadStores>;
+  getItems: () => Item[];
+  store: ItemListStore<Item, PreLoadStores>;
   dependentStores?: SubscribableStore[];
   preloadStores?: boolean;
   hideFilters?: boolean;
-  searchFilters?: SearchFilter<I>[];
+  searchFilters?: SearchFilter<Item>[];
   /** @deprecated */
-  filterItems?: ItemsFilter<I>[];
+  filterItems?: ItemsFilter<Item>[];
 
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
-  renderHeaderTitle?: ReactNode | ((parent: NonInjectedItemListLayout<I, PreLoadStores>) => ReactNode);
+  renderHeaderTitle?: RenderHeaderTitle<Item, PreLoadStores>;
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 
   // items list configuration
@@ -96,23 +101,23 @@ export type ItemListLayoutProps<I extends ItemObject, PreLoadStores extends bool
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: TableSortCallbacks<I>;
-  tableProps?: Partial<TableProps<I>>; // low-level table configuration
+  sortingCallbacks?: TableSortCallbacks<Item>;
+  tableProps?: Partial<TableProps<Item>>; // low-level table configuration
   renderTableHeader?: (TableCellProps | undefined | null)[];
-  renderTableContents: (item: I) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: I, store: ItemListStore<I, PreLoadStores>) => ReactNode;
-  customizeTableRowProps?: (item: I) => Partial<TableRowProps<I>>;
+  renderTableContents: (item: Item) => (ReactNode | TableCellProps)[];
+  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => ReactNode;
+  customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
 
   // item details view
   hasDetailsView?: boolean;
-  detailsItem?: I;
-  onDetails?: (item: I) => void;
+  detailsItem?: Item;
+  onDetails?: (item: Item) => void;
 
   // other
-  customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
-  renderFooter?: (parent: NonInjectedItemListLayout<I, PreLoadStores>) => React.ReactNode;
+  customizeRemoveDialog?: (selectedItems: Item[]) => Partial<ConfirmDialogParams>;
+  renderFooter?: (parent: NonInjectedItemListLayout<Item, PreLoadStores>) => React.ReactNode;
 
   /**
    * Message to display when a store failed to load
@@ -121,7 +126,7 @@ export type ItemListLayoutProps<I extends ItemObject, PreLoadStores extends bool
    */
   failedToLoadMessage?: React.ReactNode;
 
-  filterCallbacks?: ItemsFilters<I>;
+  filterCallbacks?: ItemsFilters<Item>;
 } & (
   PreLoadStores extends true
     ? {
@@ -261,6 +266,8 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   }
 
   render() {
+    const { renderHeaderTitle } = this.props;
+
     return untracked(() => (
       <div
         className={cssNames("ItemListLayout flex column", this.props.className)}
@@ -273,7 +280,11 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
           searchFilters={this.props.searchFilters}
           showHeader={this.props.showHeader}
           headerClassName={this.props.headerClassName}
-          renderHeaderTitle={this.props.renderHeaderTitle}
+          renderHeaderTitle={(
+            typeof renderHeaderTitle === "function"
+              ? () => renderHeaderTitle(this)
+              : renderHeaderTitle
+          )}
           customizeHeader={this.props.customizeHeader}
         />
 

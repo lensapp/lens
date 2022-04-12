@@ -28,7 +28,7 @@ export interface ItemListLayoutHeaderProps<I extends ItemObject, PreLoadStores e
   headerClassName?: IClassName;
   renderHeaderTitle?:
     | ReactNode
-    | ((parent: ItemListLayoutHeader<I, PreLoadStores>) => ReactNode);
+    | (() => ReactNode);
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 }
 
@@ -71,7 +71,7 @@ export class ItemListLayoutHeader<I extends ItemObject, PreLoadStores extends bo
 
     const customizeHeaderFunctions = [customizeHeader].flat().filter(isDefined);
     const renderedTitle = typeof renderHeaderTitle === "function"
-      ? renderHeaderTitle(this)
+      ? renderHeaderTitle()
       : renderHeaderTitle;
 
     const {
