@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { podStore } from "../+workloads-pods/legacy-store";
-import { statefulSetStore } from "./statefulset.store";
+import { statefulSetStore } from "./legacy-store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

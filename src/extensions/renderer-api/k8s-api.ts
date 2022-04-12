@@ -98,7 +98,7 @@ export type { PodStore as PodsStore } from "../../renderer/components/+workloads
 export type { NodesStore } from "../../renderer/components/+nodes/nodes.store";
 export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/store";
 export type { DaemonSetStore } from "../../renderer/components/+workloads-daemonsets/store";
-export type { StatefulSetStore } from "../../renderer/components/+workloads-statefulsets/statefulset.store";
+export type { StatefulSetStore } from "../../renderer/components/+workloads-statefulsets/store";
 export type { JobStore } from "../../renderer/components/+workloads-jobs/store";
 export type { CronJobStore } from "../../renderer/components/+workloads-cronjobs/store";
 export type { ConfigMapStore as ConfigMapsStore } from "../../renderer/components/+config-maps/config-maps.store";

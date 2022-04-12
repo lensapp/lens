@@ -7,9 +7,9 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import type { OpenStatefulSetScaleDialog } from "./dialog/open.injectable";
+import type { OpenStatefulSetScaleDialog } from "./scale/open-dialog.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import openStatefulSetScaleDialogInjectable from "./dialog/open.injectable";
+import openStatefulSetScaleDialogInjectable from "./scale/open-dialog.injectable";
 
 export interface StatefulSetMenuProps extends KubeObjectMenuProps<StatefulSet> {}
 

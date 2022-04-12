@@ -4,9 +4,12 @@
  */
 
 import { observable } from "mobx";
-import { podStore } from "../+workloads-pods/legacy-store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { StatefulSetStore } from "../+workloads-statefulsets/store";
+import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injectable";
 import { StatefulSet, Pod } from "../../../common/k8s-api/endpoints";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningStatefulSet = new StatefulSet({
   apiVersion: "foo",
@@ -128,7 +131,17 @@ const failedPod = new Pod({
 });
 
 describe("StatefulSet Store tests", () => {
-  beforeAll(() => {
+  let statefulSetStore: StatefulSetStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    statefulSetStore = di.inject(statefulSetStoreInjectable);
+
+    const podStore = di.inject(podStoreInjectable);
+
     // Add pods to pod store
     podStore.items = observable.array([
       runningPod,

@@ -19,7 +19,7 @@ import { Notifications } from "../../notifications";
 import { cssNames } from "../../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
-import statefulSetDialogStateInjectable from "./state.injectable";
+import statefulSetDialogStateInjectable from "./dialog-state.injectable";
 
 export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
 }

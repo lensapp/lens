@@ -3,16 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { podStore } from "../+workloads-pods/legacy-store";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import type { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
-import { PodStatusPhase, statefulSetApi } from "../../../common/k8s-api/endpoints";
+import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
+import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { isClusterPageContext } from "../../utils";
+
+interface Dependencies {
+  getPodsByOwnerId: GetPodsByOwnerId;
+}
 
 export class StatefulSetStore extends KubeObjectStore<StatefulSet, StatefulSetApi> {
+  constructor(protected readonly dependencies: Dependencies, api: StatefulSetApi, opts?: KubeObjectStoreOptions) {
+    super(api, opts);
+  }
+
   getChildPods(statefulSet: StatefulSet) {
-    return podStore.getPodsByOwnerId(statefulSet.getId());
+    return this.dependencies.getPodsByOwnerId(statefulSet.getId());
   }
 
   getStatuses(statefulSets: StatefulSet[]) {
@@ -32,12 +39,4 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet, StatefulSetAp
 
     return status;
   }
-}
-
-export const statefulSetStore = isClusterPageContext()
-  ? new StatefulSetStore(statefulSetApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(statefulSetStore);
 }

@@ -10,11 +10,11 @@ import { StatefulSet } from "../../../../common/k8s-api/endpoints";
 import { StatefulSetScaleDialog } from "./dialog";
 import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
-import type { OpenStatefulSetScaleDialog } from "./open.injectable";
+import type { OpenStatefulSetScaleDialog } from "./open-dialog.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
 import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
-import openStatefulSetScaleDialogInjectable from "./open.injectable";
+import openStatefulSetScaleDialogInjectable from "./open-dialog.injectable";
 import { type DiRender, renderFor } from "../../test-utils/renderFor";
 
 const dummyStatefulSet = new StatefulSet({

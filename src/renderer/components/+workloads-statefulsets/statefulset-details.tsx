@@ -13,7 +13,7 @@ import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { statefulSetStore } from "./statefulset.store";
+import type { StatefulSetStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { PodMetricData } from "../../../common/k8s-api/endpoints";
 import { getMetricsForStatefulSets, StatefulSet } from "../../../common/k8s-api/endpoints";
@@ -29,6 +29,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import statefulSetStoreInjectable from "./store.injectable";
 
 export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -36,6 +37,7 @@ export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<Stateful
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
+  statefulSetStore: StatefulSetStore;
 }
 
 @observer
@@ -66,7 +68,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
   };
 
   render() {
-    const { object: statefulSet, podStore } = this.props;
+    const { object: statefulSet, podStore, statefulSetStore } = this.props;
 
     if (!statefulSet) {
       return null;
@@ -137,6 +139,7 @@ export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetai
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
+    statefulSetStore: di.inject(statefulSetStoreInjectable),
   }),
 });
 

@@ -9,7 +9,7 @@ import { Redirect } from "react-router";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { DeploymentScaleDialog } from "../../components/+workloads-deployments/scale/dialog";
 import { CronJobTriggerDialog } from "../../components/+workloads-cronjobs/cronjob-trigger-dialog";
-import { StatefulSetScaleDialog } from "../../components/+workloads-statefulsets/dialog/dialog";
+import { StatefulSetScaleDialog } from "../../components/+workloads-statefulsets/scale/dialog";
 import { ReplicaSetScaleDialog } from "../../components/+workloads-replicasets/scale-dialog/dialog";
 import { CommandContainer } from "../../components/command-palette/command-container";
 import { ErrorBoundary } from "../../components/error-boundary";

@@ -9,7 +9,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { eventStore } from "../+events/event.store";
 import type { DeploymentStore } from "../+workloads-deployments/store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
+import type { StatefulSetStore } from "../+workloads-statefulsets/store";
 import type { JobStore } from "../+workloads-jobs/store";
 import type { CronJobStore } from "../+workloads-cronjobs/store";
 import type { IComputedValue } from "mobx";
@@ -33,6 +33,7 @@ import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectabl
 import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
 import deploymentStoreInjectable from "../+workloads-deployments/store.injectable";
 import jobStoreInjectable from "../+workloads-jobs/store.injectable";
+import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injectable";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ComponentType<{}>[]>;
@@ -44,6 +45,7 @@ interface Dependencies {
   deploymentStore: DeploymentStore;
   jobStore: JobStore;
   cronJobStore: CronJobStore;
+  statefulSetStore: StatefulSetStore;
 }
 
 @observer
@@ -65,7 +67,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
         this.props.jobStore,
         this.props.podStore,
         this.props.replicaSetStore,
-        statefulSetStore,
+        this.props.statefulSetStore,
       ], {
         onLoadFailure: error => this.loadErrors.push(String(error)),
       }),
@@ -127,5 +129,6 @@ export const WorkloadsOverview = withInjectables<Dependencies>(NonInjectedWorklo
     cronJobStore: di.inject(cronJobStoreInjectable),
     deploymentStore: di.inject(deploymentStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
+    statefulSetStore: di.inject(statefulSetStoreInjectable),
   }),
 });
