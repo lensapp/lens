@@ -45,7 +45,7 @@ import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
 import type { HotbarStore } from "../../../common/hotbar-store";
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { set: (value: string ) => void };
+  catalogPreviousActiveTabStorage: { set: (value: string ) => void; get: () => string };
   catalogEntityStore: CatalogEntityStore;
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
@@ -81,6 +81,12 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
       return `${dereferencedGroup}/${dereferencedKind}`;
     }
 
+    const previousTab = this.props.catalogPreviousActiveTabStorage.get();
+
+    if (previousTab) {
+      return previousTab;
+    }
+
     return browseCatalogTab;
   }
 
@@ -92,8 +98,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     disposeOnUnmount(this, [
       this.props.catalogEntityStore.watch(),
       reaction(() => this.routeActiveTab, async (routeTab) => {
-        this.props.catalogPreviousActiveTabStorage.set(this.routeActiveTab);
-
         try {
           await when(() => (routeTab === browseCatalogTab || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
           const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
@@ -178,9 +182,10 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     });
 
     if (activeCategory) {
-
+      this.props.catalogPreviousActiveTabStorage.set(`${activeCategory.spec.group}/${activeCategory.spec.names.kind}`);
       this.props.navigateToCatalog({ group: activeCategory.spec.group, kind: activeCategory.spec.names.kind });
     } else {
+      this.props.catalogPreviousActiveTabStorage.set(null);
       this.props.navigateToCatalog({ group: browseCatalogTab });
     }
   });
