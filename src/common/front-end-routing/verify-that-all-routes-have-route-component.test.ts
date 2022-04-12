@@ -9,19 +9,14 @@ import { filter, map, matches } from "lodash/fp";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../cluster-store/cluster-store";
 import { pipeline } from "@ogre-tools/fp";
-import createStoresAndApisInjectable from "../../renderer/create-stores-apis.injectable";
 
 describe("verify-that-all-routes-have-component", () => {
   it("verify that routes have route component", async () => {
     const rendererDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    rendererDi.override(createStoresAndApisInjectable, () => true);
-
     rendererDi.override(clusterStoreInjectable, () => ({
       getById: () => null,
     } as unknown as ClusterStore));
-
-    await rendererDi.runSetups();
 
     const routes = rendererDi.injectMany(routeInjectionToken);
     const routeComponents = rendererDi.injectMany(

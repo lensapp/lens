@@ -12,7 +12,6 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -41,7 +40,6 @@ describe("<PodTolerations />", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
     di.override(directoryForLensLocalStorageInjectable, () => "some-directory-for-lens-local-storage" );
 
     render = renderFor(di);

@@ -36,7 +36,6 @@ describe("<Select />", () => {
 
     mockFs();
 
-    await di.runSetups();
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
 
@@ -119,11 +118,13 @@ describe("<Select />", () => {
 
     const onChange = jest.fn();
 
-    const { container, rerender } = render(<Select
-      value={options[0]}
-      onChange={onChange}
-      options={options}
-    />);
+    const { container, rerender } = render((
+      <Select
+        value={options[0]}
+        onChange={onChange}
+        options={options}
+      />
+    ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
     expect(selectedValueContainer?.textContent).toBe(options[0].label);
