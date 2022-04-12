@@ -36,9 +36,6 @@ export const isDevelopment = !isTestEnv && !isProduction;
 
 export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
 
-export const integrationTestingArg = "--integration-testing";
-export const isIntegrationTesting = process.argv.includes(integrationTestingArg);
-
 export const productName = packageInfo.productName;
 
 /**
