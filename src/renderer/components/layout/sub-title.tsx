@@ -12,6 +12,7 @@ export interface SubTitleProps {
   title: React.ReactNode;
   compact?: boolean; // no bottom padding
   id?: string;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 export class SubTitle extends React.Component<SubTitleProps> {
@@ -23,7 +24,7 @@ export class SubTitle extends React.Component<SubTitleProps> {
 
     return (
       <div className={classNames} id={id}>
-        {title} 
+        {title}
         {" "}
         {children}
       </div>
