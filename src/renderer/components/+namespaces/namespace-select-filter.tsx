@@ -12,7 +12,7 @@ import { components } from "react-select";
 import type { NamespaceStore } from "./namespace-store/namespace.store";
 import { Select } from "../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { NamespaceSelectFilterModel, SelectAllNamespaces } from "./namespace-select-filter-model/namespace-select-filter-model";
+import type { NamespaceSelectFilterModel, NamespaceSelectFilterOption, SelectAllNamespaces } from "./namespace-select-filter-model/namespace-select-filter-model";
 import namespaceSelectFilterModelInjectable from "./namespace-select-filter-model/namespace-select-filter-model.injectable";
 import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
 
@@ -31,7 +31,7 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
       onKeyDown={model.onKeyDown}
       onClick={model.onClick}
     >
-      <Select<string | SelectAllNamespaces, true>
+      <Select<{ namespace: string | SelectAllNamespaces }, true>
         id={id}
         isMulti={true}
         isClearable={false}
@@ -58,7 +58,7 @@ export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSele
   }),
 });
 
-export interface CustomPlaceholderProps extends PlaceholderProps<string | SelectAllNamespaces, boolean> {}
+export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, boolean> {}
 
 interface PlaceholderDependencies {
   namespaceStore: NamespaceStore;

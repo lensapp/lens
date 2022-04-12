@@ -17,6 +17,10 @@ export const selectAllNamespaces = Symbol("all-namespaces-selected");
 
 export type SelectAllNamespaces = typeof selectAllNamespaces;
 
+export interface NamespaceSelectFilterOption {
+  namespace: string | SelectAllNamespaces;
+}
+
 export class NamespaceSelectFilterModel {
   constructor(private readonly dependencies: Dependencies) {
     makeObservable(this, {
@@ -27,7 +31,7 @@ export class NamespaceSelectFilterModel {
     });
   }
 
-  readonly options = computed(() => {
+  readonly options = computed((): readonly NamespaceSelectFilterOption[] => {
     const baseOptions = this.dependencies.namespaceStore.items.map(ns => ns.getName());
 
     baseOptions.sort((
@@ -36,20 +40,22 @@ export class NamespaceSelectFilterModel {
         - +this.selectedNames.has(left)
     ));
 
-    return [selectAllNamespaces, ...baseOptions] as const;
+    const res = [selectAllNamespaces, ...baseOptions] as const;
+
+    return res.map(namespace => ({ namespace }));
   });
 
-  formatOptionLabel = (option: string | SelectAllNamespaces) => {
-    if (option === selectAllNamespaces) {
+  formatOptionLabel = ({ namespace }: NamespaceSelectFilterOption) => {
+    if (namespace === selectAllNamespaces) {
       return "All Namespaces";
     }
 
-    const isSelected = this.isSelected(option);
+    const isSelected = this.isSelected(namespace);
 
     return (
       <div className="flex gaps align-center">
         <Icon small material="layers" />
-        <span>{option}</span>
+        <span>{namespace}</span>
         {isSelected && (
           <Icon
             small
@@ -61,12 +67,12 @@ export class NamespaceSelectFilterModel {
     );
   };
 
-  getOptionLabel = (option: string | SelectAllNamespaces) => {
-    if (option === selectAllNamespaces) {
+  getOptionLabel = ({ namespace }: NamespaceSelectFilterOption) => {
+    if (namespace === selectAllNamespaces) {
       return "All Namespaces";
     }
 
-    return option;
+    return namespace;
   };
 
   menuIsOpen = false;
@@ -94,7 +100,7 @@ export class NamespaceSelectFilterModel {
     this.dependencies.namespaceStore.selectAll();
   };
 
-  onChange = (namespace: unknown, action: ActionMeta<string | SelectAllNamespaces>) => {
+  onChange = (namespace: unknown, action: ActionMeta<NamespaceSelectFilterOption>) => {
     switch (action.action) {
       case "clear":
         this.dependencies.namespaceStore.selectAll();
@@ -105,13 +111,13 @@ export class NamespaceSelectFilterModel {
         }
         break;
       case "select-option":
-        if (action.option === selectAllNamespaces) {
+        if (action.option?.namespace === selectAllNamespaces) {
           this.dependencies.namespaceStore.selectAll();
         } else if (action.option) {
           if (this.isMultiSelection) {
-            this.dependencies.namespaceStore.toggleSingle(action.option);
+            this.dependencies.namespaceStore.toggleSingle(action.option.namespace);
           } else {
-            this.dependencies.namespaceStore.selectSingle(action.option);
+            this.dependencies.namespaceStore.selectSingle(action.option.namespace);
           }
         }
         break;
