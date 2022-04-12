@@ -182,7 +182,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
           isDisabled={this.isEditing}
           value={this.bindingNamespace}
           autoFocus={!this.isEditing}
-          onChange={namespace => this.bindingNamespace = namespace}
+          onChange={opt => this.bindingNamespace = opt ? opt.namespace : null}
         />
 
         <SubTitle title="Role Reference" />
