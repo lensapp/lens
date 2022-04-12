@@ -306,7 +306,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Automatically start Lens on login
@@ -481,10 +481,11 @@ exports[`preferences - closing-preferences given accessing preferences directly 
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -496,6 +497,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -621,10 +623,11 @@ exports[`preferences - closing-preferences given accessing preferences directly 
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -636,6 +639,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -969,7 +973,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Automatically start Lens on login
@@ -1144,10 +1148,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -1159,6 +1164,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -1284,10 +1290,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -1299,6 +1306,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -1424,10 +1432,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -1439,6 +1448,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -1564,10 +1574,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -1579,6 +1590,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>

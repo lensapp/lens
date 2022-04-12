@@ -294,7 +294,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Automatically start Lens on login
@@ -469,10 +469,11 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -484,6 +485,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -627,7 +629,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Copy on select and paste on right-click
@@ -778,10 +780,11 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -793,6 +796,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>

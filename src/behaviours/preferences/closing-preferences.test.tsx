@@ -2,9 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { DiContainer, getInjectable } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
-import { ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import currentPathInjectable from "../../renderer/routes/current-path.injectable";
 import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
 import { computed } from "mobx";
