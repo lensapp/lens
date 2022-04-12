@@ -35,6 +35,10 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import whenApplicationIsActivatedInjectable from "./electron-app/when-application-is-activated.injectable";
+import whenApplicationWillQuitInjectable from "./electron-app/when-application-will-quit.injectable";
+import whenOpeningUrlInjectable from "./electron-app/when-opening-url.injectable";
+import whenSecondInstanceInjectable from "./electron-app/when-second-instance.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -62,6 +66,11 @@ export const getDiForUnitTesting = (
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
+
+    di.override(whenApplicationIsActivatedInjectable, () => () => {});
+    di.override(whenApplicationWillQuitInjectable, () => () => {});
+    di.override(whenOpeningUrlInjectable, () => () => {});
+    di.override(whenSecondInstanceInjectable, () => () => {});
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);

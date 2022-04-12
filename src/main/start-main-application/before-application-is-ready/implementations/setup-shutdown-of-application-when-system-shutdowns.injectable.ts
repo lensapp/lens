@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { powerMonitor } from "electron";
-import exitAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/exit-app.injectable";
+import exitAppInjectable from "../../../electron-app/exit-app.injectable";
 import { beforeApplicationIsReadyInjectionToken } from "../before-application-is-ready-injection-token";
 
 const setupShutdownOfApplicationWhenSystemShutdownsInjectable = getInjectable({

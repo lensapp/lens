@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import windowManagerInjectable from "../../../window-manager.injectable";
-import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
+import electronAppInjectable from "../../../electron-app/electron-app.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";

@@ -8,7 +8,7 @@ import {
   getAppVersion,
   getAppVersionFromProxyServer,
 } from "../../../../common/utils";
-import exitAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/exit-app.injectable";
+import exitAppInjectable from "../../../electron-app/exit-app.injectable";
 import lensProxyInjectable from "../../../lens-proxy.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import { dialog } from "electron";

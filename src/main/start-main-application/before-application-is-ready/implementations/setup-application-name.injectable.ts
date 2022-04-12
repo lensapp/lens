@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
+import electronAppInjectable from "../../../electron-app/electron-app.injectable";
 import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import { beforeApplicationIsReadyInjectionToken } from "../before-application-is-ready-injection-token";
 

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import electronAppInjectable from "../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
+import electronAppInjectable from "../electron-app/electron-app.injectable";
 import { beforeApplicationIsReadyInjectionToken } from "./before-application-is-ready/before-application-is-ready-injection-token";
 import { afterApplicationIsReadyInjectionToken } from "./after-application-is-ready/after-application-is-ready-injection-token";
 import { runManyFor } from "./run-many-for";

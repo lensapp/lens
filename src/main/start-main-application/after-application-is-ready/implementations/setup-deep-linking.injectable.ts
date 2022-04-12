@@ -6,7 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import windowManagerInjectable from "../../../window-manager.injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
-import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
+import whenOpeningUrlInjectable from "../../../electron-app/when-opening-url.injectable";
+import whenSecondInstanceInjectable from "../../../electron-app/when-second-instance.injectable";
 
 const setupDeepLinking = getInjectable({
   id: "setup-deep-linking",
@@ -14,17 +15,18 @@ const setupDeepLinking = getInjectable({
   instantiate: (di) => {
     const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
     const windowManager = di.inject(windowManagerInjectable);
-    const app = di.inject(electronAppInjectable);
+    const whenOpeningUrl = di.inject(whenOpeningUrlInjectable);
+    const whenSecondInstance = di.inject(whenSecondInstanceInjectable);
 
     return {
       run: () => {
-        app.on("open-url", async (event, url) => {
-          event.preventDefault();
+        whenOpeningUrl(({ cancel, url }) => {
+          cancel();
 
-          await lensProtocolRouterMain.route(url);
+          lensProtocolRouterMain.route(url);
         });
 
-        app.on("second-instance", async (_, commandLineArguments) => {
+        whenSecondInstance(async ({ commandLineArguments }) => {
           for (const arg of commandLineArguments) {
             if (arg.toLowerCase().startsWith("lens://")) {
               await lensProtocolRouterMain.route(arg);

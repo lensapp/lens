@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import exitAppInjectable from "./app-paths/get-electron-app-path/electron-app/exit-app.injectable";
+import exitAppInjectable from "./electron-app/exit-app.injectable";
 import clusterManagerInjectable from "./cluster-manager.injectable";
 import windowManagerInjectable from "./window-manager.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";

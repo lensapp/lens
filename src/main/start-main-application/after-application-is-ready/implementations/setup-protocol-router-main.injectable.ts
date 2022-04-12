@@ -6,9 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import { productName } from "../../../../common/vars";
 import loggerInjectable from "../../../../common/logger.injectable";
-import electronAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/electron-app.injectable";
+import electronAppInjectable from "../../../electron-app/electron-app.injectable";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
-import exitAppInjectable from "../../../app-paths/get-electron-app-path/electron-app/exit-app.injectable";
+import exitAppInjectable from "../../../electron-app/exit-app.injectable";
 
 const setupProtocolRouterMainInjectable = getInjectable({
   id: "setup-protocol-router-main",
