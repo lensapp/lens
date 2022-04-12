@@ -3,52 +3,45 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./deployment-scale-dialog.scss";
+import "./dialog.scss";
 
 import React, { Component } from "react";
+import type { IObservableValue } from "mobx";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import type { DialogProps } from "../dialog";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
-import { deploymentApi } from "../../../common/k8s-api/endpoints";
-import { Icon } from "../icon";
-import { Slider } from "../slider";
-import { Notifications } from "../notifications";
-import { cssNames } from "../../utils";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
+import { Wizard, WizardStep } from "../../wizard";
+import type { Deployment, DeploymentApi } from "../../../../common/k8s-api/endpoints";
+import { Icon } from "../../icon";
+import { Slider } from "../../slider";
+import { Notifications } from "../../notifications";
+import { cssNames } from "../../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";
+import deploymentScaleDialogStateInjectable from "./dialog-state.injectable";
 
 export interface DeploymentScaleDialogProps extends Partial<DialogProps> {
-  deploymentApi: DeploymentApi;
 }
 
-const dialogState = observable.box<Deployment | undefined>();
+interface Dependencies {
+  deploymentApi: DeploymentApi;
+  state: IObservableValue<Deployment | undefined>;
+}
 
 @observer
-export class DeploymentScaleDialog extends Component<DeploymentScaleDialogProps> {
-  static defaultProps = {
-    deploymentApi,
-  };
-
+class NonInjectedDeploymentScaleDialog extends Component<DeploymentScaleDialogProps & Dependencies> {
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  constructor(props: DeploymentScaleDialogProps) {
+  constructor(props: DeploymentScaleDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(deployment: Deployment) {
-    dialogState.set(deployment);
-  }
-
-  static close() {
-    dialogState.set(undefined);
-  }
-
   close = () => {
-    DeploymentScaleDialog.close();
+    this.props.state.set(undefined);
   };
 
   @computed get scaleMax() {
@@ -166,8 +159,8 @@ export class DeploymentScaleDialog extends Component<DeploymentScaleDialogProps>
   }
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const deployment = dialogState.get();
+    const { className, state, ...dialogProps } = this.props;
+    const deployment = state.get();
 
     return (
       <Dialog
@@ -183,3 +176,11 @@ export class DeploymentScaleDialog extends Component<DeploymentScaleDialogProps>
     );
   }
 }
+
+export const DeploymentScaleDialog = withInjectables<Dependencies, DeploymentScaleDialogProps>(NonInjectedDeploymentScaleDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    deploymentApi: di.inject(deploymentApiInjectable),
+    state: di.inject(deploymentScaleDialogStateInjectable),
+  }),
+});

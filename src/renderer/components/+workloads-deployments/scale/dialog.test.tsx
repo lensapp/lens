@@ -4,11 +4,19 @@
  */
 
 import React from "react";
-import { render, waitFor, fireEvent } from "@testing-library/react";
+import { waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-import { DeploymentScaleDialog } from "./deployment-scale-dialog";
-import { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints/deployment.api";
+import { DeploymentScaleDialog } from "./dialog";
+import type { DeploymentApi } from "../../../../common/k8s-api/endpoints/deployment.api";
+import { Deployment } from "../../../../common/k8s-api/endpoints/deployment.api";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";
+import type { OpenDeploymentScaleDialog } from "./open.injectable";
+import openDeploymentScaleDialogInjectable from "./open.injectable";
+import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
 
 const dummyDeployment = new Deployment({
   apiVersion: "v1",
@@ -76,9 +84,17 @@ const dummyDeployment = new Deployment({
 
 describe("<DeploymentScaleDialog />", () => {
   let deploymentApi: DeploymentApi;
+  let openDeploymentScaleDialog: OpenDeploymentScaleDialog;
+  let render: DiRender;
 
   beforeEach(() => {
-    deploymentApi = new DeploymentApi();
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    deploymentApi = di.inject(deploymentApiInjectable);
+    openDeploymentScaleDialog = di.inject(openDeploymentScaleDialogInjectable);
+    render = renderFor(di);
   });
 
   it("renders w/o errors", () => {
@@ -93,9 +109,9 @@ describe("<DeploymentScaleDialog />", () => {
     const initReplicas = 3;
 
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { findByTestId } = render(<DeploymentScaleDialog deploymentApi={deploymentApi} />);
+    const { findByTestId } = render(<DeploymentScaleDialog />);
 
-    DeploymentScaleDialog.open(dummyDeployment);
+    openDeploymentScaleDialog(dummyDeployment);
     // we need to wait for the DeploymentScaleDialog to show up
     // because there is an <Animate /> in <Dialog /> which renders null at start.
     await waitFor(async () => {
@@ -114,9 +130,9 @@ describe("<DeploymentScaleDialog />", () => {
     const initReplicas = 1;
 
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const component = render(<DeploymentScaleDialog deploymentApi={deploymentApi} />);
+    const component = render(<DeploymentScaleDialog />);
 
-    DeploymentScaleDialog.open(dummyDeployment);
+    openDeploymentScaleDialog(dummyDeployment);
     await waitFor(async () => {
       expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
       expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
