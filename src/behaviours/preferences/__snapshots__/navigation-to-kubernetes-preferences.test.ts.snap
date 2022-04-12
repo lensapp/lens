@@ -294,7 +294,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Automatically start Lens on login
@@ -469,10 +469,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -484,6 +485,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -604,7 +606,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                  
               </div>
               <label
-                class=""
+                class="Switch"
                 data-testid="switch"
               >
                 Download kubectl binaries matching the Kubernetes cluster version
@@ -772,7 +774,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                
             </div>
             <div
-              class="mt-3"
+              class="notice mt-3"
             >
               <div
                 class="flex-grow text-center"
@@ -864,9 +866,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   Add Custom Helm Repo
                 </button>
               </div>
-              <div>
+              <div
+                class="repos"
+              >
                 <div
-                  class=""
+                  class="notice"
                 >
                   <div
                     class="flex-grow text-center"
@@ -890,10 +894,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -905,6 +910,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>

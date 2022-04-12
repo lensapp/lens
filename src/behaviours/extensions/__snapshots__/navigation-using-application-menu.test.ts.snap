@@ -20,7 +20,7 @@ exports[`extensions - navigation using application menu when navigating to exten
             Extensions
           </h1>
           <div
-            class="mb-14 mt-3"
+            class="notice mb-14 mt-3"
           >
             <p>
               Add new features via Lens Extensions.
@@ -96,10 +96,11 @@ exports[`extensions - navigation using application menu when navigating to exten
           <div>
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -111,6 +112,7 @@ exports[`extensions - navigation using application menu when navigating to exten
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>

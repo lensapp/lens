@@ -5,7 +5,7 @@ exports[`add-cluster - navigation using application menu renders 1`] = `<div />`
 exports[`add-cluster - navigation using application menu when navigating to add cluster using application menu renders 1`] = `
 <div>
   <div
-    class="SettingLayout"
+    class="SettingLayout AddClusters"
     data-testid="add-cluster-page"
   >
     <div
@@ -62,10 +62,11 @@ exports[`add-cluster - navigation using application menu when navigating to add 
           <div>
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -77,6 +78,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
