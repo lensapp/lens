@@ -3,7 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { apiManager } from "../api-manager";
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
+import type { ApiManager } from "../api-manager";
+import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { KubeObjectStore } from "../kube-object.store";
@@ -19,6 +21,14 @@ class TestStore extends KubeObjectStore<KubeObject, TestApi> {
 }
 
 describe("ApiManager", () => {
+  let apiManager: ApiManager;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    apiManager = di.inject(apiManagerInjectable);
+  });
+
   describe("registerApi", () => {
     it("re-register store if apiBase changed", async () => {
       const apiBase = "apis/v1/foo";
@@ -26,6 +36,7 @@ describe("ApiManager", () => {
       const kubeApi = new TestApi({
         objectConstructor: KubeObject,
         apiBase,
+        kind: "foo",
         fallbackApiBases: [fallbackApiBase],
         checkPreferredVersion: true,
       });
