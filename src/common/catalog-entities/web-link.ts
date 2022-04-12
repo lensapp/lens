@@ -4,7 +4,7 @@
  */
 
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog";
+import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";

@@ -5,7 +5,7 @@
 
 import { navigate } from "../../renderer/navigation";
 import type { CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
-import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog";
+import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 
 interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
