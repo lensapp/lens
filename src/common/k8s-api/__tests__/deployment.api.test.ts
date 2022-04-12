@@ -3,33 +3,39 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { DeploymentApi } from "../endpoints/deployment.api";
+import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
+import createStoresAndApisInjectable from "../../../renderer/create-stores-apis.injectable";
+import apiKubeInjectable from "../api-kube.injectable";
+import type { DeploymentApi } from "../endpoints/deployment.api";
+import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
 import type { KubeJsonApi } from "../kube-json-api";
 
-class DeploymentApiTest extends DeploymentApi {
-  declare protected request: KubeJsonApi;
-
-  public setRequest(request: KubeJsonApi) {
-    this.request = request;
-  }
-}
-
 describe("DeploymentApi", () => {
+  let deploymentApi: DeploymentApi;
+  let kubeJsonApi: jest.Mocked<KubeJsonApi>;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+    kubeJsonApi = {
+      getResponse: jest.fn(),
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      patch: jest.fn(),
+      del: jest.fn(),
+    } as never;
+    di.override(apiKubeInjectable, () => kubeJsonApi);
+
+    deploymentApi = di.inject(deploymentApiInjectable);
+  });
+
   describe("scale", () => {
-    const requestMock = {
-      patch: () => ({}),
-    } as unknown as KubeJsonApi;
-
-    const sub = new DeploymentApiTest();
-
-    sub.setRequest(requestMock);
-
     it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
-      const patchSpy = jest.spyOn(requestMock, "patch");
+      deploymentApi.scale({ namespace: "default", name: "deployment-1" }, 5);
 
-      sub.scale({ namespace: "default", name: "deployment-1" }, 5);
-
-      expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
+      expect(kubeJsonApi.patch).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
         data: {
           spec: {
             replicas: 5,
