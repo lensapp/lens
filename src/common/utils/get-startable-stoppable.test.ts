@@ -39,6 +39,12 @@ describe("getStartableStoppable", () => {
       expect(startMock).toHaveBeenCalled();
     });
 
+    it("when started again, throws", () => {
+      expect(() => {
+        actual.start();
+      }).toThrow("Tried to start something that has already started.");
+    });
+
     it("does not stop yet", () => {
       expect(stopMock).not.toHaveBeenCalled();
     });
@@ -58,10 +64,24 @@ describe("getStartableStoppable", () => {
         }).toThrow("Tried to stop something that has already stopped.");
       });
 
-      it("when started again, throws for restart being YAGNI with logical blind spots", () => {
-        expect(() => {
+      describe("when started again", () => {
+        beforeEach(() => {
+          startMock.mockClear();
+
           actual.start();
-        }).toThrow("Tried to restart something that has stopped.");
+        });
+
+        it("starts", () => {
+          expect(startMock).toHaveBeenCalled();
+        });
+
+        it("when stopped, stops", () => {
+          stopMock.mockClear();
+
+          actual.stop();
+
+          expect(stopMock).toHaveBeenCalled();
+        });
       });
     });
   });

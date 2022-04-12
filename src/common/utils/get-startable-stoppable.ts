@@ -12,8 +12,10 @@ export const getStartableStoppable = (
   return {
     start: () => {
       if (started) {
-        throw new Error("Tried to restart something that has stopped.");
+        throw new Error("Tried to start something that has already started.");
       }
+
+      stopped = false;
 
       dispose = startAndGetStopCallback();
 
@@ -21,13 +23,15 @@ export const getStartableStoppable = (
     },
 
     stop: () => {
+      if (stopped) {
+        throw new Error("Tried to stop something that has already stopped.");
+      }
+
       if (!started) {
         throw new Error("Tried to stop something that has not started yet.");
       }
 
-      if (stopped) {
-        throw new Error("Tried to stop something that has already stopped.");
-      }
+      started = false;
 
       dispose();
 
