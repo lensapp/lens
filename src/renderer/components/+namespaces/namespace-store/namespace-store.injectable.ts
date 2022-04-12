@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { NamespaceStore } from "./namespace.store";
-import apiManagerInjectable from "../../kube-object-menu/dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 import { namespaceApi } from "../../../../common/k8s-api/endpoints";
 

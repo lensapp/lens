@@ -8,7 +8,7 @@ import "./overview.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { eventStore } from "../+events/event.store";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
+import { deploymentStore } from "../+workloads-deployments/store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";

@@ -8,11 +8,11 @@
 import { splitArray } from "../utils";
 
 export interface IKubeApiLinkRef {
-  apiPrefix?: string;
+  apiPrefix?: string | undefined;
   apiVersion: string;
   resource: string;
-  name?: string;
-  namespace?: string;
+  name?: string | undefined;
+  namespace?: string | undefined;
 }
 
 export interface IKubeApiParsed extends IKubeApiLinkRef {

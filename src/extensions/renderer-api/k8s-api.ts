@@ -90,7 +90,7 @@ export type { KubeObjectStoreLoadAllParams, KubeObjectStoreLoadingParams, KubeOb
 export type { EventStore } from "../../renderer/components/+events/event.store";
 export type { PodStore as PodsStore } from "../../renderer/components/+workloads-pods/store";
 export type { NodesStore } from "../../renderer/components/+nodes/nodes.store";
-export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/deployments.store";
+export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/store";
 export type { DaemonSetStore } from "../../renderer/components/+workloads-daemonsets/store";
 export type { StatefulSetStore } from "../../renderer/components/+workloads-statefulsets/statefulset.store";
 export type { JobStore } from "../../renderer/components/+workloads-jobs/job.store";

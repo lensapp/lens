@@ -61,7 +61,11 @@ export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
     });
   }
 
-  protected parseError(error: KubeJsonApiError | any, res: Response): string[] {
+  protected parseError(error: KubeJsonApiError | string, res: Response): string[] {
+    if (typeof error === "string") {
+      return [error];
+    }
+
     const { status, reason, message } = error;
 
     if (status && reason) {

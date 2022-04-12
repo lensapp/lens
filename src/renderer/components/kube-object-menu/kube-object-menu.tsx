@@ -15,7 +15,7 @@ import clusterNameInjectable from "./dependencies/cluster-name.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
-import apiManagerInjectable from "./dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 
 export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends MenuActionsProps {
   object: TKubeObject;

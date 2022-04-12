@@ -16,7 +16,7 @@ import { PodDetailsTolerations } from "../+workloads-pods/pod-details-toleration
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
-import { deploymentStore } from "./deployments.store";
+import type { DeploymentStore } from "./store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -32,6 +32,7 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
+import deploymentStoreInjectable from "./store.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
@@ -40,6 +41,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   replicaSetStore: ReplicaSetStore;
+  deploymentStore: DeploymentStore;
 }
 
 @observer
@@ -71,7 +73,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   };
 
   render() {
-    const { object: deployment, podStore, replicaSetStore } = this.props;
+    const { object: deployment, podStore, replicaSetStore, deploymentStore } = this.props;
 
     if (!deployment) {
       return null;
@@ -171,6 +173,7 @@ export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetails
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     replicaSetStore: di.inject(replicaSetStoreInjectable),
+    deploymentStore: di.inject(deploymentStoreInjectable),
   }),
 });
 

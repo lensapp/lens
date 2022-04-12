@@ -7,6 +7,7 @@ import { asLegacyGlobalForExtensionApi } from "../../../extensions/as-legacy-glo
 import clusterRoleBindingApiInjectable from "./cluster-role-binding.api.injectable";
 import clusterRoleApiInjectable from "./cluster-role.api.injectable";
 import daemonSetApiInjectable from "./daemon-set.api.injectable";
+import deploymentApiInjectable from "./deployment.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
 import replicaSetApiInjectable from "./replica-set.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
@@ -52,3 +53,8 @@ export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectab
  * @deprecated use `di.inject(statefulSetApiInjectable)` instead
  */
 export const statefulSetApi = asLegacyGlobalForExtensionApi(statefulSetApiInjectable);
+
+/**
+ * @deprecated use `di.inject(deploymentApiInjectable)` instead
+ */
+export const deploymentApi = asLegacyGlobalForExtensionApi(deploymentApiInjectable);

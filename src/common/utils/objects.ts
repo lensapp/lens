@@ -11,8 +11,8 @@ export function fromEntries<T, Key extends string>(entries: Iterable<readonly [K
   return Object.fromEntries(entries) as Record<Key, T>;
 }
 
+export function entries<K extends string | number | symbol, V>(obj: Partial<Record<K, V>> | null | undefined): [K, V][];
 export function entries<K extends string | number | symbol, V>(obj: Record<K, V> | null | undefined): [K, V][];
-export function entries<K extends string | number | symbol, V>(obj: Partial<Record<K, V>> | null | undefined): [K, V | undefined][];
 
 export function entries<K extends string | number | symbol, V>(obj: Record<K, V> | null | undefined): [K, V][] {
   if (obj && typeof obj == "object") {

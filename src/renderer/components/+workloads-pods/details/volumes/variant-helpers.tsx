@@ -5,7 +5,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import type { PodVolumeVariants, Pod, SecretReference } from "../../../../../common/k8s-api/endpoints";
-import type { IKubeApiQueryParams, ResourceDescriptor } from "../../../../../common/k8s-api/kube-api";
+import type { KubeApiQueryParams, ResourceDescriptor } from "../../../../../common/k8s-api/kube-api";
 import type { LocalObjectReference } from "../../../../../common/k8s-api/kube-object";
 import { DrawerItem } from "../../../drawer";
 import { getDetailsUrl } from "../../../kube-detail-params";
@@ -19,7 +19,7 @@ export interface PodVolumeVariantSpecificProps<Kind extends keyof PodVolumeVaria
 export type VolumeVariantComponent<Kind extends keyof PodVolumeVariants> = React.FunctionComponent<PodVolumeVariantSpecificProps<Kind>>;
 
 export interface LocalRefPropsApi {
-  getUrl(desc?: Partial<ResourceDescriptor>, query?: Partial<IKubeApiQueryParams>): string;
+  getUrl(desc?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>): string;
 }
 
 export interface LocalRefProps {

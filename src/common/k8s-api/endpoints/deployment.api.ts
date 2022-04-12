@@ -9,7 +9,6 @@ import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData, PodSpec } from "./pod.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { hasTypedProperty, isNumber, isObject } from "../../utils";
@@ -166,7 +165,3 @@ export class Deployment extends KubeObject<DeploymentStatus, DeploymentSpec, Kub
     return this.spec.replicas || 0;
   }
 }
-
-export const deploymentApi = isClusterPageContext()
-  ? new DeploymentApi()
-  : undefined as never;

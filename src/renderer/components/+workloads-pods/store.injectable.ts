@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import podApiInjectable from "../../../common/k8s-api/endpoints/pod.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
-import apiManagerInjectable from "../kube-object-menu/dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { PodStore } from "./store";
 
 const podStoreInjectable = getInjectable({

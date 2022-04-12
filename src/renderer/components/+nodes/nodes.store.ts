@@ -9,7 +9,7 @@ import { apiManager } from "../../../common/k8s-api/api-manager";
 import type { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import { nodeApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
+import { autoBind, isClusterPageContext } from "../../utils";
 
 export class NodesStore extends KubeObjectStore<Node, NodeApi> {
   constructor() {
@@ -32,5 +32,10 @@ export class NodesStore extends KubeObjectStore<Node, NodeApi> {
   }
 }
 
-export const nodesStore = new NodesStore();
-apiManager.registerStore(nodesStore);
+export const nodesStore = isClusterPageContext()
+  ? new NodesStore()
+  : undefined as never;
+
+if (isClusterPageContext()) {
+  apiManager.registerStore(nodesStore);
+}

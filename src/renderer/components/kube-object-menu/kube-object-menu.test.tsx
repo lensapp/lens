@@ -19,7 +19,7 @@ import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import apiManagerInjectable from "./dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectMenu } from "./index";
 import type { KubeObjectMenuRegistration } from "./dependencies/kube-object-menu-items/kube-object-menu-registration";
 import { computed } from "mobx";

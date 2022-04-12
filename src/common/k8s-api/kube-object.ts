@@ -10,7 +10,6 @@ import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata } fr
 import { autoBind, formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord, json } from "../utils";
 import type { ItemObject } from "../item.store";
 import { apiKube } from "./index";
-import type { JsonApiParams } from "./json-api";
 import * as resourceApplierApi from "./endpoints/resource-applier.api";
 import type { Patch } from "rfc6902";
 import assert from "assert";
@@ -653,7 +652,7 @@ export class KubeObject<
   /**
    * @deprecated use KubeApi.delete instead
    */
-  delete(params?: JsonApiParams) {
+  delete(params?: object) {
     assert(this.selfLink, "selfLink must be present to delete self");
 
     return apiKube.del(this.selfLink, params);

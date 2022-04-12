@@ -12,7 +12,7 @@ import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
-import type { IKubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
+import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
@@ -20,16 +20,19 @@ import type { Patch } from "rfc6902";
 import logger from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
+import { entries } from "../utils/objects";
+
+export type OnLoadFailure = (error: unknown) => void;
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
-  reqInit?: RequestInit;
+  reqInit?: RequestInit | undefined;
 
   /**
    * A function that is called when listing fails. If set then blocks errors
    * being rejected with
    */
-  onLoadFailure?: (err: any) => void;
+  onLoadFailure?: OnLoadFailure | undefined;
 }
 
 export interface KubeObjectStoreLoadAllParams {
@@ -41,7 +44,7 @@ export interface KubeObjectStoreLoadAllParams {
    * A function that is called when listing fails. If set then blocks errors
    * being rejected with
    */
-  onLoadFailure?: (err: any) => void;
+  onLoadFailure?: OnLoadFailure | undefined;
 }
 
 export interface KubeObjectStoreSubscribeParams {
@@ -49,7 +52,7 @@ export interface KubeObjectStoreSubscribeParams {
    * A function that is called when listing fails. If set then blocks errors
    * being rejected with
    */
-  onLoadFailure?: (err: any) => void;
+  onLoadFailure?: OnLoadFailure | undefined;
 
   /**
    * An optional parent abort controller
@@ -88,7 +91,7 @@ export abstract class KubeObjectStore<
   static readonly defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
   public readonly api: A;
-  public readonly limit?: number;
+  public readonly limit: number | undefined;
   public readonly bufferSize: number;
   @observable private loadedNamespaces: string[] | undefined = undefined;
 
@@ -130,7 +133,7 @@ export abstract class KubeObjectStore<
     return this.contextItems.length;
   }
 
-  get query(): IKubeApiQueryParams {
+  get query(): KubeApiQueryParams {
     const { limit } = this;
 
     if (!limit) {
@@ -170,7 +173,7 @@ export abstract class KubeObjectStore<
     return this.items.find(item => item.selfLink === path);
   }
 
-  getByLabel(labels: string[] | { [label: string]: string }): K[] {
+  getByLabel(labels: string[] | Partial<Record<string, string>>): K[] {
     if (Array.isArray(labels)) {
       return this.items.filter((item: K) => {
         const itemLabels = item.getLabels();
@@ -181,7 +184,7 @@ export abstract class KubeObjectStore<
       return this.items.filter((item: K) => {
         const itemLabels = item.metadata.labels || {};
 
-        return Object.entries(labels)
+        return entries(labels)
           .every(([key, value]) => itemLabels[key] === value);
       });
     }

@@ -105,19 +105,19 @@ export interface IgnoredKubeApiOptions {
   apiBase?: any;
 }
 
-export interface IKubeApiQueryParams {
-  watch?: boolean | number;
-  resourceVersion?: string;
-  timeoutSeconds?: number;
-  limit?: number; // doesn't work with ?watch
-  continue?: string; // might be used with ?limit from second request
-  labelSelector?: string | string[]; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
-  fieldSelector?: string | string[]; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
+export interface KubeApiQueryParams {
+  watch?: boolean | number | undefined;
+  resourceVersion?: string | undefined;
+  timeoutSeconds?: number | undefined;
+  limit?: number | undefined; // doesn't work with ?watch
+  continue?: string | undefined; // might be used with ?limit from second request
+  labelSelector?: string | string[] | undefined; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
+  fieldSelector?: string | string[] | undefined; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
 }
 
 export interface KubeApiListOptions {
-  namespace?: string;
-  reqInit?: RequestInit;
+  namespace?: string | undefined;
+  reqInit?: RequestInit | undefined;
 }
 
 export interface IKubePreferredVersion {
@@ -126,15 +126,24 @@ export interface IKubePreferredVersion {
   };
 }
 
-export interface IKubeResourceList {
-  resources: {
-    kind: string;
-    name: string;
-    namespaced: boolean;
-    singularName: string;
-    storageVersionHash: string;
-    verbs: string[];
-  }[];
+export interface KubeApiResource {
+  categories?: string[];
+  group?: string;
+  kind: string;
+  name: string;
+  namespaced: boolean;
+  shortNames?: string[];
+  singularName: string;
+  storageVersionHash?: string;
+  verbs: string[];
+  version?: string;
+}
+
+export interface KubeApiResourceList {
+  apiVersion?: string;
+  groupVersion?: string;
+  kind?: string;
+  resources: KubeApiResource[];
 }
 
 export interface ILocalKubeApiConfig {
@@ -288,7 +297,7 @@ export interface ResourceDescriptor {
    *
    * Note: if not provided and the resource kind is namespaced, then this defaults to `"default"`
    */
-  namespace?: string;
+  namespace?: string | undefined;
 }
 
 export interface DeleteResourceDescriptor extends ResourceDescriptor {
@@ -320,7 +329,7 @@ export class KubeApi<
   private watchId = 1;
   protected readonly doCheckPreferredVersion: boolean;
   protected readonly fullApiPathname: string;
-  protected readonly fallbackApiBases?: string[];
+  protected readonly fallbackApiBases: string[] | undefined;
   protected readonly logger: Logger;
 
   constructor({
@@ -382,7 +391,7 @@ export class KubeApi<
         const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
 
         // Request available resources
-        const { resources } = await this.request.get(`${apiPrefix}/${apiVersionWithGroup}`) as IKubeResourceList;
+        const { resources } = (await this.request.get(`${apiPrefix}/${apiVersionWithGroup}`)) as unknown as KubeApiResourceList;
 
         // If the resource is found in the group, use this apiUrl
         if (resources.find(({ name }) => name === resource)) {
@@ -461,7 +470,7 @@ export class KubeApi<
     });
   }
 
-  getUrl({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<IKubeApiQueryParams>) {
+  getUrl({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
     const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
@@ -473,7 +482,7 @@ export class KubeApi<
     return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
   }
 
-  protected normalizeQuery(query: Partial<IKubeApiQueryParams> = {}) {
+  protected normalizeQuery(query: Partial<KubeApiQueryParams> = {}) {
     if (query.labelSelector) {
       query.labelSelector = [query.labelSelector].flat().join(",");
     }
@@ -537,7 +546,7 @@ export class KubeApi<
     return null;
   }
 
-  private ensureMetadataSelfLink<T extends { selfLink?: string; namespace?: string; name: string }>(metadata: T): asserts metadata is T & { selfLink: string } {
+  private ensureMetadataSelfLink<T extends { selfLink?: string | undefined; namespace?: string | undefined; name: string }>(metadata: T): asserts metadata is T & { selfLink: string } {
     metadata.selfLink ||= createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
@@ -547,7 +556,7 @@ export class KubeApi<
     });
   }
 
-  async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: IKubeApiQueryParams): Promise<K[] | null> {
+  async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: KubeApiQueryParams): Promise<K[] | null> {
     await this.checkPreferredVersion();
 
     const url = this.getUrl({ namespace });
@@ -565,7 +574,7 @@ export class KubeApi<
     throw new Error(`GET multiple request to ${url} returned not an array: ${JSON.stringify(parsed)}`);
   }
 
-  async get(desc: ResourceDescriptor, query?: IKubeApiQueryParams): Promise<K | null> {
+  async get(desc: ResourceDescriptor, query?: KubeApiQueryParams): Promise<K | null> {
     await this.checkPreferredVersion();
 
     const url = this.getUrl(desc);
@@ -623,7 +632,7 @@ export class KubeApi<
     return parsed;
   }
 
-  async patch(desc: ResourceDescriptor, data?: PartialDeep<K> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<K | null> {
+  async patch(desc: ResourceDescriptor, data: PartialDeep<K> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<K | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl(desc);
 
@@ -652,7 +661,7 @@ export class KubeApi<
     });
   }
 
-  getWatchUrl(namespace = "", query: IKubeApiQueryParams = {}) {
+  getWatchUrl(namespace = "", query: KubeApiQueryParams = {}) {
     return this.getUrl({ namespace }, {
       watch: 1,
       resourceVersion: this.getResourceVersion(namespace),

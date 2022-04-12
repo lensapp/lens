@@ -11,6 +11,8 @@ import { merge } from "lodash";
 import type { Response, RequestInit } from "node-fetch";
 import fetch from "node-fetch";
 import { stringify } from "querystring";
+import type { Patch } from "rfc6902";
+import type { PartialDeep, ValueOf } from "type-fest";
 import { EventEmitter } from "../../common/event-emitter";
 import logger from "../../common/logger";
 import type { Defaulted } from "../utils";
@@ -24,9 +26,8 @@ export interface JsonApiError {
   errors?: { id: string; title: string; status?: number }[];
 }
 
-export interface JsonApiParams<D = any> {
-  query?: { [param: string]: string | number | any };
-  data?: D; // request body
+export interface JsonApiParams<D> {
+  data?: PartialDeep<D>; // request body
 }
 
 export interface JsonApiLog {
@@ -49,7 +50,16 @@ export interface JsonApiConfig {
 const httpAgent = new HttpAgent({ keepAlive: true });
 const httpsAgent = new HttpsAgent({ keepAlive: true });
 
-export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
+export type QueryParam = string | number | boolean | null | undefined | readonly string[] | readonly  number[] | readonly boolean[];
+export type QueryParams = Partial<Record<string, QueryParam | undefined>>;
+
+export type ParamsAndQuery<Params, Query> = (
+  ValueOf<Query> extends QueryParam
+    ? Params & { query?: Query }
+    : Params & { query?: undefined }
+);
+
+export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>> {
   static readonly reqInitDefault = {
     headers: {
       "content-type": "application/json",
@@ -68,15 +78,15 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     this.getRequestOptions = config.getRequestOptions ?? (() => Promise.resolve({}));
   }
 
-  public readonly onData = new EventEmitter<[D, Response]>();
+  public readonly onData = new EventEmitter<[Data, Response]>();
   public readonly onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
   private readonly getRequestOptions: GetRequestOptions;
 
-  get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "get" });
-  }
-
-  async getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
+  async getResponse<Query>(
+    path: string,
+    params?: ParamsAndQuery<Params, Query> | undefined,
+    init: RequestInit = {},
+  ): Promise<Response> {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
     const reqInit = merge(
       {
@@ -87,10 +97,10 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       await this.getRequestOptions(),
       init,
     );
-    const { query } = params || {} as P;
+    const { query } = params ?? {};
 
     if (query) {
-      const queryString = stringify(query);
+      const queryString = stringify(query as unknown as QueryParams);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
@@ -98,23 +108,51 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return fetch(reqUrl, reqInit);
   }
 
-  post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "post" });
+  get<OutData = Data, Query = QueryParams>(
+    path: string,
+    params?: ParamsAndQuery<Params, Query> | undefined,
+    reqInit: RequestInit = {},
+  ) {
+    return this.request<OutData, Query>(path, params, { ...reqInit, method: "get" });
   }
 
-  put<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "put" });
+  post<OutData = Data, Query = QueryParams>(
+    path: string,
+    params?: ParamsAndQuery<Params, Query> | undefined,
+    reqInit: RequestInit = {},
+  ) {
+    return this.request<OutData, Query>(path, params, { ...reqInit, method: "post" });
   }
 
-  patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "PATCH" });
+  put<OutData = Data, Query = QueryParams>(
+    path: string,
+    params?: ParamsAndQuery<Params, Query> | undefined,
+    reqInit: RequestInit = {},
+  ) {
+    return this.request<OutData, Query>(path, params, { ...reqInit, method: "put" });
   }
 
-  del<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "delete" });
+  patch<OutData = Data, Query = QueryParams>(
+    path: string,
+    params?: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: Patch | PartialDeep<Data> }) | undefined,
+    reqInit: RequestInit = {},
+  ) {
+    return this.request<OutData, Query>(path, params, { ...reqInit, method: "patch" });
   }
 
-  protected async request<D>(path: string, params: P | undefined, init: Defaulted<RequestInit, "method">) {
+  del<OutData = Data, Query = QueryParams>(
+    path: string,
+    params?: ParamsAndQuery<Params, Query> | undefined,
+    reqInit: RequestInit = {},
+  ) {
+    return this.request<OutData, Query>(path, params, { ...reqInit, method: "delete" });
+  }
+
+  protected async request<OutData, Query = QueryParams>(
+    path: string,
+    params: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: unknown }) | undefined,
+    init: Defaulted<RequestInit, "method">,
+  ) {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
     const reqInit = merge(
       {},
@@ -122,14 +160,14 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       await this.getRequestOptions(),
       init,
     );
-    const { data, query } = params || {} as P;
+    const { data, query } = params || {};
 
     if (data && !reqInit.body) {
       reqInit.body = JSON.stringify(data);
     }
 
     if (query) {
-      const queryString = stringify(query);
+      const queryString = stringify(query as unknown as QueryParams);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
@@ -141,10 +179,10 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
     const res = await fetch(reqUrl, reqInit);
 
-    return this.parseResponse<D>(res, infoLog);
+    return this.parseResponse<OutData>(res, infoLog);
   }
 
-  protected async parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
+  protected async parseResponse<OutData>(res: Response, log: JsonApiLog): Promise<OutData> {
     const { status } = res;
 
     const text = await res.text();

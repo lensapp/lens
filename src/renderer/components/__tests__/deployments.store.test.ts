@@ -4,10 +4,13 @@
  */
 
 import { observable } from "mobx";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { podStore } from "../+workloads-pods/legacy-store";
+import type { DeploymentStore } from "../+workloads-deployments/store";
+import deploymentStoreInjectable from "../+workloads-deployments/store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { PodSpec } from "../../../common/k8s-api/endpoints";
 import { Deployment, Pod } from "../../../common/k8s-api/endpoints";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const spec: PodSpec = {
   containers: [{
@@ -200,13 +203,22 @@ const failedPod = new Pod({
 });
 
 describe("Deployment Store tests", () => {
-  beforeAll(() => {
+  let deploymentStore: DeploymentStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    const podStore = di.inject(podStoreInjectable);
+
     // Add pods to pod store
     podStore.items = observable.array([
       runningPod,
       failedPod,
       pendingPod,
     ]);
+    deploymentStore = di.inject(deploymentStoreInjectable);
   });
 
   it("gets Deployment statuses in proper sorting order", () => {

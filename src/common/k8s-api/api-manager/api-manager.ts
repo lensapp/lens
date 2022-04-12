@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectStore } from "./kube-object.store";
+import type { KubeObjectStore } from "../kube-object.store";
 
 import { action, observable, makeObservable } from "mobx";
-import { autoBind, isDefined, iter } from "../utils";
-import type { KubeApi } from "./kube-api";
-import type { KubeJsonApiDataFor, KubeObject, ObjectReference } from "./kube-object";
-import { parseKubeApi, createKubeApiURL } from "./kube-api-parse";
+import { autoBind, isDefined, iter } from "../../utils";
+import type { KubeApi } from "../kube-api";
+import type { KubeJsonApiDataFor, KubeObject, ObjectReference } from "../kube-object";
+import { parseKubeApi, createKubeApiURL } from "../kube-api-parse";
 
 export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store
@@ -148,5 +148,3 @@ export class ApiManager {
     return createKubeApiURL({ apiVersion, name, namespace, resource });
   }
 }
-
-export const apiManager = new ApiManager();

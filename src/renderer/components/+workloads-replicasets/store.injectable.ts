@@ -7,7 +7,7 @@ import assert from "assert";
 import getPodsByOwnerIdInjectable from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import replicaSetApiInjectable from "../../../common/k8s-api/endpoints/replica-set.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
-import apiManagerInjectable from "../kube-object-menu/dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { ReplicaSetStore } from "./store";
 
 const replicaSetStoreInjectable = getInjectable({

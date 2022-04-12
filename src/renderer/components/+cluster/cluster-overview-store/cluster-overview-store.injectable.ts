@@ -11,7 +11,7 @@ import {
   MetricType,
 } from "./cluster-overview-store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
-import apiManagerInjectable from "../../kube-object-menu/dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { clusterApi } from "../../../../common/k8s-api/endpoints";
 
 const clusterOverviewStoreInjectable = getInjectable({
