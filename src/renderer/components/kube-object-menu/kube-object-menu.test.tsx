@@ -53,9 +53,8 @@ describe("kube-object-menu", () => {
   let render: DiRender;
 
   beforeEach(async () => {
-    const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
-
-    const kubeObjectMenuItems = [
+    const MenuItemComponent = () => <li>Some menu item</li>;
+    const someTestExtension = new SomeTestExtension([
       {
         apiVersions: ["some-api-version"],
         kind: "some-kind",
@@ -73,9 +72,7 @@ describe("kube-object-menu", () => {
         kind: "some-unrelated-kind",
         components: { MenuItem: MenuItemComponent },
       },
-    ];
-
-    const someTestExtension = new SomeTestExtension(kubeObjectMenuItems);
+    ]);
 
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
@@ -84,8 +81,6 @@ describe("kube-object-menu", () => {
     di.override(rendererExtensionsInjectable, () =>
       computed(() => [someTestExtension]),
     );
-
-    await di.runSetups();
 
     di.override(
       clusterInjectable,
