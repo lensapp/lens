@@ -10,7 +10,6 @@ const createStoresAndApisInjectable = getInjectable({
   id: "create-stores-and-apis",
   instantiate: () => isClusterPageContext(),
   injectionToken: createStoresAndApisInjectionToken,
-  causesSideEffects: true,
 });
 
 export default createStoresAndApisInjectable;

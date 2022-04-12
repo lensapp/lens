@@ -4,16 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiBase } from "../../common/k8s-api";
-import apiKubeInjectable from "../../common/k8s-api/api-kube.injectable";
 import { onApiError } from "./on-api-error";
 
 const setupOnApiErrorListenersInjectable = getInjectable({
   id: "setup-on-api-error-listeners",
-  setup: async (di) => {
-    const apiKube = await di.inject(apiKubeInjectable);
-
+  setup: () => {
     apiBase?.onError.addListener(onApiError);
-    apiKube?.onError.addListener(onApiError);
   },
   instantiate: () => undefined,
 });
