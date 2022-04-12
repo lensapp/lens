@@ -6,17 +6,21 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
     class="flex flex-col"
     data-testid="cluster-sidebar"
   >
-    <div>
+    <div
+      class="SidebarCluster"
+    >
       <div
-        class=""
+        class="Avatar rounded loadingAvatar"
         style="width: 40px; height: 40px;"
       >
         ??
       </div>
-      <div />
+      <div
+        class="loadingClusterName"
+      />
     </div>
     <div
-      class="undefined sidebar-active-status"
+      class="sidebarNav sidebar-active-status"
     >
       <div
         class="SidebarItem"
@@ -333,17 +337,21 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
     class="flex flex-col"
     data-testid="cluster-sidebar"
   >
-    <div>
+    <div
+      class="SidebarCluster"
+    >
       <div
-        class=""
+        class="Avatar rounded loadingAvatar"
         style="width: 40px; height: 40px;"
       >
         ??
       </div>
-      <div />
+      <div
+        class="loadingClusterName"
+      />
     </div>
     <div
-      class="undefined sidebar-active-status"
+      class="sidebarNav sidebar-active-status"
     >
       <div
         class="SidebarItem"
