@@ -3,8 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { fireEvent, RenderResult } from "@testing-library/react";
-import { SidebarItemRegistration, sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
+import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
 import { computed } from "mobx";
 import { get, includes, noop } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";

@@ -2,12 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRendererExtensionFake, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import type { TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFake } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
-import { ApplicationBuilder, getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 
 describe("extension special characters in page registrations", () => {
   let applicationBuilder: ApplicationBuilder;
