@@ -21,6 +21,7 @@ import directoryForUserDataInjectable from "../../../../common/app-paths/directo
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
+import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -78,6 +79,7 @@ describe("<DockTabs />", () => {
 
     render = renderFor(di);
 
+    di.override(hostedClusterIdInjectable, () => "some-cluster-id");
     di.override(
       directoryForUserDataInjectable,
       () => "some-test-suite-specific-directory-for-user-data",
