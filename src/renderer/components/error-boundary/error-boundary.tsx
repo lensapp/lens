@@ -11,8 +11,10 @@ import { observer } from "mobx-react";
 import { Button } from "../button";
 import { navigation } from "../../navigation";
 import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
+import type { SingleOrMany } from "../../utils";
 
 export interface ErrorBoundaryProps {
+  children?: SingleOrMany<React.ReactNode>;
 }
 
 interface State {
