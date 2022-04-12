@@ -5,6 +5,7 @@
 
 import "./sub-title.scss";
 import React from "react";
+import type { SingleOrMany } from "../../utils";
 import { cssNames } from "../../utils";
 
 export interface SubTitleProps {
@@ -12,7 +13,7 @@ export interface SubTitleProps {
   title: React.ReactNode;
   compact?: boolean; // no bottom padding
   id?: string;
-  children?: React.ReactNode | React.ReactNode[];
+  children?: SingleOrMany<React.ReactNode>;
 }
 
 export class SubTitle extends React.Component<SubTitleProps> {

@@ -8,7 +8,7 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import type { StorageLayer } from "../../utils";
+import type { SingleOrMany, StorageLayer } from "../../utils";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
@@ -40,6 +40,7 @@ export interface DrawerProps {
   animation?: AnimateName;
   onClose?: () => void;
   toolbar?: React.ReactNode;
+  children?: SingleOrMany<React.ReactNode>;
 }
 
 const defaultProps = {
@@ -239,7 +240,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
   }
 }
 
-export const Drawer = withInjectables<Dependencies, DrawerProps>(NonInjectedDrawer as never, {
+export const Drawer = withInjectables<Dependencies, DrawerProps>(NonInjectedDrawer as React.ElementType<DrawerProps & Dependencies>, {
   getProps: (di, props) => ({
     ...props,
     history: di.inject(historyInjectable),
