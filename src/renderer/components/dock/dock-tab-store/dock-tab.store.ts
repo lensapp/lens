@@ -16,32 +16,21 @@ export interface DockTabStoreOptions {
 
 export type DockTabStorageState<T> = Record<TabId, T>;
 
-interface DockTabStoreDependencies {
+export interface DockTabStoreDependencies {
   createStorage: CreateStorage;
 }
 
 export class DockTabStore<T> {
-  protected storage?: StorageLayer<DockTabStorageState<T>>;
-  private data = observable.map<TabId, T>();
+  protected readonly storage?: StorageLayer<DockTabStorageState<T>>;
+  private readonly data = observable.map<TabId, T>();
 
-  constructor(protected dependencies: DockTabStoreDependencies, protected options: DockTabStoreOptions) {
+  constructor(protected readonly dependencies: DockTabStoreDependencies, protected readonly options: DockTabStoreOptions) {
     autoBind(this);
+    this.options.autoInit ??= true;
 
-    this.options = {
-      autoInit: true,
-      ...this.options,
-    };
+    const { storageKey, autoInit } = this.options;
 
-    if (this.options.autoInit) {
-      this.init();
-    }
-  }
-
-  protected init() {
-    const { storageKey } = this.options;
-
-    // auto-save to local-storage
-    if (storageKey) {
+    if (autoInit && storageKey) {
       const storage = this.storage = this.dependencies.createStorage(storageKey, {});
 
       storage.whenReady.then(() => {
