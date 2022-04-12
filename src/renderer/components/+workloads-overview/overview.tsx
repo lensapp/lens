@@ -8,10 +8,10 @@ import "./overview.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { eventStore } from "../+events/event.store";
-import { deploymentStore } from "../+workloads-deployments/store";
+import type { DeploymentStore } from "../+workloads-deployments/store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
+import type { JobStore } from "../+workloads-jobs/store";
+import type { CronJobStore } from "../+workloads-cronjobs/store";
 import type { IComputedValue } from "mobx";
 import { makeObservable, observable, reaction } from "mobx";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
@@ -30,6 +30,9 @@ import daemonSetStoreInjectable from "../+workloads-daemonsets/store.injectable"
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
+import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
+import deploymentStoreInjectable from "../+workloads-deployments/store.injectable";
+import jobStoreInjectable from "../+workloads-jobs/store.injectable";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ComponentType<{}>[]>;
@@ -38,6 +41,9 @@ interface Dependencies {
   podStore: PodStore;
   daemonSetStore: DaemonSetStore;
   replicaSetStore: ReplicaSetStore;
+  deploymentStore: DeploymentStore;
+  jobStore: JobStore;
+  cronJobStore: CronJobStore;
 }
 
 @observer
@@ -52,11 +58,11 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
-        cronJobStore,
+        this.props.cronJobStore,
         this.props.daemonSetStore,
-        deploymentStore,
+        this.props.deploymentStore,
         eventStore,
-        jobStore,
+        this.props.jobStore,
         this.props.podStore,
         this.props.replicaSetStore,
         statefulSetStore,
@@ -118,5 +124,8 @@ export const WorkloadsOverview = withInjectables<Dependencies>(NonInjectedWorklo
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),
     replicaSetStore: di.inject(replicaSetStoreInjectable),
+    cronJobStore: di.inject(cronJobStoreInjectable),
+    deploymentStore: di.inject(deploymentStoreInjectable),
+    jobStore: di.inject(jobStoreInjectable),
   }),
 });

@@ -7,7 +7,7 @@ import "./jobs.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { jobStore } from "./job.store";
+import { jobStore } from "./legacy-store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import kebabCase from "lodash/kebabCase";

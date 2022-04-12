@@ -3,14 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { CronJob, CronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
-import { cronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { apiManager } from "../../../common/k8s-api/api-manager";
-import { isClusterPageContext } from "../../utils";
+import type { GetJobsByOwner } from "../+workloads-jobs/get-jobs-by-owner.injectable";
+
+interface Dependencies {
+  getJobsByOwner: GetJobsByOwner;
+}
 
 export class CronJobStore extends KubeObjectStore<CronJob, CronJobApi> {
+  constructor(protected readonly dependencies: Dependencies, api: CronJobApi, opts?: KubeObjectStoreOptions) {
+    super(api, opts);
+  }
+
   getStatuses(cronJobs?: CronJob[]) {
     const status = { scheduled: 0, suspended: 0 };
 
@@ -28,18 +34,10 @@ export class CronJobStore extends KubeObjectStore<CronJob, CronJobApi> {
 
   getActiveJobsNum(cronJob: CronJob) {
     // Active jobs are jobs without any condition 'Complete' nor 'Failed'
-    const jobs = jobStore.getJobsByOwner(cronJob);
+    const jobs = this.dependencies.getJobsByOwner(cronJob);
 
     if (!jobs.length) return 0;
 
     return jobs.filter(job => !job.getCondition()).length;
   }
-}
-
-export const cronJobStore = isClusterPageContext()
-  ? new CronJobStore(cronJobApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(cronJobStore);
 }

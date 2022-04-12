@@ -3,18 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { Job, JobApi } from "../../../common/k8s-api/endpoints/job.api";
-import { jobApi } from "../../../common/k8s-api/endpoints/job.api";
 import type { CronJob, Pod } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
-import { podStore } from "../+workloads-pods/legacy-store";
-import { apiManager } from "../../../common/k8s-api/api-manager";
-import { isClusterPageContext } from "../../utils";
+import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
+
+interface Dependencies {
+  getPodsByOwnerId: GetPodsByOwnerId;
+}
 
 export class JobStore extends KubeObjectStore<Job, JobApi> {
+  constructor(protected readonly dependencies: Dependencies, api: JobApi, opts?: KubeObjectStoreOptions) {
+    super(api, opts);
+  }
+
   getChildPods(job: Job): Pod[] {
-    return podStore.getPodsByOwnerId(job.getId());
+    return this.dependencies.getPodsByOwnerId(job.getId());
   }
 
   getJobsByOwner(cronJob: CronJob) {
@@ -43,12 +49,4 @@ export class JobStore extends KubeObjectStore<Job, JobApi> {
 
     return status;
   }
-}
-
-export const jobStore = isClusterPageContext()
-  ? new JobStore(jobApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(jobStore);
 }

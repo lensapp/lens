@@ -6,8 +6,10 @@
 import { asLegacyGlobalForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import clusterRoleBindingApiInjectable from "./cluster-role-binding.api.injectable";
 import clusterRoleApiInjectable from "./cluster-role.api.injectable";
+import cronJobApiInjectable from "./cron-job.api.injectable";
 import daemonSetApiInjectable from "./daemon-set.api.injectable";
 import deploymentApiInjectable from "./deployment.api.injectable";
+import jobApiInjectable from "./job.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
 import replicaSetApiInjectable from "./replica-set.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
@@ -58,3 +60,13 @@ export const statefulSetApi = asLegacyGlobalForExtensionApi(statefulSetApiInject
  * @deprecated use `di.inject(deploymentApiInjectable)` instead
  */
 export const deploymentApi = asLegacyGlobalForExtensionApi(deploymentApiInjectable);
+
+/**
+ * @deprecated use `di.inject(cronJobApiInjectable)` instead
+ */
+export const cronJobApi = asLegacyGlobalForExtensionApi(cronJobApiInjectable);
+
+/**
+ * @deprecated use `di.inject(jobApiInjectable)` instead
+ */
+export const jobApi = asLegacyGlobalForExtensionApi(jobApiInjectable);

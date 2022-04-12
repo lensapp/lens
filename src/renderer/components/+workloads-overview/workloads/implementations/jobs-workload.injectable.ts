@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
 import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
-import jobsStoreInjectable from "../../../+workloads-jobs/jobs-store.injectable";
+import jobStoreInjectable from "../../../+workloads-jobs/store.injectable";
 import navigateToJobsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/jobs/navigate-to-jobs.injectable";
 import { computed } from "mobx";
 
@@ -16,7 +16,7 @@ const jobsWorkloadInjectable = getInjectable({
   instantiate: (di) => {
     const navigate = di.inject(navigateToJobsInjectable);
     const namespaceStore = di.inject(namespaceStoreInjectable);
-    const store = di.inject(jobsStoreInjectable);
+    const store = di.inject(jobStoreInjectable);
 
     return {
       resourceName: "jobs",

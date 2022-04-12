@@ -14,7 +14,7 @@ import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { Link } from "react-router-dom";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { jobStore } from "./job.store";
+import type { JobStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getMetricsForJobs, type PodMetricData, Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -32,6 +32,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import jobStoreInjectable from "./store.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
@@ -39,6 +40,7 @@ export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
+  jobStore: JobStore;
 }
 
 @observer
@@ -68,7 +70,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   };
 
   render() {
-    const { object: job } = this.props;
+    const { object: job, jobStore } = this.props;
 
     if (!job) {
       return null;
@@ -175,6 +177,7 @@ export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInje
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
+    jobStore: di.inject(jobStoreInjectable),
   }),
 });
 

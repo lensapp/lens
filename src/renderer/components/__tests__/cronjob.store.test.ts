@@ -2,33 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import type { CronJobSpec } from "../../../common/k8s-api/endpoints";
+import type { CronJobStore } from "../+workloads-cronjobs/store";
+import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
 import { CronJob } from "../../../common/k8s-api/endpoints";
-
-const spec: CronJobSpec = {
-  schedule: "test",
-  concurrencyPolicy: "test",
-  suspend: true,
-  jobTemplate: {
-    metadata: {},
-    spec: {
-      template: {
-        metadata: {},
-        spec: {
-          containers: [],
-          restartPolicy: "restart",
-          terminationGracePeriodSeconds: 1,
-          dnsPolicy: "no",
-          hostPID: true,
-          schedulerName: "string",
-        },
-      },
-    },
-  },
-  successfulJobsHistoryLimit: 1,
-  failedJobsHistoryLimit: 1,
-};
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const scheduledCronJob = new CronJob({
   apiVersion: "foo",
@@ -40,7 +18,29 @@ const scheduledCronJob = new CronJob({
     namespace: "default",
     selfLink: "/apis/batch/v1beta1/cronjobs/default/scheduledCronJob",
   },
-  spec,
+  spec: {
+    schedule: "test",
+    concurrencyPolicy: "test",
+    suspend: false,
+    jobTemplate: {
+      metadata: {},
+      spec: {
+        template: {
+          metadata: {},
+          spec: {
+            containers: [],
+            restartPolicy: "restart",
+            terminationGracePeriodSeconds: 1,
+            dnsPolicy: "no",
+            hostPID: true,
+            schedulerName: "string",
+          },
+        },
+      },
+    },
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 1,
+  },
 });
 
 const suspendedCronJob = new CronJob({
@@ -53,7 +53,29 @@ const suspendedCronJob = new CronJob({
     namespace: "default",
     selfLink: "/apis/batch/v1beta1/cronjobs/default/suspendedCronJob",
   },
-  spec,
+  spec: {
+    schedule: "test",
+    concurrencyPolicy: "test",
+    suspend: true,
+    jobTemplate: {
+      metadata: {},
+      spec: {
+        template: {
+          metadata: {},
+          spec: {
+            containers: [],
+            restartPolicy: "restart",
+            terminationGracePeriodSeconds: 1,
+            dnsPolicy: "no",
+            hostPID: true,
+            schedulerName: "string",
+          },
+        },
+      },
+    },
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 1,
+  },
 });
 
 const otherSuspendedCronJob = new CronJob({
@@ -66,12 +88,42 @@ const otherSuspendedCronJob = new CronJob({
     namespace: "default",
     selfLink: "/apis/batch/v1beta1/cronjobs/default/otherSuspendedCronJob",
   },
-  spec,
+  spec: {
+    schedule: "test",
+    concurrencyPolicy: "test",
+    suspend: true,
+    jobTemplate: {
+      metadata: {},
+      spec: {
+        template: {
+          metadata: {},
+          spec: {
+            containers: [],
+            restartPolicy: "restart",
+            terminationGracePeriodSeconds: 1,
+            dnsPolicy: "no",
+            hostPID: true,
+            schedulerName: "string",
+          },
+        },
+      },
+    },
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 1,
+  },
 });
 
-scheduledCronJob.spec.suspend = false;
-
 describe("CronJob Store tests", () => {
+  let cronJobStore: CronJobStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    cronJobStore = di.inject(cronJobStoreInjectable);
+  });
+
   it("gets CronJob statuses in proper sorting order", () => {
     const statuses = Object.entries(cronJobStore.getStatuses([
       suspendedCronJob,

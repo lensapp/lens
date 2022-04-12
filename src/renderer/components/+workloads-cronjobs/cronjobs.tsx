@@ -7,8 +7,8 @@ import "./cronjobs.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cronJobStore } from "./cronjob.store";
-import { jobStore } from "../+workloads-jobs/job.store";
+import { cronJobStore } from "./legacy-store";
+import { jobStore } from "../+workloads-jobs/legacy-store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

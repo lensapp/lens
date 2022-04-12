@@ -7,7 +7,6 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodContainer, PodMetricData, PodSpec } from "./pod.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
 import { KubeObject } from "../kube-object";
 
@@ -82,7 +81,7 @@ export class Job extends KubeObject<JobStatus, JobSpec, KubeObjectScope.Namespac
 
   getCondition() {
     // Type of Job condition could be only Complete or Failed
-    // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/#jobcondition-v1-batch
+    // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#jobcondition-v1-batch
     return this.status?.conditions?.find(({ status }) => status === "True");
   }
 
@@ -116,7 +115,3 @@ export function getMetricsForJobs(jobs: Job[], namespace: string, selector = "")
     namespace,
   });
 }
-
-export const jobApi = isClusterPageContext()
-  ? new JobApi()
-  : undefined as never;

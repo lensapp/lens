@@ -4,7 +4,7 @@
  */
 
 import { observable } from "mobx";
-import { jobStore } from "../+workloads-jobs/job.store";
+import { jobStore } from "../+workloads-jobs/store";
 import { podStore } from "../+workloads-pods/legacy-store";
 import { Job, Pod } from "../../../common/k8s-api/endpoints";
 

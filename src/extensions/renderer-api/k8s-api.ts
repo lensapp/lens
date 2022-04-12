@@ -16,6 +16,9 @@ import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable"
 import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
 import replicaSetApiInjectable from "../../common/k8s-api/endpoints/replica-set.api.injectable";
 import statefulSetApiInjectable from "../../common/k8s-api/endpoints/stateful-set.api.injectable";
+import deploymentApiInjectable from "../../common/k8s-api/endpoints/deployment.api.injectable";
+import jobApiInjectable from "../../common/k8s-api/endpoints/job.api.injectable";
+import cronJobApiInjectable from "../../common/k8s-api/endpoints/cron-job.api.injectable";
 
 export function isAllowedResource(resource: KubeResource | KubeResource[]) {
   const resources = castArray(resource);
@@ -38,6 +41,9 @@ export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
 export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
 export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);
 export const statefulSetApi = asLegacyGlobalForExtensionApi(statefulSetApiInjectable);
+export const deploymentApi = asLegacyGlobalForExtensionApi(deploymentApiInjectable);
+export const jobApi = asLegacyGlobalForExtensionApi(jobApiInjectable);
+export const cronJobApi = asLegacyGlobalForExtensionApi(cronJobApiInjectable);
 
 export {
   BaseKubeJsonApiObjectMetadata,
@@ -49,11 +55,11 @@ export { KubeObject, KubeStatus } from "../../common/k8s-api/kube-object";
 export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 export { Pod, PodApi as PodsApi } from "../../common/k8s-api/endpoints/pod.api";
 export { Node, nodeApi as nodesApi, NodeApi as NodesApi } from "../../common/k8s-api/endpoints/nodes.api";
-export { Deployment, deploymentApi, DeploymentApi } from "../../common/k8s-api/endpoints/deployment.api";
+export { Deployment, DeploymentApi } from "../../common/k8s-api/endpoints/deployment.api";
 export { DaemonSet } from "../../common/k8s-api/endpoints/daemon-set.api";
 export { StatefulSet } from "../../common/k8s-api/endpoints/stateful-set.api";
-export { Job, jobApi } from "../../common/k8s-api/endpoints/job.api";
-export { CronJob, cronJobApi } from "../../common/k8s-api/endpoints/cron-job.api";
+export { Job } from "../../common/k8s-api/endpoints/job.api";
+export { CronJob } from "../../common/k8s-api/endpoints/cron-job.api";
 export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/configmap.api";
 export { Secret, secretApi as secretsApi } from "../../common/k8s-api/endpoints/secret.api";
 export { ReplicaSet } from "../../common/k8s-api/endpoints/replica-set.api";
@@ -93,8 +99,8 @@ export type { NodesStore } from "../../renderer/components/+nodes/nodes.store";
 export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/store";
 export type { DaemonSetStore } from "../../renderer/components/+workloads-daemonsets/store";
 export type { StatefulSetStore } from "../../renderer/components/+workloads-statefulsets/statefulset.store";
-export type { JobStore } from "../../renderer/components/+workloads-jobs/job.store";
-export type { CronJobStore } from "../../renderer/components/+workloads-cronjobs/cronjob.store";
+export type { JobStore } from "../../renderer/components/+workloads-jobs/store";
+export type { CronJobStore } from "../../renderer/components/+workloads-cronjobs/store";
 export type { ConfigMapStore as ConfigMapsStore } from "../../renderer/components/+config-maps/config-maps.store";
 export type { SecretStore as SecretsStore } from "../../renderer/components/+config-secrets/secrets.store";
 export type { ReplicaSetStore } from "../../renderer/components/+workloads-replicasets/store";

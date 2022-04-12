@@ -9,7 +9,6 @@ import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { JobTemplateSpec } from "./types/job-template-spec";
 
 export class CronJobApi extends KubeApi<CronJob> {
@@ -103,7 +102,3 @@ export class CronJob extends KubeObject<CronJobStatus, CronJobSpec, KubeObjectSc
     return this.spec.suspend;
   }
 }
-
-export const cronJobApi = isClusterPageContext()
-  ? new CronJobApi()
-  : undefined as never;
