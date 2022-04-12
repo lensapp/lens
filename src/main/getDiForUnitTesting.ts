@@ -44,6 +44,9 @@ import exitAppInjectable from "./electron-app/exit-app.injectable";
 import setApplicationNameInjectable from "./electron-app/set-application-name.injectable";
 import getCommandLineSwitchInjectable from "./electron-app/get-command-line-switch.injectable";
 import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
+import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
+import { EventEmitter } from "../common/event-emitter";
+import type { AppEvent } from "../common/app-event-bus/event-bus";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -81,6 +84,9 @@ export const getDiForUnitTesting = (
     di.override(setApplicationNameInjectable, () => () => {});
     di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
     di.override(isAutoUpdateEnabledInjectable, () => () => false);
+
+    // TODO: Remove usages of globally exported appEventBus to get rid of this
+    di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
