@@ -16,10 +16,14 @@
     "name": "OpenLens Authors"
   },
   "dependencies": {
-    "@types/node": "14.17.14",
-    "@types/react-select": "3.1.2",
     "@material-ui/core": "4.12.3",
+    "@types/node": "14.17.14",
+    "@types/react": "^18.0.3",
+    "@types/react-router": "^5.1.18",
+    "@types/react-router-dom": "^5.3.3",
     "conf": "^7.0.1",
+    "mobx": "^6.5.0",
+    "mobx-react": "^7.3.0",
     "typed-emitter": "^1.3.1"
   }
 }
