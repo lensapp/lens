@@ -4,9 +4,12 @@
  */
 
 import { observable } from "mobx";
-import { jobStore } from "../+workloads-jobs/store";
-import { podStore } from "../+workloads-pods/legacy-store";
+import type { JobStore } from "../+workloads-jobs/store";
+import jobStoreInjectable from "../+workloads-jobs/store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 import { Job, Pod } from "../../../common/k8s-api/endpoints";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningJob = new Job({
   apiVersion: "foo",
@@ -165,7 +168,18 @@ const succeededPod = new Pod({
 });
 
 describe("Job Store tests", () => {
-  beforeAll(() => {
+  let jobStore: JobStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(createStoresAndApisInjectable, () => true);
+
+    jobStore = di.inject(jobStoreInjectable);
+
+    const podStore = di.inject(podStoreInjectable);
+
+    // Add pods to pod store
     podStore.items = observable.array([
       runningPod,
       failedPod,
