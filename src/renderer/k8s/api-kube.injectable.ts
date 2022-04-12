@@ -4,10 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { onApiError } from "../../renderer/api/on-api-error";
-import { apiKubePrefix, isDevelopment } from "../vars";
-import { createStoresAndApisInjectionToken } from "./create-stores-apis.token";
-import { KubeJsonApi } from "./kube-json-api";
+import { onApiError } from "../api/on-api-error";
+import { apiKubePrefix, isDevelopment } from "../../common/vars";
+import { apiKubeInjectionToken } from "../../common/k8s-api/api-kube";
+import { createStoresAndApisInjectionToken } from "../../common/k8s-api/create-stores-apis.token";
+import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
@@ -28,6 +29,7 @@ const apiKubeInjectable = getInjectable({
 
     return apiKube;
   },
+  injectionToken: apiKubeInjectionToken,
 });
 
 export default apiKubeInjectable;

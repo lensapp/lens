@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import createStoresAndApisInjectable from "../../../renderer/create-stores-apis.injectable";
-import apiKubeInjectable from "../api-kube.injectable";
+import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { DeploymentApi } from "../endpoints/deployment.api";
 import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
 import type { KubeJsonApi } from "../kube-json-api";

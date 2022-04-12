@@ -5,7 +5,7 @@
 
 import createStoresAndApisInjectable from "../../../renderer/create-stores-apis.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
-import apiKubeInjectable from "../api-kube.injectable";
+import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { StatefulSetApi } from "../endpoints";
 import statefulSetApiInjectable from "../endpoints/stateful-set.api.injectable";
 import type { KubeJsonApi } from "../kube-json-api";

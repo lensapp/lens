@@ -3,7 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { getInjectionToken } from "@ogre-tools/injectable";
 import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import apiKubeInjectable from "./api-kube.injectable";
+import type { KubeJsonApi } from "./kube-json-api";
 
-export const apiKube = asLegacyGlobalForExtensionApi(apiKubeInjectable);
+export const apiKubeInjectionToken = getInjectionToken<KubeJsonApi>({
+  id: "api-kube-injection-token",
+});
+
+export const apiKube = asLegacyGlobalForExtensionApi(apiKubeInjectionToken);
