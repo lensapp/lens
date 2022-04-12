@@ -5,7 +5,7 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { ScrollSpy } from "../scroll-spy";
 import { RecursiveTreeView } from "../../tree-view";
 
@@ -23,7 +23,6 @@ describe("<ScrollSpy/>", () => {
   it("renders w/o errors", () => {
     const { container } = render((
       <ScrollSpy
-        htmlFor=""
         render={() => (
           <div>
             <section id="application">
@@ -40,7 +39,6 @@ describe("<ScrollSpy/>", () => {
   it("calls intersection observer", () => {
     render((
       <ScrollSpy
-        htmlFor=""
         render={() => (
           <div>
             <section id="application">
@@ -55,9 +53,8 @@ describe("<ScrollSpy/>", () => {
   });
 
   it("renders dataTree component", async () => {
-    const { queryByTestId } = render((
+    render((
       <ScrollSpy
-        htmlFor=""
         render={dataTree => (
           <div>
             <nav>
@@ -71,9 +68,7 @@ describe("<ScrollSpy/>", () => {
       />
     ));
 
-    await waitFor(() => {
-      expect(queryByTestId("TreeView")).toBeInTheDocument();
-    });
+    expect(await screen.findByTestId("TreeView")).toBeInTheDocument();
   });
 
   it("throws if no sections founded", () => {
@@ -84,7 +79,6 @@ describe("<ScrollSpy/>", () => {
 
     expect(() => render((
       <ScrollSpy
-        htmlFor=""
         render={() => (
           <div>
             Content
@@ -101,9 +95,8 @@ describe("<ScrollSpy/>", () => {
 
 describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
   it("contains links to all sections", async () => {
-    const { queryByTitle } = render((
+    render((
       <ScrollSpy
-        htmlFor=""
         render={dataTree => (
           <div>
             <nav>
@@ -124,17 +117,14 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
       />
     ));
 
-    await waitFor(() => {
-      expect(queryByTitle("Application")).toBeInTheDocument();
-      expect(queryByTitle("Appearance")).toBeInTheDocument();
-      expect(queryByTitle("Theme")).toBeInTheDocument();
-    });
+    expect(await screen.findByTitle("Application")).toBeInTheDocument();
+    expect(await screen.findByTitle("Appearance")).toBeInTheDocument();
+    expect(await screen.findByTitle("Theme")).toBeInTheDocument();
   });
 
   it("not showing links to sections without id", async () => {
     const { queryByTitle } = render((
       <ScrollSpy
-        htmlFor=""
         render={dataTree => (
           <div>
             <nav>
@@ -154,17 +144,17 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
       />
     ));
 
+    expect(await screen.findByTitle("Application")).toBeInTheDocument();
+    expect(await screen.findByTitle("Appearance")).toBeInTheDocument();
+
     await waitFor(() => {
-      expect(queryByTitle("Application")).toBeInTheDocument();
-      expect(queryByTitle("Appearance")).toBeInTheDocument();
       expect(queryByTitle("Kubectl")).not.toBeInTheDocument();
     });
   });
 
   it("expands parent sections", async () => {
-    const { queryByTitle } = render((
+    render((
       <ScrollSpy
-        htmlFor=""
         render={dataTree => (
           <div>
             <nav>
@@ -191,16 +181,13 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
       />
     ));
 
-    await waitFor(() => {
-      expect(queryByTitle("Application")).toHaveAttribute("aria-expanded");
-      expect(queryByTitle("Kubernetes")).toHaveAttribute("aria-expanded");
-    });
+    expect(await screen.findByTitle("Application")).toHaveAttribute("aria-expanded");
+    expect(await screen.findByTitle("Kubernetes")).toHaveAttribute("aria-expanded");
   });
 
   it("skips sections without headings", async () => {
-    const { queryByTitle } = render((
+    render((
       <ScrollSpy
-        htmlFor=""
         render={dataTree => (
           <div>
             <nav>
@@ -220,10 +207,11 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
       />
     ));
 
+    expect(await screen.findByTitle("Application")).toBeInTheDocument();
+
     await waitFor(() => {
-      expect(queryByTitle("Application")).toBeInTheDocument();
-      expect(queryByTitle("appearance")).not.toBeInTheDocument();
-      expect(queryByTitle("Appearance")).not.toBeInTheDocument();
+      expect(screen.queryByTitle("appearance")).not.toBeInTheDocument();
+      expect(screen.queryByTitle("Appearance")).not.toBeInTheDocument();
     });
   });
 });
