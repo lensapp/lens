@@ -96,7 +96,7 @@ export class KubeWatchApi {
 
     const loadThenSubscribe = async (namespaces: string[]) => {
       try {
-        await store.loadAll({ namespaces, reqInit: { signal: childController.signal }, onLoadFailure });
+        await store.loadAll({ namespaces, merge: false, reqInit: { signal: childController.signal }, onLoadFailure });
         unsubscribe.push(store.subscribe({ onLoadFailure, abortController: childController }));
       } catch (error) {
         if (!(error instanceof DOMException)) {
