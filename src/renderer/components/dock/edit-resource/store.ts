@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { StorageHelper } from "../../../utils";
-import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import type { TabId } from "../dock/store";
 import type { KubeObject } from "../../../../common/k8s-api/kube-object";
-import { apiManager } from "../../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 
 export interface EditingResource {
@@ -17,12 +16,12 @@ export interface EditingResource {
   firstDraft?: string;
 }
 
-interface Dependencies {
-  createStorage:<T> (storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
+export interface EditResourceTabStoreDependencies extends DockTabStoreDependencies {
+  readonly apiManager: ApiManager;
 }
 
 export class EditResourceTabStore extends DockTabStore<EditingResource> {
-  constructor(protected dependencies: Dependencies) {
+  constructor(protected readonly dependencies: EditResourceTabStoreDependencies) {
     super(dependencies, {
       storageKey: "edit_resource_store",
     });
@@ -40,18 +39,16 @@ export class EditResourceTabStore extends DockTabStore<EditingResource> {
     const apiPath = this.getResourcePath(tabId);
 
     return apiPath
-      ? apiManager.getStore(apiPath)
+      ? this.dependencies.apiManager.getStore(apiPath)
       : undefined;
   }
 
   getResource(tabId: TabId): KubeObject | undefined {
     const apiPath = this.getResourcePath(tabId);
 
-    if (apiPath) {
-      return apiManager.getStore(apiPath)?.getByPath(apiPath);
-    }
-
-    return undefined;
+    return apiPath
+      ? this.dependencies.apiManager.getStore(apiPath)?.getByPath(apiPath)
+      : undefined;
   }
 
   getResourcePath(tabId: TabId): string | undefined {
