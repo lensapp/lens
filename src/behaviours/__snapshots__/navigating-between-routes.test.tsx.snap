@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`navigating between routes given route with optional path parameters when navigating to route with path parameters renders 1`] = `
+<div>
+  <pre>
+    {
+  "someParameter": "some-value",
+  "someOtherParameter": "some-other-value"
+}
+  </pre>
+</div>
+`;
+
+exports[`navigating between routes given route without path parameters when navigating to route renders 1`] = `
+<div>
+  <div>
+    Some component
+  </div>
+</div>
+`;
