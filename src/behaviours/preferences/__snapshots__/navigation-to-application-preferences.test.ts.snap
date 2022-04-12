@@ -142,7 +142,7 @@ exports[`preferences - navigation to application preferences given in some child
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Allow untrusted Certificate Authorities
@@ -174,10 +174,11 @@ exports[`preferences - navigation to application preferences given in some child
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -189,6 +190,7 @@ exports[`preferences - navigation to application preferences given in some child
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>
@@ -494,7 +496,7 @@ exports[`preferences - navigation to application preferences given in some child
                
             </div>
             <label
-              class=""
+              class="Switch"
               data-testid="switch"
             >
               Automatically start Lens on login
@@ -669,10 +671,11 @@ exports[`preferences - navigation to application preferences given in some child
           >
             <div
               aria-label="Close"
+              class="closeButton"
               role="button"
             >
               <i
-                class="Icon material focusable"
+                class="Icon icon material focusable"
               >
                 <span
                   class="icon"
@@ -684,6 +687,7 @@ exports[`preferences - navigation to application preferences given in some child
             </div>
             <div
               aria-hidden="true"
+              class="esc"
             >
               ESC
             </div>

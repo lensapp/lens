@@ -6,17 +6,21 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
     class="flex flex-col"
     data-testid="cluster-sidebar"
   >
-    <div>
+    <div
+      class="SidebarCluster"
+    >
       <div
-        class=""
+        class="Avatar rounded loadingAvatar"
         style="width: 40px; height: 40px;"
       >
         ??
       </div>
-      <div />
+      <div
+        class="loadingClusterName"
+      />
     </div>
     <div
-      class="undefined sidebar-active-status"
+      class="sidebarNav sidebar-active-status"
     >
       <div
         class="SidebarItem"
@@ -266,17 +270,21 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
     class="flex flex-col"
     data-testid="cluster-sidebar"
   >
-    <div>
+    <div
+      class="SidebarCluster"
+    >
       <div
-        class=""
+        class="Avatar rounded loadingAvatar"
         style="width: 40px; height: 40px;"
       >
         ??
       </div>
-      <div />
+      <div
+        class="loadingClusterName"
+      />
     </div>
     <div
-      class="undefined sidebar-active-status"
+      class="sidebarNav sidebar-active-status"
     >
       <div
         class="SidebarItem"

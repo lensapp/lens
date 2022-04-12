@@ -2,9 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRendererExtensionFake, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import type { TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFake } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
-import { fireEvent, RenderResult } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import isEmpty from "lodash/isEmpty";
 import queryParametersInjectable from "../renderer/routes/query-parameters.injectable";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
