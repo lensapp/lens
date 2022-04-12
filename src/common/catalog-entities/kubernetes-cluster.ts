@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import type { CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategorySpec } from "../catalog";
 import { CatalogEntity, CatalogCategory, categoryVersion } from "../catalog/catalog-entity";
 import { ClusterStore } from "../cluster-store/cluster-store";
@@ -103,7 +102,7 @@ export class KubernetesCluster<
     //
   }
 
-  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+  onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push({
         title: "Settings",
@@ -132,10 +131,6 @@ export class KubernetesCluster<
         });
         break;
     }
-
-    catalogCategoryRegistry
-      .getCategoryForEntity<KubernetesClusterCategory>(this)
-      ?.emit("contextMenuOpen", this, context);
   }
 }
 

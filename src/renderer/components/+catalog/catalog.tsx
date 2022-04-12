@@ -15,8 +15,7 @@ import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { ConfirmDialog } from "../confirm-dialog";
-import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
-import { catalogCategoryRegistry } from "../../../common/catalog";
+import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
@@ -43,6 +42,9 @@ import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { HotbarStore } from "../../../common/hotbars/store";
+import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
+import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void; get: () => string };
@@ -50,14 +52,14 @@ interface Dependencies {
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
   emitEvent: (event: AppEvent) => void;
-
   routeParameters: {
     group: IComputedValue<string>;
     kind: IComputedValue<string>;
   };
-
   navigateToCatalog: NavigateToCatalog;
   hotbarStore: HotbarStore;
+  catalogCategoryRegistry: CatalogCategoryRegistry;
+  onContextMenuOpen: OnContextMenuOpen;
 }
 
 @observer
@@ -91,16 +93,24 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   async componentDidMount() {
+    const {
+      catalogEntityStore,
+      catalogPreviousActiveTabStorage,
+      catalogCategoryRegistry,
+    } = this.props;
+
     disposeOnUnmount(this, [
-      this.props.catalogEntityStore.watch(),
+      catalogEntityStore.watch(),
       reaction(() => this.routeActiveTab, async (routeTab) => {
+        catalogPreviousActiveTabStorage.set(this.routeActiveTab);
+
         try {
           await when(() => (routeTab === browseCatalogTab || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
           const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
 
           runInAction(() => {
             this.activeTab = routeTab;
-            this.props.catalogEntityStore.activeCategory.set(item);
+            catalogEntityStore.activeCategory.set(item);
           });
         } catch (error) {
           console.error(error);
@@ -112,21 +122,20 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
           ));
         }
       }, { fireImmediately: true }),
+      // If active category is filtered out, automatically switch to the first category
+      reaction(() => catalogCategoryRegistry.filteredItems, () => {
+        if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === catalogEntityStore.activeCategory.get()?.getId())) {
+          const item = catalogCategoryRegistry.filteredItems[0];
+
+          runInAction(() => {
+            if (item) {
+              this.activeTab = item.getId();
+              this.props.catalogEntityStore.activeCategory.set(item);
+            }
+          });
+        }
+      }),
     ]);
-
-    // If active category is filtered out, automatically switch to the first category
-    disposeOnUnmount(this, reaction(() => catalogCategoryRegistry.filteredItems, () => {
-      if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === this.props.catalogEntityStore.activeCategory.get()?.getId())) {
-        const item = catalogCategoryRegistry.filteredItems[0];
-
-        runInAction(() => {
-          if (item) {
-            this.activeTab = item.getId();
-            this.props.catalogEntityStore.activeCategory.set(item);
-          }
-        });
-      }
-    }));
 
     this.props.emitEvent({
       name: "catalog",
@@ -168,7 +177,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   get categories() {
-    return catalogCategoryRegistry.items;
+    return this.props.catalogCategoryRegistry.items;
   }
 
   onTabChange = action((tabId: string | null) => {
@@ -194,7 +203,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   renderItemMenu = (entity: CatalogEntity) => {
     const onOpen = () => {
       this.menuItems.clear();
-      entity.onContextMenuOpen({
+      this.props.onContextMenuOpen(entity, {
         menuItems: this.menuItems,
         navigate: (url) => navigate(url),
       });
@@ -358,5 +367,7 @@ export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     emitEvent: di.inject(appEventBusInjectable).emit,
     hotbarStore: di.inject(hotbarStoreInjectable),
+    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
   }),
 });

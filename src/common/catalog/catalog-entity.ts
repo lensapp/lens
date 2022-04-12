@@ -396,7 +396,7 @@ export abstract class CatalogEntity<
     return this.status.enabled ?? true;
   }
 
-  public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
-  public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
-  public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;
+  public onRun?(context: CatalogEntityActionContext): void | Promise<void>;
+  public onContextMenuOpen?(context: CatalogEntityContextMenuContext): void | Promise<void>;
+  public onSettingsOpen?(context: CatalogEntitySettingsContext): void | Promise<void>;
 }

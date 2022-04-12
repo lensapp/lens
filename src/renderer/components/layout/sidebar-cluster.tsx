@@ -19,6 +19,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { HotbarStore } from "../../../common/hotbars/store";
 import { observer } from "mobx-react";
+import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
+import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
 
 const contextMenu: CatalogEntityContextMenuContext = observable({
   menuItems: [],
@@ -64,13 +66,18 @@ function renderLoadingSidebarCluster() {
 
 interface Dependencies {
   hotbarStore: HotbarStore;
+  onContextMenuOpen: OnContextMenuOpen;
 }
 
 interface SidebarClusterProps {
   clusterEntity: CatalogEntity | undefined;
 }
 
-const NonInjectedSidebarCluster = observer(({ clusterEntity, hotbarStore }: Dependencies & SidebarClusterProps) => {
+const NonInjectedSidebarCluster = observer(({
+  clusterEntity,
+  hotbarStore,
+  onContextMenuOpen,
+}: Dependencies & SidebarClusterProps) => {
   const [opened, setOpened] = useState(false);
 
   if (!clusterEntity) {
@@ -87,7 +94,7 @@ const NonInjectedSidebarCluster = observer(({ clusterEntity, hotbarStore }: Depe
       : () => hotbarStore.addToHotbar(clusterEntity);
 
     contextMenu.menuItems = [{ title, onClick }];
-    clusterEntity.onContextMenuOpen(contextMenu);
+    onContextMenuOpen(clusterEntity, contextMenu);
 
     toggle();
   };
@@ -150,13 +157,10 @@ const NonInjectedSidebarCluster = observer(({ clusterEntity, hotbarStore }: Depe
   );
 });
 
-export const SidebarCluster = withInjectables<Dependencies, SidebarClusterProps>(
-  NonInjectedSidebarCluster,
-
-  {
-    getProps: (di, props) => ({
-      hotbarStore: di.inject(hotbarStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const SidebarCluster = withInjectables<Dependencies, SidebarClusterProps>(NonInjectedSidebarCluster, {
+  getProps: (di, props) => ({
+    ...props,
+    hotbarStore: di.inject(hotbarStoreInjectable),
+    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+  }),
+});

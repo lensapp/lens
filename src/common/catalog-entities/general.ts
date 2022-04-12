@@ -22,18 +22,6 @@ export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogE
   async onRun() {
     navigate(this.spec.path);
   }
-
-  public onSettingsOpen(): void {
-    return;
-  }
-
-  public onDetailsOpen(): void {
-    return;
-  }
-
-  public onContextMenuOpen(): void {
-    return;
-  }
 }
 
 export class GeneralCategory extends CatalogCategory {

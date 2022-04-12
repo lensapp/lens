@@ -15,17 +15,24 @@ import { MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
+import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
 
-export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
-  entity: T;
+export interface CatalogEntityDrawerMenuProps<Entity extends CatalogEntity> extends MenuActionsProps {
+  entity: Entity;
+}
+
+interface Dependencies {
+  onContextMenuOpen: OnContextMenuOpen;
 }
 
 @observer
-export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Component<CatalogEntityDrawerMenuProps<T>> {
+class NonInjectedCatalogEntityDrawerMenu<Entity extends CatalogEntity> extends React.Component<Dependencies & CatalogEntityDrawerMenuProps<Entity>> {
   private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
   componentDidMount() {
-    this.props.entity?.onContextMenuOpen({
+    this.props.onContextMenuOpen(this.props.entity, {
       menuItems: this.menuItems,
       navigate: (url) => navigate(url),
     });
@@ -48,7 +55,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     }
   }
 
-  getMenuItems(entity: T): React.ReactChild[] {
+  getMenuItems(entity: Entity): React.ReactChild[] {
     if (!entity) {
       return [];
     }
@@ -117,3 +124,10 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     );
   }
 }
+
+export const CatalogEntityDrawerMenu = withInjectables<Dependencies, CatalogEntityDrawerMenuProps<CatalogEntity>>(NonInjectedCatalogEntityDrawerMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+  }),
+}) as <Entity extends CatalogEntity>(props: CatalogEntityDrawerMenuProps<Entity>) => JSX.Element;

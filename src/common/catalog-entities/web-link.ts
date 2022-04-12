@@ -5,7 +5,6 @@
 
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
 
@@ -30,11 +29,7 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     window.open(this.spec.url, "_blank");
   }
 
-  public onSettingsOpen(): void {
-    return;
-  }
-
-  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+  onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (this.metadata.source === "local") {
       context.menuItems.push({
         title: "Delete",
@@ -45,10 +40,6 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
         },
       });
     }
-
-    catalogCategoryRegistry
-      .getCategoryForEntity(this)
-      ?.emit("contextMenuOpen", this, context);
   }
 }
 
