@@ -40,8 +40,8 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   });
 
   it("opens cluster settings by clicking link in no-metrics area", async () => {
-    await frame.click(`[data-testid="no-metrics-message"]`);
-    await frame.waitForSelector(`[data-testid="general-header"]`);
+    await frame.locator("text=Open cluster settings >> nth=0").click();
+    await window.waitForSelector(`[data-testid="general-header"]`);
   });
 
   it(
