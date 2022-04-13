@@ -26,7 +26,7 @@ export function ClusterNoMetrics({ className }: ClusterNoMetricsProps) {
   }
 
   return (
-    <div className={cssNames(styles.ClusterNoMetrics, className)}>
+    <div className={cssNames(styles.ClusterNoMetrics, className)} data-testid="no-metrics-message">
       <Icon material="info"/>
       <p>Metrics are not available due to missing or invalid Prometheus configuration.</p>
       <p><span className={styles.link} onClick={openSettingsPage}>Open cluster settings</span></p>
