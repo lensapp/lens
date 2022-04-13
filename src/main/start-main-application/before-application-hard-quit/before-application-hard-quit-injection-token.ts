@@ -5,8 +5,7 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Runnable } from "../run-many-for";
 
-export const beforeApplicationHardQuitInjectionToken = getInjectionToken<
-  Runnable<{ cancel: () => void }>
-    >({
-      id: "before-application-hard-quit",
-    });
+export const beforeApplicationHardQuitInjectionToken =
+  getInjectionToken<Runnable>({
+    id: "before-application-hard-quit",
+  });

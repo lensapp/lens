@@ -7,21 +7,42 @@ import { beforeApplicationIsReadyInjectionToken } from "../before-application-is
 import { beforeApplicationSoftQuitInjectionToken } from "../../before-application-soft-quit/before-application-soft-quit-injection-token";
 import { runManyFor } from "../../run-many-for";
 import whenApplicationWillQuitInjectable from "../../../electron-app/when-application-will-quit.injectable";
+import { beforeApplicationHardQuitInjectionToken } from "../../before-application-hard-quit/before-application-hard-quit-injection-token";
+import isIntegrationTestingInjectable from "../../../../common/vars/is-integration-testing.injectable";
 
 const setupClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",
 
   instantiate: (di) => {
-    const whenApplicationWillQuit = di.inject(whenApplicationWillQuitInjectable);
+    const whenApplicationWillQuit = di.inject(
+      whenApplicationWillQuitInjectable,
+    );
 
-    const runManyForApplicationClose = runManyFor(di)(
+    const runMany = runManyFor(di);
+
+    const runRunnablesBeforeApplicationSoftQuit = runMany(
       beforeApplicationSoftQuitInjectionToken,
     );
 
+    const runRunnablesBeforeApplicationHardQuit = runMany(
+      beforeApplicationHardQuitInjectionToken,
+    );
+
+    const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
+
     return {
       run: () => {
-        whenApplicationWillQuit(async args => {
-          await runManyForApplicationClose(args);
+        whenApplicationWillQuit(async ({ cancel: cancelNativeQuit }) => {
+          await runRunnablesBeforeApplicationSoftQuit();
+
+          // &&!autoUpdateIsRunning) {
+          const shouldDoOnlySoftQuit = !isIntegrationTesting;
+
+          if (shouldDoOnlySoftQuit) {
+            cancelNativeQuit();
+          } else {
+            await runRunnablesBeforeApplicationHardQuit();
+          }
         });
       },
     };
