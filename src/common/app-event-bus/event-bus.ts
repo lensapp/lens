@@ -8,7 +8,8 @@ import { EventEmitter } from "../event-emitter";
 export interface AppEvent {
   name: string;
   action: string;
-  params?: object;
+  destination?: string;
+  params?: Record<string, any>;
 }
 
 export const appEventBus = new EventEmitter<[AppEvent]>();
