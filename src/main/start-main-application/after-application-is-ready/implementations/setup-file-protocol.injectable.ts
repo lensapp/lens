@@ -4,22 +4,25 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
-import { registerFileProtocol } from "../../../../common/register-protocol";
+import registerFileProtocolInjectable from "../../../electron-app/register-file-protocol.injectable";
 
 // TODO: Remove side effect on import defining __static
 import "../../../../common/vars";
+import staticDirInjectable from "../../../../common/vars/static-dir.injectable";
 
 const setupFileProtocolInjectable = getInjectable({
-
   id: "setup-file-protocol",
 
-  instantiate: () => ({
-    run: () => {
-      registerFileProtocol("static", __static);
-    },
-  }),
+  instantiate: (di) => {
+    const registerFileProtocol = di.inject(registerFileProtocolInjectable);
+    const staticDir = di.inject(staticDirInjectable);
 
-  causesSideEffects: true,
+    return {
+      run: () => {
+        registerFileProtocol("static", staticDir);
+      },
+    };
+  },
 
   injectionToken: afterApplicationIsReadyInjectionToken,
 });

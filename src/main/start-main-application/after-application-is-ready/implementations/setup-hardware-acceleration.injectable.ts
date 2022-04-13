@@ -4,24 +4,24 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
-import electronAppInjectable from "../../../electron-app/electron-app.injectable";
+import environmentVariablesInjectable from "../../../../common/utils/environment-variables.injectable";
+import disableHardwareAccelerationInjectable from "../../../electron-app/disable-hardware-acceleration.injectable";
 
 const setupHardwareAccelerationInjectable = getInjectable({
   id: "setup-hardware-acceleration",
 
   instantiate: (di) => {
-    const app = di.inject(electronAppInjectable);
+    const { LENS_DISABLE_GPU: hardwareAccelerationShouldBeDisabled } = di.inject(environmentVariablesInjectable);
+    const disableHardwareAcceleration = di.inject(disableHardwareAccelerationInjectable);
 
     return {
-      run: async () => {
-        if (process.env.LENS_DISABLE_GPU) {
-          app.disableHardwareAcceleration();
+      run: () => {
+        if (hardwareAccelerationShouldBeDisabled) {
+          disableHardwareAcceleration();
         }
       },
     };
   },
-
-  causesSideEffects: true,
 
   injectionToken: afterApplicationIsReadyInjectionToken,
 });
