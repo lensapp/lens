@@ -49,4 +49,7 @@ export class CatalogEntityRegistry {
   }
 }
 
+/**
+ * @deprecated Switch to using catalogEntityRegistryInjectable
+ */
 export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);

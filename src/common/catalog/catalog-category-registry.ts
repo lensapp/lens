@@ -95,4 +95,7 @@ export class CatalogCategoryRegistry {
   }
 }
 
+/**
+ * @deprecated Switch to using catalogCategoryRegistryInjectable
+ */
 export const catalogCategoryRegistry = new CatalogCategoryRegistry();
