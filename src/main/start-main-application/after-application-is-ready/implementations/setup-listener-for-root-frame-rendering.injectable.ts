@@ -15,14 +15,14 @@ const setupListenerForRootFrameRenderingInjectable = getInjectable({
   instantiate: (di) => {
     const runMany = runManyFor(di);
 
-    const runOnRootFrameRender = runMany(
+    const runAfterRootFrameIsReady = runMany(
       afterRootFrameIsReadyInjectionToken,
     );
 
     return {
       run: () => {
         ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
-          await runOnRootFrameRender();
+          await runAfterRootFrameIsReady();
         });
       },
     };
