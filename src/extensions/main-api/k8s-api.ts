@@ -3,19 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import clusterRoleBindingApiInjectable from "../../common/k8s-api/endpoints/cluster-role-binding.api.injectable";
-import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-role.api.injectable";
-import cronJobApiInjectable from "../../common/k8s-api/endpoints/cron-job.api.injectable";
-import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
-import deploymentApiInjectable from "../../common/k8s-api/endpoints/deployment.api.injectable";
-import jobApiInjectable from "../../common/k8s-api/endpoints/job.api.injectable";
-import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable";
-import replicaSetApiInjectable from "../../common/k8s-api/endpoints/replica-set.api.injectable";
-import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
-import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
-import statefulSetApiInjectable from "../../common/k8s-api/endpoints/stateful-set.api.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-
 /**
  * @deprecated This function never works
  * @returns false
@@ -24,56 +11,4 @@ export function isAllowedResource(...args: any[]) {
   return Boolean(void args);
 }
 
-export const serviceAccountsApi = asLegacyGlobalForExtensionApi(serviceAccountApiInjectable);
-export const clusterRoleApi = asLegacyGlobalForExtensionApi(clusterRoleApiInjectable);
-export const clusterRoleBindingApi = asLegacyGlobalForExtensionApi(clusterRoleBindingApiInjectable);
-export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
-export const podsApi = asLegacyGlobalForExtensionApi(podApiInjectable);
-export const daemonSetApi = asLegacyGlobalForExtensionApi(daemonSetApiInjectable);
-export const replicaSetApi = asLegacyGlobalForExtensionApi(replicaSetApiInjectable);
-export const statefulSetApi = asLegacyGlobalForExtensionApi(statefulSetApiInjectable);
-export const deploymentApi = asLegacyGlobalForExtensionApi(deploymentApiInjectable);
-export const jobApi = asLegacyGlobalForExtensionApi(jobApiInjectable);
-export const cronJobApi = asLegacyGlobalForExtensionApi(cronJobApiInjectable);
-
-export { ResourceStack } from "../../common/k8s/resource-stack";
-export { apiManager } from "../../common/k8s-api/api-manager";
-export { KubeApi, forCluster, forRemoteCluster } from "../../common/k8s-api/kube-api";
-export { KubeObject, KubeStatus } from "../../common/k8s-api/kube-object";
-export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
-export { Pod, PodApi as PodsApi } from "../../common/k8s-api/endpoints/pod.api";
-export { Node, nodeApi as nodesApi, NodeApi as NodesApi } from "../../common/k8s-api/endpoints/node.api";
-export { Deployment, DeploymentApi } from "../../common/k8s-api/endpoints/deployment.api";
-export { DaemonSet } from "../../common/k8s-api/endpoints/daemon-set.api";
-export { StatefulSet } from "../../common/k8s-api/endpoints/stateful-set.api";
-export { Job } from "../../common/k8s-api/endpoints/job.api";
-export { CronJob } from "../../common/k8s-api/endpoints/cron-job.api";
-export { ConfigMap, configMapApi } from "../../common/k8s-api/endpoints/config-map.api";
-export { Secret, secretApi as secretsApi } from "../../common/k8s-api/endpoints/secret.api";
-export { ReplicaSet } from "../../common/k8s-api/endpoints/replica-set.api";
-export { ResourceQuota, resourceQuotaApi } from "../../common/k8s-api/endpoints/resource-quota.api";
-export { LimitRange, limitRangeApi } from "../../common/k8s-api/endpoints/limit-range.api";
-export { HorizontalPodAutoscaler, horizontalPodAutoscalerApi as hpaApi } from "../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
-export { PodDisruptionBudget, podDisruptionBudgetApi as pdbApi } from "../../common/k8s-api/endpoints/pod-disruption-budget.api";
-export { Service, serviceApi } from "../../common/k8s-api/endpoints/service.api";
-export { Endpoints as Endpoint, endpointsApi as endpointApi } from "../../common/k8s-api/endpoints/endpoint.api";
-export { Ingress, ingressApi, IngressApi } from "../../common/k8s-api/endpoints/ingress.api";
-export { NetworkPolicy, networkPolicyApi } from "../../common/k8s-api/endpoints/network-policy.api";
-export { PersistentVolume, persistentVolumeApi } from "../../common/k8s-api/endpoints/persistent-volume.api";
-export { PersistentVolumeClaim, persistentVolumeClaimApi as pvcApi, PersistentVolumeClaimApi as PersistentVolumeClaimsApi } from "../../common/k8s-api/endpoints/persistent-volume-claim.api";
-export { StorageClass, storageClassApi } from "../../common/k8s-api/endpoints/storage-class.api";
-export { Namespace, namespaceApi as namespacesApi } from "../../common/k8s-api/endpoints/namespace.api";
-export { KubeEvent, eventApi } from "../../common/k8s-api/endpoints/events.api";
-export { ServiceAccount } from "../../common/k8s-api/endpoints/service-account.api";
-export { Role } from "../../common/k8s-api/endpoints/role.api";
-export { RoleBinding, roleBindingApi } from "../../common/k8s-api/endpoints/role-binding.api";
-export { ClusterRole } from "../../common/k8s-api/endpoints/cluster-role.api";
-export { ClusterRoleBinding } from "../../common/k8s-api/endpoints/cluster-role-binding.api";
-export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints/custom-resource-definition.api";
-
-// types
-export type { ILocalKubeApiConfig, IRemoteKubeApiConfig, IKubeApiCluster } from "../../common/k8s-api/kube-api";
-export type { PodContainer as IPodContainer, PodContainerStatus as IPodContainerStatus } from "../../common/k8s-api/endpoints/pod.api";
-export type { SecretReference as ISecretRef } from "../../common/k8s-api/endpoints/secret.api";
-export type { KubeObjectMetadata, KubeJsonApiObjectMetadata, KubeStatusData } from "../../common/k8s-api/kube-object";
-export type { KubeObjectStoreLoadAllParams, KubeObjectStoreLoadingParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
+export * from "../common-api/k8s-api";
