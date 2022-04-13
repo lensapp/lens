@@ -7,7 +7,6 @@
 import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
-import { defineGlobal } from "./utils/defineGlobal";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
 export const isMac = process.platform === "darwin";
@@ -101,26 +100,12 @@ export const kubectlBinaryName = getBinaryName("kubectl");
  * @deprecated for being explicit side effect.
  */
 export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
-
-// Webpack build paths
-export const contextDir = process.cwd();
-export const buildDir = path.join(contextDir, "static", publicPath);
-export const preloadEntrypoint = path.join(contextDir, "src/preload.ts");
-export const mainDir = path.join(contextDir, "src/main");
-export const rendererDir = path.join(contextDir, "src/renderer");
-export const htmlTemplate = path.resolve(rendererDir, "template.html");
-export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
-
-// Special runtime paths
-defineGlobal("__static", {
-  get() {
-    const root = isDevelopment
-      ? contextDir
-      : (process.resourcesPath ?? contextDir);
-
-    return path.resolve(root, "static");
-  },
-});
+export const staticFilesDirectory = path.resolve(
+  !isProduction
+    ? process.cwd()
+    : process.resourcesPath,
+  "static",
+);
 
 // Apis
 export const apiPrefix = "/api" as string; // local router apis
@@ -142,5 +127,3 @@ export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = "https://docs.k8slens.dev/main/" as string;
 
 export const sentryDsn = packageInfo.config?.sentryDsn ?? "";
-
-export const webpackDevServerPort: number = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;

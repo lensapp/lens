@@ -11,7 +11,7 @@ import httpProxy from "http-proxy";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName, staticFilesDirectory } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -198,7 +198,7 @@ async function main(di: DiContainer) {
 
   powerMonitor.on("shutdown", () => app.exit());
 
-  registerFileProtocol("static", __static);
+  registerFileProtocol("static", staticFilesDirectory);
 
   PrometheusProviderRegistry.createInstance();
   initializers.initPrometheusProviderRegistry();

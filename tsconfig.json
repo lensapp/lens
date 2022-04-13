@@ -32,7 +32,11 @@
         "types/*"
       ]
     },
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
   },
   "ts-node": {
     "transpileOnly": true,
@@ -42,7 +46,7 @@
   },
   "include": [
     "src/**/*",
-    "types/*.d.ts"
+    "types/*.d.ts",
   ],
   "exclude": [
     "node_modules",
