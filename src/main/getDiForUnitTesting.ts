@@ -49,6 +49,15 @@ import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
 import registerProtocolClientInjectable from "./electron-app/register-protocol-client.injectable";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
+import initializeExtensionsInjectable from "./start-main-application/after-application-is-ready/implementations/initialize-extensions.injectable";
+import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
+import registerFileProtocolInjectable from "./electron-app/register-file-protocol.injectable";
+import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
+import disableHardwareAccelerationInjectable from "./electron-app/disable-hardware-acceleration.injectable";
+import catalogEntityRegistryInjectable from "./catalog/catalog-entity-registry.injectable";
+import { CatalogCategoryRegistry } from "../common/catalog";
+import { CatalogEntityRegistry } from "./catalog";
+import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -87,7 +96,20 @@ export const getDiForUnitTesting = (
     di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
     di.override(isAutoUpdateEnabledInjectable, () => () => false);
     di.override(registerProtocolClientInjectable, () => () => {});
+    di.override(initializeExtensionsInjectable, () => ({ run: () => {} }));
+    di.override(lensResourcesDirInjectable, () => "/irrelevant");
+    di.override(registerFileProtocolInjectable, () => () => {});
+    di.override(disableHardwareAccelerationInjectable, () => () => {});
 
+    di.override(catalogCategoryRegistryInjectable, () => new CatalogCategoryRegistry());
+
+    di.override(catalogEntityRegistryInjectable, (diForInstantiate) => {
+      const catalogCategoryRegistry = diForInstantiate.inject(catalogCategoryRegistryInjectable);
+
+      return new CatalogEntityRegistry(catalogCategoryRegistry);
+    });
+
+    di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
