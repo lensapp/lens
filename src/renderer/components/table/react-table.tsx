@@ -5,7 +5,7 @@
 
 import styles from "./react-table.module.scss";
 import React, { useCallback, useMemo } from "react";
-import type { UseTableOptions } from "react-table";
+import type { Row, UseTableOptions } from "react-table";
 import { useFlexLayout, useSortBy, useTable } from "react-table";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
@@ -39,19 +39,12 @@ export function ReactTable({ columns, data, headless }: ReactTableProps) {
     useSortBy,
   );
 
-  const RenderRow = useCallback(
-    ({ index, style }) => {
-      const row = rows[index];
-
+  const renderRow = useCallback(
+    (row: Row<object>) => {
       prepareRow(row);
 
       return (
-        <div
-          {...row.getRowProps({
-            style,
-          })}
-          className={styles.tr}
-        >
+        <div className={styles.tr}>
           {row.cells.map((cell, index) => (
             <div
               {...cell.getCellProps()}
@@ -64,7 +57,7 @@ export function ReactTable({ columns, data, headless }: ReactTableProps) {
         </div>
       );
     },
-    [columns, prepareRow, rows],
+    [columns, prepareRow],
   );
 
   return (
@@ -106,7 +99,7 @@ export function ReactTable({ columns, data, headless }: ReactTableProps) {
       )}
 
       <div {...getTableBodyProps()}>
-        {rows.map((row, index) => RenderRow({ index }))}
+        {rows.map(renderRow)}
       </div>
     </div>
   );

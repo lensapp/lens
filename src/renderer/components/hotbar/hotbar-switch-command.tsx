@@ -25,19 +25,33 @@ interface Dependencies {
   commandOverlay: CommandOverlay;
 }
 
-function ignoreIf<T>(check: boolean, menuItems: T) {
+function ignoreIf<T>(check: boolean, menuItems: T[]): T[] {
   return check ? [] : menuItems;
 }
 
-function getHotbarSwitchOptions(hotbars: Hotbar[]): (Hotbar | typeof hotbarAddAction | typeof hotbarRemoveAction | typeof hotbarRenameAction)[] {
+interface HotbarSwitchActionOption {
+  action: typeof hotbarAddAction | typeof hotbarRemoveAction | typeof hotbarRenameAction;
+}
+
+interface SwitchToHotbarOption {
+  hotbar: Hotbar;
+}
+
+type HotbarSwitchOption = SwitchToHotbarOption | HotbarSwitchActionOption;
+
+function getHotbarSwitchOptions(hotbars: Hotbar[]): HotbarSwitchOption[] {
   return [
-    ...hotbars,
-    hotbarAddAction,
+    ...hotbars.map(hotbar => ({ hotbar })),
+    { action: hotbarAddAction },
     ...ignoreIf(hotbars.length > 1, [
-      hotbarRemoveAction,
-    ] as const),
-    hotbarRenameAction,
+      { action: hotbarRemoveAction } as const,
+    ]),
+    { action: hotbarRenameAction },
   ];
+}
+
+function isActionOption(option: HotbarSwitchOption): option is HotbarSwitchActionOption {
+  return Boolean((option as HotbarSwitchActionOption).action);
 }
 
 const NonInjectedHotbarSwitchCommand = observer(({
@@ -47,40 +61,45 @@ const NonInjectedHotbarSwitchCommand = observer(({
   <Select
     id="switch-to-hotbar-input"
     menuPortalTarget={null}
-    onChange={(value) => {
-      switch (value) {
-        case hotbarAddAction:
-          return commandOverlay.open(<HotbarAddCommand />);
-        case hotbarRemoveAction:
-          return commandOverlay.open(<HotbarRemoveCommand />);
-        case hotbarRenameAction:
-          return commandOverlay.open(<HotbarRenameCommand />);
+    onChange={(option) => {
+      if (!option) {
+        return;
+      }
 
-        default: {
-          if (value) {
-            hotbarStore.setActiveHotbar(value);
-            commandOverlay.close();
-          }
+      if (isActionOption(option)) {
+        switch (option.action) {
+          case hotbarAddAction:
+            return commandOverlay.open(<HotbarAddCommand />);
+          case hotbarRemoveAction:
+            return commandOverlay.open(<HotbarRemoveCommand />);
+          case hotbarRenameAction:
+            return commandOverlay.open(<HotbarRenameCommand />);
         }
       }
-    } }
+
+      hotbarStore.setActiveHotbar(option.hotbar);
+      commandOverlay.close();
+    }}
     components={{ DropdownIndicator: null, IndicatorSeparator: null }}
     menuIsOpen={true}
     options={getHotbarSwitchOptions(hotbarStore.hotbars)}
-    getOptionLabel={actionOrId => {
-      switch (actionOrId) {
-        case hotbarAddAction:
-          return "Add hotbar ...";
-        case hotbarRemoveAction:
-          return "Remove hotbar ...";
-        case hotbarRenameAction:
-          return "Rename hotbar ...";
-        default:
-          return hotbarStore.getDisplayLabel(actionOrId);
+    getOptionLabel={option => {
+      if (isActionOption(option)) {
+        switch (option.action) {
+          case hotbarAddAction:
+            return "Add hotbar ...";
+          case hotbarRemoveAction:
+            return "Remove hotbar ...";
+          case hotbarRenameAction:
+            return "Rename hotbar ...";
+        }
       }
-    } }
+
+      return hotbarStore.getDisplayLabel(option.hotbar);
+    }}
     autoFocus={true}
     escapeClearsValue={false}
+    isClearable={false}
     placeholder="Switch to hotbar"
   />
 ));
