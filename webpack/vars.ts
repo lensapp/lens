@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import assert from "assert";
 import path from "path";
 import packageInfo from "../package.json";
 
@@ -19,3 +20,6 @@ export const appName = isDevelopment
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const publicPath = "/build/";
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
+export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;
+
+assert(Number.isInteger(webpackDevServerPort), "WEBPACK_DEV_SERVER_PORT environment variable must only be an integer");

@@ -7,7 +7,7 @@ import Webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import { webpackLensRenderer } from "./renderer";
 import logger from "../src/common/logger";
-import { buildDir } from "./vars";
+import { buildDir, webpackDevServerPort } from "./vars";
 
 /**
  * API docs:
@@ -24,6 +24,7 @@ const server = new WebpackDevServer({
   },
   allowedHosts: "all",
   host: "localhost",
+  port: webpackDevServerPort,
   static: buildDir, // aka `devServer.contentBase` in webpack@4
   hot: "only", // use HMR only without errors
   liveReload: false,
