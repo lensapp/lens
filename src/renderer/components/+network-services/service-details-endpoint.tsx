@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Table, TableHead, TableCell, TableRow } from "../table";
 import { prevDefault } from "../../utils";
-import { endpointStore } from "../+network-endpoints/endpoints.store";
+import { endpointsStore } from "../+network-endpoints/legacy-store";
 import { Spinner } from "../spinner";
 import { showDetails } from "../kube-detail-params";
 import logger from "../../../common/logger";
@@ -22,7 +22,7 @@ export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpoi
   render() {
     const { endpoints } = this.props;
 
-    if (!endpoints && !endpointStore.isLoaded) return (
+    if (!endpoints && !endpointsStore.isLoaded) return (
       <div className="PodDetailsList flex justify-center"><Spinner/></div>
     );
 

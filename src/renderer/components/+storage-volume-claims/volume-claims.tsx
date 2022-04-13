@@ -8,7 +8,7 @@ import "./volume-claims.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { persistentVolumeClaimStore } from "./volume-claim.store";
+import { persistentVolumeClaimStore } from "./legacy-store";
 import { podStore } from "../+workloads-pods/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../../common/utils/convertMemory";

@@ -7,7 +7,7 @@ import "./endpoints.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { endpointStore } from "./endpoints.store";
+import { endpointsStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -29,7 +29,7 @@ export class Endpoints extends React.Component {
           isConfigurable
           tableId="network_endpoints"
           className="Endpoints"
-          store={endpointStore}
+          store={endpointsStore}
           sortingCallbacks={{
             [columnId.name]: endpoint => endpoint.getName(),
             [columnId.namespace]: endpoint => endpoint.getNs(),

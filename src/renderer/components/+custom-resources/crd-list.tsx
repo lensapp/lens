@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { iter, stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { crdStore } from "./crd.store";
+import { customResourceDefinitionStore } from "./legacy-store";
 import { Select } from "../select";
 import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
@@ -42,10 +42,10 @@ export class CustomResourceDefinitions extends React.Component {
 
   @computed get items() {
     if (this.selectedGroups.size) {
-      return crdStore.items.filter(item => this.selectedGroups.has(item.getGroup()));
+      return customResourceDefinitionStore.items.filter(item => this.selectedGroups.has(item.getGroup()));
     }
 
-    return crdStore.items; // show all by default
+    return customResourceDefinitionStore.items; // show all by default
   }
 
   toggleSelection = (options: readonly ({ group: string })[]) => {
@@ -76,8 +76,8 @@ export class CustomResourceDefinitions extends React.Component {
           isConfigurable
           tableId="crd"
           className="CrdList"
-          store={crdStore}
-          // Don't subscribe the `crdStore` because <Sidebar> already has and is always mounted
+          store={customResourceDefinitionStore}
+          // Don't subscribe the `customResourceDefinitionStore` because <Sidebar> already has and is always mounted
           subscribeStores={false}
           items={items}
           sortingCallbacks={{
@@ -103,7 +103,7 @@ export class CustomResourceDefinitions extends React.Component {
                 <Select
                   className="group-select"
                   placeholder={this.getPlaceholder()}
-                  options={Object.keys(crdStore.groups).map(group => ({ group }))}
+                  options={Object.keys(customResourceDefinitionStore.groups).map(group => ({ group }))}
                   onChange={this.toggleSelection}
                   closeMenuOnSelect={false}
                   controlShouldRenderValue={false}

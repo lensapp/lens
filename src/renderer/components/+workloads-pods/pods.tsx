@@ -9,7 +9,7 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { podStore } from "./legacy-store";
-import { eventStore } from "../+events/event.store";
+import { eventStore } from "../+events/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { Pod } from "../../../common/k8s-api/endpoints";
 import { nodeApi } from "../../../common/k8s-api/endpoints";

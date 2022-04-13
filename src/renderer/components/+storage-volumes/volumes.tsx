@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { getDetailsUrl } from "../kube-detail-params";
 import { stopPropagation } from "../../utils";
-import { volumesStore } from "./volumes.store";
+import { persistentVolumeStore } from "./legacy-store";
 import { persistentVolumeClaimApi, storageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -35,7 +35,7 @@ export class PersistentVolumes extends React.Component {
           isConfigurable
           tableId="storage_volumes"
           className="PersistentVolumes"
-          store={volumesStore}
+          store={persistentVolumeStore}
           sortingCallbacks={{
             [columnId.name]: volume => volume.getName(),
             [columnId.storageClass]: volume => volume.getStorageClass(),

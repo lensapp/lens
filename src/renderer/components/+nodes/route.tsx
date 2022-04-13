@@ -8,7 +8,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout-2";
-import { nodesStore } from "./nodes.store";
+import { nodeStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NodeMetricData, Node } from "../../../common/k8s-api/endpoints/node.api";
 import { formatNodeTaint, getMetricsForAllNodes } from "../../../common/k8s-api/endpoints/node.api";
@@ -19,7 +19,7 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
-import { eventStore } from "../+events/event.store";
+import { eventStore } from "../+events/legacy-store";
 import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
 import { KubeObjectAge } from "../kube-object/age";
@@ -181,8 +181,8 @@ export class NodesRoute extends React.Component {
           isConfigurable
           tableId="nodes"
           className="Nodes"
-          store={nodesStore}
-          isReady={nodesStore.isLoaded}
+          store={nodeStore}
+          isReady={nodeStore.isLoaded}
           dependentStores={[eventStore]}
           isSelectable={false}
           sortingCallbacks={{

@@ -12,7 +12,7 @@ import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
 import { Input } from "../input";
 import { Button } from "../button";
-import { configMapStore } from "./config-maps.store";
+import { configMapStore } from "./legacy-store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";

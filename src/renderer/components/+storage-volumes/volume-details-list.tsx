@@ -16,7 +16,7 @@ import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";
-import { volumesStore } from "./volumes.store";
+import { persistentVolumeStore } from "./legacy-store";
 import kebabCase from "lodash/kebabCase";
 
 export interface VolumeDetailsListProps {
@@ -64,7 +64,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
     const virtual = persistentVolumes.length > 100;
 
     if (!persistentVolumes.length) {
-      return !volumesStore.isLoaded && <Spinner center/>;
+      return !persistentVolumeStore.isLoaded && <Spinner center/>;
     }
 
     return (

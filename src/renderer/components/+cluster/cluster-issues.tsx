@@ -11,8 +11,8 @@ import { computed, makeObservable } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
+import { nodeStore } from "../+nodes/legacy-store";
+import { eventStore } from "../+events/legacy-store";
 import { cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
@@ -48,7 +48,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
 
   @computed get warnings(): Warning[] {
     return [
-      ...nodesStore.items.flatMap(node => (
+      ...nodeStore.items.flatMap(node => (
         node.getWarningConditions()
           .map(({ message }) => ({
             selfLink: node.selfLink,

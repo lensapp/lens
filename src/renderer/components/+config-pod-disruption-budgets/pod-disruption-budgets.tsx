@@ -7,7 +7,7 @@ import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
+import { podDisruptionBudgetStore } from "./legacy-store";
 import type { PodDisruptionBudget } from "../../../common/k8s-api/endpoints/pod-disruption-budget.api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
@@ -37,7 +37,7 @@ export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsPr
           isConfigurable
           tableId="configuration_distribution_budgets"
           className="PodDisruptionBudgets"
-          store={podDisruptionBudgetsStore}
+          store={podDisruptionBudgetStore}
           sortingCallbacks={{
             [columnId.name]: pdb => pdb.getName(),
             [columnId.namespace]: pdb => pdb.getNs(),

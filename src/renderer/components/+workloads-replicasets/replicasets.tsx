@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import { replicaSetStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { eventStore } from "../+events/event.store";
+import { eventStore } from "../+events/legacy-store";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 

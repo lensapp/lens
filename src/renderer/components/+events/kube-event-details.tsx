@@ -11,12 +11,13 @@ import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
 import { LocaleDate } from "../locale-date";
-import { eventStore } from "./event.store";
+import type { EventStore } from "./store";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import eventStoreInjectable from "./store.injectable";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -24,6 +25,7 @@ export interface KubeEventDetailsProps {
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  eventStore: EventStore;
 }
 
 @observer
@@ -31,13 +33,13 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
-        eventStore,
+        this.props.eventStore,
       ]),
     ]);
   }
 
   render() {
-    const { object } = this.props;
+    const { object, eventStore } = this.props;
 
     if (!object) {
       return null;
@@ -90,6 +92,7 @@ export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsPr
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
+    eventStore: di.inject(eventStoreInjectable),
   }),
 });
 

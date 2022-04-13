@@ -3,12 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { apiManager } from "../../../../common/k8s-api/api-manager";
 import type { RoleBinding, RoleBindingApi, RoleBindingData } from "../../../../common/k8s-api/endpoints";
-import { roleBindingApi } from "../../../../common/k8s-api/endpoints";
 import type { Subject } from "../../../../common/k8s-api/endpoints/types/subject";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import { HashSet, isClusterPageContext } from "../../../utils";
+import { HashSet } from "../../../utils";
 import { hashSubject } from "../hashers";
 
 export class RoleBindingStore extends KubeObjectStore<RoleBinding, RoleBindingApi, RoleBindingData> {
@@ -35,12 +33,4 @@ export class RoleBindingStore extends KubeObjectStore<RoleBinding, RoleBindingAp
 
     return this.updateSubjects(roleBinding, currentSubjects.toJSON());
   }
-}
-
-export const roleBindingStore = isClusterPageContext()
-  ? new RoleBindingStore(roleBindingApi)
-  : undefined as never;
-
-if (isClusterPageContext()) {
-  apiManager.registerStore(roleBindingStore);
 }

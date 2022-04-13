@@ -8,7 +8,7 @@ import "./daemonsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { DaemonSet } from "../../../common/k8s-api/endpoints";
-import { eventStore } from "../+events/event.store";
+import { eventStore } from "../+events/legacy-store";
 import { daemonSetStore } from "./legacy-store";
 import { podStore } from "../+workloads-pods/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";

@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { secretStore } from "../../+config-secrets/secrets.store";
+import { secretStore } from "../../+config-secrets/legacy-store";
 import type { Secret, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "../../icon";

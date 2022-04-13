@@ -7,7 +7,7 @@ import "./ingresses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { ingressStore } from "./ingress.store";
+import { ingressStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";

@@ -12,7 +12,7 @@ import { Drawer } from "../drawer";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import { crdStore } from "../+custom-resources/crd.store";
+import { customResourceDefinitionStore } from "../+custom-resources/legacy-store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { CustomResourceDetails } from "../+custom-resources";
@@ -56,7 +56,7 @@ export class KubeObjectDetails extends React.Component {
       reaction(() => [
         this.path,
         this.object, // resource might be updated via watch-event or from already opened details
-        crdStore.items.length, // crd stores initialized after loading
+        customResourceDefinitionStore.items.length, // crd stores initialized after loading
       ], async () => {
         this.loadingError = "";
         const { path, object } = this;
@@ -103,7 +103,7 @@ export class KubeObjectDetails extends React.Component {
       ));
 
     if (details.length === 0) {
-      const crd = crdStore.getByObject(object);
+      const crd = customResourceDefinitionStore.getByObject(object);
 
       /**
        * This is a fallback so that if a custom resource object doesn't have

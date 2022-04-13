@@ -23,7 +23,7 @@ import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Select } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
-import { roleBindingStore } from "./store";
+import { roleBindingStore } from "./legacy-store";
 import { clusterRoleStore } from "../+cluster-roles/legacy-store";
 import { Input } from "../../input";
 import { ObservableHashSet, nFircate } from "../../../utils";

@@ -10,7 +10,7 @@ import { getMetricsByNodeNames, type ClusterMetricData } from "../../../../commo
 import type { StorageLayer } from "../../../utils";
 import { autoBind } from "../../../utils";
 import { type IMetricsReqParams, normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
-import { nodesStore } from "../../+nodes/nodes.store";
+import type { NodeStore } from "../../+nodes/store";
 
 export enum MetricType {
   MEMORY = "memory",
@@ -28,7 +28,8 @@ export interface ClusterOverviewStorageState {
 }
 
 interface Dependencies {
-  storage: StorageLayer<ClusterOverviewStorageState>;
+  readonly storage: StorageLayer<ClusterOverviewStorageState>;
+  readonly nodeStore: NodeStore;
 }
 
 export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> implements ClusterOverviewStorageState {
@@ -69,8 +70,8 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
     });
 
     // check which node type to select
-    reaction(() => nodesStore.items.length, () => {
-      const { masterNodes, workerNodes } = nodesStore;
+    reaction(() => this.dependencies.nodeStore.items.length, () => {
+      const { masterNodes, workerNodes } = this.dependencies.nodeStore;
 
       if (!masterNodes.length) this.metricNodeRole = MetricNodeRole.WORKER;
       if (!workerNodes.length) this.metricNodeRole = MetricNodeRole.MASTER;
@@ -79,8 +80,8 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
 
   @action
   async loadMetrics(params?: IMetricsReqParams) {
-    await when(() => nodesStore.isLoaded);
-    const { masterNodes, workerNodes } = nodesStore;
+    await when(() => this.dependencies.nodeStore.isLoaded);
+    const { masterNodes, workerNodes } = this.dependencies.nodeStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
     this.metrics = await getMetricsByNodeNames(nodes.map(node => node.getName()), params);

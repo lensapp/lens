@@ -13,19 +13,23 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { StorageClass } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { storageClassStore } from "./storage-class.store";
+import type { StorageClassStore } from "./store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
-import { volumesStore } from "../+storage-volumes/volumes.store";
+import type { PersistentVolumeStore } from "../+storage-volumes/store";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import storageClassStoreInjectable from "./store.injectable";
+import persistentVolumeStoreInjectable from "../+storage-volumes/store.injectable";
 
 export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  storageClassStore: StorageClassStore;
+  persistentVolumeStore: PersistentVolumeStore;
 }
 
 @observer
@@ -33,13 +37,13 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
-        volumesStore,
+        this.props.persistentVolumeStore,
       ]),
     ]);
   }
 
   render() {
-    const { object: storageClass } = this.props;
+    const { object: storageClass, storageClassStore } = this.props;
 
     if (!storageClass) {
       return null;
@@ -97,6 +101,8 @@ export const StorageClassDetails = withInjectables<Dependencies, StorageClassDet
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
+    storageClassStore: di.inject(storageClassStoreInjectable),
+    persistentVolumeStore: di.inject(persistentVolumeStoreInjectable),
   }),
 });
 

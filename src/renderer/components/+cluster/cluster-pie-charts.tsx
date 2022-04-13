@@ -11,7 +11,7 @@ import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-over
 import { MetricNodeRole } from "./cluster-overview-store/cluster-overview-store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
-import { nodesStore } from "../+nodes/nodes.store";
+import type { NodeStore } from "../+nodes/store";
 import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
@@ -20,6 +20,7 @@ import { ThemeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
+import nodeStoreInjectable from "../+nodes/store.injectable";
 
 function createLabels(rawLabelData: [string, number | undefined][]): string[] {
   return rawLabelData.map(([key, value]) => `${key}: ${value?.toFixed(2) || "N/A"}`);
@@ -27,9 +28,13 @@ function createLabels(rawLabelData: [string, number | undefined][]): string[] {
 
 interface Dependencies {
   clusterOverviewStore: ClusterOverviewStore;
+  nodeStore: NodeStore;
 }
 
-const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependencies) => {
+const NonInjectedClusterPieCharts = observer(({
+  clusterOverviewStore,
+  nodeStore,
+}: Dependencies) => {
   const renderLimitWarning = () => {
     return (
       <div className="node-warning flex gaps align-center">
@@ -210,7 +215,7 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
   };
 
   const renderContent = ({ metricNodeRole, metricsLoaded }: ClusterOverviewStore) => {
-    const { masterNodes, workerNodes } = nodesStore;
+    const { masterNodes, workerNodes } = nodeStore;
     const nodes = metricNodeRole === MetricNodeRole.MASTER ? masterNodes : workerNodes;
 
     if (!nodes.length) {
@@ -249,12 +254,9 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
   );
 });
 
-export const ClusterPieCharts = withInjectables<Dependencies>(
-  NonInjectedClusterPieCharts,
-
-  {
-    getProps: (di) => ({
-      clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
-    }),
-  },
-);
+export const ClusterPieCharts = withInjectables<Dependencies>(NonInjectedClusterPieCharts, {
+  getProps: (di) => ({
+    clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
+    nodeStore: di.inject(nodeStoreInjectable),
+  }),
+});

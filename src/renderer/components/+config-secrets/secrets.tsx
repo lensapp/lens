@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
-import { secretStore } from "./secrets.store";
+import { secretStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";

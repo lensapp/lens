@@ -17,7 +17,7 @@ import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { RoleBindingDialog } from "./dialog";
-import { roleBindingStore } from "./store";
+import { roleBindingStore } from "./legacy-store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
 import { hashSubject } from "../hashers";
 

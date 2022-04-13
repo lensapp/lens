@@ -13,7 +13,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Service } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
-import { endpointStore } from "../+network-endpoints/endpoints.store";
+import type { EndpointsStore } from "../+network-endpoints/store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import type { PortForwardStore } from "../../port-forward";
 import logger from "../../../common/logger";
@@ -21,6 +21,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import endpointsStoreInjectable from "../+network-endpoints/store.injectable";
 
 export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
 }
@@ -28,25 +29,31 @@ export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
 interface Dependencies {
   subscribeStores: SubscribeStores;
   portForwardStore: PortForwardStore;
+  endpointsStore: EndpointsStore;
 }
 
 @observer
 class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & Dependencies> {
   componentDidMount() {
-    const { object: service } = this.props;
+    const {
+      object: service,
+      subscribeStores,
+      endpointsStore,
+      portForwardStore,
+    } = this.props;
 
     disposeOnUnmount(this, [
-      this.props.subscribeStores([
-        endpointStore,
+      subscribeStores([
+        endpointsStore,
       ], {
         namespaces: [service.getNs()],
       }),
-      this.props.portForwardStore.watch(),
+      portForwardStore.watch(),
     ]);
   }
 
   render() {
-    const { object: service } = this.props;
+    const { object: service, endpointsStore } = this.props;
 
     if (!service) {
       return null;
@@ -59,7 +66,7 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
     }
 
     const { spec } = service;
-    const endpoints = endpointStore.getByName(service.getName(), service.getNs());
+    const endpoints = endpointsStore.getByName(service.getName(), service.getNs());
     const externalIps = service.getExternalIps();
 
     if (externalIps.length === 0 && spec?.externalName) {
@@ -150,5 +157,6 @@ export const ServiceDetails = withInjectables<Dependencies, ServiceDetailsProps>
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     portForwardStore: di.inject(portForwardStoreInjectable),
+    endpointsStore: di.inject(endpointsStoreInjectable),
   }),
 });

@@ -4,11 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { createStoresAndApisInjectionToken } from "../common/k8s-api/create-stores-apis.token";
-import { isClusterPageContext } from "./utils";
+import { getClusterIdFromHost } from "./utils";
 
 const createStoresAndApisInjectable = getInjectable({
   id: "create-stores-and-apis",
-  instantiate: () => isClusterPageContext(),
+  instantiate: () => Boolean(getClusterIdFromHost(location.host)),
   injectionToken: createStoresAndApisInjectionToken,
 });
 

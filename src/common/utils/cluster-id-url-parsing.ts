@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { once } from "lodash/fp";
 import type { ClusterId } from "../cluster-types";
 
 /**
@@ -26,12 +25,3 @@ export function getClusterIdFromHost(host: string): ClusterId | undefined {
 export function getClusterFrameUrl(clusterId: ClusterId) {
   return `//${clusterId}.${location.host}`;
 }
-
-/**
- * Returns true only if code is running within a cluster iframe context
- */
-export const isClusterPageContext = once(() => {
-  if (typeof window === "undefined") return false;
-
-  return !!getClusterIdFromHost(window.location.host);
-});

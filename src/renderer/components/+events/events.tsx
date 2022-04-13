@@ -10,8 +10,7 @@ import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout-2";
-import type { EventStore } from "./event.store";
-import { eventStore } from "./event.store";
+import type { EventStore } from "./store";
 import type { KubeObjectListLayoutProps } from "../kube-object-list-layout";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { KubeEvent, KubeEventApi, KubeEventData } from "../../../common/k8s-api/endpoints/events.api";
@@ -23,11 +22,13 @@ import type { IClassName } from "../../utils";
 import { cssNames, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { getDetailsUrl } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEventsInjectable  from "../../../common/front-end-routing/routes/cluster/events/navigate-to-events.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 import { ReactiveDuration } from "../duration/reactive-duration";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import eventStoreInjectable from "./store.injectable";
 
 enum columnId {
   message = "message",
@@ -52,6 +53,8 @@ const defaultProps: Partial<EventsProps> = {
 
 interface Dependencies {
   navigateToEvents: () => void;
+  eventStore: EventStore;
+  apiManager: ApiManager;
 }
 
 @observer
@@ -77,12 +80,8 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
     makeObservable(this);
   }
 
-  get store(): EventStore {
-    return eventStore;
-  }
-
   @computed get items(): KubeEvent[] {
-    const items = this.store.contextItems;
+    const items = this.props.eventStore.contextItems;
     const { sortBy, orderBy: order } = this.sorting;
 
     // we must sort items before passing to "KubeObjectListLayout -> Table"
@@ -101,8 +100,8 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   }
 
   customizeHeader: HeaderCustomizer = ({ info, title, ...headerPlaceholders }) => {
-    const { compact } = this.props;
-    const { store, items, visibleItems } = this;
+    const { compact, eventStore } = this.props;
+    const { items, visibleItems } = this;
     const allEventsAreShown = visibleItems.length === items.length;
 
     // handle "compact"-mode header
@@ -133,7 +132,7 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
             small
             material="help_outline"
             className="help-icon"
-            tooltip={`Limited to ${store.limit}`}
+            tooltip={`Limited to ${eventStore.limit}`}
           />
         </>
       ),
@@ -143,15 +142,14 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   };
 
   render() {
-    const { store } = this;
-    const { compact, compactLimit, className, ...layoutProps } = this.props;
+    const { apiManager, eventStore, compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
       <KubeObjectListLayout
         {...layoutProps}
         isConfigurable
         tableId="events"
-        store={store}
+        store={eventStore}
         className={cssNames("Events", className, { compact })}
         renderHeaderTitle="Events"
         customizeHeader={this.customizeHeader}
@@ -227,13 +225,11 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   }
 }
 
-export const Events = withInjectables<Dependencies, EventsProps>(
-  NonInjectedEvents,
-
-  {
-    getProps: (di, props) => ({
-      navigateToEvents: di.inject(navigateToEventsInjectable),
-      ...props,
-    }),
-  },
-);
+export const Events = withInjectables<Dependencies, EventsProps>(NonInjectedEvents, {
+  getProps: (di, props) => ({
+    ...props,
+    navigateToEvents: di.inject(navigateToEventsInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+  }),
+});
