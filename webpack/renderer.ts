@@ -117,8 +117,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
 
       ...(
         isDevelopment
-          ? []
-          : [new ReactRefreshWebpackPlugin()]
+          ? [new ReactRefreshWebpackPlugin()]
+          : []
       ),
     ],
   };
