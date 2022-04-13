@@ -39,6 +39,11 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await frame.waitForSelector(`.Menu >> text="Remove"`);
   });
 
+  it("opens cluster settings by clicking link in no-metrics area", async () => {
+    await frame.click(`[data-testid="no-metrics-message"]`);
+    await frame.waitForSelector(`[data-testid="general-header"]`);
+  });
+
   it(
     "should navigate around common cluster pages",
 
