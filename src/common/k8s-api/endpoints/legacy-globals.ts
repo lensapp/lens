@@ -11,6 +11,7 @@ import networkPolicyApiInjectable from "./network-policy.api.injectable";
 import nodeApiInjectable from "./node.api.injectable";
 import persistentVolumeClaimApiInjectable from "./persistent-volume-claim.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
+import resourceQuotaApiInjectable from "./resource-quota.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 import secretApiInjectable from "./secret.api.injectable";
 import serviceApiInjectable from "./service.api.injectable";
@@ -55,6 +56,11 @@ export const nodeApi = asLegacyGlobalForExtensionApi(nodeApiInjectable);
  * @deprecated use `di.inject(persistentVolumeClaimApiInjectable)` instead
  */
 export const persistentVolumeClaimApi = asLegacyGlobalForExtensionApi(persistentVolumeClaimApiInjectable);
+
+/**
+ * @deprecated use `di.inject(resourceQuotaApiInjectable)` instead
+ */
+export const resourceQuotaApi = asLegacyGlobalForExtensionApi(resourceQuotaApiInjectable);
 
 /**
  * @deprecated use `di.inject(secretApiInjectable)` instead
