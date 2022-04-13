@@ -47,6 +47,8 @@ import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
+import registerProtocolClientInjectable from "./electron-app/register-protocol-client.injectable";
+import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -84,6 +86,9 @@ export const getDiForUnitTesting = (
     di.override(setApplicationNameInjectable, () => () => {});
     di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
     di.override(isAutoUpdateEnabledInjectable, () => () => false);
+    di.override(registerProtocolClientInjectable, () => () => {});
+
+    di.override(commandLineArgumentsInjectable, () => []);
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
