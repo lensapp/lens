@@ -8,7 +8,6 @@ import { beforeApplicationSoftQuitInjectionToken } from "../../before-applicatio
 import { runManyFor } from "../../run-many-for";
 import whenApplicationWillQuitInjectable from "../../../electron-app/when-application-will-quit.injectable";
 import { beforeApplicationHardQuitInjectionToken } from "../../before-application-hard-quit/before-application-hard-quit-injection-token";
-import isIntegrationTestingInjectable from "../../../../common/vars/is-integration-testing.injectable";
 
 const setupClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",
@@ -28,17 +27,12 @@ const setupClosingOfApplicationInjectable = getInjectable({
       beforeApplicationHardQuitInjectionToken,
     );
 
-    const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
-
     return {
       run: () => {
-        whenApplicationWillQuit(async ({ cancel: cancelNativeQuit }) => {
+        whenApplicationWillQuit(async ({ cancel: cancelNativeQuit, shouldOnlySoftQuit }) => {
           await runRunnablesBeforeApplicationSoftQuit();
 
-          // &&!autoUpdateIsRunning) {
-          const shouldDoOnlySoftQuit = !isIntegrationTesting;
-
-          if (shouldDoOnlySoftQuit) {
+          if (shouldOnlySoftQuit) {
             cancelNativeQuit();
           } else {
             await runRunnablesBeforeApplicationHardQuit();
