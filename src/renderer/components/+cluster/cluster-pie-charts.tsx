@@ -232,7 +232,11 @@ const NonInjectedClusterPieCharts = observer(({ clusterOverviewStore }: Dependen
     const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
 
     if (!memoryCapacity || !cpuCapacity || !podCapacity) {
-      return <ClusterNoMetrics className={styles.empty}/>;
+      return (
+        <div className={styles.noMetrics}>
+          <ClusterNoMetrics className={styles.empty}/>
+        </div>
+      );
     }
 
     return renderCharts();
