@@ -23,7 +23,8 @@ const initializeExtensionsInjectable = getInjectable({
       run: async () => {
         logger.info("🧩 Initializing extensions");
 
-        // call after windowManager to see splash earlier
+        await extensionLoader.init();
+
         try {
           const extensions = await extensionDiscovery.load();
 
