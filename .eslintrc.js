@@ -254,6 +254,12 @@ module.exports = {
       ],
       rules: {
         "no-restricted-imports": ["error", {
+          "paths": [
+            {
+              "name": ".",
+              "message": "No importing from local index.ts(x?) file. A common way to make circular dependencies.",
+            },
+          ],
           "patterns": [
             {
               "group": [

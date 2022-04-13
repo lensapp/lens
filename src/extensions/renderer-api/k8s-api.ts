@@ -84,7 +84,7 @@ export * from "../common-api/k8s-api";
 export {
   KubeObjectStatusLevel,
   type KubeObjectStatus,
-} from "./kube-object-status";
+} from "../../common/k8s-api/kube-object-status";
 
 // stores
 export type { EventStore } from "../../renderer/components/+events/store";

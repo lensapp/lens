@@ -8,10 +8,11 @@ import "./kube-object-status-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { cssNames, formatDuration, getOrInsert } from "../../utils";
-import type { KubeObject, KubeObjectStatus } from "../../..//extensions/renderer-api/k8s-api";
-import { KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import statusesForKubeObjectInjectable from "./statuses-for-kube-object.injectable";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
+import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 
 function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {

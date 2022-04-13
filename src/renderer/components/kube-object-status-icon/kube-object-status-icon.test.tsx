@@ -8,7 +8,7 @@ import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { computed } from "mobx";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import { KubeObjectStatusLevel } from "../../../extensions/renderer-api/kube-object-status";
+import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { KubeObjectStatusIcon } from "./kube-object-status-icon";
 import React from "react";
