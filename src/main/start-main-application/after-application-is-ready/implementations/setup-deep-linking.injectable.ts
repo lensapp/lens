@@ -8,33 +8,46 @@ import windowManagerInjectable from "../../../window-manager.injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import whenOpeningUrlInjectable from "../../../electron-app/when-opening-url.injectable";
 import whenSecondInstanceInjectable from "../../../electron-app/when-second-instance.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
+import electronAppInjectable from "../../../electron-app/electron-app.injectable";
+import type { LensProtocolRouterMain } from "../../../protocol-handler";
+import { pipeline } from "@ogre-tools/fp";
+import { find, map, startsWith, toLower } from "lodash/fp";
 
-const setupDeepLinking = getInjectable({
+const setupDeepLinkingInjectable = getInjectable({
   id: "setup-deep-linking",
 
   instantiate: (di) => {
-    const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
     const windowManager = di.inject(windowManagerInjectable);
     const whenOpeningUrl = di.inject(whenOpeningUrlInjectable);
     const whenSecondInstance = di.inject(whenSecondInstanceInjectable);
+    const logger = di.inject(loggerInjectable);
+    const app = di.inject(electronAppInjectable);
+    const protocolRouter = di.inject(lensProtocolRouterMainInjectable);
+    const routeWithProtocolRouter = routeWithProtocolRouterFor(protocolRouter);
 
     return {
-      run: () => {
-        whenOpeningUrl(({ cancel, url }) => {
+      run: async () => {
+        whenOpeningUrl(async ({ cancel, url }) => {
           cancel();
 
-          lensProtocolRouterMain.route(url);
+          await protocolRouter.route(url);
         });
 
         whenSecondInstance(async ({ commandLineArguments }) => {
-          for (const arg of commandLineArguments) {
-            if (arg.toLowerCase().startsWith("lens://")) {
-              await lensProtocolRouterMain.route(arg);
-            }
-          }
-
+          await routeWithProtocolRouter(commandLineArguments);
           await windowManager.ensureMainWindow();
         });
+
+        logger.info(`📟 Setting protocol client for lens://`);
+
+        if (app.setAsDefaultProtocolClient("lens")) {
+          logger.info("📟 Protocol client register succeeded ✅");
+        } else {
+          logger.info("📟 Protocol client register failed ❗");
+        }
+
+        await routeWithProtocolRouter(process.argv);
       },
     };
   },
@@ -42,4 +55,18 @@ const setupDeepLinking = getInjectable({
   injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
-export default setupDeepLinking;
+const routeWithProtocolRouterFor =
+  (protocolRouter: LensProtocolRouterMain) =>
+    async (commandLineArguments: string[]) => {
+      const route = pipeline(
+        commandLineArguments,
+        map(toLower),
+        find(startsWith("lens://")),
+      );
+
+      if (route) {
+        await protocolRouter.route(route);
+      }
+    };
+
+export default setupDeepLinkingInjectable;
