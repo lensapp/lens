@@ -8,12 +8,12 @@ import { runManyFor } from "../../run-many-for";
 import { beforeApplicationSoftQuitInjectionToken } from "../before-application-soft-quit-injection-token";
 import isIntegrationTestingInjectable from "../../../../common/vars/is-integration-testing.injectable";
 
-const quitApplicationInjectable = getInjectable({
-  id: "prevent-application-from-closing-involuntarily",
+const tentativeHardQuitApplicationInjectable = getInjectable({
+  id: "tentative-hard-quit-application",
 
   instantiate: (di) => {
     const runMany = runManyFor(di);
-    const runOnApplicationQuit = runMany(beforeApplicationHardQuitInjectionToken);
+    const runRunnablesBeforeApplicationHardQuit = runMany(beforeApplicationHardQuitInjectionToken);
     const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
 
     return {
@@ -25,7 +25,7 @@ const quitApplicationInjectable = getInjectable({
           return;
         }
 
-        await runOnApplicationQuit(runParameter);
+        await runRunnablesBeforeApplicationHardQuit(runParameter);
       },
     };
   },
@@ -35,4 +35,4 @@ const quitApplicationInjectable = getInjectable({
   injectionToken: beforeApplicationSoftQuitInjectionToken,
 });
 
-export default quitApplicationInjectable;
+export default tentativeHardQuitApplicationInjectable;
