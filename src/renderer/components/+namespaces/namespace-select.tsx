@@ -21,7 +21,7 @@ export type NamespaceSelectSort = (left: string, right: string) => number;
 export interface NamespaceSelectProps<IsMulti extends boolean> extends Omit<SelectProps<{ namespace: string }, IsMulti>, "options" | "value"> {
   showIcons?: boolean;
   sort?: NamespaceSelectSort;
-  value: string | null;
+  value: string | null | undefined;
 }
 
 interface Dependencies {

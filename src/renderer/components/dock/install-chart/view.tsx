@@ -30,6 +30,7 @@ import { Notifications } from "../../notifications";
 import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import assert from "assert";
+import type { SingleValue } from "react-select";
 
 export interface InstallCharProps {
   tab: DockTab;
@@ -87,9 +88,9 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     this.props.installChartStore.setData(this.tabId, { ...this.chartData, ...data });
   }
 
-  onVersionChange = (version: string | null) => {
-    if (version) {
-      this.save({ version, values: "" });
+  onVersionChange = (option: SingleValue<{ version: string }>) => {
+    if (option) {
+      this.save({ ...option, values: "" });
       this.props.installChartStore.loadValues(this.tabId);
     }
   };
@@ -103,9 +104,9 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     this.error = error.toString();
   });
 
-  onNamespaceChange = (namespace: string | null) => {
-    if (namespace) {
-      this.save({ namespace });
+  onNamespaceChange = (option: SingleValue<{ namespace: string }>) => {
+    if (option) {
+      this.save(option);
     }
   };
 
@@ -178,6 +179,8 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     }
 
     const { repo, name, version, namespace, releaseName } = chartData;
+    const versionOptions = versions.map(version => ({ version }));
+    const selectedVersionOption = versionOptions.find(opt => opt.version === version);
 
     return (
       <div className="InstallChart flex column">
@@ -190,8 +193,8 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
               <span>Version</span>
               <Select
                 className="chart-version"
-                value={version}
-                options={versions}
+                value={selectedVersionOption}
+                options={versionOptions}
                 onChange={this.onVersionChange}
                 menuPlacement="top"
                 themeName="outlined"
