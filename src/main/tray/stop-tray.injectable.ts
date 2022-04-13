@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import trayInjectable from "./tray.injectable";
-import { onApplicationHardQuitInjectionToken } from "../start-main-application/on-application-hard-quit/on-application-hard-quit-injection-token";
+import { beforeApplicationHardQuitInjectionToken } from "../start-main-application/before-application-hard-quit/before-application-hard-quit-injection-token";
 
 const stopTrayInjectable = getInjectable({
   id: "stop-tray",
@@ -19,7 +19,7 @@ const stopTrayInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationHardQuitInjectionToken,
+  injectionToken: beforeApplicationHardQuitInjectionToken,
 });
 
 export default stopTrayInjectable;
