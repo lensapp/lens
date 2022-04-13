@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onRootFrameRenderInjectionToken } from "../on-root-frame-render-injection-token";
+import { afterRootFrameIsReadyInjectionToken } from "../after-root-frame-is-ready-injection-token";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import { runInAction } from "mobx";
 
@@ -23,7 +23,7 @@ const flagRendererAsLoaded = getInjectable({
     };
   },
 
-  injectionToken: onRootFrameRenderInjectionToken,
+  injectionToken: afterRootFrameIsReadyInjectionToken,
 });
 
 export default flagRendererAsLoaded;

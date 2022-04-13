@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onRootFrameRenderInjectionToken } from "../start-main-application/on-root-frame-render/on-root-frame-render-injection-token";
+import { afterRootFrameIsReadyInjectionToken } from "../start-main-application/after-root-frame-is-ready/after-root-frame-is-ready-injection-token";
 import catalogSyncToRendererInjectable from "./catalog-sync-to-renderer.injectable";
 
 const startCatalogSyncInjectable = getInjectable({
@@ -19,7 +19,7 @@ const startCatalogSyncInjectable = getInjectable({
     };
   },
 
-  injectionToken: onRootFrameRenderInjectionToken,
+  injectionToken: afterRootFrameIsReadyInjectionToken,
 });
 
 export default startCatalogSyncInjectable;

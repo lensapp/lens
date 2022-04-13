@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ipcMainOn } from "../../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../../../renderer/navigation/events";
-import { onRootFrameRenderInjectionToken } from "../../on-root-frame-render/on-root-frame-render-injection-token";
+import { afterRootFrameIsReadyInjectionToken } from "../../after-root-frame-is-ready/after-root-frame-is-ready-injection-token";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import { runManyFor } from "../../run-many-for";
 
@@ -16,7 +16,7 @@ const setupListenerForRootFrameRenderingInjectable = getInjectable({
     const runMany = runManyFor(di);
 
     const runOnRootFrameRender = runMany(
-      onRootFrameRenderInjectionToken,
+      afterRootFrameIsReadyInjectionToken,
     );
 
     return {
