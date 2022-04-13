@@ -27,7 +27,7 @@ export interface ClusterOverviewStorageState {
   metricNodeRole: MetricNodeRole;
 }
 
-interface Dependencies {
+interface ClusterOverviewStoreDependencies {
   readonly storage: StorageLayer<ClusterOverviewStorageState>;
   readonly nodeStore: NodeStore;
 }
@@ -52,7 +52,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
     this.dependencies.storage.merge({ metricNodeRole: value });
   }
 
-  constructor(protected readonly dependencies: Dependencies, api: ClusterApi) {
+  constructor(protected readonly dependencies: ClusterOverviewStoreDependencies, api: ClusterApi) {
     super(api);
     makeObservable(this);
     autoBind(this);

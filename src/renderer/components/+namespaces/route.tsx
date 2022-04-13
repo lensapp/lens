@@ -11,10 +11,10 @@ import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout-2";
 import { Badge } from "../badge";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { NamespaceStore } from "./namespace-store/namespace.store";
+import type { NamespaceStore } from "./store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "./store.injectable";
 import addNamespaceDialogModelInjectable from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 

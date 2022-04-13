@@ -12,9 +12,9 @@ import type { SelectProps } from "../select";
 import { Select } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import type { NamespaceStore } from "./namespace-store/namespace.store";
+import type { NamespaceStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "./store.injectable";
 
 export type NamespaceSelectSort = (left: string, right: string) => number;
 

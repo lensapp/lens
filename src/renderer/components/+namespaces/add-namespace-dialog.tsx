@@ -16,11 +16,11 @@ import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "./store.injectable";
 import type { AddNamespaceDialogModel } from "./add-namespace-dialog-model/add-namespace-dialog-model";
 import addNamespaceDialogModelInjectable
   from "./add-namespace-dialog-model/add-namespace-dialog-model.injectable";
-import type { NamespaceStore } from "./namespace-store/namespace.store";
+import type { NamespaceStore } from "./store";
 
 export interface AddNamespaceDialogProps extends DialogProps {
   onSuccess?(ns: Namespace): void;

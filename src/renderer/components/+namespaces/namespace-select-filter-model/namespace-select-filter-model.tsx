@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { observable, makeObservable, action, untracked, computed } from "mobx";
-import type { NamespaceStore } from "../namespace-store/namespace.store";
+import type { NamespaceStore } from "../store";
 import { isMac } from "../../../../common/vars";
 import type { ActionMeta } from "react-select";
 import { Icon } from "../../icon";

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "../../../+namespaces/store.injectable";
 import deploymentsStoreInjectable from "../../../+workloads-deployments/store.injectable";
 import navigateToDeploymentsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
 import { computed } from "mobx";

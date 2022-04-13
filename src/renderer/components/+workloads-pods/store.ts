@@ -5,18 +5,30 @@
 
 import countBy from "lodash/countBy";
 import { observable } from "mobx";
+import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { cpuUnitsToNumber, unitsToBytes } from "../../utils";
-import type { Pod, PodMetrics, PodApi } from "../../../common/k8s-api/endpoints";
-import { podMetricsApi } from "../../../common/k8s-api/endpoints";
+import type { Pod, PodMetrics, PodApi, PodMetricsApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObject, KubeObjectScope } from "../../../common/k8s-api/kube-object";
 
+export interface PodStoreDependencies {
+  readonly podMetricsApi: PodMetricsApi;
+}
+
 export class PodStore extends KubeObjectStore<Pod, PodApi> {
+  constructor(
+    protected readonly dependencies: PodStoreDependencies,
+    api: PodApi,
+    opts?: KubeObjectStoreOptions,
+  ) {
+    super(api, opts);
+  }
+
   readonly kubeMetrics = observable.array<PodMetrics>([]);
 
   async loadKubeMetrics(namespace?: string) {
     try {
-      const metrics = await podMetricsApi.list({ namespace });
+      const metrics = await this.dependencies.podMetricsApi.list({ namespace });
 
       this.kubeMetrics.replace(metrics ?? []);
     } catch (error) {

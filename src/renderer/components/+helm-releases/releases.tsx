@@ -9,7 +9,7 @@ import "./releases.scss";
 import React, { Component } from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import type { ItemListStore } from "../item-object-list";
 import { ItemListLayout } from "../item-object-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";

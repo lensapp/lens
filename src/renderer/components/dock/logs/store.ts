@@ -5,11 +5,12 @@
 
 import type { IComputedValue } from "mobx";
 import { observable } from "mobx";
-import type { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
+import type { PodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
 import { waitUntilDefinied } from "../../../../common/utils/wait";
 import type { IntervalFn } from "../../../utils";
 import { getOrInsertWith, interval } from "../../../utils";
 import type { TabId } from "../dock/store";
+import type { CallForLogs } from "./call-for-logs.injectable";
 import type { LogTabData } from "./tab-store";
 
 type PodLogLine = string;
@@ -17,7 +18,7 @@ type PodLogLine = string;
 const logLinesToLoad = 500;
 
 interface Dependencies {
-  callForLogs: ({ namespace, name }: { namespace: string; name: string }, query: IPodLogsQuery) => Promise<string>;
+  callForLogs: CallForLogs;
 }
 
 export class LogStore {
@@ -109,7 +110,7 @@ export class LogStore {
    * @param params request parameters described in IPodLogsQuery interface
    * @returns A fetch request promise
    */
-  private async loadLogs(computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>, params: Partial<IPodLogsQuery>): Promise<string[]> {
+  private async loadLogs(computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>, params: Partial<PodLogsQuery>): Promise<string[]> {
     const {
       pod,
       tabData: {

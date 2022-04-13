@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
 import navigateToPodsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
-import namespaceStoreInjectable from "../../../+namespaces/namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "../../../+namespaces/store.injectable";
 import { computed } from "mobx";
 import podStoreInjectable from "../../../+workloads-pods/store.injectable";
 

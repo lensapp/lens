@@ -12,13 +12,19 @@ import {
 } from "./cluster-overview-store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
-import { clusterApi } from "../../../../common/k8s-api/endpoints";
+import clusterApiInjectable from "../../../../common/k8s-api/endpoints/cluster.api.injectable";
+import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import assert from "assert";
+import nodeStoreInjectable from "../../+nodes/store.injectable";
 
 const clusterOverviewStoreInjectable = getInjectable({
   id: "cluster-overview-store",
 
   instantiate: (di) => {
+    assert(di.inject(createStoresAndApisInjectable), "clusterOverviewStore is only available in certain environments");
     const createStorage = di.inject(createStorageInjectable);
+    const clusterApi = di.inject(clusterApiInjectable);
+    const apiManager = di.inject(apiManagerInjectable);
 
     const storage = createStorage<ClusterOverviewStorageState>(
       "cluster_overview",
@@ -27,12 +33,10 @@ const clusterOverviewStoreInjectable = getInjectable({
         metricNodeRole: MetricNodeRole.WORKER,
       },
     );
-
     const store = new ClusterOverviewStore({
       storage,
+      nodeStore: di.inject(nodeStoreInjectable),
     }, clusterApi);
-
-    const apiManager = di.inject(apiManagerInjectable);
 
     apiManager.registerStore(store);
 

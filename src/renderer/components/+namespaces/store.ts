@@ -5,12 +5,12 @@
 
 import type { IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
-import type { StorageLayer } from "../../../utils";
-import { autoBind, noop, toggle } from "../../../utils";
-import type { KubeObjectStoreLoadingParams } from "../../../../common/k8s-api/kube-object.store";
-import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import type { NamespaceApi } from "../../../../common/k8s-api/endpoints/namespace.api";
-import { Namespace } from "../../../../common/k8s-api/endpoints/namespace.api";
+import type { StorageLayer } from "../../utils";
+import { autoBind, noop, toggle } from "../../utils";
+import type { KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { NamespaceApi } from "../../../common/k8s-api/endpoints/namespace.api";
+import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
 
 interface Dependencies {
   storage: StorageLayer<string[] | undefined>;

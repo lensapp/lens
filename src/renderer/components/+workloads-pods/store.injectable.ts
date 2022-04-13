@@ -8,6 +8,7 @@ import podApiInjectable from "../../../common/k8s-api/endpoints/pod.api.injectab
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { PodStore } from "./store";
+import podMetricsApiInjectable from "../../../common/k8s-api/endpoints/pod-metrics.api.injectable";
 
 const podStoreInjectable = getInjectable({
   id: "pod-store",
@@ -16,7 +17,9 @@ const podStoreInjectable = getInjectable({
 
     const api = di.inject(podApiInjectable);
     const apiManager = di.inject(apiManagerInjectable);
-    const store = new PodStore(api);
+    const store = new PodStore({
+      podMetricsApi: di.inject(podMetricsApiInjectable),
+    }, api);
 
     apiManager.registerStore(store);
 

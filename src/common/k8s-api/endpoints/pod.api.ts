@@ -5,7 +5,7 @@
 
 import type { MetricData } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions, ResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";
 import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector, KubeObjectScope } from "../kube-object";
@@ -22,11 +22,11 @@ export class PodApi extends KubeApi<Pod> {
     });
   }
 
-  getLogs = async (params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> => {
+  async getLogs(params: ResourceDescriptor, query?: PodLogsQuery): Promise<string> {
     const path = `${this.getUrl(params)}/log`;
 
     return this.request.get(path, { query });
-  };
+  }
 }
 
 export function getMetricsForPods(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<PodMetricData> {
@@ -65,7 +65,7 @@ export interface PodMetricData extends Partial<Record<string, MetricData>> {
 }
 
 // Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core
-export interface IPodLogsQuery {
+export interface PodLogsQuery {
   container?: string;
   tailLines?: number;
   timestamps?: boolean;

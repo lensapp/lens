@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import { listReleases } from "../../../common/k8s-api/endpoints/helm-releases.api";
 
 const releasesInjectable = getInjectable({

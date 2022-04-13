@@ -9,12 +9,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { PlaceholderProps } from "react-select";
 import { components } from "react-select";
-import type { NamespaceStore } from "./namespace-store/namespace.store";
+import type { NamespaceStore } from "./store";
 import { Select } from "../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NamespaceSelectFilterModel, NamespaceSelectFilterOption, SelectAllNamespaces } from "./namespace-select-filter-model/namespace-select-filter-model";
 import namespaceSelectFilterModelInjectable from "./namespace-select-filter-model/namespace-select-filter-model.injectable";
-import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "./store.injectable";
 
 interface NamespaceSelectFilterProps {
   id: string;
