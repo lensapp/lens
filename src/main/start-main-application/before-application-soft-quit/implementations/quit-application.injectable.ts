@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeApplicationHardQuitInjectionToken } from "../../before-application-hard-quit/before-application-hard-quit-injection-token";
 import { runManyFor } from "../../run-many-for";
-import { onApplicationSoftQuitInjectionToken } from "../on-application-soft-quit-injection-token";
+import { beforeApplicationSoftQuitInjectionToken } from "../before-application-soft-quit-injection-token";
 import isIntegrationTestingInjectable from "../../../../common/vars/is-integration-testing.injectable";
 
 const quitApplicationInjectable = getInjectable({
@@ -32,7 +32,7 @@ const quitApplicationInjectable = getInjectable({
 
   causesSideEffects: true,
 
-  injectionToken: onApplicationSoftQuitInjectionToken,
+  injectionToken: beforeApplicationSoftQuitInjectionToken,
 });
 
 export default quitApplicationInjectable;

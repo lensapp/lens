@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
-import { onApplicationSoftQuitInjectionToken } from "../on-application-soft-quit-injection-token";
+import { beforeApplicationSoftQuitInjectionToken } from "../before-application-soft-quit-injection-token";
 
 const emitCloseToCommandBusInjectable = getInjectable({
   id: "emit-close-to-command-bus",
@@ -19,7 +19,7 @@ const emitCloseToCommandBusInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationSoftQuitInjectionToken,
+  injectionToken: beforeApplicationSoftQuitInjectionToken,
 });
 
 export default emitCloseToCommandBusInjectable;

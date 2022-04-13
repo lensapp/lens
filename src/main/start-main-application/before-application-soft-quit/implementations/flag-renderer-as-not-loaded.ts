@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { runInAction } from "mobx";
 import lensProtocolRouterMainInjectable  from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
-import { onApplicationSoftQuitInjectionToken } from "../on-application-soft-quit-injection-token";
+import { beforeApplicationSoftQuitInjectionToken } from "../before-application-soft-quit-injection-token";
 
 const flagRendererAsNotLoaded = getInjectable({
   id: "stop-deep-linking",
@@ -23,7 +23,7 @@ const flagRendererAsNotLoaded = getInjectable({
     };
   },
 
-  injectionToken: onApplicationSoftQuitInjectionToken,
+  injectionToken: beforeApplicationSoftQuitInjectionToken,
 });
 
 export default flagRendererAsNotLoaded;

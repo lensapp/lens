@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeApplicationIsReadyInjectionToken } from "../before-application-is-ready-injection-token";
-import { onApplicationSoftQuitInjectionToken } from "../../on-application-soft-quit/on-application-soft-quit-injection-token";
+import { beforeApplicationSoftQuitInjectionToken } from "../../before-application-soft-quit/before-application-soft-quit-injection-token";
 import { runManyFor } from "../../run-many-for";
 import whenApplicationWillQuitInjectable from "../../../electron-app/when-application-will-quit.injectable";
 
@@ -15,7 +15,7 @@ const setupClosingOfApplicationInjectable = getInjectable({
     const whenApplicationWillQuit = di.inject(whenApplicationWillQuitInjectable);
 
     const runManyForApplicationClose = runManyFor(di)(
-      onApplicationSoftQuitInjectionToken,
+      beforeApplicationSoftQuitInjectionToken,
     );
 
     return {

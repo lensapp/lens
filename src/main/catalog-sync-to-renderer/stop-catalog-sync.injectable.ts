@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import catalogSyncToRendererInjectable from "./catalog-sync-to-renderer.injectable";
-import { onApplicationSoftQuitInjectionToken } from "../start-main-application/on-application-soft-quit/on-application-soft-quit-injection-token";
+import { beforeApplicationSoftQuitInjectionToken } from "../start-main-application/before-application-soft-quit/before-application-soft-quit-injection-token";
 
 const stopCatalogSyncInjectable = getInjectable({
   id: "stop-catalog-sync",
@@ -19,7 +19,7 @@ const stopCatalogSyncInjectable = getInjectable({
     };
   },
 
-  injectionToken: onApplicationSoftQuitInjectionToken,
+  injectionToken: beforeApplicationSoftQuitInjectionToken,
 });
 
 export default stopCatalogSyncInjectable;

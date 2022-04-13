@@ -5,8 +5,8 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Runnable } from "../run-many-for";
 
-export const onApplicationSoftQuitInjectionToken = getInjectionToken<
+export const beforeApplicationSoftQuitInjectionToken = getInjectionToken<
   Runnable<{ cancel: () => void }>
     >({
-      id: "on-application-soft-quit",
+      id: "before-application-soft-quit",
     });
