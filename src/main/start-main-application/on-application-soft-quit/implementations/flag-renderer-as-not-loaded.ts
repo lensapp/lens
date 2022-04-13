@@ -3,20 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { runInAction } from "mobx";
 import lensProtocolRouterMainInjectable  from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import { onApplicationSoftQuitInjectionToken } from "../on-application-soft-quit-injection-token";
 
-const makeProtocolRouterNotHaveLoadedRendererInjectable = getInjectable({
-  id: "make-protocol-router-not-have-loaded-renderer",
+const flagRendererAsNotLoaded = getInjectable({
+  id: "stop-deep-linking",
 
   instantiate: (di) => {
     const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
 
     return {
       run: () => {
-        // This is set to false here so that LPRM can wait to send future lens://
-        // requests until after it loads again
-        lensProtocolRouterMain.rendererLoaded = false;
+        runInAction(() => {
+          // Todo: remove this kludge which enables out-of-place temporal dependency.
+          lensProtocolRouterMain.rendererLoaded = false;
+        });
       },
     };
   },
@@ -24,4 +26,4 @@ const makeProtocolRouterNotHaveLoadedRendererInjectable = getInjectable({
   injectionToken: onApplicationSoftQuitInjectionToken,
 });
 
-export default makeProtocolRouterNotHaveLoadedRendererInjectable;
+export default flagRendererAsNotLoaded;
