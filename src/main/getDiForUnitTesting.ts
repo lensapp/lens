@@ -58,6 +58,8 @@ import catalogEntityRegistryInjectable from "./catalog/catalog-entity-registry.i
 import { CatalogCategoryRegistry } from "../common/catalog";
 import { CatalogEntityRegistry } from "./catalog";
 import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
+import setupIpcMainHandlersInjectable from "./start-main-application/after-application-is-ready/implementations/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
+import setupLensProxyInjectable from "./start-main-application/after-application-is-ready/implementations/setup-lens-proxy.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -100,6 +102,8 @@ export const getDiForUnitTesting = (
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
     di.override(registerFileProtocolInjectable, () => () => {});
     di.override(disableHardwareAccelerationInjectable, () => () => {});
+    di.override(setupIpcMainHandlersInjectable, () => ({ run: () => {} }));
+    di.override(setupLensProxyInjectable, () => ({ run: () => {} }));
 
     di.override(catalogCategoryRegistryInjectable, () => new CatalogCategoryRegistry());
 
