@@ -9,7 +9,6 @@ import type { KubeJsonApiData } from "../kube-json-api";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { autoBind } from "../../utils";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface ConfigMapData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   data?: Partial<Record<string, string>>;
@@ -48,7 +47,3 @@ export class ConfigMapApi extends KubeApi<ConfigMap, ConfigMapData> {
     });
   }
 }
-
-export const configMapApi = isClusterPageContext()
-  ? new ConfigMapApi()
-  : undefined as never;

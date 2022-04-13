@@ -7,7 +7,6 @@ import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum LimitType {
   CONTAINER = "Container",
@@ -66,7 +65,3 @@ export class LimitRangeApi extends KubeApi<LimitRange> {
     });
   }
 }
-
-export const limitRangeApi = isClusterPageContext()
-  ? new LimitRangeApi()
-  : undefined as never;

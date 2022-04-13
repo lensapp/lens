@@ -10,7 +10,6 @@ import { metricsApi } from "./metrics.api";
 import type { Pod } from "./pod.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import { object } from "../../utils";
 import type { ResourceRequirements } from "./types/resource-requirements";
 
@@ -86,7 +85,3 @@ export class PersistentVolumeClaim extends KubeObject<PersistentVolumeClaimStatu
     return this.status?.phase ?? "-";
   }
 }
-
-export const persistentVolumeClaimApi = isClusterPageContext()
-  ? new PersistentVolumeClaimApi()
-  : undefined as never;

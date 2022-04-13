@@ -8,7 +8,6 @@ import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { RoleRef } from "./types/role-ref";
 import type { Subject } from "./types/subject";
 
@@ -48,7 +47,3 @@ export class RoleBindingApi extends KubeApi<RoleBinding, RoleBindingData> {
     });
   }
 }
-
-export const roleBindingApi = isClusterPageContext()
-  ? new RoleBindingApi()
-  : undefined as never;

@@ -6,12 +6,19 @@
 import type { MetricData, IMetricsReqParams } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class ClusterApi extends KubeApi<Cluster> {
   static kind = "Cluster";
   static namespaced = true;
+
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: Cluster,
+    });
+  }
 }
 
 export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<ClusterMetricData> {
@@ -106,18 +113,3 @@ export class Cluster extends KubeObject {
     return ClusterStatus.ACTIVE;
   }
 }
-
-/**
- * Only available within kubernetes cluster pages
- */
-let clusterApi: ClusterApi;
-
-if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
-  clusterApi = new ClusterApi({
-    objectConstructor: Cluster,
-  });
-}
-
-export {
-  clusterApi,
-};

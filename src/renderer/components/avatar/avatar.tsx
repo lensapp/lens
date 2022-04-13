@@ -5,13 +5,14 @@
 
 import styles from "./avatar.module.scss";
 
-import type { HTMLAttributes, ImgHTMLAttributes } from "react";
+import type { ImgHTMLAttributes, MouseEventHandler } from "react";
 import React from "react";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
+import type { SingleOrMany } from "../../utils";
 import { cssNames, isDefined, iter } from "../../utils";
 
-export interface AvatarProps extends HTMLAttributes<HTMLElement> {
+export interface AvatarProps {
   title: string;
   colorHash?: string;
   size?: number;
@@ -20,6 +21,10 @@ export interface AvatarProps extends HTMLAttributes<HTMLElement> {
   variant?: "circle" | "rounded" | "square";
   imgProps?: ImgHTMLAttributes<HTMLImageElement>;
   disabled?: boolean;
+  children?: SingleOrMany<React.ReactNode>;
+  className?: string;
+  id?: string;
+  onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
 function getNameParts(name: string): string[] {
@@ -57,7 +62,7 @@ function getLabelFromTitle(title: string) {
 }
 
 export function Avatar(props: AvatarProps) {
-  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, ...rest } = props;
+  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, id, onClick } = props;
   const colorFromHash = randomColor({ seed: colorHash, luminosity: "dark" });
 
   const renderContents = () => {
@@ -86,7 +91,8 @@ export function Avatar(props: AvatarProps) {
         height: `${size}px`,
         background: background || (src ? "transparent" : colorFromHash),
       }}
-      {...rest}
+      id={id}
+      onClick={onClick}
     >
       {renderContents()}
     </div>

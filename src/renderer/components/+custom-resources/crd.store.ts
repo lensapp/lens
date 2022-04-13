@@ -6,8 +6,8 @@
 import { computed, reaction, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind, isClusterPageContext } from "../../utils";
-import type { CustomResourceDefinition, CustomResourceDefinitionApi } from "../../../common/k8s-api/endpoints/crd.api";
-import { crdApi } from "../../../common/k8s-api/endpoints/crd.api";
+import type { CustomResourceDefinition, CustomResourceDefinitionApi } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
+import { crdApi } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { KubeApi } from "../../../common/k8s-api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";

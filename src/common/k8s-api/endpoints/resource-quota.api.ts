@@ -7,7 +7,6 @@ import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export type IResourceQuotaValues = Partial<Record<string, string>> & {
   // Compute Resource Quota
@@ -69,7 +68,3 @@ export class ResourceQuotaApi extends KubeApi<ResourceQuota> {
     });
   }
 }
-
-export const resourceQuotaApi = isClusterPageContext()
-  ? new ResourceQuotaApi()
-  : undefined as never;

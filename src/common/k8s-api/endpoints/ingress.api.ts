@@ -10,7 +10,6 @@ import type { MetricData } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { RequireExactlyOne } from "type-fest";
 
 export class IngressApi extends KubeApi<Ingress> {
@@ -230,7 +229,3 @@ export function computeRuleDeclarations(ingress: Ingress, rule: IngressRule): Co
 export function computeRouteDeclarations(ingress: Ingress): ComputedIngressRoute[] {
   return ingress.getRules().flatMap(rule => computeRuleDeclarations(ingress, rule));
 }
-
-export const ingressApi = isClusterPageContext()
-  ? new IngressApi()
-  : undefined as never;

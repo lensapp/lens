@@ -8,7 +8,6 @@ import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { ResourceRequirements } from "./types/resource-requirements";
 
 export interface PersistentVolumeSpec {
@@ -107,7 +106,3 @@ export class PersistentVolumeApi extends KubeApi<PersistentVolume> {
     });
   }
 }
-
-export const persistentVolumeApi = isClusterPageContext()
-  ? new PersistentVolumeApi()
-  : undefined as never;

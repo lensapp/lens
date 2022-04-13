@@ -10,7 +10,6 @@ import type { MetricData } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import { TypedRegEx } from "typed-regex";
 
 export class NodeApi extends KubeApi<Node> {
@@ -267,7 +266,3 @@ export class Node extends KubeObject<NodeStatus, NodeSpec, KubeObjectScope.Clust
     return this.spec.unschedulable;
   }
 }
-
-export const nodeApi = isClusterPageContext()
-  ? new NodeApi()
-  : undefined as never;

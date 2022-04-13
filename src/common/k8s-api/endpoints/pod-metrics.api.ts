@@ -7,7 +7,6 @@ import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export interface PodMetricsData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
@@ -56,7 +55,3 @@ export class PodMetricsApi extends KubeApi<PodMetrics, PodMetricsData> {
     });
   }
 }
-
-export const podMetricsApi = isClusterPageContext()
-  ? new PodMetricsApi()
-  : undefined as never;

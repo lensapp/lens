@@ -10,8 +10,8 @@ import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout-2";
 import { nodesStore } from "./nodes.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { NodeMetricData, Node } from "../../../common/k8s-api/endpoints/nodes.api";
-import { formatNodeTaint, getMetricsForAllNodes } from "../../../common/k8s-api/endpoints/nodes.api";
+import type { NodeMetricData, Node } from "../../../common/k8s-api/endpoints/node.api";
+import { formatNodeTaint, getMetricsForAllNodes } from "../../../common/k8s-api/endpoints/node.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../../common/utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
@@ -224,7 +224,7 @@ export class NodesRoute extends React.Component {
                 flat
                 key="name"
                 label={node.getName()}
-                tooltip={node.getName()} 
+                tooltip={node.getName()}
               />,
               <KubeObjectStatusIcon key="icon" object={node} />,
               this.renderCpuUsage(node),

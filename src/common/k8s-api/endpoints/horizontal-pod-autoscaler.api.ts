@@ -7,7 +7,6 @@ import type { BaseKubeObjectCondition, KubeObjectScope, LabelSelector } from "..
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { OptionVarient } from "../../utils";
 
 export enum HpaMetricType {
@@ -260,7 +259,3 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
     });
   }
 }
-
-export const horizontalPodAutoscalerApi = isClusterPageContext()
-  ? new HorizontalPodAutoscalerApi()
-  : undefined as never;

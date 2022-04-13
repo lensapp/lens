@@ -10,7 +10,7 @@ import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";
 import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector, KubeObjectScope } from "../kube-object";
 import type { SecretReference } from "./secret.api";
-import type { PersistentVolumeClaimSpec } from "./persistent-volume-claims.api";
+import type { PersistentVolumeClaimSpec } from "./persistent-volume-claim.api";
 import { KubeObject } from "../kube-object";
 import { isDefined } from "../../utils";
 

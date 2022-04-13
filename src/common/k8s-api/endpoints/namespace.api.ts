@@ -9,7 +9,6 @@ import type { KubeObjectScope, KubeObjectStatus } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pod.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum NamespaceStatusKind {
   ACTIVE = "Active",
@@ -58,7 +57,3 @@ export function getMetricsForNamespace(namespace: string, selector = ""): Promis
     namespace,
   });
 }
-
-export const namespaceApi = isClusterPageContext()
-  ? new NamespaceApi()
-  : undefined as never;

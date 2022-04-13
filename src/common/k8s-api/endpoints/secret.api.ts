@@ -9,7 +9,6 @@ import type { KubeJsonApiData } from "../kube-json-api";
 import { autoBind } from "../../utils";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum SecretType {
   Opaque = "Opaque",
@@ -65,7 +64,3 @@ export class SecretApi extends KubeApi<Secret, SecretData> {
     });
   }
 }
-
-export const secretApi = isClusterPageContext()
-  ? new SecretApi()
-  : undefined as never;

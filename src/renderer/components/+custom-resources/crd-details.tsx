@@ -8,7 +8,7 @@ import "./crd-details.scss";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";

@@ -9,7 +9,6 @@ import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export interface EventSeries {
@@ -140,7 +139,3 @@ export class KubeEventApi extends KubeApi<KubeEvent, KubeEventData> {
     });
   }
 }
-
-export const eventApi = isClusterPageContext()
-  ? new KubeEventApi()
-  : undefined as never;

@@ -8,7 +8,7 @@ import "./hpa.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/hpa.api";
+import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { hpaStore } from "./hpa.store";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
@@ -40,7 +40,7 @@ export class HorizontalPodAutoscalers extends React.Component {
 
     return (
       <p>
-        {hpa.getMetricValues(metrics[0])} 
+        {hpa.getMetricValues(metrics[0])}
         {" "}
         {metricsRemain}
       </p>

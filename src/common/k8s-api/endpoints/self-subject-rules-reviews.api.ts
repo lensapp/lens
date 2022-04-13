@@ -4,10 +4,17 @@
  */
 
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: SelfSubjectRulesReview,
+    });
+  }
+
   create({ namespace = "default" }) {
     return super.create({}, {
       spec: {
@@ -70,16 +77,4 @@ export class SelfSubjectRulesReview extends KubeObject {
     };
   }
 }
-
-let selfSubjectRulesReviewApi: SelfSubjectRulesReviewApi;
-
-if (isClusterPageContext()) {
-  selfSubjectRulesReviewApi = new SelfSubjectRulesReviewApi({
-    objectConstructor: SelfSubjectRulesReview,
-  });
-}
-
-export {
-  selfSubjectRulesReviewApi,
-};
 

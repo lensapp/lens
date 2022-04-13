@@ -9,7 +9,6 @@ import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export function formatEndpointSubset(subset: EndpointSubset): string {
   const { addresses, ports } = subset;
@@ -116,7 +115,3 @@ export class EndpointsApi extends KubeApi<Endpoints, EndpointsData> {
     });
   }
 }
-
-export const endpointsApi = isClusterPageContext()
-  ? new EndpointsApi()
-  : undefined as never;

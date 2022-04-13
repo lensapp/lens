@@ -9,7 +9,6 @@ import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface TopologySelectorLabelRequirement {
   key: string;
@@ -90,7 +89,3 @@ export class StorageClassApi extends KubeApi<StorageClass, StorageClassData> {
     });
   }
 }
-
-export const storageClassApi = isClusterPageContext()
-  ? new StorageClassApi()
-  : undefined as never;

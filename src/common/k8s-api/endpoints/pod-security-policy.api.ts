@@ -7,7 +7,6 @@ import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface PodSecurityPolicySpec {
   allowPrivilegeEscalation?: boolean;
@@ -116,7 +115,3 @@ export class PodSecurityPolicyApi extends KubeApi<PodSecurityPolicy> {
     });
   }
 }
-
-export const podSecurityPolicyApi = isClusterPageContext()
-  ? new PodSecurityPolicyApi()
-  : undefined as never;

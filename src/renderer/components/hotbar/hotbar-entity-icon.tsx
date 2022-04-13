@@ -5,9 +5,8 @@
 
 import styles from "./hotbar-entity-icon.module.scss";
 
-import type { HTMLAttributes } from "react";
 import React from "react";
-import { makeObservable, observable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 
 import type { CatalogCategoryRegistry, CatalogEntity, CatalogEntityContextMenu } from "../../../common/catalog";
@@ -23,13 +22,15 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
 
-export interface HotbarEntityIconProps extends HTMLAttributes<HTMLElement> {
+export interface HotbarEntityIconProps {
   entity: CatalogEntity;
   index: number;
   errorClass?: IClassName;
   add: (item: CatalogEntity, index: number) => void;
   remove: (uid: string) => void;
   size?: number;
+  onClick?: () => void;
+  className?: string;
 }
 
 interface Dependencies {
@@ -41,11 +42,6 @@ interface Dependencies {
 class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps & Dependencies> {
   private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
-  constructor(props: HotbarEntityIconProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
   get kindIcon() {
     const className = styles.badge;
     const category = this.props.catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
@@ -56,9 +52,9 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
 
     if (Icon.isSvg(category.metadata.icon)) {
       return <Icon svg={category.metadata.icon} className={className} />;
-    } else {
-      return <Icon material={category.metadata.icon} className={className} />;
     }
+
+    return <Icon material={category.metadata.icon} className={className} />;
   }
 
   get ledIcon() {
@@ -66,9 +62,14 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
       return null;
     }
 
-    const className = cssNames(styles.led, { [styles.online]: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED }); // TODO: make it more generic
-
-    return <div className={className} />;
+    return (
+      <div
+        className={cssNames(styles.led, {
+          // TODO: make it more generic
+          [styles.online]: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED,
+        })}
+      />
+    );
   }
 
   isActive(item: CatalogEntity) {
@@ -88,7 +89,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
   }
 
   render() {
-    const { entity, errorClass, add, remove, index, children, ...elemProps } = this.props;
+    const { entity, className, onClick } = this.props;
 
     return (
       <HotbarIcon
@@ -98,7 +99,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
         src={entity.spec.icon?.src}
         material={entity.spec.icon?.material}
         background={entity.spec.icon?.background}
-        className={this.props.className}
+        className={className}
         active={this.isActive(entity)}
         onMenuOpen={() => this.onMenuOpen()}
         disabled={!entity}
@@ -108,7 +109,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
             ? `${entity.getName()} (${entity.metadata.source})`
             : entity.getName()
         )}
-        {...elemProps}
+        onClick={onClick}
       >
         { this.ledIcon }
         { this.kindIcon }

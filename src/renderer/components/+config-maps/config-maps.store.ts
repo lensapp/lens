@@ -4,8 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { ConfigMap, ConfigMapApi, ConfigMapData } from "../../../common/k8s-api/endpoints/configmap.api";
-import { configMapApi } from "../../../common/k8s-api/endpoints/configmap.api";
+import type { ConfigMap, ConfigMapApi, ConfigMapData } from "../../../common/k8s-api/endpoints/config-map.api";
+import { configMapApi } from "../../../common/k8s-api/endpoints/config-map.api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { isClusterPageContext } from "../../utils";
 
