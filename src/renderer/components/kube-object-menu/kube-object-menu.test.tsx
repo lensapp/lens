@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
@@ -21,7 +21,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "./dependencies/api-manager.injectable";
 import { KubeObjectMenu } from "./index";
-import type { KubeObjectMenuRegistration } from "./dependencies/kube-object-menu-items/kube-object-menu-registration";
+import type { KubeObjectMenuRegistration } from "./kube-object-menu-registration";
 import { computed } from "mobx";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
@@ -164,23 +164,20 @@ describe("kube-object-menu", () => {
     });
 
     describe("when removing kube object", () => {
-      beforeEach(() => {
-        const menuItem = screen.getByTestId("menu-action-remove");
+      beforeEach(async () => {
+        const menuItem = await screen.findByTestId("menu-action-delete");
 
         userEvent.click(menuItem);
+        await screen.findByTestId("confirmation-dialog");
       });
 
       it("renders", () => {
         expect(baseElement).toMatchSnapshot();
       });
 
-      it("opens a confirmation dialog", () => {
-        screen.getByTestId("confirmation-dialog");
-      });
-
       describe("when remove is confirmed", () => {
-        beforeEach(() => {
-          const confirmRemovalButton = screen.getByTestId("confirm");
+        beforeEach(async () => {
+          const confirmRemovalButton = await screen.findByTestId("confirm");
 
           userEvent.click(confirmRemovalButton);
         });
@@ -189,14 +186,15 @@ describe("kube-object-menu", () => {
           expect(removeActionMock).toHaveBeenCalledWith();
         });
 
-        it("does not close the confirmation dialog yet", () => {
-          screen.getByTestId("confirmation-dialog");
+        it("does not close the confirmation dialog yet", async () => {
+          await screen.findByTestId("confirmation-dialog");
         });
 
         it("when removal resolves, closes the confirmation dialog", async () => {
           await removeActionMock.resolve();
-
-          expect(screen.queryByTestId("confirmation-dialog")).toBeNull();
+          await waitFor(() => {
+            expect(screen.queryByTestId("confirmation-dialog")).toBeNull();
+          });
         });
       });
     });
@@ -230,8 +228,8 @@ describe("kube-object-menu", () => {
       ));
     });
 
-    it("when removing kube object, renders confirmation dialog with namespace", () => {
-      const menuItem = screen.getByTestId("menu-action-remove");
+    it("when removing kube object, renders confirmation dialog with namespace", async () => {
+      const menuItem = await screen.findByTestId("menu-action-delete");
 
       userEvent.click(menuItem);
 
@@ -267,8 +265,8 @@ describe("kube-object-menu", () => {
       ));
     });
 
-    it("when removing kube object, renders confirmation dialog without namespace", () => {
-      const menuItem = screen.getByTestId("menu-action-remove");
+    it("when removing kube object, renders confirmation dialog without namespace", async () => {
+      const menuItem = await screen.findByTestId("menu-action-delete");
 
       userEvent.click(menuItem);
 

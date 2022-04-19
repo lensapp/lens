@@ -15,21 +15,68 @@ import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 import { decode } from "../../../common/utils/base64";
 
-export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
-  material?: string;          // material-icon, see available names at https://material.io/icons/
-  svg?: string;               // svg-filename without extension in current folder
-  link?: LocationDescriptor;   // render icon as NavLink from react-router-dom
-  href?: string;              // render icon as hyperlink
-  size?: string | number;     // icon-size
-  small?: boolean;            // pre-defined icon-size
-  smallest?: boolean;            // pre-defined icon-size
-  big?: boolean;              // pre-defined icon-size
-  active?: boolean;           // apply active-state styles
-  interactive?: boolean;      // indicates that icon is interactive and highlight it on focus/hover
-  focusable?: boolean;        // allow focus to the icon + show .active styles (default: "true", when icon is interactive)
+export interface BaseIconProps {
+   /**
+   * One of the names from https://material.io/icons/
+   */
+  material?: string;
+
+  /**
+   * Either an SVG data URL or one of the following strings
+   */
+  svg?: string;
+
+  /**
+   * render icon as NavLink from react-router-dom
+   */
+  link?: LocationDescriptor;
+
+  /**
+   * render icon as hyperlink
+   */
+  href?: string;
+
+  /**
+   * The icon size (css units)
+   */
+  size?: string | number;
+
+  /**
+   * A pre-defined icon-size
+   */
+  small?: boolean;
+
+  /**
+   * A pre-defined icon-size
+   */
+  smallest?: boolean;
+
+  /**
+   * A pre-defined icon-size
+   */
+  big?: boolean;
+
+  /**
+   * apply active-state styles
+   */
+  active?: boolean;
+
+  /**
+   * indicates that icon is interactive and highlight it on focus/hover
+   */
+  interactive?: boolean;
+
+  /**
+   * Allow focus to the icon to show `.active` styles. Only applicable if {@link IconProps.interactive} is `true`.
+   *
+   * @default true
+   */
+  focusable?: boolean;
   sticker?: boolean;
   disabled?: boolean;
 }
+
+export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps, BaseIconProps {}
 
 @withTooltip
 export class Icon extends React.PureComponent<IconProps> {

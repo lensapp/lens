@@ -13,7 +13,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -45,7 +45,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
@@ -53,7 +53,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -78,7 +78,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal enter"
     data-testid="confirmation-dialog"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -99,21 +99,19 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
           </span>
         </i>
          
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-namespace/some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+        <p>
+          Remove 
+          some-kind
+           
+          <b>
+            some-namespace/some-name
+          </b>
+           from 
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -150,7 +148,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -196,21 +194,19 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
           </span>
         </i>
          
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-namespace/some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+        <p>
+          Remove 
+          some-kind
+           
+          <b>
+            some-namespace/some-name
+          </b>
+           from 
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -239,7 +235,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <li>
@@ -247,7 +243,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -293,21 +289,19 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           </span>
         </i>
          
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+        <p>
+          Remove 
+          some-kind
+           
+          <b>
+            some-name
+          </b>
+           from 
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"

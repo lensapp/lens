@@ -11,10 +11,9 @@ import { ItemListLayout } from "../item-object-list";
 import type { IComputedValue } from "mobx";
 import { action, computed, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
-import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
-import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
-import { ConfirmDialog } from "../confirm-dialog";
+import type { CatalogEntityContextMenuContext } from "../../api/catalog-entity";
+import type { HotbarStore } from "../../../common/hotbar-store";
 import type { CatalogEntity } from "../../../common/catalog";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
@@ -42,7 +41,10 @@ import { browseCatalogTab } from "./catalog-browse-tab";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import type { Navigate } from "../../navigation/navigate.injectable";
+import navigateInjectable from "../../navigation/navigate.injectable";
+import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
+import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: { set: (value: string ) => void; get: () => string };
@@ -50,14 +52,14 @@ interface Dependencies {
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
   emitEvent: (event: AppEvent) => void;
-
   routeParameters: {
     group: IComputedValue<string>;
     kind: IComputedValue<string>;
   };
-
   navigateToCatalog: NavigateToCatalog;
   hotbarStore: HotbarStore;
+  navigate: Navigate;
+  normalizeMenuItem: NormalizeCatalogEntityContextMenu;
 }
 
 @observer
@@ -93,7 +95,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   async componentDidMount() {
     this.contextMenu = {
       menuItems: observable.array([]),
-      navigate: (url: string) => navigate(url),
+      navigate: this.props.navigate,
     };
     disposeOnUnmount(this, [
       this.props.catalogEntityStore.watch(),
@@ -149,23 +151,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     }
   };
 
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message,
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
   get categories() {
     return catalogCategoryRegistry.items;
   }
@@ -209,11 +194,13 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
           View Details
         </MenuItem>
         {
-          this.contextMenu.menuItems.map((menuItem, index) => (
-            <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              {menuItem.title}
-            </MenuItem>
-          ))
+          this.contextMenu.menuItems
+            .map(this.props.normalizeMenuItem)
+            .map((menuItem, index) => (
+              <MenuItem key={index} onClick={menuItem.onClick}>
+                {menuItem.title}
+              </MenuItem>
+            ))
         }
         <HotbarToggleMenuItem
           key="hotbar-toggle"
@@ -342,8 +329,9 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 }
 
-export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
-  getProps: (di) => ({
+export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
+  getProps: (di, props) => ({
+    ...props,
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
@@ -352,5 +340,7 @@ export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     emitEvent: di.inject(appEventBusInjectable).emit,
     hotbarStore: di.inject(hotbarStoreInjectable),
+    navigate: di.inject(navigateInjectable),
+    normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
   }),
 });

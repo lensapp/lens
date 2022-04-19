@@ -2,11 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { ServiceAccountMenu } from "../../../+user-management/+service-accounts/service-account-menu";
-import { CronJobMenu } from "../../../+workloads-cronjobs/cron-job-menu";
-import { DeploymentMenu } from "../../../+workloads-deployments/deployment-menu";
-import { ReplicaSetMenu } from "../../../+workloads-replicasets/replica-set-menu";
-import { StatefulSetMenu } from "../../../+workloads-statefulsets/stateful-set-menu";
+import { ServiceAccountMenu } from "../../+user-management/+service-accounts/service-account-menu";
+import { CronJobMenu } from "../../+workloads-cronjobs/cron-job-menu";
+import { DeploymentMenu } from "../../+workloads-deployments/deployment-menu";
+import { ReplicaSetMenu } from "../../+workloads-replicasets/replica-set-menu";
 
 export const staticKubeObjectMenuItems = [
   {
@@ -35,13 +34,6 @@ export const staticKubeObjectMenuItems = [
     apiVersions: ["apps/v1"],
     components: {
       MenuItem: ReplicaSetMenu,
-    },
-  },
-  {
-    kind: "StatefulSet",
-    apiVersions: ["apps/v1"],
-    components: {
-      MenuItem: StatefulSetMenu,
     },
   },
 ];

@@ -20,7 +20,7 @@ import type { AppPreferenceRegistration } from "../renderer/components/+preferen
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
 import type { StatusBarRegistration } from "../renderer/components/status-bar/status-bar-registration";
-import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
+import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/kube-object-menu-registration";
 import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/+workloads-overview/workloads-overview-detail-registration";
 import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -30,6 +30,7 @@ import extensionPageParametersInjectable from "../renderer/routes/extension-page
 import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/get-extension-route-path";
 import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
+import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -49,6 +50,7 @@ export class LensRendererExtension extends LensExtension {
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
+  kubeObjectHandlers: KubeObjectHandlerRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {
     const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(

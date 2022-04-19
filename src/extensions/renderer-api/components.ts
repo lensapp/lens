@@ -15,6 +15,10 @@ import sendCommandInjectable from "../../renderer/components/dock/terminal/send-
 import { podsStore } from "../../renderer/components/+workloads-pods/pods.store";
 import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
 import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
+import { ConfirmDialog as _ConfirmDialog } from "../../renderer/components/confirm-dialog";
+import type { ConfirmDialogBooleanParams, ConfirmDialogParams, ConfirmDialogProps } from "../../renderer/components/confirm-dialog";
+import openConfirmDialogInjectable from "../../renderer/components/confirm-dialog/open.injectable";
+import confirmInjectable from "../../renderer/components/confirm-dialog/confirm.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -43,6 +47,16 @@ export type {
 } from "../../renderer/components/+catalog/custom-category-columns";
 
 // other components
+export type {
+  ConfirmDialogBooleanParams,
+  ConfirmDialogParams,
+  ConfirmDialogProps,
+};
+export const ConfirmDialog = Object.assign(_ConfirmDialog, {
+  open: asLegacyGlobalFunctionForExtensionApi(openConfirmDialogInjectable),
+  confirm: asLegacyGlobalFunctionForExtensionApi(confirmInjectable),
+});
+
 export * from "../../renderer/components/icon";
 export * from "../../renderer/components/tooltip";
 export * from "../../renderer/components/tabs";
@@ -50,7 +64,6 @@ export * from "../../renderer/components/table";
 export * from "../../renderer/components/badge";
 export * from "../../renderer/components/drawer";
 export * from "../../renderer/components/dialog";
-export * from "../../renderer/components/confirm-dialog";
 export * from "../../renderer/components/line-progress";
 export * from "../../renderer/components/menu";
 export * from "../../renderer/components/notifications";
