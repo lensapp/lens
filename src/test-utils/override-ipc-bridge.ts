@@ -11,9 +11,6 @@ import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-valu
 import windowManagerInjectable from "../main/window-manager.injectable";
 import type { SendToViewArgs, WindowManager } from "../main/window-manager";
 import { appNavigationIpcChannel } from "../common/front-end-routing/navigation-ipc-channel";
-import subscribeToChannelInjectable from "../renderer/communication-between-processes/subscribe-to-channel.injectable";
-import publishToChannelInjectable from "../main/communication-between-processes/publish-to-channel.injectable";
-import { isEmpty } from "lodash/fp";
 
 export const overrideIpcBridge = ({
   rendererDi,
@@ -83,8 +80,6 @@ export const overrideIpcBridge = ({
       },
   );
 
-  overridePublishAndSubscribe(mainDi, rendererDi);
-
   mainDi.override(
     windowManagerInjectable,
     () =>
@@ -101,40 +96,4 @@ export const overrideIpcBridge = ({
 
       } as unknown as WindowManager),
   );
-};
-
-const overridePublishAndSubscribe = (mainDi: DiContainer, rendererDi: DiContainer) => {
-  [
-    [mainDi, rendererDi],
-    [rendererDi, mainDi],
-  ].forEach(([diForSubscribe, diForPublish]) => {
-    const fakeSubscriptionsMap = new Map<
-      Channel<unknown>,
-      ((message: any) => void)[]
-    >();
-
-    diForSubscribe.override(
-      subscribeToChannelInjectable,
-      () => (channel, subscriber) => {
-        const subscribers = fakeSubscriptionsMap.get(channel) || [];
-
-        fakeSubscriptionsMap.set(channel, [...subscribers, subscriber]);
-      },
-    );
-
-    diForPublish.override(
-      publishToChannelInjectable,
-      () => (channel, message) => {
-        const subscribers = fakeSubscriptionsMap.get(channel);
-
-        if (isEmpty(subscribers)) {
-          throw new Error(
-            `Tried to publish message "${message}" to channel "${channel.name}" when there is no subscribers.`,
-          );
-        }
-
-        subscribers.forEach((subscriber) => subscriber(message));
-      },
-    );
-  });
 };
