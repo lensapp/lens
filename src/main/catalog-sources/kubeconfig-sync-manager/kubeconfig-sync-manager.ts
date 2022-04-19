@@ -6,7 +6,7 @@
 import type { IComputedValue, ObservableMap } from "mobx";
 import { action, observable, computed, runInAction, makeObservable, observe } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
-import { catalogEntityRegistry } from "../../catalog";
+import type { CatalogEntityRegistry } from "../../catalog";
 import type { FSWatcher } from "chokidar";
 import { watch } from "chokidar";
 import fs from "fs";
@@ -50,10 +50,11 @@ const ignoreGlobs = [
 const folderSyncMaxAllowedFileReadSize = 2 * 1024 * 1024; // 2 MiB
 const fileSyncMaxAllowedFileReadSize = 16 * folderSyncMaxAllowedFileReadSize; // 32 MiB
 
-interface Dependencies {
+interface KubeconfigSyncManagerDependencies {
   directoryForKubeConfigs: string;
   createCluster: (model: ClusterModel) => Cluster;
   clusterManager: ClusterManager;
+  catalogEntityRegistry: CatalogEntityRegistry;
 }
 
 const kubeConfigSyncName = "lens:kube-sync";
@@ -63,7 +64,7 @@ export class KubeconfigSyncManager {
   protected syncing = false;
   protected syncListDisposer?: Disposer;
 
-  constructor(private dependencies: Dependencies) {
+  constructor(private dependencies: KubeconfigSyncManagerDependencies) {
     makeObservable(this);
   }
 
@@ -77,7 +78,7 @@ export class KubeconfigSyncManager {
 
     logger.info(`${logPrefix} starting requested syncs`);
 
-    catalogEntityRegistry.addComputedSource(kubeConfigSyncName, computed(() => (
+    this.dependencies.catalogEntityRegistry.addComputedSource(kubeConfigSyncName, computed(() => (
       Array.from(iter.flatMap(
         this.sources.values(),
         ([entities]) => entities.get(),
@@ -111,7 +112,7 @@ export class KubeconfigSyncManager {
       this.stopOldSync(filePath);
     }
 
-    catalogEntityRegistry.removeSource(kubeConfigSyncName);
+    this.dependencies.catalogEntityRegistry.removeSource(kubeConfigSyncName);
     this.syncing = false;
   }
 
@@ -164,8 +165,14 @@ export function configToModels(rootConfig: KubeConfig, filePath: string): Update
 type RootSourceValue = [Cluster, CatalogEntity];
 type RootSource = ObservableMap<string, RootSourceValue>;
 
+interface ComputeDiffDependencies {
+  directoryForKubeConfigs: string;
+  createCluster: (model: ClusterModel) => Cluster;
+  clusterManager: ClusterManager;
+}
+
 // exported for testing
-export const computeDiff = ({ directoryForKubeConfigs, createCluster, clusterManager }: Dependencies) => (contents: string, source: RootSource, filePath: string): void => {
+export const computeDiff = ({ directoryForKubeConfigs, createCluster, clusterManager }: ComputeDiffDependencies) => (contents: string, source: RootSource, filePath: string): void => {
   runInAction(() => {
     try {
       const { config, error } = loadConfigFromString(contents);
@@ -241,7 +248,7 @@ interface DiffChangedConfigArgs {
   maxAllowedFileReadSize: number;
 }
 
-const diffChangedConfigFor = (dependencies: Dependencies) => ({ filePath, source, stats, maxAllowedFileReadSize }: DiffChangedConfigArgs): Disposer => {
+const diffChangedConfigFor = (dependencies: ComputeDiffDependencies) => ({ filePath, source, stats, maxAllowedFileReadSize }: DiffChangedConfigArgs): Disposer => {
   logger.debug(`${logPrefix} file changed`, { filePath });
 
   if (stats.size >= maxAllowedFileReadSize) {
@@ -297,7 +304,7 @@ const diffChangedConfigFor = (dependencies: Dependencies) => ({ filePath, source
   return cleanup;
 };
 
-const watchFileChanges = (filePath: string, dependencies: Dependencies): [IComputedValue<CatalogEntity[]>, Disposer] => {
+const watchFileChanges = (filePath: string, dependencies: ComputeDiffDependencies): [IComputedValue<CatalogEntity[]>, Disposer] => {
   const rootSource = observable.map<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
 

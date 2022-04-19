@@ -4,14 +4,20 @@
  */
 
 import type { Hotbar } from "../../common/hotbar-types";
-import { catalogEntityRegistry } from "../../main/catalog";
 import type { MigrationDeclaration } from "../helpers";
+import {
+  getLegacyGlobalDiForExtensionApi,
+} from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import catalogEntityRegistryInjectable from "../../main/catalog/catalog-entity-registry.injectable";
 
 export default {
   version: "5.0.0-beta.5",
   run(store) {
     const rawHotbars = store.get("hotbars");
     const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars : [];
+
+    const di = getLegacyGlobalDiForExtensionApi();
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     for (const hotbar of hotbars) {
       for (let i = 0; i < hotbar.items.length; i += 1) {

@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterManager } from "./cluster-manager";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
+import catalogEntityRegistryInjectable from "./catalog/catalog-entity-registry.injectable";
 
 const clusterManagerInjectable = getInjectable({
   id: "cluster-manager",
@@ -12,6 +13,7 @@ const clusterManagerInjectable = getInjectable({
   instantiate: (di) => {
     const clusterManager = new ClusterManager({
       store: di.inject(clusterStoreInjectable),
+      catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
     });
 
     clusterManager.init();

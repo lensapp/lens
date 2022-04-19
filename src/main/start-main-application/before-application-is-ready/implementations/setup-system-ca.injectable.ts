@@ -15,6 +15,8 @@ const setupSystemCaInjectable = getInjectable({
     },
   }),
 
+  causesSideEffects: true,
+
   injectionToken: beforeApplicationIsReadyInjectionToken,
 });
 

@@ -4,17 +4,14 @@
  */
 
 import { LensExtension } from "./lens-extension";
-import { catalogEntityRegistry } from "../main/catalog";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "../main/menu/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
-import {
-  Environments,
-  getEnvironmentSpecificLegacyGlobalDiForExtensionApi,
-} from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import windowManagerInjectable from "../main/window-manager.injectable";
+import catalogEntityRegistryInjectable from "../main/catalog/catalog-entity-registry.injectable";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
@@ -44,10 +41,18 @@ export class LensMainExtension extends LensExtension {
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
+
     catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
   }
 
   removeCatalogSource(id: string) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
+
     catalogEntityRegistry.removeSource(`${this.name}:${id}`);
   }
 }

@@ -10,7 +10,7 @@ import type { ClusterId } from "../../../../../common/cluster-types";
 import { ClusterStore } from "../../../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../../common/ipc";
-import { catalogEntityRegistry } from "../../../../catalog";
+import type { CatalogEntityRegistry } from "../../../../catalog";
 import { pushCatalogToRenderer } from "../../../../catalog-pusher";
 import type { ClusterManager } from "../../../../cluster-manager";
 import { ResourceApplier } from "../../../../resource-applier";
@@ -30,9 +30,10 @@ interface Dependencies {
   getAbsolutePath: GetAbsolutePath;
   applicationMenuItems: IComputedValue<MenuItemOpts[]>;
   clusterManager: ClusterManager;
+  catalogEntityRegistry: CatalogEntityRegistry;
 }
 
-export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager }: Dependencies) => {
+export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)

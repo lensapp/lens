@@ -54,12 +54,24 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import registerFileProtocolInjectable from "./electron-app/register-file-protocol.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import disableHardwareAccelerationInjectable from "./electron-app/disable-hardware-acceleration.injectable";
-import catalogEntityRegistryInjectable from "./catalog/catalog-entity-registry.injectable";
 import { CatalogCategoryRegistry } from "../common/catalog";
-import { CatalogEntityRegistry } from "./catalog";
 import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
 import setupIpcMainHandlersInjectable from "./start-main-application/after-application-is-ready/implementations/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/after-application-is-ready/implementations/setup-lens-proxy.injectable";
+import setupListenerForRootFrameRenderingInjectable from "./start-main-application/after-application-is-ready/implementations/setup-listener-for-root-frame-rendering.injectable";
+import setupOsThemeUpdatesInjectable from "./start-main-application/after-application-is-ready/implementations/setup-os-theme-updates.injectable";
+import setupSentryInjectable from "./start-main-application/after-application-is-ready/implementations/setup-sentry.injectable";
+import setupShellInjectable from "./start-main-application/after-application-is-ready/implementations/setup-shell.injectable";
+import requestSingleInstanceLockInjectable from "./electron-app/request-single-instance-lock.injectable";
+import setupSyncingOfWeblinksInjectable from "./start-main-application/after-application-is-ready/implementations/setup-syncing-of-weblinks.injectable";
+import shouldStartHiddenInjectable from "./electron-app/should-start-hidden.injectable";
+import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
+import trayInjectable from "./tray/tray.injectable";
+import applicationMenuInjectable from "./menu/application-menu.injectable";
+import windowManagerInjectable from "./window-manager.injectable";
+import isDevelopmentInjectable from "../common/vars/is-development.injectable";
+import setupSystemCaInjectable
+  from "./start-main-application/before-application-is-ready/implementations/setup-system-ca.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -84,6 +96,7 @@ export const getDiForUnitTesting = (
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
+    di.override(isDevelopmentInjectable, () => false);
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
@@ -98,20 +111,28 @@ export const getDiForUnitTesting = (
     di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
     di.override(isAutoUpdateEnabledInjectable, () => () => false);
     di.override(registerProtocolClientInjectable, () => () => {});
-    di.override(initializeExtensionsInjectable, () => ({ run: () => {} }));
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
     di.override(registerFileProtocolInjectable, () => () => {});
+    di.override(requestSingleInstanceLockInjectable, () => () => true);
     di.override(disableHardwareAccelerationInjectable, () => () => {});
+    di.override(shouldStartHiddenInjectable, () => true);
+    di.override(stopServicesAndExitAppInjectable, () => () => {});
+    di.override(windowManagerInjectable, () => ({ ensureMainWindow: () => Promise.resolve(null) }));
+
+    di.override(initializeExtensionsInjectable, () => ({ run: () => {} }));
     di.override(setupIpcMainHandlersInjectable, () => ({ run: () => {} }));
     di.override(setupLensProxyInjectable, () => ({ run: () => {} }));
+    di.override(setupListenerForRootFrameRenderingInjectable, () => ({ run: () => {} }));
+    di.override(setupOsThemeUpdatesInjectable, () => ({ run: () => {} }));
+    di.override(setupSentryInjectable, () => ({ run: () => {} }));
+    di.override(setupShellInjectable, () => ({ run: () => {} }));
+    di.override(setupSyncingOfWeblinksInjectable, () => ({ run: () => {} }));
+    di.override(setupSystemCaInjectable, () => ({ run: () => {} }));
+
+    di.override(trayInjectable, () => ({ start: () => {}, stop: () => {} }));
+    di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
 
     di.override(catalogCategoryRegistryInjectable, () => new CatalogCategoryRegistry());
-
-    di.override(catalogEntityRegistryInjectable, (diForInstantiate) => {
-      const catalogCategoryRegistry = diForInstantiate.inject(catalogCategoryRegistryInjectable);
-
-      return new CatalogEntityRegistry(catalogCategoryRegistry);
-    });
 
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
@@ -122,13 +143,13 @@ export const getDiForUnitTesting = (
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
 
-    di.override(hotbarStoreInjectable, () => ({}));
+    di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
-    di.override(userStoreInjectable, () => ({}) as UserStore);
+    di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
+    di.override(userStoreInjectable, () => ({ startMainReactions: () => {} }) as UserStore);
 
     di.override(
       getElectronAppPathInjectable,

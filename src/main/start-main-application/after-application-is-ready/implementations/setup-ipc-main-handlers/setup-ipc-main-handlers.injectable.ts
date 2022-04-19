@@ -10,6 +10,7 @@ import clusterManagerInjectable from "../../../../cluster-manager.injectable";
 import applicationMenuItemsInjectable from "../../../../menu/application-menu-items.injectable";
 import getAbsolutePathInjectable from "../../../../../common/path/get-absolute-path.injectable";
 import { afterApplicationIsReadyInjectionToken } from "../../after-application-is-ready-injection-token";
+import catalogEntityRegistryInjectable from "../../../../catalog/catalog-entity-registry.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -24,6 +25,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const clusterManager = di.inject(clusterManagerInjectable);
     const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     return {
       run: () => {
@@ -34,6 +36,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           getAbsolutePath,
           directoryForLensLocalStorage,
           clusterManager,
+          catalogEntityRegistry,
         });
       },
     };

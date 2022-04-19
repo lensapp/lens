@@ -5,18 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import exitAppInjectable from "../../../electron-app/exit-app.injectable";
-import electronAppInjectable from "../../../electron-app/electron-app.injectable";
+import requestSingleInstanceLockInjectable from "../../../electron-app/request-single-instance-lock.injectable";
 
-const setupSingleInstanceLockInjectable = getInjectable({
-  id: "setup-single-instance-lock",
+const enforceSingleApplicationInstanceInjectable = getInjectable({
+  id: "enforce-single-application-instance",
 
   instantiate: (di) => {
     const exitApp = di.inject(exitAppInjectable);
-    const app = di.inject(electronAppInjectable);
+    const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
 
     return {
       run: () => {
-        if (!app.requestSingleInstanceLock()) {
+        if (!requestSingleInstanceLock()) {
           exitApp();
 
           return;
@@ -28,4 +28,4 @@ const setupSingleInstanceLockInjectable = getInjectable({
   injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
-export default setupSingleInstanceLockInjectable;
+export default enforceSingleApplicationInstanceInjectable;

@@ -76,6 +76,7 @@ export const getApplicationBuilder = () => {
   const dis = { rendererDi, mainDi };
 
   const clusterStoreStub = {
+    provideInitialFromMain: () => {},
     getById: (): null => null,
   } as unknown as ClusterStore;
 

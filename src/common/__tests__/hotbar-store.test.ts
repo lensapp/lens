@@ -15,60 +15,8 @@ import hotbarStoreInjectable from "../hotbar-store.injectable";
 import { HotbarStore } from "../hotbar-store";
 import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 import { runSetups } from "../setupable-injection-token/run-setups";
+import catalogEntityRegistryInjectable from "../../main/catalog/catalog-entity-registry.injectable";
 
-jest.mock("../../main/catalog/catalog-entity-registry", () => ({
-  catalogEntityRegistry: {
-    items: [
-      getMockCatalogEntity({
-        apiVersion: "v1",
-        kind: "Cluster",
-
-        status: {
-          phase: "Running",
-        },
-
-        metadata: {
-          uid: "1dfa26e2ebab15780a3547e9c7fa785c",
-          name: "mycluster",
-          source: "local",
-          labels: {},
-        },
-      }),
-
-      getMockCatalogEntity({
-        apiVersion: "v1",
-        kind: "Cluster",
-
-        status: {
-          phase: "Running",
-        },
-
-        metadata: {
-          uid: "55b42c3c7ba3b04193416cda405269a5",
-          name: "my_shiny_cluster",
-          source: "remote",
-          labels: {},
-        },
-      }),
-
-      getMockCatalogEntity({
-        apiVersion: "v1",
-        kind: "Cluster",
-
-        status: {
-          phase: "Running",
-        },
-
-        metadata: {
-          uid: "catalog-entity",
-          name: "Catalog",
-          source: "app",
-          labels: {},
-        },
-      }),
-    ],
-  },
-}));
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -133,6 +81,59 @@ describe("HotbarStore", () => {
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
+
+    di.override(catalogEntityRegistryInjectable, () => ({
+      addComputedSource: (id, source) => {},
+      items: [
+        getMockCatalogEntity({
+          apiVersion: "v1",
+          kind: "Cluster",
+
+          status: {
+            phase: "Running",
+          },
+
+          metadata: {
+            uid: "1dfa26e2ebab15780a3547e9c7fa785c",
+            name: "mycluster",
+            source: "local",
+            labels: {},
+          },
+        }),
+
+        getMockCatalogEntity({
+          apiVersion: "v1",
+          kind: "Cluster",
+
+          status: {
+            phase: "Running",
+          },
+
+          metadata: {
+            uid: "55b42c3c7ba3b04193416cda405269a5",
+            name: "my_shiny_cluster",
+            source: "remote",
+            labels: {},
+          },
+        }),
+
+        getMockCatalogEntity({
+          apiVersion: "v1",
+          kind: "Cluster",
+
+          status: {
+            phase: "Running",
+          },
+
+          metadata: {
+            uid: "catalog-entity",
+            name: "Catalog",
+            source: "app",
+            labels: {},
+          },
+        }),
+      ],
+    }));
 
     di.override(hotbarStoreInjectable, () => {
       HotbarStore.resetInstance();

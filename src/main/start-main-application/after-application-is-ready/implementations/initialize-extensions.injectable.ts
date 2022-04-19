@@ -23,6 +23,8 @@ const initializeExtensionsInjectable = getInjectable({
       run: async () => {
         logger.info("🧩 Initializing extensions");
 
+        await extensionDiscovery.init();
+
         await extensionLoader.init();
 
         try {

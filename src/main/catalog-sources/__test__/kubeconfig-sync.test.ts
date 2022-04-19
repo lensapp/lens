@@ -48,6 +48,9 @@ describe("kubeconfig-sync.source tests", () => {
       ClusterStore.createInstance({ createCluster: () => null }),
     );
 
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(appVersionInjectable);
+
     await runSetups(di);
 
     computeDiff = computeDiffFor({
@@ -55,9 +58,6 @@ describe("kubeconfig-sync.source tests", () => {
       createCluster: di.inject(createClusterInjectionToken),
       clusterManager: di.inject(clusterManagerInjectable),
     });
-
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
     di.inject(clusterStoreInjectable);
   });

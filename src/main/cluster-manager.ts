@@ -10,7 +10,7 @@ import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { getClusterIdFromHost } from "../common/utils";
-import { catalogEntityRegistry } from "./catalog";
+import type { CatalogEntityRegistry } from "./catalog";
 import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
@@ -24,6 +24,7 @@ const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKuber
 
 interface Dependencies {
   store: ClusterStore;
+  catalogEntityRegistry: CatalogEntityRegistry;
 }
 
 export class ClusterManager {
@@ -51,12 +52,12 @@ export class ClusterManager {
     );
 
     reaction(
-      () => catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster) as KubernetesCluster[],
+      () => this.dependencies.catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster) as KubernetesCluster[],
       entities => this.syncClustersFromCatalog(entities),
     );
 
     reaction(() => [
-      catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster),
+      this.dependencies.catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster),
       this.visibleCluster,
     ] as const, ([entities, visibleCluster]) => {
       for (const entity of entities) {
@@ -70,7 +71,7 @@ export class ClusterManager {
 
     observe(this.deleting, change => {
       if (change.type === "add") {
-        this.updateEntityStatus(catalogEntityRegistry.getById(change.newValue));
+        this.updateEntityStatus(this.dependencies.catalogEntityRegistry.getById(change.newValue));
       }
     });
 
@@ -88,13 +89,13 @@ export class ClusterManager {
   }
 
   protected updateEntityFromCluster(cluster: Cluster) {
-    const index = catalogEntityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
+    const index = this.dependencies.catalogEntityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
 
     if (index === -1) {
       return;
     }
 
-    const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
+    const entity = this.dependencies.catalogEntityRegistry.items[index] as KubernetesCluster;
 
     this.updateEntityStatus(entity, cluster);
 
@@ -135,7 +136,7 @@ export class ClusterManager {
       cluster.preferences.icon = undefined;
     }
 
-    catalogEntityRegistry.items.splice(index, 1, entity);
+    this.dependencies.catalogEntityRegistry.items.splice(index, 1, entity);
   }
 
   @action
