@@ -18,7 +18,7 @@ import namespaceStoreInjectable from "./store.injectable";
 
 export type NamespaceSelectSort = (left: string, right: string) => number;
 
-export interface NamespaceSelectProps<IsMulti extends boolean> extends Omit<SelectProps<{ namespace: string }, IsMulti>, "options" | "value"> {
+export interface NamespaceSelectProps<IsMulti extends boolean> extends Omit<SelectProps<string, { value: string; label: string }, IsMulti>, "options" | "value"> {
   showIcons?: boolean;
   sort?: NamespaceSelectSort;
   value: string | null | undefined;
@@ -36,7 +36,10 @@ function getOptions(namespaceStore: NamespaceStore, sort: NamespaceSelectSort | 
       baseOptions.sort(sort);
     }
 
-    return baseOptions.map(namespace => ({ namespace }));
+    return baseOptions.map(namespace => ({
+      value: namespace,
+      label: namespace,
+    }));
   });
 }
 
@@ -46,7 +49,6 @@ const NonInjectedNamespaceSelect = observer(({
   formatOptionLabel,
   sort,
   className,
-  value,
   ...selectProps
 }: Dependencies & NamespaceSelectProps<boolean>) => {
   const [baseOptions, setBaseOptions] = useState(getOptions(namespaceStore, sort));
@@ -58,16 +60,14 @@ const NonInjectedNamespaceSelect = observer(({
       className={cssNames("NamespaceSelect", className)}
       menuClass="NamespaceSelectMenu"
       formatOptionLabel={showIcons
-        ? ({ namespace }) => (
+        ? ({ value }) => (
           <>
             <Icon small material="layers" />
-            {namespace}
+            {value}
           </>
         )
         : undefined
       }
-      getOptionLabel={({ namespace }) => namespace}
-      value={value ? ({ namespace: value }) : null}
       options={baseOptions.get()}
       {...selectProps}
     />

@@ -31,18 +31,17 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
       onKeyDown={model.onKeyDown}
       onClick={model.onClick}
     >
-      <Select<{ namespace: string | SelectAllNamespaces }, true>
+      <Select<string | SelectAllNamespaces, NamespaceSelectFilterOption, true>
         id={id}
         isMulti={true}
         isClearable={false}
-        menuIsOpen={model.menuIsOpen}
+        menuIsOpen={model.menuIsOpen.get()}
         components={{ Placeholder }}
         closeMenuOnSelect={false}
         controlShouldRenderValue={false}
         onChange={model.onChange}
         onBlur={model.reset}
         formatOptionLabel={model.formatOptionLabel}
-        getOptionLabel={model.getOptionLabel}
         options={model.options.get()}
         className="NamespaceSelect NamespaceSelectFilter"
         menuClass="NamespaceSelectFilterMenu"

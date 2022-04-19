@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import yaml from "js-yaml";
 import type { IComputedValue } from "mobx";
@@ -107,7 +108,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
   renderControls() {
     return (
       <div className="flex gaps align-center">
-        <Select<{ label: string; value: string }, false>
+        <Select<string, SelectOption<string>, false>
           id="create-resource-resource-templates-input"
           controlShouldRenderValue={false} // always keep initial placeholder
           className="TemplateSelect"
@@ -116,9 +117,9 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
           formatGroupLabel={group => group.label}
           menuPlacement="top"
           themeName="outlined"
-          onChange={(item) => {
-            if (item) {
-              this.props.createResourceTabStore.setData(this.tabId, item.value);
+          onChange={(option) => {
+            if (option) {
+              this.props.createResourceTabStore.setData(this.tabId, option.value);
             }
           }}
         />

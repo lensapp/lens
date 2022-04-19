@@ -99,22 +99,23 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       return null;
     }
 
-    const contextName = this.newCurrentContext.get();
     const selectOptions = config
       .contexts
-      .filter(context => context.name !== cluster.contextName);
-    const selectedOption = selectOptions.find(ctx => ctx.name === contextName);
+      .filter(context => context.name !== cluster.contextName)
+      .map(context => ({
+        value: context.name,
+        label: context.name,
+      }));
 
     return (
       <div className="mt-4">
         <Select
           id="delete-cluster-input"
           options={selectOptions}
-          getOptionLabel={opt => opt.name}
-          value={selectedOption}
+          value={this.newCurrentContext.get()}
           onChange={opt => {
             if (opt) {
-              this.newCurrentContext.set(opt.name);
+              this.newCurrentContext.set(opt.value);
             }
           }}
           themeName="light"

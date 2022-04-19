@@ -11,13 +11,13 @@ import { getChartDetails, listCharts } from "../../../common/k8s-api/endpoints/h
 import { ItemStore } from "../../../common/item.store";
 import flatten from "lodash/flatten";
 
-export interface IChartVersion {
+export interface ChartVersion {
   repo: string;
   version: string;
 }
 
 export class HelmChartStore extends ItemStore<HelmChart> {
-  @observable versions = observable.map<string, IChartVersion[]>();
+  @observable versions = observable.map<string, ChartVersion[]>();
 
   constructor() {
     super();
@@ -53,14 +53,14 @@ export class HelmChartStore extends ItemStore<HelmChart> {
     return this.items.find(chart => chart.getName() === name && chart.getRepository() === repo);
   }
 
-  protected sortVersions = (versions: IChartVersion[]) => {
+  protected sortVersions = (versions: ChartVersion[]) => {
     return versions
       .map(chartVersion => ({ ...chartVersion, __version: semver.coerce(chartVersion.version, { includePrerelease: true, loose: true }) }))
       .sort(sortCompareChartVersions)
       .map(({ __version, ...chartVersion }) => chartVersion);
   };
 
-  async getVersions(chartName: string, force?: boolean): Promise<IChartVersion[]> {
+  async getVersions(chartName: string, force?: boolean): Promise<ChartVersion[]> {
     const versions = this.versions.get(chartName);
 
     if (versions && !force) {

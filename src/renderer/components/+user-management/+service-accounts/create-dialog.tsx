@@ -86,7 +86,7 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
               id="create-dialog-namespace-select-input"
               themeName="light"
               value={namespace}
-              onChange={option => this.namespace = option?.namespace ?? "default"}
+              onChange={option => this.namespace = option?.value ?? "default"}
             />
           </WizardStep>
         </Wizard>

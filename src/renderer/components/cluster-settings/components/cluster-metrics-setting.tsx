@@ -10,7 +10,7 @@ import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
 import type { Cluster } from "../../../../common/cluster/cluster";
-import { observable, reaction, makeObservable, runInAction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { ClusterMetricsResourceType } from "../../../../common/cluster-types";
 
 export interface ClusterMetricsSettingProps {
@@ -52,7 +52,11 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
 
   renderMetricsSelect() {
     const metricResourceTypeOptions = Object.values(ClusterMetricsResourceType)
-      .map(type => ({ type }));
+      .map(type => ({
+        value: type,
+        label: type,
+        isSelected: this.hiddenMetrics.has(type),
+      }));
 
     return (
       <>
@@ -67,16 +71,13 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
           controlShouldRenderValue={false}
           options={metricResourceTypeOptions}
           onChange={(options) => {
-            runInAction(() => {
-              this.hiddenMetrics.replace(options.map(opt => opt.type));
-              this.save();
-            });
+            this.hiddenMetrics.replace(options.map(opt => opt.value));
+            this.save();
           }}
-          getOptionLabel={option => option.type}
           formatOptionLabel={(option) => (
             <div className="flex gaps align-center">
-              <span>{option.type}</span>
-              {this.hiddenMetrics.has(option.type) && (
+              <span>{option.value}</span>
+              {option.isSelected && (
                 <Icon
                   smallest
                   material="check"

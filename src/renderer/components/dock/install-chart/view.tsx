@@ -18,6 +18,7 @@ import { Spinner } from "../../spinner";
 import { Icon } from "../../icon";
 import { Button } from "../../button";
 import { LogsDialog } from "../../dialog/logs-dialog";
+import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { Input } from "../../input";
 import { EditorPanel } from "../editor-panel";
@@ -88,7 +89,7 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     this.props.installChartStore.setData(this.tabId, { ...this.chartData, ...data });
   }
 
-  onVersionChange = (option: SingleValue<{ version: string }>) => {
+  onVersionChange = (option: SingleValue<SelectOption<string>>) => {
     if (option) {
       this.save({ ...option, values: "" });
       this.props.installChartStore.loadValues(this.tabId);
@@ -104,9 +105,9 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     this.error = error.toString();
   });
 
-  onNamespaceChange = (option: SingleValue<{ namespace: string }>) => {
+  onNamespaceChange = (option: SingleValue<SelectOption<string>>) => {
     if (option) {
-      this.save(option);
+      this.save({ namespace: option.value });
     }
   };
 
@@ -179,8 +180,10 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
     }
 
     const { repo, name, version, namespace, releaseName } = chartData;
-    const versionOptions = versions.map(version => ({ version }));
-    const selectedVersionOption = versionOptions.find(opt => opt.version === version);
+    const versionOptions = versions.map(version => ({
+      value: version,
+      label: version,
+    }));
 
     return (
       <div className="InstallChart flex column">
@@ -193,7 +196,7 @@ class NonInjectedInstallChart extends Component<InstallCharProps & Dependencies>
               <span>Version</span>
               <Select
                 className="chart-version"
-                value={selectedVersionOption}
+                value={version}
                 options={versionOptions}
                 onChange={this.onVersionChange}
                 menuPlacement="top"

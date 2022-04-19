@@ -21,6 +21,17 @@ export enum SecretType {
   BootstrapToken = "bootstrap.kubernetes.io/token",
 }
 
+export const reverseSecretTypeMap = {
+  [SecretType.Opaque]: "Opaque",
+  [SecretType.ServiceAccountToken]: "ServiceAccountToken",
+  [SecretType.Dockercfg]: "Dockercfg",
+  [SecretType.DockerConfigJson]: "DockerConfigJson",
+  [SecretType.BasicAuth]: "BasicAuth",
+  [SecretType.SSHAuth]: "SSHAuth",
+  [SecretType.TLS]: "TLS",
+  [SecretType.BootstrapToken]: "BootstrapToken",
+};
+
 export interface SecretReference {
   name: string;
   namespace?: string;

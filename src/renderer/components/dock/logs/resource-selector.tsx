@@ -9,10 +9,11 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import { Badge } from "../../badge";
+import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
 import type { PodContainer, Pod } from "../../../../common/k8s-api/endpoints";
-import type { GroupBase } from "react-select";
+import type { SingleValue } from "react-select";
 
 export interface LogResourceSelectorProps {
   model: LogTabViewModel;
@@ -33,40 +34,50 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     return null;
   }
 
+  const podOptions = pods.map(pod => ({
+    value: pod,
+    label: pod.getName(),
+  }));
   const allContainers = pod.getAllContainers();
   const container = allContainers.find(container => container.name === selectedContainer) ?? null;
-  const onContainerChange = (container: PodContainer | null) => {
-    if (!container) {
+  const onContainerChange = (option: SingleValue<SelectOption<PodContainer>>) => {
+    if (!option) {
       return;
     }
 
     model.updateLogTabData({
-      selectedContainer: container.name,
+      selectedContainer: option.value.name,
     });
     model.reloadLogs();
   };
 
-  const onPodChange = (value: Pod | null) => {
-    if (!value) {
+  const onPodChange = (option: SingleValue<SelectOption<Pod>>) => {
+    if (!option) {
       return;
     }
 
     model.updateLogTabData({
-      selectedPodId: value.getId(),
-      selectedContainer: value.getAllContainers()[0]?.name,
+      selectedPodId: option.value.getId(),
+      selectedContainer: option.value.getAllContainers()[0]?.name,
     });
-    model.renameTab(`Pod ${value.getName()}`);
+    model.renameTab(`Pod ${option.value.getName()}`);
     model.reloadLogs();
   };
 
   const containerSelectOptions = [
     {
       label: "Containers",
-      options: pod.getContainers(),
+      options: pod.getContainers().map(container => ({
+        value: container,
+        label: container.name,
+      })),
     },
     {
       label: "Init Containers",
-      options: pod.getInitContainers(),
+      options: pod.getInitContainers().map(container => ({
+        value: container,
+        label: container.name,
+      })),
     },
   ];
 
@@ -86,21 +97,19 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       }
       <span>Pod</span>
       <Select
-        options={pods}
+        options={podOptions}
         value={pod}
         isClearable={false}
-        formatOptionLabel={option => option.getName()}
         onChange={onPodChange}
         className="pod-selector"
         menuClass="pod-selector-menu"
       />
       <span>Container</span>
-      <Select<PodContainer, false, GroupBase<PodContainer>>
+      <Select<PodContainer, SelectOption<PodContainer>, false>
         id="container-selector-input"
         options={containerSelectOptions}
         value={container}
         onChange={onContainerChange}
-        getOptionLabel={opt => opt.name}
         className="container-selector"
         menuClass="container-selector-menu"
         controlShouldRenderValue

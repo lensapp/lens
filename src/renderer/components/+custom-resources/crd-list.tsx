@@ -48,8 +48,17 @@ export class CustomResourceDefinitions extends React.Component {
     return customResourceDefinitionStore.items; // show all by default
   }
 
-  toggleSelection = (options: readonly ({ group: string })[]) => {
-    const groups = options.map(({ group }) => group);
+  @computed get groupSelectOptions() {
+    return Object.keys(customResourceDefinitionStore.groups)
+      .map(group => ({
+        value: group,
+        label: group,
+        isSelected: this.selectedGroups.has(group),
+      }));
+  }
+
+  toggleSelection = (options: readonly ({ value: string })[]) => {
+    const groups = options.map(({ value }) => value);
 
     this.selectedGroups.replace(groups);
     crdGroupsUrlParam.set(groups);
@@ -68,8 +77,6 @@ export class CustomResourceDefinitions extends React.Component {
   }
 
   render() {
-    const { items, selectedGroups } = this;
-
     return (
       <TabLayout>
         <KubeObjectListLayout
@@ -79,7 +86,7 @@ export class CustomResourceDefinitions extends React.Component {
           store={customResourceDefinitionStore}
           // Don't subscribe the `customResourceDefinitionStore` because <Sidebar> already has and is always mounted
           subscribeStores={false}
-          items={items}
+          items={this.items}
           sortingCallbacks={{
             [columnId.kind]: crd => crd.getResourceKind(),
             [columnId.group]: crd => crd.getGroup(),
@@ -103,17 +110,16 @@ export class CustomResourceDefinitions extends React.Component {
                 <Select
                   className="group-select"
                   placeholder={this.getPlaceholder()}
-                  options={Object.keys(customResourceDefinitionStore.groups).map(group => ({ group }))}
+                  options={this.groupSelectOptions}
                   onChange={this.toggleSelection}
                   closeMenuOnSelect={false}
                   controlShouldRenderValue={false}
-                  isOptionSelected={opt => this.selectedGroups.has(opt.group)}
                   isMulti={true}
-                  formatOptionLabel={({ group }) => (
+                  formatOptionLabel={({ value, isSelected }) => (
                     <div className="flex gaps align-center">
                       <Icon small material="folder" />
-                      <span>{group}</span>
-                      {selectedGroups.has(group) && (
+                      <span>{value}</span>
+                      {isSelected && (
                         <Icon
                           small
                           material="check"

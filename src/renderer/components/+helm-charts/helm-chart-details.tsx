@@ -8,7 +8,7 @@ import "./helm-chart-details.scss";
 import React, { Component } from "react";
 import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { getChartDetails } from "../../../common/k8s-api/endpoints/helm-charts.api";
-import { observable, reaction, runInAction } from "mobx";
+import { computed, observable, reaction, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
 import { autoBind, stopPropagation } from "../../utils";
@@ -21,6 +21,8 @@ import { Tooltip, withStyles } from "@material-ui/core";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable from "../dock/install-chart/create-install-chart-tab.injectable";
 import { Notifications } from "../notifications";
+import HelmLogoPlaceholder from "./helm-placeholder.svg";
+import type { SingleValue } from "react-select";
 
 export interface HelmChartDetailsProps {
   chart: HelmChart;
@@ -42,6 +44,12 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
   readonly chartVersions = observable.array<HelmChart>();
   readonly selectedChart = observable.box<HelmChart | undefined>();
   readonly readme = observable.box<string | undefined>(undefined);
+  readonly chartVerionOptions = computed(() => (
+    this.chartVersions.map(chart => ({
+      value: chart,
+      label: chart.version,
+    }))
+  ));
 
   private abortController = new AbortController();
 
@@ -80,8 +88,8 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     ]);
   }
 
-  async onVersionChange(c: HelmChart | null | undefined) {
-    const chart = c ?? this.chartVersions[0];
+  async onVersionChange(option: SingleValue<{ value: HelmChart }>) {
+    const chart = option?.value ?? this.chartVersions[0];
 
     runInAction(() => {
       this.selectedChart.set(chart ?? undefined);
@@ -106,15 +114,12 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
   }
 
   renderIntroduction(selectedChart: HelmChart) {
-    const { chartVersions, onVersionChange } = this;
-    const placeholder = require("./helm-placeholder.svg");
-
     return (
       <div className="introduction flex align-flex-start">
         <img
           className="intro-logo"
-          src={selectedChart.getIcon() || placeholder}
-          onError={(event) => event.currentTarget.src = placeholder}
+          src={selectedChart.getIcon() || HelmLogoPlaceholder}
+          onError={(event) => event.currentTarget.src = HelmLogoPlaceholder}
         />
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">
@@ -134,9 +139,8 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
               id="chart-version-input"
               themeName="outlined"
               menuPortalTarget={null}
-              options={chartVersions.slice()}
-              getOptionLabel={chart => chart.version}
-              formatOptionLabel={chart => (
+              options={this.chartVerionOptions.get()}
+              formatOptionLabel={({ value: chart }) => (
                 chart.deprecated
                   ? (
                     <LargeTooltip title="Deprecated" placement="left">
@@ -145,9 +149,9 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
                   )
                   : chart.version
               )}
-              isOptionDisabled={chart => chart.deprecated}
+              isOptionDisabled={({ value: chart }) => chart.deprecated}
               value={selectedChart}
-              onChange={onVersionChange}
+              onChange={this.onVersionChange}
             />
           </DrawerItem>
           <DrawerItem name="Home">

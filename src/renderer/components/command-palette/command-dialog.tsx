@@ -36,7 +36,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
 
     try {
       closeCommandOverlay();
-      option.action({
+      option.value.action({
         entity: activeEntity,
         navigate: (url, opts = {}) => {
           const { forceRootFrame = false } = opts;
@@ -49,7 +49,7 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         },
       });
     } catch (error) {
-      console.error("[COMMAND-DIALOG] failed to execute command", option.id, error);
+      console.error("[COMMAND-DIALOG] failed to execute command", option.value.id, error);
     }
   };
 
@@ -65,6 +65,12 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         return void console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
       }
     })
+    .map(command => ({
+      value: command,
+      label: typeof command.title === "string"
+        ? command.title
+        : command.title(context),
+    }))
     .collect(items => Array.from(items));
 
   return (
@@ -78,11 +84,6 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
       }}
       menuIsOpen
       options={activeCommands}
-      getOptionLabel={({ title }) => (
-        typeof title === "string"
-          ? title
-          : title(context)
-      )}
       autoFocus={true}
       escapeClearsValue={false}
       data-test-id="command-palette-search"

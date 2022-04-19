@@ -13,23 +13,30 @@ import { Input, InputValidators } from "../input";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import { string } from "../../utils";
 import { defaultEditorConfig } from "../../../common/user-store/preferences-helpers";
+import { capitalize } from "lodash";
 
 interface Dependencies {
   userStore: UserStore;
 }
 
+const minimapPositionOptions = (["left", "right"] as const)
+  .map(side => ({
+    value: side,
+    label: side,
+  }));
+const lineNumberOptions = ([
+  "on",
+  "off",
+  "relative",
+  "interval",
+] as const).map(lineNumbers => ({
+  value: lineNumbers,
+  label: capitalize(lineNumbers),
+}));
+
 const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
   const editorConfiguration = userStore.editorConfiguration;
-  const minimapPositionOptions = (["left", "right"] as const)
-    .map(side => ({ side }));
-  const lineNumberOptions = ([
-    "on",
-    "off",
-    "relative",
-    "interval",
-  ] as const).map(lineNumbers => ({ lineNumbers }));
 
   return (
     <Preferences data-testid="editor-preferences-page">
@@ -52,8 +59,8 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
               <Select
                 themeName="lens"
                 options={minimapPositionOptions}
-                value={editorConfiguration.minimap.side ? ({ side: editorConfiguration.minimap.side }) : null}
-                onChange={value => editorConfiguration.minimap.side = value?.side}
+                value={editorConfiguration.minimap.side}
+                onChange={option => editorConfiguration.minimap.side = option?.value}
               />
             </div>
           </div>
@@ -63,9 +70,8 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
           <SubTitle title="Line numbers"/>
           <Select
             options={lineNumberOptions}
-            getOptionLabel={option => string.uppercaseFirst(option.lineNumbers)}
-            value={{ lineNumbers: editorConfiguration.lineNumbers }}
-            onChange={value => editorConfiguration.lineNumbers = value?.lineNumbers ?? defaultEditorConfig.lineNumbers}
+            value={editorConfiguration.lineNumbers}
+            onChange={option => editorConfiguration.lineNumbers = option?.value ?? defaultEditorConfig.lineNumbers}
             themeName="lens"
           />
         </section>

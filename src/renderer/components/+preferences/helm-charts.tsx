@@ -6,13 +6,14 @@
 import styles from "./helm-charts.module.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, computed } from "mobx";
 
 import type { HelmRepo } from "../../../main/helm/helm-repo-manager";
 import { HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
+import type { SelectOption } from "../select";
 import { Select } from "../select";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
@@ -20,6 +21,7 @@ import { RemovableItem } from "./removable-item";
 import { Notice } from "../+extensions/notice";
 import { Spinner } from "../spinner";
 import { noop } from "../../utils";
+import type { SingleValue } from "react-select";
 
 @observer
 export class HelmCharts extends React.Component {
@@ -31,6 +33,14 @@ export class HelmCharts extends React.Component {
   constructor(props: {}) {
     super(props);
     makeObservable(this);
+  }
+
+  @computed get repoOptions() {
+    return this.repos.map(repo => ({
+      value: repo,
+      label: repo.name,
+      isSelected: this.addedRepos.has(repo.name),
+    }));
   }
 
   componentDidMount() {
@@ -98,40 +108,35 @@ export class HelmCharts extends React.Component {
     }
   }
 
-  onRepoSelect = async (repo: HelmRepo | null): Promise<void> => {
-    if (!repo) {
+  onRepoSelect = async (option: SingleValue<{ value: HelmRepo }>): Promise<void> => {
+    if (!option) {
       return;
     }
 
-    if (this.addedRepos.has(repo.name)) {
+    if (this.addedRepos.has(option.value.name)) {
       return void Notifications.ok((
         <>
           {"Helm repo "}
-          <b>{repo.name}</b>
+          <b>{option.value.name}</b>
           {" already in use."}
         </>
       ));
     }
 
-    await this.addRepo(repo);
+    await this.addRepo(option.value);
   };
 
-  formatOptionLabel = (repo: HelmRepo) => {
-    const isAdded = this.addedRepos.has(repo.name);
-
-    return (
-      <div className="flex gaps">
-        <span>{repo.name}</span>
-        {isAdded && (
-          <Icon
-            small
-            material="check"
-            className="box right"
-          />
-        )}
-      </div>
-    );
-  };
+  formatOptionLabel = ({ value, isSelected }: SelectOption<HelmRepo>) => (
+    <div className="flex gaps">
+      <span>{value.name}</span>
+      {isSelected && (
+        <Icon
+          small
+          material="check"
+          className="box right" />
+      )}
+    </div>
+  );
 
   renderRepositories() {
     const repos = Array.from(this.addedRepos);
@@ -173,10 +178,10 @@ export class HelmCharts extends React.Component {
             placeholder="Repositories"
             isLoading={this.loadingAvailableRepos}
             isDisabled={this.loadingAvailableRepos}
-            options={this.repos}
+            options={this.repoOptions}
             onChange={this.onRepoSelect}
+            value={this.repos}
             formatOptionLabel={this.formatOptionLabel}
-            getOptionLabel={repo => repo.name}
             controlShouldRenderValue={false}
             className="box grow"
             themeName="lens"

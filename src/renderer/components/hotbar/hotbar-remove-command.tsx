@@ -23,8 +23,8 @@ const NonInjectedHotbarRemoveCommand = observer(({
 }: Dependencies) => (
   <Select
     menuPortalTarget={null}
-    onChange={hotbar => {
-      if (!hotbar) {
+    onChange={option => {
+      if (!option) {
         return;
       }
 
@@ -36,14 +36,14 @@ const NonInjectedHotbarRemoveCommand = observer(({
           primary: false,
           accent: true,
         },
-        ok: () => hotbarStore.remove(hotbar),
+        ok: () => hotbarStore.remove(option.value),
         message: (
           <div className="confirm flex column gaps">
             <p>
               Are you sure you want remove hotbar
               {" "}
               <b>
-                {hotbar.name}
+                {option.value.name}
               </b>
               ?
             </p>
@@ -53,8 +53,13 @@ const NonInjectedHotbarRemoveCommand = observer(({
     } }
     components={{ DropdownIndicator: null, IndicatorSeparator: null }}
     menuIsOpen={true}
-    options={hotbarStore.hotbars}
-    getOptionLabel={hotbar => hotbarStore.getDisplayLabel(hotbar)}
+    options={(
+      hotbarStore.hotbars
+        .map(hotbar => ({
+          value: hotbar,
+          label: hotbarStore.getDisplayLabel(hotbar),
+        }))
+    )}
     autoFocus={true}
     escapeClearsValue={false}
     placeholder="Remove hotbar"

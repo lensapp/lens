@@ -21,6 +21,7 @@ import { Icon } from "../../icon";
 import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
+import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
 import { roleBindingStore } from "./legacy-store";
@@ -95,7 +96,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
     ];
   }
 
-  @computed get roleRefOptions(): (Role | ClusterRole)[] {
+  @computed get roleRefOptions(): SelectOption<Role | ClusterRole>[] {
     const roles = roleStore.items
       .filter(role => role.getNs() === this.bindingNamespace);
     const clusterRoles = clusterRoleStore.items;
@@ -103,7 +104,18 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
     return [
       ...roles,
       ...clusterRoles,
-    ];
+    ].map(r => ({
+      value: r,
+      label: r.getName(),
+    }));
+  }
+
+  @computed get serviceAccountOptions(): SelectOption<ServiceAccount>[] {
+    return serviceAccountStore.items.map(serviceAccount => ({
+      value: serviceAccount,
+      label: `${serviceAccount.getName()} (${serviceAccount.getNs()})`,
+      isSelected: this.selectedAccounts.has(serviceAccount),
+    }));
   }
 
   onOpen = action(() => {
@@ -182,7 +194,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
           isDisabled={this.isEditing}
           value={this.bindingNamespace}
           autoFocus={!this.isEditing}
-          onChange={opt => this.bindingNamespace = opt ? opt.namespace : null}
+          onChange={opt => this.bindingNamespace = opt?.value ?? null}
         />
 
         <SubTitle title="Role Reference" />
@@ -193,12 +205,11 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
           isDisabled={this.isEditing}
           options={this.roleRefOptions}
           value={this.selectedRoleRef}
-          getOptionLabel={ref => ref.getName()}
-          onChange={roleRef => {
-            this.selectedRoleRef = roleRef;
+          onChange={option => {
+            this.selectedRoleRef = option?.value;
 
             if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
-              this.bindingName = roleRef?.getName() ?? "";
+              this.bindingName = option?.value.getName() ?? "";
             }
           }}
         />
@@ -234,16 +245,32 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
           isMulti
           themeName="light"
           placeholder="Select service accounts ..."
-          options={serviceAccountStore.items}
-          isOptionSelected={account => this.selectedAccounts.has(account)}
-          formatOptionLabel={account => (
+          options={this.serviceAccountOptions}
+          formatOptionLabel={option => (
             <>
               <Icon small material="account_box" />
-              {` ${account.getName()} (${account.getNs()})`}
+              {` ${option.label}`}
             </>
           )}
-          getOptionLabel={account => `${account.getName()} (${account.getNs()})`}
-          onChange={selected => this.selectedAccounts.replace(selected)}
+          onChange={(selected, meta) => {
+            switch (meta.action) {
+              case "clear":
+                this.selectedAccounts.clear();
+                break;
+              case "deselect-option":
+              case "remove-value":
+              case "pop-value":
+                if (meta.option) {
+                  this.selectedAccounts.delete(meta.option.value);
+                }
+                break;
+              case "select-option":
+                if (meta.option) {
+                  this.selectedAccounts.add(meta.option.value);
+                }
+                break;
+            }
+          }}
           maxMenuHeight={200}
         />
       </>

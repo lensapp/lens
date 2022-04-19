@@ -20,29 +20,30 @@ interface Dependencies {
   entities: IComputedValue<CatalogEntity[]>;
 }
 
-const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entities }: Dependencies) => {
-  const onSelect = (entity: CatalogEntity | null): void => {
-    if (entity) {
-      broadcastMessage(catalogEntityRunListener, entity.getId());
-      closeCommandOverlay();
-    }
-  };
-
-  return (
-    <Select
-      id="activate-entity-input"
-      menuPortalTarget={null}
-      onChange={onSelect}
-      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-      menuIsOpen={true}
-      options={entities.get()}
-      getOptionLabel={entity => `${entity.kind}: ${entity.getName()}`}
-      autoFocus={true}
-      escapeClearsValue={false}
-      placeholder="Activate entity ..."
-    />
-  );
-});
+const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entities }: Dependencies) => (
+  <Select
+    id="activate-entity-input"
+    menuPortalTarget={null}
+    onChange={(option) => {
+      if (option) {
+        broadcastMessage(catalogEntityRunListener, option.value.getId());
+        closeCommandOverlay();
+      }
+    }}
+    components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+    menuIsOpen={true}
+    options={(
+      entities.get()
+        .map(entity => ({
+          value: entity,
+          label: `${entity.kind}: ${entity.getName()}`,
+        }))
+    )}
+    autoFocus={true}
+    escapeClearsValue={false}
+    placeholder="Activate entity ..."
+  />
+));
 
 export const ActivateEntityCommand = withInjectables<Dependencies>(NonInjectedActivateEntityCommand, {
   getProps: di => ({

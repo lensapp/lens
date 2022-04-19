@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { observable, makeObservable, action, untracked, computed } from "mobx";
+import { observable, action, untracked, computed } from "mobx";
 import type { NamespaceStore } from "../store";
 import { isMac } from "../../../../common/vars";
 import type { ActionMeta } from "react-select";
 import { Icon } from "../../icon";
+import type { SelectOption } from "../../select";
 
 interface Dependencies {
   readonly namespaceStore: NamespaceStore;
@@ -17,19 +18,10 @@ export const selectAllNamespaces = Symbol("all-namespaces-selected");
 
 export type SelectAllNamespaces = typeof selectAllNamespaces;
 
-export interface NamespaceSelectFilterOption {
-  namespace: string | SelectAllNamespaces;
-}
+export type NamespaceSelectFilterOption = SelectOption<string | SelectAllNamespaces>;
 
 export class NamespaceSelectFilterModel {
-  constructor(private readonly dependencies: Dependencies) {
-    makeObservable(this, {
-      menuIsOpen: observable,
-      closeMenu: action,
-      openMenu: action,
-      reset: action,
-    });
-  }
+  constructor(private readonly dependencies: Dependencies) {}
 
   readonly options = computed((): readonly NamespaceSelectFilterOption[] => {
     const baseOptions = this.dependencies.namespaceStore.items.map(ns => ns.getName());
@@ -40,22 +32,29 @@ export class NamespaceSelectFilterModel {
         - +this.selectedNames.has(left)
     ));
 
-    const res = [selectAllNamespaces, ...baseOptions] as const;
-
-    return res.map(namespace => ({ namespace }));
+    return [
+      {
+        value: selectAllNamespaces,
+        label: "All Namespaces",
+        isSelected: false,
+      },
+      ...baseOptions.map(namespace => ({
+        value: namespace,
+        label: namespace,
+        isSelected: this.selectedNames.has(namespace),
+      })),
+    ];
   });
 
-  formatOptionLabel = ({ namespace }: NamespaceSelectFilterOption) => {
-    if (namespace === selectAllNamespaces) {
+  formatOptionLabel = ({ value, isSelected }: NamespaceSelectFilterOption) => {
+    if (value === selectAllNamespaces) {
       return "All Namespaces";
     }
-
-    const isSelected = this.isSelected(namespace);
 
     return (
       <div className="flex gaps align-center">
         <Icon small material="layers" />
-        <span>{namespace}</span>
+        <span>{value}</span>
         {isSelected && (
           <Icon
             small
@@ -67,23 +66,15 @@ export class NamespaceSelectFilterModel {
     );
   };
 
-  getOptionLabel = ({ namespace }: NamespaceSelectFilterOption) => {
-    if (namespace === selectAllNamespaces) {
-      return "All Namespaces";
-    }
+  readonly menuIsOpen = observable.box(false);
 
-    return namespace;
-  };
+  closeMenu = action(() => {
+    this.menuIsOpen.set(false);
+  });
 
-  menuIsOpen = false;
-
-  closeMenu = () => {
-    this.menuIsOpen = false;
-  };
-
-  openMenu = () => {
-    this.menuIsOpen = true;
-  };
+  openMenu = action(() => {
+    this.menuIsOpen.set(true);
+  });
 
   get selectedNames() {
     return untracked(() => this.dependencies.namespaceStore.selectedNames);
@@ -111,13 +102,13 @@ export class NamespaceSelectFilterModel {
         }
         break;
       case "select-option":
-        if (action.option?.namespace === selectAllNamespaces) {
+        if (action.option?.value === selectAllNamespaces) {
           this.dependencies.namespaceStore.selectAll();
         } else if (action.option) {
           if (this.isMultiSelection) {
-            this.dependencies.namespaceStore.toggleSingle(action.option.namespace);
+            this.dependencies.namespaceStore.toggleSingle(action.option.value);
           } else {
-            this.dependencies.namespaceStore.selectSingle(action.option.namespace);
+            this.dependencies.namespaceStore.selectSingle(action.option.value);
           }
         }
         break;
@@ -146,10 +137,10 @@ export class NamespaceSelectFilterModel {
     }
   };
 
-  reset = () => {
+  reset = action(() => {
     this.isMultiSelection = false;
     this.closeMenu();
-  };
+  });
 }
 
 const isSelectionKey = (event: React.KeyboardEvent): boolean  => {

@@ -7,6 +7,7 @@ import "./item-list-layout.scss";
 
 import type { ReactNode } from "react";
 import React from "react";
+import type { IComputedValue } from "mobx";
 import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
@@ -17,8 +18,6 @@ import type { ItemObject } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";
 import { FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
-import type { NamespaceStore } from "../+namespaces/store";
-import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import itemListLayoutStorageInjectable from "./storage.injectable";
 import { ItemListLayoutContent } from "./content";
@@ -28,6 +27,7 @@ import { ItemListLayoutFilters } from "./filters";
 import { observer } from "mobx-react";
 import type { Primitive } from "type-fest";
 import type { SubscribableStore } from "../../kube-watch-api/kube-watch-api";
+import selectedFilterNamespacesInjectable from "../../../common/k8s-api/selected-filter-namespaces.injectable";
 
 export type SearchFilter<I extends ItemObject> = (item: I) => SingleOrMany<string | number | undefined | null>;
 export type SearchFilters<I extends ItemObject> = Record<string, SearchFilter<I>>;
@@ -159,7 +159,7 @@ export interface ItemListLayoutStorage {
 }
 
 interface Dependencies {
-  namespaceStore: NamespaceStore;
+  selectedFilterNamespaces: IComputedValue<string[]>;
   itemListLayoutStorage: StorageLayer<ItemListLayoutStorage>;
 }
 
@@ -184,7 +184,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
       const { store, dependentStores = [] } = this.props;
       const stores = Array.from(new Set([store, ...dependentStores])) as ItemListStore<I, true>[];
 
-      stores.forEach(store => store.loadAll(this.props.namespaceStore.contextNamespaces));
+      stores.forEach(store => store.loadAll(this.props.selectedFilterNamespaces.get()));
     }
   }
 
@@ -328,7 +328,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
 
 const InjectedItemListLayout = withInjectables<Dependencies, ItemListLayoutProps<ItemObject, boolean>>(NonInjectedItemListLayout, {
   getProps: (di, props) => ({
-    namespaceStore: di.inject(namespaceStoreInjectable),
+    selectedFilterNamespaces: di.inject(selectedFilterNamespacesInjectable),
     itemListLayoutStorage: di.inject(itemListLayoutStorageInjectable),
     ...props,
   }),

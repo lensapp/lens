@@ -180,7 +180,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
               placeholder="Namespace"
               themeName="light"
               className="box grow"
-              onChange={option => this.namespace = option?.namespace ?? null}
+              onChange={option => this.namespace = option?.value ?? null}
             />
 
             <SubTitle title="Values" />
@@ -190,26 +190,24 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
                 className="quota-select"
                 themeName="light"
                 placeholder="Select a quota.."
-                options={Object.keys(this.quotas).map(quota => ({ quota }))}
-                isMulti={false}
-                value={(
-                  this.quotaSelectValue
-                    ? ({ quota: this.quotaSelectValue })
-                    : null
-                )}
-                onChange={option => this.quotaSelectValue = option?.quota ?? null}
-                formatOptionLabel={({ quota }) => {
-                  const iconMaterial = this.getQuotaOptionLabelIconMaterial(quota);
+                options={Object.keys(this.quotas).map(quota => ({
+                  value: quota,
+                  label: quota,
+                }))}
+                value={this.quotaSelectValue}
+                onChange={option => this.quotaSelectValue = option?.value ?? null}
+                formatOptionLabel={({ value }) => {
+                  const iconMaterial = this.getQuotaOptionLabelIconMaterial(value);
 
                   return iconMaterial
                     ? (
                       <span className="nobr">
                         <Icon material={iconMaterial} />
                         {" "}
-                        {quota}
+                        {value}
                       </span>
                     )
-                    : quota;
+                    : value;
                 }}
               />
               <Input

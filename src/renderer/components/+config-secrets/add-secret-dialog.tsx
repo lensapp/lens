@@ -13,7 +13,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
-import { secretApi, SecretType } from "../../../common/k8s-api/endpoints";
+import { reverseSecretTypeMap, secretApi, SecretType } from "../../../common/k8s-api/endpoints";
 import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Select } from "../select";
@@ -72,7 +72,10 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
   };
 
   private get secretTypeOptions() {
-    return object.keys(this.secretTemplate).map(type => ({ type }));
+    return object.keys(this.secretTemplate).map(type => ({
+      value: type,
+      label: reverseSecretTypeMap[type],
+    }));
   }
 
   @observable secret = this.secretTemplate;
@@ -224,7 +227,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                   id="secret-namespace-input"
                   themeName="light"
                   value={namespace}
-                  onChange={value => this.namespace = value?.namespace ?? "default"}
+                  onChange={option => this.namespace = option?.value ?? "default"}
                 />
               </div>
               <div className="secret-type">
@@ -233,8 +236,8 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                   id="secret-input"
                   themeName="light"
                   options={this.secretTypeOptions}
-                  value={({ type })}
-                  onChange={value => this.type = value?.type ?? SecretType.Opaque}
+                  value={type}
+                  onChange={option => this.type = option?.value ?? SecretType.Opaque}
                 />
               </div>
             </div>

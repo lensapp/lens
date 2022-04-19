@@ -90,7 +90,7 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
               id="add-dialog-namespace-select-input"
               themeName="light"
               value={this.namespace}
-              onChange={option => this.namespace = option?.namespace ?? "default"}
+              onChange={option => this.namespace = option?.value ?? "default"}
             />
           </WizardStep>
         </Wizard>

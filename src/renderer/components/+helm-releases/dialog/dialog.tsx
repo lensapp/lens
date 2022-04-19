@@ -7,7 +7,7 @@ import "./dialog.scss";
 
 import React from "react";
 import type { IObservableValue } from "mobx";
-import { observable, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
@@ -34,6 +34,12 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
   readonly isLoading = observable.box(false);
   readonly revision = observable.box<HelmReleaseRevision | undefined>();
   readonly revisions = observable.array<HelmReleaseRevision>();
+  readonly revisionOptions = computed(() => (
+    this.revisions.map(revision => ({
+      value: revision,
+      label: `${revision.revision} - ${revision.chart} - ${revision.app_version}, updated: ${new Date(revision.updated).toLocaleString()}`,
+    }))
+  ));
 
   close = () => {
     this.props.state.set(undefined);
@@ -79,9 +85,8 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
         <Select
           themeName="light"
           value={revision}
-          options={this.revisions}
-          formatOptionLabel={value => `${value.revision} - ${value.chart} - ${value.app_version}, updated: ${new Date(value.updated).toLocaleString()}`}
-          onChange={value => this.revision.set(value ?? undefined)}
+          options={this.revisionOptions.get()}
+          onChange={option => this.revision.set(option?.value)}
         />
       </div>
     );

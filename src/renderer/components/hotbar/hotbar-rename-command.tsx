@@ -9,7 +9,6 @@ import { Select } from "../select";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { InputValidator } from "../input";
 import { Input } from "../input";
-import type { Hotbar } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
@@ -29,12 +28,6 @@ const NonInjectedHotbarRenameCommand = observer(({
   const [hotbarId, setHotbarId] = useState("");
   const [hotbarName, setHotbarName] = useState("");
 
-  const onSelect = (hotbar: Hotbar | null) => {
-    if (hotbar) {
-      setHotbarId(hotbar.id);
-      setHotbarName(hotbar.name);
-    }
-  };
   const onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
@@ -69,11 +62,21 @@ const NonInjectedHotbarRenameCommand = observer(({
     <Select
       id="rename-hotbar-input"
       menuPortalTarget={null}
-      onChange={onSelect}
+      onChange={(option) => {
+        if (option) {
+          setHotbarId(option.value.id);
+          setHotbarName(option.value.name);
+        }
+      }}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
       menuIsOpen={true}
-      options={hotbarStore.hotbars}
-      getOptionLabel={hotbar => hotbarStore.getDisplayLabel(hotbar)}
+      options={(
+        hotbarStore.hotbars
+          .map(hotbar => ({
+            value: hotbar,
+            label: hotbarStore.getDisplayLabel(hotbar),
+          }))
+      )}
       autoFocus={true}
       escapeClearsValue={false}
       placeholder="Rename hotbar"

@@ -8,51 +8,71 @@
 import "./select.scss";
 
 import React from "react";
-import { computed, makeObservable } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import ReactSelect, { components } from "react-select";
-import type { Props as ReactSelectProps, GroupBase } from "react-select";
+import ReactSelect, { components, createFilter } from "react-select";
+import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
 import { ThemeStore } from "../../theme.store";
 import { autoBind, cssNames } from "../../utils";
+import type { SetRequired } from "type-fest";
 
 const { Menu } = components;
 
-/**
- * @deprecated This type is no longer used
- */
-export interface SelectOption<T> {
-  value: T;
-  label?: React.ReactElement | string;
+export interface SelectOption<Value> {
+  value: Value;
+  label: string;
+  isDisabled?: boolean;
+  isSelected?: boolean;
 }
 
 export interface SelectProps<
+  Value,
   /**
    * This needs to extend `object` because even though `ReactSelectProps` allows for any `T`, the
    * maintainers of `react-select` says that they don't support it.
    *
    * Ref: https://github.com/JedWatson/react-select/issues/5032
+   *
+   * Futhermore, we mandate the option is of this shape because it is easier than requiring
+   * `getOptionValue` and `getOptionLabel` all over the place.
    */
-  Option extends object,
+  Option extends SelectOption<Value>,
   IsMulti extends boolean,
   Group extends GroupBase<Option> = GroupBase<Option>,
-> extends ReactSelectProps<Option, IsMulti, Group> {
+> extends SetRequired<Omit<ReactSelectProps<Option, IsMulti, Group>, "value">, "options"> {
   id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
+  value?: PropsValue<Value>;
 }
+
+function isGroup<Option, Group extends GroupBase<Option>>(optionOrGroup: Option | Group): optionOrGroup is Group {
+  return Array.isArray((optionOrGroup as Group).options);
+}
+
+const defaultFilter = createFilter({
+  stringify(option) {
+    if (typeof option.data === "symbol") {
+      return option.label;
+    }
+
+    return `${option.label} ${option.value}`;
+  },
+});
 
 @observer
 export class Select<
-  Option extends object,
+  Value,
+  Option extends SelectOption<Value>,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
-> extends React.Component<SelectProps<Option, IsMulti, Group>> {
+> extends React.Component<SelectProps<Value, Option, IsMulti, Group>> {
   static defaultProps = {
     menuPortalTarget: document.body,
     menuPlacement: "auto",
   };
 
-  constructor(props: SelectProps<Option, IsMulti, Group>) {
+  constructor(props: SelectProps<Value, Option, IsMulti, Group>) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -72,6 +92,48 @@ export class Select<
     }
   }
 
+  private filterSelectedMultiValue(values: MultiValue<Value> | null, options: OptionsOrGroups<Option, Group>): MultiValue<Option> | null {
+    if (!values) {
+      return null;
+    }
+
+    return options
+      .flatMap(option => (
+        isGroup(option)
+          ? option.options
+          : option
+      ))
+      .filter(option => values.includes(option.value));
+  }
+
+  private findSelectedSingleValue(value: SingleValue<Value>, options: OptionsOrGroups<Option, Group>): SingleValue<Option> {
+    if (value === null) {
+      return null;
+    }
+
+    for (const optionOrGroup of options) {
+      if (isGroup(optionOrGroup)) {
+        for (const option of optionOrGroup.options) {
+          if (option.value === value) {
+            return option;
+          }
+        }
+      } else if (optionOrGroup.value === value) {
+        return optionOrGroup;
+      }
+    }
+
+    return null;
+  }
+
+  private findSelectedPropsValue(value: PropsValue<Value>, options: OptionsOrGroups<Option, Group>, isMulti: IsMulti | undefined): PropsValue<Option> {
+    if (isMulti) {
+      return this.filterSelectedMultiValue(value as MultiValue<Value>, options);
+    }
+
+    return this.findSelectedSingleValue(value as SingleValue<Value>, options);
+  }
+
   render() {
     const {
       className,
@@ -79,9 +141,16 @@ export class Select<
       components = {},
       styles,
       value = null,
+      options,
+      isMulti,
+      onChange,
       ...props
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
+
+    if (options.length > 0 && !(options?.[0] as { label?: string }).label) {
+      console.warn("[SELECT]: will not display any label in dropdown");
+    }
 
     return (
       <ReactSelect
@@ -93,10 +162,14 @@ export class Select<
           }),
           ...styles,
         }}
-        value={value}
+        filterOption={defaultFilter} // This is done because the default filter crashes on symbols
+        isMulti={isMulti}
+        options={options}
+        value={this.findSelectedPropsValue(value, options, isMulti)}
         onKeyDown={this.onKeyDown}
         className={cssNames("Select", this.themeClass, className)}
         classNamePrefix="Select"
+        onChange={action(onChange)} // This is done so that all changes are actionable
         components={{
           ...components,
           Menu: props => (

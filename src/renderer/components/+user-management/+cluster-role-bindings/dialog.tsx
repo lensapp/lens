@@ -63,6 +63,21 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
     dialogState.isOpen = false;
   }
 
+  @computed get clusterRoleOptions() {
+    return clusterRoleStore.items.map(clusterRole => ({
+      value: clusterRole,
+      label: clusterRole.getName(),
+    }));
+  }
+
+  @computed get serviceAccountOptions() {
+    return serviceAccountStore.items.map(serviceAccount => ({
+      value: serviceAccount,
+      label: `${serviceAccount.getName()} (${serviceAccount.getNs()})`,
+      isSelected: this.selectedAccounts.has(serviceAccount),
+    }));
+  }
+
   get clusterRoleBinding() {
     return dialogState.data;
   }
@@ -164,29 +179,28 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
           themeName="light"
           placeholder="Select cluster role ..."
           isDisabled={this.isEditing}
-          options={clusterRoleStore.items.slice()}
+          options={this.clusterRoleOptions}
           value={this.selectedRoleRef}
           autoFocus={!this.isEditing}
-          formatOptionLabel={value => (
+          formatOptionLabel={option => (
             <>
               <Icon
                 small
-                material={value.kind === "Role" ? "person" : "people"}
+                material="people"
                 tooltip={{
                   preferredPositions: TooltipPosition.LEFT,
-                  children: value.kind,
+                  children: option.value.kind,
                 }}
               />
               {" "}
-              {value.getName()}
+              {option.value.getName()}
             </>
           )}
-          getOptionLabel={value => value.getName()}
-          onChange={value => {
-            this.selectedRoleRef = value ?? undefined;
+          onChange={option => {
+            this.selectedRoleRef = option?.value;
 
             if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
-              this.bindingName = value?.getName() ?? "";
+              this.bindingName = option?.value?.getName() ?? "";
             }
           }}
         />
@@ -223,16 +237,31 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
           isMulti
           themeName="light"
           placeholder="Select service accounts ..."
-          options={serviceAccountStore.items.slice()}
-          formatOptionLabel={value => (
+          options={this.serviceAccountOptions}
+          formatOptionLabel={option => (
             <>
               <Icon small material="account_box" />
-              {` ${value.getName()} (${value.getNs()})`}
+              {` ${option.label}`}
             </>
           )}
-          getOptionLabel={value => `${value.getName()} (${value.getNs()})`}
-          onChange={selected => {
-            this.selectedAccounts.replace(selected);
+          onChange={(selected, meta) => {
+            switch (meta.action) {
+              case "clear":
+                this.selectedAccounts.clear();
+                break;
+              case "deselect-option":
+              case "remove-value":
+              case "pop-value":
+                if (meta.option) {
+                  this.selectedAccounts.delete(meta.option.value);
+                }
+                break;
+              case "select-option":
+                if (meta.option) {
+                  this.selectedAccounts.add(meta.option.value);
+                }
+                break;
+            }
           }}
           maxMenuHeight={200}
         />

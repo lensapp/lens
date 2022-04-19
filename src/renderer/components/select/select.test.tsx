@@ -4,6 +4,7 @@
  */
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
+import type { SelectOption } from "./select";
 import { Select } from "./select";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
@@ -94,7 +95,7 @@ describe("<Select />", () => {
 
     const { container } = render((
       <Select
-        value={options[0]}
+        value={options[0].value}
         onChange={onChange}
         options={options}
       />
@@ -120,7 +121,7 @@ describe("<Select />", () => {
 
     const { container, rerender } = render((
       <Select
-        value={options[0]}
+        value={options[0].value}
         onChange={onChange}
         options={options}
       />
@@ -131,7 +132,7 @@ describe("<Select />", () => {
 
     rerender((
       <Select
-        value={options[1]}
+        value={options[1].value}
         onChange={onChange}
         options={options}
       />
@@ -156,7 +157,7 @@ describe("<Select />", () => {
 
     const { container, rerender } = render((
       <Select
-        value={options[0]}
+        value={options[0].value}
         onChange={onChange}
         options={options}
       />
@@ -166,7 +167,7 @@ describe("<Select />", () => {
     expect(selectedValueContainer?.textContent).toBe(options[0].label);
 
     rerender((
-      <Select
+      <Select<string, SelectOption<string>>
         value={null}
         onChange={onChange}
         options={options}
@@ -192,7 +193,7 @@ describe("<Select />", () => {
 
     const { container, rerender } = render((
       <Select
-        value={options[0]}
+        value={options[0].value}
         onChange={onChange}
         options={options}
       />
@@ -202,7 +203,7 @@ describe("<Select />", () => {
     expect(selectedValueContainer?.textContent).toBe(options[0].label);
 
     rerender((
-      <Select
+      <Select<string, SelectOption<string>>
         value={undefined}
         onChange={onChange}
         options={options}

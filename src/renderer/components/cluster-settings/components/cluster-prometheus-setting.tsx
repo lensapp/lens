@@ -7,6 +7,7 @@ import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { SubTitle } from "../../layout/sub-title";
+import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
@@ -14,7 +15,6 @@ import { productName } from "../../../../common/vars";
 import type { MetricProviderInfo } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
-import type { GroupBase } from "react-select";
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
@@ -22,23 +22,28 @@ export interface ClusterPrometheusSettingProps {
 
 const autoDetectPrometheus = Symbol("auto-detect-prometheus");
 
-interface ProviderOption {
-  provider: typeof autoDetectPrometheus | string;
-}
+type ProviderValue = typeof autoDetectPrometheus | string;
 
 @observer
 export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps> {
   @observable path = "";
-  @observable selectedOption = this.options.find(opt => opt.provider === autoDetectPrometheus);
+  @observable selectedOption: ProviderValue = autoDetectPrometheus;
   @observable loading = true;
-  loadedOptions = observable.map<string, MetricProviderInfo>();
+  readonly loadedOptions = observable.map<string, MetricProviderInfo>();
 
-  @computed get options(): ProviderOption[] {
-    return ([
-      autoDetectPrometheus,
-      ...this.loadedOptions.keys(),
-    ] as const)
-      .map(provider => ({ provider }));
+  @computed get options(): SelectOption<ProviderValue>[] {
+    return [
+      {
+        value: autoDetectPrometheus,
+        label: "Auto Detect Prometheus",
+        isSelected: autoDetectPrometheus === this.selectedOption,
+      },
+      ...Array.from(this.loadedOptions, ([id, provider]) => ({
+        value: id,
+        label: provider.name,
+        isSelected: id === this.selectedOption,
+      })),
+    ];
   }
 
   constructor(props: ClusterPrometheusSettingProps) {
@@ -47,11 +52,11 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
   }
 
   @computed get canEditPrometheusPath(): boolean {
-    if (!this.selectedOption || this.selectedOption.provider === autoDetectPrometheus) {
+    if (!this.selectedOption || this.selectedOption === autoDetectPrometheus) {
       return false;
     }
 
-    return this.loadedOptions.get(this.selectedOption.provider)?.isConfigurable ?? false;
+    return this.loadedOptions.get(this.selectedOption)?.isConfigurable ?? false;
   }
 
   componentDidMount() {
@@ -68,9 +73,9 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
         }
 
         if (prometheusProvider) {
-          this.selectedOption = this.options.find(opt => opt.provider === prometheusProvider.type);
+          this.selectedOption = this.options.find(opt => opt.value === prometheusProvider.type)?.value ?? autoDetectPrometheus;
         } else {
-          this.selectedOption = undefined;
+          this.selectedOption = autoDetectPrometheus;
         }
       }),
     );
@@ -122,11 +127,11 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
               ? <Spinner />
               : (
                 <>
-                  <Select<ProviderOption, false, GroupBase<ProviderOption>>
+                  <Select
                     id="cluster-prometheus-settings-input"
                     value={this.selectedOption}
-                    onChange={provider => {
-                      this.selectedOption = provider ?? { provider: autoDetectPrometheus };
+                    onChange={option => {
+                      this.selectedOption = option?.value ?? autoDetectPrometheus;
                       this.onSaveProvider();
                     }}
                     options={this.options}

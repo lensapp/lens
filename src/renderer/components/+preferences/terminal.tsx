@@ -23,11 +23,21 @@ interface Dependencies {
   defaultShell: string;
 }
 
-const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: Dependencies) => {
+const NonInjectedTerminal = observer(({
+  userStore,
+  themeStore,
+  defaultShell,
+}: Dependencies) => {
   const themeOptions = [
-    "",
-    ...themeStore.themes.keys(),
-  ].map(name => ({ name }));
+    {
+      value: "", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
+      label: "Match Lens Theme",
+    },
+    ...Array.from(themeStore.themes, ([themeId, { name }]) => ({
+      value: themeId,
+      label: name,
+    })),
+  ];
 
   return (
     <Preferences data-testid="terminal-preferences-page">
@@ -59,17 +69,8 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
           <Select
             themeName="lens"
             options={themeOptions}
-            getOptionLabel={option => {
-              const theme = themeStore.themes.get(option.name);
-
-              if (theme) {
-                return theme.name;
-              }
-
-              return "Match System Theme";
-            }}
-            value={{ name: userStore.terminalTheme }}
-            onChange={option => userStore.terminalTheme = option?.name ?? ""}
+            value={userStore.terminalTheme}
+            onChange={option => userStore.terminalTheme = option?.value ?? ""}
           />
         </section>
 
