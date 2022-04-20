@@ -56,7 +56,6 @@ import applicationMenuInjectable from "./menu/application-menu.injectable";
 import windowManagerInjectable from "./window-manager.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/before-application-is-ready/implementations/setup-system-ca.injectable";
-import whenApplicationIsActivatedInjectable from "./electron-app/when-application-is-activated.injectable";
 import whenApplicationWillQuitInjectable from "./electron-app/when-application-will-quit.injectable";
 import whenOpeningUrlInjectable from "./electron-app/when-opening-url.injectable";
 import whenSecondInstanceInjectable from "./electron-app/when-second-instance.injectable";
@@ -70,6 +69,7 @@ import shouldStartHiddenInjectable from "./electron-app/should-start-hidden.inje
 import registerProtocolClientInjectable from "./electron-app/register-protocol-client.injectable";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
+import onApplicationActivateInjectable from "./electron-app/on-application-activate.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -190,7 +190,7 @@ const overrideOperatingSystem = (di: DiContainer) => {
 };
 
 const overrideElectron = (di: DiContainer) => {
-  di.override(whenApplicationIsActivatedInjectable, () => () => {});
+  di.override(onApplicationActivateInjectable, () => () => {});
   di.override(whenApplicationWillQuitInjectable, () => () => {});
   di.override(whenOpeningUrlInjectable, () => () => {});
   di.override(whenSecondInstanceInjectable, () => () => {});
