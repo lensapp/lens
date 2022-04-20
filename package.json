@@ -239,7 +239,7 @@
     "mobx-react": "^7.3.0",
     "mobx-utils": "^6.0.4",
     "mock-fs": "^5.1.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "moment-timezone": "^0.5.34",
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
