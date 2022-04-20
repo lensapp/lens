@@ -12,8 +12,10 @@ import copyrightDeclarationInjectable from "../../common/vars/copyright-declarat
 import electronVersionInjectable from "../../common/vars/electron-version.injectable";
 import isWindowsInjectable from "../../common/vars/is-windows.injectable";
 import nodeVersionInjectable from "../../common/vars/node-version.injectable";
-import showMessageBoxInjectable, { ShowMessageBox } from "../electron/show-message-box.injectable";
-import writeTextToClipboardInjectable, { WriteTextToClipboard } from "../electron/write-text-to-clipboard.injectable";
+import type { ShowMessageBox } from "../electron/show-message-box.injectable";
+import showMessageBoxInjectable from "../electron/show-message-box.injectable";
+import type { WriteTextToClipboard } from "../electron/write-text-to-clipboard.injectable";
+import writeTextToClipboardInjectable from "../electron/write-text-to-clipboard.injectable";
 import appNameInjectable from "../vars/app-name.injectable";
 
 export type ShowAbout = (browserWindow: BrowserWindow) => void;

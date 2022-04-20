@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { BrowserWindow, dialog, MessageBoxOptions, MessageBoxReturnValue } from "electron";
+import type { BrowserWindow, MessageBoxOptions, MessageBoxReturnValue } from "electron";
+import { dialog } from "electron";
 
 export type ShowMessageBox = (browserWindow: BrowserWindow, options: MessageBoxOptions) => Promise<MessageBoxReturnValue>;
 
