@@ -5,11 +5,8 @@
 
 import glob from "glob";
 import { kebabCase, memoize, noop } from "lodash/fp";
-import { createContainer } from "@ogre-tools/injectable";
-
+import { createContainer, DiContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
-import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
@@ -35,25 +32,15 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
-import whenApplicationIsActivatedInjectable from "./electron-app/when-application-is-activated.injectable";
-import whenApplicationWillQuitInjectable from "./electron-app/when-application-will-quit.injectable";
-import whenOpeningUrlInjectable from "./electron-app/when-opening-url.injectable";
-import whenSecondInstanceInjectable from "./electron-app/when-second-instance.injectable";
-import whenSystemShutdownInjectable from "./electron-app/when-system-shutdown.injectable";
-import exitAppInjectable from "./electron-app/exit-app.injectable";
-import setApplicationNameInjectable from "./electron-app/set-application-name.injectable";
-import getCommandLineSwitchInjectable from "./electron-app/get-command-line-switch.injectable";
 import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
-import registerProtocolClientInjectable from "./electron-app/register-protocol-client.injectable";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/after-application-is-ready/implementations/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import registerFileProtocolInjectable from "./electron-app/register-file-protocol.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
-import disableHardwareAccelerationInjectable from "./electron-app/disable-hardware-acceleration.injectable";
 import { CatalogCategoryRegistry } from "../common/catalog";
 import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
 import setupIpcMainHandlersInjectable from "./start-main-application/after-application-is-ready/implementations/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
@@ -62,16 +49,27 @@ import setupListenerForRootFrameRenderingInjectable from "./start-main-applicati
 import setupOsThemeUpdatesInjectable from "./start-main-application/after-application-is-ready/implementations/setup-os-theme-updates.injectable";
 import setupSentryInjectable from "./start-main-application/after-application-is-ready/implementations/setup-sentry.injectable";
 import setupShellInjectable from "./start-main-application/after-application-is-ready/implementations/setup-shell.injectable";
-import requestSingleInstanceLockInjectable from "./electron-app/request-single-instance-lock.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/after-application-is-ready/implementations/setup-syncing-of-weblinks.injectable";
-import shouldStartHiddenInjectable from "./electron-app/should-start-hidden.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
 import trayInjectable from "./tray/tray.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
 import windowManagerInjectable from "./window-manager.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
-import setupSystemCaInjectable
-  from "./start-main-application/before-application-is-ready/implementations/setup-system-ca.injectable";
+import setupSystemCaInjectable from "./start-main-application/before-application-is-ready/implementations/setup-system-ca.injectable";
+import whenApplicationIsActivatedInjectable from "./electron-app/when-application-is-activated.injectable";
+import whenApplicationWillQuitInjectable from "./electron-app/when-application-will-quit.injectable";
+import whenOpeningUrlInjectable from "./electron-app/when-opening-url.injectable";
+import whenSecondInstanceInjectable from "./electron-app/when-second-instance.injectable";
+import whenSystemShutdownInjectable from "./electron-app/when-system-shutdown.injectable";
+import exitAppInjectable from "./electron-app/exit-app.injectable";
+import setApplicationNameInjectable from "./electron-app/set-application-name.injectable";
+import getCommandLineSwitchInjectable from "./electron-app/get-command-line-switch.injectable";
+import requestSingleInstanceLockInjectable from "./electron-app/request-single-instance-lock.injectable";
+import disableHardwareAccelerationInjectable from "./electron-app/disable-hardware-acceleration.injectable";
+import shouldStartHiddenInjectable from "./electron-app/should-start-hidden.injectable";
+import registerProtocolClientInjectable from "./electron-app/register-protocol-client.injectable";
+import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
+import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -93,49 +91,22 @@ export const getDiForUnitTesting = (
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
-    di.override(isMacInjectable, () => true);
-    di.override(isWindowsInjectable, () => false);
-    di.override(isLinuxInjectable, () => false);
+    overrideOperatingSystem(di);
+    overrideRunnablesHavingSideEffects(di);
+    overrideElectron(di);
+
     di.override(isDevelopmentInjectable, () => false);
+    di.override(environmentVariablesInjectable, () => ({}));
+    di.override(commandLineArgumentsInjectable, () => []);
 
-    di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
-    di.override(joinPathsInjectable, () => joinPathsFake);
-
-    di.override(whenApplicationIsActivatedInjectable, () => () => {});
-    di.override(whenApplicationWillQuitInjectable, () => () => {});
-    di.override(whenOpeningUrlInjectable, () => () => {});
-    di.override(whenSecondInstanceInjectable, () => () => {});
-    di.override(whenSystemShutdownInjectable, () => () => {});
-    di.override(exitAppInjectable, () => () => {});
-    di.override(setApplicationNameInjectable, () => () => {});
-    di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
-    di.override(isAutoUpdateEnabledInjectable, () => () => false);
-    di.override(registerProtocolClientInjectable, () => () => {});
-    di.override(lensResourcesDirInjectable, () => "/irrelevant");
-    di.override(registerFileProtocolInjectable, () => () => {});
-    di.override(requestSingleInstanceLockInjectable, () => () => true);
-    di.override(disableHardwareAccelerationInjectable, () => () => {});
-    di.override(shouldStartHiddenInjectable, () => true);
     di.override(stopServicesAndExitAppInjectable, () => () => {});
+    di.override(lensResourcesDirInjectable, () => "/irrelevant");
     di.override(windowManagerInjectable, () => ({ ensureMainWindow: () => Promise.resolve(null) }));
-
-    di.override(initializeExtensionsInjectable, () => ({ run: () => {} }));
-    di.override(setupIpcMainHandlersInjectable, () => ({ run: () => {} }));
-    di.override(setupLensProxyInjectable, () => ({ run: () => {} }));
-    di.override(setupListenerForRootFrameRenderingInjectable, () => ({ run: () => {} }));
-    di.override(setupOsThemeUpdatesInjectable, () => ({ run: () => {} }));
-    di.override(setupSentryInjectable, () => ({ run: () => {} }));
-    di.override(setupShellInjectable, () => ({ run: () => {} }));
-    di.override(setupSyncingOfWeblinksInjectable, () => ({ run: () => {} }));
-    di.override(setupSystemCaInjectable, () => ({ run: () => {} }));
 
     di.override(trayInjectable, () => ({ start: () => {}, stop: () => {} }));
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
 
     di.override(catalogCategoryRegistryInjectable, () => new CatalogCategoryRegistry());
-
-    di.override(environmentVariablesInjectable, () => ({}));
-    di.override(commandLineArgumentsInjectable, () => []);
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
@@ -151,13 +122,7 @@ export const getDiForUnitTesting = (
     di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {} }) as UserStore);
 
-    di.override(
-      getElectronAppPathInjectable,
-      () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`,
-    );
-
-    di.override(setElectronAppPathInjectable, () => () => undefined);
-    di.override(appNameInjectable, () => "some-electron-app-name");
+    di.override(appNameInjectable, () => "some-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
 
@@ -197,3 +162,49 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+// TODO: Reorganize code in Runnables to get rid of requirement for override
+const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
+  [
+    initializeExtensionsInjectable,
+    setupIpcMainHandlersInjectable,
+    setupLensProxyInjectable,
+    setupListenerForRootFrameRenderingInjectable,
+    setupOsThemeUpdatesInjectable,
+    setupSentryInjectable,
+    setupShellInjectable,
+    setupSyncingOfWeblinksInjectable,
+    setupSystemCaInjectable,
+  ].forEach((injectable) => {
+    di.override(injectable, () => ({ run: () => {} }));
+  });
+};
+
+const overrideOperatingSystem = (di: DiContainer) => {
+  di.override(isMacInjectable, () => true);
+  di.override(isWindowsInjectable, () => false);
+  di.override(isLinuxInjectable, () => false);
+
+  di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
+  di.override(joinPathsInjectable, () => joinPathsFake);
+};
+
+const overrideElectron = (di: DiContainer) => {
+  di.override(whenApplicationIsActivatedInjectable, () => () => {});
+  di.override(whenApplicationWillQuitInjectable, () => () => {});
+  di.override(whenOpeningUrlInjectable, () => () => {});
+  di.override(whenSecondInstanceInjectable, () => () => {});
+  di.override(whenSystemShutdownInjectable, () => () => {});
+  di.override(exitAppInjectable, () => () => {});
+  di.override(setApplicationNameInjectable, () => () => {});
+  di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
+  di.override(requestSingleInstanceLockInjectable, () => () => true);
+  di.override(disableHardwareAccelerationInjectable, () => () => {});
+  di.override(shouldStartHiddenInjectable, () => true);
+  di.override(registerProtocolClientInjectable, () => () => {});
+  di.override(getElectronAppPathInjectable, () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`);
+  di.override(setElectronAppPathInjectable, () => () => {});
+
+  di.override(isAutoUpdateEnabledInjectable, () => () => false);
+  di.override(registerFileProtocolInjectable, () => () => {});
+};
