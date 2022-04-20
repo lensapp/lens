@@ -25,7 +25,6 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
-import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter } from "lodash/fp";
@@ -91,7 +90,7 @@ export const getApplicationBuilder = () => {
 
   rendererDi.override(subscribeStoresInjectable, () => () => () => {});
 
-  const environments: Record<string, Environment> = {
+  const environments = {
     application: {
       renderSidebar: () => null,
 
@@ -100,12 +99,12 @@ export const getApplicationBuilder = () => {
           "Tried to allow kube resource when environment is not cluster frame.",
         );
       },
-    },
+    } as Environment,
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
       onAllowKubeResource: () => {},
-    },
+    } as Environment,
   };
 
   let environment = environments.application;
@@ -120,7 +119,7 @@ export const getApplicationBuilder = () => {
   );
 
   mainDi.override(mainExtensionsInjectable, () =>
-    computed((): LensMainExtension[] => []),
+    computed(() => []),
   );
 
   let allowedResourcesState: IObservableArray<KubeResource>;
@@ -182,9 +181,7 @@ export const getApplicationBuilder = () => {
               .map(get("id"));
 
             throw new Error(
-              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join(
-                '", "',
-              )}"`,
+              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join('", "')}"`,
             );
           }
 
@@ -268,12 +265,8 @@ export const getApplicationBuilder = () => {
       await runSetups();
 
       const render = renderFor(rendererDi);
-
       const history = rendererDi.inject(observableHistoryInjectable);
-
-      const currentRouteComponent = rendererDi.inject(
-        currentRouteComponentInjectable,
-      );
+      const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
 
       for (const callback of beforeRenderCallbacks) {
         await callback(dis);

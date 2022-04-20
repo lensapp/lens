@@ -4,18 +4,24 @@
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-import { action, comparer, computed, makeObservable, observable, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, observe, toJS, when } from "mobx";
 import type { Draft } from "immer";
 import { produce, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
+export interface StorageChange<T> {
+  key: string;
+  value: T | undefined;
+  oldValue: T | undefined;
+}
+
 export interface StorageAdapter<T> {
-  [metadata: string]: any;
+  [metadata: string]: unknown;
   getItem(key: string): T | Promise<T>;
   setItem(key: string, value: T): void;
   removeItem(key: string): void;
-  onChange?(change: { key: string; value: T; oldValue?: T }): void;
+  onChange?(change: StorageChange<T>): void;
 }
 
 export interface StorageHelperOptions<T> {
@@ -61,9 +67,8 @@ export class StorageHelper<T> implements StorageLayer<T> {
 
     this.storage = storage;
 
-    // TODO: This code uses undocumented MobX internal to criminally permit exotic mutations without encapsulation.
-    this.data.observe_(({ newValue, oldValue }) => {
-      this.onChange(newValue as T, oldValue as T);
+    observe(this.data, (change) => {
+      this.onChange(change.newValue as T | undefined, change.oldValue as T | undefined);
     });
 
     if (autoInit) {
@@ -109,7 +114,7 @@ export class StorageHelper<T> implements StorageLayer<T> {
     return isEqual(value, this.defaultValue);
   }
 
-  protected onChange(value: T, oldValue?: T) {
+  protected onChange(value: T | undefined, oldValue: T | undefined) {
     if (!this.initialized) return;
 
     try {

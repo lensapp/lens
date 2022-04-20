@@ -6,7 +6,7 @@ import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+import { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import routesInjectable from "../../renderer/routes/routes.injectable";
 import { matches } from "lodash/fp";
@@ -17,6 +17,8 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import assert from "assert";
+import { getSidebarItem } from "../utils";
 
 describe("cluster - sidebar and tab navigation for extensions", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -41,9 +43,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
   describe("given extension with cluster pages and cluster page menus", () => {
     beforeEach(async () => {
-      const testExtension = getRendererExtensionFake(
-        extensionStubWithSidebarItems,
-      );
+      const testExtension = getRendererExtensionFake(extensionStubWithSidebarItems);
 
       await applicationBuilder.addExtensions(testExtension);
     });
@@ -51,9 +51,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
     describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {
       beforeEach(async () => {
         applicationBuilder.beforeRender(({ rendererDi }) => {
-          const navigateToRoute = rendererDi.inject(
-            navigateToRouteInjectionToken,
-          );
+          const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
 
           const route = rendererDi
             .inject(routesInjectable)
@@ -64,6 +62,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
               }),
             );
 
+          assert(route);
           navigateToRoute(route);
         });
 
@@ -80,7 +79,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-parent-id",
         );
 
-        expect(parent.dataset.isActiveTest).toBe("true");
+        expect(parent?.dataset.isActiveTest).toBe("true");
       });
 
       it("parent sidebar item is not expanded", () => {
@@ -89,7 +88,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-child-id",
         );
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
 
       it("child page is shown", () => {
@@ -126,7 +125,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-parent-id",
         );
 
-        expect(parent.dataset.isActiveTest).toBe("false");
+        expect(parent?.dataset.isActiveTest).toBe("false");
       });
 
       it("parent sidebar item is expanded", () => {
@@ -135,7 +134,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-child-id",
         );
 
-        expect(child).not.toBe(null);
+        expect(child).not.toBeUndefined();
       });
     });
 
@@ -168,7 +167,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-child-id",
         );
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
     });
 
@@ -198,7 +197,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-child-id",
         );
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
     });
 
@@ -217,7 +216,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-parent-id",
         );
 
-        expect(parent.dataset.isActiveTest).toBe("false");
+        expect(parent?.dataset.isActiveTest).toBe("false");
       });
 
       it("parent sidebar item is not expanded", () => {
@@ -226,7 +225,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           "some-extension-id-some-child-id",
         );
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
 
       describe("when a parent sidebar item is expanded", () => {
@@ -248,7 +247,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             "some-extension-id-some-parent-id",
           );
 
-          expect(parent.dataset.isActiveTest).toBe("false");
+          expect(parent?.dataset.isActiveTest).toBe("false");
         });
 
         it("parent sidebar item is expanded", () => {
@@ -257,7 +256,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             "some-extension-id-some-child-id",
           );
 
-          expect(child).not.toBe(null);
+          expect(child).not.toBeUndefined();
         });
 
         describe("when a child of the parent is selected", () => {
@@ -279,7 +278,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
               "some-extension-id-some-parent-id",
             );
 
-            expect(parent.dataset.isActiveTest).toBe("true");
+            expect(parent?.dataset.isActiveTest).toBe("true");
           });
 
           it("child is highlighted", () => {
@@ -288,7 +287,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
               "some-extension-id-some-child-id",
             );
 
-            expect(child.dataset.isActiveTest).toBe("true");
+            expect(child?.dataset.isActiveTest).toBe("true");
           });
 
           it("child page is shown", () => {
@@ -385,10 +384,8 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   });
 });
 
-const extensionStubWithSidebarItems: Partial<LensRendererExtension> = {
-  id: "some-extension-id",
-
-  clusterPages: [
+const extensionStubWithSidebarItems = new (class extends LensRendererExtension {
+  clusterPages = [
     {
       components: {
         Page: () => {
@@ -396,7 +393,6 @@ const extensionStubWithSidebarItems: Partial<LensRendererExtension> = {
         },
       },
     },
-
     {
       id: "some-child-page-id",
 
@@ -404,7 +400,6 @@ const extensionStubWithSidebarItems: Partial<LensRendererExtension> = {
         Page: () => <div data-testid="some-child-page">Some child page</div>,
       },
     },
-
     {
       id: "some-other-child-page-id",
 
@@ -414,9 +409,9 @@ const extensionStubWithSidebarItems: Partial<LensRendererExtension> = {
         ),
       },
     },
-  ],
+  ];
 
-  clusterPageMenus: [
+  clusterPageMenus = [
     {
       id: "some-parent-id",
       title: "Parent",
@@ -433,7 +428,7 @@ const extensionStubWithSidebarItems: Partial<LensRendererExtension> = {
       title: "Child 1",
 
       components: {
-        Icon: null,
+        Icon: null as never,
       },
     },
 
@@ -444,13 +439,16 @@ const extensionStubWithSidebarItems: Partial<LensRendererExtension> = {
       title: "Child 2",
 
       components: {
-        Icon: null,
+        Icon: null as never,
       },
     },
-  ],
-};
-
-const getSidebarItem = (rendered: RenderResult, itemId: string) =>
-  rendered
-    .queryAllByTestId("sidebar-item")
-    .find((x) => x.dataset.idTest === itemId) || null;
+  ];
+})({
+  absolutePath: "/some/absolute/path",
+  id: "some-extension-id",
+  isBundled: true,
+  isCompatible: true,
+  isEnabled: true,
+  manifest: null as never,
+  manifestPath: "/some/manifest/path",
+});

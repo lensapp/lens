@@ -8,46 +8,23 @@ import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../common/fs/path-exists.injectable";
 
-type Override = (di: DiContainer) => void;
-
 export const overrideFsWithFakes = (di: DiContainer) => {
   const state = new Map();
 
   const readFile = readFileFor(state);
 
-  const overrides: Override[] = [
-    (di) => {
-      di.override(readFileInjectable, () => readFile);
-    },
-
-    (di) => {
-      di.override(
-        writeJsonFileInjectable,
-        () => (filePath, contents) => {
-          state.set(filePath, JSON.stringify(contents));
-
-          return Promise.resolve();
-        },
-      );
-    },
-
-    (di) => {
-      di.override(readJsonFileInjectable, () => async (filePath: string) => {
-        const fileContent = await readFile(filePath);
-
-        return JSON.parse(fileContent.toString());
-      });
-    },
-
-    (di) => {
-      di.override(
-        pathExistsInjectable,
-        () => async (filePath: string) => Promise.resolve(state.has(filePath)),
-      );
-    },
-  ];
-
-  overrides.forEach(callback => callback(di));
+  di.override(readFileInjectable, () => readFile);
+  di.override(writeJsonFileInjectable, () => (
+    async (filePath, contents) => {
+      state.set(filePath, JSON.stringify(contents));
+    }
+  ));
+  di.override(readJsonFileInjectable, () => (
+    async (filePath: string) => JSON.parse(await readFile(filePath))
+  ));
+  di.override(pathExistsInjectable, () => (
+    (filePath: string) => Promise.resolve(state.has(filePath))
+  ));
 };
 
 const readFileFor = (state: Map<string, string>) => (filePath: string) => {

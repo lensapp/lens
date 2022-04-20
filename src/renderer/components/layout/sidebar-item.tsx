@@ -123,13 +123,9 @@ class NonInjectedSidebarItem extends React.Component<
   }
 }
 
-export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(
-  NonInjectedSidebarItem,
-
-  {
-    getProps: (di, props) => ({
-      sidebarStorage: di.inject(sidebarStorageInjectable),
-      ...props,
-    }),
-  },
-);
+export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(NonInjectedSidebarItem, {
+  getProps: (di, props) => ({
+    ...props,
+    sidebarStorage: di.inject(sidebarStorageInjectable),
+  }),
+});

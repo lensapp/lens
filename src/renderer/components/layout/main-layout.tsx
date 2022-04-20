@@ -69,15 +69,10 @@ class NonInjectedMainLayout extends React.Component<MainLayoutProps & Dependenci
   }
 }
 
-export const MainLayout = withInjectables<Dependencies, MainLayoutProps>(
-  NonInjectedMainLayout,
-
-  {
-    getProps: (di, props) => ({
-      sidebarStorage: di.inject(sidebarStorageInjectable),
-
-      ...props,
-    }),
-  },
-);
+export const MainLayout = withInjectables<Dependencies, MainLayoutProps>(NonInjectedMainLayout, {
+  getProps: (di, props) => ({
+    ...props,
+    sidebarStorage: di.inject(sidebarStorageInjectable),
+  }),
+});
 

@@ -26,9 +26,7 @@ import { Agent } from "https";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import loggerInjectable from "../logger.injectable";
-import type { Logger } from "../logger";
+import logger from "../logger";
 
 /**
  * The options used for creating a `KubeApi`
@@ -330,7 +328,6 @@ export class KubeApi<
   protected readonly doCheckPreferredVersion: boolean;
   protected readonly fullApiPathname: string;
   protected readonly fallbackApiBases: string[] | undefined;
-  protected readonly logger: Logger;
 
   constructor({
     objectConstructor,
@@ -345,12 +342,10 @@ export class KubeApi<
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
     const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(fullApiPathname);
-    const di = getLegacyGlobalDiForExtensionApi();
 
     assert(kind, "kind MUST be provied either via KubeApiOptions.kind or KubeApiOptions.objectConstructor.kind");
     assert(apiPrefix, "apiBase MUST be parsable as a kubeApi selfLink style string");
 
-    this.logger = di.inject(loggerInjectable);
     this.doCheckPreferredVersion = doCheckPreferredVersion;
     this.fallbackApiBases = fallbackApiBases;
     this.fullApiPathname = fullApiPathname;
@@ -414,7 +409,7 @@ export class KubeApi<
         return await this.getLatestApiPrefixGroup();
       } catch (error) {
         // If valid API wasn't found, log the error and return defaults below
-        this.logger.error(`[KUBE-API]: ${error}`);
+        logger.error(`[KUBE-API]: ${error}`);
       }
     }
 
@@ -679,7 +674,7 @@ export class KubeApi<
     const abortController = new WrappedAbortController(opts.abortController);
 
     abortController.signal.addEventListener("abort", () => {
-      this.logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
+      logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
       clearTimeout(timedRetry);
     });
 
@@ -690,7 +685,7 @@ export class KubeApi<
       timeout: 600_000,
     });
 
-    this.logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
+    logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     responsePromise
       .then(response => {
@@ -698,7 +693,7 @@ export class KubeApi<
         let requestRetried = false;
 
         if (!response.ok) {
-          this.logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
+          logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
 
           return callback(null, response);
         }
@@ -715,7 +710,7 @@ export class KubeApi<
             // Close current request
             abortController.abort();
 
-            this.logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
+            logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
 
             requestRetried = true;
 
@@ -734,7 +729,7 @@ export class KubeApi<
               return;
             }
 
-            this.logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
+            logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
 
             requestRetried = true;
 
@@ -763,7 +758,7 @@ export class KubeApi<
         });
       })
       .catch(error => {
-        this.logger.error(`[KUBE-API] watch (${watchId}) throwed ${watchUrl}`, error);
+        logger.error(`[KUBE-API] watch (${watchId}) throwed ${watchUrl}`, error);
 
         callback(null, error);
       });

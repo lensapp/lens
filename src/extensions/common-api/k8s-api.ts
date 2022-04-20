@@ -8,7 +8,10 @@
 //       and to `Renderer`
 
 export { ResourceStack } from "../../common/k8s/resource-stack";
-export { apiManager } from "../../common/k8s-api/api-manager";
+import apiManagerInjectable from "../../common/k8s-api/api-manager/manager.injectable";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+
+export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 
 export {
   KubeApi,
