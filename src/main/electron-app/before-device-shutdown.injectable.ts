@@ -5,18 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import powerMonitorInjectable from "./power-monitor.injectable";
 
-const whenSystemShutdownInjectable = getInjectable({
-  id: "when-system-shutdown",
+const beforeDeviceShutdownInjectable = getInjectable({
+  id: "before-device-shutdown",
 
   instantiate: (di) => {
     const powerMonitor = di.inject(powerMonitorInjectable);
 
-    return (callback: () => void) => {
-      powerMonitor.on("shutdown", () => {
-        callback();
+    return (callback: () => Promise<void> | void) => {
+      powerMonitor.on("shutdown", async () => {
+        await callback();
       });
     };
   },
 });
 
-export default whenSystemShutdownInjectable;
+export default beforeDeviceShutdownInjectable;

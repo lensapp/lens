@@ -59,7 +59,6 @@ import setupSystemCaInjectable from "./start-main-application/before-application
 import whenApplicationWillQuitInjectable from "./electron-app/when-application-will-quit.injectable";
 import whenOpeningUrlInjectable from "./electron-app/when-opening-url.injectable";
 import whenSecondInstanceInjectable from "./electron-app/when-second-instance.injectable";
-import whenSystemShutdownInjectable from "./electron-app/when-system-shutdown.injectable";
 import exitAppInjectable from "./electron-app/exit-app.injectable";
 import setApplicationNameInjectable from "./electron-app/set-application-name.injectable";
 import getCommandLineSwitchInjectable from "./electron-app/get-command-line-switch.injectable";
@@ -69,7 +68,8 @@ import shouldStartHiddenInjectable from "./electron-app/should-start-hidden.inje
 import registerProtocolClientInjectable from "./electron-app/register-protocol-client.injectable";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
-import onApplicationActivateInjectable from "./electron-app/on-application-activate.injectable";
+import afterApplicationActivationInjectable from "./electron-app/after-application-activation.injectable";
+import beforeDeviceShutdownInjectable from "./electron-app/before-device-shutdown.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -190,11 +190,11 @@ const overrideOperatingSystem = (di: DiContainer) => {
 };
 
 const overrideElectron = (di: DiContainer) => {
-  di.override(onApplicationActivateInjectable, () => () => {});
+  di.override(afterApplicationActivationInjectable, () => () => {});
   di.override(whenApplicationWillQuitInjectable, () => () => {});
   di.override(whenOpeningUrlInjectable, () => () => {});
   di.override(whenSecondInstanceInjectable, () => () => {});
-  di.override(whenSystemShutdownInjectable, () => () => {});
+  di.override(beforeDeviceShutdownInjectable, () => () => {});
   di.override(exitAppInjectable, () => () => {});
   di.override(setApplicationNameInjectable, () => () => {});
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");

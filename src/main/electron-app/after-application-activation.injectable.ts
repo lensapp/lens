@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "./electron-app.injectable";
 import type { ActivationArgs } from "../start-main-application/after-application-activation/after-application-activation-injection-token";
 
-const onApplicationActivateInjectable = getInjectable({
-  id: "on-application-activate",
+const afterApplicationActivationInjectable = getInjectable({
+  id: "after-application-activation",
 
   instantiate: (di) => {
     const app = di.inject(electronAppInjectable);
@@ -22,4 +22,4 @@ const onApplicationActivateInjectable = getInjectable({
   },
 });
 
-export default onApplicationActivateInjectable;
+export default afterApplicationActivationInjectable;
