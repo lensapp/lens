@@ -8,12 +8,10 @@ import mainExtensionsInjectable from "../../extensions/main-extensions.injectabl
 
 const trayItemsInjectable = getInjectable({
   id: "tray-items",
-
   instantiate: (di) => {
     const extensions = di.inject(mainExtensionsInjectable);
 
-    return computed(() =>
-      extensions.get().flatMap(extension => extension.trayMenus));
+    return computed(() => extensions.get().flatMap(extension => extension.trayMenus));
   },
 });
 
