@@ -32,8 +32,7 @@ import preferenceNavigationItemsInjectable from "../+preferences/preferences-nav
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItemConstructorOptions } from "electron";
-import { MenuItem } from "electron";
+import type { MenuItem, MenuItemConstructorOptions } from "electron";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
@@ -153,7 +152,15 @@ export const getApplicationBuilder = () => {
           );
         }
 
-        menuItem.click?.(new MenuItem(menuItem), undefined, {});
+        menuItem.click?.(
+          {
+            menu: null as never,
+            commandId: 0,
+            ...menuItem,
+          } as MenuItem,
+          undefined,
+          {},
+        );
       },
     },
 

@@ -19,7 +19,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
           Add Clusters from Kubeconfig
         </h2>
         <p>
-          Clusters added here are 
+          Clusters added here are  
           <b>
             not
           </b>
@@ -27,16 +27,14 @@ exports[`add-cluster - navigation using application menu when navigating to add 
           <code>
             ~/.kube/config
           </code>
-           file.
-           
+           file. 
           <a
             href="https://docs.k8slens.dev/main//catalog/add-clusters/"
             rel="noreferrer"
             target="_blank"
           >
-            Read more about adding clusters
+            Read more about adding clusters.
           </a>
-          .
         </p>
         <div
           class="flex column"
