@@ -59,6 +59,10 @@ export class Iterator<T> {
 
     return this as never;
   }
+
+  public join(sep?: string): string {
+    return join(this.#inner, sep);
+  }
 }
 
 /**

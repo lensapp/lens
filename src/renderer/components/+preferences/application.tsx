@@ -77,6 +77,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="appearance">
           <SubTitle title="Theme" />
           <Select
+            id="theme-input"
             options={themeOptions}
             value={userStore.colorTheme}
             onChange={value => userStore.colorTheme = value?.value ?? defaultThemeId}
@@ -89,6 +90,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="extensionRegistryUrl">
           <SubTitle title="Extension Install Registry" />
           <Select
+            id="extension-install-registry-input"
             options={extensionInstallRegistryOptions}
             value={userStore.extensionRegistryUrl.location}
             onChange={value => runInAction(() => {
@@ -140,6 +142,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="update-channel">
           <SubTitle title="Update Channel" />
           <Select
+            id="update-channel-input"
             options={updateChannelOptions}
             value={userStore.updateChannel}
             onChange={value => userStore.updateChannel = value?.value ?? defaultUpdateChannel}
@@ -152,6 +155,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
         <section id="locale">
           <SubTitle title="Locale Timezone" />
           <Select
+            id="timezone-input"
             options={timezoneOptions}
             value={userStore.localeTimezone}
             onChange={value => userStore.localeTimezone = value?.value ?? defaultLocaleTimezone}

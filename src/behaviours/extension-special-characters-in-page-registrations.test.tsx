@@ -10,6 +10,7 @@ import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
 import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { SetRequired } from "type-fest";
 
 describe("extension special characters in page registrations", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -49,7 +50,7 @@ describe("extension special characters in page registrations", () => {
   });
 });
 
-const extensionWithPagesHavingSpecialCharacters: Partial<LensRendererExtension> = {
+const extensionWithPagesHavingSpecialCharacters: SetRequired<Partial<LensRendererExtension>, "id"> = {
   id: "@some-extension-id/",
 
   globalPages: [

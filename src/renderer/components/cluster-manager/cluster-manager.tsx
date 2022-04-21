@@ -21,9 +21,10 @@ import { setEntityOnRouteMatch } from "../../api/helpers/general-active-sync";
 import { navigation } from "../../navigation";
 import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
 import { buildURL } from "../../../common/utils/buildUrl";
+import type { StorageLayer } from "../../utils";
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { get: () => string };
+  catalogPreviousActiveTabStorage: StorageLayer<string | null>;
   currentRouteComponent: IComputedValue<React.ElementType | undefined>;
   welcomeUrl: string;
 }

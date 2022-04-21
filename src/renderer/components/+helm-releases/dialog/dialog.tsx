@@ -83,6 +83,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
       <div className="flex gaps align-center">
         <b>Revision</b>
         <Select
+          id="revision-input"
           themeName="light"
           value={revision}
           options={this.revisionOptions.get()}

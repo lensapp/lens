@@ -56,6 +56,7 @@ const NonInjectedKubectlBinaries= observer(({
       <section>
         <SubTitle title="Download mirror" />
         <Select
+          id="download-mirror-input"
           placeholder="Download mirror for kubectl"
           options={downloadMirrorOptions}
           value={userStore.downloadMirror}

@@ -13,6 +13,7 @@ import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { IComputedValue } from "mobx";
 import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { SetRequired } from "type-fest";
 
 describe("navigate to extension page", () => {
   let rendered: RenderResult;
@@ -125,7 +126,7 @@ describe("navigate to extension page", () => {
   });
 });
 
-const extensionWithPagesHavingParameters: Partial<LensRendererExtension> = {
+const extensionWithPagesHavingParameters: SetRequired<Partial<LensRendererExtension>, "id"> = {
   id: "some-extension-id",
 
   globalPages: [

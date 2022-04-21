@@ -42,7 +42,7 @@ export interface SelectProps<
   IsMulti extends boolean,
   Group extends GroupBase<Option> = GroupBase<Option>,
 > extends SetRequired<Omit<ReactSelectProps<Option, IsMulti, Group>, "value">, "options"> {
-  id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
+  id: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
   value?: PropsValue<Value>;

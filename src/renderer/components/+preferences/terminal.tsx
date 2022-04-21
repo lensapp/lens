@@ -67,6 +67,7 @@ const NonInjectedTerminal = observer(({
         <section id="terminalTheme">
           <SubTitle title="Terminal theme" />
           <Select
+            id="terminal-theme-input"
             themeName="lens"
             options={themeOptions}
             value={userStore.terminalTheme}
