@@ -105,7 +105,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Theme
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -190,7 +190,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Extension Install Registry
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -270,16 +270,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="mt-4 mb-5 leading-relaxed"
             >
               This setting is to change the registry URL for installing extensions by name.
-               
-              If you are unable to access the default registry (
-              https://registry.npmjs.org
-              )
-               
-              you can change it in your 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
               <b>
                 .npmrc
               </b>
-               file or in the input below.
+               file or in the input below.
             </p>
             <div
               class="Input theme round black disabled invalid"
@@ -309,7 +304,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Start-up
-               
+
             </div>
             <label
               class="Switch"
@@ -330,7 +325,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Update Channel
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -415,7 +410,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Locale Timezone
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -639,7 +634,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Kubectl binary download
-                 
+
               </div>
               <label
                 class="Switch"
@@ -657,7 +652,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Download mirror
-                 
+
               </div>
               <div
                 class="Select theme-lens Select--is-disabled css-3iigni-container"
@@ -740,7 +735,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Directory for binaries
-                 
+
               </div>
               <div
                 class="Input theme round black disabled"
@@ -772,7 +767,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Path to kubectl binary
-                 
+
               </div>
               <div
                 class="Input theme round black"
@@ -817,7 +812,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle pt-5"
             >
               Synced Items
-               
+
             </div>
             <div
               class="notice mt-3"
