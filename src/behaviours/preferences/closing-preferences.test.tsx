@@ -12,8 +12,6 @@ import { routeInjectionToken } from "../../common/front-end-routing/route-inject
 import { computed } from "mobx";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { ThemeStore } from "../../renderer/themes/store";
-import themeStoreInjectable from "../../renderer/themes/store.injectable";
 import { preferenceNavigationItemInjectionToken } from "../../renderer/components/+preferences/preferences-navigation/preference-navigation-items.injectable";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { Preferences } from "../../renderer/components/+preferences";
@@ -26,6 +24,7 @@ import { createObservableHistory } from "mobx-observable-history";
 import navigateToPreferenceTabInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab.injectable";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - closing-preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -45,10 +44,10 @@ describe("preferences - closing-preferences", () => {
       } as unknown as UserStore;
 
       rendererDi.override(userStoreInjectable, () => userStoreStub);
-
-      const themeStoreStub = { themeOptions: [] } as unknown as ThemeStore;
-
-      rendererDi.override(themeStoreInjectable, () => themeStoreStub);
+      rendererDi.override(ipcRendererInjectable, () => ({
+        on: jest.fn(),
+        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+      } as never));
 
       rendererDi.override(navigateToFrontPageInjectable, (di) => {
         const navigateToRoute = di.inject(navigateToRouteInjectionToken);
