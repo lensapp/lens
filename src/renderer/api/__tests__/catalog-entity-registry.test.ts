@@ -4,12 +4,14 @@
  */
 
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
-import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
 import type { CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
 import { CatalogCategory } from "../catalog-entity";
 import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";
 import { observable } from "mobx";
+import type { CatalogCategoryRegistry } from "../../../common/catalog";
 import { categoryVersion } from "../../../common/catalog";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 
 class TestCatalogEntityRegistry extends CatalogEntityRegistry {
   replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
@@ -79,6 +81,14 @@ const entitykc = new KubernetesCluster({
 });
 
 describe("CatalogEntityRegistry", () => {
+  let catalogCategoryRegistry: CatalogCategoryRegistry;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
+  });
+
   describe("updateItems", () => {
     it("adds new catalog item", () => {
       const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);

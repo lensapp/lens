@@ -8,7 +8,10 @@ import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
 import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
 import type { CatalogEntityOnBeforeRun } from "../../renderer/api/catalog-entity-registry";
 import type { Disposer } from "../../common/utils";
-export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
+import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+
+export const catalogCategories = asLegacyGlobalForExtensionApi(catalogCategoryRegistryInjectable);
 
 export class CatalogEntityRegistry {
   /**
