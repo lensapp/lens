@@ -19,6 +19,7 @@ import getConfigurationFileModelInjectable from "../../../../common/get-configur
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import type { HotbarStore } from "../../../../common/hotbars/store";
 import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 const mockHotbars: Partial<Record<string, any>> = {
   "1": {
@@ -46,6 +47,10 @@ describe("<HotbarRemoveCommand />", () => {
 
     di.override(createStoresAndApisInjectable, () => true);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     di.permitSideEffects(hotbarStoreInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);
