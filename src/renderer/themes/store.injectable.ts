@@ -14,8 +14,6 @@ const themeStoreInjectable = getInjectable({
     ipcRenderer: di.inject(ipcRendererInjectable),
     userStore: di.inject(userStoreInjectable),
   }),
-
-  causesSideEffects: true,
 });
 
 export default themeStoreInjectable;

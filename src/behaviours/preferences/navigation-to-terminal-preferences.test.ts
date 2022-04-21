@@ -9,7 +9,6 @@ import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import type { UserStore } from "../../common/user-store";
 import { observable } from "mobx";
 import defaultShellInjectable from "../../renderer/components/+preferences/default-shell.injectable";
-import themeStoreInjectable from "../../renderer/themes/store.injectable";
 import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation to terminal preferences", () => {
@@ -27,7 +26,6 @@ describe("preferences - navigation to terminal preferences", () => {
 
       rendererDi.override(userStoreInjectable, () => userStoreStub);
       rendererDi.override(defaultShellInjectable, () => "some-default-shell");
-      rendererDi.permitSideEffects(themeStoreInjectable);
       rendererDi.override(ipcRendererInjectable, () => ({
         on: jest.fn(),
         invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge

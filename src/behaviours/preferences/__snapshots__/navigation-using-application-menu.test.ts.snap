@@ -107,7 +107,7 @@ exports[`preferences - navigation using application menu when navigating to pref
               class="SubTitle"
             >
               Theme
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -192,7 +192,7 @@ exports[`preferences - navigation using application menu when navigating to pref
               class="SubTitle"
             >
               Extension Install Registry
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -272,16 +272,11 @@ exports[`preferences - navigation using application menu when navigating to pref
               class="mt-4 mb-5 leading-relaxed"
             >
               This setting is to change the registry URL for installing extensions by name.
-               
-              If you are unable to access the default registry (
-              https://registry.npmjs.org
-              )
-               
-              you can change it in your 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
               <b>
                 .npmrc
               </b>
-               file or in the input below.
+               file or in the input below.
             </p>
             <div
               class="Input theme round black disabled invalid"
@@ -311,7 +306,7 @@ exports[`preferences - navigation using application menu when navigating to pref
               class="SubTitle"
             >
               Start-up
-               
+
             </div>
             <label
               class="Switch"
@@ -332,7 +327,7 @@ exports[`preferences - navigation using application menu when navigating to pref
               class="SubTitle"
             >
               Update Channel
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -417,7 +412,7 @@ exports[`preferences - navigation using application menu when navigating to pref
               class="SubTitle"
             >
               Locale Timezone
-               
+
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"

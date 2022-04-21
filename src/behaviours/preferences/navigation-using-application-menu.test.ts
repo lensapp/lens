@@ -9,8 +9,7 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { ThemeStore } from "../../renderer/themes/store";
-import themeStoreInjectable from "../../renderer/themes/store.injectable";
+import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -27,10 +26,10 @@ describe("preferences - navigation using application menu", () => {
       } as unknown as UserStore;
 
       rendererDi.override(userStoreInjectable, () => userStoreStub);
-
-      const themeStoreStub = { themeOptions: [] } as unknown as ThemeStore;
-
-      rendererDi.override(themeStoreInjectable, () => themeStoreStub);
+      rendererDi.override(ipcRendererInjectable, () => ({
+        on: jest.fn(),
+        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+      } as never));
     });
 
     rendered = await applicationBuilder.render();
