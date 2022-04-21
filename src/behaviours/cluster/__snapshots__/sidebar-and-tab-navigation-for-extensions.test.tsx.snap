@@ -261,14 +261,14 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           class="nav-item flex gaps align-center expandable"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -557,14 +557,14 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           class="nav-item flex gaps align-center expandable"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -853,14 +853,14 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           class="nav-item flex gaps align-center expandable"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -887,15 +887,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
         >
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-child-id"
+            data-id-test="some-extension-name-some-child-id"
             data-is-active-test="false"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-child-id"
             data-testid="sidebar-item"
           >
             <a
               class="nav-item flex gaps align-center"
-              data-testid="sidebar-item-link-for-some-extension-id-some-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-child-id"
               href="/"
             >
               <span
@@ -907,15 +907,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           </div>
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-other-child-id"
+            data-id-test="some-extension-name-some-other-child-id"
             data-is-active-test="false"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-other-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-other-child-id"
             data-testid="sidebar-item"
           >
             <a
               class="nav-item flex gaps align-center"
-              data-testid="sidebar-item-link-for-some-extension-id-some-other-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-other-child-id"
               href="/"
             >
               <span
@@ -1193,15 +1193,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="true"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           aria-current="page"
           class="nav-item flex gaps align-center expandable active"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -1228,16 +1228,16 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
         >
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-child-id"
+            data-id-test="some-extension-name-some-child-id"
             data-is-active-test="true"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-child-id"
             data-testid="sidebar-item"
           >
             <a
               aria-current="page"
               class="nav-item flex gaps align-center active"
-              data-testid="sidebar-item-link-for-some-extension-id-some-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-child-id"
               href="/"
             >
               <span
@@ -1249,15 +1249,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           </div>
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-other-child-id"
+            data-id-test="some-extension-name-some-other-child-id"
             data-is-active-test="false"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-other-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-other-child-id"
             data-testid="sidebar-item"
           >
             <a
               class="nav-item flex gaps align-center"
-              data-testid="sidebar-item-link-for-some-extension-id-some-other-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-other-child-id"
               href="/"
             >
               <span
@@ -1281,7 +1281,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       <div
         class="Tab flex gaps align-center active"
         data-is-active-test="true"
-        data-testid="tab-link-for-some-extension-id-some-child-id"
+        data-testid="tab-link-for-some-extension-name-some-child-id"
         role="tab"
         tabindex="0"
       >
@@ -1294,7 +1294,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       <div
         class="Tab flex gaps align-center"
         data-is-active-test="false"
-        data-testid="tab-link-for-some-extension-id-some-other-child-id"
+        data-testid="tab-link-for-some-extension-name-some-other-child-id"
         role="tab"
         tabindex="0"
       >
@@ -1577,15 +1577,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="true"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           aria-current="page"
           class="nav-item flex gaps align-center expandable active"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -1612,15 +1612,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
         >
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-child-id"
+            data-id-test="some-extension-name-some-child-id"
             data-is-active-test="false"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-child-id"
             data-testid="sidebar-item"
           >
             <a
               class="nav-item flex gaps align-center"
-              data-testid="sidebar-item-link-for-some-extension-id-some-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-child-id"
               href="/"
             >
               <span
@@ -1632,16 +1632,16 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           </div>
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-other-child-id"
+            data-id-test="some-extension-name-some-other-child-id"
             data-is-active-test="true"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-other-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-other-child-id"
             data-testid="sidebar-item"
           >
             <a
               aria-current="page"
               class="nav-item flex gaps align-center active"
-              data-testid="sidebar-item-link-for-some-extension-id-some-other-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-other-child-id"
               href="/"
             >
               <span
@@ -1665,7 +1665,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       <div
         class="Tab flex gaps align-center"
         data-is-active-test="false"
-        data-testid="tab-link-for-some-extension-id-some-child-id"
+        data-testid="tab-link-for-some-extension-name-some-child-id"
         role="tab"
         tabindex="0"
       >
@@ -1678,7 +1678,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       <div
         class="Tab flex gaps align-center active"
         data-is-active-test="true"
-        data-testid="tab-link-for-some-extension-id-some-other-child-id"
+        data-testid="tab-link-for-some-extension-name-some-other-child-id"
         role="tab"
         tabindex="0"
       >
@@ -1961,15 +1961,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="true"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           aria-current="page"
           class="nav-item flex gaps align-center expandable active"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -2004,7 +2004,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       <div
         class="Tab flex gaps align-center active"
         data-is-active-test="true"
-        data-testid="tab-link-for-some-extension-id-some-child-id"
+        data-testid="tab-link-for-some-extension-name-some-child-id"
         role="tab"
         tabindex="0"
       >
@@ -2017,7 +2017,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       <div
         class="Tab flex gaps align-center"
         data-is-active-test="false"
-        data-testid="tab-link-for-some-extension-id-some-other-child-id"
+        data-testid="tab-link-for-some-extension-name-some-other-child-id"
         role="tab"
         tabindex="0"
       >
@@ -2300,14 +2300,14 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           class="nav-item flex gaps align-center expandable"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>
@@ -2334,15 +2334,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
         >
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-child-id"
+            data-id-test="some-extension-name-some-child-id"
             data-is-active-test="false"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-child-id"
             data-testid="sidebar-item"
           >
             <a
               class="nav-item flex gaps align-center"
-              data-testid="sidebar-item-link-for-some-extension-id-some-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-child-id"
               href="/"
             >
               <span
@@ -2354,15 +2354,15 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           </div>
           <div
             class="SidebarItem"
-            data-id-test="some-extension-id-some-other-child-id"
+            data-id-test="some-extension-name-some-other-child-id"
             data-is-active-test="false"
-            data-parent-id-test="some-extension-id-some-parent-id"
-            data-test-id="some-extension-id-some-other-child-id"
+            data-parent-id-test="some-extension-name-some-parent-id"
+            data-test-id="some-extension-name-some-other-child-id"
             data-testid="sidebar-item"
           >
             <a
               class="nav-item flex gaps align-center"
-              data-testid="sidebar-item-link-for-some-extension-id-some-other-child-id"
+              data-testid="sidebar-item-link-for-some-extension-name-some-other-child-id"
               href="/"
             >
               <span
@@ -2640,14 +2640,14 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-extension-id-some-parent-id"
+        data-id-test="some-extension-name-some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-extension-id-some-parent-id"
+        data-test-id="some-extension-name-some-parent-id"
         data-testid="sidebar-item"
       >
         <a
           class="nav-item flex gaps align-center expandable"
-          data-testid="sidebar-item-link-for-some-extension-id-some-parent-id"
+          data-testid="sidebar-item-link-for-some-extension-name-some-parent-id"
           href="/"
         >
           <div>

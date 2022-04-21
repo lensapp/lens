@@ -34,6 +34,7 @@ import type { MenuItemOpts } from "../../../main/menu/application-menu-items.inj
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
 import type { MenuItemConstructorOptions } from "electron";
 import { MenuItem } from "electron";
+import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -82,6 +83,7 @@ export const getApplicationBuilder = () => {
   } as unknown as ClusterStore;
 
   rendererDi.override(clusterStoreInjectable, () => clusterStoreStub);
+  rendererDi.override(createStoresAndApisInjectable, () => true);
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
 
   const beforeSetupsCallbacks: Callback[] = [];

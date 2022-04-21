@@ -22,7 +22,6 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import { getSidebarItem } from "../utils";
-import createStoresAndApisInjectable from "../../renderer/create-stores-apis.injectable";
 import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-storage/sidebar-storage.injectable";
 
 describe("cluster - sidebar and tab navigation for core", () => {
@@ -36,7 +35,6 @@ describe("cluster - sidebar and tab navigation for core", () => {
     applicationBuilder = getApplicationBuilder();
     rendererDi = applicationBuilder.dis.rendererDi;
 
-    rendererDi.override(createStoresAndApisInjectable, () => true);
     applicationBuilder.setEnvironmentToClusterFrame();
     applicationBuilder.beforeSetups(({ rendererDi }) => {
       rendererDi.override(
