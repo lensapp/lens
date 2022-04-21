@@ -11,7 +11,9 @@ import ChartJS from "chart.js";
 import type { ChartProps } from "./chart";
 import { Chart } from "./chart";
 import { cssNames } from "../../utils";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
 export interface PieChartProps extends ChartProps {
 }
@@ -41,9 +43,19 @@ function getCutout(length: number | undefined): number {
   }
 }
 
-export const PieChart = observer((props: PieChartProps) => {
-  const { data, className, options, ...chartProps } = props;
-  const { contentColor } = ThemeStore.getInstance().activeTheme.colors;
+interface Dependencies {
+  themeStore: ThemeStore;
+}
+
+const NonInjectedPieChart = observer(({
+  themeStore,
+  data,
+  className,
+  options,
+  showChart,
+  ...chartProps
+}: Dependencies & PieChartProps) => {
+  const { contentColor } = themeStore.activeTheme.colors;
   const opts: ChartOptions = {
     maintainAspectRatio: false,
     tooltips: {
@@ -98,10 +110,18 @@ export const PieChart = observer((props: PieChartProps) => {
     <Chart
       className={cssNames("PieChart flex column align-center", className)}
       data={data}
-      options={props.showChart ? {} : opts}
+      options={showChart ? {} : opts}
+      showChart={showChart}
       {...chartProps}
     />
   );
+});
+
+export const PieChart = withInjectables<Dependencies, PieChartProps>(NonInjectedPieChart, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
 });
 
 ChartJS.Tooltip.positioners.cursor = function (elements: any, position: { x: number; y: number }) {

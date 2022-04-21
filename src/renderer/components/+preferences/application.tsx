@@ -7,7 +7,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { SubTitle } from "../layout/sub-title";
 import { Select } from "../select";
-import type { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
 import type { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { Switch } from "../switch";
@@ -22,8 +22,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import appPreferencesInjectable from "./app-preferences/app-preferences.injectable";
 import { Preferences } from "./preferences";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import themeStoreInjectable from "../../theme-store.injectable";
-import { defaultTheme } from "../../../common/vars";
+import themeStoreInjectable from "../../themes/store.injectable";
+import { defaultThemeId } from "../../../common/vars";
 
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
@@ -57,8 +57,6 @@ const extensionInstallRegistryOptions = [
 
 const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, userStore, themeStore }) => {
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
-  const extensionSettings = appPreferenceItems.get()
-    .filter((preference) => preference.showInPreferencesTab === "application");
   const themeOptions = [
     {
       value: "system", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
@@ -69,6 +67,8 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
       label: name,
     })),
   ];
+  const extensionSettings = appPreferenceItems.get()
+    .filter((preference) => preference.showInPreferencesTab === "application");
 
   return (
     <Preferences data-testid="application-preferences-page">
@@ -79,7 +79,7 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
           <Select
             options={themeOptions}
             value={userStore.colorTheme}
-            onChange={value => userStore.colorTheme = value?.value ?? defaultTheme}
+            onChange={value => userStore.colorTheme = value?.value ?? defaultThemeId}
             themeName="lens"
           />
         </section>

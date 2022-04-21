@@ -7,9 +7,9 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import type { UserStore } from "../../common/user-store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+import themeStoreInjectable from "../../renderer/themes/store.injectable";
+import type { ThemeStore } from "../../renderer/themes/store";
+import { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import React from "react";
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 
@@ -107,10 +107,8 @@ describe("preferences - navigation to extension specific preferences", () => {
   });
 });
 
-const extensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExtension> = {
-  id: "some-test-extension-id",
-
-  appPreferences: [
+const extensionStubWithExtensionSpecificPreferenceItems = new (class extends LensRendererExtension{
+  appPreferences = [
     {
       title: "Some preference item",
       id: "some-preference-item-id",
@@ -131,6 +129,17 @@ const extensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExt
         Input: () => <div />,
       },
     },
-  ],
-};
+  ];
+})({
+  absolutePath: "/some/absolute/path",
+  id: "some-extension-id",
+  isBundled: true,
+  isCompatible: true,
+  isEnabled: true,
+  manifest: {
+    name: "some-extension-name",
+    version: "1.0.0",
+  },
+  manifestPath: "/some/manifest/path",
+});
 

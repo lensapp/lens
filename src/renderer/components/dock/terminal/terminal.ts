@@ -11,7 +11,7 @@ import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
 import { TerminalChannels } from "../../../api/terminal-api";
-import { ThemeStore } from "../../../theme.store";
+import type { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
@@ -24,6 +24,7 @@ export interface TerminalDependencies {
   readonly spawningPool: HTMLElement;
   readonly terminalConfig: IComputedValue<TerminalConfig>;
   readonly terminalCopyOnSelect: IComputedValue<boolean>;
+  readonly themeStore: ThemeStore;
 }
 
 export interface TerminalArguments {
@@ -94,7 +95,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposer.push(
-      reaction(() => ThemeStore.getInstance().xtermColors, colors => {
+      reaction(() => this.dependencies.themeStore.xtermColors, colors => {
         this.xterm?.setOption("theme", colors);
       }, {
         fireImmediately: true,

@@ -10,7 +10,7 @@ import { getAppVersion } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
+import { defaultThemeId, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
 import type { ObservableMap } from "mobx";
 import { observable } from "mobx";
 import { readonly } from "../utils/readonly";
@@ -77,10 +77,10 @@ const shell: PreferenceDescription<string | undefined> = {
 
 const colorTheme: PreferenceDescription<string> = {
   fromStore(val) {
-    return val || defaultTheme;
+    return val || defaultThemeId;
   },
   toStore(val) {
-    if (!val || val === defaultTheme) {
+    if (!val || val === defaultThemeId) {
       return undefined;
     }
 

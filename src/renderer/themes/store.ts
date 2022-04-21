@@ -4,17 +4,17 @@
  */
 
 import { comparer, computed, makeObservable, observable, reaction } from "mobx";
-import { autoBind, Singleton } from "./utils";
-import { UserStore } from "../common/user-store";
-import logger from "../main/logger";
-import lensDarkTheme from "./themes/lens-dark";
-import lensLightTheme from "./themes/lens-light";
-import type { MonacoTheme } from "./components/monaco-editor";
-import { defaultTheme } from "../common/vars";
+import { autoBind } from "../utils";
+import logger from "../../main/logger";
+import lensDarkTheme from "./lens-dark";
+import lensLightTheme from "./lens-light";
+import type { MonacoTheme } from "../components/monaco-editor";
+import { defaultThemeId } from "../../common/vars";
 import { camelCase } from "lodash";
-import { ipcRenderer } from "electron";
-import { getNativeThemeChannel, setNativeThemeChannel } from "../common/ipc/native-theme";
+import type { IpcRenderer } from "electron";
+import { getNativeThemeChannel, setNativeThemeChannel } from "../../common/ipc/native-theme";
 import type { ReadonlyDeep } from "type-fest/source/readonly-deep";
+import assert from "assert";
 
 export type ThemeId = string;
 
@@ -27,7 +27,16 @@ export interface Theme {
   monacoTheme: MonacoTheme;
 }
 
-export class ThemeStore extends Singleton {
+interface Dependencies {
+  readonly userStore: {
+    colorTheme: string;
+    terminalTheme: ThemeId;
+    resetTheme(): void;
+  };
+  readonly ipcRenderer: IpcRenderer;
+}
+
+export class ThemeStore {
   private terminalColorPrefix = "terminal";
 
   #themes = observable.map<ThemeId, Theme>({
@@ -38,18 +47,19 @@ export class ThemeStore extends Singleton {
   @observable osNativeTheme: "dark" | "light" | undefined;
 
   @computed get activeThemeId(): ThemeId {
-    return UserStore.getInstance().colorTheme;
+    return this.dependencies.userStore.colorTheme;
   }
 
-  @computed get terminalThemeId(): ThemeId | undefined {
-    return UserStore.getInstance().terminalTheme;
+  @computed get terminalThemeId(): ThemeId {
+    return this.dependencies.userStore.terminalTheme;
   }
+
+  private readonly defaultTheme: Theme;
 
   @computed get activeTheme(): Theme {
     return this.systemTheme
       ?? this.#themes.get(this.activeThemeId)
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ?? this.#themes.get(defaultTheme)!;
+      ?? this.defaultTheme;
   }
 
   @computed get terminalColors(): [string, string][] {
@@ -85,12 +95,16 @@ export class ThemeStore extends Singleton {
     return null;
   }
 
-  constructor() {
-    super();
-
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
     autoBind(this);
     this.init();
+
+    const defaultTheme = this.#themes.get(defaultThemeId);
+
+    assert(defaultTheme, `${defaultThemeId} is invalid as there is no corresponding theme`);
+
+    this.defaultTheme = defaultTheme;
   }
 
   async init() {
@@ -106,7 +120,7 @@ export class ThemeStore extends Singleton {
         this.applyActiveTheme();
       } catch (err) {
         logger.error(err);
-        UserStore.getInstance().resetTheme();
+        this.dependencies.userStore.resetTheme();
       }
     }, {
       fireImmediately: true,
@@ -115,14 +129,14 @@ export class ThemeStore extends Singleton {
   }
 
   bindNativeThemeUpdateEvent() {
-    ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
+    this.dependencies.ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
       this.osNativeTheme = theme;
       this.applyActiveTheme();
     });
   }
 
   async setNativeTheme() {
-    const theme: "dark" | "light" = await ipcRenderer.invoke(getNativeThemeChannel);
+    const theme: "dark" | "light" = await this.dependencies.ipcRenderer.invoke(getNativeThemeChannel);
 
     this.osNativeTheme = theme;
   }

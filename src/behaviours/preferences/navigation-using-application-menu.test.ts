@@ -9,8 +9,8 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
+import type { ThemeStore } from "../../renderer/themes/store";
+import themeStoreInjectable from "../../renderer/themes/store.injectable";
 
 describe("preferences - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;

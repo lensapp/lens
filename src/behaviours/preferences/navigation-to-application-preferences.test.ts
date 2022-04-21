@@ -7,8 +7,8 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import type { UserStore } from "../../common/user-store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
+import themeStoreInjectable from "../../renderer/themes/store.injectable";
+import type { ThemeStore } from "../../renderer/themes/store";
 import navigateToProxyPreferencesInjectable
   from "../../common/front-end-routing/routes/preferences/proxy/navigate-to-proxy-preferences.injectable";
 

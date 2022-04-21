@@ -9,8 +9,8 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
+import type { ThemeStore } from "../../renderer/themes/store";
+import themeStoreInjectable from "../../renderer/themes/store.injectable";
 import navigateToTelemetryPreferencesInjectable from "../../common/front-end-routing/routes/preferences/telemetry/navigate-to-telemetry-preferences.injectable";
 import sentryDnsUrlInjectable from "../../renderer/components/+preferences/sentry-dns-url.injectable";
 

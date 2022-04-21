@@ -13,9 +13,11 @@ import type { ChartProps } from "./chart";
 import { Chart, ChartKind } from "./chart";
 import { bytesToUnits, cssNames, isObject } from "../../utils";
 import { ZebraStripesPlugin } from "./zebra-stripes.plugin";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import assert from "assert";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
 export interface BarChartProps extends ChartProps {
   name?: string;
@@ -24,7 +26,12 @@ export interface BarChartProps extends ChartProps {
 
 const getBarColor: Scriptable<string> = ({ dataset }) => Color(dataset?.borderColor).alpha(0.2).string();
 
-export const BarChart = observer(({
+interface Dependencies {
+  themeStore: ThemeStore;
+}
+
+const NonInjectedBarChart = observer(({
+  themeStore,
   name,
   data,
   className,
@@ -32,8 +39,8 @@ export const BarChart = observer(({
   plugins,
   options: customOptions,
   ...settings
-}: BarChartProps) => {
-  const { textColorPrimary, borderFaintColor, chartStripesColor } = ThemeStore.getInstance().activeTheme.colors;
+}: Dependencies & BarChartProps) => {
+  const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
   const { datasets: rawDatasets = [], ...rest } = data;
   const datasets = rawDatasets
     .filter(set => set.data?.length)
@@ -156,6 +163,13 @@ export const BarChart = observer(({
       {...settings}
     />
   );
+});
+
+export const BarChart = withInjectables<Dependencies, BarChartProps>(NonInjectedBarChart, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
 });
 
 const tooltipCallbackWith = (precision: number): ChartTooltipCallback["label"] => (

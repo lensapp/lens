@@ -12,9 +12,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
-import { ThemeStore } from "../../../theme.store";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
@@ -54,15 +52,10 @@ describe("<HotbarRemoveCommand />", () => {
     di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
   });
 
   it("renders w/o errors", async () => {

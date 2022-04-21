@@ -12,9 +12,11 @@ import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import ReactSelect, { components, createFilter } from "react-select";
 import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
 import { autoBind, cssNames } from "../../utils";
 import type { SetRequired } from "type-fest";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
 const { Menu } = components;
 
@@ -60,26 +62,30 @@ const defaultFilter = createFilter({
   },
 });
 
+interface Dependencies {
+  themeStore: ThemeStore;
+}
+
 @observer
-export class Select<
+class NonInjectedSelect<
   Value,
   Option extends SelectOption<Value>,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
-> extends React.Component<SelectProps<Value, Option, IsMulti, Group>> {
+> extends React.Component<SelectProps<Value, Option, IsMulti, Group> & Dependencies> {
   static defaultProps = {
     menuPortalTarget: document.body,
-    menuPlacement: "auto",
+    menuPlacement: "auto" as const,
   };
 
-  constructor(props: SelectProps<Value, Option, IsMulti, Group>) {
+  constructor(props: SelectProps<Value, Option, IsMulti, Group> & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
   }
 
   @computed get themeClass() {
-    const themeName = this.props.themeName || ThemeStore.getInstance().activeTheme.type;
+    const themeName = this.props.themeName || this.props.themeStore.activeTheme.type;
 
     return `theme-${themeName}`;
   }
@@ -183,3 +189,15 @@ export class Select<
     );
   }
 }
+
+export const Select = withInjectables<Dependencies, SelectProps<unknown, SelectOption<unknown>, boolean>>(NonInjectedSelect, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
+}) as <
+  Value,
+  Option extends SelectOption<Value>,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+>(props: SelectProps<Value, Option, IsMulti, Group>) => React.ReactElement;

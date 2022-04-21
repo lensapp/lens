@@ -37,7 +37,7 @@ import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-fram
 import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
-import themeStoreInjectable from "./theme-store.injectable";
+import themeStoreInjectable from "./themes/store.injectable";
 import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";

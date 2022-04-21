@@ -21,7 +21,7 @@ import { Spinner } from "../../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { Button } from "../../button";
 import { Notifications } from "../../notifications";
-import { ThemeStore } from "../../../theme.store";
+import type { ThemeStore } from "../../../themes/store";
 import { apiManager } from "../../../../common/k8s-api/api-manager";
 import { SubTitle } from "../../layout/sub-title";
 import { getDetailsUrl } from "../../kube-detail-params";
@@ -38,6 +38,7 @@ import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-sho
 import { KubeObjectAge } from "../../kube-object/age";
 import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
 import { entries } from "../../../../common/utils/objects";
+import themeStoreInjectable from "../../../themes/store.injectable";
 
 export interface ReleaseDetailsProps {
   hideDetails(): void;
@@ -50,6 +51,7 @@ interface Dependencies {
   updateRelease: (name: string, namespace: string, payload: HelmReleaseUpdatePayload) => Promise<HelmReleaseUpdateDetails>;
   createUpgradeChartTab: (release: HelmRelease) => void;
   userSuppliedValuesAreShown: { toggle: () => void; value: boolean };
+  themeStore: ThemeStore;
 }
 
 @observer
@@ -252,12 +254,12 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
   }
 
   render() {
-    const { hideDetails } = this.props;
+    const { hideDetails, themeStore } = this.props;
     const release = this.props.release.get();
 
     return (
       <Drawer
-        className={cssNames("ReleaseDetails", ThemeStore.getInstance().activeTheme.type)}
+        className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}
         usePortal={true}
         open={Boolean(release)}
         title={release ? `Release: ${release.getName()}` : ""}
@@ -285,5 +287,6 @@ export const ReleaseDetails = withInjectables<Dependencies, ReleaseDetailsProps>
     userSuppliedValuesAreShown: di.inject(userSuppliedValuesAreShownInjectable),
     updateRelease: di.inject(updateReleaseInjectable),
     createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
+    themeStore: di.inject(themeStoreInjectable),
   }),
 });

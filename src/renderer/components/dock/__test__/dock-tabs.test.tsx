@@ -11,8 +11,6 @@ import { DockTabs } from "../dock-tabs";
 import type { DockStore, DockTab } from "../dock/store";
 import { TabKind } from "../dock/store";
 import { noop } from "../../../utils";
-import { ThemeStore } from "../../../theme.store";
-import { UserStore } from "../../../../common/user-store";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
@@ -92,16 +90,11 @@ describe("<DockTabs />", () => {
 
     dockStore = di.inject(dockStoreInjectable);
 
-    UserStore.createInstance();
-    ThemeStore.createInstance();
     await dockStore.whenReady;
     dockStore.tabs = initialTabs;
   });
 
   afterEach(() => {
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
-
     // TODO: A unit test may not cause side effects. Here accessing file system is a side effect.
     fse.remove("some-test-suite-specific-directory-for-user-data");
   });

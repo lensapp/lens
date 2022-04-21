@@ -6,8 +6,6 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import type { SelectOption } from "./select";
 import { Select } from "./select";
-import { UserStore } from "../../../common/user-store";
-import { ThemeStore } from "../../theme.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { DiRender } from "../test-utils/renderFor";
@@ -42,15 +40,9 @@ describe("<Select />", () => {
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
-
     mockFs.restore();
   });
 

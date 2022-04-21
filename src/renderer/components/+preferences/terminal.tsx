@@ -10,11 +10,11 @@ import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
 import { Switch } from "../switch";
 import { Select } from "../select";
-import type { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import themeStoreInjectable from "../../theme-store.injectable";
+import themeStoreInjectable from "../../themes/store.injectable";
 import defaultShellInjectable from "./default-shell.injectable";
 
 interface Dependencies {

@@ -12,8 +12,8 @@ import { routeInjectionToken } from "../../common/front-end-routing/route-inject
 import { computed } from "mobx";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
+import type { ThemeStore } from "../../renderer/themes/store";
+import themeStoreInjectable from "../../renderer/themes/store.injectable";
 import { preferenceNavigationItemInjectionToken } from "../../renderer/components/+preferences/preferences-navigation/preference-navigation-items.injectable";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { Preferences } from "../../renderer/components/+preferences";

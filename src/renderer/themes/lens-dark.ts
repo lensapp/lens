@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Theme } from "../theme.store";
+import type { Theme } from "./store";
 
 const lensDarkTheme: Theme = {
   "name": "Dark",

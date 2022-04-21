@@ -30,7 +30,7 @@ import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
-import { defaultTheme } from "../vars";
+import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable
@@ -80,7 +80,7 @@ describe("user store tests", () => {
       userStore.httpsProxy = "abcd://defg";
 
       expect(userStore.httpsProxy).toBe("abcd://defg");
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultThemeId);
 
       userStore.colorTheme = "light";
       expect(userStore.colorTheme).toBe("light");
@@ -89,7 +89,7 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       userStore.colorTheme = "some other theme";
       userStore.resetTheme();
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultThemeId);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {

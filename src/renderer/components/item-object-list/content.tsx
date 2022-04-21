@@ -22,39 +22,41 @@ import { Spinner } from "../spinner";
 import type { ItemObject } from "../../../common/item.store";
 import type { Filter } from "./page-filters.store";
 import { pageFilters } from "./page-filters.store";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 import type { ItemListStore } from "./list-layout";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
-export interface ItemListLayoutContentProps<I extends ItemObject, PreLoadStores extends boolean> {
+export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
   tableId?: string;
   className: IClassName;
-  getItems: () => I[];
-  store: ItemListStore<I, PreLoadStores>;
+  getItems: () => Item[];
+  store: ItemListStore<Item, PreLoadStores>;
   getIsReady: () => boolean; // show loading indicator while not ready
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: TableSortCallbacks<I>;
-  tableProps?: Partial<TableProps<I>>; // low-level table configuration
+  sortingCallbacks?: TableSortCallbacks<Item>;
+  tableProps?: Partial<TableProps<Item>>; // low-level table configuration
   renderTableHeader?: (TableCellProps | undefined | null)[];
-  renderTableContents: (item: I) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: I, store: ItemListStore<I, PreLoadStores>) => ReactNode;
-  customizeTableRowProps?: (item: I) => Partial<TableRowProps<I>>;
+  renderTableContents: (item: Item) => (ReactNode | TableCellProps)[];
+  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => ReactNode;
+  customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
 
   // item details view
   hasDetailsView?: boolean;
-  detailsItem?: I;
-  onDetails?: (item: I) => void;
+  detailsItem?: Item;
+  onDetails?: (item: Item) => void;
 
   // other
-  customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
+  customizeRemoveDialog?: (selectedItems: Item[]) => Partial<ConfirmDialogParams>;
 
   /**
    * Message to display when a store failed to load
@@ -64,9 +66,13 @@ export interface ItemListLayoutContentProps<I extends ItemObject, PreLoadStores 
   failedToLoadMessage?: React.ReactNode;
 }
 
+interface Dependencies {
+  themeStore: ThemeStore;
+}
+
 @observer
-export class ItemListLayoutContent<I extends ItemObject, PreLoadStores extends boolean> extends React.Component<ItemListLayoutContentProps<I, PreLoadStores>> {
-  constructor(props: ItemListLayoutContentProps<I, PreLoadStores>) {
+class NonInjectedItemListLayoutContent<Item extends ItemObject, PreLoadStores extends boolean> extends React.Component<ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies> {
+  constructor(props: ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -76,11 +82,11 @@ export class ItemListLayoutContent<I extends ItemObject, PreLoadStores extends b
     return this.props.store.failedLoading;
   }
 
-  renderRow(item: I) {
+  renderRow(item: Item) {
     return this.getTableRow(item);
   }
 
-  getTableRow(item: I) {
+  getTableRow(item: Item) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
       store, hasDetailsView, onDetails,
@@ -150,7 +156,7 @@ export class ItemListLayoutContent<I extends ItemObject, PreLoadStores extends b
     );
   }
 
-  removeItemsDialog(selectedItems: I[]) {
+  removeItemsDialog(selectedItems: Item[]) {
     const { customizeRemoveDialog, store } = this.props;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
@@ -275,10 +281,10 @@ export class ItemListLayoutContent<I extends ItemObject, PreLoadStores extends b
   render() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
-      detailsItem, className, tableProps = {}, tableId, getItems,
+      detailsItem, className, tableProps = {}, tableId, getItems, themeStore,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
-    const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
+    const classNames = cssNames(className, "box", "grow", themeStore.activeTheme.type);
     const items = getItems();
     const selectedItems = store.pickOnlySelected(items);
 
@@ -356,3 +362,10 @@ export class ItemListLayoutContent<I extends ItemObject, PreLoadStores extends b
     );
   }
 }
+
+export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject, boolean>>(NonInjectedItemListLayoutContent, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
+}) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;
