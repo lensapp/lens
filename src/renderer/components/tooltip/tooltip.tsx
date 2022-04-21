@@ -9,7 +9,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames, IClassName } from "../../utils";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, action } from "mobx";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -54,7 +54,8 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable.ref elem: HTMLElement;
   @observable activePosition: TooltipPosition;
-  @observable isVisible = false;
+  @observable isVisible = this.props.visible ?? false;
+  @observable isContentVisible = false; // animation manager
 
   constructor(props: TooltipProps) {
     super(props);
@@ -87,21 +88,26 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @boundMethod
+  @action.bound
   protected onEnterTarget() {
     this.isVisible = true;
-    this.refreshPosition();
+    requestAnimationFrame(action(() => this.isContentVisible = true));
   }
 
-  @boundMethod
+  @action.bound
   protected onLeaveTarget() {
     this.isVisible = false;
+    this.isContentVisible = false;
   }
 
   @boundMethod
   refreshPosition() {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
+
+    if (!elem) {
+      return;
+    }
 
     let positions = new Set<TooltipPosition>([
       TooltipPosition.RIGHT,
@@ -150,6 +156,10 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   protected setPosition(pos: { left: number; top: number }) {
+    if (!this.elem) {
+      return;
+    }
+
     const elemStyle = this.elem.style;
 
     elemStyle.left = `${pos.left}px`;
@@ -214,13 +224,17 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    const { style, formatters, usePortal, children, visible } = this.props;
+    if (!this.isVisible) {
+      return null;
+    }
+
+    const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      visible: visible ?? this.isVisible,
+      visible: this.isContentVisible,
       formatter: !!formatters,
     });
     const tooltip = (
-      <div className={className} style={style} ref={this.bindRef}>
+      <div className={className} style={style} ref={this.bindRef} role="tooltip">
         {children}
       </div>
     );

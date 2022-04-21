@@ -93,7 +93,6 @@ export class Menu extends React.Component<MenuProps, State> {
       this.opener.addEventListener(this.props.toggleEvent, this.toggle);
       this.opener.addEventListener("keydown", this.onKeyDown);
     }
-    this.elem.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("resize", this.onWindowResize);
     window.addEventListener("click", this.onClickOutside, true);
     window.addEventListener("scroll", this.onScrollOutside, true);
@@ -106,7 +105,6 @@ export class Menu extends React.Component<MenuProps, State> {
       this.opener.removeEventListener(this.props.toggleEvent, this.toggle);
       this.opener.removeEventListener("keydown", this.onKeyDown);
     }
-    this.elem.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener("resize", this.onWindowResize);
     window.removeEventListener("click", this.onClickOutside, true);
     window.removeEventListener("scroll", this.onScrollOutside, true);
@@ -218,7 +216,7 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onKeyDown(evt: KeyboardEvent) {
+  onKeyDown(evt: React.KeyboardEvent | KeyboardEvent) {
     if (!this.isOpen) return;
 
     switch (evt.code) {
@@ -330,6 +328,7 @@ export class Menu extends React.Component<MenuProps, State> {
               left: this.state?.menuStyle?.left,
               top: this.state?.menuStyle?.top,
             }}
+            onKeyDown={this.onKeyDown}
           >
             {menuItems}
           </ul>
