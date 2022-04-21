@@ -25,6 +25,7 @@ export interface AvatarProps {
   className?: string;
   id?: string;
   onClick?: MouseEventHandler<HTMLDivElement>;
+  "data-testid"?: string;
 }
 
 function getNameParts(name: string): string[] {
@@ -61,40 +62,48 @@ function getLabelFromTitle(title: string) {
   ].filter(isDefined).join("");
 }
 
-export function Avatar(props: AvatarProps) {
-  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, id, onClick } = props;
-  const colorFromHash = randomColor({ seed: colorHash, luminosity: "dark" });
-
-  const renderContents = () => {
-    if (src) {
-      return (
+export const Avatar = ({
+  title,
+  variant = "rounded",
+  size = 32,
+  colorHash,
+  children,
+  background,
+  imgProps,
+  src,
+  className,
+  disabled,
+  id,
+  onClick,
+  "data-testid": dataTestId,
+}: AvatarProps) => (
+  <div
+    className={cssNames(styles.Avatar, {
+      [styles.circle]: variant == "circle",
+      [styles.rounded]: variant == "rounded",
+      [styles.disabled]: disabled,
+    }, className)}
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      background: background || (
+        src
+          ? "transparent"
+          : randomColor({ seed: colorHash, luminosity: "dark" })
+      ),
+    }}
+    id={id}
+    onClick={onClick}
+    data-testid={dataTestId}
+  >
+    {src
+      ? (
         <img
           src={src}
           {...imgProps}
           alt={title}
         />
-      );
-    }
-
-    return children || getLabelFromTitle(title);
-  };
-
-  return (
-    <div
-      className={cssNames(styles.Avatar, {
-        [styles.circle]: variant == "circle",
-        [styles.rounded]: variant == "rounded",
-        [styles.disabled]: disabled,
-      }, className)}
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        background: background || (src ? "transparent" : colorFromHash),
-      }}
-      id={id}
-      onClick={onClick}
-    >
-      {renderContents()}
-    </div>
-  );
-}
+      )
+      : children || getLabelFromTitle(title)}
+  </div>
+);

@@ -19,6 +19,7 @@ import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "..
 import { CatalogAddButton } from "./catalog-add-button";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
+import type { StorageLayer } from "../../utils";
 import { prevDefault } from "../../utils";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { CatalogMenu } from "./catalog-menu";
@@ -47,7 +48,7 @@ import catalogCategoryRegistryInjectable from "../../../common/catalog/category-
 import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: { set: (value: string ) => void; get: () => string };
+  catalogPreviousActiveTabStorage: StorageLayer<string | null>;
   catalogEntityStore: CatalogEntityStore;
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;

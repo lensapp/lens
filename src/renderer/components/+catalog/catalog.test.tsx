@@ -61,28 +61,25 @@ class MockCatalogEntity extends CatalogEntity {
   constructor(data: CatalogEntityData, public onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
     super(data);
   }
+}
 
-  public onContextMenuOpen(): void | Promise<void> {}
-  public onSettingsOpen(): void | Promise<void> {}
+function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
+  return new MockCatalogEntity({
+    metadata: {
+      uid: "a_catalogEntity_uid",
+      name: "a catalog entity",
+      labels: {
+        test: "label",
+      },
+    },
+    status: {
+      phase: "",
+    },
+    spec: {},
+  }, onRun);
 }
 
 describe("<Catalog />", () => {
-  function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
-    return new MockCatalogEntity({
-      metadata: {
-        uid: "a_catalogEntity_uid",
-        name: "a catalog entity",
-        labels: {
-          test: "label",
-        },
-      },
-      status: {
-        phase: "",
-      },
-      spec: {},
-    }, onRun);
-  }
-
   let di: DiContainer;
   let catalogEntityStore: CatalogEntityStore;
   let catalogEntityRegistry: CatalogEntityRegistry;
@@ -95,14 +92,12 @@ describe("<Catalog />", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
     await di.runSetups();
 
     mockFs();
-
     UserStore.createInstance();
     ThemeStore.createInstance();
     CatalogEntityDetailRegistry.createInstance();
@@ -133,7 +128,6 @@ describe("<Catalog />", () => {
     UserStore.resetInstance();
     ThemeStore.resetInstance();
     CatalogEntityDetailRegistry.resetInstance();
-
     jest.clearAllMocks();
     jest.restoreAllMocks();
     mockFs.restore();
@@ -152,9 +146,7 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
