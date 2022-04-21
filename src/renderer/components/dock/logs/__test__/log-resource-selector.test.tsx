@@ -22,6 +22,7 @@ import { SearchStore } from "../../../../search-store/search-store";
 import getConfigurationFileModelInjectable from "../../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
+import ipcRendererInjectable from "../../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -131,6 +132,10 @@ describe("<LogResourceSelector />", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
