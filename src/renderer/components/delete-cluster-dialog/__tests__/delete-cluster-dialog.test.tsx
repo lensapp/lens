@@ -20,6 +20,7 @@ import type { OpenDeleteClusterDialog } from "../open.injectable";
 import openDeleteClusterDialogInjectable from "../open.injectable";
 import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
 import createKubeconfigManagerInjectable from "../../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
+import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -104,6 +105,10 @@ describe("<DeleteClusterDialog />", () => {
     mockFs();
 
     rendererDi.override(createStoresAndApisInjectable, () => true);
+    rendererDi.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     await runSetups();
 
