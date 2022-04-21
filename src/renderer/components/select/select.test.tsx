@@ -17,6 +17,7 @@ import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import ipcRendererInjectable from "../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 jest.mock("electron", () => ({
   ipcRenderer: {
@@ -37,6 +38,10 @@ describe("<Select />", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
