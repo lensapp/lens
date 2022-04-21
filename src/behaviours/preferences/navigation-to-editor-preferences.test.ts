@@ -7,8 +7,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import type { UserStore } from "../../common/user-store";
-import themeStoreInjectable from "../../renderer/themes/store.injectable";
-import type { ThemeStore } from "../../renderer/themes/store";
+import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation to editor preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -23,10 +22,10 @@ describe("preferences - navigation to editor preferences", () => {
       } as unknown as UserStore;
 
       rendererDi.override(userStoreInjectable, () => userStoreStub);
-
-      const themeStoreStub = ({ themeOptions: [] }) as unknown as ThemeStore;
-
-      rendererDi.override(themeStoreInjectable, () => themeStoreStub);
+      rendererDi.override(ipcRendererInjectable, () => ({
+        on: jest.fn(),
+        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+      } as never));
     });
   });
 
