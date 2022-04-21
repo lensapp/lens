@@ -10,11 +10,11 @@ import { useFlexLayout, useSortBy, useTable } from "react-table";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 
-export interface ReactTableProps extends UseTableOptions<any> {
+export interface ReactTableProps<Data extends object> extends UseTableOptions<Data> {
   headless?: boolean;
 }
 
-export function ReactTable({ columns, data, headless }: ReactTableProps) {
+export function ReactTable<Data extends object>({ columns, data, headless }: ReactTableProps<Data>) {
   const defaultColumn = useMemo(
     () => ({
       minWidth: 20,
@@ -40,11 +40,11 @@ export function ReactTable({ columns, data, headless }: ReactTableProps) {
   );
 
   const renderRow = useCallback(
-    (row: Row<object>) => {
+    (row: Row<Data>) => {
       prepareRow(row);
 
       return (
-        <div className={styles.tr}>
+        <div className={styles.tr} key={row.id}>
           {row.cells.map((cell, index) => (
             <div
               {...cell.getCellProps()}

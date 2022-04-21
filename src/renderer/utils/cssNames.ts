@@ -5,22 +5,27 @@
 
 // Helper for combining css classes inside components
 
-export type IClassName = string | string[] | IClassNameMap | undefined | false;
-export type IClassNameMap = Record<string, any>;
+export type IgnoredClassNames = number | symbol | Function;
 
-export function cssNames(...args: IClassName[]): string {
-  const map: IClassNameMap = {};
+export type IClassName = string | string[] | IClassNameMap | undefined | null | false | IgnoredClassNames;
+export type IClassNameMap = Record<string, unknown>;
 
-  args.forEach(className => {
-    if (typeof className === "string" || Array.isArray(className)) {
-      [className].flat().forEach(name => map[name] = true);
+export function cssNames(...classNames: IClassName[]): string {
+  const classNamesEnabled: IClassNameMap = {};
+
+  for (const className of classNames) {
+    if (typeof className === "string") {
+      classNamesEnabled[className] = true;
+    } else if (Array.isArray(className)) {
+      for (const name of className) {
+        classNamesEnabled[name] = true;
+      }
+    } else if (className && typeof className === "object") {
+      Object.assign(classNamesEnabled, className);
     }
-    else {
-      Object.assign(map, className);
-    }
-  });
+  }
 
-  return Object.entries(map)
+  return Object.entries(classNamesEnabled)
     .filter(([, isActive]) => !!isActive)
     .map(([className]) => className.trim())
     .join(" ");
