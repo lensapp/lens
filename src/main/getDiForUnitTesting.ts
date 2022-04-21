@@ -34,9 +34,9 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
+import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 
-export interface GetDiOptions {
-  doGeneralOverrides?: boolean;
+export interface GetMainDiForUnitTestingOptions extends GetDiForUnitTestingOptions {
   overrideHotbarStore?: boolean;
   overrideUserStore?: boolean;
   overrideExtensionsStore?: boolean;
@@ -44,7 +44,7 @@ export interface GetDiOptions {
   overrideFileSystemProvisionerStore?: boolean;
 }
 
-export function getDiForUnitTesting(opts: GetDiOptions = {}) {
+export function getDiForUnitTesting(opts: GetMainDiForUnitTestingOptions = {}) {
   const {
     doGeneralOverrides = false,
   } = opts;

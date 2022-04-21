@@ -39,15 +39,11 @@ export const createStorage = ({
 }: Dependencies): CreateStorage => (key, defaultValue) => {
   const { logPrefix } = StorageHelper;
 
-  console.log("createStorage", { key, defaultValue });
-
   if (!storage.initialized) {
     storage.initialized = true;
 
     (async () => {
       const filePath = getAbsolutePath(directoryForLensLocalStorage, `${hostedClusterId || "app"}.json`);
-
-      console.log("reading from", filePath);
 
       try {
         storage.data = (await readJsonFile(filePath)) as JsonObject;

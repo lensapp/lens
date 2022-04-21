@@ -72,6 +72,7 @@ interface Environment {
 export const getApplicationBuilder = () => {
   const { rendererDi, mainDi, runSetups } = getDisForUnitTesting({
     doGeneralOverrides: true,
+    overrideCreateStorage: false,
   });
 
   const dis = { rendererDi, mainDi };

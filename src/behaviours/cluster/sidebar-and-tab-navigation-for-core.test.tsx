@@ -108,7 +108,6 @@ describe("cluster - sidebar and tab navigation for core", () => {
           const sidebarStorage = rendererDi.inject(sidebarStorageInjectable);
 
           await sidebarStorage.whenReady;
-          console.log({ ...sidebarStorage.get() });
         });
 
         rendered = await applicationBuilder.render();
