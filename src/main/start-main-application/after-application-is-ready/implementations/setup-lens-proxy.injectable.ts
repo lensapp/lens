@@ -8,12 +8,12 @@ import {
   getAppVersion,
   getAppVersionFromProxyServer,
 } from "../../../../common/utils";
-import exitAppInjectable from "../../../electron-app/exit-app.injectable";
+import exitAppInjectable from "../../../electron-app/features/exit-app.injectable";
 import lensProxyInjectable from "../../../lens-proxy.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
-import { dialog } from "electron";
 import lensProxyPortNumberStateInjectable from "../../../lens-proxy-port-number-state.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
+import showErrorPopupInjectable from "../../../electron-app/features/show-error-popup.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -24,6 +24,7 @@ const setupLensProxyInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const lensProxyPortNumberState = di.inject(lensProxyPortNumberStateInjectable);
     const isWindows = di.inject(isWindowsInjectable);
+    const showErrorPopup = di.inject(showErrorPopupInjectable);
 
     return {
       run: async () => {
@@ -31,7 +32,7 @@ const setupLensProxyInjectable = getInjectable({
           logger.info("🔌 Starting LensProxy");
           await lensProxy.listen(); // lensProxy.port available
         } catch (error) {
-          dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
+          showErrorPopup("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
           return exitApp();
         }
@@ -63,7 +64,7 @@ const setupLensProxyInjectable = getInjectable({
             "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",
           ];
 
-          dialog.showErrorBox("Lens Proxy Error", message.join("\n\n"));
+          showErrorPopup("Lens Proxy Error", message.join("\n\n"));
 
           return exitApp();
         }

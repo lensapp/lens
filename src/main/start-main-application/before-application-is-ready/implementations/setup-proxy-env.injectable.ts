@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeApplicationIsReadyInjectionToken } from "../before-application-is-ready-injection-token";
-import getCommandLineSwitchInjectable from "../../../electron-app/get-command-line-switch.injectable";
+import getCommandLineSwitchInjectable from "../../../electron-app/features/get-command-line-switch.injectable";
 
 const setupProxyEnvInjectable = getInjectable({
   id: "setup-proxy-env",

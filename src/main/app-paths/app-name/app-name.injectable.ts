@@ -3,12 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { isDevelopment } from "../../../common/vars";
 import packageInfo from "../../../../package.json";
+import isDevelopmentInjectable from "../../../common/vars/is-development.injectable";
 
 const appNameInjectable = getInjectable({
   id: "app-name",
-  instantiate: () => `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`,
+
+  instantiate: (di) => {
+    const isDevelopment = di.inject(isDevelopmentInjectable);
+
+    return `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
+  },
+
   causesSideEffects: true,
 });
 

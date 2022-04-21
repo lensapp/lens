@@ -9,7 +9,7 @@ import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import loggerInjectable from "../../../../common/logger.injectable";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
-import { dialog } from "electron";
+import showErrorPopupInjectable from "../../../electron-app/features/show-error-popup.injectable";
 
 const initializeExtensionsInjectable = getInjectable({
   id: "initialize-extensions",
@@ -18,6 +18,7 @@ const initializeExtensionsInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
     const extensionLoader = di.inject(extensionLoaderInjectable);
+    const showErrorPopup = di.inject(showErrorPopupInjectable);
 
     return {
       run: async () => {
@@ -44,12 +45,13 @@ const initializeExtensionsInjectable = getInjectable({
 
           extensionLoader.initExtensions(extensions);
         } catch (error) {
-          dialog.showErrorBox(
+          showErrorPopup(
             "Lens Error",
             `Could not load extensions${
               error?.message ? `: ${error.message}` : ""
             }`,
           );
+
           console.error(error);
           console.trace();
         }

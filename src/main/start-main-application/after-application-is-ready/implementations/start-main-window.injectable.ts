@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import windowManagerInjectable from "../../../window-manager.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
-import shouldStartHiddenInjectable from "../../../electron-app/should-start-hidden.injectable";
+import shouldStartHiddenInjectable from "../../../electron-app/features/should-start-hidden.injectable";
 
 const startMainWindowInjectable = getInjectable({
   id: "start-main-window",

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import environmentVariablesInjectable from "../../../../common/utils/environment-variables.injectable";
-import disableHardwareAccelerationInjectable from "../../../electron-app/disable-hardware-acceleration.injectable";
+import disableHardwareAccelerationInjectable from "../../../electron-app/features/disable-hardware-acceleration.injectable";
 
 const setupHardwareAccelerationInjectable = getInjectable({
   id: "setup-hardware-acceleration",
