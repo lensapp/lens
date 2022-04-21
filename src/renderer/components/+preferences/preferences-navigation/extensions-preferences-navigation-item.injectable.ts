@@ -3,49 +3,39 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { computed } from "mobx";
-import extensionsPreferenceItemsInjectable from "../extension-preference-items.injectable";
-import extensionPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
-import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab.injectable";
+import navigateToExtensionPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/extension/navigate-to-extension-preferences.injectable";
+import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
+import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
+import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
 
-const extensionsPreferencesNavigationItemInjectable = getInjectable({
+const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
   id: "extension-preferences-navigation-item",
 
   instantiate: (di) => {
-    const preferenceItems = di.inject(
-      extensionsPreferenceItemsInjectable,
-    );
+    return (extension: LensRendererExtension) => {
+      const navigateToExtensionPreferences = di.inject(
+        navigateToExtensionPreferencesInjectable,
+      );
 
-    const navigateToPreferenceTab = di.inject(
-      navigateToPreferenceTabInjectable,
-    );
+      const extensionInjectable = getInjectable({
+        id: `extension-preferences-navigation-item-${extension.sanitizedExtensionId}`,
+        instantiate: () => ({
+          id: `extension-${extension.sanitizedExtensionId}`,
+          label: `${extension.name}`,
+          navigate: () => navigateToExtensionPreferences(extension.sanitizedExtensionId),
+          isActive: computed(() => false),
+          isVisible: computed(() => true),
+          orderNumber: 20,
+        }),
+        injectionToken: preferenceNavigationItemInjectionToken,
+      });
 
-    const route = di.inject(
-      extensionPreferencesRouteInjectable,
-    );
-
-    const routeIsActive = di.inject(
-      routeIsActiveInjectable,
-      route,
-    );
-
-    return {
-      id: "extensions",
-      label: "Extensions",
-      navigate: navigateToPreferenceTab(route),
-      isActive: routeIsActive,
-
-      isVisible: computed(
-        () => preferenceItems.get().length > 0,
-      ),
-
-      orderNumber: 70,
+      di.register(extensionInjectable);
     };
   },
 
-  injectionToken: preferenceNavigationItemInjectionToken,
+  injectionToken: extensionRegistratorInjectionToken,
 });
 
-export default extensionsPreferencesNavigationItemInjectable;
+export default extensionPreferencesNavigationItemRegistratorInjectable;

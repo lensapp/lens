@@ -59,11 +59,37 @@ describe("preferences - navigation to extension specific preferences", () => {
       expect(actual).toBeNull();
     });
 
+    describe("given multiple extensions with specific preferences, when navigating to extension specific preferences page", () => {
+      beforeEach(async () => {
+        const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
+        const someOtherTestExtension = getRendererExtensionFake(someOtherExtensionStubWithExtensionSpecificPreferenceItems);
+
+        await applicationBuilder.addExtensions(someTestExtension, someOtherTestExtension);
+        applicationBuilder.preferences.navigation.click("extension-some-test-extension-id");
+      });
+
+      it("renders", () => {
+        expect(rendered.container).toMatchSnapshot();
+      });
+
+      it("doesn't show preferences from unrelated extension", () => {
+        const actual = rendered.getByTestId("extension-preference-item-for-some-other-preference-item-id");
+
+        expect(actual).toBeNull();
+      });
+
+      it("shows preferences from related extension", () => {
+        const actual = rendered.getByTestId("extension-preference-item-for-some-preference-item-id");
+
+        expect(actual).not.toBeNull();
+      });
+    });
+
     describe("when extension with specific preferences is enabled", () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
-        applicationBuilder.addExtensions(testExtension);
+        await applicationBuilder.addExtensions(testExtension);
       });
 
       it("renders", () => {
@@ -71,14 +97,14 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows link for extension preferences", () => {
-        const actual = rendered.getByTestId("tab-link-for-extensions");
+        const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
 
         expect(actual).not.toBeNull();
       });
 
       describe("when navigating to extension preferences using navigation", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extensions");
+          applicationBuilder.preferences.navigation.click("extension-some-test-extension-id");
         });
 
         it("renders", () => {
@@ -129,6 +155,22 @@ const extensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExt
       components: {
         Hint: () => <div />,
         Input: () => <div />,
+      },
+    },
+  ],
+};
+
+const someOtherExtensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExtension> = {
+  id: "some-other-test-extension-id",
+
+  appPreferences: [
+    {
+      title: "Test preference item",
+      id: "some-other-preference-item-id",
+
+      components: {
+        Hint: () => <div data-testid="some-other-preference-item-hint" />,
+        Input: () => <div data-testid="some-other-preference-item-input" />,
       },
     },
   ],

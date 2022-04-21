@@ -4,13 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
+import type { Route } from "../../../route-injection-token";
 import { routeInjectionToken } from "../../../route-injection-token";
+
+interface ExtensionPreferenceRouteParams {
+  extensionId: string;
+}
 
 const extensionPreferencesRouteInjectable = getInjectable({
   id: "extension-preferences-route",
 
-  instantiate: () => ({
-    path: "/preferences/extensions",
+  instantiate: (): Route<ExtensionPreferenceRouteParams> => ({
+    path: "/preferences/extension/:extensionId",
     clusterFrame: false,
     isEnabled: computed(() => true),
   }),
