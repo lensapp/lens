@@ -35,6 +35,7 @@ export interface MonacoEditorProps {
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
   onModelChange?(model: editor.ITextModel, prev?: editor.ITextModel): void;
+  innerRef?: React.ForwardedRef<MonacoEditorRef>;
 }
 
 interface Dependencies {
@@ -46,6 +47,10 @@ export function createMonacoUri(id: MonacoEditorId): Uri {
 }
 
 const monacoViewStates = new WeakMap<Uri, editor.ICodeEditorViewState>();
+
+export interface MonacoEditorRef {
+  focus(): void;
+}
 
 @observer
 class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Dependencies> {
@@ -290,9 +295,12 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   }
 }
 
-export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps>(NonInjectedMonacoEditor, {
-  getProps: (di, props) => ({
-    ...props,
-    themeStore: di.inject(themeStoreInjectable),
-  }),
-});
+export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, MonacoEditorRef>(
+  React.forwardRef<MonacoEditorRef, MonacoEditorProps & Dependencies>((props, ref) => <NonInjectedMonacoEditor innerRef={ref} {...props} />),
+  {
+    getProps: (di, props) => ({
+      ...props,
+      themeStore: di.inject(themeStoreInjectable),
+    }),
+  },
+);

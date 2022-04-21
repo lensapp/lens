@@ -45,7 +45,7 @@ describe("extension special characters in page registrations", () => {
     it("knows URL", () => {
       const currentPath = applicationBuilder.dis.rendererDi.inject(currentPathInjectable);
 
-      expect(currentPath.get()).toBe("/extension/some-extension-id--/some-page-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name--/some-page-id");
     });
   });
 });

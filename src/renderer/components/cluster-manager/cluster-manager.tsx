@@ -60,13 +60,9 @@ class NonInjectedClusterManager extends React.Component<Dependencies> {
 }
 
 export const ClusterManager = withInjectables<Dependencies>(NonInjectedClusterManager, {
-  getProps: (di) => {
-    const welcomeRoute = di.inject(welcomeRouteInjectable);
-
-    return {
-      catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
-      currentRouteComponent: di.inject(currentRouteComponentInjectable),
-      welcomeUrl: buildURL(welcomeRoute.path),
-    };
-  },
+  getProps: (di) => ({
+    catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
+    currentRouteComponent: di.inject(currentRouteComponentInjectable),
+    welcomeUrl: buildURL(di.inject(welcomeRouteInjectable).path),
+  }),
 });

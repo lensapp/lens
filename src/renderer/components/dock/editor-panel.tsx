@@ -6,12 +6,12 @@
 import styles from "./editor-panel.module.scss";
 import throttle from "lodash/throttle";
 import React from "react";
-import { makeObservable, observable, reaction } from "mobx";
+import { makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { DockStore, TabId } from "./dock/store";
 import { cssNames } from "../../utils";
-import type { MonacoEditorProps } from "../monaco-editor";
 import { MonacoEditor } from "../monaco-editor";
+import type { MonacoEditorProps, MonacoEditorRef  } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
 
@@ -36,7 +36,7 @@ const defaultProps: Partial<EditorPanelProps> = {
 class NonInjectedEditorPanel extends React.Component<EditorPanelProps & Dependencies> {
   static defaultProps = defaultProps as object;
 
-  @observable.ref editor: MonacoEditor | null = null;
+  private readonly editor = React.createRef<MonacoEditorRef>();
 
   constructor(props: EditorPanelProps & Dependencies) {
     super(props);
@@ -46,12 +46,12 @@ class NonInjectedEditorPanel extends React.Component<EditorPanelProps & Dependen
   componentDidMount() {
     disposeOnUnmount(this, [
       // keep focus on editor's area when <Dock/> just opened
-      reaction(() => this.props.dockStore.isOpen, isOpen => isOpen && this.editor?.focus(), {
+      reaction(() => this.props.dockStore.isOpen, isOpen => isOpen && this.editor.current?.focus(), {
         fireImmediately: true,
       }),
 
       // focus to editor on dock's resize or turning into fullscreen mode
-      this.props.dockStore.onResize(throttle(() => this.editor?.focus(), 250)),
+      this.props.dockStore.onResize(throttle(() => this.editor.current?.focus(), 250)),
     ]);
   }
 
@@ -68,19 +68,15 @@ class NonInjectedEditorPanel extends React.Component<EditorPanelProps & Dependen
         className={cssNames(styles.EditorPanel, className)}
         onChange={onChange}
         onError={onError}
-        ref={monaco => this.editor = monaco}
+        ref={this.editor}
       />
     );
   }
 }
 
-export const EditorPanel = withInjectables<Dependencies, EditorPanelProps>(
-  NonInjectedEditorPanel,
-
-  {
-    getProps: (di, props) => ({
-      dockStore: di.inject(dockStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const EditorPanel = withInjectables<Dependencies, EditorPanelProps>(NonInjectedEditorPanel, {
+  getProps: (di, props) => ({
+    ...props,
+    dockStore: di.inject(dockStoreInjectable),
+  }),
+});

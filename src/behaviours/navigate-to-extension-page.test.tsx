@@ -52,7 +52,7 @@ describe("navigate to extension page", () => {
     });
 
     it("URL is correct", () => {
-      expect(currentPath.get()).toBe("/extension/some-extension-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name");
     });
 
     it("query parameters is empty", () => {
@@ -71,7 +71,7 @@ describe("navigate to extension page", () => {
       });
 
       it("URL is correct", () => {
-        expect(currentPath.get()).toBe("/extension/some-extension-id");
+        expect(currentPath.get()).toBe("/extension/some-extension-name");
       });
 
       it("knows query parameters", () => {
@@ -99,7 +99,7 @@ describe("navigate to extension page", () => {
     });
 
     it("URL is correct", () => {
-      expect(currentPath.get()).toBe("/extension/some-extension-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name");
     });
 
     it("knows query parameters", () => {
@@ -121,7 +121,7 @@ describe("navigate to extension page", () => {
     });
 
     it("URL is correct", () => {
-      expect(currentPath.get()).toBe("/extension/some-extension-id/some-child-page-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name/some-child-page-id");
     });
   });
 });
@@ -160,20 +160,14 @@ const extensionWithPagesHavingParameters: SetRequired<Partial<LensRendererExtens
 
       params: {
         someStringParameter: "some-string-value",
-
         someNumberParameter: {
           defaultValue: 42,
-
           stringify: (value) => value.toString(),
-
           parse: (value) => (value ? Number(value) : undefined),
         },
-
         someArrayParameter: {
           defaultValue: ["some-array-value", "some-other-array-value"],
-
           stringify: (value) => value.join(","),
-
           parse: (value: string[]) => (!isEmpty(value) ? value : undefined),
         },
       },

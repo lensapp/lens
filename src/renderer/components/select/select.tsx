@@ -14,7 +14,6 @@ import ReactSelect, { components, createFilter } from "react-select";
 import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
 import type { ThemeStore } from "../../themes/store";
 import { autoBind, cssNames } from "../../utils";
-import type { SetRequired } from "type-fest";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
 
@@ -26,6 +25,11 @@ export interface SelectOption<Value> {
   isDisabled?: boolean;
   isSelected?: boolean;
 }
+
+/**
+ * @deprecated This should not be used anymore, convert the options yourself.
+ */
+export type LegacyAutoConvertedOptions = string[];
 
 export interface SelectProps<
   Value,
@@ -41,11 +45,22 @@ export interface SelectProps<
   Option extends SelectOption<Value>,
   IsMulti extends boolean,
   Group extends GroupBase<Option> = GroupBase<Option>,
-> extends SetRequired<Omit<ReactSelectProps<Option, IsMulti, Group>, "value">, "options"> {
-  id: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
+> extends Omit<ReactSelectProps<Option, IsMulti, Group>, "value" | "options"> {
+  id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
   value?: PropsValue<Value>;
+  options: NonNullable<ReactSelectProps<Option, IsMulti, Group>["options"]> | LegacyAutoConvertedOptions;
+
+  /**
+   * @deprecated This option does nothing
+   */
+  isCreatable?: boolean;
+
+  /**
+   * @deprecated We will always auto convert options if they are of type `string`
+   */
+  autoConvertOptions?: boolean;
 }
 
 function isGroup<Option, Group extends GroupBase<Option>>(optionOrGroup: Option | Group): optionOrGroup is Group {
@@ -154,6 +169,15 @@ class NonInjectedSelect<
     } = this.props;
     const WrappedMenu = components.Menu ?? Menu;
 
+    const convertedOptions = options.map(option => (
+      typeof option === "string"
+        ? {
+          value: option,
+          label: option,
+        } as unknown as Option
+        : option
+    ));
+
     if (options.length > 0 && !(options?.[0] as { label?: string }).label) {
       console.warn("[SELECT]: will not display any label in dropdown");
     }
@@ -170,8 +194,8 @@ class NonInjectedSelect<
         }}
         filterOption={defaultFilter} // This is done because the default filter crashes on symbols
         isMulti={isMulti}
-        options={options}
-        value={this.findSelectedPropsValue(value, options, isMulti)}
+        options={convertedOptions}
+        value={this.findSelectedPropsValue(value, convertedOptions, isMulti)}
         onKeyDown={this.onKeyDown}
         className={cssNames("Select", this.themeClass, className)}
         classNamePrefix="Select"

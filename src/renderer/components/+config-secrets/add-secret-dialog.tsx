@@ -18,7 +18,7 @@ import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Select } from "../select";
 import { Icon } from "../icon";
-import { base64, iter, object } from "../../utils";
+import { base64, iter } from "../../utils";
 import { Notifications } from "../notifications";
 import upperFirst from "lodash/upperFirst";
 import { showDetails } from "../kube-detail-params";
@@ -70,13 +70,6 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
       ],
     },
   };
-
-  private get secretTypeOptions() {
-    return object.keys(this.secretTemplate).map(type => ({
-      value: type,
-      label: reverseSecretTypeMap[type],
-    }));
-  }
 
   @observable secret = this.secretTemplate;
   @observable name = "";
@@ -235,9 +228,10 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
                 <Select
                   id="secret-input"
                   themeName="light"
-                  options={this.secretTypeOptions}
+                  options={Object.keys(this.secretTemplate) as SecretType[]}
                   value={type}
                   onChange={option => this.type = option?.value ?? SecretType.Opaque}
+                  getOptionLabel={option => reverseSecretTypeMap[option.value]}
                 />
               </div>
             </div>
