@@ -20,6 +20,7 @@ import getConfigurationFileModelInjectable from "../../../../common/get-configur
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
 import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
+import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -82,6 +83,10 @@ describe("<DockTabs />", () => {
       directoryForUserDataInjectable,
       () => "some-test-suite-specific-directory-for-user-data",
     );
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
