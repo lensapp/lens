@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import getPersistentVolumesByStorageClassInjectable from "../+storage-volumes/get-persisten-volumes-by-storage-class.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
 import { StorageClassStore } from "./store";
@@ -16,15 +16,12 @@ const storageClassStoreInjectable = getInjectable({
     assert(di.inject(createStoresAndApisInjectable), "storageClassStore is only available in certain environments");
 
     const api = di.inject(storageClassApiInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-    const store = new StorageClassStore({
+
+    return new StorageClassStore({
       getPersistentVolumesByStorageClass: di.inject(getPersistentVolumesByStorageClassInjectable),
     }, api);
-
-    apiManager.registerStore(store);
-
-    return store;
   },
+  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default storageClassStoreInjectable;

@@ -36,7 +36,8 @@ export const ResourceMetricsContext = createContext<ResourceMetricsValue | null>
 export function ResourceMetrics({ object, loader = noop, interval = 60, tabs, children, className, metrics }: ResourceMetricsProps) {
   const [tab, setTab] = useState<MetricsTab>(tabs[0]);
 
-  useEffect(loader, [object]);
+  // This is done just incase `loader` is actually something like `() => Promise<void>`
+  useEffect(() => void loader(), [object]);
   useInterval(loader, interval * 1000);
 
   const renderContents = () => {

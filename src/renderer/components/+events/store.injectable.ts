@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import getPodByIdInjectable from "../+workloads-pods/get-pod-by-id.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import kubeEventApiInjectable from "../../../common/k8s-api/endpoints/events.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
 import { EventStore } from "./store";
@@ -16,15 +16,12 @@ const eventStoreInjectable = getInjectable({
     assert(di.inject(createStoresAndApisInjectable), "eventStore is only available in certain environments");
 
     const api = di.inject(kubeEventApiInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-    const store = new EventStore({
+
+    return new EventStore({
       getPodById: di.inject(getPodByIdInjectable),
     }, api);
-
-    apiManager.registerStore(store);
-
-    return store;
   },
+  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default eventStoreInjectable;

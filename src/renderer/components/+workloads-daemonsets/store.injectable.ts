@@ -7,7 +7,7 @@ import assert from "assert";
 import getPodsByOwnerIdInjectable from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import daemonSetApiInjectable from "../../../common/k8s-api/endpoints/daemon-set.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import { DaemonSetStore } from "./store";
 
 const daemonSetStoreInjectable = getInjectable({
@@ -16,15 +16,12 @@ const daemonSetStoreInjectable = getInjectable({
     assert(di.inject(createStoresAndApisInjectable), "daemonSetStore is only available in certain environments");
 
     const api = di.inject(daemonSetApiInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-    const store = new DaemonSetStore({
+
+    return new DaemonSetStore({
       getPodsByOwnerId: di.inject(getPodsByOwnerIdInjectable),
     }, api);
-
-    apiManager.registerStore(store);
-
-    return store;
   },
+  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default daemonSetStoreInjectable;

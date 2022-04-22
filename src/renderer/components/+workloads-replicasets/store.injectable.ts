@@ -7,7 +7,7 @@ import assert from "assert";
 import getPodsByOwnerIdInjectable from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import replicaSetApiInjectable from "../../../common/k8s-api/endpoints/replica-set.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import { ReplicaSetStore } from "./store";
 
 const replicaSetStoreInjectable = getInjectable({
@@ -16,15 +16,12 @@ const replicaSetStoreInjectable = getInjectable({
     assert(di.inject(createStoresAndApisInjectable), "replicaSetStore is only available in certain environments");
 
     const api = di.inject(replicaSetApiInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-    const store = new ReplicaSetStore({
+
+    return new ReplicaSetStore({
       getPodsByOwnerId: di.inject(getPodsByOwnerIdInjectable),
     }, api);
-
-    apiManager.registerStore(store);
-
-    return store;
   },
+  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default replicaSetStoreInjectable;

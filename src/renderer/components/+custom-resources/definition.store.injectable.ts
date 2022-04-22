@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import customResourceDefinitionApiInjectable from "../../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
 import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
 import { CustomResourceDefinitionStore } from "./definition.store";
@@ -16,15 +16,12 @@ const customResourceDefinitionStoreInjectable = getInjectable({
     assert(di.inject(createStoresAndApisInjectable), "customResourceDefinitionStore is only available in certain environments");
 
     const api = di.inject(customResourceDefinitionApiInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-    const store = new CustomResourceDefinitionStore({
+
+    return new CustomResourceDefinitionStore({
       initCustomResourceStore: di.inject(initCustomResourceStoreInjectable),
     }, api);
-
-    apiManager.registerStore(store);
-
-    return store;
   },
+  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default customResourceDefinitionStoreInjectable;

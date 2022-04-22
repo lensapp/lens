@@ -1,6 +1,6 @@
 {
   "name": "lens-metrics-cluster-feature",
-  "version": "0.0.1",
+  "version": "5.5.0-alpha.0.1650655975317",
   "description": "Lens metrics cluster feature",
   "renderer": "dist/renderer.js",
   "lens": {

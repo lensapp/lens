@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import roleApiInjectable from "../../../../common/k8s-api/endpoints/role.api.injectable";
 import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
-import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { RoleStore } from "./store";
 
 const roleStoreInjectable = getInjectable({
@@ -15,13 +15,10 @@ const roleStoreInjectable = getInjectable({
     assert(di.inject(createStoresAndApisInjectable), "roleStore is only available in certain environments");
 
     const api = di.inject(roleApiInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-    const store = new RoleStore(api);
 
-    apiManager.registerStore(store);
-
-    return store;
+    return new RoleStore(api);
   },
+  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default roleStoreInjectable;

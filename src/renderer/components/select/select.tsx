@@ -69,7 +69,7 @@ function isGroup<Option, Group extends GroupBase<Option>>(optionOrGroup: Option 
 
 const defaultFilter = createFilter({
   stringify(option) {
-    if (typeof option.data === "symbol") {
+    if (typeof option.value === "symbol") {
       return option.label;
     }
 

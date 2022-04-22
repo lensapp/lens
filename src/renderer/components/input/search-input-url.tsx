@@ -45,10 +45,7 @@ class NonInjectedSearchInputUrl extends React.Component<SearchInputUrlProps & De
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
     this.setValue(val);
-
-    if (this.props.onChange) {
-      this.props.onChange(val, evt);
-    }
+    this.props.onChange?.(val, evt);
   };
 
   constructor(props: SearchInputUrlProps & Dependencies) {
@@ -57,14 +54,17 @@ class NonInjectedSearchInputUrl extends React.Component<SearchInputUrlProps & De
   }
 
   render() {
-    const { inputVal } = this;
+    const { searchUrlParam, ...searchInputProps } = this.props;
 
     return (
       <SearchInput
-        value={inputVal}
-        onChange={this.onChange}
+        value={this.inputVal}
+        onChange={(val, event) => {
+          this.setValue(val);
+          this.props.onChange?.(val, event);
+        }}
         onClear={this.clear}
-        {...this.props}
+        {...searchInputProps}
       />
     );
   }
