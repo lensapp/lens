@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import assert from "assert";
 import { iter } from "../../common/utils";
 
 const legacyGlobalDis = new Map<Environments, DiContainer>();
@@ -35,9 +34,5 @@ export const getLegacyGlobalDiForExtensionApi = () => {
 };
 
 export function getEnvironmentSpecificLegacyGlobalDiForExtensionApi(environment: Environments) {
-  const di = legacyGlobalDis.get(environment);
-
-  assert(di, `missing di for environment=${Environments[environment]}`);
-
-  return di;
+  return legacyGlobalDis.get(environment);
 }

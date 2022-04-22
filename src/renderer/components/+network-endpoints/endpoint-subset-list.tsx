@@ -9,19 +9,27 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { EndpointSubset, Endpoints, EndpointAddress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
-import { getDetailsUrl } from "../kube-detail-params";
 import { autoBind } from "../../../common/utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
 export interface EndpointSubsetListProps {
   subset: Required<EndpointSubset>;
   endpoint: Endpoints;
 }
 
+interface Dependencies {
+  apiManager: ApiManager;
+  getDetailsUrl: GetDetailsUrl;
+}
+
 @observer
-export class EndpointSubsetList extends React.Component<EndpointSubsetListProps> {
-  constructor(props: EndpointSubsetListProps) {
+class NonInjectedEndpointSubsetList extends React.Component<EndpointSubsetListProps & Dependencies> {
+  constructor(props: EndpointSubsetListProps & Dependencies) {
     super(props);
     autoBind(this);
   }
@@ -68,7 +76,7 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
       return undefined;
     }
 
-    const { endpoint } = this.props;
+    const { endpoint, getDetailsUrl, apiManager } = this.props;
 
     return (
       <TableRow
@@ -166,3 +174,11 @@ export class EndpointSubsetList extends React.Component<EndpointSubsetListProps>
     );
   }
 }
+
+export const EndpointSubsetList = withInjectables<Dependencies, EndpointSubsetListProps>(NonInjectedEndpointSubsetList, {
+  getProps: (di, props) => ({
+    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+  }),
+});

@@ -4,4 +4,3 @@
  */
 
 export * from "./api-manager";
-export * from "./legacy-global";

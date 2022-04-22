@@ -15,22 +15,30 @@ import { cssNames } from "../../utils";
 import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTarget } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
 
+interface Dependencies {
+  apiManager: ApiManager;
+  getDetailsUrl: GetDetailsUrl;
+}
+
 @observer
-export class HpaDetails extends React.Component<HpaDetailsProps> {
+class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependencies> {
   private renderTargetLink(target: HorizontalPodAutoscalerMetricTarget | undefined) {
     if (!target) {
       return null;
     }
 
-    const { object: hpa } = this.props;
+    const { object: hpa, apiManager, getDetailsUrl } = this.props;
     const { kind, name } = target;
     const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
 
@@ -119,7 +127,7 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
   }
 
   render() {
-    const { object: hpa } = this.props;
+    const { object: hpa, apiManager, getDetailsUrl } = this.props;
 
     if (!hpa) {
       return null;
@@ -183,3 +191,11 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
     );
   }
 }
+
+export const HpaDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInjectedHpaDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+  }),
+});

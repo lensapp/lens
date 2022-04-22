@@ -17,15 +17,18 @@ import { InfoPanel } from "../info-panel";
 import * as resourceApplierApi from "../../../../common/k8s-api/endpoints/resource-applier.api";
 import { Notifications } from "../../notifications";
 import logger from "../../../../common/logger";
-import { getDetailsUrl } from "../../kube-detail-params";
-import { apiManager } from "../../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import { isString, prevDefault } from "../../../utils";
-import { navigate } from "../../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
 import { Spinner } from "../../spinner";
 import type { GroupBase } from "react-select";
+import type { Navigate } from "../../../navigation/navigate.injectable";
+import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
+import navigateInjectable from "../../../navigation/navigate.injectable";
 
 export interface CreateResourceProps {
   tab: DockTab;
@@ -34,6 +37,9 @@ export interface CreateResourceProps {
 interface Dependencies {
   createResourceTemplates: IComputedValue<GroupBase<{ label: string; value: string }>[]>;
   createResourceTabStore: CreateResourceTabStore;
+  apiManager: ApiManager;
+  navigate: Navigate;
+  getDetailsUrl: GetDetailsUrl;
 }
 
 @observer
@@ -63,6 +69,8 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
   };
 
   create = async (): Promise<void> => {
+    const { apiManager, getDetailsUrl, navigate } = this.props;
+
     if (this.error || !this.data?.trim()) {
       // do not save when field is empty or there is an error
       return;
@@ -155,8 +163,11 @@ export const CreateResource = withInjectables<Dependencies, CreateResourceProps>
   getPlaceholder: () => <Spinner center />,
 
   getProps: async (di, props) => ({
+    ...props,
     createResourceTabStore: di.inject(createResourceTabStoreInjectable),
     createResourceTemplates: await di.inject(createResourceTemplatesInjectable),
-    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    navigate: di.inject(navigateInjectable),
   }),
 });

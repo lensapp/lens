@@ -8,21 +8,26 @@ import "./pods.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { podStore } from "./legacy-store";
-import { eventStore } from "../+events/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { Pod } from "../../../common/k8s-api/endpoints";
-import { nodeApi } from "../../../common/k8s-api/endpoints";
+import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
-import { getDetailsUrl } from "../kube-detail-params";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import type { EventStore } from "../+events/store";
+import type { PodStore } from "./store";
+import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
+import eventStoreInjectable from "../+events/store.injectable";
+import podStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -36,8 +41,16 @@ enum columnId {
   status = "status",
 }
 
+interface Dependencies {
+  getDetailsUrl: GetDetailsUrl;
+  apiManager: ApiManager;
+  eventStore: EventStore;
+  podStore: PodStore;
+  nodeApi: NodeApi;
+}
+
 @observer
-export class Pods extends React.Component {
+class NonInjectedPods extends React.Component<Dependencies> {
   renderState<T extends string>(name: string, ready: boolean, key: string, data: Partial<Record<T, string | number>> | undefined) {
     return data && (
       <>
@@ -87,6 +100,8 @@ export class Pods extends React.Component {
   }
 
   render() {
+    const { apiManager, getDetailsUrl, podStore, eventStore, nodeApi } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -177,3 +192,14 @@ export class Pods extends React.Component {
     );
   }
 }
+
+export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
+  getProps: (di, props) => ({
+    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    nodeApi: di.inject(nodeApiInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});

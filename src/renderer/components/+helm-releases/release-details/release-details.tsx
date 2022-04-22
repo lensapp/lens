@@ -22,9 +22,8 @@ import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { Button } from "../../button";
 import { Notifications } from "../../notifications";
 import type { ThemeStore } from "../../../themes/store";
-import { apiManager } from "../../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import { SubTitle } from "../../layout/sub-title";
-import { getDetailsUrl } from "../../kube-detail-params";
 import { Checkbox } from "../../checkbox";
 import { MonacoEditor } from "../../monaco-editor";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
@@ -39,6 +38,9 @@ import { KubeObjectAge } from "../../kube-object/age";
 import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
 import { entries } from "../../../../common/utils/objects";
 import themeStoreInjectable from "../../../themes/store.injectable";
+import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
 
 export interface ReleaseDetailsProps {
   hideDetails(): void;
@@ -52,6 +54,8 @@ interface Dependencies {
   createUpgradeChartTab: (release: HelmRelease) => void;
   userSuppliedValuesAreShown: { toggle: () => void; value: boolean };
   themeStore: ThemeStore;
+  apiManager: ApiManager;
+  getDetailsUrl: GetDetailsUrl;
 }
 
 @observer
@@ -158,6 +162,8 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
   }
 
   renderResources(resources: KubeJsonApiData[]) {
+    const { apiManager, getDetailsUrl } = this.props;
+
     return (
       <div className="resources">
         {
@@ -288,5 +294,7 @@ export const ReleaseDetails = withInjectables<Dependencies, ReleaseDetailsProps>
     updateRelease: di.inject(updateReleaseInjectable),
     createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
     themeStore: di.inject(themeStoreInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
   }),
 });

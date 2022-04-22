@@ -8,7 +8,6 @@
 import { isFunction, merge } from "lodash";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
-import { apiManager } from "./api-manager";
 import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata, KubeObjectScope } from "./kube-object";
@@ -27,6 +26,8 @@ import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import logger from "../logger";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import apiManagerInjectable from "./api-manager/manager.injectable";
 
 /**
  * The options used for creating a `KubeApi`
@@ -307,6 +308,22 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
   propagationPolicy?: PropagationPolicy;
 }
 
+/**
+ * @deprecated In the new extension API, don't expose `KubeApi`'s constructor
+ */
+function legacyRegisterApi(apiBase: string, api: KubeApi): void {
+  // Try both just in case, because we might be in a testing environment
+  for (const env of [Environments.main, Environments.renderer]) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(env);
+
+    if (di) {
+      const apiManager = di.inject(apiManagerInjectable);
+
+      apiManager.registerApi(apiBase, api);
+    }
+  }
+}
+
 export class KubeApi<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
@@ -359,7 +376,7 @@ export class KubeApi<
     this.request = request;
     this.objectConstructor = objectConstructor;
     this.parseResponse = this.parseResponse.bind(this);
-    apiManager.registerApi<KubeApi<Object, Data>>(apiBase, this);
+    legacyRegisterApi(apiBase, this as unknown as KubeApi);
   }
 
   get apiVersionWithGroup() {
@@ -440,7 +457,7 @@ export class KubeApi<
 
       if (this.apiVersionPreferred) {
         this.apiBase = this.computeApiBase();
-        apiManager.registerApi<KubeApi<Object, Data>>(this.apiBase, this);
+        legacyRegisterApi(this.apiBase, this as unknown as KubeApi);
       }
     }
   }
