@@ -52,12 +52,12 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return Uri.file(`/monaco-editor/${id}`);
   }
 
-  public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
-  public dispose = disposer();
+  private staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
+  private dispose = disposer();
 
   @observable.ref containerElem: HTMLElement;
   @observable.ref editor: editor.IStandaloneCodeEditor;
-  @observable private dimensions: { width?: number; height?: number } = {};
+  @observable readonly dimensions: { width?: number; height?: number } = {};
   @observable private unmounting = false;
 
   constructor(props: MonacoEditorProps) {
