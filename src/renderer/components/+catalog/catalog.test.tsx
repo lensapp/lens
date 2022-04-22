@@ -9,14 +9,14 @@ import userEvent from "@testing-library/user-event";
 import { Catalog } from "./catalog";
 import { mockWindow } from "../../../../__mocks__/windowMock";
 import type { CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
-import { CatalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
-import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { CatalogEntity } from "../../../common/catalog";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
-import catalogEntityRegistryInjectable from "../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import mockFs from "mock-fs";
@@ -101,10 +101,7 @@ describe("<Catalog />", () => {
     render = renderFor(di);
     onRun = jest.fn();
     catalogEntityItem = createMockCatalogEntity(onRun);
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-
-    catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
 

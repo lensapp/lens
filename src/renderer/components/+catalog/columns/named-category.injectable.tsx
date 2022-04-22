@@ -3,15 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import styles from "./catalog.module.scss";
-import type { CatalogEntity } from "../../../common/catalog";
-import { prevDefault } from "../../utils";
-import { Avatar } from "../avatar";
-import { Icon } from "../icon";
+import styles from "../catalog.module.scss";
+import type { CatalogEntity } from "../../../../common/catalog";
+import { prevDefault } from "../../../utils";
+import { Avatar } from "../../avatar";
+import { Icon } from "../../icon";
 import React from "react";
-import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
-import type { HotbarStore } from "../../../common/hotbars/store";
+import type { RegisteredAdditionalCategoryColumn } from "../custom-category-columns";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
+import type { HotbarStore } from "../../../../common/hotbars/store";
 
 const renderEntityName = (hotbarStore: HotbarStore) => (entity: CatalogEntity) => {
   const isItemInHotbar = hotbarStore.isAddedToActive(entity);
@@ -45,8 +45,7 @@ const renderEntityName = (hotbarStore: HotbarStore) => (entity: CatalogEntity) =
   );
 };
 
-
-const nameCategoryColumnInjectable = getInjectable({
+const namedCategoryColumnInjectable = getInjectable({
   id: "name-category-column",
   instantiate: (di): RegisteredAdditionalCategoryColumn => ({
     id: "name",
@@ -63,4 +62,4 @@ const nameCategoryColumnInjectable = getInjectable({
   }),
 });
 
-export default nameCategoryColumnInjectable;
+export default namedCategoryColumnInjectable;

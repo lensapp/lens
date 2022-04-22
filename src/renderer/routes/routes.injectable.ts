@@ -13,10 +13,7 @@ const routesInjectable = getInjectable({
 
   instantiate: (di) => {
     const allRoutes = di.inject(allRoutesInjectable);
-
-    const currentlyInClusterFrame = di.inject(
-      currentlyInClusterFrameInjectable,
-    );
+    const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
 
     return computed(() =>
       allRoutes

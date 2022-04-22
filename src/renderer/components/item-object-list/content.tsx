@@ -20,8 +20,7 @@ import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import type { ItemObject } from "../../../common/item.store";
-import type { Filter } from "./page-filters.store";
-import { pageFilters } from "./page-filters.store";
+import type { Filter, PageFiltersStore } from "./page-filters/store";
 import type { ThemeStore } from "../../themes/store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
@@ -30,6 +29,7 @@ import { UserStore } from "../../../common/user-store";
 import type { ItemListStore } from "./list-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
+import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -68,10 +68,14 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
 
 interface Dependencies {
   themeStore: ThemeStore;
+  pageFiltersStore: PageFiltersStore;
 }
 
 @observer
-class NonInjectedItemListLayoutContent<Item extends ItemObject, PreLoadStores extends boolean> extends React.Component<ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies> {
+class NonInjectedItemListLayoutContent<
+  Item extends ItemObject,
+  PreLoadStores extends boolean,
+> extends React.Component<ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies> {
   constructor(props: ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies) {
     super(props);
     makeObservable(this);
@@ -221,7 +225,7 @@ class NonInjectedItemListLayoutContent<Item extends ItemObject, PreLoadStores ex
         <NoItems>
           No items found.
           <p>
-            <a onClick={() => pageFilters.reset()} className="contrast">
+            <a onClick={() => this.props.pageFiltersStore.reset()} className="contrast">
               Reset filters?
             </a>
           </p>
@@ -367,5 +371,6 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
   getProps: (di, props) => ({
     ...props,
     themeStore: di.inject(themeStoreInjectable),
+    pageFiltersStore: di.inject(pageFiltersStoreInjectable),
   }),
 }) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;

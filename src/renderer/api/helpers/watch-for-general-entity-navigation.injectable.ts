@@ -9,7 +9,7 @@ import isActiveRouteInjectable from "../../navigation/is-route-active.injectable
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 import type { Disposer } from "../../utils";
 import { disposer } from "../../utils";
-import catalogEntityRegistryInjectable from "../catalog-entity-registry/catalog-entity-registry.injectable";
+import catalogEntityRegistryInjectable from "../catalog/entity/registry.injectable";
 
 export type WatchForGeneralEntityNavigation = () => Disposer;
 

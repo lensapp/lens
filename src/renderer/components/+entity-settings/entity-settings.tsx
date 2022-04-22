@@ -9,10 +9,9 @@ import React from "react";
 import type { IComputedValue } from "mobx";
 import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
-import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { EntitySettingRegistry } from "../../../extensions/registries";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
@@ -20,9 +19,14 @@ import logger from "../../../common/logger";
 import { Avatar } from "../avatar";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import entitySettingsRouteParametersInjectable from "./entity-settings-route-parameters.injectable";
+import type { ObservableHistory } from "mobx-observable-history";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
 interface Dependencies {
   entityId: IComputedValue<string>;
+  entityRegistry: CatalogEntityRegistry;
+  observableHistory: ObservableHistory<unknown>;
 }
 
 @observer
@@ -33,7 +37,7 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
     super(props);
     makeObservable(this);
 
-    const { hash } = navigation.location;
+    const { hash } = this.props.observableHistory.location;
 
     if (hash) {
       const menuId = hash.slice(1);
@@ -50,8 +54,8 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
     return this.props.entityId.get();
   }
 
-  get entity(): CatalogEntity {
-    return catalogEntityRegistry.getById(this.entityId);
+  get entity() {
+    return this.props.entityRegistry.getById(this.entityId);
   }
 
   get menuItems() {
@@ -70,7 +74,7 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
     this.activeTab = tabId;
   };
 
-  renderNavigation() {
+  renderNavigation(entity: CatalogEntity) {
     const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
 
     groups.sort((a, b) => {
@@ -84,14 +88,14 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
       <>
         <div className="flex items-center pb-8">
           <Avatar
-            title={this.entity.getName()}
-            colorHash={`${this.entity.getName()}-${this.entity.metadata.source}`}
-            src={this.entity.spec.icon?.src}
+            title={entity.getName()}
+            colorHash={`${entity.getName()}-${entity.metadata.source}`}
+            src={entity.spec.icon?.src}
             className={styles.settingsAvatar}
             size={40}
           />
           <div className={styles.entityName}>
-            {this.entity.getName()}
+            {entity.getName()}
           </div>
         </div>
         <Tabs
@@ -120,17 +124,17 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
   }
 
   render() {
-    if (!this.entity) {
+    const { activeSetting, entity } = this;
+
+    if (!entity) {
       logger.error("[ENTITY-SETTINGS]: entity not found", this.entityId);
 
       return null;
     }
 
-    const { activeSetting } = this;
-
     return (
       <SettingLayout
-        navigation={this.renderNavigation()}
+        navigation={this.renderNavigation(entity)}
         contentGaps={false}
       >
         {
@@ -138,7 +142,7 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
             <section>
               <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
               <section>
-                <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
+                <activeSetting.components.View entity={entity} key={activeSetting.title} />
               </section>
             </section>
           )
@@ -148,16 +152,10 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
   }
 }
 
-export const EntitySettings = withInjectables<Dependencies>(
-  NonInjectedEntitySettings,
-
-  {
-    getProps: (di) => {
-      const routeParameters = di.inject(entitySettingsRouteParametersInjectable);
-
-      return {
-        entityId: routeParameters.entityId,
-      };
-    },
-  },
-);
+export const EntitySettings = withInjectables<Dependencies>(NonInjectedEntitySettings, {
+  getProps: (di) => ({
+    ...di.inject(entitySettingsRouteParametersInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    observableHistory: di.inject(observableHistoryInjectable),
+  }),
+});

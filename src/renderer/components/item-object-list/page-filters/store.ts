@@ -4,8 +4,8 @@
  */
 
 import { computed, observable, reaction, makeObservable, action } from "mobx";
-import { autoBind } from "../../utils";
-import { searchUrlParam } from "../input/search-input-url";
+import type { PageParam } from "../../../navigation";
+import { autoBind } from "../../../utils";
 
 export enum FilterType {
   SEARCH = "search",
@@ -16,6 +16,10 @@ export interface Filter {
   value: string;
 }
 
+interface Dependencies {
+  readonly searchUrlParam: PageParam<string>;
+}
+
 export class PageFiltersStore {
   protected filters = observable.array<Filter>([], { deep: false });
   protected isDisabled = observable.map<FilterType, boolean>();
@@ -24,7 +28,7 @@ export class PageFiltersStore {
     return this.filters.filter(filter => !this.isDisabled.get(filter.type));
   }
 
-  constructor() {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
     autoBind(this);
 
@@ -33,8 +37,8 @@ export class PageFiltersStore {
 
   protected syncWithGlobalSearch() {
     const disposers = [
-      reaction(() => this.getValues(FilterType.SEARCH)[0], search => searchUrlParam.set(search)),
-      reaction(() => searchUrlParam.get(), search => {
+      reaction(() => this.getValues(FilterType.SEARCH)[0], search => this.dependencies.searchUrlParam.set(search)),
+      reaction(() => this.dependencies.searchUrlParam.get(), search => {
         const filter = this.getByType(FilterType.SEARCH);
 
         if (filter) {
@@ -102,12 +106,10 @@ export class PageFiltersStore {
   @action
   reset() {
     if (this.isEnabled(FilterType.SEARCH)) {
-      searchUrlParam.clear();
+      this.dependencies.searchUrlParam.clear();
     }
 
     this.filters.length = 0;
     this.isDisabled.clear();
   }
 }
-
-export const pageFilters = new PageFiltersStore();

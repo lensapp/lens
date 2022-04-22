@@ -14,7 +14,6 @@ import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
-import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
@@ -26,6 +25,7 @@ import { computed } from "mobx";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
+import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../tooltip");

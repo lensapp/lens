@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import { WebLinkCategory } from "../catalog-entities";
 import type { CatalogCategory } from "./catalog-entity";
 import { CatalogCategoryRegistry } from "./category-registry";
 
@@ -20,8 +19,6 @@ const catalogCategoryRegistryInjectable = getInjectable({
     for (const category of categories) {
       registry.add(category);
     }
-
-    registry.add(new WebLinkCategory());
 
     return registry;
   },

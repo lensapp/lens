@@ -15,8 +15,8 @@ import registerIpcChannelListenerInjectable from "./app-paths/get-value-from-reg
 import focusWindowInjectable from "./ipc-channel-listeners/focus-window.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
+import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";

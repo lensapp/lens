@@ -5,24 +5,26 @@
 
 
 import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
-import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
-import type { CatalogEntityOnBeforeRun } from "../../renderer/api/catalog-entity-registry";
+import type { CatalogEntityOnBeforeRun } from "../../renderer/api/catalog/entity/registry";
 import type { Disposer } from "../../common/utils";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 
 export const catalogCategories = asLegacyGlobalForExtensionApi(catalogCategoryRegistryInjectable);
+
+const internalEntityRegistry = asLegacyGlobalForExtensionApi(catalogEntityRegistryInjectable);
 
 export class CatalogEntityRegistry {
   /**
    * Currently active/visible entity
    */
   get activeEntity() {
-    return registry.activeEntity;
+    return internalEntityRegistry.activeEntity;
   }
 
   get entities(): Map<string, CatalogEntity> {
-    return registry.entities;
+    return internalEntityRegistry.entities;
   }
 
   getById(id: string) {
@@ -30,11 +32,11 @@ export class CatalogEntityRegistry {
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    return registry.getItemsForApiKind<T>(apiVersion, kind);
+    return internalEntityRegistry.getItemsForApiKind<T>(apiVersion, kind);
   }
 
   getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
-    return registry.getItemsForCategory(category);
+    return internalEntityRegistry.getItemsForCategory(category);
   }
 
   /**
@@ -46,7 +48,7 @@ export class CatalogEntityRegistry {
    * @returns A function to remove that hook
    */
   addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    return registry.addOnBeforeRun(onBeforeRun);
+    return internalEntityRegistry.addOnBeforeRun(onBeforeRun);
   }
 }
 

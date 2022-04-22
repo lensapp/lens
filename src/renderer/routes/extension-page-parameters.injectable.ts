@@ -7,10 +7,11 @@ import { pipeline } from "@ogre-tools/fp";
 import type { PageParamInit } from "../navigation";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import type { PageRegistration } from "../../extensions/registries";
-import { fromPairs, map } from "lodash/fp";
+import { map } from "lodash/fp";
 import createPageParamInjectable from "../navigation/create-page-param.injectable";
+import { object } from "../utils";
 
-interface InstantiationParameter {
+export interface ExtensionPageParametersInstantiationParam {
   extension: LensRendererExtension;
   registration: PageRegistration;
 }
@@ -18,7 +19,7 @@ interface InstantiationParameter {
 const extensionPageParametersInjectable = getInjectable({
   id: "extension-page-parameters",
 
-  instantiate: (di, { registration }: InstantiationParameter) => {
+  instantiate: (di, { registration }: ExtensionPageParametersInstantiationParam) => {
     const createPageParam = di.inject(createPageParamInjectable);
 
     return pipeline(
@@ -30,15 +31,15 @@ const extensionPageParametersInjectable = getInjectable({
           ? convertStringToPageParamInit(key, value)
           : convertPartialPageParamInitToFull(key, value),
       ]),
-      map(([key, value]) => [key, createPageParam(value)]),
-      fromPairs,
+      map(([key, value]) => [key, createPageParam(value)] as const),
+      object.fromEntries,
     );
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (
       di,
-      { extension, registration }: InstantiationParameter,
+      { extension, registration }: ExtensionPageParametersInstantiationParam,
     ) => `${extension.sanitizedExtensionId}-${registration?.id}`,
   }),
 });

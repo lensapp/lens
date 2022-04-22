@@ -5,7 +5,7 @@
 
 import type { IComputedValue, IObservableValue } from "mobx";
 import { computed, observable, reaction } from "mobx";
-import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import type { CatalogEntity } from "../../../api/catalog-entity";
 import type { CatalogCategory, CatalogCategoryRegistry } from "../../../../common/catalog";
 import type { Disposer } from "../../../../common/utils";

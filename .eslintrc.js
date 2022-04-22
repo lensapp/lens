@@ -259,6 +259,10 @@ module.exports = {
               "name": ".",
               "message": "No importing from local index.ts(x?) file. A common way to make circular dependencies.",
             },
+            {
+              "name": "..",
+              "message": "No importing from parent index.ts(x?) file. A common way to make circular dependencies.",
+            },
           ],
           "patterns": [
             {

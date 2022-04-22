@@ -19,7 +19,6 @@ import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -29,6 +28,8 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { ReplicaSetStore } from "./store";
 import replicaSetStoreInjectable from "./store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSet> {
 }
@@ -37,6 +38,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   replicaSetStore: ReplicaSetStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
@@ -67,7 +69,7 @@ class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProp
   };
 
   render() {
-    const { object: replicaSet, podStore, replicaSetStore } = this.props;
+    const { object: replicaSet, podStore, replicaSetStore, getActiveClusterEntity } = this.props;
 
     if (!replicaSet) {
       return null;
@@ -141,5 +143,6 @@ export const ReplicaSetDetails = withInjectables<Dependencies, ReplicaSetDetails
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     replicaSetStore: di.inject(replicaSetStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });

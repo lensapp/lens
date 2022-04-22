@@ -10,11 +10,7 @@ import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import type { Disposer } from "../common/utils";
 import { disposer } from "../common/utils";
-import type {
-  LensExtensionDependencies } from "./lens-extension-set-dependencies";
-import {
-  setLensExtensionDependencies,
-} from "./lens-extension-set-dependencies";
+import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -28,7 +24,7 @@ export interface LensExtensionManifest extends PackageJson {
 
 export const Disposers = Symbol();
 
-export class LensExtension {
+export class LensExtension<Dependencies extends LensExtensionDependencies = LensExtensionDependencies> {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
@@ -68,11 +64,7 @@ export class LensExtension {
     return this.manifest.description;
   }
 
-  private readonly dependencies!: LensExtensionDependencies;
-
-  [setLensExtensionDependencies] = (dependencies: LensExtensionDependencies) => {
-    (this as unknown as { dependencies: LensExtensionDependencies }).dependencies = dependencies;
-  };
+  protected readonly dependencies!: Dependencies;
 
   /**
    * getExtensionFileFolder returns the path to an already created folder. This

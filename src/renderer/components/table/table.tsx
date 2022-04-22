@@ -14,7 +14,7 @@ import type { TableHeadElem } from "./table-head";
 import { TableHead } from "./table-head";
 import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
-import { createPageParam } from "../../navigation";
+import type { PageParam } from "../../navigation";
 import { computed, makeObservable } from "mobx";
 import { getSorted } from "./sorting";
 import type { TableModel } from "./table-model/table-model";
@@ -22,6 +22,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import tableModelInjectable from "./table-model/table-model.injectable";
 import type { ItemObject } from "../../../common/item.store";
 import assert from "assert";
+import orderByUrlParamInjectable from "./order-by-url-param.injectable";
+import sortByUrlParamInjectable from "./sort-by-url-param.injectable";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc";
@@ -75,16 +77,10 @@ export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
   renderRow?: (item: Item) => React.ReactElement<TableRowProps<Item>> | undefined | null;
 }
 
-export const sortByUrlParam = createPageParam({
-  name: "sort",
-});
-
-export const orderByUrlParam = createPageParam({
-  name: "order",
-});
-
 interface Dependencies {
   model: TableModel;
+  sortByUrlParam: PageParam<string>;
+  orderByUrlParam: PageParam<string>;
 }
 
 @observer
@@ -178,8 +174,8 @@ class NonInjectedTable<Item extends ItemObject> extends React.Component<TablePro
     const { sortSyncWithUrl, onSort } = this.props;
 
     if (sortSyncWithUrl) {
-      sortByUrlParam.set(sortBy);
-      orderByUrlParam.set(orderBy);
+      this.props.sortByUrlParam.set(sortBy);
+      this.props.orderByUrlParam.set(orderBy);
     }
 
     onSort?.({ sortBy, orderBy });
@@ -269,18 +265,12 @@ class NonInjectedTable<Item extends ItemObject> extends React.Component<TablePro
   }
 }
 
-const InjectedTable = withInjectables<Dependencies, TableProps<any>>(
-  NonInjectedTable,
-
-  {
-    getProps: (di, props) => ({
-      model: di.inject(tableModelInjectable),
-      ...props,
-    }),
-  },
-);
-
-export function Table<Item>(props: TableProps<Item>) {
-  return <InjectedTable {...props} />;
-}
+export const Table = withInjectables<Dependencies, TableProps<ItemObject>>(NonInjectedTable, {
+  getProps: (di, props) => ({
+    ...props,
+    model: di.inject(tableModelInjectable),
+    orderByUrlParam: di.inject(orderByUrlParamInjectable),
+    sortByUrlParam: di.inject(sortByUrlParamInjectable),
+  }),
+}) as <Item>(props: TableProps<Item>) => React.ReactElement;
 

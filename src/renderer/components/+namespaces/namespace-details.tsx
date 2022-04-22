@@ -14,25 +14,33 @@ import { getMetricsForNamespace, type PodMetricData, Namespace } from "../../../
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
-import { resourceQuotaStore } from "../+config-resource-quotas/legacy-store";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { limitRangeStore } from "../+config-limit-ranges/legacy-store";
 import { ResourceMetrics } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import type { ResourceQuotaStore } from "../+config-resource-quotas/store";
+import type { LimitRangeStore } from "../+config-limit-ranges/store";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import limitRangeStoreInjectable from "../+config-limit-ranges/store.injectable";
+import resourceQuotaStoreInjectable from "../+config-resource-quotas/store.injectable";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
+  getActiveClusterEntity: GetActiveClusterEntity;
+  getDetailsUrl: GetDetailsUrl;
+  resourceQuotaStore: ResourceQuotaStore;
+  limitRangeStore: LimitRangeStore;
 }
 
 @observer
@@ -51,8 +59,8 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
       }),
 
       this.props.subscribeStores([
-        resourceQuotaStore,
-        limitRangeStore,
+        this.props.resourceQuotaStore,
+        this.props.limitRangeStore,
       ]),
     ]);
   }
@@ -60,13 +68,13 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
   @computed get quotas() {
     const namespace = this.props.object.getName();
 
-    return resourceQuotaStore.getAllByNs(namespace);
+    return this.props.resourceQuotaStore.getAllByNs(namespace);
   }
 
   @computed get limitranges() {
     const namespace = this.props.object.getName();
 
-    return limitRangeStore.getAllByNs(namespace);
+    return this.props.limitRangeStore.getAllByNs(namespace);
   }
 
   loadMetrics = async () => {
@@ -74,7 +82,7 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
   };
 
   render() {
-    const { object: namespace } = this.props;
+    const { object: namespace, getActiveClusterEntity, resourceQuotaStore, getDetailsUrl, limitRangeStore } = this.props;
 
     if (!namespace) {
       return null;
@@ -109,23 +117,19 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
 
         <DrawerItem name="Resource Quotas" className="quotas flex align-center">
           {!this.quotas && resourceQuotaStore.isLoading && <Spinner/>}
-          {this.quotas.map(quota => {
-            return quota.selfLink && (
-              <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
-                {quota.getName()}
-              </Link>
-            );
-          })}
+          {this.quotas.map(quota => quota.selfLink && (
+            <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
+              {quota.getName()}
+            </Link>
+          ))}
         </DrawerItem>
         <DrawerItem name="Limit Ranges">
           {!this.limitranges && limitRangeStore.isLoading && <Spinner/>}
-          {this.limitranges.map(limitrange => {
-            return limitrange.selfLink && (
-              <Link key={limitrange.getId()} to={getDetailsUrl(limitrange.selfLink)}>
-                {limitrange.getName()}
-              </Link>
-            );
-          })}
+          {this.limitranges.map(limitrange => limitrange.selfLink && (
+            <Link key={limitrange.getId()} to={getDetailsUrl(limitrange.selfLink)}>
+              {limitrange.getName()}
+            </Link>
+          ))}
         </DrawerItem>
       </div>
     );
@@ -136,6 +140,10 @@ export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsPr
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    limitRangeStore: di.inject(limitRangeStoreInjectable),
+    resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
   }),
 });
 

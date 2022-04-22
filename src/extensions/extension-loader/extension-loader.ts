@@ -4,8 +4,8 @@
  */
 
 import { ipcRenderer } from "electron";
-import { EventEmitter } from "events";
 import { isEqual } from "lodash";
+import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
@@ -21,14 +21,17 @@ import type { LensExtensionState } from "../extensions-store/extensions-store";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
+import { EventEmitter } from "../../common/event-emitter";
+import type { CreateExtensionInstance } from "./create-extension-instance.token";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
-  createExtensionInstance: (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension;
-  extensionRegistrators: ((extension: LensExtension, extensionInstallationCount: number) => void)[];
-  extensionInstallationCounter: Map<string, number>;
+  createExtensionInstance: CreateExtensionInstance;
+  readonly extensionRegistrators: ((extension: LensExtension, extensionInstallationCount: number) => void)[];
+  readonly extensionInstallationCounter: Map<string, number>;
+  readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
 }
 
 export interface ExtensionLoading {
@@ -40,23 +43,21 @@ export interface ExtensionLoading {
  * Loads installed extensions to the Lens application
  */
 export class ExtensionLoader {
-  protected extensions = observable.map<LensExtensionId, InstalledExtension>();
-  protected instances = observable.map<LensExtensionId, LensExtension>();
+  protected readonly extensions = observable.map<LensExtensionId, InstalledExtension>();
 
   /**
    * This is the set of extensions that don't come with either
    * - Main.LensExtension when running in the main process
    * - Renderer.LensExtension when running in the renderer process
    */
-  protected nonInstancesByName = observable.set<string>();
+  protected readonly nonInstancesByName = observable.set<string>();
 
   /**
    * This is updated by the `observe` in the constructor. DO NOT write directly to it
    */
-  protected instancesByName = observable.map<string, LensExtension>();
+  protected readonly instancesByName = observable.map<string, LensExtension>();
 
-  // emits event "remove" of type LensExtension when the extension is removed
-  private events = new EventEmitter();
+  private readonly onRemoveExtensionId = new EventEmitter<[string]>();
 
   @observable isLoaded = false;
 
@@ -64,10 +65,10 @@ export class ExtensionLoader {
     return when(() => this.isLoaded);
   }
 
-  constructor(protected dependencies : Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
 
-    observe(this.instances, change => {
+    observe(this.dependencies.extensionInstances, change => {
       switch (change.type) {
         case "add":
           if (this.instancesByName.has(change.newValue.name)) {
@@ -83,10 +84,6 @@ export class ExtensionLoader {
           throw new Error("Extension instances shouldn't be updated");
       }
     });
-  }
-
-  @computed get enabledExtensionInstances() : LensExtension[] {
-    return [...this.instances.values()].filter(extension => extension.isEnabled);
   }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
@@ -164,7 +161,7 @@ export class ExtensionLoader {
   @action
   removeInstance(lensExtensionId: LensExtensionId) {
     logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
-    const instance = this.instances.get(lensExtensionId);
+    const instance = this.dependencies.extensionInstances.get(lensExtensionId);
 
     if (!instance) {
       return;
@@ -172,8 +169,8 @@ export class ExtensionLoader {
 
     try {
       instance.disable();
-      this.events.emit("remove", instance);
-      this.instances.delete(lensExtensionId);
+      this.onRemoveExtensionId.emit(instance.id);
+      this.dependencies.extensionInstances.delete(lensExtensionId);
       this.nonInstancesByName.delete(instance.name);
     } catch (error) {
       logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
@@ -260,8 +257,8 @@ export class ExtensionLoader {
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
       ];
 
-      this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.id === extension.id) {
+      this.onRemoveExtensionId.addListener((removedExtensionId) => {
+        if (removedExtensionId === extension.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -288,8 +285,8 @@ export class ExtensionLoader {
         registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
       ];
 
-      this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.id === extension.id) {
+      this.onRemoveExtensionId.addListener((removedExtensionId) => {
+        if (removedExtensionId === extension.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -309,7 +306,7 @@ export class ExtensionLoader {
 
     const extensions = [...installedExtensions.entries()]
       .map(([extId, extension]) => {
-        const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
+        const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
         if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
           try {
@@ -326,7 +323,7 @@ export class ExtensionLoader {
               extension,
             );
 
-            this.instances.set(extId, instance);
+            this.dependencies.extensionInstances.set(extId, instance);
 
             return {
               instance,
@@ -415,7 +412,7 @@ export class ExtensionLoader {
   }
 
   getInstanceById(extId: LensExtensionId) {
-    return this.instances.get(extId);
+    return this.dependencies.extensionInstances.get(extId);
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {

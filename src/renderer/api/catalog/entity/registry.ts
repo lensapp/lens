@@ -4,57 +4,54 @@
  */
 
 import { computed, observable, makeObservable, action } from "mobx";
-import { ipcRendererOn } from "../../common/ipc";
-import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
-import { catalogCategoryRegistry } from "../../common/catalog";
-import "../../common/catalog-entities";
-import type { Cluster } from "../../common/cluster/cluster";
-import { ClusterStore } from "../../common/cluster-store/cluster-store";
-import { iter } from "../utils";
-import type { Disposer } from "../utils";
+import { ipcRendererOn } from "../../../../common/ipc";
+import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategoryRegistry, CatalogEntityKindData } from "../../../../common/catalog";
+import "../../../../common/catalog-entities";
+import { iter } from "../../../utils";
+import type { Disposer } from "../../../utils";
 import { once } from "lodash";
-import logger from "../../common/logger";
-import { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
+import logger from "../../../../common/logger";
+import { CatalogRunEvent } from "../../../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
-import { catalogInitChannel, catalogItemsChannel, catalogEntityRunListener } from "../../common/ipc/catalog";
-import { navigate } from "../navigation";
+import { catalogInitChannel, catalogItemsChannel, catalogEntityRunListener } from "../../../../common/ipc/catalog";
 import { isMainFrame } from "process";
+import type { Navigate } from "../../../navigation/navigate.injectable";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
 
-export const catalogEntityRunContext = {
-  navigate: (url: string) => navigate(url),
-  setCommandPaletteContext: (entity?: CatalogEntity) => {
-    catalogEntityRegistry.activeEntity = entity;
-  },
-};
+interface Dependencies {
+  navigate: Navigate;
+  readonly categoryRegistry: CatalogCategoryRegistry;
+}
 
 export class CatalogEntityRegistry {
-  @observable protected activeEntityId: string | undefined = undefined;
-  protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
-  protected filters = observable.set<EntityFilter>([], {
+  protected readonly activeEntityId = observable.box<string | undefined>(undefined);
+  protected readonly _entities = observable.map<string, CatalogEntity>([], { deep: true });
+  protected readonly filters = observable.set<EntityFilter>([], {
     deep: false,
   });
-  protected onBeforeRunHooks = observable.set<CatalogEntityOnBeforeRun>([], {
+  protected readonly onBeforeRunHooks = observable.set<CatalogEntityOnBeforeRun>([], {
     deep: false,
   });
 
   /**
    * Buffer for keeping entities that don't yet have CatalogCategory synced
    */
-  protected rawEntities: (CatalogEntityData & CatalogEntityKindData)[] = [];
+  protected readonly rawEntities: (CatalogEntityData & CatalogEntityKindData)[] = [];
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 
   protected getActiveEntityById() {
-    if (!this.activeEntityId) {
+    const activeEntityId = this.activeEntityId.get();
+
+    if (!activeEntityId) {
       return undefined;
     }
 
-    return this._entities.get(this.activeEntityId);
+    return this._entities.get(activeEntityId);
   }
 
   get activeEntity(): CatalogEntity | undefined {
@@ -78,9 +75,9 @@ export class CatalogEntityRegistry {
         ? raw
         : raw.getId();
 
-      this.activeEntityId = id;
+      this.activeEntityId.set(id);
     } else {
-      this.activeEntityId = undefined;
+      this.activeEntityId.set(undefined);
     }
   }
 
@@ -123,7 +120,7 @@ export class CatalogEntityRegistry {
     const existing = this._entities.get(item.metadata.uid);
 
     if (!existing) {
-      const entity = this.categoryRegistry.getEntityForData(item);
+      const entity = this.dependencies.categoryRegistry.getEntityForData(item);
 
       if (entity) {
         this._entities.set(entity.getId(), entity);
@@ -147,25 +144,25 @@ export class CatalogEntityRegistry {
     }
   }
 
-  @computed get items() {
+  readonly items = computed(() => {
     this.processRawEntities();
 
     return Array.from(this._entities.values());
-  }
+  });
 
   @computed get filteredItems() {
     return Array.from(
       iter.reduce(
         this.filters,
         iter.filter,
-        this.items.values(),
+        this.items.get().values(),
       ),
     );
   }
 
   @computed get entities(): Map<string, CatalogEntity> {
     return new Map(
-      this.items.map(entity => [entity.getId(), entity]),
+      this.items.get().map(entity => [entity.getId(), entity]),
     );
   }
 
@@ -175,13 +172,13 @@ export class CatalogEntityRegistry {
     );
   }
 
-  getById<T extends CatalogEntity>(id: string) {
-    return this.entities.get(id) as T;
+  getById(id: string) {
+    return this.entities.get(id);
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string, { filtered = false } = {}): T[] {
     const byApiKind = (item: CatalogEntity) => item.apiVersion === apiVersion && item.kind === kind;
-    const entities = filtered ? this.filteredItems : this.items;
+    const entities = filtered ? this.filteredItems : this.items.get();
 
     return entities.filter(byApiKind) as T[];
   }
@@ -189,7 +186,7 @@ export class CatalogEntityRegistry {
   getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory, { filtered = false } = {}): T[] {
     const supportedVersions = new Set(category.spec.versions.map((v) => `${category.spec.group}/${v.name}`));
     const byApiVersionKind = (item: CatalogEntity) => supportedVersions.has(item.apiVersion) && item.kind === category.spec.names.kind;
-    const entities = filtered ? this.filteredItems : this.items;
+    const entities = filtered ? this.filteredItems : this.items.get();
 
     return entities.filter(byApiVersionKind) as T[];
   }
@@ -249,17 +246,16 @@ export class CatalogEntityRegistry {
     this.onBeforeRun(entity)
       .then(doOnRun => {
         if (doOnRun) {
-          return entity.onRun?.(catalogEntityRunContext);
+          return entity.onRun?.({
+            navigate: this.dependencies.navigate,
+            setCommandPaletteContext: (entity) => {
+              this.activeEntity = entity;
+            },
+          });
         } else {
           logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
         }
       })
       .catch(error => logger.error(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onRun threw an error`, error));
   }
-}
-
-export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
-
-export function getActiveClusterEntity(): Cluster | undefined {
-  return ClusterStore.getInstance().getById(catalogEntityRegistry.activeEntity?.getId());
 }

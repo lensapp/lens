@@ -16,8 +16,9 @@ import { autoBind, cssNames, noop } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";
-import { FilterType, pageFilters } from "./page-filters.store";
-import { PageFiltersList } from "./page-filters-list";
+import type { PageFiltersStore } from "./page-filters/store";
+import { FilterType } from "./page-filters/store";
+import { PageFiltersList } from "./page-filters/list";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import itemListLayoutStorageInjectable from "./storage.injectable";
 import { ItemListLayoutContent } from "./content";
@@ -28,6 +29,7 @@ import { observer } from "mobx-react";
 import type { Primitive } from "type-fest";
 import type { SubscribableStore } from "../../kube-watch-api/kube-watch-api";
 import selectedFilterNamespacesInjectable from "../../../common/k8s-api/selected-filter-namespaces.injectable";
+import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 
 export type SearchFilter<I extends ItemObject> = (item: I) => SingleOrMany<string | number | undefined | null>;
 export type SearchFilters<I extends ItemObject> = Record<string, SearchFilter<I>>;
@@ -161,6 +163,7 @@ export interface ItemListLayoutStorage {
 interface Dependencies {
   selectedFilterNamespaces: IComputedValue<string[]>;
   itemListLayoutStorage: StorageLayer<ItemListLayoutStorage>;
+  pageFiltersStore: PageFiltersStore;
 }
 
 @observer
@@ -197,7 +200,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   }
 
   @computed get filters() {
-    let { activeFilters } = pageFilters;
+    let { activeFilters } = this.props.pageFiltersStore;
     const { searchFilters = [] } = this.props;
 
     if (searchFilters.length === 0) {
@@ -229,7 +232,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   private filterCallbacks: ItemsFilters<I> = {
     [FilterType.SEARCH]: items => {
       const { searchFilters = [] } = this.props;
-      const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
+      const search = this.props.pageFiltersStore.getValues(FilterType.SEARCH)[0] || "";
 
       if (search && searchFilters.length) {
         const searchTexts = [search].map(normalizeText);
@@ -326,17 +329,14 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   }
 }
 
-const InjectedItemListLayout = withInjectables<Dependencies, ItemListLayoutProps<ItemObject, boolean>>(NonInjectedItemListLayout, {
+export const ItemListLayout = withInjectables<Dependencies, ItemListLayoutProps<ItemObject, boolean>>(NonInjectedItemListLayout, {
   getProps: (di, props) => ({
+    ...props,
     selectedFilterNamespaces: di.inject(selectedFilterNamespacesInjectable),
     itemListLayoutStorage: di.inject(itemListLayoutStorageInjectable),
-    ...props,
+    pageFiltersStore: di.inject(pageFiltersStoreInjectable),
   }),
-});
-
-export function ItemListLayout<I extends ItemObject, PreLoadStores extends boolean = true>(props: ItemListLayoutProps<I, PreLoadStores>) {
-  return <InjectedItemListLayout {...(props as never)} />;
-}
+}) as <I extends ItemObject, PreLoadStores extends boolean = true>(props: ItemListLayoutProps<I, PreLoadStores>) => React.ReactElement;
 
 function applyFilters<I extends ItemObject>(filters: ItemsFilter<I>[], items: I[]): I[] {
   if (!filters || !filters.length) {

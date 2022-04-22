@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { Cluster } from "../../../../common/cluster/cluster";
-import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import logger from "../../../../main/logger";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { Notifications } from "../../../components/notifications";
@@ -51,7 +51,7 @@ export const initClusterFrame = ({
     // Only load the extensions once the catalog has been populated.
     // Note that the Catalog might still have unprocessed entities until the extensions are fully loaded.
     when(
-      () => catalogEntityRegistry.items.length > 0,
+      () => catalogEntityRegistry.items.get().length > 0,
       () =>
         loadExtensions(() => catalogEntityRegistry.activeEntity as KubernetesCluster),
       {

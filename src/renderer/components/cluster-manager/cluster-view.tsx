@@ -12,18 +12,20 @@ import { ClusterStatus } from "./cluster-status";
 import type { ClusterFrameHandler } from "./lens-views";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import clusterViewRouteParametersInjectable from "./cluster-view-route-parameters.injectable";
 import clusterFramesInjectable from "./lens-views.injectable";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
 interface Dependencies {
   clusterId: IComputedValue<string>;
   clusterFrames: ClusterFrameHandler;
   navigateToCatalog: NavigateToCatalog;
+  entityRegistry: CatalogEntityRegistry;
 }
 
 @observer
@@ -60,7 +62,7 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
 
   componentWillUnmount() {
     this.props.clusterFrames.clearVisibleCluster();
-    catalogEntityRegistry.activeEntity = undefined;
+    this.props.entityRegistry.activeEntity = undefined;
   }
 
   bindEvents() {
@@ -69,7 +71,7 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
         this.props.clusterFrames.setVisibleCluster(clusterId);
         this.props.clusterFrames.initView(clusterId);
         requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
-        catalogEntityRegistry.activeEntity = clusterId;
+        this.props.entityRegistry.activeEntity = clusterId;
       }, {
         fireImmediately: true,
       }),
@@ -106,6 +108,7 @@ export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView,
     clusterId: di.inject(clusterViewRouteParametersInjectable).clusterId,
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     clusterFrames: di.inject(clusterFramesInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
   }),
 });
 

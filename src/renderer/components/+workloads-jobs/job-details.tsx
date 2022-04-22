@@ -22,10 +22,8 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable, reaction } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ResourceMetrics } from "../resource-metrics";
-import { getDetailsUrl } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
@@ -33,6 +31,11 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import jobStoreInjectable from "./store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
@@ -41,6 +44,9 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   jobStore: JobStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
+  getDetailsUrl: GetDetailsUrl;
+  apiManager: ApiManager;
 }
 
 @observer
@@ -70,7 +76,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   };
 
   render() {
-    const { object: job, jobStore } = this.props;
+    const { object: job, jobStore, getActiveClusterEntity, getDetailsUrl, apiManager } = this.props;
 
     if (!job) {
       return null;
@@ -178,6 +184,9 @@ export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInje
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });
 

@@ -24,7 +24,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getItemMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";

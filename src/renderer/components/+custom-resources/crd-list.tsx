@@ -13,15 +13,14 @@ import { iter, stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { customResourceDefinitionStore } from "./legacy-store";
 import { Select } from "../select";
-import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
 import { KubeObjectAge } from "../kube-object/age";
 import { TabLayout } from "../layout/tab-layout-2";
-
-export const crdGroupsUrlParam = createPageParam<string[]>({
-  name: "groups",
-  defaultValue: [],
-});
+import type { PageParam } from "../../navigation";
+import type { CustomResourceDefinitionStore } from "./definition.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import crdGroupsUrlParamInjectable from "./crd-groups-url-param.injectable";
+import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 
 enum columnId {
   kind = "kind",
@@ -31,25 +30,30 @@ enum columnId {
   age = "age",
 }
 
-@observer
-export class CustomResourceDefinitions extends React.Component {
-  private readonly selectedGroups = observable.set(crdGroupsUrlParam.get());
+interface Dependencies {
+  crdGroupsUrlParam: PageParam<string[]>;
+  customResourceDefinitionStore: CustomResourceDefinitionStore;
+}
 
-  constructor(props: {}) {
+@observer
+class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies> {
+  private readonly selectedGroups = observable.set(this.props.crdGroupsUrlParam.get());
+
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @computed get items() {
     if (this.selectedGroups.size) {
-      return customResourceDefinitionStore.items.filter(item => this.selectedGroups.has(item.getGroup()));
+      return this.props.customResourceDefinitionStore.items.filter(item => this.selectedGroups.has(item.getGroup()));
     }
 
-    return customResourceDefinitionStore.items; // show all by default
+    return this.props.customResourceDefinitionStore.items; // show all by default
   }
 
   @computed get groupSelectOptions() {
-    return Object.keys(customResourceDefinitionStore.groups)
+    return Object.keys(this.props.customResourceDefinitionStore.groups)
       .map(group => ({
         value: group,
         label: group,
@@ -61,7 +65,7 @@ export class CustomResourceDefinitions extends React.Component {
     const groups = options.map(({ value }) => value);
 
     this.selectedGroups.replace(groups);
-    crdGroupsUrlParam.set(groups);
+    this.props.crdGroupsUrlParam.set(groups);
   };
 
   private getPlaceholder() {
@@ -159,3 +163,11 @@ export class CustomResourceDefinitions extends React.Component {
     );
   }
 }
+
+export const CustomResourceDefinitions = withInjectables<Dependencies>(NonInjectedCustomResourceDefinitions, {
+  getProps: (di, props) => ({
+    ...props,
+    crdGroupsUrlParam: di.inject(crdGroupsUrlParamInjectable),
+    customResourceDefinitionStore: di.inject(customResourceDefinitionStoreInjectable),
+  }),
+});

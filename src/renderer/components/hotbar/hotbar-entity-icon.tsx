@@ -6,11 +6,11 @@
 import styles from "./hotbar-entity-icon.module.scss";
 
 import React from "react";
+import type { IComputedValue } from "mobx";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
 import type { CatalogCategoryRegistry, CatalogEntity, CatalogEntityContextMenu } from "../../../common/catalog";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { IClassName } from "../../utils";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
@@ -21,6 +21,7 @@ import { navigate } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
+import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
 
 export interface HotbarEntityIconProps {
   entity: CatalogEntity;
@@ -36,6 +37,7 @@ export interface HotbarEntityIconProps {
 interface Dependencies {
   onContextMenuOpen: OnContextMenuOpen;
   catalogCategoryRegistry: CatalogCategoryRegistry;
+  activeEntity: IComputedValue<CatalogEntity | undefined>;
 }
 
 @observer
@@ -73,7 +75,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
   }
 
   isActive(item: CatalogEntity) {
-    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
+    return this.props.activeEntity.get()?.metadata?.uid == item.getId();
   }
 
   onMenuOpen() {
@@ -123,5 +125,6 @@ export const HotbarEntityIcon = withInjectables<Dependencies, HotbarEntityIconPr
     ...props,
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+    activeEntity: di.inject(activeEntityInjectable),
   }),
 });

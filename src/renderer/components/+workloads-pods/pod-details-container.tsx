@@ -17,12 +17,13 @@ import { ResourceMetrics } from "../resource-metrics";
 import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { PortForwardStore } from "../../port-forward";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface PodDetailsContainerProps {
   pod: Pod;
@@ -32,6 +33,7 @@ export interface PodDetailsContainerProps {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
@@ -82,7 +84,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
   }
 
   render() {
-    const { pod, container, metrics } = this.props;
+    const { pod, container, metrics, getActiveClusterEntity } = this.props;
 
     if (!pod || !container) return null;
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container;
@@ -211,13 +213,10 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
   }
 }
 
-export const PodDetailsContainer = withInjectables<Dependencies, PodDetailsContainerProps>(
-  NonInjectedPodDetailsContainer,
-
-  {
-    getProps: (di, props) => ({
-      portForwardStore: di.inject(portForwardStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const PodDetailsContainer = withInjectables<Dependencies, PodDetailsContainerProps>(NonInjectedPodDetailsContainer, {
+  getProps: (di, props) => ({
+    ...props,
+    portForwardStore: di.inject(portForwardStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+  }),
+});

@@ -5,7 +5,7 @@
 
 import React from "react";
 import type { LensProtocolRouterRenderer } from "../lens-protocol-router-renderer/lens-protocol-router-renderer";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import {
   EXTENSION_NAME_MATCH,
@@ -30,118 +30,112 @@ interface Dependencies {
   navigateToEntitySettings: NavigateToEntitySettings;
   navigateToClusterView: NavigateToClusterView;
   navigateToPreferenceTabId: (tabId: string) => void;
+  entityRegistry: CatalogEntityRegistry;
 }
 
-export const bindProtocolAddRouteHandlers =
-  ({ attemptInstallByInfo, lensProtocolRouterRenderer, navigateToCatalog, navigateToAddCluster, navigateToExtensions, navigateToEntitySettings, navigateToClusterView, navigateToPreferenceTabId }: Dependencies) =>
-    () => {
-      lensProtocolRouterRenderer
-        .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
-          if (tabId) {
-            navigateToPreferenceTabId(tabId);
-          }
-        })
-        .addInternalHandler("/", ({ tail }) => {
-          if (tail) {
-            Notifications.shortInfo(
-              <p>
-                {"Unknown Action for "}
-                <code>
-                  lens://app/
-                  {tail}
-                </code>
-                . Are you on the latest version?
-              </p>,
-            );
-          }
-
-          navigateToCatalog();
-        })
-        .addInternalHandler("/landing", () => {
-          navigateToCatalog();
-        })
-        .addInternalHandler(
-          "/landing/view/:group/:kind",
-          ({ pathname: { group, kind }}) => {
-            navigateToCatalog({ group, kind });
-          },
-        )
-        .addInternalHandler("/cluster", () => {
-          navigateToAddCluster();
-        })
-        .addInternalHandler(
-          "/entity/:entityId/settings",
-          ({ pathname: { entityId }}) => {
-            assert(entityId);
-            const entity = catalogEntityRegistry.getById(entityId);
-
-            if (entity) {
-              navigateToEntitySettings(entityId);
-            } else {
-              Notifications.shortInfo(
-                <p>
-                  {"Unknown catalog entity "}
-                  <code>{entityId}</code>
-                  .
-                </p>,
-              );
-            }
-          },
-        )
-      // Handlers below are deprecated and only kept for backward compact purposes
-        .addInternalHandler(
-          "/cluster/:clusterId",
-          ({ pathname: { clusterId }}) => {
-            assert(clusterId);
-            const cluster = ClusterStore.getInstance().getById(clusterId);
-
-            if (cluster) {
-              navigateToClusterView(clusterId);
-            } else {
-              Notifications.shortInfo(
-                <p>
-                  {"Unknown catalog entity "}
-                  <code>{clusterId}</code>
-                  .
-                </p>,
-              );
-            }
-          },
-        )
-        .addInternalHandler(
-          "/cluster/:clusterId/settings",
-          ({ pathname: { clusterId }}) => {
-            assert(clusterId);
-            const cluster = ClusterStore.getInstance().getById(clusterId);
-
-            if (cluster) {
-              navigateToEntitySettings(clusterId);
-            } else {
-              Notifications.shortInfo(
-                <p>
-                  {"Unknown catalog entity "}
-                  <code>{clusterId}</code>
-                  .
-                </p>,
-              );
-            }
-          },
-        )
-        .addInternalHandler("/extensions", () => {
-          navigateToExtensions();
-        })
-        .addInternalHandler(
-          `/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`,
-          ({ pathname, search: { version }}) => {
-            const name = [
-              pathname[EXTENSION_PUBLISHER_MATCH],
-              pathname[EXTENSION_NAME_MATCH],
-            ]
-              .filter(Boolean)
-              .join("/");
-
-            navigateToExtensions();
-            attemptInstallByInfo({ name, version, requireConfirmation: true });
-          },
+export const bindProtocolAddRouteHandlers = ({
+  attemptInstallByInfo,
+  lensProtocolRouterRenderer,
+  navigateToCatalog,
+  navigateToAddCluster,
+  navigateToExtensions,
+  navigateToEntitySettings,
+  navigateToClusterView,
+  navigateToPreferenceTabId,
+  entityRegistry,
+}: Dependencies) => () => {
+  lensProtocolRouterRenderer
+    .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
+      if (tabId) {
+        navigateToPreferenceTabId(tabId);
+      }
+    })
+    .addInternalHandler("/", ({ tail }) => {
+      if (tail) {
+        Notifications.shortInfo(
+          <p>
+            {"Unknown Action for "}
+            <code>
+              lens://app/
+              {tail}
+            </code>
+            . Are you on the latest version?
+          </p>,
         );
-    };
+      }
+
+      navigateToCatalog();
+    })
+    .addInternalHandler("/landing", () => {
+      navigateToCatalog();
+    })
+    .addInternalHandler("/landing/view/:group/:kind", ({ pathname: { group, kind }}) => {
+      navigateToCatalog({ group, kind });
+    })
+    .addInternalHandler("/cluster", () => {
+      navigateToAddCluster();
+    })
+    .addInternalHandler("/entity/:entityId/settings", ({ pathname: { entityId }}) => {
+      assert(entityId);
+      const entity = entityRegistry.getById(entityId);
+
+      if (entity) {
+        navigateToEntitySettings(entityId);
+      } else {
+        Notifications.shortInfo(
+          <p>
+            {"Unknown catalog entity "}
+            <code>{entityId}</code>
+            .
+          </p>,
+        );
+      }
+    })
+    // Handlers below are deprecated and only kept for backward compact purposes
+    .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId }}) => {
+      assert(clusterId);
+      const cluster = ClusterStore.getInstance().getById(clusterId);
+
+      if (cluster) {
+        navigateToClusterView(clusterId);
+      } else {
+        Notifications.shortInfo(
+          <p>
+            {"Unknown catalog entity "}
+            <code>{clusterId}</code>
+            .
+          </p>,
+        );
+      }
+    })
+    .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId }}) => {
+      assert(clusterId);
+      const cluster = ClusterStore.getInstance().getById(clusterId);
+
+      if (cluster) {
+        navigateToEntitySettings(clusterId);
+      } else {
+        Notifications.shortInfo(
+          <p>
+            {"Unknown catalog entity "}
+            <code>{clusterId}</code>
+            .
+          </p>,
+        );
+      }
+    })
+    .addInternalHandler("/extensions", () => {
+      navigateToExtensions();
+    })
+    .addInternalHandler(`/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`, ({ pathname, search: { version }}) => {
+      const name = [
+        pathname[EXTENSION_PUBLISHER_MATCH],
+        pathname[EXTENSION_NAME_MATCH],
+      ]
+        .filter(Boolean)
+        .join("/");
+
+      navigateToExtensions();
+      attemptInstallByInfo({ name, version, requireConfirmation: true });
+    });
+};

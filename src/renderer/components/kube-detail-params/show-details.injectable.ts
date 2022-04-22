@@ -11,7 +11,7 @@ import getDetailsUrlInjectable from "./get-details-url.injectable";
  * @param resetSelected If true then will reset the selected kube object (which object is highlighted generally)
  * @default resetSelected true
  */
-export type ShowDetails = (selfLink: string, resetSelected?: boolean) => void;
+export type ShowDetails = (selfLink: string | undefined, resetSelected?: boolean) => void;
 
 const showDetailsInjectable = getInjectable({
   id: "show-details",
@@ -19,7 +19,7 @@ const showDetailsInjectable = getInjectable({
     const observableHistory = di.inject(observableHistoryInjectable);
     const getDetailsUrl = di.inject(getDetailsUrlInjectable);
 
-    return (selfLink, resetSelected = true) => {
+    return (selfLink = "", resetSelected = true) => {
       observableHistory.merge({
         search: getDetailsUrl(selfLink, resetSelected),
       });

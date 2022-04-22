@@ -21,7 +21,6 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -29,6 +28,8 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -37,6 +38,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   daemonSetStore: DaemonSetStore;
   podStore: PodStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
@@ -66,7 +68,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   };
 
   render() {
-    const { object: daemonSet, daemonSetStore, podStore } = this.props;
+    const { object: daemonSet, daemonSetStore, podStore, getActiveClusterEntity } = this.props;
 
     if (!daemonSet) {
       return null;
@@ -140,5 +142,6 @@ export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsPr
     subscribeStores: di.inject(subscribeStoresInjectable),
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });

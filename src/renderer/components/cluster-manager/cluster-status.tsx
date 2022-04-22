@@ -16,11 +16,12 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { requestClusterActivation } from "../../ipc";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
 export interface ClusterStatusProps {
   className?: IClassName;
@@ -29,6 +30,7 @@ export interface ClusterStatusProps {
 
 interface Dependencies {
   navigateToEntitySettings: NavigateToEntitySettings;
+  entityRegistry: CatalogEntityRegistry;
 }
 
 @observer
@@ -46,7 +48,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
   }
 
   @computed get entity() {
-    return catalogEntityRegistry.getById(this.cluster.id);
+    return this.props.entityRegistry.getById(this.cluster.id);
   }
 
   @computed get hasErrors(): boolean {
@@ -158,13 +160,10 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
   }
 }
 
-export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(
-  NonInjectedClusterStatus,
-
-  {
-    getProps: (di, props) => ({
-      navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
-      ...props,
-    }),
-  },
-);
+export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(NonInjectedClusterStatus, {
+  getProps: (di, props) => ({
+    ...props,
+    navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+  }),
+});

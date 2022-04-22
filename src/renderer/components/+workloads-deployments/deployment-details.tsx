@@ -23,7 +23,6 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -33,6 +32,8 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
 import deploymentStoreInjectable from "./store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
@@ -42,6 +43,7 @@ interface Dependencies {
   podStore: PodStore;
   replicaSetStore: ReplicaSetStore;
   deploymentStore: DeploymentStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
@@ -73,7 +75,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   };
 
   render() {
-    const { object: deployment, podStore, replicaSetStore, deploymentStore } = this.props;
+    const { object: deployment, podStore, replicaSetStore, deploymentStore, getActiveClusterEntity } = this.props;
 
     if (!deployment) {
       return null;
@@ -174,6 +176,7 @@ export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetails
     podStore: di.inject(podStoreInjectable),
     replicaSetStore: di.inject(replicaSetStoreInjectable),
     deploymentStore: di.inject(deploymentStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });
 

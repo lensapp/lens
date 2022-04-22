@@ -5,7 +5,6 @@
 
 import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import createPageParamInjectable from "./create-page-param.injectable";
 import matchRouteInjectable from "./match-route.injectable";
 import navigateInjectable from "./navigate.injectable";
 import observableHistoryInjectable from "./observable-history.injectable";
@@ -21,11 +20,6 @@ export const navigation = asLegacyGlobalForExtensionApi(observableHistoryInjecta
  * @deprecated use `di.inject(navigateInjectable)` instead
  */
 export const navigate = asLegacyGlobalFunctionForExtensionApi(navigateInjectable);
-
-/**
- * @deprecated use `di.inject(createPageParamInjectable)` instead
- */
-export const createPageParam = asLegacyGlobalFunctionForExtensionApi(createPageParamInjectable);
 
 /**
  * @deprecated use `di.inject(matchRouteInjectable)` instead

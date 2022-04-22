@@ -21,7 +21,6 @@ import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -30,6 +29,8 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import statefulSetStoreInjectable from "./store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -38,6 +39,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   statefulSetStore: StatefulSetStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
@@ -68,7 +70,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
   };
 
   render() {
-    const { object: statefulSet, podStore, statefulSetStore } = this.props;
+    const { object: statefulSet, podStore, statefulSetStore, getActiveClusterEntity } = this.props;
 
     if (!statefulSet) {
       return null;
@@ -140,6 +142,7 @@ export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetai
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     statefulSetStore: di.inject(statefulSetStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });
 

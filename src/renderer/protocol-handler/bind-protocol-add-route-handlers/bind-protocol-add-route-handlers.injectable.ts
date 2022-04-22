@@ -12,25 +12,22 @@ import navigateToExtensionsInjectable from "../../../common/front-end-routing/ro
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import navigateToClusterViewInjectable from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import navigateToPreferenceTabIdInjectable from "./navigate-to-preference-tab-id.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({
   id: "bind-protocol-add-route-handlers",
 
-  instantiate: (di) =>
-    bindProtocolAddRouteHandlers({
-      attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
-
-      lensProtocolRouterRenderer: di.inject(
-        lensProtocolRouterRendererInjectable,
-      ),
-
-      navigateToCatalog: di.inject(navigateToCatalogInjectable),
-      navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
-      navigateToExtensions: di.inject(navigateToExtensionsInjectable),
-      navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
-      navigateToClusterView: di.inject(navigateToClusterViewInjectable),
-      navigateToPreferenceTabId: di.inject(navigateToPreferenceTabIdInjectable),
-    }),
+  instantiate: (di) => bindProtocolAddRouteHandlers({
+    attemptInstallByInfo: di.inject(attemptInstallByInfoInjectable),
+    lensProtocolRouterRenderer: di.inject(lensProtocolRouterRendererInjectable ),
+    navigateToCatalog: di.inject(navigateToCatalogInjectable),
+    navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
+    navigateToExtensions: di.inject(navigateToExtensionsInjectable),
+    navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
+    navigateToClusterView: di.inject(navigateToClusterViewInjectable),
+    navigateToPreferenceTabId: di.inject(navigateToPreferenceTabIdInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+  }),
 });
 
 export default bindProtocolAddRouteHandlersInjectable;

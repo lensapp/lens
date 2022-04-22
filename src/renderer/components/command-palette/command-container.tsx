@@ -13,20 +13,22 @@ import type { ClusterId } from "../../../common/cluster-types";
 import type { CommandOverlay } from "./command-overlay.injectable";
 import commandOverlayInjectable from "./command-overlay.injectable";
 import { isMac } from "../../../common/vars";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
 import type { Disposer } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 import type { IComputedValue } from "mobx";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import hostedClusterIdInjectable from "../../../common/cluster-store/hosted-cluster-id.injectable";
 
 interface Dependencies {
   addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
   commandOverlay: CommandOverlay;
   clusterId?: ClusterId;
   matchedClusterId: IComputedValue<ClusterId>;
+  entityRegistry: CatalogEntityRegistry;
 }
 
 @observer
@@ -41,12 +43,12 @@ class NonInjectedCommandContainer extends React.Component<Dependencies> {
   }
 
   handleCommandPalette = () => {
-    const { commandOverlay } = this.props;
+    const { commandOverlay, entityRegistry } = this.props;
     const clusterIsActive = this.props.matchedClusterId.get() !== undefined;
 
     if (clusterIsActive) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      broadcastMessage(`command-palette:${catalogEntityRegistry.activeEntity!.getId()}:open`);
+      broadcastMessage(`command-palette:${entityRegistry.activeEntity!.getId()}:open`);
     } else {
       commandOverlay.open(<CommandDialog />);
     }
@@ -97,19 +99,13 @@ class NonInjectedCommandContainer extends React.Component<Dependencies> {
   }
 }
 
-export const CommandContainer = withInjectables<Dependencies>(
-  NonInjectedCommandContainer,
-  {
-    getProps: (di, props) => {
-      const hostedCluster = di.inject(hostedClusterInjectable);
-
-      return {
-        clusterId: hostedCluster?.id,
-        addWindowEventListener: di.inject(windowAddEventListenerInjectable),
-        commandOverlay: di.inject(commandOverlayInjectable),
-        matchedClusterId: di.inject(matchedClusterIdInjectable),
-        ...props,
-      };
-    },
-  },
-);
+export const CommandContainer = withInjectables<Dependencies>(NonInjectedCommandContainer, {
+  getProps: (di, props) => ({
+    ...props,
+    clusterId: di.inject(hostedClusterIdInjectable),
+    addWindowEventListener: di.inject(windowAddEventListenerInjectable),
+    commandOverlay: di.inject(commandOverlayInjectable),
+    matchedClusterId: di.inject(matchedClusterIdInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+  }),
+});

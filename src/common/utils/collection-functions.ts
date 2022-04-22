@@ -4,6 +4,7 @@
  */
 
 import { runInAction } from "mobx";
+import { inspect } from "util";
 import { isDefined } from "./type-narrowing";
 
 /**
@@ -79,7 +80,7 @@ export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBu
  */
 export function strictSet<K, V>(map: Map<K, V>, key: K, val: V): typeof map {
   if (map.has(key)) {
-    throw new TypeError("Duplicate key in map");
+    throw new TypeError(`Map already contains key: ${inspect(key)}`);
   }
 
   return map.set(key, val);
@@ -92,7 +93,7 @@ export function strictSet<K, V>(map: Map<K, V>, key: K, val: V): typeof map {
  */
 export function strictGet<K, V>(map: Map<K, V>, key: K): V {
   if (!map.has(key)) {
-    throw new TypeError("key not in map");
+    throw new TypeError(`Map does not contains key: ${inspect(key)}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

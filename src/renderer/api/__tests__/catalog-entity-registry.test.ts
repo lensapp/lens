@@ -3,24 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { CatalogEntityRegistry } from "../catalog-entity-registry";
-import type { CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
 import { CatalogCategory } from "../catalog-entity";
 import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";
 import { observable } from "mobx";
 import type { CatalogCategoryRegistry } from "../../../common/catalog";
 import { categoryVersion } from "../../../common/catalog";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { CatalogEntityRegistry } from "../catalog/entity/registry";
+import catalogEntityRegistryInjectable from "../catalog/entity/registry.injectable";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 
-class TestCatalogEntityRegistry extends CatalogEntityRegistry {
-  replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
-    this.updateItems(items);
-  }
-}
 
 class FooBarCategory extends CatalogCategory {
-  public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
+  public readonly apiVersion = "entityRegistry.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "FooBars",
@@ -81,17 +76,18 @@ const entitykc = new KubernetesCluster({
 });
 
 describe("CatalogEntityRegistry", () => {
+  let entityRegistry: CatalogEntityRegistry;
   let catalogCategoryRegistry: CatalogCategoryRegistry;
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
+    entityRegistry = di.inject(catalogEntityRegistryInjectable);
     catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
   });
 
   describe("updateItems", () => {
     it("adds new catalog item", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -107,8 +103,8 @@ describe("CatalogEntityRegistry", () => {
         spec: {},
       }];
 
-      catalog.replaceItems(items);
-      expect(catalog.items.length).toEqual(1);
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.items.get().length).toEqual(1);
 
       items.push({
         apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -125,12 +121,11 @@ describe("CatalogEntityRegistry", () => {
         spec: {},
       });
 
-      catalog.replaceItems(items);
-      expect(catalog.items.length).toEqual(2);
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.items.get().length).toEqual(2);
     });
 
     it("updates existing items", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -146,19 +141,18 @@ describe("CatalogEntityRegistry", () => {
         spec: {},
       }];
 
-      catalog.replaceItems(items);
-      expect(catalog.items.length).toEqual(1);
-      expect(catalog.items[0].status.phase).toEqual("disconnected");
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.items.get().length).toEqual(1);
+      expect(entityRegistry.items.get()[0].status.phase).toEqual("disconnected");
 
       items[0].status.phase = "connected";
 
-      catalog.replaceItems(items);
-      expect(catalog.items.length).toEqual(1);
-      expect(catalog.items[0].status.phase).toEqual("connected");
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.items.get().length).toEqual(1);
+      expect(entityRegistry.items.get()[0].status.phase).toEqual("connected");
     });
 
     it("updates activeEntity", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -174,17 +168,16 @@ describe("CatalogEntityRegistry", () => {
         spec: {},
       }];
 
-      catalog.replaceItems(items);
-      catalog.activeEntity = catalog.items[0];
-      expect(catalog.activeEntity.status.phase).toEqual("disconnected");
+      entityRegistry.updateItems(items);
+      entityRegistry.activeEntity = entityRegistry.items.get()[0];
+      expect(entityRegistry.activeEntity.status.phase).toEqual("disconnected");
 
       items[0].status.phase = "connected";
-      catalog.replaceItems(items);
-      expect(catalog.activeEntity.status.phase).toEqual("connected");
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.activeEntity.status.phase).toEqual("connected");
     });
 
     it("removes deleted items", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -216,17 +209,16 @@ describe("CatalogEntityRegistry", () => {
         },
       ];
 
-      catalog.replaceItems(items);
+      entityRegistry.updateItems(items);
       items.splice(0, 1);
-      catalog.replaceItems(items);
-      expect(catalog.items.length).toEqual(1);
-      expect(catalog.items[0].metadata.uid).toEqual("456");
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.items.get().length).toEqual(1);
+      expect(entityRegistry.items.get()[0].metadata.uid).toEqual("456");
     });
   });
 
   describe("items", () => {
     it("does not return items without matching category", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -258,13 +250,12 @@ describe("CatalogEntityRegistry", () => {
         },
       ];
 
-      catalog.replaceItems(items);
-      expect(catalog.items.length).toBe(1);
+      entityRegistry.updateItems(items);
+      expect(entityRegistry.items.get().length).toBe(1);
     });
   });
 
   it("does return items after matching category is added", () => {
-    const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
     const items = [
       {
         apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -282,29 +273,28 @@ describe("CatalogEntityRegistry", () => {
       },
     ];
 
-    catalog.replaceItems(items);
+    entityRegistry.updateItems(items);
     catalogCategoryRegistry.add(new FooBarCategory());
-    expect(catalog.items.length).toBe(1);
+    expect(entityRegistry.items.get().length).toBe(1);
   });
 
   it("does not return items that are filtered out", () => {
     const source = observable.array([entity, entity2, entitykc]);
-    const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
 
-    catalog.replaceItems(source);
+    entityRegistry.updateItems(source);
 
-    expect(catalog.items.length).toBe(3);
-    expect(catalog.filteredItems.length).toBe(3);
+    expect(entityRegistry.items.get().length).toBe(3);
+    expect(entityRegistry.filteredItems.length).toBe(3);
 
-    const d = catalog.addCatalogFilter(entity => entity.kind === KubernetesCluster.kind);
+    const d = entityRegistry.addCatalogFilter(entity => entity.kind === KubernetesCluster.kind);
 
-    expect(catalog.items.length).toBe(3);
-    expect(catalog.filteredItems.length).toBe(1);
+    expect(entityRegistry.items.get().length).toBe(3);
+    expect(entityRegistry.filteredItems.length).toBe(1);
 
     // Remove filter
     d();
 
-    expect(catalog.items.length).toBe(3);
-    expect(catalog.filteredItems.length).toBe(3);
+    expect(entityRegistry.items.get().length).toBe(3);
+    expect(entityRegistry.filteredItems.length).toBe(3);
   });
 });

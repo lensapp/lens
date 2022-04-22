@@ -11,8 +11,8 @@ import rendererExtensionsInjectable from "../../../../extensions/renderer-extens
 import { CatalogCategory } from "../../../api/catalog-entity";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { AdditionalCategoryColumnRegistration, CategoryColumnRegistration } from "../custom-category-columns";
-import type { CategoryColumns, GetCategoryColumnsParams } from "../get-category-columns.injectable";
-import getCategoryColumnsInjectable from "../get-category-columns.injectable";
+import type { CategoryColumns, GetCategoryColumnsParams } from "../columns/get.injectable";
+import getCategoryColumnsInjectable from "../columns/get.injectable";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 
 class TestCategory extends CatalogCategory {

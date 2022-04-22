@@ -17,7 +17,7 @@ import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { EventStore } from "../+events/store";
 import { withInjectables } from "@ogre-tools/injectable-react";

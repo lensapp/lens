@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import type { IClassName } from "../../utils";
 import { cssNames, isDefined } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
-import type { Filter } from "./page-filters.store";
+import type { Filter } from "./page-filters/store";
 import type { HeaderCustomizer, HeaderPlaceholders, ItemListStore, SearchFilter } from "./list-layout";
 import { SearchInputUrl } from "../input";
 
