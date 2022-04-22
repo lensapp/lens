@@ -12,6 +12,7 @@ import type { ThemeStore } from "../../renderer/theme.store";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import React from "react";
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import "@testing-library/jest-dom/extend-expect";
 
 describe("preferences - navigation to extension specific preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -85,6 +86,21 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
     });
 
+    describe("given multiple extensions with and without specific preferences, when navigating to extension specific preferences page", () => {
+      beforeEach(async () => {
+        const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
+        const extensionWithoutPreferences = getRendererExtensionFake(extensionStubWithoutPreferences);
+
+        await applicationBuilder.addExtensions(someTestExtension, extensionWithoutPreferences);
+      });
+
+      it("doesn't show link for extension without preferences", () => {
+        const actual = rendered.queryByTestId("tab-link-for-extension-without-preferences-id");
+
+        expect(actual).toBeNull();
+      });
+    });
+
     describe("when extension with specific preferences is enabled", () => {
       beforeEach(async () => {
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
@@ -100,6 +116,12 @@ describe("preferences - navigation to extension specific preferences", () => {
         const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
 
         expect(actual).not.toBeNull();
+      });
+
+      it("link doesn't have 'active' class", () => {
+        const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
+
+        expect(actual).not.toHaveClass("active");
       });
 
       describe("when navigating to extension preferences using navigation", () => {
@@ -127,6 +149,12 @@ describe("preferences - navigation to extension specific preferences", () => {
           const actual = rendered.queryByTestId("extension-preference-item-for-some-unrelated-preference-item-id");
 
           expect(actual).toBeNull();
+        });
+
+        it("link does have 'active' class", () => {
+          const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
+
+          expect(actual).toHaveClass("active");
         });
       });
     });
@@ -176,3 +204,6 @@ const someOtherExtensionStubWithExtensionSpecificPreferenceItems: Partial<LensRe
   ],
 };
 
+const extensionStubWithoutPreferences: Partial<LensRendererExtension> = {
+  id: "without-preferences-id",
+};
