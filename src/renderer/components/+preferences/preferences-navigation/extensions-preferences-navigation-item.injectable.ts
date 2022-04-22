@@ -17,6 +17,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
       const navigateToExtensionPreferences = di.inject(
         navigateToExtensionPreferencesInjectable,
       );
+      const isVisible = extension.appPreferences.length > 0;
 
       const extensionInjectable = getInjectable({
         id: `extension-preferences-navigation-item-${extension.sanitizedExtensionId}`,
@@ -25,7 +26,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
           label: `${extension.name}`,
           navigate: () => navigateToExtensionPreferences(extension.sanitizedExtensionId),
           isActive: computed(() => false),
-          isVisible: computed(() => true),
+          isVisible: computed(() => isVisible),
           orderNumber: 20,
         }),
         injectionToken: preferenceNavigationItemInjectionToken,
