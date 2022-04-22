@@ -153,7 +153,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   onDetails = (entity: CatalogEntity) => {
-    if (this.props.catalogEntityStore.selectedItemId) {
+    if (this.props.catalogEntityStore.selectedItemId.get()) {
       this.props.catalogEntityStore.selectedItemId.set(undefined);
     } else {
       this.props.catalogEntityStore.onRun(entity);

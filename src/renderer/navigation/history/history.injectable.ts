@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { history } from "./history";
+import { createBrowserHistory } from "history";
 
 const historyInjectable = getInjectable({
   id: "history",
-  instantiate: () => history,
+  instantiate: () => createBrowserHistory(),
 });
 
 export default historyInjectable;

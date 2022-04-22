@@ -7,14 +7,14 @@ import type { IComputedValue, IObservableValue } from "mobx";
 import { computed, observable, reaction } from "mobx";
 import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../../api/catalog-entity";
-import type { CatalogCategory } from "../../../../common/catalog";
-import { catalogCategoryRegistry } from "../../../../common/catalog";
+import type { CatalogCategory, CatalogCategoryRegistry } from "../../../../common/catalog";
 import type { Disposer } from "../../../../common/utils";
 import { disposer } from "../../../../common/utils";
 import type { ItemListStore } from "../../item-object-list";
 
 interface Dependencies {
-  registry: CatalogEntityRegistry;
+  entityRegistry: CatalogEntityRegistry;
+  catalogRegistry: CatalogCategoryRegistry;
 }
 
 export type CatalogEntityStore = ItemListStore<CatalogEntity, false> & {
@@ -26,15 +26,18 @@ export type CatalogEntityStore = ItemListStore<CatalogEntity, false> & {
   onRun(entity: CatalogEntity): void;
 };
 
-export function catalogEntityStore({ registry }: Dependencies): CatalogEntityStore {
+export function catalogEntityStore({
+  entityRegistry,
+  catalogRegistry,
+}: Dependencies): CatalogEntityStore {
   const activeCategory = observable.box<CatalogCategory | undefined>(undefined);
   const selectedItemId = observable.box<string | undefined>(undefined);
   const entities = computed(() => {
     const category = activeCategory.get();
 
     return category
-      ? registry.getItemsForCategory(category, { filtered: true })
-      : registry.filteredItems;
+      ? entityRegistry.getItemsForCategory(category, { filtered: true })
+      : entityRegistry.filteredItems;
   });
   const selectedItem = computed(() => {
     const id = selectedItemId.get();
@@ -51,7 +54,7 @@ export function catalogEntityStore({ registry }: Dependencies): CatalogEntitySto
     if (category) {
       category.emit("load");
     } else {
-      for (const category of catalogCategoryRegistry.items) {
+      for (const category of catalogRegistry.items) {
         category.emit("load");
       }
     }
@@ -66,9 +69,9 @@ export function catalogEntityStore({ registry }: Dependencies): CatalogEntitySto
       reaction(() => entities.get(), loadAll),
       reaction(() => activeCategory.get(), loadAll, { delay: 100 }),
     ),
-    onRun: entity => registry.onRun(entity),
+    onRun: entity => entityRegistry.onRun(entity),
     failedLoading: false,
-    getTotalCount: () => registry.filteredItems.length,
+    getTotalCount: () => entityRegistry.filteredItems.length,
     isLoaded: true,
     isSelected: (item) => item.getId() === selectedItemId.get(),
     isSelectedAll: () => false,

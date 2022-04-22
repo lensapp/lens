@@ -10,10 +10,7 @@ import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import observableHistoryInjectable from "./navigation/observable-history.injectable";
-import { searchParamsOptions } from "./navigation";
 import { createMemoryHistory } from "history";
-import { createObservableHistory } from "mobx-observable-history";
 import registerIpcChannelListenerInjectable from "./app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
 import focusWindowInjectable from "./ipc-channel-listeners/focus-window.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
@@ -40,6 +37,7 @@ import { observable, toJS } from "mobx";
 import type { Draft } from "immer";
 import { produce, isDraft } from "immer";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
+import historyInjectable from "./navigation/history/history.injectable";
 
 export interface GetRendererDiForUnitTestingOptions extends GetDiForUnitTestingOptions {
   overrideCreateStorage?: boolean;
@@ -78,6 +76,8 @@ export const getDiForUnitTesting = (opts: GetRendererDiForUnitTestingOptions = {
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
 
+    di.override(historyInjectable, () => createMemoryHistory());
+
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
 
@@ -93,14 +93,6 @@ export const getDiForUnitTesting = (opts: GetRendererDiForUnitTestingOptions = {
     di.override(registerIpcChannelListenerInjectable, () => () => undefined);
 
     overrideFsWithFakes(di);
-
-    di.override(observableHistoryInjectable, () => {
-      const historyFake = createMemoryHistory();
-
-      return createObservableHistory(historyFake, {
-        searchParams: searchParamsOptions,
-      });
-    });
 
     di.override(focusWindowInjectable, () => () => {});
 
