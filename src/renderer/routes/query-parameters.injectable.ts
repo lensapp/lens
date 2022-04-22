@@ -13,11 +13,7 @@ const queryParametersInjectable = getInjectable({
   instantiate: (di) => {
     const observableHistory = di.inject(observableHistoryInjectable);
 
-    return computed(() => {
-      const queryString = observableHistory.location.search;
-
-      return parseQueryString(queryString);
-    });
+    return computed(() => parseQueryString(observableHistory.location.search));
   },
 });
 

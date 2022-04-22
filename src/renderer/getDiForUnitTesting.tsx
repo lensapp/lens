@@ -37,7 +37,7 @@ import { observable, toJS } from "mobx";
 import type { Draft } from "immer";
 import { produce, isDraft } from "immer";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
-import historyInjectable from "./navigation/history/history.injectable";
+import historyInjectable from "./navigation/history.injectable";
 
 export interface GetRendererDiForUnitTestingOptions extends GetDiForUnitTestingOptions {
   overrideCreateStorage?: boolean;

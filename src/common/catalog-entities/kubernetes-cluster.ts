@@ -134,7 +134,7 @@ export class KubernetesCluster<
   }
 }
 
-class KubernetesClusterCategory extends CatalogCategory {
+export class KubernetesClusterCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
@@ -151,5 +151,3 @@ class KubernetesClusterCategory extends CatalogCategory {
     },
   };
 }
-
-export const kubernetesClusterCategory = new KubernetesClusterCategory();

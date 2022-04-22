@@ -15,25 +15,25 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { TopBar } from "../layout/top-bar/top-bar";
 import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 import type { IComputedValue } from "mobx";
-import { reaction } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
-import { setEntityOnRouteMatch } from "../../api/helpers/general-active-sync";
-import { navigation } from "../../navigation";
 import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
 import { buildURL } from "../../../common/utils/buildUrl";
 import type { StorageLayer } from "../../utils";
+import type { WatchForGeneralEntityNavigation } from "../../api/helpers/watch-for-general-entity-navigation.injectable";
+import watchForGeneralEntityNavigationInjectable from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
   currentRouteComponent: IComputedValue<React.ElementType | undefined>;
   welcomeUrl: string;
+  watchForGeneralEntityNavigation: WatchForGeneralEntityNavigation;
 }
 
 @observer
 class NonInjectedClusterManager extends React.Component<Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => navigation.location, () => setEntityOnRouteMatch(), { fireImmediately: true }),
+      this.props.watchForGeneralEntityNavigation(),
     ]);
   }
 
@@ -64,5 +64,6 @@ export const ClusterManager = withInjectables<Dependencies>(NonInjectedClusterMa
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     currentRouteComponent: di.inject(currentRouteComponentInjectable),
     welcomeUrl: buildURL(di.inject(welcomeRouteInjectable).path),
+    watchForGeneralEntityNavigation: di.inject(watchForGeneralEntityNavigationInjectable),
   }),
 });

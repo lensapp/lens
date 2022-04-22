@@ -45,6 +45,7 @@ import { bindEvents } from "./navigation/events";
 import assert from "assert";
 import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import { init } from "@sentry/electron/renderer";
+import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -95,13 +96,11 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
   initializers.initCatalogEntityDetailRegistry();
 
-  const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
-  const addSyncEntries = di.inject(addSyncEntriesInjectable);
-
   logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
   initializers.initCatalogCategoryRegistryEntries({
-    navigateToAddCluster,
-    addSyncEntries,
+    navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
+    addSyncEntries: di.inject(addSyncEntriesInjectable),
+    kubernetesClusterCategory: di.inject(kubernetesClusterCategoryInjectable),
   });
 
   logger.info(`${logPrefix} initializing Catalog`);

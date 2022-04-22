@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { createObservableHistory } from "mobx-observable-history";
-import loggerInjectable from "../../../common/logger.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 import { searchParamsOptions } from "./search-params";
 import historyInjectable from "./history.injectable";
 

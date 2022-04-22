@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import observableHistoryInjectable from "../navigation/observable-history.injectable";
 import { runInAction } from "mobx";
+import type { NavigateToUrl } from "../../common/front-end-routing/navigate-to-url-injection-token";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
 import { broadcastMessage } from "../../common/ipc";
 import { IpcRendererNavigationEvents } from "../navigation/events";
@@ -12,24 +13,20 @@ import { IpcRendererNavigationEvents } from "../navigation/events";
 const navigateToUrlInjectable = getInjectable({
   id: "navigate-to-url",
 
-  instantiate: (di) => {
+  instantiate: (di): NavigateToUrl => {
     const observableHistory = di.inject(observableHistoryInjectable);
 
-    return (url, options = {}) => {
+    return (url, options = {}): void => {
       if (options.forceRootFrame) {
-        broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
-
-        return;
+        return void broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
       }
 
       runInAction(() => {
         if (options.withoutAffectingBackButton) {
           observableHistory.replace(url);
-
-          return;
+        } else {
+          observableHistory.push(url);
         }
-
-        observableHistory.push(url);
       });
     };
   },

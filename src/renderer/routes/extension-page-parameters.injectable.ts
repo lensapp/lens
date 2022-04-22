@@ -5,11 +5,10 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import type { PageParamInit } from "../navigation";
-import { PageParam } from "../navigation";
-import observableHistoryInjectable from "../navigation/history/observable.injectable";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import type { PageRegistration } from "../../extensions/registries";
-import { fromPairs, map, toPairs } from "lodash/fp";
+import { fromPairs, map } from "lodash/fp";
+import createPageParamInjectable from "../navigation/create-page-param.injectable";
 
 interface InstantiationParameter {
   extension: LensRendererExtension;
@@ -20,18 +19,18 @@ const extensionPageParametersInjectable = getInjectable({
   id: "extension-page-parameters",
 
   instantiate: (di, { registration }: InstantiationParameter) => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const createPageParam = di.inject(createPageParamInjectable);
 
     return pipeline(
       registration.params ?? {},
-      toPairs,
-      map(([key, value]): [string, PageParamInit] => [
+      Object.entries,
+      map(([key, value]): [string, PageParamInit<unknown>] => [
         key,
         typeof value === "string"
           ? convertStringToPageParamInit(key, value)
-          : convertPartialPageParamInitToFull(key, value as PageParamInit),
+          : convertPartialPageParamInitToFull(key, value),
       ]),
-      map(([key, value]) => [key, new PageParam(value, observableHistory)]),
+      map(([key, value]) => [key, createPageParam(value)]),
       fromPairs,
     );
   },
@@ -44,20 +43,20 @@ const extensionPageParametersInjectable = getInjectable({
   }),
 });
 
-const convertPartialPageParamInitToFull = (
+const convertPartialPageParamInitToFull = <V>(
   key: string,
-  value: PageParamInit,
-): PageParamInit => ({
-  name: key,
-  defaultValue: value.defaultValue,
-  stringify: value.stringify,
-  parse: value.parse,
-});
+  value: PageParamInit<V>,
+): PageParamInit<V> => ({
+    name: key,
+    defaultValue: value.defaultValue,
+    stringify: value.stringify,
+    parse: value.parse,
+  });
 
 const convertStringToPageParamInit = (
   key: string,
   value: string,
-): PageParamInit => ({
+): PageParamInit<string> => ({
   name: key,
   defaultValue: value,
 });

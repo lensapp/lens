@@ -15,7 +15,6 @@ import { cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
 import type { ThemeStore } from "../../themes/store";
-import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectAge } from "../kube-object/age";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -25,6 +24,10 @@ import type { EventStore } from "../+events/store";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import nodeStoreInjectable from "../+nodes/store.injectable";
+import type { PageParam } from "../../navigation";
+import type { ToggleDetails } from "../kube-detail-params/toggle-details.injectable";
+import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
+import toggleDetailsInjectable from "../kube-detail-params/toggle-details.injectable";
 
 export interface ClusterIssuesProps {
   className?: string;
@@ -49,6 +52,8 @@ interface Dependencies {
   nodeStore: NodeStore;
   eventStore: EventStore;
   apiManager: ApiManager;
+  kubeSelectedUrlParam: PageParam<string>;
+  toggleDetails: ToggleDetails;
 }
 
 @observer
@@ -86,6 +91,7 @@ class NonInjectedClusterIssues extends React.Component<ClusterIssuesProps & Depe
 
   getTableRow = (uid: string) => {
     const { warnings } = this;
+    const { kubeSelectedUrlParam, toggleDetails } = this.props;
     const warning = warnings.find(warn => warn.getId() == uid);
 
     if (!warning) {
@@ -189,5 +195,7 @@ export const ClusterIssues = withInjectables<Dependencies, ClusterIssuesProps>(N
     apiManager: di.inject(apiManagerInjectable),
     eventStore: di.inject(eventStoreInjectable),
     nodeStore: di.inject(nodeStoreInjectable),
+    kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
+    toggleDetails: di.inject(toggleDetailsInjectable),
   }),
 });

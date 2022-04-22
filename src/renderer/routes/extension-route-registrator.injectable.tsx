@@ -10,8 +10,6 @@ import { observer } from "mobx-react";
 import React from "react";
 import { isEmpty, matches } from "lodash/fp";
 import type { PageRegistration } from "../../extensions/registries";
-import observableHistoryInjectable from "../navigation/observable-history.injectable";
-import type { ObservableHistory } from "mobx-observable-history";
 import { extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
 import { SiblingsInTabLayout } from "../components/layout/siblings-in-tab-layout";
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
@@ -24,14 +22,11 @@ const extensionRouteRegistratorInjectable = getInjectable({
   id: "extension-route-registrator",
 
   instantiate: (di) => {
-    const observableHistory = di.inject(observableHistoryInjectable);
-
     return (ext, extensionInstallationCount) => {
       const extension = ext as LensRendererExtension;
       const toRouteInjectable = toRouteInjectableFor(
         di,
         extension,
-        observableHistory,
         extensionInstallationCount,
       );
 
@@ -53,7 +48,6 @@ const toRouteInjectableFor =
   (
     di: DiContainerForInstantiate,
     extension: LensRendererExtension,
-    observableHistory: ObservableHistory<unknown>,
     extensionInstallationCount: number,
   ) =>
     (clusterFrame: boolean) =>

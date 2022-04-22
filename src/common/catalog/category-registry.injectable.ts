@@ -2,18 +2,25 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import { GeneralCategory, kubernetesClusterCategory, WebLinkCategory } from "../catalog-entities";
+import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import { WebLinkCategory } from "../catalog-entities";
+import type { CatalogCategory } from "./catalog-entity";
 import { CatalogCategoryRegistry } from "./category-registry";
+
+export const builtInCategoryInjectionToken = getInjectionToken<CatalogCategory>({
+  id: "built-in-category-token",
+});
 
 const catalogCategoryRegistryInjectable = getInjectable({
   id: "catalog-category-registry",
-  instantiate: () => {
+  instantiate: (di) => {
     const registry = new CatalogCategoryRegistry();
+    const categories = di.injectMany(builtInCategoryInjectionToken);
 
-    // TODO: move to different place
-    registry.add(new GeneralCategory());
-    registry.add(kubernetesClusterCategory);
+    for (const category of categories) {
+      registry.add(category);
+    }
+
     registry.add(new WebLinkCategory());
 
     return registry;

@@ -11,37 +11,50 @@ import { computed, observable, reaction, makeObservable } from "mobx";
 import { Drawer } from "../drawer";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
-import { apiManager } from "../../../common/k8s-api/api-manager";
-import { customResourceDefinitionStore } from "../+custom-resources/legacy-store";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { CustomResourceDetails } from "../+custom-resources";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { hideDetails, kubeDetailsUrlParam } from "../kube-detail-params";
+import type { PageParam } from "../../navigation";
+import type { HideDetails } from "../kube-detail-params/hide-details.injectable";
+import type { CustomResourceDefinitionStore } from "../+custom-resources/definition.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import customResourceDefinitionStoreInjectable from "../+custom-resources/definition.store.injectable";
+import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
+import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-url.injectable";
 
 
-export interface KubeObjectDetailsProps<T extends KubeObject = KubeObject> {
+export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
   className?: string;
-  object: T;
+  object: Kube;
+}
+
+interface Dependencies {
+  kubeDetailsUrlParam: PageParam<string>;
+  apiManager: ApiManager;
+  hideDetails: HideDetails;
+  customResourceDefinitionStore: CustomResourceDefinitionStore;
 }
 
 @observer
-export class KubeObjectDetails extends React.Component {
+class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
   @observable isLoading = false;
   @observable.ref loadingError: React.ReactNode;
 
-  constructor(props: {}) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @computed get path() {
-    return kubeDetailsUrlParam.get();
+    return this.props.kubeDetailsUrlParam.get();
   }
 
   @computed get object() {
     try {
-      return apiManager
+      return this.props.apiManager
         .getStore(this.path)
         ?.getByPath(this.path);
     } catch (error) {
@@ -56,13 +69,13 @@ export class KubeObjectDetails extends React.Component {
       reaction(() => [
         this.path,
         this.object, // resource might be updated via watch-event or from already opened details
-        customResourceDefinitionStore.items.length, // crd stores initialized after loading
+        this.props.customResourceDefinitionStore.items.length, // crd stores initialized after loading
       ], async () => {
         this.loadingError = "";
         const { path, object } = this;
 
         if (!object) {
-          const store = apiManager.getStore(path);
+          const store = this.props.apiManager.getStore(path);
 
           if (store) {
             this.isLoading = true;
@@ -103,7 +116,7 @@ export class KubeObjectDetails extends React.Component {
       ));
 
     if (details.length === 0) {
-      const crd = customResourceDefinitionStore.getByObject(object);
+      const crd = this.props.customResourceDefinitionStore.getByObject(object);
 
       /**
        * This is a fallback so that if a custom resource object doesn't have
@@ -141,10 +154,20 @@ export class KubeObjectDetails extends React.Component {
         open={!!(object || isLoading || loadingError)}
         title={this.renderTitle(object)}
         toolbar={object && <KubeObjectMenu object={object} toolbar={true}/>}
-        onClose={hideDetails}
+        onClose={this.props.hideDetails}
       >
         {object && this.renderContents(object)}
       </Drawer>
     );
   }
 }
+
+export const KubeObjectDetails = withInjectables<Dependencies>(NonInjectedKubeObjectDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    customResourceDefinitionStore: di.inject(customResourceDefinitionStoreInjectable),
+    hideDetails: di.inject(hideDetailsInjectable),
+    kubeDetailsUrlParam: di.inject(kubeDetailsUrlParamInjectable),
+  }),
+});

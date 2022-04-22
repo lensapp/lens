@@ -12,7 +12,7 @@ import { cssNames } from "../../utils";
 import { CloseButton } from "./close-button";
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import observableHistoryInjectable from "../../navigation/history/observable.injectable";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
 export interface SettingLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;

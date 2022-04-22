@@ -14,13 +14,11 @@ const closePreferencesInjectable = getInjectable({
     const navigateToFrontPage = di.inject(navigateToFrontPageInjectable);
 
     return () => {
-      if (observableHistory.length === 1) {
+      if (observableHistory.length <= 1) {
         navigateToFrontPage();
-
-        return;
+      } else {
+        observableHistory.goBack();
       }
-
-      observableHistory.goBack();
     };
   },
 });
