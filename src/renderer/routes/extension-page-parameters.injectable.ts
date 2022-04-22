@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import type { PageParamInit } from "../navigation";
 import { PageParam } from "../navigation";
-import observableHistoryInjectable from "../navigation/observable-history.injectable";
+import observableHistoryInjectable from "../navigation/history/observable.injectable";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import type { PageRegistration } from "../../extensions/registries";
 import { fromPairs, map, toPairs } from "lodash/fp";

@@ -18,7 +18,7 @@ import drawerStorageInjectable, {
   defaultDrawerWidth,
 } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import historyInjectable from "../../navigation/history.injectable";
+import historyInjectable from "../../navigation/history/history.injectable";
 import type { History } from "history";
 
 export type DrawerPosition = "top" | "left" | "right" | "bottom";
